@@ -2,7 +2,7 @@ export default function Hero() {
   return (
     <section className="mx-auto grid min-h-[78vh] max-w-7xl items-center gap-14 px-6 py-20 lg:grid-cols-[1.25fr_0.75fr] lg:px-10">
       <div>
-        <p className="mb-6 text-sm font-medium uppercase tracking-[0.22em] text-black/50">
+        <p className="mb-6 text-sm font-medium uppercase tracking-[0.22em] text-accent">
           Gayrimenkul · Kitaplar · Yapay Zekâ · Araştırma
         </p>
 
@@ -14,7 +14,7 @@ export default function Hero() {
           paylaşan bir platform.
         </h1>
 
-        <p className="mt-8 max-w-2xl text-lg leading-8 text-black/60">
+        <p className="mt-8 max-w-2xl text-lg leading-8 text-muted">
           İstanbul gayrimenkul piyasası, kitaplar, yapay zekâ, satış ve
           müzakere üzerine uzun vadeli ve güvenilir bir bilgi merkezi
           oluşturuyorum.
@@ -23,42 +23,46 @@ export default function Hero() {
         <div className="mt-10 flex flex-wrap gap-4">
           <a
             href="#alanlar"
-            className="rounded-full bg-black px-7 py-3.5 text-sm font-medium text-white transition hover:bg-black/80"
+            className="rounded-full bg-accent px-7 py-3.5 text-sm font-medium text-surface transition hover:bg-accent-strong"
           >
             Çalışmaları keşfet
           </a>
 
           <a
             href="#hakkimda"
-            className="rounded-full border border-black/20 px-7 py-3.5 text-sm font-medium transition hover:bg-black/5"
+            className="rounded-full border border-border px-7 py-3.5 text-sm font-medium text-foreground transition hover:bg-surface"
           >
             Hakkımda
           </a>
         </div>
       </div>
 
-      <aside className="rounded-[2rem] border border-black/10 bg-white/65 p-8 shadow-sm">
-        <p className="text-sm text-black/45">Platform hedefi</p>
+      <aside className="rounded-[2rem] border border-border bg-surface p-8 shadow-sm">
+        <p className="text-sm text-muted">Platform hedefi</p>
 
         <div className="mt-7">
-          <p className="text-4xl font-semibold tracking-tight">500+</p>
-          <p className="mt-1 text-sm text-black/50">kitap incelemesi</p>
-        </div>
-
-        <div className="my-7 h-px bg-black/10" />
-
-        <div>
-          <p className="text-4xl font-semibold tracking-tight">1.000+</p>
-          <p className="mt-1 text-sm text-black/50">makale ve analiz</p>
-        </div>
-
-        <div className="my-7 h-px bg-black/10" />
-
-        <div>
-          <p className="text-4xl font-semibold tracking-tight">2 dil</p>
-          <p className="mt-1 text-sm text-black/50">
-            Türkçe ve İngilizce
+          <p className="text-4xl font-semibold tracking-tight text-accent">
+            500+
           </p>
+          <p className="mt-1 text-sm text-muted">kitap incelemesi</p>
+        </div>
+
+        <div className="my-7 h-px bg-border" />
+
+        <div>
+          <p className="text-4xl font-semibold tracking-tight text-accent">
+            1.000+
+          </p>
+          <p className="mt-1 text-sm text-muted">makale ve analiz</p>
+        </div>
+
+        <div className="my-7 h-px bg-border" />
+
+        <div>
+          <p className="text-4xl font-semibold tracking-tight text-accent">
+            2 dil
+          </p>
+          <p className="mt-1 text-sm text-muted">Türkçe ve İngilizce</p>
         </div>
       </aside>
     </section>
