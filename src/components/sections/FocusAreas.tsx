@@ -38,7 +38,7 @@ export default function FocusAreas() {
         {focusAreas.map((area) => (
           <article
             key={area.title}
-            className="min-h-64 bg-[#f5f3ee] p-8 transition hover:bg-white"
+            className="bg-[#f5f3ee] p-6 transition hover:bg-white md:min-h-64 md:p-8"
           >
             <h3 className="text-2xl font-semibold tracking-tight">
               {area.title}

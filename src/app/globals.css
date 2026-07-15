@@ -81,6 +81,18 @@ button {
   -webkit-tap-highlight-color: transparent;
 }
 
+a:focus-visible,
+button:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 ::selection {
   background: var(--accent);
   color: var(--surface);

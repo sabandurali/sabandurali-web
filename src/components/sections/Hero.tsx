@@ -6,7 +6,7 @@ export default function Hero() {
           Gayrimenkul · Kitaplar · Yapay Zekâ · Araştırma
         </p>
 
-        <h1 className="max-w-5xl text-5xl font-semibold leading-[0.98] tracking-[-0.055em] sm:text-7xl lg:text-[86px]">
+        <h1 className="max-w-5xl text-[2.5rem] font-semibold leading-[1.05] tracking-[-0.04em] sm:text-7xl sm:leading-[0.98] sm:tracking-[-0.055em] lg:text-[86px]">
           Bilgiyi araştıran,
           <br />
           analiz eden ve

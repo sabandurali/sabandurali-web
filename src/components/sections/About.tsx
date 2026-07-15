@@ -1,7 +1,7 @@
 export default function About() {
   return (
     <section id="hakkimda" className="bg-accent-strong text-surface">
-      <div className="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32">
+      <div className="mx-auto max-w-7xl px-6 py-16 sm:py-24 lg:px-10 lg:py-32">
         <p className="mb-10 text-sm font-medium uppercase tracking-[0.24em] text-accent-warm-soft">
           Hakkımda
         </p>
