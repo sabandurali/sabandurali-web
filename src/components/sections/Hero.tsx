@@ -1,44 +1,55 @@
 export default function Hero() {
   return (
-    <section className="mx-auto grid min-h-[78vh] max-w-7xl items-center gap-14 px-6 py-20 lg:grid-cols-[1.25fr_0.75fr] lg:px-10">
-      <div>
-        <p className="mb-6 text-sm font-medium uppercase tracking-[0.22em] text-accent">
-          Gayrimenkul · Kitaplar · Yapay Zekâ · Araştırma
-        </p>
-
-        <h1 className="max-w-5xl text-[2.5rem] font-semibold leading-[1.05] tracking-[-0.04em] sm:text-7xl sm:leading-[0.98] sm:tracking-[-0.055em] lg:text-[86px]">
-          Bilgiyi araştıran,
-          <br />
-          analiz eden ve
-          <br />
-          paylaşan bir platform.
-        </h1>
-
-        <p className="mt-8 max-w-2xl text-lg leading-8 text-muted">
-          İstanbul gayrimenkul piyasası, kitaplar, yapay zekâ, satış ve
-          müzakere üzerine uzun vadeli ve güvenilir bir bilgi merkezi
-          oluşturuyorum.
-        </p>
-
-        <div className="mt-10 flex flex-wrap gap-4">
-          <a
-            href="#alanlar"
-            className="rounded-full bg-accent px-7 py-3.5 text-sm font-medium text-surface transition hover:bg-accent-strong"
-          >
-            Çalışmaları keşfet
-          </a>
-
-          <a
-            href="#hakkimda"
-            className="rounded-full border border-border px-7 py-3.5 text-sm font-medium text-foreground transition hover:bg-surface"
-          >
-            Hakkımda
-          </a>
-        </div>
+    <section className="relative isolate overflow-hidden border-b border-border">
+      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_28%_42%,rgba(184,132,82,0.12),transparent_34%),linear-gradient(115deg,transparent_0%,transparent_47%,rgba(184,132,82,0.06)_47%,rgba(184,132,82,0.06)_63%,transparent_63%)]" />
+      <div aria-hidden="true" className="absolute inset-y-0 right-[8%] -z-10 hidden w-[42%] grid-cols-4 gap-px opacity-70 lg:grid">
+        <span className="border-x border-border/50 bg-black/10" />
+        <span className="border-r border-border/40 bg-surface/20" />
+        <span className="border-r border-border/50 bg-black/20" />
+        <span className="border-r border-border/30 bg-surface/10" />
       </div>
 
-      <aside className="rounded-[2rem] border border-border bg-surface p-8 shadow-sm">
-        <p className="text-sm text-muted">Platform hedefi</p>
+      <div className="mx-auto grid min-h-[calc(100vh-94px)] max-w-7xl items-center gap-14 px-5 py-16 sm:px-6 sm:py-20 lg:grid-cols-[1.2fr_0.8fr] lg:px-10 lg:py-24">
+        <div className="min-w-0">
+          <p className="mb-6 text-xs font-medium uppercase leading-6 tracking-[0.18em] text-accent sm:text-sm sm:tracking-[0.22em]">
+            Gayrimenkul • Danışmanlık • Araştırma • Teknoloji
+          </p>
+
+          <h1 className="max-w-4xl font-serif text-[2.65rem] font-medium leading-[1.08] tracking-[-0.035em] text-ivory sm:text-6xl lg:text-[72px]">
+            Bilgiyi araştıran,
+            <br />
+            analiz eden ve
+            <br />
+            <span className="text-accent-strong">değer üreten</span>
+            <br />
+            bir platform.
+          </h1>
+
+          <p className="mt-8 max-w-2xl text-base leading-8 text-muted sm:text-lg">
+            Gayrimenkul, danışmanlık, araştırma ve teknoloji alanlarında
+            güvenilir bilgi, uygulanabilir analiz ve sürdürülebilir değer üreten
+            bağımsız bir platform oluşturuyorum.
+          </p>
+
+          <div className="mt-10 flex flex-col gap-4 min-[360px]:flex-row min-[360px]:flex-wrap">
+            <a
+              href="#alanlar"
+              className="rounded-md bg-accent px-7 py-3.5 text-center text-sm font-medium text-ink transition hover:bg-accent-strong"
+            >
+              Çalışmaları keşfet
+            </a>
+
+            <a
+              href="#hakkimda"
+              className="rounded-md border border-ivory/40 px-7 py-3.5 text-center text-sm font-medium text-ivory transition hover:border-accent hover:bg-surface"
+            >
+              Hakkımda
+            </a>
+          </div>
+        </div>
+
+        <aside className="rounded-2xl border border-border bg-black/25 p-7 shadow-[0_18px_50px_rgba(0,0,0,0.18)] sm:p-8">
+          <p className="text-sm text-muted">Platform hedefi</p>
 
         <div className="mt-7">
           <p className="text-4xl font-semibold tracking-tight text-accent">
@@ -64,7 +75,8 @@ export default function Hero() {
           </p>
           <p className="mt-1 text-sm text-muted">Türkçe ve İngilizce</p>
         </div>
-      </aside>
+        </aside>
+      </div>
     </section>
   );
 }

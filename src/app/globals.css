@@ -1,21 +1,19 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f4e6d4;
-  --foreground: #202a2d;
-
-  --surface: #fff9f1;
-  --muted: #675f58;
-  --border: #d8bfa5;
-
-  --accent: #087f8c;
-  --accent-strong: #066772;
-  --accent-soft: #d7eef0;
-
-  --accent-warm: #df7545;
-  --accent-warm-soft: #f6d4c1;
-
-  --success: #6b7d48;
+  --background: #0b0f12;
+  --foreground: #f3eee6;
+  --surface: #11171b;
+  --surface-soft: #171d21;
+  --ivory: #f1eadf;
+  --ivory-soft: #f7f2ea;
+  --ink: #121619;
+  --muted: #b8b1a7;
+  --muted-dark: #6f6962;
+  --border: rgba(184, 132, 82, 0.3);
+  --accent: #b88452;
+  --accent-strong: #d0a36e;
+  --accent-soft: #d9c3a4;
 }
 
 @theme inline {
@@ -23,17 +21,17 @@
   --color-foreground: var(--foreground);
 
   --color-surface: var(--surface);
+  --color-surface-soft: var(--surface-soft);
+  --color-ivory: var(--ivory);
+  --color-ivory-soft: var(--ivory-soft);
+  --color-ink: var(--ink);
   --color-muted: var(--muted);
+  --color-muted-dark: var(--muted-dark);
   --color-border: var(--border);
 
   --color-accent: var(--accent);
   --color-accent-strong: var(--accent-strong);
   --color-accent-soft: var(--accent-soft);
-
-  --color-accent-warm: var(--accent-warm);
-  --color-accent-warm-soft: var(--accent-warm-soft);
-
-  --color-success: var(--success);
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -41,7 +39,7 @@
 
 html {
   scroll-behavior: smooth;
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 body {
@@ -50,15 +48,16 @@ body {
 
   background:
     radial-gradient(
-      circle at 8% 5%,
-      rgba(223, 117, 69, 0.16),
-      transparent 32%
-    ),
-    radial-gradient(
-      circle at 92% 12%,
-      rgba(8, 127, 140, 0.14),
+      circle at 12% 8%,
+      rgba(184, 132, 82, 0.1),
       transparent 30%
     ),
+    radial-gradient(
+      circle at 86% 18%,
+      rgba(208, 163, 110, 0.05),
+      transparent 28%
+    ),
+    linear-gradient(145deg, #0b0f12 0%, #10161a 52%, #090d10 100%),
     var(--background);
 
   color: var(--foreground);
