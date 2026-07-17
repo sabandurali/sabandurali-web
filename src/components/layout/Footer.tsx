@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { FooterContent } from "@/content/homeContent";
 
 type FooterProps = {
@@ -38,6 +39,12 @@ export default function Footer({ id, content }: FooterProps) {
           <p className="mt-4 text-xs text-muted">
             {content.copyright}
           </p>
+          <Link
+            href={content.feedbackLink.href}
+            className="mt-3 inline-flex min-h-11 items-center text-xs text-accent-soft underline decoration-border underline-offset-4 transition-colors hover:text-accent-strong motion-reduce:transition-none"
+          >
+            {content.feedbackLink.label}
+          </Link>
         </div>
       </div>
     </footer>

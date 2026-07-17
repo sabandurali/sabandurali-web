@@ -11,14 +11,24 @@ type HeaderProps = {
   locale: Locale;
   anchors: HomeAnchors;
   content: HeaderContent;
+  homeHref?: string;
+  anchorPrefix?: string;
+  languageHrefs?: Record<Locale, string>;
 };
 
-export default function Header({ locale, anchors, content }: HeaderProps) {
+export default function Header({
+  locale,
+  anchors,
+  content,
+  homeHref = "#top",
+  anchorPrefix = "",
+  languageHrefs,
+}: HeaderProps) {
   return (
     <header className="border-b border-border bg-background/95">
       <div className="relative mx-auto flex min-h-[72px] max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 md:min-h-[94px] md:py-4 lg:px-10">
         <a
-          href="#top"
+          href={homeHref}
           className="flex min-w-0 shrink items-center gap-2.5 md:gap-3"
         >
           <Image
@@ -42,33 +52,40 @@ export default function Header({ locale, anchors, content }: HeaderProps) {
 
         <nav className="hidden items-center gap-5 text-sm text-ivory md:flex lg:gap-7">
           <a
-            href={`#${anchors.about}`}
+            href={`${anchorPrefix}#${anchors.about}`}
             className="transition hover:opacity-55"
           >
             {content.navigation.about}
           </a>
 
           <a
-            href={`#${anchors.work}`}
+            href={`${anchorPrefix}#${anchors.work}`}
             className="transition hover:opacity-55"
           >
             {content.navigation.work}
           </a>
 
           <a
-            href={`#${anchors.contact}`}
+            href={`${anchorPrefix}#${anchors.contact}`}
             className="transition hover:opacity-55"
           >
             {content.navigation.contact}
           </a>
         </nav>
 
-        <MobileMenu locale={locale} anchors={anchors} content={content} />
+        <MobileMenu
+          locale={locale}
+          anchors={anchors}
+          content={content}
+          anchorPrefix={anchorPrefix}
+          languageHrefs={languageHrefs}
+        />
 
         <LanguageSwitcher
           locale={locale}
           label={content.languageSwitcherLabel}
           variant="desktop"
+          hrefs={languageHrefs}
         />
       </div>
     </header>

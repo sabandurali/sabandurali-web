@@ -12,19 +12,27 @@ type MobileMenuProps = {
   locale: Locale;
   anchors: HomeAnchors;
   content: HeaderContent;
+  anchorPrefix?: string;
+  languageHrefs?: Record<Locale, string>;
 };
 
 export default function MobileMenu({
   locale,
   anchors,
   content,
+  anchorPrefix = "",
+  languageHrefs,
 }: MobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const menuLinks = [
-    { href: `#${anchors.about}`, label: content.navigation.about },
-    { href: `#${anchors.work}`, label: content.navigation.work },
-    { href: `#${anchors.contact}`, label: content.navigation.contact },
+    { href: `${anchorPrefix}#${anchors.about}`, label: content.navigation.about },
+    { href: `${anchorPrefix}#${anchors.work}`, label: content.navigation.work },
+    { href: `${anchorPrefix}#${anchors.contact}`, label: content.navigation.contact },
+    {
+      href: locale === "tr" ? "/geri-bildirim" : "/en/feedback",
+      label: content.navigation.feedback,
+    },
   ];
 
   useEffect(() => {
@@ -100,6 +108,7 @@ export default function MobileMenu({
             label={content.languageSwitcherLabel}
             variant="mobile"
             onNavigate={closeMenu}
+            hrefs={languageHrefs}
           />
         </div>
       </nav>

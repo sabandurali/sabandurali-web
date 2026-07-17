@@ -14,6 +14,7 @@ export type HeaderContent = {
     about: string;
     work: string;
     contact: string;
+    feedback: string;
   };
   menu: {
     openLabel: string;
@@ -64,6 +65,10 @@ export type FooterContent = {
   brandTagline: string;
   description: string;
   copyright: string;
+  feedbackLink: {
+    href: string;
+    label: string;
+  };
 };
 
 export type HomeContent = {
@@ -93,6 +98,7 @@ export const homeContent = {
         about: "Hakkımda",
         work: "Çalışmalar",
         contact: "İletişim",
+        feedback: "Beta geri bildirimi",
       },
       menu: {
         openLabel: "Menüyü aç",
@@ -169,6 +175,10 @@ export const homeContent = {
       description:
         "Gayrimenkul, danışmanlık, araştırma ve teknoloji odaklı bağımsız bilgi ve yayın platformu.",
       copyright: "© 2026 Şaban Durali. Tüm hakları saklıdır.",
+      feedbackLink: {
+        href: "/geri-bildirim",
+        label: "Beta geri bildirimi",
+      },
     },
     backToTopLabel: "Sayfanın başına dön",
   },
@@ -187,6 +197,7 @@ export const homeContent = {
         about: "About",
         work: "Work",
         contact: "Contact",
+        feedback: "Beta feedback",
       },
       menu: {
         openLabel: "Open menu",
@@ -263,6 +274,10 @@ export const homeContent = {
       description:
         "An independent knowledge and publishing platform focused on real estate, consulting, research and technology.",
       copyright: "© 2026 Şaban Durali. All rights reserved.",
+      feedbackLink: {
+        href: "/en/feedback",
+        label: "Beta feedback",
+      },
     },
     backToTopLabel: "Back to top",
   },

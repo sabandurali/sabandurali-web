@@ -8,6 +8,7 @@ type LanguageSwitcherProps = {
   label: string;
   variant: "desktop" | "mobile";
   onNavigate?: () => void;
+  hrefs?: Record<Locale, string>;
 };
 
 const languages = [
@@ -20,6 +21,7 @@ export default function LanguageSwitcher({
   label,
   variant,
   onNavigate,
+  hrefs,
 }: LanguageSwitcherProps) {
   const isMobile = variant === "mobile";
 
@@ -44,7 +46,7 @@ export default function LanguageSwitcher({
               </span>
             )}
             <Link
-              href={language.href}
+              href={hrefs?.[language.locale] ?? language.href}
               aria-current={isActive ? "page" : undefined}
               className={`${
                 isMobile
