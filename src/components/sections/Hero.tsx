@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import type { HeroContent, HomeAnchors } from "@/content/homeContent";
 
 type HeroProps = {
@@ -51,6 +53,23 @@ export default function Hero({ anchors, content }: HeroProps) {
             >
               {content.secondaryAction}
             </a>
+          </div>
+
+          <div className="mt-6 max-w-2xl space-y-1 text-center text-xs leading-5 text-muted">
+            <p className="font-medium">{content.betaInvitation.label}</p>
+            <p className="break-words">{content.betaInvitation.description}</p>
+            <Link
+              href={content.betaInvitation.href}
+              className="group inline-flex items-center gap-1.5 font-medium text-muted no-underline transition-colors hover:text-accent-strong motion-reduce:transition-none"
+            >
+              <span
+                aria-hidden="true"
+                className="transition-transform group-hover:translate-x-0.5 motion-reduce:transform-none motion-reduce:transition-none"
+              >
+                →
+              </span>
+              {content.betaInvitation.linkLabel}
+            </Link>
           </div>
         </div>
 

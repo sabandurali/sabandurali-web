@@ -33,6 +33,12 @@ export type HeroContent = {
   description: string;
   primaryAction: string;
   secondaryAction: string;
+  betaInvitation: {
+    label: string;
+    description: string;
+    linkLabel: string;
+    href: string;
+  };
   goalsLabel: string;
   goals: ReadonlyArray<{
     value: string;
@@ -119,6 +125,13 @@ export const homeContent = {
         "Gayrimenkul, danışmanlık, araştırma ve teknoloji alanlarında güvenilir bilgi, uygulanabilir analiz ve sürdürülebilir değer üreten bağımsız bir platform oluşturuyorum.",
       primaryAction: "Çalışmaları keşfet",
       secondaryAction: "Hakkımda",
+      betaInvitation: {
+        label: "🧪 Beta sürümü",
+        description:
+          "Bu platformu geliştirmeme yardımcı olmak için 3–4 dakikanızı ayırabilirsiniz.",
+        linkLabel: "Beta geri bildirimi",
+        href: "/geri-bildirim",
+      },
       goalsLabel: "Platform hedefi",
       goals: [
         { value: "500+", label: "kitap incelemesi" },
@@ -218,6 +231,13 @@ export const homeContent = {
         "I am building an independent platform that produces reliable knowledge, actionable analysis and sustainable value across real estate, consulting, research and technology.",
       primaryAction: "Explore the work",
       secondaryAction: "About",
+      betaInvitation: {
+        label: "🧪 Beta",
+        description:
+          "Help improve this platform by sharing your thoughts in just 3–4 minutes.",
+        linkLabel: "Beta feedback",
+        href: "/en/feedback",
+      },
       goalsLabel: "Platform goals",
       goals: [
         { value: "500+", label: "book reviews" },
