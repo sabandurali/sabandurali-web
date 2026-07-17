@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { siteUrl } from "@/config/site";
 import "../globals.css";
 
 const geistSans = Geist({
@@ -13,6 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: siteUrl,
   title: "Şaban Durali | Araştırma ve Bilgi Platformu",
   description:
     "Gayrimenkul, kitaplar, yapay zekâ, satış ve müzakere üzerine araştırma ve bilgi platformu.",

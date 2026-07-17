@@ -9,7 +9,13 @@ import { homeContent } from "@/content/homeContent";
 const content = feedbackContent.en;
 const home = homeContent.en;
 
-export const metadata: Metadata = content.metadata;
+export const metadata: Metadata = {
+  ...content.metadata,
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default function EnglishFeedbackPage() {
   return (
