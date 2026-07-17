@@ -1,9 +1,10 @@
 import Image from "next/image";
+import MobileMenu from "./MobileMenu";
 
 export default function Header() {
   return (
     <header className="border-b border-border bg-background/95">
-      <div className="mx-auto flex min-h-[72px] max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 md:min-h-[94px] md:py-4 lg:px-10">
+      <div className="relative mx-auto flex min-h-[72px] max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 md:min-h-[94px] md:py-4 lg:px-10">
         <a href="#" className="flex min-w-0 shrink items-center gap-2.5 md:gap-3">
           <Image
             src="/brand/sd-monogram-light.png"
@@ -38,7 +39,9 @@ export default function Header() {
           </a>
         </nav>
 
-        <button className="shrink-0 rounded-full border border-border px-3 py-2 text-xs font-medium text-ivory transition hover:border-accent hover:bg-surface sm:px-4">
+        <MobileMenu />
+
+        <button className="hidden shrink-0 rounded-full border border-border px-3 py-2 text-xs font-medium text-ivory transition hover:border-accent hover:bg-surface sm:px-4 md:block">
           TR · EN
         </button>
       </div>
