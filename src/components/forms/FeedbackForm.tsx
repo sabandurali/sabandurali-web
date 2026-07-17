@@ -77,10 +77,12 @@ function RadioQuestion({
 
 export default function FeedbackForm({
   content,
+  formId,
+  showConfigurationNotice,
 }: FeedbackFormProps) {
   const [status, setStatus] = useState<SubmissionStatus>("idle");
-  const formId =
-    process.env.NEXT_PUBLIC_FORMSPREE_FORM_ID?.trim() || "xzdneygr";
+  const normalizedFormId = formId?.trim();
+  const isConfigured = Boolean(normalizedFormId);
   const homeHref = content.locale === "tr" ? "/" : "/en";
   const languageHref =
     content.locale === "tr" ? "/en/feedback" : "/geri-bildirim";
@@ -88,7 +90,7 @@ export default function FeedbackForm({
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (status === "loading") return;
+    if (status === "loading" || !normalizedFormId) return;
 
     const form = event.currentTarget;
     const formData = new FormData(form);
@@ -99,7 +101,7 @@ export default function FeedbackForm({
 
     try {
       const response = await fetch(
-        `https://formspree.io/f/${formId}`,
+        `https://formspree.io/f/${normalizedFormId}`,
         {
           method: "POST",
           body: formData,
@@ -120,6 +122,15 @@ export default function FeedbackForm({
 
   return (
     <form className="space-y-4" onSubmit={handleSubmit}>
+      {showConfigurationNotice && !isConfigured && (
+        <p
+          className="rounded-sm border border-accent bg-surface px-4 py-3 text-sm text-ivory"
+          role="status"
+        >
+          {content.configurationMessage}
+        </p>
+      )}
+
       <RadioQuestion
         name="clarity"
         legend={content.fields.clarity.legend}
@@ -281,7 +292,7 @@ export default function FeedbackForm({
       <div className="pt-3">
         <button
           type="submit"
-          disabled={status === "loading"}
+          disabled={status === "loading" || !isConfigured}
           className="flex min-h-12 w-full items-center justify-center rounded-sm bg-accent px-6 py-3 text-sm font-semibold text-ink transition-colors hover:bg-accent-strong disabled:cursor-not-allowed disabled:opacity-45 motion-reduce:transition-none sm:w-auto sm:min-w-56"
         >
           {status === "loading"
