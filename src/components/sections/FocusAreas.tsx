@@ -75,7 +75,8 @@ function AreaIcon({ icon }: { icon: string }) {
 
 export default function FocusAreas() {
   return (
-    <section id="alanlar" className="bg-ivory-soft text-ink">
+    <section id="calismalar" className="scroll-mt-24 bg-ivory-soft text-ink">
+      <div id="alanlar" className="scroll-mt-24" aria-hidden="true" />
       <div className="mx-auto max-w-7xl px-6 py-20 lg:px-10 lg:py-24">
         <div className="mb-14 max-w-3xl">
           <p className="text-sm uppercase tracking-[0.22em] text-muted-dark">

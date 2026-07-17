@@ -2,7 +2,10 @@ import Image from "next/image";
 
 export default function Footer() {
   return (
-    <footer id="iletisim" className="border-t border-border bg-background">
+    <footer
+      id="iletisim"
+      className="scroll-mt-24 border-t border-border bg-background"
+    >
       <div className="mx-auto grid max-w-7xl gap-8 px-6 py-12 md:grid-cols-[0.9fr_1.1fr] md:items-center lg:px-10">
         <div className="flex items-center gap-3">
           <Image

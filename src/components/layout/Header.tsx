@@ -5,7 +5,10 @@ export default function Header() {
   return (
     <header className="border-b border-border bg-background/95">
       <div className="relative mx-auto flex min-h-[72px] max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 md:min-h-[94px] md:py-4 lg:px-10">
-        <a href="#" className="flex min-w-0 shrink items-center gap-2.5 md:gap-3">
+        <a
+          href="#top"
+          className="flex min-w-0 shrink items-center gap-2.5 md:gap-3"
+        >
           <Image
             src="/brand/sd-monogram-light.png"
             alt=""
@@ -30,7 +33,7 @@ export default function Header() {
             Hakkımda
           </a>
 
-          <a href="#alanlar" className="transition hover:opacity-55">
+          <a href="#calismalar" className="transition hover:opacity-55">
             Çalışmalar
           </a>
 
