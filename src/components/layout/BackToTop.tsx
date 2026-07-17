@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 const VISIBILITY_THRESHOLD = 550;
 
-export default function BackToTop() {
+export default function BackToTop({ label }: { label: string }) {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -21,7 +21,7 @@ export default function BackToTop() {
   return (
     <a
       href="#top"
-      aria-label="Sayfanın başına dön"
+      aria-label={label}
       aria-hidden={!isVisible}
       tabIndex={isVisible ? 0 : -1}
       className={`fixed right-4 bottom-4 z-40 flex size-11 items-center justify-center rounded-full border border-border bg-background/95 text-accent-soft shadow-lg shadow-black/30 transition-[opacity,transform,background-color,border-color] duration-200 hover:border-accent hover:bg-surface motion-reduce:transition-none sm:right-6 sm:bottom-6 ${

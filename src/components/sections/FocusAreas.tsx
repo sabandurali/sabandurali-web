@@ -1,31 +1,9 @@
-const focusAreas = [
-  {
-    icon: "book",
-    title: "Kitap İncelemeleri",
-    description:
-      "Okuduğum kitaplardan çıkardığım fikirler, eleştiriler ve uygulanabilir notlar.",
-  },
-  {
-    icon: "city",
-    title: "İstanbul Analizleri",
-    description:
-      "İlçe, mahalle, ulaşım, dönüşüm ve gayrimenkul piyasası üzerine araştırmalar.",
-  },
-  {
-    icon: "network",
-    title: "Yapay Zekâ",
-    description:
-      "Yapay zekâ araçları, iş modelleri ve günlük hayatta uygulanabilir kullanım rehberleri.",
-  },
-  {
-    icon: "handshake",
-    title: "Satış ve Müzakere",
-    description:
-      "Güven oluşturma, ikna, müşteri yönetimi ve profesyonel müzakere sistemleri.",
-  },
-];
+import type {
+  FocusAreaIcon,
+  FocusAreasContent,
+} from "@/content/homeContent";
 
-function AreaIcon({ icon }: { icon: string }) {
+function AreaIcon({ icon }: { icon: FocusAreaIcon }) {
   const commonProps = {
     "aria-hidden": true,
     className: "size-6",
@@ -73,23 +51,27 @@ function AreaIcon({ icon }: { icon: string }) {
   );
 }
 
-export default function FocusAreas() {
+type FocusAreasProps = {
+  id: string;
+  content: FocusAreasContent;
+};
+
+export default function FocusAreas({ id, content }: FocusAreasProps) {
   return (
-    <section id="calismalar" className="scroll-mt-24 bg-ivory-soft text-ink">
-      <div id="alanlar" className="scroll-mt-24" aria-hidden="true" />
+    <section id={id} className="scroll-mt-24 bg-ivory-soft text-ink">
       <div className="mx-auto max-w-7xl px-6 py-20 lg:px-10 lg:py-24">
         <div className="mb-14 max-w-3xl">
           <p className="text-sm uppercase tracking-[0.22em] text-muted-dark">
-            Ana çalışma alanları
+            {content.label}
           </p>
 
           <h2 className="mt-5 text-4xl font-semibold tracking-tight sm:text-6xl">
-            Birbirini besleyen bilgi ve uzmanlık alanları.
+            {content.title}
           </h2>
         </div>
 
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-          {focusAreas.map((area) => (
+          {content.cards.map((area) => (
             <article
               key={area.title}
               className="rounded-xl border border-[rgba(184,132,82,0.24)] bg-ivory p-6 shadow-[0_8px_24px_rgba(18,22,25,0.04)] transition duration-200 hover:-translate-y-0.5 hover:border-[rgba(184,132,82,0.55)] md:min-h-72"
@@ -106,7 +88,7 @@ export default function FocusAreas() {
                 {area.description}
               </p>
 
-              <p className="mt-10 text-sm font-medium">Yakında →</p>
+              <p className="mt-10 text-sm font-medium">{area.linkLabel}</p>
             </article>
           ))}
         </div>

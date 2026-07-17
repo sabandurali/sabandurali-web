@@ -1,7 +1,19 @@
 import Image from "next/image";
+import type {
+  HeaderContent,
+  HomeAnchors,
+  Locale,
+} from "@/content/homeContent";
+import LanguageSwitcher from "./LanguageSwitcher";
 import MobileMenu from "./MobileMenu";
 
-export default function Header() {
+type HeaderProps = {
+  locale: Locale;
+  anchors: HomeAnchors;
+  content: HeaderContent;
+};
+
+export default function Header({ locale, anchors, content }: HeaderProps) {
   return (
     <header className="border-b border-border bg-background/95">
       <div className="relative mx-auto flex min-h-[72px] max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 md:min-h-[94px] md:py-4 lg:px-10">
@@ -19,34 +31,45 @@ export default function Header() {
           />
           <span className="min-w-0">
             <span className="block truncate font-serif text-base font-semibold tracking-tight text-ivory md:text-xl md:uppercase md:tracking-[0.16em]">
-              <span className="md:hidden">Şaban Durali</span>
-              <span className="hidden md:inline">ŞABAN DURALİ</span>
+              <span className="md:hidden">{content.mobileBrandName}</span>
+              <span className="hidden md:inline">{content.brandName}</span>
             </span>
             <span className="hidden whitespace-nowrap text-[9px] tracking-[0.18em] text-accent-soft md:block">
-              ARAŞTIRMA VE BİLGİ PLATFORMU
+              {content.brandTagline}
             </span>
           </span>
         </a>
 
         <nav className="hidden items-center gap-5 text-sm text-ivory md:flex lg:gap-7">
-          <a href="#hakkimda" className="transition hover:opacity-55">
-            Hakkımda
+          <a
+            href={`#${anchors.about}`}
+            className="transition hover:opacity-55"
+          >
+            {content.navigation.about}
           </a>
 
-          <a href="#calismalar" className="transition hover:opacity-55">
-            Çalışmalar
+          <a
+            href={`#${anchors.work}`}
+            className="transition hover:opacity-55"
+          >
+            {content.navigation.work}
           </a>
 
-          <a href="#iletisim" className="transition hover:opacity-55">
-            İletişim
+          <a
+            href={`#${anchors.contact}`}
+            className="transition hover:opacity-55"
+          >
+            {content.navigation.contact}
           </a>
         </nav>
 
-        <MobileMenu />
+        <MobileMenu locale={locale} anchors={anchors} content={content} />
 
-        <button className="hidden shrink-0 rounded-full border border-border px-3 py-2 text-xs font-medium text-ivory transition hover:border-accent hover:bg-surface sm:px-4 md:block">
-          TR · EN
-        </button>
+        <LanguageSwitcher
+          locale={locale}
+          label={content.languageSwitcherLabel}
+          variant="desktop"
+        />
       </div>
     </header>
   );

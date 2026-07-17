@@ -1,16 +1,31 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import type {
+  HeaderContent,
+  HomeAnchors,
+  Locale,
+} from "@/content/homeContent";
+import LanguageSwitcher from "./LanguageSwitcher";
 
-const menuLinks = [
-  { href: "#hakkimda", label: "Hakkımda" },
-  { href: "#calismalar", label: "Çalışmalar" },
-  { href: "#iletisim", label: "İletişim" },
-];
+type MobileMenuProps = {
+  locale: Locale;
+  anchors: HomeAnchors;
+  content: HeaderContent;
+};
 
-export default function MobileMenu() {
+export default function MobileMenu({
+  locale,
+  anchors,
+  content,
+}: MobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const menuLinks = [
+    { href: `#${anchors.about}`, label: content.navigation.about },
+    { href: `#${anchors.work}`, label: content.navigation.work },
+    { href: `#${anchors.contact}`, label: content.navigation.contact },
+  ];
 
   useEffect(() => {
     if (!isOpen) return;
@@ -36,7 +51,9 @@ export default function MobileMenu() {
         ref={buttonRef}
         type="button"
         className="flex size-11 shrink-0 items-center justify-center rounded-full border border-border text-ivory transition-colors hover:border-accent hover:bg-surface motion-reduce:transition-none"
-        aria-label={isOpen ? "Menüyü kapat" : "Menüyü aç"}
+        aria-label={
+          isOpen ? content.menu.closeLabel : content.menu.openLabel
+        }
         aria-expanded={isOpen}
         aria-controls="mobile-navigation"
         onClick={() => setIsOpen((open) => !open)}
@@ -61,7 +78,7 @@ export default function MobileMenu() {
 
       <nav
         id="mobile-navigation"
-        aria-label="Mobil navigasyon"
+        aria-label={content.menu.navigationLabel}
         className={`absolute right-4 top-full z-50 mt-2 w-[calc(100vw-2rem)] max-w-sm overflow-hidden rounded-sm border border-border bg-background shadow-2xl shadow-black/30 sm:right-6 sm:w-[calc(100vw-3rem)] ${
           isOpen ? "block" : "hidden"
         }`}
@@ -78,13 +95,12 @@ export default function MobileMenu() {
             </a>
           ))}
 
-          <button
-            type="button"
-            className="flex min-h-11 items-center rounded-sm px-4 text-left font-medium transition-colors hover:bg-surface hover:text-accent-soft motion-reduce:transition-none"
-            onClick={closeMenu}
-          >
-            TR · EN
-          </button>
+          <LanguageSwitcher
+            locale={locale}
+            label={content.languageSwitcherLabel}
+            variant="mobile"
+            onNavigate={closeMenu}
+          />
         </div>
       </nav>
     </div>

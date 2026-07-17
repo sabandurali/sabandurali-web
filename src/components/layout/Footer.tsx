@@ -1,9 +1,15 @@
 import Image from "next/image";
+import type { FooterContent } from "@/content/homeContent";
 
-export default function Footer() {
+type FooterProps = {
+  id: string;
+  content: FooterContent;
+};
+
+export default function Footer({ id, content }: FooterProps) {
   return (
     <footer
-      id="iletisim"
+      id={id}
       className="scroll-mt-24 border-t border-border bg-background"
     >
       <div className="mx-auto grid max-w-7xl gap-8 px-6 py-12 md:grid-cols-[0.9fr_1.1fr] md:items-center lg:px-10">
@@ -17,21 +23,20 @@ export default function Footer() {
           />
           <div>
             <h3 className="font-serif text-lg font-semibold tracking-[0.14em] text-ivory">
-              ŞABAN DURALİ
+              {content.brandName}
             </h3>
             <p className="mt-1 text-[9px] tracking-[0.16em] text-accent-soft">
-              ARAŞTIRMA VE BİLGİ PLATFORMU
+              {content.brandTagline}
             </p>
           </div>
         </div>
 
         <div>
           <p className="max-w-xl text-sm leading-6 text-muted">
-            Gayrimenkul, danışmanlık, araştırma ve teknoloji odaklı bağımsız
-            bilgi ve yayın platformu.
+            {content.description}
           </p>
           <p className="mt-4 text-xs text-muted">
-            © 2026 Şaban Durali. Tüm hakları saklıdır.
+            {content.copyright}
           </p>
         </div>
       </div>
