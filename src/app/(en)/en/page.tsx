@@ -11,6 +11,16 @@ export const metadata: Metadata = {
     canonical: homeUrls.en,
     languages: homeUrls,
   },
+  openGraph: {
+    title: "Şaban Durali | Research and Knowledge Platform",
+    description:
+      "An independent platform producing reliable knowledge, actionable analysis and sustainable value across real estate, consulting, research and technology.",
+    url: homeUrls.en,
+    locale: "en_US",
+    alternateLocale: "tr_TR",
+    type: "website",
+    siteName: "Şaban Durali",
+  },
 };
 
 export default function EnglishHome() {

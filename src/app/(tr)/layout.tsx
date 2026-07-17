@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: siteUrl,
+  metadataBase: new URL(siteUrl),
   title: "Şaban Durali | Araştırma ve Bilgi Platformu",
   description:
     "Gayrimenkul, kitaplar, yapay zekâ, satış ve müzakere üzerine araştırma ve bilgi platformu.",
