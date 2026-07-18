@@ -74,7 +74,7 @@ export default function FocusAreas({ id, content }: FocusAreasProps) {
           {content.cards.map((area) => (
             <article
               key={area.title}
-              className="rounded-xl border border-[rgba(184,132,82,0.24)] bg-ivory p-6 shadow-[0_8px_24px_rgba(18,22,25,0.04)] transition duration-200 hover:-translate-y-0.5 hover:border-[rgba(184,132,82,0.55)] md:min-h-72"
+              className="rounded-xl border border-[var(--accent-border-soft)] bg-ivory p-6 shadow-[0_8px_24px_rgba(18,22,25,0.04)] transition duration-200 hover:-translate-y-0.5 hover:border-[var(--accent-border-hover)] md:min-h-72"
             >
               <div className="flex size-12 items-center justify-center rounded-full border border-accent bg-ink text-accent-soft">
                 <AreaIcon icon={area.icon} />

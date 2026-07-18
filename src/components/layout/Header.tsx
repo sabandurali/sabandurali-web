@@ -29,22 +29,22 @@ export default function Header({
       <div className="relative mx-auto flex min-h-[72px] max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 md:min-h-[94px] md:py-4 lg:px-10">
         <a
           href={homeHref}
-          className="flex min-w-0 shrink items-center gap-2.5 md:gap-3"
+          className="flex shrink-0 items-center gap-2.5 md:min-w-0 md:shrink md:gap-3"
         >
           <Image
             src="/brand/sd-monogram-light.png"
             alt=""
-            width={52}
-            height={52}
-            className="size-10 shrink-0 md:size-[50px]"
+            width={606}
+            height={669}
+            className="h-10 w-auto shrink-0 object-contain md:h-[50px]"
             priority
           />
-          <span className="min-w-0">
-            <span className="block truncate font-serif text-base font-semibold tracking-tight text-ivory md:text-xl md:uppercase md:tracking-[0.16em]">
+          <span className="md:min-w-0">
+            <span className="block whitespace-nowrap font-serif text-base font-semibold tracking-tight text-ivory md:text-xl md:uppercase md:tracking-[0.16em]">
               <span className="md:hidden">{content.mobileBrandName}</span>
               <span className="hidden md:inline">{content.brandName}</span>
             </span>
-            <span className="hidden whitespace-nowrap text-[9px] tracking-[0.18em] text-accent-soft md:block">
+            <span className="hidden whitespace-nowrap text-[10px] tracking-[0.16em] text-accent-soft md:block">
               {content.brandTagline}
             </span>
           </span>

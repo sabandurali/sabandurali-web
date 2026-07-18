@@ -18,9 +18,9 @@ export default function Footer({ id, content }: FooterProps) {
           <Image
             src="/brand/sd-monogram-light.png"
             alt=""
-            width={44}
-            height={44}
-            className="size-11 shrink-0"
+            width={606}
+            height={669}
+            className="h-11 w-auto shrink-0 object-contain"
           />
           <div>
             <h3 className="font-serif text-lg font-semibold tracking-[0.14em] text-ivory">

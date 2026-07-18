@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: "Şaban Durali | Araştırma ve Bilgi Platformu",
   description:
-    "Gayrimenkul, kitaplar, yapay zekâ, satış ve müzakere üzerine araştırma ve bilgi platformu.",
+    "Gayrimenkul, danışmanlık, araştırma ve teknoloji alanlarında güvenilir bilgi, uygulanabilir analiz ve sürdürülebilir değer üreten bağımsız platform.",
 };
 
 export default function TurkishRootLayout({

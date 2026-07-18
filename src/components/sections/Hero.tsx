@@ -10,7 +10,7 @@ type HeroProps = {
 export default function Hero({ anchors, content }: HeroProps) {
   return (
     <section className="relative isolate overflow-hidden border-b border-border">
-      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_28%_42%,rgba(184,132,82,0.12),transparent_34%),linear-gradient(115deg,transparent_0%,transparent_47%,rgba(184,132,82,0.06)_47%,rgba(184,132,82,0.06)_63%,transparent_63%)]" />
+      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_28%_42%,var(--accent-hero-glow),transparent_34%),linear-gradient(115deg,transparent_0%,transparent_47%,var(--accent-hero-sheen)_47%,var(--accent-hero-sheen)_63%,transparent_63%)]" />
       <div aria-hidden="true" className="absolute inset-y-0 right-[8%] -z-10 hidden w-[42%] grid-cols-4 gap-px opacity-70 lg:grid">
         <span className="border-x border-border/50 bg-black/10" />
         <span className="border-r border-border/40 bg-surface/20" />
