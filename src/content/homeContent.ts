@@ -13,6 +13,7 @@ export type HeaderContent = {
   navigation: {
     about: string;
     work: string;
+    contact: string;
     feedback: string;
   };
   menu: {
@@ -66,13 +67,16 @@ export type FocusAreasContent = {
 };
 
 export type FooterContent = {
+  locale: Locale;
   brandName: string;
   brandTagline: string;
   description: string;
   copyright: string;
-  feedbackLink: {
-    href: string;
-    label: string;
+  links: {
+    contact: string;
+    feedback: string;
+    privacy: string;
+    email: string;
   };
 };
 
@@ -102,6 +106,7 @@ export const homeContent = {
       navigation: {
         about: "Hakkımda",
         work: "Çalışmalar",
+        contact: "İletişim",
         feedback: "Beta geri bildirimi",
       },
       menu: {
@@ -181,14 +186,17 @@ export const homeContent = {
       ],
     },
     footer: {
+      locale: "tr",
       brandName: "ŞABAN DURALİ",
       brandTagline: "ARAŞTIRMA VE BİLGİ PLATFORMU",
       description:
         "Gayrimenkul, danışmanlık, araştırma ve teknoloji odaklı bağımsız bilgi ve yayın platformu.",
       copyright: "© 2026 Şaban Durali. Tüm hakları saklıdır.",
-      feedbackLink: {
-        href: "/geri-bildirim",
-        label: "Beta geri bildirimi",
+      links: {
+        contact: "İletişim",
+        feedback: "Beta geri bildirimi",
+        privacy: "KVKK Aydınlatma Metni",
+        email: "E-posta",
       },
     },
     backToTopLabel: "Sayfanın başına dön",
@@ -207,6 +215,7 @@ export const homeContent = {
       navigation: {
         about: "About",
         work: "Work",
+        contact: "Contact",
         feedback: "Beta feedback",
       },
       menu: {
@@ -286,14 +295,17 @@ export const homeContent = {
       ],
     },
     footer: {
+      locale: "en",
       brandName: "ŞABAN DURALİ",
       brandTagline: "RESEARCH AND KNOWLEDGE PLATFORM",
       description:
         "An independent knowledge and publishing platform focused on real estate, consulting, research and technology.",
       copyright: "© 2026 Şaban Durali. All rights reserved.",
-      feedbackLink: {
-        href: "/en/feedback",
-        label: "Beta feedback",
+      links: {
+        contact: "Contact",
+        feedback: "Beta feedback",
+        privacy: "Privacy Notice",
+        email: "Email",
       },
     },
     backToTopLabel: "Back to top",

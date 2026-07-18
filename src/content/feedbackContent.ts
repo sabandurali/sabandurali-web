@@ -1,3 +1,5 @@
+import type { SubmissionMessages } from "@/components/forms/FormStatus";
+import type { PrivacyAcknowledgementContent } from "@/components/forms/PrivacyAcknowledgement";
 import type { Locale } from "@/content/homeContent";
 
 export type FeedbackContent = {
@@ -9,8 +11,7 @@ export type FeedbackContent = {
   eyebrow: string;
   heading: string;
   description: string;
-  unavailableMessage: string;
-  dataProtectionNote: string;
+  dataNotice: string;
   requiredLabel: string;
   optionalLabel: string;
   fields: {
@@ -39,7 +40,8 @@ export type FeedbackContent = {
     email: string;
   };
   privacyNote: string;
-  unavailableButtonLabel: string;
+  privacyAcknowledgement: PrivacyAcknowledgementContent;
+  submission: SubmissionMessages;
 };
 
 export const feedbackContent = {
@@ -53,11 +55,9 @@ export const feedbackContent = {
     eyebrow: "BETA GERİ BİLDİRİMİ",
     heading: "Bu platformu birlikte geliştirelim.",
     description:
-      "Bu beta geri bildirim sayfası, platformun içerik ve kullanıcı deneyimini geliştirmek için hazırlanmıştır. Form yeniden açıldığında görüşlerinizi yaklaşık 3–4 dakikada paylaşabileceksiniz.",
-    unavailableMessage:
-      "Beta geri bildirim formu veri koruma ve gönderim altyapısı tamamlanırken geçici olarak kapalıdır. Form yeniden açıldığında bu sayfadan görüşlerinizi paylaşabileceksiniz.",
-    dataProtectionNote:
-      "Form yeniden açılmadan önce veri işleme ve aktarım bilgileri bu sayfada açıklanacaktır. Bu aşamada form üzerinden herhangi bir veri alınmamaktadır.",
+      "Siteyi birkaç dakika inceleyerek görüşlerinizi paylaşmanız, içerik ve kullanıcı deneyimini daha doğru geliştirmeme yardımcı olacaktır. Formun tamamlanması yaklaşık 3–4 dakika sürer.",
+    dataNotice:
+      "Form aracılığıyla ilettiğiniz bilgiler, geri bildiriminizi değerlendirmek ve platformu geliştirmek amacıyla işlenir. Ayrıntılar için KVKK Aydınlatma Metni’ni inceleyin. Lütfen özel nitelikli veya gereksiz kişisel bilgiler paylaşmayın.",
     requiredLabel: "Zorunlu",
     optionalLabel: "İsteğe bağlı",
     fields: {
@@ -98,7 +98,21 @@ export const feedbackContent = {
     },
     privacyNote:
       "Ad ve e-posta alanları isteğe bağlıdır. Lütfen bu forma özel veya hassas kişisel bilgiler yazmayın.",
-    unavailableButtonLabel: "Form geçici olarak kapalı",
+    privacyAcknowledgement: {
+      prefix: "",
+      linkLabel: "KVKK Aydınlatma Metni",
+      suffix: "’ni okudum.",
+    },
+    submission: {
+      submit: "Geri bildirimi gönder",
+      submitting: "Geri bildiriminiz gönderiliyor…",
+      success: "Teşekkür ederim. Geri bildiriminiz başarıyla gönderildi.",
+      error:
+        "Geri bildirim şu anda gönderilemedi. Lütfen daha sonra yeniden deneyin.",
+      configurationError:
+        "Beta geri bildirim formu geçici olarak kullanılamıyor.",
+      submitAnother: "Yeni geri bildirim gönder",
+    },
   },
   en: {
     locale: "en",
@@ -110,11 +124,9 @@ export const feedbackContent = {
     eyebrow: "BETA FEEDBACK",
     heading: "Help shape this platform.",
     description:
-      "This beta feedback page is designed to improve the platform's content and user experience. Once the form is reopened, you will be able to share your feedback in approximately 3–4 minutes.",
-    unavailableMessage:
-      "The beta feedback form is temporarily unavailable while its data-protection and submission infrastructure is being completed. You will be able to share your feedback on this page once it is reopened.",
-    dataProtectionNote:
-      "Before the form is reopened, information about data processing and transfers will be explained on this page. No data is being collected through the form at this stage.",
+      "Spending a few minutes reviewing the website and sharing your thoughts will help me improve its content and user experience. The form takes approximately 3–4 minutes to complete.",
+    dataNotice:
+      "The information you submit through this form is processed to evaluate your feedback and improve the platform. Please review the Privacy Notice for details. Do not share sensitive or unnecessary personal information.",
     requiredLabel: "Required",
     optionalLabel: "Optional",
     fields: {
@@ -152,6 +164,19 @@ export const feedbackContent = {
     },
     privacyNote:
       "Name and email are optional. Please do not enter private or sensitive personal information in this form.",
-    unavailableButtonLabel: "Form temporarily unavailable",
+    privacyAcknowledgement: {
+      prefix: "I have read the ",
+      linkLabel: "Privacy Notice",
+      suffix: ".",
+    },
+    submission: {
+      submit: "Submit feedback",
+      submitting: "Your feedback is being submitted…",
+      success: "Thank you. Your feedback has been submitted successfully.",
+      error:
+        "Your feedback could not be submitted right now. Please try again later.",
+      configurationError: "The beta feedback form is temporarily unavailable.",
+      submitAnother: "Submit more feedback",
+    },
   },
 } satisfies Record<Locale, FeedbackContent>;

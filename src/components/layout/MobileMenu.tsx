@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { contactPaths, feedbackPaths } from "@/config/site";
 import type {
   HeaderContent,
   HomeAnchors,
@@ -28,8 +29,9 @@ export default function MobileMenu({
   const menuLinks = [
     { href: `${anchorPrefix}#${anchors.about}`, label: content.navigation.about },
     { href: `${anchorPrefix}#${anchors.work}`, label: content.navigation.work },
+    { href: contactPaths[locale], label: content.navigation.contact },
     {
-      href: locale === "tr" ? "/geri-bildirim" : "/en/feedback",
+      href: feedbackPaths[locale],
       label: content.navigation.feedback,
     },
   ];

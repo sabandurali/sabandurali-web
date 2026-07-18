@@ -1,5 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
+import {
+  contactEmail,
+  contactPaths,
+  feedbackPaths,
+  privacyPaths,
+} from "@/config/site";
 import type { FooterContent } from "@/content/homeContent";
 
 type FooterProps = {
@@ -8,6 +14,12 @@ type FooterProps = {
 };
 
 export default function Footer({ id, content }: FooterProps) {
+  const links = [
+    { href: contactPaths[content.locale], label: content.links.contact },
+    { href: feedbackPaths[content.locale], label: content.links.feedback },
+    { href: privacyPaths[content.locale], label: content.links.privacy },
+  ];
+
   return (
     <footer
       id={id}
@@ -39,12 +51,26 @@ export default function Footer({ id, content }: FooterProps) {
           <p className="mt-4 text-xs text-muted">
             {content.copyright}
           </p>
-          <Link
-            href={content.feedbackLink.href}
-            className="mt-3 inline-flex min-h-11 items-center text-xs text-accent-soft underline decoration-border underline-offset-4 transition-colors hover:text-accent-strong motion-reduce:transition-none"
+          <nav
+            aria-label={content.locale === "tr" ? "Alt bilgi" : "Footer"}
+            className="mt-3 flex flex-wrap gap-x-5 gap-y-1"
           >
-            {content.feedbackLink.label}
-          </Link>
+            {links.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="inline-flex min-h-11 items-center text-xs text-accent-soft underline decoration-border underline-offset-4 transition-colors hover:text-accent-strong motion-reduce:transition-none"
+              >
+                {link.label}
+              </Link>
+            ))}
+            <a
+              href={`mailto:${contactEmail}`}
+              className="inline-flex min-h-11 items-center text-xs text-accent-soft underline decoration-border underline-offset-4 transition-colors hover:text-accent-strong motion-reduce:transition-none"
+            >
+              {content.links.email}: {contactEmail}
+            </a>
+          </nav>
         </div>
       </div>
     </footer>

@@ -1,4 +1,6 @@
 import Image from "next/image";
+import Link from "next/link";
+import { contactPaths } from "@/config/site";
 import type {
   HeaderContent,
   HomeAnchors,
@@ -64,6 +66,13 @@ export default function Header({
           >
             {content.navigation.work}
           </a>
+
+          <Link
+            href={contactPaths[locale]}
+            className="transition hover:opacity-55"
+          >
+            {content.navigation.contact}
+          </Link>
         </nav>
 
         <MobileMenu
