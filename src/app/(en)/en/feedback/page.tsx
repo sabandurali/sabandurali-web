@@ -3,6 +3,7 @@ import FeedbackForm from "@/components/forms/FeedbackForm";
 import BackToTop from "@/components/layout/BackToTop";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
+import { feedbackUrls } from "@/config/site";
 import { feedbackContent } from "@/content/feedbackContent";
 import { homeContent } from "@/content/homeContent";
 
@@ -11,9 +12,13 @@ const home = homeContent.en;
 
 export const metadata: Metadata = {
   ...content.metadata,
+  alternates: {
+    canonical: feedbackUrls.en,
+    languages: feedbackUrls,
+  },
   robots: {
     index: false,
-    follow: false,
+    follow: true,
   },
 };
 
@@ -41,11 +46,7 @@ export default function EnglishFeedbackPage() {
               {content.description}
             </p>
           </header>
-          <FeedbackForm
-            content={content}
-            formId={process.env.NEXT_PUBLIC_FORMSPREE_FORM_ID}
-            showConfigurationNotice={process.env.NODE_ENV === "development"}
-          />
+          <FeedbackForm content={content} />
         </div>
       </main>
       <Footer id={home.anchors.contact} content={home.footer} />

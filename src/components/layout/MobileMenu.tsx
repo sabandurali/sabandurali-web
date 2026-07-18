@@ -28,7 +28,6 @@ export default function MobileMenu({
   const menuLinks = [
     { href: `${anchorPrefix}#${anchors.about}`, label: content.navigation.about },
     { href: `${anchorPrefix}#${anchors.work}`, label: content.navigation.work },
-    { href: `${anchorPrefix}#${anchors.contact}`, label: content.navigation.contact },
     {
       href: locale === "tr" ? "/geri-bildirim" : "/en/feedback",
       label: content.navigation.feedback,

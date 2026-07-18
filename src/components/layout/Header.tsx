@@ -64,13 +64,6 @@ export default function Header({
           >
             {content.navigation.work}
           </a>
-
-          <a
-            href={`${anchorPrefix}#${anchors.contact}`}
-            className="transition hover:opacity-55"
-          >
-            {content.navigation.contact}
-          </a>
         </nav>
 
         <MobileMenu

@@ -9,6 +9,8 @@ export type FeedbackContent = {
   eyebrow: string;
   heading: string;
   description: string;
+  unavailableMessage: string;
+  dataProtectionNote: string;
   requiredLabel: string;
   optionalLabel: string;
   fields: {
@@ -37,15 +39,7 @@ export type FeedbackContent = {
     email: string;
   };
   privacyNote: string;
-  submitLabel: string;
-  submittingLabel: string;
-  successMessage: string;
-  errorMessage: string;
-  configurationMessage: string;
-  successLinks: {
-    home: string;
-    switchLanguage: string;
-  };
+  unavailableButtonLabel: string;
 };
 
 export const feedbackContent = {
@@ -59,7 +53,11 @@ export const feedbackContent = {
     eyebrow: "BETA GERİ BİLDİRİMİ",
     heading: "Bu platformu birlikte geliştirelim.",
     description:
-      "Siteyi birkaç dakika inceleyerek görüşlerinizi paylaşmanız, içerik ve kullanıcı deneyimini daha doğru geliştirmeme yardımcı olacaktır. Formun tamamlanması yaklaşık 3–4 dakika sürer.",
+      "Bu beta geri bildirim sayfası, platformun içerik ve kullanıcı deneyimini geliştirmek için hazırlanmıştır. Form yeniden açıldığında görüşlerinizi yaklaşık 3–4 dakikada paylaşabileceksiniz.",
+    unavailableMessage:
+      "Beta geri bildirim formu veri koruma ve gönderim altyapısı tamamlanırken geçici olarak kapalıdır. Form yeniden açıldığında bu sayfadan görüşlerinizi paylaşabileceksiniz.",
+    dataProtectionNote:
+      "Form yeniden açılmadan önce veri işleme ve aktarım bilgileri bu sayfada açıklanacaktır. Bu aşamada form üzerinden herhangi bir veri alınmamaktadır.",
     requiredLabel: "Zorunlu",
     optionalLabel: "İsteğe bağlı",
     fields: {
@@ -100,16 +98,7 @@ export const feedbackContent = {
     },
     privacyNote:
       "Ad ve e-posta alanları isteğe bağlıdır. Lütfen bu forma özel veya hassas kişisel bilgiler yazmayın.",
-    submitLabel: "Geri bildirimi gönder",
-    submittingLabel: "Gönderiliyor…",
-    successMessage: "Teşekkür ederim. Geri bildiriminiz başarıyla gönderildi.",
-    errorMessage:
-      "Geri bildirim gönderilemedi. Lütfen bağlantınızı kontrol ederek yeniden deneyin.",
-    configurationMessage: "Formspree form kimliği yapılandırılmamış.",
-    successLinks: {
-      home: "Ana sayfaya dön",
-      switchLanguage: "İngilizce forma geç",
-    },
+    unavailableButtonLabel: "Form geçici olarak kapalı",
   },
   en: {
     locale: "en",
@@ -121,7 +110,11 @@ export const feedbackContent = {
     eyebrow: "BETA FEEDBACK",
     heading: "Help shape this platform.",
     description:
-      "Spending a few minutes reviewing the website and sharing your thoughts will help me improve its content and user experience. The form takes approximately 3–4 minutes to complete.",
+      "This beta feedback page is designed to improve the platform's content and user experience. Once the form is reopened, you will be able to share your feedback in approximately 3–4 minutes.",
+    unavailableMessage:
+      "The beta feedback form is temporarily unavailable while its data-protection and submission infrastructure is being completed. You will be able to share your feedback on this page once it is reopened.",
+    dataProtectionNote:
+      "Before the form is reopened, information about data processing and transfers will be explained on this page. No data is being collected through the form at this stage.",
     requiredLabel: "Required",
     optionalLabel: "Optional",
     fields: {
@@ -159,15 +152,6 @@ export const feedbackContent = {
     },
     privacyNote:
       "Name and email are optional. Please do not enter private or sensitive personal information in this form.",
-    submitLabel: "Submit feedback",
-    submittingLabel: "Submitting…",
-    successMessage: "Thank you. Your feedback has been submitted successfully.",
-    errorMessage:
-      "Your feedback could not be submitted. Please check your connection and try again.",
-    configurationMessage: "Formspree form ID has not been configured.",
-    successLinks: {
-      home: "Return to homepage",
-      switchLanguage: "Switch to Turkish form",
-    },
+    unavailableButtonLabel: "Form temporarily unavailable",
   },
 } satisfies Record<Locale, FeedbackContent>;

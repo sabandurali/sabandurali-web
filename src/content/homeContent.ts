@@ -13,7 +13,6 @@ export type HeaderContent = {
   navigation: {
     about: string;
     work: string;
-    contact: string;
     feedback: string;
   };
   menu: {
@@ -103,7 +102,6 @@ export const homeContent = {
       navigation: {
         about: "Hakkımda",
         work: "Çalışmalar",
-        contact: "İletişim",
         feedback: "Beta geri bildirimi",
       },
       menu: {
@@ -209,7 +207,6 @@ export const homeContent = {
       navigation: {
         about: "About",
         work: "Work",
-        contact: "Contact",
         feedback: "Beta feedback",
       },
       menu: {

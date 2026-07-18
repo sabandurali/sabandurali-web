@@ -1,16 +1,11 @@
 "use client";
 
-import Link from "next/link";
-import { useState, type FormEvent, type ReactNode } from "react";
+import type { FormEvent, ReactNode } from "react";
 import type { FeedbackContent } from "@/content/feedbackContent";
 
 type FeedbackFormProps = {
   content: FeedbackContent;
-  formId?: string;
-  showConfigurationNotice: boolean;
 };
-
-type SubmissionStatus = "idle" | "loading" | "success" | "error";
 
 const fieldClassName =
   "mt-3 min-h-11 w-full rounded-sm border border-border bg-background px-4 py-3 text-base text-ivory outline-none transition-colors placeholder:text-muted-dark hover:border-accent focus:border-accent motion-reduce:transition-none";
@@ -75,68 +70,43 @@ function RadioQuestion({
   );
 }
 
-export default function FeedbackForm({
-  content,
-  formId,
-  showConfigurationNotice,
-}: FeedbackFormProps) {
-  const [status, setStatus] = useState<SubmissionStatus>("idle");
-  const normalizedFormId = formId?.trim();
-  const isConfigured = Boolean(normalizedFormId);
-  const homeHref = content.locale === "tr" ? "/" : "/en";
-  const languageHref =
-    content.locale === "tr" ? "/en/feedback" : "/geri-bildirim";
-
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+export default function FeedbackForm({ content }: FeedbackFormProps) {
+  function preventSubmission(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-
-    if (status === "loading" || !normalizedFormId) return;
-
-    const form = event.currentTarget;
-    const formData = new FormData(form);
-    formData.set("language", content.locale);
-    formData.set("formType", "beta-feedback");
-    formData.set("pageUrl", window.location.href);
-    setStatus("loading");
-
-    try {
-      const response = await fetch(
-        `https://formspree.io/f/${normalizedFormId}`,
-        {
-          method: "POST",
-          body: formData,
-          headers: {
-            Accept: "application/json",
-          },
-        },
-      );
-
-      if (!response.ok) throw new Error("Feedback submission failed");
-
-      form.reset();
-      setStatus("success");
-    } catch {
-      setStatus("error");
-    }
   }
 
   return (
-    <form className="space-y-4" onSubmit={handleSubmit}>
-      {showConfigurationNotice && !isConfigured && (
-        <p
-          className="rounded-sm border border-accent bg-surface px-4 py-3 text-sm text-ivory"
-          role="status"
-        >
-          {content.configurationMessage}
+    <form
+      method="post"
+      aria-describedby="feedback-unavailable-message"
+      onSubmit={preventSubmission}
+    >
+      <div
+        id="feedback-unavailable-message"
+        className="mb-6 rounded-sm border border-accent bg-surface px-5 py-4"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        <p className="font-medium leading-7 text-ivory">
+          {content.unavailableMessage}
         </p>
-      )}
+        <p className="mt-2 text-sm leading-6 text-muted">
+          {content.dataProtectionNote}
+        </p>
+      </div>
 
-      <RadioQuestion
-        name="clarity"
-        legend={content.fields.clarity.legend}
-        options={content.fields.clarity.options}
-        requiredLabel={content.requiredLabel}
-      />
+      <fieldset
+        disabled
+        aria-describedby="feedback-unavailable-message"
+        className="space-y-4 border-0 p-0 disabled:opacity-75"
+      >
+        <RadioQuestion
+          name="clarity"
+          legend={content.fields.clarity.legend}
+          options={content.fields.clarity.options}
+          requiredLabel={content.requiredLabel}
+        />
 
       <fieldset className="rounded-sm border border-border bg-surface/70 p-5 sm:p-6">
         <legend className="w-full px-0">
@@ -286,62 +256,17 @@ export default function FeedbackForm({
         </p>
       </div>
 
-      <input type="hidden" name="language" value={content.locale} />
-      <input type="hidden" name="formType" value="beta-feedback" />
-
-      <div className="pt-3">
-        <button
-          type="submit"
-          disabled={status === "loading" || !isConfigured}
-          className="flex min-h-12 w-full items-center justify-center rounded-sm bg-accent px-6 py-3 text-sm font-semibold text-ink transition-colors hover:bg-accent-strong disabled:cursor-not-allowed disabled:opacity-45 motion-reduce:transition-none sm:w-auto sm:min-w-56"
-        >
-          {status === "loading"
-            ? content.submittingLabel
-            : content.submitLabel}
-        </button>
-
-        <div className="mt-4" aria-live="polite" aria-atomic="true">
-          {status === "loading" && (
-            <p className="text-sm text-muted" role="status">
-              {content.submittingLabel}
-            </p>
-          )}
-          {status === "error" && (
-            <p
-              className="rounded-sm border border-accent bg-surface px-4 py-3 text-sm text-ivory"
-              role="alert"
-            >
-              <span aria-hidden="true">! </span>
-              {content.errorMessage}
-            </p>
-          )}
-          {status === "success" && (
-            <div
-              className="rounded-sm border border-accent bg-surface px-4 py-4"
-              role="status"
-            >
-              <p className="text-sm text-ivory">
-                <span aria-hidden="true">✓ </span>
-                {content.successMessage}
-              </p>
-              <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm">
-                <Link
-                  href={homeHref}
-                  className="min-h-11 content-center text-accent-soft underline decoration-border underline-offset-4 hover:text-accent-strong"
-                >
-                  {content.successLinks.home}
-                </Link>
-                <Link
-                  href={languageHref}
-                  className="min-h-11 content-center text-accent-soft underline decoration-border underline-offset-4 hover:text-accent-strong"
-                >
-                  {content.successLinks.switchLanguage}
-                </Link>
-              </div>
-            </div>
-          )}
+        <div className="pt-3">
+          <button
+            type="submit"
+            disabled
+            aria-describedby="feedback-unavailable-message"
+            className="flex min-h-12 w-full items-center justify-center rounded-sm bg-accent px-6 py-3 text-sm font-semibold text-ink transition-colors hover:bg-accent-strong disabled:cursor-not-allowed disabled:opacity-45 motion-reduce:transition-none sm:w-auto sm:min-w-56"
+          >
+            {content.unavailableButtonLabel}
+          </button>
         </div>
-      </div>
+      </fieldset>
     </form>
   );
 }
