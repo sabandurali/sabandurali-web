@@ -157,3 +157,82 @@ export const exampleTurkishArticle = {
     },
   ],
 } satisfies Article;
+
+export const exampleEnglishArticle = {
+  ...exampleTurkishArticle,
+  id: "article-istanbul-real-estate-investment-en",
+  title: "What to Consider When Investing in Istanbul Real Estate",
+  slug: "what-to-consider-when-investing-in-istanbul-real-estate",
+  language: "en",
+  translationStatus: "completed",
+  translationSourceArticleId: exampleTurkishArticle.id,
+  translationSourceUpdatedAt: exampleTurkishArticle.updatedAt,
+  summary:
+    "A practical guide to evaluating location, legal status, total cost and long-term potential before investing in Istanbul real estate.",
+  content: [
+    {
+      id: "block-introduction-en",
+      type: "paragraph",
+      text: "Istanbul's property market varies significantly between districts and even neighborhoods. A sound decision should consider several connected factors, not only the purchase price.",
+    },
+    {
+      id: "block-location-heading-en",
+      type: "heading",
+      level: "h2",
+      text: "Evaluate the location with evidence",
+    },
+    {
+      id: "block-location-list-en",
+      type: "bullet_list",
+      items: [
+        "Public transport and major connections",
+        "Local supply, demand and vacancy rates",
+        "Planned infrastructure and regeneration projects",
+      ],
+    },
+    {
+      id: "block-legal-heading-en",
+      type: "heading",
+      level: "h2",
+      text: "Complete the legal and technical checks",
+    },
+  ],
+  coverImage: {
+    ...exampleTurkishArticle.coverImage,
+    alt: "Representative view of Istanbul's skyline and residential buildings",
+    caption: "Istanbul real estate investment guide",
+  },
+  seo: {
+    title: "Istanbul Real Estate Investment Guide | Şaban Durali",
+    description:
+      "Learn how to assess location, legal status, total ownership cost and long-term value before making a real estate investment decision in Istanbul.",
+    canonical:
+      "https://sabandurali.com/en/articles/what-to-consider-when-investing-in-istanbul-real-estate",
+    index: true,
+    follow: true,
+    openGraphTitle: "What to Consider When Investing in Istanbul Real Estate",
+    openGraphDescription:
+      "Essential checks for making informed decisions in Istanbul's property market.",
+    openGraphImage: "/articles/istanbul-real-estate-investment-og.jpg",
+  },
+  sources: [
+    {
+      ...exampleTurkishArticle.sources[0],
+      title: "Property Purchase Process Information Guide",
+      note: "Example source for legal due-diligence steps.",
+    },
+  ],
+  faq: [],
+  legalNotice: {
+    required: true,
+    text: "This content is for general information and is not investment, legal or tax advice.",
+  },
+  versionHistory: [
+    {
+      version: 1,
+      createdAt: "2026-07-22T09:00:00+03:00",
+      createdBy: author,
+      changeSummary: "Initial English translation created.",
+    },
+  ],
+} satisfies Article;
