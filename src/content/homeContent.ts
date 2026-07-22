@@ -14,6 +14,7 @@ export type HeaderContent = {
     about: string;
     work: string;
     articles: string;
+    books?: string;
     contact: string;
     feedback: string;
   };
@@ -109,6 +110,7 @@ export const homeContent = {
         about: "Hakkımda",
         work: "Çalışmalar",
         articles: "Makaleler",
+        books: "Kitaplar",
         contact: "İletişim",
         feedback: "Beta geri bildirimi",
       },

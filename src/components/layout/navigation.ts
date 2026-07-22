@@ -1,5 +1,6 @@
 import { contactPaths, feedbackPaths } from "@/config/site";
 import { articleListPaths } from "@/content/articles/article-routes";
+import { bookListPaths } from "@/content/books/book-routes";
 import type {
   HeaderContent,
   HomeAnchors,
@@ -9,7 +10,7 @@ import type {
 export type HeaderNavigationVariant = "desktop" | "mobile";
 
 export type HeaderNavigationItem = {
-  id: "about" | "work" | "articles" | "contact" | "feedback";
+  id: "about" | "work" | "articles" | "books" | "contact" | "feedback";
   href: string;
   label: string;
   activePathPrefix?: string;
@@ -31,6 +32,17 @@ export function getHeaderNavigationItems({
   anchorPrefix,
   variant,
 }: GetHeaderNavigationItemsOptions): ReadonlyArray<HeaderNavigationItem> {
+  const booksItems: ReadonlyArray<HeaderNavigationItem> =
+    locale === "tr" && content.navigation.books !== undefined
+      ? [
+          {
+            id: "books",
+            href: bookListPaths.tr,
+            label: content.navigation.books,
+            activePathPrefix: bookListPaths.tr,
+          },
+        ]
+      : [];
   const items: ReadonlyArray<HeaderNavigationItem> = [
     {
       id: "about",
@@ -48,6 +60,7 @@ export function getHeaderNavigationItems({
       label: content.navigation.articles,
       activePathPrefix: articleListPaths[locale],
     },
+    ...booksItems,
     {
       id: "contact",
       href: contactPaths[locale],
