@@ -1,7 +1,25 @@
 import type { MetadataRoute } from "next";
 import { contactUrls, homeUrls, privacyUrls } from "@/config/site";
+import { getAllPublishedArticles } from "@/content/articles/article-data-source";
+import {
+  getArticleAlternateUrls,
+  getArticleUrl,
+  articleListUrls,
+} from "@/content/articles/article-routes";
+import type { Article } from "@/content/articles/types";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+function getLastModified(article: Article): Date | undefined {
+  for (const value of [article.updatedAt, article.publishedAt]) {
+    if (value === null) continue;
+
+    const date = new Date(value);
+    if (Number.isFinite(date.getTime())) return date;
+  }
+
+  return undefined;
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const alternates = {
     languages: homeUrls,
   };
@@ -12,6 +30,32 @@ export default function sitemap(): MetadataRoute.Sitemap {
     languages: privacyUrls,
   };
   const lastModified = new Date();
+  const [turkishArticles, englishArticles] = await Promise.all([
+    getAllPublishedArticles("tr"),
+    getAllPublishedArticles("en"),
+  ]);
+  const articles = [...turkishArticles, ...englishArticles];
+  const articleEntries: MetadataRoute.Sitemap = articles.map((article) => {
+    const translation =
+      article.translationGroupId === null
+        ? null
+        : articles.find(
+            (candidate) =>
+              candidate.id !== article.id &&
+              candidate.language !== article.language &&
+              candidate.translationGroupId === article.translationGroupId,
+          ) ?? null;
+
+    return {
+      url: getArticleUrl(article.slug, article.language),
+      lastModified: getLastModified(article),
+      changeFrequency: "monthly",
+      priority: 0.7,
+      alternates: {
+        languages: getArticleAlternateUrls(article, translation),
+      },
+    };
+  });
 
   return [
     {
@@ -56,5 +100,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.5,
       alternates: privacyAlternates,
     },
+    {
+      url: articleListUrls["tr-TR"],
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.8,
+      alternates: {
+        languages: articleListUrls,
+      },
+    },
+    {
+      url: articleListUrls.en,
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.8,
+      alternates: {
+        languages: articleListUrls,
+      },
+    },
+    ...articleEntries,
   ];
 }
