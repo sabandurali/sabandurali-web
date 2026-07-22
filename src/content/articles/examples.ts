@@ -236,3 +236,52 @@ export const exampleEnglishArticle = {
     },
   ],
 } satisfies Article;
+
+export const exampleDraftArticle = {
+  ...exampleTurkishArticle,
+  id: "article-ai-workflow-draft-tr",
+  title: "Günlük Çalışmada Yapay Zekâ Araçlarını Kullanma Rehberi",
+  slug: "gunluk-calismada-yapay-zeka-araclarini-kullanma-rehberi",
+  translationGroupId: null,
+  translationStatus: "none",
+  summary:
+    "Yapay zekâ araçlarını günlük araştırma ve üretim süreçlerine kontrollü biçimde eklemek için hazırlanan taslak çalışma.",
+  content: [
+    {
+      id: "block-ai-workflow-heading",
+      type: "heading",
+      level: "h2",
+      text: "Önce kullanım amacını tanımlayın",
+    },
+    {
+      id: "block-ai-workflow-paragraph",
+      type: "paragraph",
+      text: "Araç seçmeden önce hangi iş adımının hızlandırılacağını ve sonucun nasıl doğrulanacağını belirlemek gerekir.",
+    },
+  ],
+  coverImage: null,
+  category: "artificial_intelligence_and_technology",
+  tags: [exampleArticleTags[0]],
+  status: "draft",
+  visibility: "private",
+  publishedAt: null,
+  scheduledAt: null,
+  createdAt: "2026-07-22T10:00:00+03:00",
+  updatedAt: "2026-07-22T10:30:00+03:00",
+  lastVerifiedAt: null,
+  nextReviewAt: null,
+  freshnessStatus: "not_reviewed",
+  featured: false,
+  showOnHomepage: false,
+  seo: {
+    title: "Günlük Çalışmada Yapay Zekâ Araçları | Şaban Durali",
+    description: "",
+    index: false,
+    follow: false,
+  },
+  sources: [],
+  faq: [],
+  relatedArticles: [],
+  legalNotice: null,
+  versionHistory: [],
+} satisfies Article;

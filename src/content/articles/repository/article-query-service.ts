@@ -3,6 +3,7 @@ import {
   type ArticleRepository,
 } from "@/content/articles/repository/article-repository";
 import type {
+  ArticleListQuery,
   PaginatedResult,
   PublishedArticleListQuery,
 } from "@/content/articles/repository/types";
@@ -46,6 +47,12 @@ export class ArticleQueryService {
       publishedOnly: true,
       publishedAsOf: this.now(),
     });
+  }
+
+  async getArticles(
+    query: ArticleListQuery = {},
+  ): Promise<PaginatedResult<Article>> {
+    return this.repository.list(query);
   }
 
   async getFeaturedArticles(

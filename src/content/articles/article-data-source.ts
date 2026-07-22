@@ -1,4 +1,5 @@
 import {
+  exampleDraftArticle,
   exampleEnglishArticle,
   exampleTurkishArticle,
 } from "@/content/articles/examples";
@@ -13,6 +14,7 @@ import type {
 const articleRepository = new InMemoryArticleRepository([
   exampleTurkishArticle,
   exampleEnglishArticle,
+  exampleDraftArticle,
 ]);
 
 export const articleQueryService = new ArticleQueryService(articleRepository);
@@ -50,6 +52,28 @@ export async function getAllPublishedArticles(
   while (page <= totalPages) {
     const result = await articleQueryService.getPublishedArticles({
       language,
+      pagination: {
+        page,
+        pageSize: MAX_ARTICLE_PAGE_SIZE,
+      },
+    });
+
+    articles.push(...result.items);
+    totalPages = result.totalPages;
+    page += 1;
+  }
+
+  return articles;
+}
+
+export async function getAllArticles(): Promise<Article[]> {
+  const articles: Article[] = [];
+  let page = 1;
+  let totalPages = 1;
+
+  while (page <= totalPages) {
+    const result = await articleQueryService.getArticles({
+      sort: "updatedAt_desc",
       pagination: {
         page,
         pageSize: MAX_ARTICLE_PAGE_SIZE,
