@@ -27,8 +27,8 @@ export const exampleBookTags = [
   },
 ] as const satisfies ReadonlyArray<BookTag>;
 
-// Development model fixture: publication metadata exercises lifecycle queries
-// but does not imply that this review is connected to a public route.
+// Development model fixture: publication metadata exercises lifecycle queries,
+// while draft/noindex keeps unverified review content off public routes.
 export const exampleTurkishBookReview = {
   id: "book-review-ultralearning-tr",
   title: "Aşkın Öğrenme",
@@ -60,7 +60,7 @@ export const exampleTurkishBookReview = {
   category: "learning_and_education",
   tags: exampleBookTags,
   readingStatus: "completed",
-  reviewStatus: "published",
+  reviewStatus: "draft",
   startedAt: "2026-06-01T09:00:00+03:00",
   completedAt: "2026-06-20T18:00:00+03:00",
   summary:
@@ -140,7 +140,7 @@ export const exampleTurkishBookReview = {
     title: "Aşkın Öğrenme Kitap İncelemesi | Şaban Durali",
     description:
       "Aşkın Öğrenme incelemesi: yoğun öğrenme, doğrudan pratik, hatırlama ve geri bildirim ilkelerini uygulanabilir notlar ve kişisel değerlendirmeyle keşfedin.",
-    index: true,
+    index: false,
     follow: true,
     openGraphTitle: "Aşkın Öğrenme Kitap İncelemesi",
     openGraphDescription:

@@ -7,9 +7,18 @@ import {
   articleListUrls,
 } from "@/content/articles/article-routes";
 import type { Article } from "@/content/articles/types";
+import { getAllPublishedBookReviews } from "@/content/books/book-data-source";
+import {
+  bookListUrls,
+  getBookReviewAlternateUrls,
+  getBookReviewUrl,
+} from "@/content/books/book-routes";
+import type { BookReview } from "@/content/books/types";
 
-function getLastModified(article: Article): Date | undefined {
-  for (const value of [article.updatedAt, article.publishedAt]) {
+function getLastModified(
+  entry: Pick<Article | BookReview, "updatedAt" | "publishedAt">,
+): Date | undefined {
+  for (const value of [entry.updatedAt, entry.publishedAt]) {
     if (value === null) continue;
 
     const date = new Date(value);
@@ -30,11 +39,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     languages: privacyUrls,
   };
   const lastModified = new Date();
-  const [turkishArticles, englishArticles] = await Promise.all([
+  const [
+    turkishArticles,
+    englishArticles,
+    turkishBookReviews,
+    englishBookReviews,
+  ] = await Promise.all([
     getAllPublishedArticles("tr"),
     getAllPublishedArticles("en"),
+    getAllPublishedBookReviews("tr"),
+    getAllPublishedBookReviews("en"),
   ]);
   const articles = [...turkishArticles, ...englishArticles];
+  const bookReviews = [...turkishBookReviews, ...englishBookReviews];
   const articleEntries: MetadataRoute.Sitemap = articles.map((article) => {
     const translation =
       article.translationGroupId === null
@@ -56,6 +73,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       },
     };
   });
+  const bookReviewEntries: MetadataRoute.Sitemap = bookReviews.map(
+    (bookReview) => {
+      const translation =
+        bookReview.translationGroupId === null
+          ? null
+          : bookReviews.find(
+              (candidate) =>
+                candidate.id !== bookReview.id &&
+                candidate.language !== bookReview.language &&
+                candidate.translationGroupId ===
+                  bookReview.translationGroupId,
+            ) ?? null;
+
+      return {
+        url: getBookReviewUrl(bookReview.slug, bookReview.language),
+        lastModified: getLastModified(bookReview),
+        changeFrequency: "monthly",
+        priority: 0.7,
+        alternates: {
+          languages: getBookReviewAlternateUrls(bookReview, translation),
+        },
+      };
+    },
+  );
 
   return [
     {
@@ -119,5 +160,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       },
     },
     ...articleEntries,
+    {
+      url: bookListUrls["tr-TR"],
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.8,
+      alternates: {
+        languages: bookListUrls,
+      },
+    },
+    {
+      url: bookListUrls.en,
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.8,
+      alternates: {
+        languages: bookListUrls,
+      },
+    },
+    ...bookReviewEntries,
   ];
 }
