@@ -27,6 +27,8 @@ export const exampleBookTags = [
   },
 ] as const satisfies ReadonlyArray<BookTag>;
 
+// Development model fixture: publication metadata exercises lifecycle queries
+// but does not imply that this review is connected to a public route.
 export const exampleTurkishBookReview = {
   id: "book-review-ultralearning-tr",
   title: "Aşkın Öğrenme",

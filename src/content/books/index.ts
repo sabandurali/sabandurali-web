@@ -22,6 +22,19 @@ export {
   normalizeBookTagValue,
   normalizeIsbn,
 } from "@/content/books/helpers";
+export {
+  BookReviewQueryService,
+  DEFAULT_BOOK_REVIEW_PAGE_SIZE,
+  InMemoryBookReviewRepository,
+  isPubliclyPublishedBookReview,
+  MAX_BOOK_REVIEW_PAGE_SIZE,
+  type BookReviewListQuery,
+  type BookReviewPagination,
+  type BookReviewRepository,
+  type BookReviewSortOption,
+  type PaginatedBookReviewResult,
+  type PublishedBookReviewListQuery,
+} from "@/content/books/repository";
 export { validateBookReview } from "@/content/books/schema";
 export type {
   BookApplicationNote,
