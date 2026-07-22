@@ -40,3 +40,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Payload local persistence
+/.data/*
+!/.data/.gitkeep
+/public/media/*
+!/public/media/.gitkeep
