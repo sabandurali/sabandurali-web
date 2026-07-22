@@ -1,11 +1,10 @@
 import Image from "next/image";
-import Link from "next/link";
-import { contactPaths } from "@/config/site";
 import type {
   HeaderContent,
   HomeAnchors,
   Locale,
 } from "@/content/homeContent";
+import HeaderNavigationLinks from "./HeaderNavigationLinks";
 import LanguageSwitcher from "./LanguageSwitcher";
 import MobileMenu from "./MobileMenu";
 
@@ -52,27 +51,17 @@ export default function Header({
           </span>
         </a>
 
-        <nav className="hidden items-center gap-5 text-sm text-ivory md:flex lg:gap-7">
-          <a
-            href={`${anchorPrefix}#${anchors.about}`}
-            className="transition hover:opacity-55"
-          >
-            {content.navigation.about}
-          </a>
-
-          <a
-            href={`${anchorPrefix}#${anchors.work}`}
-            className="transition hover:opacity-55"
-          >
-            {content.navigation.work}
-          </a>
-
-          <Link
-            href={contactPaths[locale]}
-            className="transition hover:opacity-55"
-          >
-            {content.navigation.contact}
-          </Link>
+        <nav
+          aria-label={content.menu.desktopNavigationLabel}
+          className="hidden items-center gap-5 text-sm text-ivory md:flex lg:gap-7"
+        >
+          <HeaderNavigationLinks
+            locale={locale}
+            anchors={anchors}
+            content={content}
+            anchorPrefix={anchorPrefix}
+            variant="desktop"
+          />
         </nav>
 
         <MobileMenu

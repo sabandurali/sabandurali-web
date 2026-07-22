@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { contactPaths, feedbackPaths } from "@/config/site";
 import type {
   HeaderContent,
   HomeAnchors,
   Locale,
 } from "@/content/homeContent";
+import HeaderNavigationLinks from "./HeaderNavigationLinks";
 import LanguageSwitcher from "./LanguageSwitcher";
 
 type MobileMenuProps = {
@@ -26,15 +26,6 @@ export default function MobileMenu({
 }: MobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const menuLinks = [
-    { href: `${anchorPrefix}#${anchors.about}`, label: content.navigation.about },
-    { href: `${anchorPrefix}#${anchors.work}`, label: content.navigation.work },
-    { href: contactPaths[locale], label: content.navigation.contact },
-    {
-      href: feedbackPaths[locale],
-      label: content.navigation.feedback,
-    },
-  ];
 
   useEffect(() => {
     if (!isOpen) return;
@@ -93,16 +84,14 @@ export default function MobileMenu({
         }`}
       >
         <div className="flex flex-col p-2 text-sm text-ivory">
-          {menuLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="flex min-h-11 items-center rounded-sm px-4 transition-colors hover:bg-surface hover:text-accent-soft motion-reduce:transition-none"
-              onClick={closeMenu}
-            >
-              {link.label}
-            </a>
-          ))}
+          <HeaderNavigationLinks
+            locale={locale}
+            anchors={anchors}
+            content={content}
+            anchorPrefix={anchorPrefix}
+            variant="mobile"
+            onNavigate={closeMenu}
+          />
 
           <LanguageSwitcher
             locale={locale}

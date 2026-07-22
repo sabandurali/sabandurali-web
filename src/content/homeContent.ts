@@ -13,12 +13,14 @@ export type HeaderContent = {
   navigation: {
     about: string;
     work: string;
+    articles: string;
     contact: string;
     feedback: string;
   };
   menu: {
     openLabel: string;
     closeLabel: string;
+    desktopNavigationLabel: string;
     navigationLabel: string;
   };
   languageSwitcherLabel: string;
@@ -106,12 +108,14 @@ export const homeContent = {
       navigation: {
         about: "Hakkımda",
         work: "Çalışmalar",
+        articles: "Makaleler",
         contact: "İletişim",
         feedback: "Beta geri bildirimi",
       },
       menu: {
         openLabel: "Menüyü aç",
         closeLabel: "Menüyü kapat",
+        desktopNavigationLabel: "Ana navigasyon",
         navigationLabel: "Mobil navigasyon",
       },
       languageSwitcherLabel: "Dil seçimi",
@@ -215,12 +219,14 @@ export const homeContent = {
       navigation: {
         about: "About",
         work: "Work",
+        articles: "Articles",
         contact: "Contact",
         feedback: "Beta feedback",
       },
       menu: {
         openLabel: "Open menu",
         closeLabel: "Close menu",
+        desktopNavigationLabel: "Primary navigation",
         navigationLabel: "Mobile navigation",
       },
       languageSwitcherLabel: "Language selection",
