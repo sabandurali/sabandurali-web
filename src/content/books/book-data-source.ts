@@ -78,6 +78,28 @@ export const bookReviewQueryService = new BookReviewQueryService(
   bookReviewRepository,
 );
 
+export async function getAllBookReviews(): Promise<BookReview[]> {
+  const bookReviews: BookReview[] = [];
+  let page = 1;
+  let totalPages = 1;
+
+  while (page <= totalPages) {
+    const result = await bookReviewRepository.list({
+      sort: "updatedAt_desc",
+      pagination: {
+        page,
+        pageSize: MAX_BOOK_REVIEW_PAGE_SIZE,
+      },
+    });
+
+    bookReviews.push(...result.items);
+    totalPages = result.totalPages;
+    page += 1;
+  }
+
+  return bookReviews;
+}
+
 export type PublishedBookReviewPageData = {
   bookReview: BookReview | null;
   translation: BookReview | null;

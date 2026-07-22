@@ -62,6 +62,18 @@ export default function AdminPrototypeLayout({
                 >
                   Yeni Makale
                 </Link>
+                <Link
+                  href="/yonetim/kitaplar"
+                  className="text-ivory underline-offset-4 transition-colors hover:text-accent-soft hover:underline motion-reduce:transition-none"
+                >
+                  Kitaplar
+                </Link>
+                <Link
+                  href="/yonetim/kitaplar/yeni"
+                  className="text-ivory underline-offset-4 transition-colors hover:text-accent-soft hover:underline motion-reduce:transition-none"
+                >
+                  Yeni Kitap İncelemesi
+                </Link>
               </nav>
             </div>
           </header>
