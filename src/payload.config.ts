@@ -10,6 +10,7 @@ import { Categories } from "@/collections/Categories";
 import { Media } from "@/collections/Media";
 import { Pages } from "@/collections/Pages";
 import { Users } from "@/collections/Users";
+import { Navigation } from "@/globals/Navigation";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -22,6 +23,7 @@ export default buildConfig({
     },
   },
   collections: [Users, Media, Categories, Articles, Books, Pages],
+  globals: [Navigation],
   db: sqliteAdapter({
     client: {
       url: process.env.DATABASE_URL || "",

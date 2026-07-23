@@ -4,6 +4,7 @@ import type {
   HomeAnchors,
   Locale,
 } from "@/content/homeContent";
+import { getHeaderNavigation } from "@/content/navigation/navigation-data-source";
 import HeaderNavigationLinks from "./HeaderNavigationLinks";
 import LanguageSwitcher from "./LanguageSwitcher";
 import MobileMenu from "./MobileMenu";
@@ -17,7 +18,7 @@ type HeaderProps = {
   languageHrefs?: Record<Locale, string>;
 };
 
-export default function Header({
+export default async function Header({
   locale,
   anchors,
   content,
@@ -25,6 +26,13 @@ export default function Header({
   anchorPrefix = "",
   languageHrefs,
 }: HeaderProps) {
+  const items = await getHeaderNavigation(
+    locale,
+    anchors,
+    content,
+    anchorPrefix,
+  );
+
   return (
     <header className="border-b border-border bg-background/95">
       <div className="relative mx-auto flex min-h-[72px] max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 md:min-h-[94px] md:py-4 lg:px-10">
@@ -56,19 +64,15 @@ export default function Header({
           className="hidden items-center gap-5 text-sm text-ivory md:flex lg:gap-7"
         >
           <HeaderNavigationLinks
-            locale={locale}
-            anchors={anchors}
-            content={content}
-            anchorPrefix={anchorPrefix}
+            items={items}
             variant="desktop"
           />
         </nav>
 
         <MobileMenu
           locale={locale}
-          anchors={anchors}
           content={content}
-          anchorPrefix={anchorPrefix}
+          items={items}
           languageHrefs={languageHrefs}
         />
 

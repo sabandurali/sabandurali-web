@@ -3,25 +3,23 @@
 import { useEffect, useRef, useState } from "react";
 import type {
   HeaderContent,
-  HomeAnchors,
   Locale,
 } from "@/content/homeContent";
+import type { PublicNavigationLink } from "@/content/navigation/public-types";
 import HeaderNavigationLinks from "./HeaderNavigationLinks";
 import LanguageSwitcher from "./LanguageSwitcher";
 
 type MobileMenuProps = {
   locale: Locale;
-  anchors: HomeAnchors;
   content: HeaderContent;
-  anchorPrefix?: string;
+  items: PublicNavigationLink[];
   languageHrefs?: Record<Locale, string>;
 };
 
 export default function MobileMenu({
   locale,
-  anchors,
   content,
-  anchorPrefix = "",
+  items,
   languageHrefs,
 }: MobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -85,10 +83,7 @@ export default function MobileMenu({
       >
         <div className="flex flex-col p-2 text-sm text-ivory">
           <HeaderNavigationLinks
-            locale={locale}
-            anchors={anchors}
-            content={content}
-            anchorPrefix={anchorPrefix}
+            items={items}
             variant="mobile"
             onNavigate={closeMenu}
           />

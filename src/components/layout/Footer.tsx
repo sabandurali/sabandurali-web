@@ -1,11 +1,6 @@
 import Image from "next/image";
-import Link from "next/link";
-import {
-  contactEmail,
-  contactPaths,
-  feedbackPaths,
-  privacyPaths,
-} from "@/config/site";
+import NavigationLink from "./NavigationLink";
+import { getFooterNavigation } from "@/content/navigation/navigation-data-source";
 import type { FooterContent } from "@/content/homeContent";
 
 type FooterProps = {
@@ -13,12 +8,8 @@ type FooterProps = {
   content: FooterContent;
 };
 
-export default function Footer({ id, content }: FooterProps) {
-  const links = [
-    { href: contactPaths[content.locale], label: content.links.contact },
-    { href: feedbackPaths[content.locale], label: content.links.feedback },
-    { href: privacyPaths[content.locale], label: content.links.privacy },
-  ];
+export default async function Footer({ id, content }: FooterProps) {
+  const groups = await getFooterNavigation(content);
 
   return (
     <footer
@@ -55,21 +46,37 @@ export default function Footer({ id, content }: FooterProps) {
             aria-label={content.locale === "tr" ? "Alt bilgi" : "Footer"}
             className="mt-3 flex flex-wrap gap-x-5 gap-y-1"
           >
-            {links.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="inline-flex min-h-11 items-center text-xs text-accent-soft underline decoration-border underline-offset-4 transition-colors hover:text-accent-strong motion-reduce:transition-none"
+            {groups.map((group) => (
+              <div
+                key={group.id}
+                className={
+                  group.title === null
+                    ? "contents"
+                    : "min-w-40 space-y-2"
+                }
               >
-                {link.label}
-              </Link>
+                {group.title !== null && (
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ivory">
+                    {group.title}
+                  </p>
+                )}
+                <div
+                  className={
+                    group.title === null
+                      ? "contents"
+                      : "flex flex-wrap gap-x-5 gap-y-1"
+                  }
+                >
+                  {group.links.map((link) => (
+                    <NavigationLink
+                      key={link.id}
+                      link={link}
+                      className="inline-flex min-h-11 items-center text-xs text-accent-soft underline decoration-border underline-offset-4 transition-colors hover:text-accent-strong motion-reduce:transition-none"
+                    />
+                  ))}
+                </div>
+              </div>
             ))}
-            <a
-              href={`mailto:${contactEmail}`}
-              className="inline-flex min-h-11 items-center text-xs text-accent-soft underline decoration-border underline-offset-4 transition-colors hover:text-accent-strong motion-reduce:transition-none"
-            >
-              {content.links.email}: {contactEmail}
-            </a>
           </nav>
         </div>
       </div>

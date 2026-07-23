@@ -95,8 +95,12 @@ export interface Config {
     defaultIDType: string;
   };
   fallbackLocale: ('false' | 'none' | 'null') | false | null | ('tr' | 'en') | ('tr' | 'en')[];
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    navigation: Navigation;
+  };
+  globalsSelect: {
+    navigation: NavigationSelect<false> | NavigationSelect<true>;
+  };
   locale: 'tr' | 'en';
   widgets: {
     collections: CollectionsWidget;
@@ -1020,6 +1024,147 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * Türkçe Header, mobil menü ve Footer bağlantılarını yönetin. Taslak, yayınlama ve sürüm geçmişi sağ üstteki belge kontrollerindedir.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "navigation".
+ */
+export interface Navigation {
+  id: string;
+  /**
+   * Masaüstü ve mobil menü aynı sıralı listeyi kullanır.
+   */
+  headerItems?:
+    | {
+        label: string;
+        active?: boolean | null;
+        linkType: 'page' | 'internal' | 'external';
+        /**
+         * Yalnız yayımlanmış ve yayın tarihi gelmiş Türkçe sayfalar public menüde bağlantıya dönüşür.
+         */
+        page?: (string | null) | Page;
+        /**
+         * Kökten başlayan bir rota girin. Örnek: /, /makaleler veya /#hakkimda.
+         */
+        internalPath?: string | null;
+        /**
+         * Yalnız https:// ile başlayan güvenli adres kullanın.
+         */
+        externalUrl?: string | null;
+        newTab?: boolean | null;
+        /**
+         * Yalnız bir alt menü seviyesi desteklenir.
+         */
+        children?:
+          | {
+              label: string;
+              active?: boolean | null;
+              linkType: 'page' | 'internal' | 'external';
+              /**
+               * Yalnız yayımlanmış ve yayın tarihi gelmiş Türkçe sayfalar public menüde bağlantıya dönüşür.
+               */
+              page?: (string | null) | Page;
+              /**
+               * Kökten başlayan bir rota girin. Örnek: /, /makaleler veya /#hakkimda.
+               */
+              internalPath?: string | null;
+              /**
+               * Yalnız https:// ile başlayan güvenli adres kullanın.
+               */
+              externalUrl?: string | null;
+              newTab?: boolean | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  footerGroups?:
+    | {
+        title: string;
+        active?: boolean | null;
+        links?:
+          | {
+              label: string;
+              active?: boolean | null;
+              linkType: 'page' | 'internal' | 'external';
+              /**
+               * Yalnız yayımlanmış ve yayın tarihi gelmiş Türkçe sayfalar public menüde bağlantıya dönüşür.
+               */
+              page?: (string | null) | Page;
+              /**
+               * Kökten başlayan bir rota girin. Örnek: /, /makaleler veya /#hakkimda.
+               */
+              internalPath?: string | null;
+              /**
+               * https://, mailto: veya tel: adresi kullanın.
+               */
+              externalUrl?: string | null;
+              newTab?: boolean | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "navigation_select".
+ */
+export interface NavigationSelect<T extends boolean = true> {
+  headerItems?:
+    | T
+    | {
+        label?: T;
+        active?: T;
+        linkType?: T;
+        page?: T;
+        internalPath?: T;
+        externalUrl?: T;
+        newTab?: T;
+        children?:
+          | T
+          | {
+              label?: T;
+              active?: T;
+              linkType?: T;
+              page?: T;
+              internalPath?: T;
+              externalUrl?: T;
+              newTab?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  footerGroups?:
+    | T
+    | {
+        title?: T;
+        active?: T;
+        links?:
+          | T
+          | {
+              label?: T;
+              active?: T;
+              linkType?: T;
+              page?: T;
+              internalPath?: T;
+              externalUrl?: T;
+              newTab?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
