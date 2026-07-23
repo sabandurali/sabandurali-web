@@ -4,6 +4,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildConfig } from "payload";
 import sharp from "sharp";
+import { Articles } from "@/collections/Articles";
+import { Categories } from "@/collections/Categories";
 import { Media } from "@/collections/Media";
 import { Users } from "@/collections/Users";
 
@@ -17,7 +19,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media],
+  collections: [Users, Media, Categories, Articles],
   db: sqliteAdapter({
     client: {
       url: process.env.DATABASE_URL || "",
@@ -26,6 +28,14 @@ export default buildConfig({
     push: process.env.NODE_ENV === "development",
   }),
   editor: lexicalEditor(),
+  localization: {
+    defaultLocale: "tr",
+    fallback: false,
+    locales: [
+      { code: "tr", label: "Türkçe" },
+      { code: "en", label: "English" },
+    ],
+  },
   secret: process.env.PAYLOAD_SECRET || "",
   sharp,
   typescript: {
