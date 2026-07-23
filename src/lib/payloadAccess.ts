@@ -1,4 +1,4 @@
-import type { Access } from "payload";
+import type { Access, Where } from "payload";
 
 function getUserRole(user: unknown): unknown {
   if (typeof user !== "object" || user === null || !("role" in user)) {
@@ -26,9 +26,20 @@ export const adminOrEditor: Access = ({ req }) =>
 export const publishedOrAdminOrEditor: Access = ({ req }) => {
   if (isAdminOrEditor(req.user)) return true;
 
-  return {
-    _status: {
-      equals: "published",
-    },
+  const publicArticleWhere: Where = {
+    and: [
+      {
+        _status: {
+          equals: "published",
+        },
+      },
+      {
+        publishedAt: {
+          less_than_equal: new Date().toISOString(),
+        },
+      },
+    ],
   };
+
+  return publicArticleWhere;
 };
