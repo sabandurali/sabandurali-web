@@ -1,8 +1,14 @@
 import { getAbsoluteUrl } from "@/config/site";
 import type {
-  Article,
-  ArticleLanguage,
-} from "@/content/articles/types";
+  PublicArticleSummary,
+  PublicArticleTranslation,
+} from "@/content/articles/public-types";
+import type { ArticleLanguage } from "@/content/articles/types";
+
+type RoutableArticle = Pick<
+  PublicArticleSummary | PublicArticleTranslation,
+  "language" | "slug"
+>;
 
 export const articleListPaths = {
   tr: "/makaleler",
@@ -30,8 +36,8 @@ export function getArticleUrl(
 }
 
 export function getArticleLanguagePaths(
-  article: Article,
-  translation: Article | null,
+  article: RoutableArticle,
+  translation: PublicArticleTranslation | null,
 ): Record<ArticleLanguage, string> {
   const paths: Record<ArticleLanguage, string> = {
     tr: articleListPaths.tr,
@@ -51,8 +57,8 @@ export function getArticleLanguagePaths(
 }
 
 export function getArticleAlternateUrls(
-  article: Article,
-  translation: Article | null,
+  article: RoutableArticle,
+  translation: PublicArticleTranslation | null,
 ): Record<string, string> {
   const currentUrl = getArticleUrl(article.slug, article.language);
   const urls: Record<string, string> = {

@@ -6,7 +6,10 @@ import {
   getArticleUrl,
   articleListUrls,
 } from "@/content/articles/article-routes";
-import type { Article } from "@/content/articles/types";
+import type {
+  PublicArticleSummary,
+  PublicArticleTranslation,
+} from "@/content/articles/public-types";
 import { getAllPublishedBookReviews } from "@/content/books/book-data-source";
 import {
   bookListUrls,
@@ -16,7 +19,7 @@ import {
 import type { BookReview } from "@/content/books/types";
 
 function getLastModified(
-  entry: Pick<Article | BookReview, "updatedAt" | "publishedAt">,
+  entry: Pick<PublicArticleSummary | BookReview, "updatedAt" | "publishedAt">,
 ): Date | undefined {
   for (const value of [entry.updatedAt, entry.publishedAt]) {
     if (value === null) continue;
@@ -53,15 +56,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const articles = [...turkishArticles, ...englishArticles];
   const bookReviews = [...turkishBookReviews, ...englishBookReviews];
   const articleEntries: MetadataRoute.Sitemap = articles.map((article) => {
-    const translation =
-      article.translationGroupId === null
+    const translationArticle =
+      article.translationKey === null
         ? null
         : articles.find(
             (candidate) =>
-              candidate.id !== article.id &&
               candidate.language !== article.language &&
-              candidate.translationGroupId === article.translationGroupId,
+              candidate.translationKey === article.translationKey,
           ) ?? null;
+    const translation: PublicArticleTranslation | null =
+      translationArticle === null
+        ? null
+        : {
+            id: translationArticle.id,
+            language: translationArticle.language,
+            slug: translationArticle.slug,
+            title: translationArticle.title,
+          };
 
     return {
       url: getArticleUrl(article.slug, article.language),

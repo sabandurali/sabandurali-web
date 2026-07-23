@@ -1,4 +1,5 @@
 import Image from "next/image";
+import PayloadRichText from "@/components/articles/PayloadRichText";
 import { getAvailableLocalArticleImage } from "@/content/articles/article-images";
 import {
   isExternalArticleHref,
@@ -6,16 +7,21 @@ import {
 } from "@/content/articles/article-links";
 import type { ArticlePageContent } from "@/content/articles/article-page-content";
 import type {
-  Article,
   ArticleContentBlock,
   ArticleFaq,
   ArticleSource,
 } from "@/content/articles/types";
+import type { PublicArticle } from "@/content/articles/public-types";
 
 type ArticleContentProps = {
-  article: Article;
+  article: PublicArticle;
   content: ArticlePageContent;
 };
+
+type StaticArticleDetails = Extract<
+  PublicArticle["content"],
+  { source: "static" }
+>["details"];
 
 function assertNeverBlock(block: never): never {
   throw new Error(`Unsupported article block: ${JSON.stringify(block)}`);
@@ -87,7 +93,7 @@ function renderReferencedSources(
 
 function renderArticleBlock(
   block: ArticleContentBlock,
-  article: Article,
+  details: StaticArticleDetails,
   content: ArticlePageContent,
 ) {
   switch (block.type) {
@@ -300,14 +306,14 @@ function renderArticleBlock(
       return <hr className="border-0 border-t border-border" />;
     case "faq":
       return renderReferencedFaq(
-        article.faq
+        details.faq
           .filter((faq) => block.faqIds.includes(faq.id) && faq.visible)
           .toSorted((left, right) => left.order - right.order),
         content,
       );
     case "sources":
       return renderReferencedSources(
-        article.sources.filter((source) =>
+        details.sources.filter((source) =>
           block.sourceIds.includes(source.id),
         ),
         content,
@@ -318,10 +324,18 @@ function renderArticleBlock(
 }
 
 export default function ArticleContent({ article, content }: ArticleContentProps) {
+  if (article.content.source === "lexical") {
+    return <PayloadRichText data={article.content.data} />;
+  }
+
+  const staticContent = article.content;
+
   return (
     <div className="space-y-7 sm:space-y-9">
-      {article.content.map((block) => (
-        <div key={block.id}>{renderArticleBlock(block, article, content)}</div>
+      {staticContent.blocks.map((block) => (
+        <div key={block.id}>
+          {renderArticleBlock(block, staticContent.details, content)}
+        </div>
       ))}
     </div>
   );

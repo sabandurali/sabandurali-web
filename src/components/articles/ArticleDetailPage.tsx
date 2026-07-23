@@ -4,8 +4,7 @@ import ArticleContent from "@/components/articles/ArticleContent";
 import BackToTop from "@/components/layout/BackToTop";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
-import { ARTICLE_CATEGORY_LABELS } from "@/content/articles/constants";
-import { getAvailableLocalArticleImage } from "@/content/articles/article-images";
+import { getAvailablePublicArticleImage } from "@/content/articles/article-images";
 import {
   getSafeArticleHref,
 } from "@/content/articles/article-links";
@@ -19,12 +18,15 @@ import {
   getArticlePath,
 } from "@/content/articles/article-routes";
 import { serializeArticleJsonLd } from "@/content/articles/article-seo";
-import type { Article } from "@/content/articles/types";
+import type {
+  PublicArticle,
+  PublicArticleTranslation,
+} from "@/content/articles/public-types";
 import { homeContent } from "@/content/homeContent";
 
 type ArticleDetailPageProps = {
-  article: Article;
-  translation: Article | null;
+  article: PublicArticle;
+  translation: PublicArticleTranslation | null;
 };
 
 export default function ArticleDetailPage({
@@ -34,16 +36,16 @@ export default function ArticleDetailPage({
   const content = articlePageContent[article.language];
   const home = homeContent[article.language];
   const homePath = article.language === "tr" ? "/" : "/en";
-  const category =
-    article.category === null
-      ? content.categoryFallback
-      : ARTICLE_CATEGORY_LABELS[article.category][article.language];
+  const category = article.categories[0]?.name ?? content.categoryFallback;
   const publishedAt = formatArticleDate(article.publishedAt, content);
   const updatedAt = formatArticleDate(article.updatedAt, content);
-  const coverImage = getAvailableLocalArticleImage(article.coverImage?.src);
-  const visibleFaq = article.faq
-    .filter((faq) => faq.visible)
-    .toSorted((left, right) => left.order - right.order);
+  const coverImage = getAvailablePublicArticleImage(article.featuredImage);
+  const staticDetails =
+    article.content.source === "static" ? article.content.details : null;
+  const visibleFaq =
+    staticDetails?.faq
+      .filter((faq) => faq.visible)
+      .toSorted((left, right) => left.order - right.order) ?? [];
 
   return (
     <div id="top" lang={article.language}>
@@ -101,12 +103,13 @@ export default function ArticleDetailPage({
                   <dd>{updatedAt}</dd>
                 </div>
               )}
-              {article.author !== null && (
+              {staticDetails?.author !== null &&
+                staticDetails?.author !== undefined && (
                 <div className="flex gap-2">
                   <dt className="font-semibold text-ivory">
                     {content.authorLabel}:
                   </dt>
-                  <dd>{article.author.name}</dd>
+                  <dd>{staticDetails.author.name}</dd>
                 </div>
               )}
             </dl>
@@ -125,20 +128,34 @@ export default function ArticleDetailPage({
             )}
           </header>
 
-          {coverImage !== null && article.coverImage !== null && (
+          {coverImage !== null && article.featuredImage !== null && (
             <figure className="mt-10 sm:mt-12">
-              <Image
-                src={coverImage}
-                alt={article.coverImage.alt}
-                width={article.coverImage.width}
-                height={article.coverImage.height}
-                sizes="(min-width: 1024px) 896px, 100vw"
-                priority
-                className="h-auto w-full rounded-sm border border-border object-cover"
-              />
-              {article.coverImage.caption && (
+              {article.featuredImage.width !== undefined &&
+              article.featuredImage.height !== undefined ? (
+                <Image
+                  src={coverImage}
+                  alt={article.featuredImage.alt}
+                  width={article.featuredImage.width}
+                  height={article.featuredImage.height}
+                  sizes="(min-width: 1024px) 896px, 100vw"
+                  priority
+                  className="h-auto w-full rounded-sm border border-border object-cover"
+                />
+              ) : (
+                <span className="relative block aspect-video overflow-hidden rounded-sm border border-border">
+                  <Image
+                    src={coverImage}
+                    alt={article.featuredImage.alt}
+                    fill
+                    sizes="(min-width: 1024px) 896px, 100vw"
+                    priority
+                    className="object-cover"
+                  />
+                </span>
+              )}
+              {article.featuredImage.caption && (
                 <figcaption className="mt-3 text-sm text-muted">
-                  {article.coverImage.caption}
+                  {article.featuredImage.caption}
                 </figcaption>
               )}
             </figure>
@@ -147,7 +164,7 @@ export default function ArticleDetailPage({
           <div className="mx-auto mt-10 max-w-3xl sm:mt-14">
             <ArticleContent article={article} content={content} />
 
-            {article.sources.length > 0 && (
+            {staticDetails !== null && staticDetails.sources.length > 0 && (
               <section
                 id="article-sources"
                 aria-labelledby="article-sources-heading"
@@ -157,7 +174,7 @@ export default function ArticleDetailPage({
                   {content.sourcesTitle}
                 </h2>
                 <ol className="mt-6 space-y-5">
-                  {article.sources.map((source) => {
+                  {staticDetails.sources.map((source) => {
                     const sourceUrl = getSafeArticleHref(source.url, false);
                     const sourcePublishedAt = formatArticleDate(
                       source.publishedAt,
@@ -252,7 +269,7 @@ export default function ArticleDetailPage({
               </section>
             )}
 
-            {article.legalNotice?.text && (
+            {staticDetails?.legalNotice?.text && (
               <section
                 aria-labelledby="article-legal-notice-heading"
                 className="mt-14 rounded-sm border border-accent bg-[var(--accent-hero-glow)] p-5 sm:p-6"
@@ -264,7 +281,7 @@ export default function ArticleDetailPage({
                   {content.legalNoticeTitle}
                 </h2>
                 <p className="mt-3 text-sm leading-7 text-muted">
-                  {article.legalNotice.text}
+                  {staticDetails.legalNotice.text}
                 </p>
               </section>
             )}

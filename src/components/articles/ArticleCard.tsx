@@ -1,40 +1,49 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ARTICLE_CATEGORY_LABELS } from "@/content/articles/constants";
-import { getAvailableLocalArticleImage } from "@/content/articles/article-images";
+import { getAvailablePublicArticleImage } from "@/content/articles/article-images";
 import {
   formatArticleDate,
   type ArticlePageContent,
 } from "@/content/articles/article-page-content";
 import { getArticlePath } from "@/content/articles/article-routes";
-import type { Article } from "@/content/articles/types";
+import type { PublicArticleSummary } from "@/content/articles/public-types";
 
 type ArticleCardProps = {
-  article: Article;
+  article: PublicArticleSummary;
   content: ArticlePageContent;
 };
 
 export default function ArticleCard({ article, content }: ArticleCardProps) {
-  const coverImage = getAvailableLocalArticleImage(article.coverImage?.src);
-  const category =
-    article.category === null
-      ? content.categoryFallback
-      : ARTICLE_CATEGORY_LABELS[article.category][article.language];
+  const coverImage = getAvailablePublicArticleImage(article.featuredImage);
+  const category = article.categories[0]?.name ?? content.categoryFallback;
   const publishedAt = formatArticleDate(article.publishedAt, content);
   const updatedAt = formatArticleDate(article.updatedAt, content);
   const href = getArticlePath(article.slug, article.language);
 
   return (
     <article className="group overflow-hidden rounded-sm border border-border bg-surface/75 transition-colors hover:border-[var(--accent-border-hover)] motion-reduce:transition-none">
-      {coverImage !== null && article.coverImage !== null && (
-        <Image
-          src={coverImage}
-          alt={article.coverImage.alt}
-          width={article.coverImage.width}
-          height={article.coverImage.height}
-          sizes="(min-width: 1024px) 560px, 100vw"
-          className="aspect-[16/9] w-full object-cover"
-        />
+      {coverImage !== null && article.featuredImage !== null && (
+        article.featuredImage.width !== undefined &&
+        article.featuredImage.height !== undefined ? (
+          <Image
+            src={coverImage}
+            alt={article.featuredImage.alt}
+            width={article.featuredImage.width}
+            height={article.featuredImage.height}
+            sizes="(min-width: 1024px) 560px, 100vw"
+            className="aspect-[16/9] w-full object-cover"
+          />
+        ) : (
+          <div className="relative aspect-[16/9] w-full">
+            <Image
+              src={coverImage}
+              alt={article.featuredImage.alt}
+              fill
+              sizes="(min-width: 1024px) 560px, 100vw"
+              className="object-cover"
+            />
+          </div>
+        )
       )}
       <div className="p-6 sm:p-7">
         <p className="text-xs font-semibold tracking-[0.16em] text-accent-soft uppercase">

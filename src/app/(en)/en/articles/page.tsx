@@ -3,6 +3,8 @@ import ArticleListPage from "@/components/articles/ArticleListPage";
 import { getAllPublishedArticles } from "@/content/articles/article-data-source";
 import { articleListUrls } from "@/content/articles/article-routes";
 
+const locale = "en" as const;
+
 export const metadata: Metadata = {
   title: "Articles | Şaban Durali",
   description:
@@ -18,7 +20,7 @@ export const metadata: Metadata = {
 };
 
 export default async function EnglishArticlesPage() {
-  const articles = await getAllPublishedArticles("en");
+  const articles = await getAllPublishedArticles(locale);
 
-  return <ArticleListPage articles={articles} locale="en" />;
+  return <ArticleListPage articles={articles} locale={locale} />;
 }

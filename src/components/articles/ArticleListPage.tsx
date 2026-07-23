@@ -4,14 +4,12 @@ import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
 import { articleListPaths } from "@/content/articles/article-routes";
 import { articlePageContent } from "@/content/articles/article-page-content";
-import type {
-  Article,
-  ArticleLanguage,
-} from "@/content/articles/types";
+import type { PublicArticleSummary } from "@/content/articles/public-types";
+import type { ArticleLanguage } from "@/content/articles/types";
 import { homeContent } from "@/content/homeContent";
 
 type ArticleListPageProps = {
-  articles: ReadonlyArray<Article>;
+  articles: ReadonlyArray<PublicArticleSummary>;
   locale: ArticleLanguage;
 };
 

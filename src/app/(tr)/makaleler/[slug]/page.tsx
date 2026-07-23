@@ -7,12 +7,14 @@ import {
 } from "@/content/articles/article-data-source";
 import { createArticleMetadata } from "@/content/articles/article-seo";
 
+const locale = "tr" as const;
+
 type TurkishArticlePageProps = {
   params: Promise<{ slug: string }>;
 };
 
 export async function generateStaticParams() {
-  const articles = await getAllPublishedArticles("tr");
+  const articles = await getAllPublishedArticles(locale);
   return articles.map((article) => ({ slug: article.slug }));
 }
 
@@ -20,7 +22,10 @@ export async function generateMetadata({
   params,
 }: TurkishArticlePageProps): Promise<Metadata> {
   const { slug } = await params;
-  const { article, translation } = await getPublishedArticlePageData(slug, "tr");
+  const { article, translation } = await getPublishedArticlePageData(
+    slug,
+    locale,
+  );
 
   if (article === null) {
     return {
@@ -36,7 +41,10 @@ export default async function TurkishArticlePage({
   params,
 }: TurkishArticlePageProps) {
   const { slug } = await params;
-  const { article, translation } = await getPublishedArticlePageData(slug, "tr");
+  const { article, translation } = await getPublishedArticlePageData(
+    slug,
+    locale,
+  );
 
   if (article === null) {
     notFound();

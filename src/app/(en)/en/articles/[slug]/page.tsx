@@ -7,12 +7,14 @@ import {
 } from "@/content/articles/article-data-source";
 import { createArticleMetadata } from "@/content/articles/article-seo";
 
+const locale = "en" as const;
+
 type EnglishArticlePageProps = {
   params: Promise<{ slug: string }>;
 };
 
 export async function generateStaticParams() {
-  const articles = await getAllPublishedArticles("en");
+  const articles = await getAllPublishedArticles(locale);
   return articles.map((article) => ({ slug: article.slug }));
 }
 
@@ -20,7 +22,10 @@ export async function generateMetadata({
   params,
 }: EnglishArticlePageProps): Promise<Metadata> {
   const { slug } = await params;
-  const { article, translation } = await getPublishedArticlePageData(slug, "en");
+  const { article, translation } = await getPublishedArticlePageData(
+    slug,
+    locale,
+  );
 
   if (article === null) {
     return {
@@ -36,7 +41,10 @@ export default async function EnglishArticlePage({
   params,
 }: EnglishArticlePageProps) {
   const { slug } = await params;
-  const { article, translation } = await getPublishedArticlePageData(slug, "en");
+  const { article, translation } = await getPublishedArticlePageData(
+    slug,
+    locale,
+  );
 
   if (article === null) {
     notFound();

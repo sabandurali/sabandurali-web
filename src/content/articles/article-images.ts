@@ -6,6 +6,7 @@ import {
   resolve,
   sep,
 } from "node:path";
+import type { PublicArticleImage } from "@/content/articles/public-types";
 
 const SUPPORTED_ARTICLE_IMAGE_EXTENSIONS = new Set([
   ".avif",
@@ -47,4 +48,47 @@ export function getAvailableLocalArticleImage(
   } catch {
     return null;
   }
+}
+
+export function getSafePayloadMediaPath(value: unknown): string | null {
+  if (
+    typeof value !== "string" ||
+    !value.startsWith("/api/media/file/") ||
+    value.startsWith("//") ||
+    value.includes("\\") ||
+    value.includes("?") ||
+    value.includes("#")
+  ) {
+    return null;
+  }
+
+  try {
+    const decodedPath = decodeURIComponent(value);
+    const filename = decodedPath.slice("/api/media/file/".length);
+
+    if (
+      filename.length === 0 ||
+      filename.includes("/") ||
+      filename === "." ||
+      filename === ".."
+    ) {
+      return null;
+    }
+  } catch {
+    return null;
+  }
+
+  return value;
+}
+
+export function getAvailablePublicArticleImage(
+  image: PublicArticleImage | null,
+): string | null {
+  if (image === null) {
+    return null;
+  }
+
+  return image.source === "payload"
+    ? getSafePayloadMediaPath(image.src)
+    : getAvailableLocalArticleImage(image.src);
 }

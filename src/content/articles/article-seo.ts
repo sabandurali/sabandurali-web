@@ -1,13 +1,20 @@
 import type { Metadata } from "next";
 import { getAbsoluteUrl } from "@/config/site";
-import { getAvailableLocalArticleImage } from "@/content/articles/article-images";
+import {
+  getAvailableLocalArticleImage,
+  getAvailablePublicArticleImage,
+  getSafePayloadMediaPath,
+} from "@/content/articles/article-images";
 import {
   getArticleAlternateUrls,
   getArticleUrl,
 } from "@/content/articles/article-routes";
-import type { Article } from "@/content/articles/types";
+import type {
+  PublicArticle,
+  PublicArticleTranslation,
+} from "@/content/articles/public-types";
 
-export function getArticleCanonicalUrl(article: Article): string {
+export function getArticleCanonicalUrl(article: PublicArticle): string {
   if (article.seo.canonical !== undefined) {
     try {
       return getAbsoluteUrl(article.seo.canonical);
@@ -20,13 +27,18 @@ export function getArticleCanonicalUrl(article: Article): string {
 }
 
 export function createArticleMetadata(
-  article: Article,
-  translation: Article | null,
+  article: PublicArticle,
+  translation: PublicArticleTranslation | null,
 ): Metadata {
   const canonical = getArticleCanonicalUrl(article);
-  const openGraphImage = getAvailableLocalArticleImage(
-    article.seo.openGraphImage,
-  );
+  const openGraphImage =
+    article.featuredImage?.source === "payload"
+      ? getSafePayloadMediaPath(article.seo.openGraphImage)
+      : getAvailableLocalArticleImage(article.seo.openGraphImage);
+  const author =
+    article.content.source === "static"
+      ? article.content.details.author
+      : null;
 
   return {
     title: article.seo.title,
@@ -55,22 +67,26 @@ export function createArticleMetadata(
       type: "article",
       publishedTime: article.publishedAt ?? undefined,
       modifiedTime: article.updatedAt,
-      authors: article.author === null ? undefined : [article.author.name],
+      authors: author === null ? undefined : [author.name],
       images:
         openGraphImage === null
           ? undefined
           : [
               {
                 url: openGraphImage,
-                alt: article.coverImage?.alt || article.title,
+                alt: article.featuredImage?.alt || article.title,
               },
             ],
     },
   };
 }
 
-export function createArticleJsonLd(article: Article) {
-  const coverImage = getAvailableLocalArticleImage(article.coverImage?.src);
+export function createArticleJsonLd(article: PublicArticle) {
+  const coverImage = getAvailablePublicArticleImage(article.featuredImage);
+  const author =
+    article.content.source === "static"
+      ? article.content.details.author
+      : null;
 
   return {
     "@context": "https://schema.org",
@@ -80,11 +96,11 @@ export function createArticleJsonLd(article: Article) {
     datePublished: article.publishedAt ?? undefined,
     dateModified: article.updatedAt,
     author:
-      article.author === null
+      author === null
         ? undefined
         : {
             "@type": "Person",
-            name: article.author.name,
+            name: author.name,
           },
     inLanguage: article.language === "tr" ? "tr-TR" : "en",
     mainEntityOfPage: getArticleCanonicalUrl(article),
@@ -92,6 +108,6 @@ export function createArticleJsonLd(article: Article) {
   };
 }
 
-export function serializeArticleJsonLd(article: Article): string {
+export function serializeArticleJsonLd(article: PublicArticle): string {
   return JSON.stringify(createArticleJsonLd(article)).replace(/</g, "\\u003c");
 }
