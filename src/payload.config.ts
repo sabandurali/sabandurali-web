@@ -8,6 +8,7 @@ import { Articles } from "@/collections/Articles";
 import { Books } from "@/collections/Books";
 import { Categories } from "@/collections/Categories";
 import { Media } from "@/collections/Media";
+import { Pages } from "@/collections/Pages";
 import { Users } from "@/collections/Users";
 
 const filename = fileURLToPath(import.meta.url);
@@ -20,7 +21,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, Categories, Articles, Books],
+  collections: [Users, Media, Categories, Articles, Books, Pages],
   db: sqliteAdapter({
     client: {
       url: process.env.DATABASE_URL || "",

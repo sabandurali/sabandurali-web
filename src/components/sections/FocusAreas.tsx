@@ -3,7 +3,7 @@ import type {
   FocusAreasContent,
 } from "@/content/homeContent";
 
-function AreaIcon({ icon }: { icon: FocusAreaIcon }) {
+export function AreaIcon({ icon }: { icon: FocusAreaIcon }) {
   const commonProps = {
     "aria-hidden": true,
     className: "size-6",

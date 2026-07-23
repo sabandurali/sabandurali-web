@@ -1,5 +1,10 @@
 import type { MetadataRoute } from "next";
-import { contactUrls, homeUrls, privacyUrls } from "@/config/site";
+import {
+  contactUrls,
+  getAbsoluteUrl,
+  homeUrls,
+  privacyUrls,
+} from "@/config/site";
 import { getAllPublishedArticles } from "@/content/articles/article-data-source";
 import {
   getArticleAlternateUrls,
@@ -17,9 +22,18 @@ import {
   getBookReviewUrl,
 } from "@/content/books/book-routes";
 import type { BookReview } from "@/content/books/types";
+import {
+  getAllPublishedTurkishStandardPages,
+  getTurkishHomePageData,
+} from "@/content/pages/page-data-source";
+import { getPublicPagePath } from "@/content/pages/page-seo";
+import type { PublicPage } from "@/content/pages/public-types";
 
 function getLastModified(
-  entry: Pick<PublicArticleSummary | BookReview, "updatedAt" | "publishedAt">,
+  entry: Pick<
+    PublicArticleSummary | BookReview | PublicPage,
+    "updatedAt" | "publishedAt"
+  >,
 ): Date | undefined {
   for (const value of [entry.updatedAt, entry.publishedAt]) {
     if (value === null) continue;
@@ -47,14 +61,26 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     englishArticles,
     turkishBookReviews,
     englishBookReviews,
+    turkishPages,
+    turkishHomePageData,
   ] = await Promise.all([
     getAllPublishedArticles("tr"),
     getAllPublishedArticles("en"),
     getAllPublishedBookReviews("tr"),
     getAllPublishedBookReviews("en"),
+    getAllPublishedTurkishStandardPages(),
+    getTurkishHomePageData(),
   ]);
   const articles = [...turkishArticles, ...englishArticles];
   const bookReviews = [...turkishBookReviews, ...englishBookReviews];
+  const pageEntries: MetadataRoute.Sitemap = turkishPages
+    .filter((page) => page.seo.index)
+    .map((page) => ({
+      url: getAbsoluteUrl(getPublicPagePath(page)),
+      lastModified: getLastModified(page),
+      changeFrequency: "monthly",
+      priority: 0.6,
+    }));
   const articleEntries: MetadataRoute.Sitemap = articles.map((article) => {
     const translationArticle =
       article.translationKey === null
@@ -110,13 +136,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   );
 
   return [
-    {
-      url: homeUrls["tr-TR"],
-      lastModified,
-      changeFrequency: "weekly",
-      priority: 1,
-      alternates,
-    },
+    ...(turkishHomePageData.source === "static" ||
+    turkishHomePageData.page?.seo.index === true
+      ? [
+          {
+            url: homeUrls["tr-TR"],
+            lastModified:
+              turkishHomePageData.source === "payload" &&
+              turkishHomePageData.page !== null
+                ? getLastModified(turkishHomePageData.page)
+                : lastModified,
+            changeFrequency: "weekly" as const,
+            priority: 1,
+            alternates,
+          },
+        ]
+      : []),
     {
       url: homeUrls.en,
       lastModified,
@@ -190,5 +225,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       },
     },
     ...bookReviewEntries,
+    ...pageEntries,
   ];
 }

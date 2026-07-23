@@ -1,4 +1,5 @@
 import Image from "next/image";
+import type { ComponentProps } from "react";
 import {
   RichText,
   type JSXConverter,
@@ -11,13 +12,9 @@ import type {
 } from "@payloadcms/richtext-lexical";
 import { getSafePayloadMediaPath } from "@/content/articles/article-images";
 import { getSafeArticleHref } from "@/content/articles/article-links";
-import type { PublicArticle } from "@/content/articles/public-types";
 
 type PayloadRichTextProps = {
-  data: Extract<
-    PublicArticle["content"],
-    { source: "lexical" }
-  >["data"];
+  data: ComponentProps<typeof RichText>["data"];
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {

@@ -74,3 +74,24 @@ export const publishedBookReviewOrAdminOrEditor: Access = ({ req }) => {
 
   return publicBookReviewWhere;
 };
+
+export const publishedPageOrAdminOrEditor: Access = ({ req }) => {
+  if (isAdminOrEditor(req.user)) return true;
+
+  const publicPageWhere: Where = {
+    and: [
+      {
+        _status: {
+          equals: "published",
+        },
+      },
+      {
+        publishedAt: {
+          less_than_equal: new Date().toISOString(),
+        },
+      },
+    ],
+  };
+
+  return publicPageWhere;
+};

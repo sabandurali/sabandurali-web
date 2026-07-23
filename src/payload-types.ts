@@ -72,6 +72,7 @@ export interface Config {
     categories: Category;
     articles: Article;
     books: Book;
+    pages: Page;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -84,6 +85,7 @@ export interface Config {
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     articles: ArticlesSelect<false> | ArticlesSelect<true>;
     books: BooksSelect<false> | BooksSelect<true>;
+    pages: PagesSelect<false> | PagesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -388,6 +390,186 @@ export interface Book {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages".
+ */
+export interface Page {
+  id: string;
+  title: string;
+  /**
+   * Başlıktan otomatik oluşur; gerekirse elle düzenlenebilir.
+   */
+  slug: string;
+  language: 'tr' | 'en';
+  pageType: 'home' | 'standard';
+  summary: string;
+  /**
+   * Bölümleri ekleyebilir, sürükleyerek sıralayabilir, gizleyebilir veya silebilirsiniz.
+   */
+  layout?:
+    | (
+        | {
+            /**
+             * Kapalıysa blok silinmeden public sayfada gizlenir.
+             */
+            visible?: boolean | null;
+            /**
+             * İsteğe bağlıdır. Örnek: hakkimda veya calismalar.
+             */
+            anchor?: string | null;
+            eyebrow?: string | null;
+            titleLines: {
+              text: string;
+              accent?: boolean | null;
+              id?: string | null;
+            }[];
+            description: string;
+            primaryAction: {
+              label: string;
+              href: string;
+            };
+            secondaryAction: {
+              label: string;
+              href: string;
+            };
+            highlights?:
+              | {
+                  value: string;
+                  label: string;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'hero';
+          }
+        | {
+            /**
+             * Kapalıysa blok silinmeden public sayfada gizlenir.
+             */
+            visible?: boolean | null;
+            /**
+             * İsteğe bağlıdır. Örnek: hakkimda veya calismalar.
+             */
+            anchor?: string | null;
+            eyebrow?: string | null;
+            title?: string | null;
+            content: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            };
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'richText';
+          }
+        | {
+            /**
+             * Kapalıysa blok silinmeden public sayfada gizlenir.
+             */
+            visible?: boolean | null;
+            /**
+             * İsteğe bağlıdır. Örnek: hakkimda veya calismalar.
+             */
+            anchor?: string | null;
+            eyebrow?: string | null;
+            title: string;
+            cards: {
+              icon?: ('book' | 'city' | 'network' | 'handshake') | null;
+              image?: (string | null) | Media;
+              imageAlt?: string | null;
+              title: string;
+              description: string;
+              link?: {
+                label?: string | null;
+                href?: string | null;
+              };
+              id?: string | null;
+            }[];
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'cardGroup';
+          }
+        | {
+            /**
+             * Kapalıysa blok silinmeden public sayfada gizlenir.
+             */
+            visible?: boolean | null;
+            /**
+             * İsteğe bağlıdır. Örnek: hakkimda veya calismalar.
+             */
+            anchor?: string | null;
+            eyebrow?: string | null;
+            title: string;
+            content: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            };
+            image: string | Media;
+            imageAlt: string;
+            imagePosition: 'right' | 'left';
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'imageText';
+          }
+        | {
+            /**
+             * Kapalıysa blok silinmeden public sayfada gizlenir.
+             */
+            visible?: boolean | null;
+            /**
+             * İsteğe bağlıdır. Örnek: hakkimda veya calismalar.
+             */
+            anchor?: string | null;
+            title: string;
+            description?: string | null;
+            action: {
+              label: string;
+              href: string;
+            };
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'cta';
+          }
+      )[]
+    | null;
+  /**
+   * İlk yayında otomatik atanır. Gelecek tarih planlı yayın anlamına gelir.
+   */
+  publishedAt?: string | null;
+  seo?: {
+    title?: string | null;
+    description?: string | null;
+    index?: boolean | null;
+    follow?: boolean | null;
+    socialImage?: (string | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -663,6 +845,137 @@ export interface BooksSelect<T extends boolean = true> {
         openGraphTitle?: T;
         openGraphDescription?: T;
         openGraphImage?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages_select".
+ */
+export interface PagesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  language?: T;
+  pageType?: T;
+  summary?: T;
+  layout?:
+    | T
+    | {
+        hero?:
+          | T
+          | {
+              visible?: T;
+              anchor?: T;
+              eyebrow?: T;
+              titleLines?:
+                | T
+                | {
+                    text?: T;
+                    accent?: T;
+                    id?: T;
+                  };
+              description?: T;
+              primaryAction?:
+                | T
+                | {
+                    label?: T;
+                    href?: T;
+                  };
+              secondaryAction?:
+                | T
+                | {
+                    label?: T;
+                    href?: T;
+                  };
+              highlights?:
+                | T
+                | {
+                    value?: T;
+                    label?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        richText?:
+          | T
+          | {
+              visible?: T;
+              anchor?: T;
+              eyebrow?: T;
+              title?: T;
+              content?: T;
+              id?: T;
+              blockName?: T;
+            };
+        cardGroup?:
+          | T
+          | {
+              visible?: T;
+              anchor?: T;
+              eyebrow?: T;
+              title?: T;
+              cards?:
+                | T
+                | {
+                    icon?: T;
+                    image?: T;
+                    imageAlt?: T;
+                    title?: T;
+                    description?: T;
+                    link?:
+                      | T
+                      | {
+                          label?: T;
+                          href?: T;
+                        };
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        imageText?:
+          | T
+          | {
+              visible?: T;
+              anchor?: T;
+              eyebrow?: T;
+              title?: T;
+              content?: T;
+              image?: T;
+              imageAlt?: T;
+              imagePosition?: T;
+              id?: T;
+              blockName?: T;
+            };
+        cta?:
+          | T
+          | {
+              visible?: T;
+              anchor?: T;
+              title?: T;
+              description?: T;
+              action?:
+                | T
+                | {
+                    label?: T;
+                    href?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+      };
+  publishedAt?: T;
+  seo?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        index?: T;
+        follow?: T;
+        socialImage?: T;
       };
   updatedAt?: T;
   createdAt?: T;
