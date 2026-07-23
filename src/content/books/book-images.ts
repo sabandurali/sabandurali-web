@@ -6,6 +6,7 @@ import {
   resolve,
   sep,
 } from "node:path";
+import { getSafePayloadMediaPath } from "@/content/articles/article-images";
 
 const SUPPORTED_BOOK_IMAGE_EXTENSIONS = new Set([
   ".avif",
@@ -19,6 +20,12 @@ const SUPPORTED_BOOK_IMAGE_EXTENSIONS = new Set([
 export function getAvailableLocalBookImage(
   src: string | undefined,
 ): string | null {
+  const payloadMediaPath = getSafePayloadMediaPath(src);
+
+  if (payloadMediaPath !== null) {
+    return payloadMediaPath;
+  }
+
   if (
     src === undefined ||
     !src.startsWith("/") ||

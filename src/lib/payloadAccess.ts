@@ -43,3 +43,34 @@ export const publishedOrAdminOrEditor: Access = ({ req }) => {
 
   return publicArticleWhere;
 };
+
+export const publishedBookReviewOrAdminOrEditor: Access = ({ req }) => {
+  if (isAdminOrEditor(req.user)) return true;
+
+  const publicBookReviewWhere: Where = {
+    and: [
+      {
+        _status: {
+          equals: "published",
+        },
+      },
+      {
+        reviewStatus: {
+          equals: "published",
+        },
+      },
+      {
+        publishedAt: {
+          less_than_equal: new Date().toISOString(),
+        },
+      },
+      {
+        "seo.index": {
+          equals: true,
+        },
+      },
+    ],
+  };
+
+  return publicBookReviewWhere;
+};

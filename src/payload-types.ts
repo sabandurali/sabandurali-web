@@ -71,6 +71,7 @@ export interface Config {
     media: Media;
     categories: Category;
     articles: Article;
+    books: Book;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -82,6 +83,7 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     articles: ArticlesSelect<false> | ArticlesSelect<true>;
+    books: BooksSelect<false> | BooksSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -153,6 +155,9 @@ export interface User {
  */
 export interface Media {
   id: string;
+  /**
+   * Görseli, içeriği görmeyen bir kullanıcı için kısa ve anlamlı biçimde açıklayın.
+   */
   alt: string;
   description?: string | null;
   sourceCopyright?: string | null;
@@ -226,6 +231,156 @@ export interface Article {
   seo?: {
     metaTitle?: string | null;
     metaDescription?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "books".
+ */
+export interface Book {
+  id: string;
+  title: string;
+  /**
+   * Başlıktan otomatik oluşur; gerekirse elle düzenlenebilir.
+   */
+  slug: string;
+  language: 'tr' | 'en';
+  originalTitle?: string | null;
+  authors?:
+    | {
+        name: string;
+        slug: string;
+        id?: string | null;
+      }[]
+    | null;
+  translator?: string | null;
+  publisher?: string | null;
+  originalPublisher?: string | null;
+  publicationYear?: number | null;
+  originalPublicationYear?: number | null;
+  edition?: string | null;
+  pageCount?: number | null;
+  isbn10?: string | null;
+  isbn13?: string | null;
+  coverImage?: (string | null) | Media;
+  /**
+   * Boş bırakılırsa medya kaydındaki alternatif metin kullanılır.
+   */
+  coverImageAlt?: string | null;
+  category?:
+    | (
+        | 'business_and_management'
+        | 'psychology_and_behavior'
+        | 'sales_and_negotiation'
+        | 'learning_and_education'
+        | 'artificial_intelligence_and_technology'
+        | 'real_estate_and_investment'
+        | 'personal_development'
+        | 'biography_and_history'
+        | 'economics_and_finance'
+        | 'other'
+      )
+    | null;
+  tags?:
+    | {
+        slug: string;
+        labelTr: string;
+        labelEn: string;
+        aliases?:
+          | {
+              value: string;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  readingStatus: 'planned' | 'reading' | 'completed' | 'paused' | 'abandoned';
+  /**
+   * Public erişim için published seçilmeli; yayın tarihi gelmiş ve SEO index açık olmalıdır.
+   */
+  reviewStatus: 'draft' | 'in_review' | 'scheduled' | 'published' | 'archived';
+  startedAt?: string | null;
+  completedAt?: string | null;
+  /**
+   * Gelecekteki bir tarih planlı yayını; boş değer public erişimin kapalı kalmasını sağlar.
+   */
+  publishedAt?: string | null;
+  summary: string;
+  keyIdeas?:
+    | {
+        title: string;
+        description: string;
+        order: number;
+        id?: string | null;
+      }[]
+    | null;
+  strengths?:
+    | {
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
+  weaknesses?:
+    | {
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
+  whoShouldRead?:
+    | {
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
+  whoShouldNotRead?:
+    | {
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
+  applicationNotes?:
+    | {
+        title: string;
+        description: string;
+        action: string;
+        order: number;
+        id?: string | null;
+      }[]
+    | null;
+  personalEvaluation: string;
+  rating?: number | null;
+  quotes?:
+    | {
+        text: string;
+        page?: number | null;
+        note?: string | null;
+        order: number;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Bu incelemenin Türkçe veya İngilizce karşılığını seçin.
+   */
+  translation?: (string | null) | Book;
+  translationStatus: 'none' | 'pending' | 'in_progress' | 'completed' | 'outdated';
+  relatedBooks?: (string | Book)[] | null;
+  authorId?: (string | null) | User;
+  editorId?: (string | null) | User;
+  featured?: boolean | null;
+  showOnHomepage?: boolean | null;
+  seo: {
+    title: string;
+    description: string;
+    canonical?: string | null;
+    index: boolean;
+    follow: boolean;
+    openGraphTitle?: string | null;
+    openGraphDescription?: string | null;
+    openGraphImage?: (string | null) | Media;
   };
   updatedAt: string;
   createdAt: string;
@@ -385,6 +540,129 @@ export interface ArticlesSelect<T extends boolean = true> {
     | {
         metaTitle?: T;
         metaDescription?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "books_select".
+ */
+export interface BooksSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  language?: T;
+  originalTitle?: T;
+  authors?:
+    | T
+    | {
+        name?: T;
+        slug?: T;
+        id?: T;
+      };
+  translator?: T;
+  publisher?: T;
+  originalPublisher?: T;
+  publicationYear?: T;
+  originalPublicationYear?: T;
+  edition?: T;
+  pageCount?: T;
+  isbn10?: T;
+  isbn13?: T;
+  coverImage?: T;
+  coverImageAlt?: T;
+  category?: T;
+  tags?:
+    | T
+    | {
+        slug?: T;
+        labelTr?: T;
+        labelEn?: T;
+        aliases?:
+          | T
+          | {
+              value?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  readingStatus?: T;
+  reviewStatus?: T;
+  startedAt?: T;
+  completedAt?: T;
+  publishedAt?: T;
+  summary?: T;
+  keyIdeas?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        order?: T;
+        id?: T;
+      };
+  strengths?:
+    | T
+    | {
+        value?: T;
+        id?: T;
+      };
+  weaknesses?:
+    | T
+    | {
+        value?: T;
+        id?: T;
+      };
+  whoShouldRead?:
+    | T
+    | {
+        value?: T;
+        id?: T;
+      };
+  whoShouldNotRead?:
+    | T
+    | {
+        value?: T;
+        id?: T;
+      };
+  applicationNotes?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        action?: T;
+        order?: T;
+        id?: T;
+      };
+  personalEvaluation?: T;
+  rating?: T;
+  quotes?:
+    | T
+    | {
+        text?: T;
+        page?: T;
+        note?: T;
+        order?: T;
+        id?: T;
+      };
+  translation?: T;
+  translationStatus?: T;
+  relatedBooks?: T;
+  authorId?: T;
+  editorId?: T;
+  featured?: T;
+  showOnHomepage?: T;
+  seo?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        canonical?: T;
+        index?: T;
+        follow?: T;
+        openGraphTitle?: T;
+        openGraphDescription?: T;
+        openGraphImage?: T;
       };
   updatedAt?: T;
   createdAt?: T;

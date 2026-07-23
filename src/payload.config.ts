@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import { buildConfig } from "payload";
 import sharp from "sharp";
 import { Articles } from "@/collections/Articles";
+import { Books } from "@/collections/Books";
 import { Categories } from "@/collections/Categories";
 import { Media } from "@/collections/Media";
 import { Users } from "@/collections/Users";
@@ -19,7 +20,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, Categories, Articles],
+  collections: [Users, Media, Categories, Articles, Books],
   db: sqliteAdapter({
     client: {
       url: process.env.DATABASE_URL || "",
