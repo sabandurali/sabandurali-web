@@ -8,6 +8,8 @@ import type {
 } from "@/content/pages/public-types";
 
 const PAYLOAD_PAGE_SIZE = 100;
+const TURKISH_HOME_SLUG = "ana-sayfa";
+const PUBLIC_PAGE_SORT = ["-publishedAt", "-updatedAt", "id"];
 
 function createPublicConditions(now: Date): Where[] {
   return [
@@ -35,9 +37,12 @@ export class PayloadPublicPageRepository {
       collection: "pages",
       depth: 1,
       draft: false,
+      fallbackLocale: false,
       limit: 1,
+      locale: language,
       overrideAccess: false,
       pagination: false,
+      sort: PUBLIC_PAGE_SORT,
       where: {
         and: [
           ...createPublicConditions(now),
@@ -56,10 +61,24 @@ export class PayloadPublicPageRepository {
   async findHome(
     language: PublicPageLanguage,
   ): Promise<PublicPage | null> {
-    return this.findOne(
+    const home = await this.findOne(
       [{ pageType: { equals: "home" } }],
       language,
     );
+
+    if (home !== null || language !== "tr") return home;
+
+    const legacyHome = await this.findOne(
+      [
+        { pageType: { equals: "standard" } },
+        { slug: { equals: TURKISH_HOME_SLUG } },
+      ],
+      language,
+    );
+
+    return legacyHome === null
+      ? null
+      : { ...legacyHome, pageType: "home" };
   }
 
   async findStandardBySlug(
@@ -89,7 +108,9 @@ export class PayloadPublicPageRepository {
         collection: "pages",
         depth: 1,
         draft: false,
+        fallbackLocale: false,
         limit: PAYLOAD_PAGE_SIZE,
+        locale: language,
         overrideAccess: false,
         page,
         sort: "title",
