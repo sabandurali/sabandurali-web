@@ -20,14 +20,16 @@ export default function Hero({ anchors, content }: HeroProps) {
 
       <div className="mx-auto grid min-h-[calc(100vh-94px)] max-w-7xl items-center gap-14 px-5 py-16 sm:px-6 sm:py-20 lg:grid-cols-[1.2fr_0.8fr] lg:px-10 lg:py-24">
         <div className="min-w-0">
-          <p className="mb-6 text-xs font-medium uppercase leading-6 tracking-[0.18em] text-accent sm:text-sm sm:tracking-[0.22em]">
-            {content.eyebrow}
-          </p>
+          {content.eyebrow && (
+            <p className="mb-6 text-xs font-medium uppercase leading-6 tracking-[0.18em] text-accent sm:text-sm sm:tracking-[0.22em]">
+              {content.eyebrow}
+            </p>
+          )}
 
           <h1 className="max-w-4xl font-serif text-[2.65rem] font-medium leading-[1.08] tracking-[-0.035em] text-ivory sm:text-6xl lg:text-[72px]">
-            {content.titleLines.map((line) => (
+            {content.titleLines.map((line, index) => (
               <span
-                key={line.text}
+                key={`${line.text}-${index}`}
                 className={`block ${line.accent ? "text-accent-strong" : ""}`}
               >
                 {line.text}
@@ -41,14 +43,14 @@ export default function Hero({ anchors, content }: HeroProps) {
 
           <div className="mt-10 flex flex-col gap-4 min-[360px]:flex-row min-[360px]:flex-wrap">
             <a
-              href={`#${anchors.work}`}
+              href={content.primaryActionHref ?? `#${anchors.work}`}
               className="rounded-md bg-accent px-7 py-3.5 text-center text-sm font-medium text-ink transition hover:bg-accent-strong"
             >
               {content.primaryAction}
             </a>
 
             <a
-              href={`#${anchors.about}`}
+              href={content.secondaryActionHref ?? `#${anchors.about}`}
               className="rounded-md border border-ivory/40 px-7 py-3.5 text-center text-sm font-medium text-ivory transition hover:border-accent hover:bg-surface"
             >
               {content.secondaryAction}

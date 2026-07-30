@@ -1,11 +1,17 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import HomePage from "@/components/HomePage";
-import PublicPageView from "@/components/pages/PublicPageView";
 import { homeUrls } from "@/config/site";
-import { homeContent } from "@/content/homeContent";
+import {
+  homeContent,
+  type HomeContent,
+} from "@/content/homeContent";
 import { getTurkishHomePageData } from "@/content/pages/page-data-source";
 import { createPublicPageMetadata } from "@/content/pages/page-seo";
+import type {
+  PublicHeroBlock,
+  PublicPage,
+} from "@/content/pages/public-types";
 
 const staticMetadata: Metadata = {
   title: "Şaban Durali | Araştırma ve Bilgi Platformu",
@@ -26,6 +32,29 @@ const staticMetadata: Metadata = {
     siteName: "Şaban Durali",
   },
 };
+
+function getPayloadHomeContent(page: PublicPage): HomeContent | null {
+  const hero = page.layout.find(
+    (block): block is PublicHeroBlock =>
+      block.blockType === "hero" && block.visible,
+  );
+
+  if (hero === undefined) return null;
+
+  return {
+    ...homeContent.tr,
+    hero: {
+      ...homeContent.tr.hero,
+      eyebrow: hero.eyebrow ?? "",
+      titleLines: hero.titleLines,
+      description: hero.description,
+      primaryAction: hero.primaryAction.label,
+      primaryActionHref: hero.primaryAction.href,
+      secondaryAction: hero.secondaryAction.label,
+      secondaryActionHref: hero.secondaryAction.href,
+    },
+  };
+}
 
 export async function generateMetadata(): Promise<Metadata> {
   const data = await getTurkishHomePageData();
@@ -49,5 +78,9 @@ export default async function Home() {
 
   if (data.page === null) notFound();
 
-  return <PublicPageView page={data.page} />;
+  const content = getPayloadHomeContent(data.page);
+
+  if (content === null) notFound();
+
+  return <HomePage content={content} />;
 }

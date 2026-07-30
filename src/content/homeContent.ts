@@ -35,7 +35,9 @@ export type HeroContent = {
   }>;
   description: string;
   primaryAction: string;
+  primaryActionHref?: string;
   secondaryAction: string;
+  secondaryActionHref?: string;
   betaInvitation: {
     label: string;
     description: string;
