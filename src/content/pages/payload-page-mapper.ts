@@ -3,6 +3,8 @@ import type {
   PublicCardGroupBlock,
   PublicCtaBlock,
   PublicHeroBlock,
+  PublicHomeAboutBlock,
+  PublicHomeFocusAreasBlock,
   PublicImageTextBlock,
   PublicPage,
   PublicPageBlock,
@@ -65,6 +67,21 @@ function mapLink(value: unknown): PublicPageLink | null {
   const href = getSafeHref(value.href);
 
   return label === null || href === null ? null : { label, href };
+}
+
+function mapOptionalLink(
+  value: unknown,
+): PublicPageLink | null | undefined {
+  if (!isRecord(value)) return undefined;
+
+  const label = getOptionalText(value.label);
+  const href = getOptionalText(value.href);
+
+  if (label === null && href === null) return undefined;
+  if (label === null || href === null) return null;
+
+  const safeHref = getSafeHref(href);
+  return safeHref === null ? null : { label, href: safeHref };
 }
 
 function mapImage(
@@ -242,6 +259,112 @@ function mapImageTextBlock(
   };
 }
 
+function mapHomeAboutBlock(
+  block: Extract<
+    NonNullable<PayloadPage["layout"]>[number],
+    { blockType: "homeAbout" }
+  >,
+  index: number,
+): PublicHomeAboutBlock | null {
+  const eyebrow = getRequiredText(block.eyebrow);
+  const imageAlt = getRequiredText(block.imageAlt);
+  const titleLines = block.titleLines.map((line) =>
+    getRequiredText(line.text),
+  );
+  const paragraphs = block.paragraphs.map((paragraph) =>
+    getRequiredText(paragraph.text),
+  );
+  const link = mapOptionalLink(block.link);
+  const image =
+    block.image === null || block.image === undefined
+      ? null
+      : mapImage(block.image, block.imageAlt, imageAlt ?? "");
+
+  if (
+    eyebrow === null ||
+    imageAlt === null ||
+    titleLines.some((line) => line === null) ||
+    paragraphs.some((paragraph) => paragraph === null) ||
+    titleLines.length === 0 ||
+    paragraphs.length === 0 ||
+    link === null ||
+    (block.image !== null &&
+      block.image !== undefined &&
+      image === null)
+  ) {
+    return null;
+  }
+
+  return {
+    ...getBlockBase(block, index),
+    blockType: "homeAbout",
+    eyebrow,
+    titleLines: titleLines as string[],
+    paragraphs: paragraphs as string[],
+    link: link ?? null,
+    image,
+    imageAlt,
+  };
+}
+
+function mapHomeFocusAreasBlock(
+  block: Extract<
+    NonNullable<PayloadPage["layout"]>[number],
+    { blockType: "homeFocusAreas" }
+  >,
+  index: number,
+): PublicHomeFocusAreasBlock | null {
+  const eyebrow = getRequiredText(block.eyebrow);
+  const title = getRequiredText(block.title);
+  const cards = block.cards.map((card, cardIndex) => {
+    const cardTitle = getRequiredText(card.title);
+    const description = getRequiredText(card.description);
+    const linkLabel = getRequiredText(card.linkLabel);
+    const linkHref =
+      getOptionalText(card.linkHref) === null
+        ? null
+        : getSafeHref(card.linkHref);
+
+    if (
+      cardTitle === null ||
+      description === null ||
+      linkLabel === null ||
+      (getOptionalText(card.linkHref) !== null && linkHref === null)
+    ) {
+      return null;
+    }
+
+    return {
+      id:
+        getRequiredText(card.id) ??
+        `${getBlockBase(block, index).id}-card-${cardIndex + 1}`,
+      icon: card.icon,
+      title: cardTitle,
+      description,
+      linkLabel,
+      linkHref,
+    };
+  });
+
+  if (
+    eyebrow === null ||
+    title === null ||
+    cards.length === 0 ||
+    cards.some((card) => card === null)
+  ) {
+    return null;
+  }
+
+  return {
+    ...getBlockBase(block, index),
+    blockType: "homeFocusAreas",
+    eyebrow,
+    title,
+    description: getOptionalText(block.description),
+    cards: cards as PublicHomeFocusAreasBlock["cards"],
+  };
+}
+
 function mapCtaBlock(
   block: Extract<
     NonNullable<PayloadPage["layout"]>[number],
@@ -276,6 +399,10 @@ function mapBlock(
       return mapCardGroupBlock(block, index);
     case "imageText":
       return mapImageTextBlock(block, index);
+    case "homeAbout":
+      return mapHomeAboutBlock(block, index);
+    case "homeFocusAreas":
+      return mapHomeFocusAreasBlock(block, index);
     case "cta":
       return mapCtaBlock(block, index);
   }

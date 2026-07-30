@@ -307,6 +307,9 @@ export default function PageBlocks({
           return <CardGroupPageBlock key={block.id} block={block} />;
         case "imageText":
           return <ImageTextPageBlock key={block.id} block={block} />;
+        case "homeAbout":
+        case "homeFocusAreas":
+          return null;
         case "cta":
           return <CtaPageBlock key={block.id} block={block} />;
       }

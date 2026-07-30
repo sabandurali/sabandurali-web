@@ -455,6 +455,61 @@ export interface Page {
              * İsteğe bağlıdır. Örnek: hakkimda veya calismalar.
              */
             anchor?: string | null;
+            eyebrow: string;
+            titleLines: {
+              text: string;
+              id?: string | null;
+            }[];
+            paragraphs: {
+              text: string;
+              id?: string | null;
+            }[];
+            link?: {
+              label?: string | null;
+              href?: string | null;
+            };
+            /**
+             * Boş bırakılırsa mevcut statik Şaban Durali portresi kullanılır.
+             */
+            image?: (string | null) | Media;
+            imageAlt: string;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'homeAbout';
+          }
+        | {
+            /**
+             * Kapalıysa blok silinmeden public sayfada gizlenir.
+             */
+            visible?: boolean | null;
+            /**
+             * İsteğe bağlıdır. Örnek: hakkimda veya calismalar.
+             */
+            anchor?: string | null;
+            eyebrow: string;
+            title: string;
+            description?: string | null;
+            cards: {
+              icon: 'book' | 'city' | 'network' | 'handshake';
+              title: string;
+              description: string;
+              linkLabel: string;
+              linkHref?: string | null;
+              id?: string | null;
+            }[];
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'homeFocusAreas';
+          }
+        | {
+            /**
+             * Kapalıysa blok silinmeden public sayfada gizlenir.
+             */
+            visible?: boolean | null;
+            /**
+             * İsteğe bağlıdır. Örnek: hakkimda veya calismalar.
+             */
+            anchor?: string | null;
             eyebrow?: string | null;
             title?: string | null;
             content: {
@@ -898,6 +953,56 @@ export interface PagesSelect<T extends boolean = true> {
                 | {
                     value?: T;
                     label?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        homeAbout?:
+          | T
+          | {
+              visible?: T;
+              anchor?: T;
+              eyebrow?: T;
+              titleLines?:
+                | T
+                | {
+                    text?: T;
+                    id?: T;
+                  };
+              paragraphs?:
+                | T
+                | {
+                    text?: T;
+                    id?: T;
+                  };
+              link?:
+                | T
+                | {
+                    label?: T;
+                    href?: T;
+                  };
+              image?: T;
+              imageAlt?: T;
+              id?: T;
+              blockName?: T;
+            };
+        homeFocusAreas?:
+          | T
+          | {
+              visible?: T;
+              anchor?: T;
+              eyebrow?: T;
+              title?: T;
+              description?: T;
+              cards?:
+                | T
+                | {
+                    icon?: T;
+                    title?: T;
+                    description?: T;
+                    linkLabel?: T;
+                    linkHref?: T;
                     id?: T;
                   };
               id?: T;

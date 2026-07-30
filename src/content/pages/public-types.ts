@@ -70,6 +70,31 @@ export type PublicImageTextBlock = PublicPageBlockBase & {
   imagePosition: "left" | "right";
 };
 
+export type PublicHomeAboutBlock = PublicPageBlockBase & {
+  blockType: "homeAbout";
+  eyebrow: string;
+  titleLines: string[];
+  paragraphs: string[];
+  link: PublicPageLink | null;
+  image: PublicPageImage | null;
+  imageAlt: string;
+};
+
+export type PublicHomeFocusAreasBlock = PublicPageBlockBase & {
+  blockType: "homeFocusAreas";
+  eyebrow: string;
+  title: string;
+  description: string | null;
+  cards: Array<{
+    id: string;
+    icon: FocusAreaIcon;
+    title: string;
+    description: string;
+    linkLabel: string;
+    linkHref: string | null;
+  }>;
+};
+
 export type PublicCtaBlock = PublicPageBlockBase & {
   blockType: "cta";
   title: string;
@@ -82,6 +107,8 @@ export type PublicPageBlock =
   | PublicRichTextBlock
   | PublicCardGroupBlock
   | PublicImageTextBlock
+  | PublicHomeAboutBlock
+  | PublicHomeFocusAreasBlock
   | PublicCtaBlock;
 
 export type PublicPage = {

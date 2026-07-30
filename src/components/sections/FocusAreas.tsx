@@ -68,12 +68,18 @@ export default function FocusAreas({ id, content }: FocusAreasProps) {
           <h2 className="mt-5 text-4xl font-semibold tracking-tight sm:text-6xl">
             {content.title}
           </h2>
+
+          {content.description && (
+            <p className="mt-6 max-w-2xl leading-7 text-muted-dark">
+              {content.description}
+            </p>
+          )}
         </div>
 
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-          {content.cards.map((area) => (
+          {content.cards.map((area, index) => (
             <article
-              key={area.title}
+              key={`${area.title}-${index}`}
               className="rounded-xl border border-[var(--accent-border-soft)] bg-ivory p-6 shadow-[0_8px_24px_rgba(18,22,25,0.04)] transition duration-200 hover:-translate-y-0.5 hover:border-[var(--accent-border-hover)] md:min-h-72"
             >
               <div className="flex size-12 items-center justify-center rounded-full border border-accent bg-ink text-accent-soft">
@@ -88,7 +94,16 @@ export default function FocusAreas({ id, content }: FocusAreasProps) {
                 {area.description}
               </p>
 
-              <p className="mt-10 text-sm font-medium">{area.linkLabel}</p>
+              {area.linkHref ? (
+                <a
+                  href={area.linkHref}
+                  className="mt-10 inline-flex min-h-11 items-center text-sm font-medium underline decoration-[var(--accent-border-soft)] underline-offset-4"
+                >
+                  {area.linkLabel}
+                </a>
+              ) : (
+                <p className="mt-10 text-sm font-medium">{area.linkLabel}</p>
+              )}
             </article>
           ))}
         </div>

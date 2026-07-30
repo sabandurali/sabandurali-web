@@ -28,7 +28,7 @@ export default function About({ id, content }: AboutProps) {
           </div>
 
           <Image
-            src="/brand/saban-durali-profile.jpg"
+            src={content.imageSrc ?? "/brand/saban-durali-profile.jpg"}
             alt={content.imageAlt}
             width={320}
             height={360}
@@ -39,6 +39,14 @@ export default function About({ id, content }: AboutProps) {
             {content.paragraphs.map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
             ))}
+            {content.linkLabel && content.linkHref && (
+              <a
+                href={content.linkHref}
+                className="inline-flex min-h-11 items-center text-sm font-medium text-accent underline decoration-accent/40 underline-offset-4 transition hover:text-accent-strong"
+              >
+                {content.linkLabel}
+              </a>
+            )}
           </div>
         </div>
       </div>

@@ -55,6 +55,9 @@ export type AboutContent = {
   label: string;
   titleLines: ReadonlyArray<string>;
   paragraphs: ReadonlyArray<string>;
+  linkLabel?: string;
+  linkHref?: string;
+  imageSrc?: string;
   imageAlt: string;
 };
 
@@ -63,11 +66,13 @@ export type FocusAreaIcon = "book" | "city" | "network" | "handshake";
 export type FocusAreasContent = {
   label: string;
   title: string;
+  description?: string;
   cards: ReadonlyArray<{
     icon: FocusAreaIcon;
     title: string;
     description: string;
     linkLabel: string;
+    linkHref?: string;
   }>;
 };
 
@@ -92,6 +97,7 @@ export type HomeContent = {
   hero: HeroContent;
   about: AboutContent;
   focusAreas: FocusAreasContent;
+  sectionOrder?: ReadonlyArray<"hero" | "about" | "focusAreas">;
   footer: FooterContent;
   backToTopLabel: string;
 };

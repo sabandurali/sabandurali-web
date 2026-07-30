@@ -317,6 +317,167 @@ export const ImageTextBlock: Block = {
   ],
 };
 
+export const HomeAboutBlock: Block = {
+  slug: "homeAbout",
+  labels: {
+    plural: "Ana sayfa Hakkımda bölümleri",
+    singular: "Ana sayfa: Hakkımda",
+  },
+  fields: [
+    ...commonFields,
+    {
+      name: "eyebrow",
+      type: "text",
+      label: "Üst başlık",
+      required: true,
+    },
+    {
+      name: "titleLines",
+      type: "array",
+      label: "Başlık satırları",
+      minRows: 1,
+      required: true,
+      fields: [
+        {
+          name: "text",
+          type: "text",
+          label: "Metin",
+          required: true,
+        },
+      ],
+    },
+    {
+      name: "paragraphs",
+      type: "array",
+      label: "Paragraflar",
+      minRows: 1,
+      required: true,
+      fields: [
+        {
+          name: "text",
+          type: "textarea",
+          label: "Metin",
+          required: true,
+        },
+      ],
+    },
+    {
+      name: "link",
+      type: "group",
+      label: "Bağlantı (isteğe bağlı)",
+      fields: [
+        {
+          name: "label",
+          type: "text",
+          label: "Bağlantı metni",
+        },
+        {
+          name: "href",
+          type: "text",
+          label: "Bağlantı adresi",
+          validate: (value: unknown) =>
+            value === null || value === undefined || value === ""
+              ? true
+              : isSafeLink(value),
+        },
+      ],
+    },
+    {
+      name: "image",
+      type: "upload",
+      label: "Portre görseli (isteğe bağlı)",
+      relationTo: "media",
+      admin: {
+        description:
+          "Boş bırakılırsa mevcut statik Şaban Durali portresi kullanılır.",
+      },
+    },
+    {
+      name: "imageAlt",
+      type: "text",
+      label: "Görsel alternatif metni",
+      required: true,
+    },
+  ],
+};
+
+export const HomeFocusAreasBlock: Block = {
+  slug: "homeFocusAreas",
+  labels: {
+    plural: "Ana sayfa çalışma alanları",
+    singular: "Ana sayfa: Çalışma alanları",
+  },
+  fields: [
+    ...commonFields,
+    {
+      name: "eyebrow",
+      type: "text",
+      label: "Üst başlık",
+      required: true,
+    },
+    {
+      name: "title",
+      type: "text",
+      label: "Başlık",
+      required: true,
+    },
+    {
+      name: "description",
+      type: "textarea",
+      label: "Bölüm açıklaması (isteğe bağlı)",
+    },
+    {
+      name: "cards",
+      type: "array",
+      label: "Çalışma alanı kartları",
+      minRows: 1,
+      required: true,
+      fields: [
+        {
+          name: "icon",
+          type: "select",
+          label: "Simge",
+          defaultValue: "book",
+          options: [
+            { label: "Kitap", value: "book" },
+            { label: "Şehir", value: "city" },
+            { label: "Ağ", value: "network" },
+            { label: "İş birliği", value: "handshake" },
+          ],
+          required: true,
+        },
+        {
+          name: "title",
+          type: "text",
+          label: "Başlık",
+          required: true,
+        },
+        {
+          name: "description",
+          type: "textarea",
+          label: "Açıklama",
+          required: true,
+        },
+        {
+          name: "linkLabel",
+          type: "text",
+          label: "Bağlantı metni",
+          required: true,
+        },
+        {
+          name: "linkHref",
+          type: "text",
+          label: "Bağlantı adresi (isteğe bağlı)",
+          validate: (value: unknown) =>
+            value === null || value === undefined || value === ""
+              ? true
+              : isSafeLink(value),
+        },
+      ],
+    },
+  ],
+};
+
 export const CtaBlock: Block = {
   slug: "cta",
   labels: {
@@ -347,6 +508,8 @@ export const CtaBlock: Block = {
 
 export const pageBlocks = [
   HeroBlock,
+  HomeAboutBlock,
+  HomeFocusAreasBlock,
   RichTextBlock,
   CardGroupBlock,
   ImageTextBlock,
