@@ -1,4 +1,5 @@
 import type { CollectionConfig } from "payload";
+import { preventDeletingLastAdmin } from "@/lib/payloadDeleteGuards";
 
 type UserWithRole = {
   id: number | string;
@@ -46,4 +47,7 @@ export const Users: CollectionConfig = {
       saveToJWT: true,
     },
   ],
+  hooks: {
+    beforeDelete: [preventDeletingLastAdmin],
+  },
 };

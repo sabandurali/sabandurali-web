@@ -1,6 +1,7 @@
 import path from "node:path";
 import type { CollectionConfig } from "payload";
 import { adminOrEditor } from "@/lib/payloadAccess";
+import { preventDeletingReferencedMedia } from "@/lib/payloadDeleteGuards";
 
 export const Media: CollectionConfig = {
   slug: "media",
@@ -36,6 +37,9 @@ export const Media: CollectionConfig = {
       label: "Kaynak / telif",
     },
   ],
+  hooks: {
+    beforeDelete: [preventDeletingReferencedMedia],
+  },
   upload: {
     bulkUpload: false,
     crop: false,

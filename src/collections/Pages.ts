@@ -11,6 +11,7 @@ import {
   publishedPageOrAdminOrEditor,
 } from "@/lib/payloadAccess";
 import { normalizeSlug } from "@/lib/localizedSlug";
+import { preventDeletingHomePage } from "@/lib/payloadDeleteGuards";
 
 const RESERVED_TURKISH_SLUGS = new Set([
   "admin",
@@ -28,6 +29,24 @@ function getText(value: unknown): string | null {
   return typeof value === "string" && value.trim().length > 0
     ? value.trim()
     : null;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+function countVisibleHomeBlocks(
+  layout: unknown,
+  blockType: "hero" | "homeAbout" | "homeFocusAreas",
+): number {
+  if (!Array.isArray(layout)) return 0;
+
+  return layout.filter(
+    (block) =>
+      isRecord(block) &&
+      block.blockType === blockType &&
+      block.visible !== false,
+  ).length;
 }
 
 const validatePageIdentity: CollectionBeforeValidateHook = async ({
@@ -127,6 +146,25 @@ const validatePageIdentity: CollectionBeforeValidateHook = async ({
       errors.push({
         message: "Bu dil için yalnız bir ana sayfa kaydı oluşturulabilir.",
         path: "pageType",
+      });
+    }
+
+    const status =
+      getText(data._status) ?? getText(originalDoc?._status) ?? "draft";
+    const layout = Array.isArray(data.layout)
+      ? data.layout
+      : originalDoc?.layout;
+
+    if (
+      status === "published" &&
+      (countVisibleHomeBlocks(layout, "hero") !== 1 ||
+        countVisibleHomeBlocks(layout, "homeAbout") !== 1 ||
+        countVisibleHomeBlocks(layout, "homeFocusAreas") !== 1)
+    ) {
+      errors.push({
+        message:
+          "Yayındaki Ana Sayfa tam olarak bir görünür Hero, Hakkımda ve Çalışma Alanları bloğu içermelidir.",
+        path: "layout",
       });
     }
   }
@@ -327,6 +365,7 @@ export const Pages: CollectionConfig = {
   ],
   hooks: {
     beforeChange: [setPublishedAtOnFirstPublish],
+    beforeDelete: [preventDeletingHomePage],
     beforeValidate: [validatePageIdentity],
   },
   indexes: [

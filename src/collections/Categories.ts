@@ -4,6 +4,7 @@ import {
   createLocalizedSlugField,
   createLocalizedSlugHook,
 } from "@/lib/localizedSlug";
+import { preventDeletingReferencedCategory } from "@/lib/payloadDeleteGuards";
 
 export const Categories: CollectionConfig = {
   slug: "categories",
@@ -46,6 +47,7 @@ export const Categories: CollectionConfig = {
     },
   ],
   hooks: {
+    beforeDelete: [preventDeletingReferencedCategory],
     beforeValidate: [
       createLocalizedSlugHook({
         collection: "categories",
