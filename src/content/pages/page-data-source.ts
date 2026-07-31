@@ -2,6 +2,7 @@ import "server-only";
 import { cache } from "react";
 import { PayloadPublicPageRepository } from "@/content/pages/payload-page-repository";
 import type { PublicPage } from "@/content/pages/public-types";
+import { assertProductionPayloadInfrastructure } from "@/lib/payloadInfrastructure";
 
 export type PublicPageSource = "payload" | "static";
 
@@ -15,12 +16,7 @@ export function getPublicPageSource(): PublicPageSource {
   }
 
   if (source === "payload") {
-    if (process.env.NODE_ENV !== "development") {
-      throw new Error(
-        "PAGE_PUBLIC_SOURCE=payload is restricted to local development during this project stage.",
-      );
-    }
-
+    assertProductionPayloadInfrastructure();
     return "payload";
   }
 

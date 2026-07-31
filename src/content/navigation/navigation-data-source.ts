@@ -16,6 +16,7 @@ import type {
   HomeAnchors,
   Locale,
 } from "@/content/homeContent";
+import { assertProductionPayloadInfrastructure } from "@/lib/payloadInfrastructure";
 
 type PublicNavigationSource = "payload" | "static";
 
@@ -30,12 +31,7 @@ function getPublicNavigationSource(): PublicNavigationSource {
   }
 
   if (source === "payload") {
-    if (process.env.NODE_ENV !== "development") {
-      throw new Error(
-        "NAVIGATION_PUBLIC_SOURCE=payload is restricted to local development during this project stage.",
-      );
-    }
-
+    assertProductionPayloadInfrastructure();
     return "payload";
   }
 

@@ -1,5 +1,7 @@
+import { postgresAdapter } from "@payloadcms/db-postgres";
 import { sqliteAdapter } from "@payloadcms/db-sqlite";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
+import { vercelBlobStorage } from "@payloadcms/storage-vercel-blob";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildConfig } from "payload";
@@ -11,9 +13,57 @@ import { Media } from "@/collections/Media";
 import { Pages } from "@/collections/Pages";
 import { Users } from "@/collections/Users";
 import { Navigation } from "@/globals/Navigation";
+import {
+  assertProductionPayloadInfrastructure,
+  getPayloadDatabaseProvider,
+  getPayloadStorageProvider,
+  requirePayloadEnvironmentVariable,
+} from "@/lib/payloadInfrastructure";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
+const databaseProvider = getPayloadDatabaseProvider();
+const storageProvider = getPayloadStorageProvider();
+
+assertProductionPayloadInfrastructure();
+
+const database =
+  databaseProvider === "postgres"
+    ? postgresAdapter({
+        disableCreateDatabase: true,
+        idType: "uuid",
+        migrationDir: path.resolve(dirname, "migrations"),
+        pool: {
+          connectionString: requirePayloadEnvironmentVariable(
+            "DATABASE_URL",
+            "PAYLOAD_DATABASE=postgres",
+          ),
+        },
+        push: false,
+      })
+    : sqliteAdapter({
+        client: {
+          url: process.env.DATABASE_URL || "",
+        },
+        idType: "uuid",
+        push: process.env.NODE_ENV === "development",
+      });
+
+const plugins =
+  storageProvider === "vercel-blob"
+    ? [
+        vercelBlobStorage({
+          clientUploads: false,
+          collections: {
+            media: true,
+          },
+          token: requirePayloadEnvironmentVariable(
+            "BLOB_READ_WRITE_TOKEN",
+            "PAYLOAD_STORAGE=vercel-blob",
+          ),
+        }),
+      ]
+    : [];
 
 export default buildConfig({
   admin: {
@@ -24,13 +74,7 @@ export default buildConfig({
   },
   collections: [Users, Media, Categories, Articles, Books, Pages],
   globals: [Navigation],
-  db: sqliteAdapter({
-    client: {
-      url: process.env.DATABASE_URL || "",
-    },
-    idType: "uuid",
-    push: process.env.NODE_ENV === "development",
-  }),
+  db: database,
   editor: lexicalEditor(),
   localization: {
     defaultLocale: "tr",
@@ -40,6 +84,7 @@ export default buildConfig({
       { code: "en", label: "English" },
     ],
   },
+  plugins,
   secret: process.env.PAYLOAD_SECRET || "",
   sharp,
   typescript: {

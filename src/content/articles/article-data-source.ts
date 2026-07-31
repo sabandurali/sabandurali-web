@@ -24,6 +24,7 @@ import type {
   Article,
   ArticleLanguage,
 } from "@/content/articles/types";
+import { assertProductionPayloadInfrastructure } from "@/lib/payloadInfrastructure";
 
 const articleRepository = new InMemoryArticleRepository([
   exampleTurkishArticle,
@@ -49,12 +50,7 @@ function getPublicArticleSource(): PublicArticleSource {
   }
 
   if (source === "payload") {
-    if (process.env.NODE_ENV !== "development") {
-      throw new Error(
-        "ARTICLE_PUBLIC_SOURCE=payload is restricted to local development during this project stage.",
-      );
-    }
-
+    assertProductionPayloadInfrastructure();
     return "payload";
   }
 

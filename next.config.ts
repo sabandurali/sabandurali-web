@@ -2,9 +2,12 @@ import { withPayload } from "@payloadcms/next/withPayload";
 import type { NextConfig } from "next";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { assertProductionPayloadInfrastructure } from "./src/lib/payloadInfrastructure";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
+
+assertProductionPayloadInfrastructure();
 
 const nextConfig: NextConfig = {
   images: {

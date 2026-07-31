@@ -12,6 +12,7 @@ import type {
   BookReview,
   BookReviewLanguage,
 } from "@/content/books/types";
+import { assertProductionPayloadInfrastructure } from "@/lib/payloadInfrastructure";
 
 const modelFixtures = [
   exampleTurkishBookReview,
@@ -95,12 +96,7 @@ function getPublicBookReviewSource(): PublicBookReviewSource {
   }
 
   if (source === "payload") {
-    if (process.env.NODE_ENV !== "development") {
-      throw new Error(
-        "BOOK_PUBLIC_SOURCE=payload is restricted to local development during this project stage.",
-      );
-    }
-
+    assertProductionPayloadInfrastructure();
     return "payload";
   }
 
