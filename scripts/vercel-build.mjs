@@ -8,6 +8,11 @@ const isTargetPreview =
   process.env.VERCEL_ENV === "preview" &&
   process.env.VERCEL_GIT_COMMIT_REF === TARGET_PREVIEW_BRANCH;
 
+const isProductionMain =
+  process.env.VERCEL === "1" &&
+  process.env.VERCEL_ENV === "production" &&
+  process.env.VERCEL_GIT_COMMIT_REF === "main";
+
 function fail(message) {
   console.error(message);
   process.exit(1);
@@ -44,7 +49,7 @@ function runNpmScript(scriptName) {
   }
 }
 
-if (isTargetPreview) {
+if (isTargetPreview || isProductionMain) {
   requireExactEnvironmentValue("PAYLOAD_DATABASE", "postgres");
   requireExactEnvironmentValue("PAYLOAD_STORAGE", "vercel-blob");
   requireEnvironmentValue("DATABASE_URL");
