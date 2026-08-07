@@ -1,12 +1,15 @@
 import { spawnSync } from "node:child_process";
 
-const TARGET_PREVIEW_BRANCH = "codex/project-day-17-production-infra";
+const TARGET_PREVIEW_BRANCHES = new Set([
+  "codex/project-day-17-production-infra",
+  "codex/project-day-19-photography",
+]);
 const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
 
 const isTargetPreview =
   process.env.VERCEL === "1" &&
   process.env.VERCEL_ENV === "preview" &&
-  process.env.VERCEL_GIT_COMMIT_REF === TARGET_PREVIEW_BRANCH;
+  TARGET_PREVIEW_BRANCHES.has(process.env.VERCEL_GIT_COMMIT_REF);
 
 const isProductionMain =
   process.env.VERCEL === "1" &&
