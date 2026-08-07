@@ -28,10 +28,17 @@ import {
 } from "@/content/pages/page-data-source";
 import { getPublicPagePath } from "@/content/pages/page-seo";
 import type { PublicPage } from "@/content/pages/public-types";
+import { getAllPublishedPhotos } from "@/content/photos/photo-data-source";
+import {
+  getPhotoAlternateUrls,
+  getPhotoUrl,
+  photoListUrls,
+} from "@/content/photos/photo-routes";
+import type { PublicPhoto, PublicPhotoTranslation } from "@/content/photos/types";
 
 function getLastModified(
   entry: Pick<
-    PublicArticleSummary | BookReview | PublicPage,
+    PublicArticleSummary | BookReview | PublicPage | PublicPhoto,
     "updatedAt" | "publishedAt"
   >,
 ): Date | undefined {
@@ -63,6 +70,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     englishBookReviews,
     turkishPages,
     turkishHomePageData,
+    turkishPhotos,
+    englishPhotos,
   ] = await Promise.all([
     getAllPublishedArticles("tr"),
     getAllPublishedArticles("en"),
@@ -70,9 +79,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     getAllPublishedBookReviews("en"),
     getAllPublishedTurkishStandardPages(),
     getTurkishHomePageData(),
+    getAllPublishedPhotos("tr"),
+    getAllPublishedPhotos("en"),
   ]);
   const articles = [...turkishArticles, ...englishArticles];
   const bookReviews = [...turkishBookReviews, ...englishBookReviews];
+  const photos = [...turkishPhotos, ...englishPhotos];
   const pageEntries: MetadataRoute.Sitemap = turkishPages
     .filter((page) => page.seo.index)
     .map((page) => ({
@@ -134,6 +146,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       };
     },
   );
+  const photoEntries: MetadataRoute.Sitemap = photos.map((photo) => {
+    const translated =
+      photos.find(
+        (candidate) =>
+          candidate.id === photo.id && candidate.language !== photo.language,
+      ) ?? null;
+    const translation: PublicPhotoTranslation | null =
+      translated === null
+        ? null
+        : {
+            id: translated.id,
+            language: translated.language,
+            title: translated.title,
+            slug: translated.slug,
+          };
+    return {
+      url: getPhotoUrl(photo.slug, photo.language),
+      lastModified: getLastModified(photo),
+      changeFrequency: "monthly",
+      priority: 0.65,
+      images: [photo.image.src],
+      alternates: { languages: getPhotoAlternateUrls(photo, translation) },
+    };
+  });
 
   return [
     ...(turkishHomePageData.source === "static" ||
@@ -225,6 +261,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       },
     },
     ...bookReviewEntries,
+    {
+      url: photoListUrls["tr-TR"],
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.8,
+      alternates: { languages: photoListUrls },
+    },
+    {
+      url: photoListUrls.en,
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.8,
+      alternates: { languages: photoListUrls },
+    },
+    ...photoEntries,
     ...pageEntries,
   ];
 }

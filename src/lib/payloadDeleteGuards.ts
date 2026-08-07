@@ -10,7 +10,7 @@ import {
 
 type ReferencingCollection = "articles" | "books" | "pages";
 type RecordValue = Record<string, unknown>;
-type MediaUsage = {
+type RelationshipUsage = {
   entity: string;
   source: "current" | "version";
 };
@@ -26,26 +26,32 @@ function isMatchingID(value: unknown, mediaID: number | string): boolean {
   );
 }
 
-function mediaRelationMatches(
+function relationshipValueMatches(
   value: unknown,
-  mediaID: number | string,
+  targetCollection: string,
+  targetID: number | string,
 ): boolean {
   if (Array.isArray(value)) {
-    return value.some((entry) => mediaRelationMatches(entry, mediaID));
+    return value.some((entry) =>
+      relationshipValueMatches(entry, targetCollection, targetID),
+    );
   }
 
-  if (isMatchingID(value, mediaID)) return true;
+  if (isMatchingID(value, targetID)) return true;
   if (!isRecord(value)) return false;
 
-  if ("relationTo" in value && value.relationTo !== "media") {
+  if ("relationTo" in value && value.relationTo !== targetCollection) {
     return false;
   }
 
-  if ("value" in value && mediaRelationMatches(value.value, mediaID)) {
+  if (
+    "value" in value &&
+    relationshipValueMatches(value.value, targetCollection, targetID)
+  ) {
     return true;
   }
 
-  return "id" in value && isMatchingID(value.id, mediaID);
+  return "id" in value && isMatchingID(value.id, targetID);
 }
 
 function lexicalValueReferencesMedia(
@@ -63,7 +69,7 @@ function lexicalValueReferencesMedia(
   if (
     (value.type === "upload" || value.type === "relationship") &&
     value.relationTo === "media" &&
-    mediaRelationMatches(value.value, mediaID)
+    relationshipValueMatches(value.value, "media", mediaID)
   ) {
     return true;
   }
@@ -73,10 +79,13 @@ function lexicalValueReferencesMedia(
   );
 }
 
-function relationTargetsMedia(relationTo: unknown): boolean {
+function relationTargetsCollection(
+  relationTo: unknown,
+  targetCollection: string,
+): boolean {
   return Array.isArray(relationTo)
-    ? relationTo.includes("media")
-    : relationTo === "media";
+    ? relationTo.includes(targetCollection)
+    : relationTo === targetCollection;
 }
 
 function fieldValues(field: Field, data: RecordValue): unknown[] {
@@ -101,16 +110,19 @@ function fieldValues(field: Field, data: RecordValue): unknown[] {
   return [value];
 }
 
-function fieldsCanReferenceMedia(fields: Field[]): boolean {
+function fieldsCanReferenceCollection(
+  fields: Field[],
+  targetCollection: string,
+): boolean {
   return fields.some((field) => {
     if (
       (field.type === "relationship" || field.type === "upload") &&
-      relationTargetsMedia(field.relationTo)
+      relationTargetsCollection(field.relationTo, targetCollection)
     ) {
       return true;
     }
 
-    if (field.type === "richText") return true;
+    if (field.type === "richText") return targetCollection === "media";
 
     if (
       field.type === "array" ||
@@ -118,18 +130,18 @@ function fieldsCanReferenceMedia(fields: Field[]): boolean {
       field.type === "group" ||
       field.type === "row"
     ) {
-      return fieldsCanReferenceMedia(field.fields);
+      return fieldsCanReferenceCollection(field.fields, targetCollection);
     }
 
     if (field.type === "blocks") {
       return field.blocks.some((block) =>
-        fieldsCanReferenceMedia(block.fields),
+        fieldsCanReferenceCollection(block.fields, targetCollection),
       );
     }
 
     if (field.type === "tabs") {
       return field.tabs.some((tab) =>
-        fieldsCanReferenceMedia(tab.fields),
+        fieldsCanReferenceCollection(tab.fields, targetCollection),
       );
     }
 
@@ -137,26 +149,27 @@ function fieldsCanReferenceMedia(fields: Field[]): boolean {
   });
 }
 
-function fieldsReferenceMedia(
+function fieldsReferenceCollection(
   fields: Field[],
   data: unknown,
-  mediaID: number | string,
+  targetCollection: string,
+  targetID: number | string,
 ): boolean {
   if (!isRecord(data)) return false;
 
   return fields.some((field) => {
     if (
       (field.type === "relationship" || field.type === "upload") &&
-      relationTargetsMedia(field.relationTo)
+      relationTargetsCollection(field.relationTo, targetCollection)
     ) {
       return fieldValues(field, data).some((value) =>
-        mediaRelationMatches(value, mediaID),
+        relationshipValueMatches(value, targetCollection, targetID),
       );
     }
 
-    if (field.type === "richText") {
+    if (field.type === "richText" && targetCollection === "media") {
       return fieldValues(field, data).some((value) =>
-        lexicalValueReferencesMedia(value, mediaID),
+        lexicalValueReferencesMedia(value, targetID),
       );
     }
 
@@ -165,7 +178,12 @@ function fieldsReferenceMedia(
         (value) =>
           Array.isArray(value) &&
           value.some((entry) =>
-            fieldsReferenceMedia(field.fields, entry, mediaID),
+              fieldsReferenceCollection(
+                field.fields,
+                entry,
+                targetCollection,
+                targetID,
+              ),
           ),
       );
     }
@@ -185,7 +203,12 @@ function fieldsReferenceMedia(
 
             return (
               block !== undefined &&
-              fieldsReferenceMedia(block.fields, entry, mediaID)
+                fieldsReferenceCollection(
+                  block.fields,
+                  entry,
+                  targetCollection,
+                  targetID,
+                )
             );
           }),
       );
@@ -197,7 +220,12 @@ function fieldsReferenceMedia(
       field.type === "row"
     ) {
       return fieldValues(field, data).some((value) =>
-        fieldsReferenceMedia(field.fields, value, mediaID),
+        fieldsReferenceCollection(
+          field.fields,
+          value,
+          targetCollection,
+          targetID,
+        ),
       );
     }
 
@@ -209,7 +237,12 @@ function fieldsReferenceMedia(
             : [data];
 
         return tabValues.some((value) =>
-          fieldsReferenceMedia(tab.fields, value, mediaID),
+          fieldsReferenceCollection(
+            tab.fields,
+            value,
+            targetCollection,
+            targetID,
+          ),
         );
       });
     }
@@ -218,14 +251,15 @@ function fieldsReferenceMedia(
   });
 }
 
-async function findCollectionMediaUsage(
+async function findCollectionRelationshipUsage(
   req: PayloadRequest,
-  mediaID: number | string,
-): Promise<MediaUsage | null> {
+  targetCollection: string,
+  targetID: number | string,
+): Promise<RelationshipUsage | null> {
   for (const collection of req.payload.config.collections) {
     if (
-      collection.slug === "media" ||
-      !fieldsCanReferenceMedia(collection.fields)
+      collection.slug === targetCollection ||
+      !fieldsCanReferenceCollection(collection.fields, targetCollection)
     ) {
       continue;
     }
@@ -244,7 +278,12 @@ async function findCollectionMediaUsage(
 
     if (
       currentDocuments.docs.some((document) =>
-        fieldsReferenceMedia(collection.fields, document, mediaID),
+        fieldsReferenceCollection(
+          collection.fields,
+          document,
+          targetCollection,
+          targetID,
+        ),
       )
     ) {
       return { entity: collection.slug, source: "current" };
@@ -264,10 +303,11 @@ async function findCollectionMediaUsage(
 
     if (
       versions.docs.some((document) =>
-        fieldsReferenceMedia(
-          collection.fields,
-          document.version,
-          mediaID,
+          fieldsReferenceCollection(
+            collection.fields,
+            document.version,
+            targetCollection,
+            targetID,
         ),
       )
     ) {
@@ -278,12 +318,13 @@ async function findCollectionMediaUsage(
   return null;
 }
 
-async function findGlobalMediaUsage(
+async function findGlobalRelationshipUsage(
   req: PayloadRequest,
-  mediaID: number | string,
-): Promise<MediaUsage | null> {
+  targetCollection: string,
+  targetID: number | string,
+): Promise<RelationshipUsage | null> {
   for (const global of req.payload.config.globals) {
-    if (!fieldsCanReferenceMedia(global.fields)) continue;
+    if (!fieldsCanReferenceCollection(global.fields, targetCollection)) continue;
 
     const globalSlug = global.slug as GlobalSlug;
     const currentDocument = await req.payload.findGlobal({
@@ -296,7 +337,14 @@ async function findGlobalMediaUsage(
       req,
     });
 
-    if (fieldsReferenceMedia(global.fields, currentDocument, mediaID)) {
+    if (
+      fieldsReferenceCollection(
+        global.fields,
+        currentDocument,
+        targetCollection,
+        targetID,
+      )
+    ) {
       return { entity: global.slug, source: "current" };
     }
 
@@ -314,7 +362,12 @@ async function findGlobalMediaUsage(
 
     if (
       versions.docs.some((document) =>
-        fieldsReferenceMedia(global.fields, document.version, mediaID),
+          fieldsReferenceCollection(
+            global.fields,
+            document.version,
+            targetCollection,
+            targetID,
+          ),
       )
     ) {
       return { entity: global.slug, source: "version" };
@@ -418,8 +471,8 @@ export const preventDeletingReferencedCategory: CollectionBeforeDeleteHook =
 export const preventDeletingReferencedMedia: CollectionBeforeDeleteHook =
   async ({ id, req }) => {
     const usage =
-      (await findCollectionMediaUsage(req, id)) ??
-      (await findGlobalMediaUsage(req, id));
+      (await findCollectionRelationshipUsage(req, "media", id)) ??
+      (await findGlobalRelationshipUsage(req, "media", id));
 
     if (usage !== null) {
       const sourceDescription =
@@ -433,3 +486,30 @@ export const preventDeletingReferencedMedia: CollectionBeforeDeleteHook =
       );
     }
   };
+
+function preventDeletingReferencedRelationship(
+  targetCollection: "photo-collections" | "tags",
+  label: string,
+): CollectionBeforeDeleteHook {
+  return async ({ id, req }) => {
+    const usage =
+      (await findCollectionRelationshipUsage(req, targetCollection, id)) ??
+      (await findGlobalRelationshipUsage(req, targetCollection, id));
+
+    if (usage === null) return;
+
+    const sourceDescription =
+      usage.source === "version" ? "geçmiş bir içerik sürümünde" : "mevcut içerikte";
+
+    throw new APIError(
+      `Bu ${label} ${sourceDescription} (${usage.entity}) kullanılıyor. Önce ilişkiyi kaldırın ve gerekiyorsa ilgili sürüm geçmişini temizleyin.`,
+      409,
+    );
+  };
+}
+
+export const preventDeletingReferencedPhotoCollection =
+  preventDeletingReferencedRelationship("photo-collections", "fotoğraf koleksiyonu");
+
+export const preventDeletingReferencedTag =
+  preventDeletingReferencedRelationship("tags", "etiket");

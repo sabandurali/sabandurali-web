@@ -51,16 +51,24 @@ export function getAvailableLocalArticleImage(
 }
 
 export function getSafePayloadMediaPath(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+
+  if (value.startsWith("https://")) {
+    try {
+      const url = new URL(value);
+      return url.hostname.endsWith(".blob.vercel-storage.com") ? value : null;
+    } catch {
+      return null;
+    }
+  }
+
   if (
-    typeof value !== "string" ||
     !value.startsWith("/api/media/file/") ||
     value.startsWith("//") ||
     value.includes("\\") ||
     value.includes("?") ||
     value.includes("#")
-  ) {
-    return null;
-  }
+  ) return null;
 
   try {
     const decodedPath = decodeURIComponent(value);

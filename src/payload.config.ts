@@ -11,6 +11,9 @@ import { Books } from "@/collections/Books";
 import { Categories } from "@/collections/Categories";
 import { Media } from "@/collections/Media";
 import { Pages } from "@/collections/Pages";
+import { PhotoCollections } from "@/collections/PhotoCollections";
+import { Photos } from "@/collections/Photos";
+import { Tags } from "@/collections/Tags";
 import { Users } from "@/collections/Users";
 import { Navigation } from "@/globals/Navigation";
 import {
@@ -72,7 +75,17 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, Categories, Articles, Books, Pages],
+  collections: [
+    Users,
+    Media,
+    Categories,
+    Articles,
+    Books,
+    Pages,
+    PhotoCollections,
+    Tags,
+    Photos,
+  ],
   globals: [Navigation],
   db: database,
   editor: lexicalEditor(),

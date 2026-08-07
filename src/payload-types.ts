@@ -73,6 +73,9 @@ export interface Config {
     articles: Article;
     books: Book;
     pages: Page;
+    'photo-collections': PhotoCollection;
+    tags: Tag;
+    photos: Photo;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -86,6 +89,9 @@ export interface Config {
     articles: ArticlesSelect<false> | ArticlesSelect<true>;
     books: BooksSelect<false> | BooksSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
+    'photo-collections': PhotoCollectionsSelect<false> | PhotoCollectionsSelect<true>;
+    tags: TagsSelect<false> | TagsSelect<true>;
+    photos: PhotosSelect<false> | PhotosSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -629,6 +635,86 @@ export interface Page {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "photo-collections".
+ */
+export interface PhotoCollection {
+  id: string;
+  title: string;
+  /**
+   * Başlıktan otomatik oluşur; gerekirse elle düzenlenebilir ve başlık değiştiğinde korunur.
+   */
+  slug: string;
+  description?: string | null;
+  /**
+   * Alt koleksiyon için üst koleksiyonu seçin. Ana koleksiyonlarda boş bırakın.
+   */
+  parent?: (string | null) | PhotoCollection;
+  sortOrder?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tags".
+ */
+export interface Tag {
+  id: string;
+  title: string;
+  /**
+   * Başlıktan otomatik oluşur; gerekirse elle düzenlenebilir ve başlık değiştiğinde korunur.
+   */
+  slug: string;
+  description?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "photos".
+ */
+export interface Photo {
+  id: string;
+  title: string;
+  /**
+   * Başlıktan otomatik oluşur; gerekirse elle düzenlenebilir ve başlık değiştiğinde korunur.
+   */
+  slug: string;
+  description?: string | null;
+  /**
+   * Public görselde önce bu alternatif metin kullanılır.
+   */
+  altText: string;
+  image: string | Media;
+  collections: (string | PhotoCollection)[];
+  tags?: (string | Tag)[] | null;
+  takenAt?: string | null;
+  locationName?: string | null;
+  photographer: string;
+  creditLicense?: string | null;
+  featured?: boolean | null;
+  exif?: {
+    camera?: string | null;
+    lens?: string | null;
+    focalLength?: string | null;
+    aperture?: string | null;
+    shutterSpeed?: string | null;
+    iso?: string | null;
+  };
+  /**
+   * İlk yayında otomatik atanır; gelecek tarih planlı yayın anlamına gelir.
+   */
+  publishedAt?: string | null;
+  seo?: {
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+    openGraphImage?: (string | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -666,6 +752,18 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'articles';
         value: string | Article;
+      } | null)
+    | ({
+        relationTo: 'photo-collections';
+        value: string | PhotoCollection;
+      } | null)
+    | ({
+        relationTo: 'tags';
+        value: string | Tag;
+      } | null)
+    | ({
+        relationTo: 'photos';
+        value: string | Photo;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -1085,6 +1183,69 @@ export interface PagesSelect<T extends boolean = true> {
         index?: T;
         follow?: T;
         socialImage?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "photo-collections_select".
+ */
+export interface PhotoCollectionsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  description?: T;
+  parent?: T;
+  sortOrder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tags_select".
+ */
+export interface TagsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  description?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "photos_select".
+ */
+export interface PhotosSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  description?: T;
+  altText?: T;
+  image?: T;
+  collections?: T;
+  tags?: T;
+  takenAt?: T;
+  locationName?: T;
+  photographer?: T;
+  creditLicense?: T;
+  featured?: T;
+  exif?:
+    | T
+    | {
+        camera?: T;
+        lens?: T;
+        focalLength?: T;
+        aperture?: T;
+        shutterSpeed?: T;
+        iso?: T;
+      };
+  publishedAt?: T;
+  seo?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+        openGraphImage?: T;
       };
   updatedAt?: T;
   createdAt?: T;

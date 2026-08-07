@@ -17,6 +17,7 @@ const RESERVED_TURKISH_SLUGS = new Set([
   "admin",
   "api",
   "en",
+  "fotograflar",
   "geri-bildirim",
   "iletisim",
   "kitaplar",

@@ -39,7 +39,7 @@ export function normalizeSlug(input: string): string {
 }
 
 type LocalizedSlugFieldOptions = {
-  collection: "articles" | "categories";
+  collection: "articles" | "categories" | "photo-collections" | "photos" | "tags";
   sourceField: string;
 };
 

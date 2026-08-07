@@ -5,6 +5,7 @@ const PUBLIC_SOURCE_VARIABLES = [
   "BOOK_PUBLIC_SOURCE",
   "PAGE_PUBLIC_SOURCE",
   "NAVIGATION_PUBLIC_SOURCE",
+  "PHOTO_PUBLIC_SOURCE",
 ] as const;
 
 export type PayloadDatabaseProvider =
