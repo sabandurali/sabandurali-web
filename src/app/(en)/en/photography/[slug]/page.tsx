@@ -2,16 +2,12 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import PhotoDetailPage from "@/components/photos/PhotoDetailPage";
 import {
-  getAllPublishedPhotos,
   getPublishedPhotoPageData,
   getRelatedPublishedPhotos,
 } from "@/content/photos/photo-data-source";
 import { createPhotoMetadata } from "@/content/photos/photo-seo";
 
-export async function generateStaticParams() {
-  const photos = await getAllPublishedPhotos("en");
-  return photos.map((photo) => ({ slug: photo.slug }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;

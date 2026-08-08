@@ -36,6 +36,8 @@ import {
 } from "@/content/photos/photo-routes";
 import type { PublicPhoto, PublicPhotoTranslation } from "@/content/photos/types";
 
+export const dynamic = "force-dynamic";
+
 function getLastModified(
   entry: Pick<
     PublicArticleSummary | BookReview | PublicPage | PublicPhoto,
