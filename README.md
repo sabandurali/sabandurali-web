@@ -54,6 +54,23 @@ The migration commands operate on the configured database. Copying existing
 SQLite content and local media requires a separate, explicitly planned
 data-migration step.
 
+### Production content strategy
+
+Production starts with an empty PostgreSQL database. The local SQLite test
+data and files under `public/media` are not transferred to Production. Add
+real content through the Production admin panel and upload real media there
+to Vercel Blob. Static fixtures and test media are never Production content;
+the Production migration command creates schema only and does not move
+content or media.
+
+### Production first administrator
+
+With a clean Production database, visit `/admin` and use Payload's first-user
+screen to create the initial administrator. After that user exists, anonymous
+first-user registration is closed and creating additional users requires an
+authenticated administrator. Never commit administrator credentials, tokens,
+or secrets to Git.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

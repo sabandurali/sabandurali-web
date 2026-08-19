@@ -10,6 +10,9 @@ const dirname = path.dirname(filename);
 assertProductionPayloadInfrastructure();
 
 const nextConfig: NextConfig = {
+  experimental: {
+    globalNotFound: true,
+  },
   images: {
     localPatterns: [
       {

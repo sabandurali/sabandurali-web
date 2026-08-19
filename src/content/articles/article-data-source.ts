@@ -26,11 +26,12 @@ import type {
 } from "@/content/articles/types";
 import { assertProductionPayloadInfrastructure } from "@/lib/payloadInfrastructure";
 
-const articleRepository = new InMemoryArticleRepository([
-  exampleTurkishArticle,
-  exampleEnglishArticle,
-  exampleDraftArticle,
-]);
+const staticArticleFixtures =
+  process.env.NODE_ENV === "production"
+    ? []
+    : [exampleTurkishArticle, exampleEnglishArticle, exampleDraftArticle];
+
+const articleRepository = new InMemoryArticleRepository(staticArticleFixtures);
 const payloadArticleRepository = new PayloadPublicArticleRepository();
 
 export const articleQueryService = new ArticleQueryService(articleRepository);

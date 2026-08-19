@@ -1,0 +1,42 @@
+"use client";
+
+import Link from "next/link";
+
+type PublicErrorProps = {
+  unstable_retry: () => void;
+};
+
+export default function TurkishError({
+  unstable_retry: retry,
+}: PublicErrorProps) {
+  return (
+    <main className="flex min-h-screen items-center px-4 py-14 sm:px-6">
+      <section className="mx-auto max-w-xl rounded-sm border border-border bg-surface/80 p-7 sm:p-10">
+        <p className="text-xs font-semibold tracking-[0.22em] text-accent-soft">
+          BİR SORUN OLUŞTU
+        </p>
+        <h1 className="mt-4 text-4xl leading-tight text-ivory sm:text-5xl">
+          Sayfa şu anda gösterilemiyor.
+        </h1>
+        <p className="mt-5 text-base leading-7 text-muted">
+          Lütfen yeniden deneyin veya ana sayfaya dönün.
+        </p>
+        <div className="mt-7 flex flex-wrap gap-3">
+          <button
+            type="button"
+            onClick={retry}
+            className="inline-flex min-h-11 items-center rounded-sm bg-accent px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-accent-strong motion-reduce:transition-none"
+          >
+            Yeniden dene
+          </button>
+          <Link
+            href="/"
+            className="inline-flex min-h-11 items-center rounded-sm border border-border px-5 py-3 text-sm font-semibold text-ivory transition-colors hover:border-accent hover:text-accent-soft motion-reduce:transition-none"
+          >
+            Ana sayfa
+          </Link>
+        </div>
+      </section>
+    </main>
+  );
+}
