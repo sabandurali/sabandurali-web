@@ -17,7 +17,6 @@ export type HeaderContent = {
     books?: string;
     photography: string;
     contact: string;
-    feedback: string;
   };
   menu: {
     openLabel: string;
@@ -39,12 +38,6 @@ export type HeroContent = {
   primaryActionHref?: string;
   secondaryAction: string;
   secondaryActionHref?: string;
-  betaInvitation: {
-    label: string;
-    description: string;
-    linkLabel: string;
-    href: string;
-  };
   goalsLabel: string;
   goals: ReadonlyArray<{
     value: string;
@@ -85,10 +78,20 @@ export type FooterContent = {
   copyright: string;
   links: {
     contact: string;
-    feedback: string;
     privacy: string;
     email: string;
   };
+};
+
+export type HomeListingSectionContent = {
+  title: string;
+  linkLabel: string;
+};
+
+export type HomeContactCallToActionContent = {
+  title: string;
+  description: string;
+  buttonLabel: string;
 };
 
 export type HomeContent = {
@@ -98,7 +101,12 @@ export type HomeContent = {
   hero: HeroContent;
   about: AboutContent;
   focusAreas: FocusAreasContent;
-  sectionOrder?: ReadonlyArray<"hero" | "about" | "focusAreas">;
+  listingSections: {
+    articles: HomeListingSectionContent;
+    books: HomeListingSectionContent;
+    photography: HomeListingSectionContent;
+  };
+  contactCallToAction: HomeContactCallToActionContent;
   footer: FooterContent;
   backToTopLabel: string;
 };
@@ -117,12 +125,11 @@ export const homeContent = {
       brandTagline: "ARAŞTIRMA VE BİLGİ PLATFORMU",
       navigation: {
         about: "Hakkımda",
-        work: "Çalışmalar",
+        work: "Çalışma Alanları",
         articles: "Makaleler",
         books: "Kitaplar",
         photography: "Fotoğraflar",
         contact: "İletişim",
-        feedback: "Beta geri bildirimi",
       },
       menu: {
         openLabel: "Menüyü aç",
@@ -144,13 +151,6 @@ export const homeContent = {
         "Gayrimenkul, danışmanlık, araştırma ve teknoloji alanlarında güvenilir bilgi, uygulanabilir analiz ve sürdürülebilir değer üreten bağımsız bir platform oluşturuyorum.",
       primaryAction: "Çalışmaları keşfet",
       secondaryAction: "Hakkımda",
-      betaInvitation: {
-        label: "🧪 Beta sürümü",
-        description:
-          "Bu platformu geliştirmeme yardımcı olmak için 3–4 dakikanızı ayırabilirsiniz.",
-        linkLabel: "Beta geri bildirimi",
-        href: "/geri-bildirim",
-      },
       goalsLabel: "Platform hedefi",
       goals: [
         { value: "500+", label: "kitap incelemesi" },
@@ -213,6 +213,26 @@ export const homeContent = {
         },
       ],
     },
+    listingSections: {
+      articles: {
+        title: "Son Yazılar",
+        linkLabel: "Tüm makaleler",
+      },
+      books: {
+        title: "Kitaplar",
+        linkLabel: "Tüm kitaplar",
+      },
+      photography: {
+        title: "Fotoğraflar",
+        linkLabel: "Tüm fotoğraflar",
+      },
+    },
+    contactCallToAction: {
+      title: "İletişime Geçin",
+      description:
+        "Gayrimenkul, danışmanlık veya içerikler hakkında iletişime geçebilirsiniz.",
+      buttonLabel: "İletişim",
+    },
     footer: {
       locale: "tr",
       brandName: "ŞABAN DURALİ",
@@ -222,7 +242,6 @@ export const homeContent = {
       copyright: "© 2026 Şaban Durali. Tüm hakları saklıdır.",
       links: {
         contact: "İletişim",
-        feedback: "Beta geri bildirimi",
         privacy: "KVKK Aydınlatma Metni",
         email: "E-posta",
       },
@@ -247,7 +266,6 @@ export const homeContent = {
         books: "Books",
         photography: "Photography",
         contact: "Contact",
-        feedback: "Beta feedback",
       },
       menu: {
         openLabel: "Open menu",
@@ -269,13 +287,6 @@ export const homeContent = {
         "I am building an independent platform that produces reliable knowledge, actionable analysis and sustainable value across real estate, consulting, research and technology.",
       primaryAction: "Explore the work",
       secondaryAction: "About",
-      betaInvitation: {
-        label: "🧪 Beta",
-        description:
-          "Help improve this platform by sharing your thoughts in just 3–4 minutes.",
-        linkLabel: "Beta feedback",
-        href: "/en/feedback",
-      },
       goalsLabel: "Platform goals",
       goals: [
         { value: "500+", label: "book reviews" },
@@ -338,6 +349,26 @@ export const homeContent = {
         },
       ],
     },
+    listingSections: {
+      articles: {
+        title: "Latest Articles",
+        linkLabel: "View all articles",
+      },
+      books: {
+        title: "Books",
+        linkLabel: "View all books",
+      },
+      photography: {
+        title: "Photography",
+        linkLabel: "View all photography",
+      },
+    },
+    contactCallToAction: {
+      title: "Get in Touch",
+      description:
+        "You can get in touch about real estate, consulting, or the published content.",
+      buttonLabel: "Contact",
+    },
     footer: {
       locale: "en",
       brandName: "ŞABAN DURALİ",
@@ -347,7 +378,6 @@ export const homeContent = {
       copyright: "© 2026 Şaban Durali. All rights reserved.",
       links: {
         contact: "Contact",
-        feedback: "Beta feedback",
         privacy: "Privacy Notice",
         email: "Email",
       },

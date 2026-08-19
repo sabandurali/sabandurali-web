@@ -3,7 +3,17 @@ import Link from "next/link";
 import { getPhotoPath } from "@/content/photos/photo-routes";
 import type { PublicPhoto } from "@/content/photos/types";
 
-export default function PhotoCard({ photo }: { photo: PublicPhoto }) {
+type PhotoCardProps = {
+  photo: PublicPhoto;
+  headingLevel?: "h2" | "h3";
+};
+
+export default function PhotoCard({
+  photo,
+  headingLevel = "h2",
+}: PhotoCardProps) {
+  const Heading = headingLevel;
+
   return (
     <article className="overflow-hidden rounded-xl border border-border bg-surface shadow-[0_8px_24px_rgba(0,0,0,0.12)]">
       <Link
@@ -34,7 +44,7 @@ export default function PhotoCard({ photo }: { photo: PublicPhoto }) {
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent-soft">
             {photo.collections.map((item) => item.title).join(" · ")}
           </p>
-          <h2 className="mt-3 text-2xl text-ivory">{photo.title}</h2>
+          <Heading className="mt-3 text-2xl text-ivory">{photo.title}</Heading>
           {photo.locationName !== null && (
             <p className="mt-2 text-sm text-muted">{photo.locationName}</p>
           )}

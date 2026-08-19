@@ -11,9 +11,15 @@ import type { PublicArticleSummary } from "@/content/articles/public-types";
 type ArticleCardProps = {
   article: PublicArticleSummary;
   content: ArticlePageContent;
+  headingLevel?: "h2" | "h3";
 };
 
-export default function ArticleCard({ article, content }: ArticleCardProps) {
+export default function ArticleCard({
+  article,
+  content,
+  headingLevel = "h2",
+}: ArticleCardProps) {
+  const Heading = headingLevel;
   const coverImage = getAvailablePublicArticleImage(article.featuredImage);
   const category = article.categories[0]?.name ?? content.categoryFallback;
   const publishedAt = formatArticleDate(article.publishedAt, content);
@@ -49,7 +55,7 @@ export default function ArticleCard({ article, content }: ArticleCardProps) {
         <p className="text-xs font-semibold tracking-[0.16em] text-accent-soft uppercase">
           {category}
         </p>
-        <h2 className="mt-3 text-2xl leading-tight text-ivory sm:text-3xl">
+        <Heading className="mt-3 text-2xl leading-tight text-ivory sm:text-3xl">
           <Link
             href={href}
             aria-label={`${content.readArticle}: ${article.title}`}
@@ -57,7 +63,7 @@ export default function ArticleCard({ article, content }: ArticleCardProps) {
           >
             {article.title}
           </Link>
-        </h2>
+        </Heading>
         <p className="mt-4 text-sm leading-7 text-muted sm:text-base">
           {article.summary}
         </p>

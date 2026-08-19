@@ -112,16 +112,6 @@ function getPayloadHomeContent(page: PublicPage): HomeContent | null {
         ...(card.linkHref === null ? {} : { linkHref: card.linkHref }),
       })),
     },
-    sectionOrder: homeSections.map((section) => {
-      switch (section.blockType) {
-        case "hero":
-          return "hero";
-        case "homeAbout":
-          return "about";
-        case "homeFocusAreas":
-          return "focusAreas";
-      }
-    }),
   };
 }
 

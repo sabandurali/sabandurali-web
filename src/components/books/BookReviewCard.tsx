@@ -12,12 +12,15 @@ import type { BookReview } from "@/content/books/types";
 type BookReviewCardProps = {
   bookReview: BookReview;
   content: BookPageContent;
+  headingLevel?: "h2" | "h3";
 };
 
 export default function BookReviewCard({
   bookReview,
   content,
+  headingLevel = "h2",
 }: BookReviewCardProps) {
+  const Heading = headingLevel;
   const coverImage = getAvailableLocalBookImage(bookReview.coverImage?.src);
   const category =
     bookReview.category === null
@@ -43,7 +46,7 @@ export default function BookReviewCard({
         <p className="text-xs font-semibold tracking-[0.16em] text-accent-soft uppercase">
           {category}
         </p>
-        <h2 className="mt-3 text-2xl leading-tight text-ivory sm:text-3xl">
+        <Heading className="mt-3 text-2xl leading-tight text-ivory sm:text-3xl">
           <Link
             href={href}
             aria-label={`${content.readReview}: ${bookReview.title}`}
@@ -51,7 +54,7 @@ export default function BookReviewCard({
           >
             {bookReview.title}
           </Link>
-        </h2>
+        </Heading>
         {bookReview.originalTitle !== null && (
           <p className="mt-2 text-sm italic text-muted">
             {content.originalTitleLabel}: {bookReview.originalTitle}

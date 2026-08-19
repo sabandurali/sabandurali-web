@@ -1,7 +1,6 @@
 import {
   contactEmail,
   contactPaths,
-  feedbackPaths,
   privacyPaths,
 } from "@/config/site";
 import { articleListPaths } from "@/content/articles/article-routes";
@@ -91,15 +90,6 @@ export function getStaticHeaderNavigationItems({
       newTab: false,
       children: [],
     },
-    {
-      id: "feedback",
-      href: feedbackPaths[locale],
-      label: content.navigation.feedback,
-      mobileOnly: true,
-      external: false,
-      newTab: false,
-      children: [],
-    },
   ];
 }
 
@@ -115,14 +105,6 @@ export function getStaticFooterGroups(
           id: "footer-contact",
           href: contactPaths[content.locale],
           label: content.links.contact,
-          external: false,
-          newTab: false,
-          children: [],
-        },
-        {
-          id: "footer-feedback",
-          href: feedbackPaths[content.locale],
-          label: content.links.feedback,
           external: false,
           newTab: false,
           children: [],
