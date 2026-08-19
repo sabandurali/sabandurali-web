@@ -10,6 +10,20 @@ const dirname = path.dirname(filename);
 assertProductionPayloadInfrastructure();
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    return [
+      {
+        source: "/en/photos",
+        destination: "/en/photography",
+        permanent: true,
+      },
+      {
+        source: "/en/photos/:path*",
+        destination: "/en/photography/:path*",
+        permanent: true,
+      },
+    ];
+  },
   experimental: {
     globalNotFound: true,
   },

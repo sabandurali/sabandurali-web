@@ -1,6 +1,7 @@
 import {
   contactEmail,
   contactPaths,
+  feedbackPaths,
   privacyPaths,
 } from "@/config/site";
 import { articleListPaths } from "@/content/articles/article-routes";
@@ -113,6 +114,14 @@ export function getStaticFooterGroups(
           id: "footer-privacy",
           href: privacyPaths[content.locale],
           label: content.links.privacy,
+          external: false,
+          newTab: false,
+          children: [],
+        },
+        {
+          id: "footer-feedback",
+          href: feedbackPaths[content.locale],
+          label: content.links.feedback,
           external: false,
           newTab: false,
           children: [],

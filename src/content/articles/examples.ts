@@ -1,3 +1,4 @@
+import { getAbsoluteUrl } from "@/config/site";
 import type { Article, ArticleTag } from "@/content/articles/types";
 
 export const exampleArticleTags = [
@@ -104,8 +105,9 @@ export const exampleTurkishArticle = {
     title: "İstanbul’da Gayrimenkul Yatırımı Rehberi | Şaban Durali",
     description:
       "İstanbul’da gayrimenkul yatırımı yaparken konum, hukuki durum, toplam maliyet ve uzun vadeli değer potansiyelini doğru değerlendirme rehberi.",
-    canonical:
-      "https://sabandurali.com/makaleler/istanbulda-gayrimenkul-yatirimi-yaparken-dikkat-edilmesi-gerekenler",
+    canonical: getAbsoluteUrl(
+      "/makaleler/istanbulda-gayrimenkul-yatirimi-yaparken-dikkat-edilmesi-gerekenler",
+    ),
     index: true,
     follow: true,
     openGraphTitle: "İstanbul’da Gayrimenkul Yatırımı Yaparken Dikkat Edilecekler",
@@ -206,8 +208,9 @@ export const exampleEnglishArticle = {
     title: "Istanbul Real Estate Investment Guide | Şaban Durali",
     description:
       "Learn how to assess location, legal status, total ownership cost and long-term value before making a real estate investment decision in Istanbul.",
-    canonical:
-      "https://sabandurali.com/en/articles/what-to-consider-when-investing-in-istanbul-real-estate",
+    canonical: getAbsoluteUrl(
+      "/en/articles/what-to-consider-when-investing-in-istanbul-real-estate",
+    ),
     index: true,
     follow: true,
     openGraphTitle: "What to Consider When Investing in Istanbul Real Estate",
