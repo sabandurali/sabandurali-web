@@ -6,6 +6,7 @@ import {
 } from "@/config/site";
 import { articleListPaths } from "@/content/articles/article-routes";
 import { bookListPaths } from "@/content/books/book-routes";
+import { photoListPaths } from "@/content/photos/photo-routes";
 import type {
   PublicFooterGroup,
   PublicNavigationLink,
@@ -33,13 +34,13 @@ export function getStaticHeaderNavigationItems({
   anchorPrefix,
 }: GetStaticHeaderNavigationItemsOptions): PublicNavigationLink[] {
   const booksItems: PublicNavigationLink[] =
-    locale === "tr" && content.navigation.books !== undefined
+    content.navigation.books !== undefined
       ? [
           {
             id: "books",
-            href: bookListPaths.tr,
+            href: bookListPaths[locale],
             label: content.navigation.books,
-            activePathPrefix: bookListPaths.tr,
+            activePathPrefix: bookListPaths[locale],
             external: false,
             newTab: false,
             children: [],
@@ -73,6 +74,15 @@ export function getStaticHeaderNavigationItems({
       children: [],
     },
     ...booksItems,
+    {
+      id: "photography",
+      href: photoListPaths[locale],
+      label: content.navigation.photography,
+      activePathPrefix: photoListPaths[locale],
+      external: false,
+      newTab: false,
+      children: [],
+    },
     {
       id: "contact",
       href: contactPaths[locale],

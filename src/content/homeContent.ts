@@ -15,6 +15,7 @@ export type HeaderContent = {
     work: string;
     articles: string;
     books?: string;
+    photography: string;
     contact: string;
     feedback: string;
   };
@@ -119,6 +120,7 @@ export const homeContent = {
         work: "Çalışmalar",
         articles: "Makaleler",
         books: "Kitaplar",
+        photography: "Fotoğraflar",
         contact: "İletişim",
         feedback: "Beta geri bildirimi",
       },
@@ -170,32 +172,44 @@ export const homeContent = {
       title: "Birbirini besleyen bilgi ve uzmanlık alanları.",
       cards: [
         {
-          icon: "book",
-          title: "Kitap İncelemeleri",
-          description:
-            "Okuduğum kitaplardan çıkardığım fikirler, eleştiriler ve uygulanabilir notlar.",
-          linkLabel: "Yakında →",
-        },
-        {
           icon: "city",
-          title: "İstanbul Analizleri",
+          title: "Gayrimenkul",
           description:
-            "İlçe, mahalle, ulaşım, dönüşüm ve gayrimenkul piyasası üzerine araştırmalar.",
-          linkLabel: "Yakında →",
-        },
-        {
-          icon: "network",
-          title: "Yapay Zekâ",
-          description:
-            "Yapay zekâ araçları, iş modelleri ve günlük hayatta uygulanabilir kullanım rehberleri.",
-          linkLabel: "Yakında →",
+            "İstanbul gayrimenkul piyasası, değerleme, yatırım ve saha deneyimine dayalı içerikler.",
+          linkLabel: "Makaleleri incele →",
+          linkHref: "/makaleler",
         },
         {
           icon: "handshake",
-          title: "Satış ve Müzakere",
+          title: "Danışmanlık",
           description:
-            "Güven oluşturma, ikna, müşteri yönetimi ve profesyonel müzakere sistemleri.",
-          linkLabel: "Yakında →",
+            "İhtiyaca, veriye ve güvene dayalı çözüm odaklı danışmanlık yaklaşımı.",
+          linkLabel: "İletişime geç →",
+          linkHref: "/iletisim",
+        },
+        {
+          icon: "network",
+          title: "Araştırma",
+          description:
+            "Karmaşık konuları güvenilir kaynaklarla inceleyen, karşılaştıran ve sadeleştiren çalışmalar.",
+          linkLabel: "Makaleleri incele →",
+          linkHref: "/makaleler",
+        },
+        {
+          icon: "network",
+          title: "Teknoloji ve Yapay Zekâ",
+          description:
+            "Teknoloji ve yapay zekânın iş, öğrenme ve günlük yaşamda bilinçli kullanımı.",
+          linkLabel: "Makaleleri incele →",
+          linkHref: "/makaleler",
+        },
+        {
+          icon: "book",
+          title: "Kitaplar ve Öğrenme",
+          description:
+            "Kitap incelemeleri ve öğrenmeyi güçlendiren fikirler.",
+          linkLabel: "Kitapları incele →",
+          linkHref: "/kitaplar",
         },
       ],
     },
@@ -228,8 +242,10 @@ export const homeContent = {
       brandTagline: "RESEARCH AND KNOWLEDGE PLATFORM",
       navigation: {
         about: "About",
-        work: "Work",
+        work: "Focus Areas",
         articles: "Articles",
+        books: "Books",
+        photography: "Photography",
         contact: "Contact",
         feedback: "Beta feedback",
       },
@@ -281,32 +297,44 @@ export const homeContent = {
       title: "Interconnected fields of knowledge and expertise.",
       cards: [
         {
-          icon: "book",
-          title: "Book Reviews",
-          description:
-            "Practical notes, ideas and critical insights drawn from the books I read.",
-          linkLabel: "Coming soon →",
-        },
-        {
           icon: "city",
-          title: "Istanbul Research",
+          title: "Real Estate",
           description:
-            "Research on districts, neighborhoods, transport, urban transformation and the real estate market.",
-          linkLabel: "Coming soon →",
-        },
-        {
-          icon: "network",
-          title: "Artificial Intelligence",
-          description:
-            "Practical guides to AI tools, business models and everyday applications.",
-          linkLabel: "Coming soon →",
+            "Content shaped by Istanbul market research, valuation, investment, and field experience.",
+          linkLabel: "Explore articles →",
+          linkHref: "/en/articles",
         },
         {
           icon: "handshake",
-          title: "Sales and Negotiation",
+          title: "Consulting",
           description:
-            "Systems for building trust, persuasion, client management and professional negotiation.",
-          linkLabel: "Coming soon →",
+            "A practical consulting approach grounded in needs, evidence, and trust.",
+          linkLabel: "Get in touch →",
+          linkHref: "/en/contact",
+        },
+        {
+          icon: "network",
+          title: "Research",
+          description:
+            "Research that examines, compares, and clarifies complex subjects using reliable sources.",
+          linkLabel: "Explore articles →",
+          linkHref: "/en/articles",
+        },
+        {
+          icon: "network",
+          title: "Technology and Artificial Intelligence",
+          description:
+            "Thoughtful use of technology and artificial intelligence in work, learning, and everyday life.",
+          linkLabel: "Explore articles →",
+          linkHref: "/en/articles",
+        },
+        {
+          icon: "book",
+          title: "Books and Learning",
+          description:
+            "Book reviews and ideas that strengthen lifelong learning.",
+          linkLabel: "Explore books →",
+          linkHref: "/en/books",
         },
       ],
     },
