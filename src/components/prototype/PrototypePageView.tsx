@@ -49,7 +49,7 @@ const ui = {
 } as const;
 
 const groupLabels: Record<string, Record<Locale, string>> = {
-  home: { tr: "Ana Sayfa", en: "Home" }, about: { tr: "Hakkımda", en: "About" }, articles: { tr: "Yazılar", en: "Articles" }, books: { tr: "Kitaplar", en: "Books" }, photos: { tr: "Fotoğraflar", en: "Photography" }, istanbul: { tr: "İstanbul Analizleri", en: "Istanbul Analyses" }, guides: { tr: "Gayrimenkul Rehberleri", en: "Real Estate Guides" }, law: { tr: "Mevzuat Bankası", en: "Law Bank" }, tools: { tr: "Araçlar", en: "Tools" }, pdf: { tr: "PDF Rehberler", en: "PDF Guides" }, current: { tr: "Güncel", en: "Current" }, search: { tr: "Arama", en: "Search" }, consulting: { tr: "Danışmanlık", en: "Consulting" }, membership: { tr: "Üyelik", en: "Membership" }, contact: { tr: "İletişim", en: "Contact" }, feedback: { tr: "Geri Bildirim", en: "Feedback" }, legal: { tr: "Yasal ve Teknik", en: "Legal and Technical" },
+  home: { tr: "Ana Sayfa", en: "Home" }, about: { tr: "Hakkımda", en: "About" }, articles: { tr: "Yazılar", en: "Articles" }, books: { tr: "Kitaplar", en: "Books" }, photos: { tr: "Fotoğraflar", en: "Photography" }, istanbul: { tr: "İstanbul Analizleri", en: "Istanbul Analyses" }, guides: { tr: "Gayrimenkul Rehberleri", en: "Real Estate Guides" }, law: { tr: "Gayrimenkul Hukuk Bankası", en: "Real Estate Law Bank" }, tools: { tr: "Araçlar", en: "Tools" }, pdf: { tr: "PDF Rehberler", en: "PDF Guides" }, current: { tr: "Güncel İçerikler", en: "Current Content" }, search: { tr: "Arama", en: "Search" }, consulting: { tr: "Danışmanlık", en: "Consulting" }, membership: { tr: "Üyelik", en: "Membership" }, contact: { tr: "İletişim", en: "Contact" }, feedback: { tr: "Geri Bildirim", en: "Feedback" }, legal: { tr: "Yasal ve Teknik", en: "Legal and Technical" },
 };
 
 const cardClass = "rounded-sm border border-border bg-surface p-5 sm:p-6";
@@ -134,10 +134,10 @@ function PrototypeHome({ locale }: { locale: Locale }) {
     { key: "photos", title: tr ? "Fotoğraflar" : "Photography", items: itemsFor("photos") },
     { key: "istanbul", title: tr ? "İstanbul Analizleri" : "Istanbul Analyses", items: itemsFor("istanbul") },
     { key: "guides", title: tr ? "Gayrimenkul Rehberleri" : "Real Estate Guides", items: itemsFor("guides") },
-    { key: "law", title: tr ? "Mevzuat Bankası" : "Law Bank", items: itemsFor("law") },
+    { key: "law", title: tr ? "Gayrimenkul Hukuk Bankası" : "Real Estate Law Bank", items: itemsFor("law") },
     { key: "tools", title: tr ? "Araçlar" : "Tools", items: itemsFor("tools") },
     { key: "pdf", title: tr ? "PDF Rehberler" : "PDF Guides", items: itemsFor("pdf") },
-    { key: "current", title: tr ? "Güncel İçerik" : "Current Content", items: itemsFor("current") },
+    { key: "current", title: tr ? "Güncel İçerikler" : "Current Content", items: itemsFor("current") },
   ];
   return (
     <>
