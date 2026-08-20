@@ -32,7 +32,7 @@ export default function LanguageSwitcher({
       className={
         isMobile
           ? "flex min-h-11 items-center px-2 text-sm font-medium"
-          : "hidden shrink-0 items-center rounded-full border border-border px-3 py-2 text-xs font-medium text-ivory transition-colors hover:border-accent hover:bg-surface motion-reduce:transition-none sm:px-4 md:flex"
+          : "hidden shrink-0 items-center rounded-full border border-border px-3 py-2 text-xs font-medium text-ivory transition-colors hover:border-accent hover:bg-surface motion-reduce:transition-none sm:px-4 lg:flex"
       }
     >
       {languages.map((language, index) => {

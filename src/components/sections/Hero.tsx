@@ -31,6 +31,7 @@ export default function Hero({ anchors, content }: HeroProps) {
                 className={`block ${line.accent ? "text-accent-strong" : ""}`}
               >
                 {line.text}
+                {index < content.titleLines.length - 1 ? " " : ""}
               </span>
             ))}
           </h1>

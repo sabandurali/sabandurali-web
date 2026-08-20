@@ -71,6 +71,7 @@ function HeroPageBlock({
                 className={`block ${line.accent ? "text-accent-strong" : ""}`}
               >
                 {line.text}
+                {index < block.titleLines.length - 1 ? " " : ""}
               </span>
             ))}
           </h1>
