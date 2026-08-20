@@ -42,13 +42,13 @@ export default async function Header({
         >
           <Image
             src="/brand/sd-monogram-light.png"
-            alt=""
+            alt="Şaban Durali"
             width={606}
             height={669}
             className="h-10 w-auto shrink-0 object-contain lg:h-[50px]"
             priority
           />
-          <span className="lg:min-w-0">
+          <span aria-hidden="true" className="lg:min-w-0">
             <span className="block whitespace-nowrap font-serif text-base font-semibold tracking-tight text-ivory lg:text-xl lg:uppercase lg:tracking-[0.16em]">
               <span className="lg:hidden">{content.mobileBrandName}</span>
               <span className="hidden lg:inline">{content.brandName}</span>

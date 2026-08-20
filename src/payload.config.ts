@@ -70,6 +70,16 @@ const plugins =
 
 export default buildConfig({
   admin: {
+    components: {
+      afterNavLinks: ["/components/admin/help/AdminHelpNavLink"],
+      views: {
+        help: {
+          Component: "/components/admin/help/AdminHelpView#AdminHelpView",
+          exact: true,
+          path: "/help",
+        },
+      },
+    },
     user: Users.slug,
     importMap: {
       baseDir: path.resolve(dirname),
