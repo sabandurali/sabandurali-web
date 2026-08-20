@@ -74,11 +74,6 @@ export type FocusAreasContent = {
     linkLabel: string;
     linkHref?: string;
   }>;
-  consultationCallToAction: {
-    supportingText: string;
-    label: string;
-    href: string;
-  };
 };
 
 export type FooterContent = {
@@ -163,18 +158,18 @@ export const homeContent = {
         "Gayrimenkul, danışmanlık, araştırma ve teknoloji alanlarında güvenilir bilgi, uygulanabilir analiz ve sürdürülebilir değer üreten bağımsız bir platform oluşturuyorum.",
       primaryAction: "Çalışmaları keşfet",
       secondaryAction: "Hakkımda",
-      goalsLabel: "Platform hedefi",
+      goalsLabel: "Platform yapısı",
       goals: [
-        { value: "500+", label: "kitap incelemesi" },
-        { value: "1.000+", label: "makale ve analiz" },
-        { value: "2 dil", label: "Türkçe ve İngilizce" },
+        { value: "5", label: "odak alanı" },
+        { value: "2", label: "Türkçe ve İngilizce" },
+        { value: "Bağımsız", label: "araştırma ve yayın platformu" },
       ],
     },
     about: {
       label: "Hakkımda",
       titleLines: ["Şaban Durali"],
       paragraphs: [
-        "Gayrimenkul, teknoloji, marka, programlama ve yaşam boyu öğrenme alanlarında çalışıyorum. Bu platformu yalnızca içerik yayımlamak için değil; araştırma yapmak, öğrendiklerimi uygulamak ve sürdürülebilir bilgi üretmek için kuruyorum.",
+        "Gayrimenkul ve İstanbul, araştırma ve analiz, yapay zekâ ve teknoloji, satış ve müzakere ile yaşam boyu öğrenme alanlarında çalışıyorum. Bu platformu yalnızca içerik yayımlamak için değil; araştırmak, öğrendiklerimi uygulamak ve sürdürülebilir bilgi üretmek için kuruyorum.",
         "Uzun vadeli hedefim, yapay zekâ ve dijital sistemleri kullanarak eğitim, araştırma, danışmanlık ve bağımsız yayıncılık alanlarında değer üreten bir yapı oluşturmaktır.",
       ],
       imageAlt: "Şaban Durali portresi",
@@ -224,11 +219,6 @@ export const homeContent = {
           linkHref: "/kitaplar",
         },
       ],
-      consultationCallToAction: {
-        supportingText: "Danışmanlık veya iş birliği için",
-        label: "İletişime geç",
-        href: "/iletisim",
-      },
     },
     listingSections: {
       articles: {
@@ -247,8 +237,8 @@ export const homeContent = {
     contactCallToAction: {
       title: "İletişime Geçin",
       description:
-        "Gayrimenkul, danışmanlık veya içerikler hakkında iletişime geçebilirsiniz.",
-      buttonLabel: "İletişim",
+        "Gayrimenkul, araştırma, teknoloji, danışmanlık veya iş birliği hakkında iletişime geçebilirsiniz.",
+      buttonLabel: "İletişime geç",
     },
     footer: {
       locale: "tr",
@@ -305,18 +295,18 @@ export const homeContent = {
         "I am building an independent platform that produces reliable knowledge, actionable analysis and sustainable value across real estate, consulting, research and technology.",
       primaryAction: "Explore the work",
       secondaryAction: "About",
-      goalsLabel: "Platform goals",
+      goalsLabel: "Platform structure",
       goals: [
-        { value: "500+", label: "book reviews" },
-        { value: "1,000+", label: "articles and analyses" },
-        { value: "2 languages", label: "Turkish and English" },
+        { value: "5", label: "focus areas" },
+        { value: "2", label: "Turkish and English" },
+        { value: "Independent", label: "research and publishing platform" },
       ],
     },
     about: {
       label: "ABOUT",
       titleLines: ["Şaban", "Durali"],
       paragraphs: [
-        "I work across real estate, technology, branding, programming and lifelong learning. I am building this platform not merely to publish content, but to conduct research, apply what I learn and produce sustainable knowledge.",
+        "I work across real estate and Istanbul, research and analysis, artificial intelligence and technology, sales and negotiation, and lifelong learning. I am building this platform not merely to publish content, but to conduct research, apply what I learn and produce sustainable knowledge.",
         "My long-term goal is to use artificial intelligence and digital systems to build a sustainable platform that creates value across education, research, consulting and independent publishing.",
       ],
       imageAlt: "Portrait of Şaban Durali",
@@ -366,11 +356,6 @@ export const homeContent = {
           linkHref: "/en/books",
         },
       ],
-      consultationCallToAction: {
-        supportingText: "For consulting or collaboration",
-        label: "Get in touch",
-        href: "/en/contact",
-      },
     },
     listingSections: {
       articles: {
@@ -389,8 +374,8 @@ export const homeContent = {
     contactCallToAction: {
       title: "Get in Touch",
       description:
-        "You can get in touch about real estate, consulting, or the published content.",
-      buttonLabel: "Contact",
+        "Get in touch about real estate, research, technology, consulting or collaboration.",
+      buttonLabel: "Get in touch",
     },
     footer: {
       locale: "en",

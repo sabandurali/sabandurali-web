@@ -98,15 +98,19 @@ export default function FocusAreas({ id, content }: FocusAreasProps) {
           {content.cards.map((area, index) => (
             <article
               key={`${area.title}-${index}`}
-              className={`flex flex-col rounded-xl border border-[var(--accent-border-soft)] bg-ivory p-6 shadow-[0_8px_24px_rgba(18,22,25,0.04)] transition duration-200 hover:-translate-y-0.5 hover:border-[var(--accent-border-hover)] md:min-h-72 ${
-                index < 3 ? "xl:col-span-2" : "xl:col-span-3"
+              className={`flex flex-col rounded-xl border border-[var(--accent-border-soft)] bg-ivory p-5 shadow-[0_8px_24px_rgba(18,22,25,0.04)] transition duration-200 hover:-translate-y-0.5 hover:border-[var(--accent-border-hover)] sm:p-6 md:min-h-72 xl:min-h-96 ${
+                index === 3
+                  ? "xl:col-span-2 xl:col-start-2"
+                  : index === 4
+                    ? "xl:col-span-2 xl:col-start-4"
+                    : "xl:col-span-2"
               }`}
             >
               <div className="flex size-12 items-center justify-center rounded-full border border-accent bg-ink text-accent-soft">
                 <AreaIcon icon={area.icon} />
               </div>
 
-              <h3 className="mt-6 text-2xl font-semibold tracking-tight">
+              <h3 className="mt-6 text-2xl font-semibold tracking-tight md:min-h-[3.5rem]">
                 {area.title}
               </h3>
 
@@ -117,29 +121,18 @@ export default function FocusAreas({ id, content }: FocusAreasProps) {
               {area.linkHref ? (
                 <a
                   href={area.linkHref}
-                  className="mt-auto inline-flex min-h-11 items-center pt-10 text-sm font-medium underline decoration-[var(--accent-border-soft)] underline-offset-4"
+                  className="mt-auto inline-flex min-h-11 items-center pt-8 text-sm font-medium underline decoration-[var(--accent-border-soft)] underline-offset-4 md:pt-10"
                 >
                   {area.linkLabel}
+                  <span aria-hidden="true">&nbsp;→</span>
                 </a>
               ) : (
-                <p className="mt-auto pt-10 text-sm font-medium">
+                <p className="mt-auto pt-8 text-sm font-medium md:pt-10">
                   {area.linkLabel}
                 </p>
               )}
             </article>
           ))}
-        </div>
-
-        <div className="mt-8 flex flex-col gap-4 border-t border-[var(--accent-border-soft)] pt-8 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm font-medium text-muted-dark">
-            {content.consultationCallToAction.supportingText}
-          </p>
-          <a
-            href={content.consultationCallToAction.href}
-            className="inline-flex min-h-11 items-center text-sm font-medium underline decoration-[var(--accent-border-soft)] underline-offset-4 transition-colors hover:text-accent motion-reduce:transition-none"
-          >
-            {content.consultationCallToAction.label}
-          </a>
         </div>
       </div>
     </section>
