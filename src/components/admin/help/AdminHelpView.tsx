@@ -1,5 +1,3 @@
-import { readFile } from "node:fs/promises";
-import path from "node:path";
 import { DefaultTemplate } from "@payloadcms/next/templates";
 import { Gutter } from "@payloadcms/ui";
 import { redirect } from "next/navigation";
@@ -7,13 +5,8 @@ import { formatAdminURL } from "payload/shared";
 import type { AdminViewServerProps } from "payload";
 import Markdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { ADMIN_HELP_GUIDE } from "./admin-help-guide";
 import styles from "./AdminHelpView.module.css";
-
-const GUIDE_PATH = path.join(
-  process.cwd(),
-  "docs",
-  "YONETIM-PANELI-KULLANIM-KILAVUZU.md",
-);
 
 const GUIDE_DESCRIPTION =
   "İçerik ekleme, yayınlama ve güvenli yönetim için adım adım rehber.";
@@ -97,8 +90,7 @@ export async function AdminHelpView({
     redirect(formatAdminURL({ adminRoute, path: adminRoutes.unauthorized }));
   }
 
-  const markdown = await readFile(GUIDE_PATH, "utf8");
-  const guide = getGuideParts(markdown);
+  const guide = getGuideParts(ADMIN_HELP_GUIDE);
 
   return (
     <DefaultTemplate
