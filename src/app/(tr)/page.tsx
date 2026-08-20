@@ -15,14 +15,16 @@ import type {
   PublicPage,
 } from "@/content/pages/public-types";
 
+const homeAlternates: NonNullable<Metadata["alternates"]> = {
+  canonical: homeUrls["tr-TR"],
+  languages: homeUrls,
+};
+
 const staticMetadata: Metadata = {
   title: "Şaban Durali | Araştırma ve Bilgi Platformu",
   description:
     "Gayrimenkul, danışmanlık, araştırma ve teknoloji alanlarında güvenilir bilgi, uygulanabilir analiz ve sürdürülebilir değer üreten bağımsız platform.",
-  alternates: {
-    canonical: homeUrls["tr-TR"],
-    languages: homeUrls,
-  },
+  alternates: homeAlternates,
   openGraph: {
     title: "Şaban Durali | Araştırma ve Bilgi Platformu",
     description:
@@ -120,12 +122,17 @@ export async function generateMetadata(): Promise<Metadata> {
 
   if (data.source === "static") return staticMetadata;
 
-  return data.page === null
+  const metadata = data.page === null
     ? {
         title: "Ana sayfa bulunamadı | Şaban Durali",
         robots: { index: false, follow: false },
       }
     : createPublicPageMetadata(data.page);
+
+  return {
+    ...metadata,
+    alternates: homeAlternates,
+  };
 }
 
 export default async function Home() {
