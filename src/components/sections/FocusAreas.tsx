@@ -32,6 +32,24 @@ export function AreaIcon({ icon }: { icon: FocusAreaIcon }) {
     );
   }
 
+  if (icon === "research") {
+    return (
+      <svg {...commonProps}>
+        <circle cx="10.5" cy="10.5" r="5.5" />
+        <path d="m15 15 4.5 4.5M8 10.5h5M10.5 8v5" />
+      </svg>
+    );
+  }
+
+  if (icon === "technology") {
+    return (
+      <svg {...commonProps}>
+        <rect x="7" y="7" width="10" height="10" rx="1.5" />
+        <path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3M10 10h4v4h-4z" />
+      </svg>
+    );
+  }
+
   if (icon === "network") {
     return (
       <svg {...commonProps}>
@@ -76,11 +94,13 @@ export default function FocusAreas({ id, content }: FocusAreasProps) {
           )}
         </div>
 
-        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-6">
           {content.cards.map((area, index) => (
             <article
               key={`${area.title}-${index}`}
-              className="rounded-xl border border-[var(--accent-border-soft)] bg-ivory p-6 shadow-[0_8px_24px_rgba(18,22,25,0.04)] transition duration-200 hover:-translate-y-0.5 hover:border-[var(--accent-border-hover)] md:min-h-72"
+              className={`flex flex-col rounded-xl border border-[var(--accent-border-soft)] bg-ivory p-6 shadow-[0_8px_24px_rgba(18,22,25,0.04)] transition duration-200 hover:-translate-y-0.5 hover:border-[var(--accent-border-hover)] md:min-h-72 ${
+                index < 3 ? "xl:col-span-2" : "xl:col-span-3"
+              }`}
             >
               <div className="flex size-12 items-center justify-center rounded-full border border-accent bg-ink text-accent-soft">
                 <AreaIcon icon={area.icon} />
@@ -97,15 +117,29 @@ export default function FocusAreas({ id, content }: FocusAreasProps) {
               {area.linkHref ? (
                 <a
                   href={area.linkHref}
-                  className="mt-10 inline-flex min-h-11 items-center text-sm font-medium underline decoration-[var(--accent-border-soft)] underline-offset-4"
+                  className="mt-auto inline-flex min-h-11 items-center pt-10 text-sm font-medium underline decoration-[var(--accent-border-soft)] underline-offset-4"
                 >
                   {area.linkLabel}
                 </a>
               ) : (
-                <p className="mt-10 text-sm font-medium">{area.linkLabel}</p>
+                <p className="mt-auto pt-10 text-sm font-medium">
+                  {area.linkLabel}
+                </p>
               )}
             </article>
           ))}
+        </div>
+
+        <div className="mt-8 flex flex-col gap-4 border-t border-[var(--accent-border-soft)] pt-8 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm font-medium text-muted-dark">
+            {content.consultationCallToAction.supportingText}
+          </p>
+          <a
+            href={content.consultationCallToAction.href}
+            className="inline-flex min-h-11 items-center text-sm font-medium underline decoration-[var(--accent-border-soft)] underline-offset-4 transition-colors hover:text-accent motion-reduce:transition-none"
+          >
+            {content.consultationCallToAction.label}
+          </a>
         </div>
       </div>
     </section>

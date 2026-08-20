@@ -111,6 +111,8 @@ function getPayloadHomeContent(page: PublicPage): HomeContent | null {
         linkLabel: card.linkLabel,
         ...(card.linkHref === null ? {} : { linkHref: card.linkHref }),
       })),
+      consultationCallToAction:
+        homeContent.tr.focusAreas.consultationCallToAction,
     },
   };
 }

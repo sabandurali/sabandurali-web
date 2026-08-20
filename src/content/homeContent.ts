@@ -55,7 +55,13 @@ export type AboutContent = {
   imageAlt: string;
 };
 
-export type FocusAreaIcon = "book" | "city" | "network" | "handshake";
+export type FocusAreaIcon =
+  | "book"
+  | "city"
+  | "network"
+  | "handshake"
+  | "research"
+  | "technology";
 
 export type FocusAreasContent = {
   label: string;
@@ -68,6 +74,11 @@ export type FocusAreasContent = {
     linkLabel: string;
     linkHref?: string;
   }>;
+  consultationCallToAction: {
+    supportingText: string;
+    label: string;
+    href: string;
+  };
 };
 
 export type FooterContent = {
@@ -174,45 +185,50 @@ export const homeContent = {
       cards: [
         {
           icon: "city",
-          title: "Gayrimenkul",
+          title: "GAYRİMENKUL VE İSTANBUL",
           description:
-            "İstanbul gayrimenkul piyasası, değerleme, yatırım ve saha deneyimine dayalı içerikler.",
-          linkLabel: "Makaleleri incele →",
+            "İstanbul piyasası, değerleme, yatırım, mahalleler ve saha deneyimine dayalı rehberler.",
+          linkLabel: "Gayrimenkul rehberlerini keşfet",
+          linkHref: "/makaleler",
+        },
+        {
+          icon: "research",
+          title: "ARAŞTIRMA VE ANALİZ",
+          description:
+            "Ekonomi, şehir ve toplumsal konuları güvenilir kaynaklarla karşılaştıran sade ve anlaşılır analizler.",
+          linkLabel: "Analizleri oku",
+          linkHref: "/makaleler",
+        },
+        {
+          icon: "technology",
+          title: "YAPAY ZEKÂ VE TEKNOLOJİ",
+          description:
+            "Yapay zekâ araçları, dijital üretim ve teknolojinin mesleki ve günlük kullanımına yönelik uygulamalı notlar.",
+          linkLabel: "Teknoloji notlarını keşfet",
           linkHref: "/makaleler",
         },
         {
           icon: "handshake",
-          title: "Danışmanlık",
+          title: "SATIŞ VE MÜZAKERE",
           description:
-            "İhtiyaca, veriye ve güvene dayalı çözüm odaklı danışmanlık yaklaşımı.",
-          linkLabel: "İletişime geç →",
-          linkHref: "/iletisim",
-        },
-        {
-          icon: "network",
-          title: "Araştırma",
-          description:
-            "Karmaşık konuları güvenilir kaynaklarla inceleyen, karşılaştıran ve sadeleştiren çalışmalar.",
-          linkLabel: "Makaleleri incele →",
-          linkHref: "/makaleler",
-        },
-        {
-          icon: "network",
-          title: "Teknoloji ve Yapay Zekâ",
-          description:
-            "Teknoloji ve yapay zekânın iş, öğrenme ve günlük yaşamda bilinçli kullanımı.",
-          linkLabel: "Makaleleri incele →",
+            "Güven oluşturma, müşteri yönetimi, ikna ve etik müzakere üzerine uygulanabilir yöntemler.",
+          linkLabel: "Satış ve müzakere içeriklerini incele",
           linkHref: "/makaleler",
         },
         {
           icon: "book",
-          title: "Kitaplar ve Öğrenme",
+          title: "KİTAPLAR VE ÖĞRENME",
           description:
-            "Kitap incelemeleri ve öğrenmeyi güçlendiren fikirler.",
-          linkLabel: "Kitapları incele →",
+            "Kitap incelemeleri, öğrenme yöntemleri ve hayata uygulanabilecek temel fikirler.",
+          linkLabel: "Kitap incelemelerine göz at",
           linkHref: "/kitaplar",
         },
       ],
+      consultationCallToAction: {
+        supportingText: "Danışmanlık veya iş birliği için",
+        label: "İletişime geç",
+        href: "/iletisim",
+      },
     },
     listingSections: {
       articles: {
@@ -311,45 +327,50 @@ export const homeContent = {
       cards: [
         {
           icon: "city",
-          title: "Real Estate",
+          title: "REAL ESTATE AND ISTANBUL",
           description:
-            "Content shaped by Istanbul market research, valuation, investment, and field experience.",
-          linkLabel: "Explore articles →",
+            "Guides grounded in Istanbul’s property market, valuation, investment, neighbourhoods and field experience.",
+          linkLabel: "Explore real estate guides",
+          linkHref: "/en/articles",
+        },
+        {
+          icon: "research",
+          title: "RESEARCH AND ANALYSIS",
+          description:
+            "Clear analysis of economic, urban and social topics based on reliable and comparative sources.",
+          linkLabel: "Read the analyses",
+          linkHref: "/en/articles",
+        },
+        {
+          icon: "technology",
+          title: "ARTIFICIAL INTELLIGENCE AND TECHNOLOGY",
+          description:
+            "Practical notes on AI tools, digital production and the professional and everyday use of technology.",
+          linkLabel: "Explore technology notes",
           linkHref: "/en/articles",
         },
         {
           icon: "handshake",
-          title: "Consulting",
+          title: "SALES AND NEGOTIATION",
           description:
-            "A practical consulting approach grounded in needs, evidence, and trust.",
-          linkLabel: "Get in touch →",
-          linkHref: "/en/contact",
-        },
-        {
-          icon: "network",
-          title: "Research",
-          description:
-            "Research that examines, compares, and clarifies complex subjects using reliable sources.",
-          linkLabel: "Explore articles →",
-          linkHref: "/en/articles",
-        },
-        {
-          icon: "network",
-          title: "Technology and Artificial Intelligence",
-          description:
-            "Thoughtful use of technology and artificial intelligence in work, learning, and everyday life.",
-          linkLabel: "Explore articles →",
+            "Applicable methods for building trust, managing clients, persuasion and ethical negotiation.",
+          linkLabel: "Explore sales and negotiation",
           linkHref: "/en/articles",
         },
         {
           icon: "book",
-          title: "Books and Learning",
+          title: "BOOKS AND LEARNING",
           description:
-            "Book reviews and ideas that strengthen lifelong learning.",
-          linkLabel: "Explore books →",
+            "Book reviews, learning methods and ideas that can be applied in everyday life.",
+          linkLabel: "Browse book reviews",
           linkHref: "/en/books",
         },
       ],
+      consultationCallToAction: {
+        supportingText: "For consulting or collaboration",
+        label: "Get in touch",
+        href: "/en/contact",
+      },
     },
     listingSections: {
       articles: {
