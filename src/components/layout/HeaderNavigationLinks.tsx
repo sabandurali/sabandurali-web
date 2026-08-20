@@ -63,7 +63,7 @@ export default function HeaderNavigationLinks({
     const submenuID = `${variant}-submenu-${item.id}`;
 
     if (variant === "desktop") {
-      const linkClassName = `transition hover:opacity-55 ${
+      const linkClassName = `transition-colors hover:text-accent-soft ${
         isActive
           ? "font-semibold text-accent underline decoration-2 underline-offset-8"
           : ""

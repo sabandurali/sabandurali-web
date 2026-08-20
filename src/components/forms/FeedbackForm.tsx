@@ -11,7 +11,7 @@ type FeedbackFormProps = {
 };
 
 const fieldClassName =
-  "mt-3 min-h-11 w-full rounded-sm border border-border bg-background px-4 py-3 text-base text-ivory outline-none transition-colors placeholder:text-muted-dark hover:border-accent focus:border-accent motion-reduce:transition-none";
+  "mt-3 min-h-11 w-full rounded-sm border border-border bg-background px-4 py-3 text-base text-ivory outline-none transition-colors placeholder:text-placeholder hover:border-accent focus:border-accent motion-reduce:transition-none";
 
 function FieldHeader({
   children,
