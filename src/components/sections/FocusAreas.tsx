@@ -79,7 +79,7 @@ export default function FocusAreas({ id, content }: FocusAreasProps) {
     <section id={id} className="scroll-mt-24 bg-ivory-soft text-ink">
       <div className="mx-auto max-w-7xl px-6 py-20 lg:px-10 lg:py-24">
         <div className="mb-14 max-w-3xl">
-          <p className="text-sm uppercase tracking-[0.22em] text-muted-dark">
+          <p className="text-sm font-medium uppercase tracking-[0.22em] text-accent-deep">
             {content.label}
           </p>
 
@@ -121,7 +121,7 @@ export default function FocusAreas({ id, content }: FocusAreasProps) {
               {area.linkHref ? (
                 <a
                   href={area.linkHref}
-                  className="mt-auto inline-flex min-h-11 items-center pt-8 text-sm font-medium underline decoration-[var(--accent-border-soft)] underline-offset-4 md:pt-10"
+                  className="mt-auto inline-flex min-h-11 items-center pt-8 text-sm font-medium text-accent-deep underline decoration-[var(--accent-border-soft)] underline-offset-4 transition-colors hover:text-ink motion-reduce:transition-none md:pt-10"
                 >
                   {area.linkLabel}
                   <span aria-hidden="true">&nbsp;→</span>

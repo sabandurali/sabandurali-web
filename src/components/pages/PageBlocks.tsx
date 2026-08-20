@@ -148,7 +148,7 @@ function CardGroupPageBlock({
       <div className="mx-auto max-w-7xl px-6 py-20 lg:px-10 lg:py-24">
         <div className="mb-14 max-w-3xl">
           {block.eyebrow !== null && (
-            <p className="text-sm uppercase tracking-[0.22em] text-muted-dark">
+            <p className="text-sm font-medium uppercase tracking-[0.22em] text-accent-deep">
               {block.eyebrow}
             </p>
           )}
@@ -195,7 +195,7 @@ function CardGroupPageBlock({
               {card.link !== null && (
                 <a
                   href={card.link.href}
-                  className="mt-8 inline-flex min-h-11 items-center text-sm font-medium underline decoration-[var(--accent-border-soft)] underline-offset-4"
+                  className="mt-8 inline-flex min-h-11 items-center text-sm font-medium text-accent-deep underline decoration-[var(--accent-border-soft)] underline-offset-4 transition-colors hover:text-ink motion-reduce:transition-none"
                 >
                   {card.link.label}
                 </a>
