@@ -443,6 +443,8 @@ export const HomeFocusAreasBlock: Block = {
             { label: "Şehir", value: "city" },
             { label: "Ağ", value: "network" },
             { label: "İş birliği", value: "handshake" },
+            { label: "Araştırma", value: "research" },
+            { label: "Teknoloji", value: "technology" },
           ],
           required: true,
         },

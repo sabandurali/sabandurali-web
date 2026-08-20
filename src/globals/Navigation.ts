@@ -217,7 +217,6 @@ export const Navigation: GlobalConfig = {
                   name: "title",
                   type: "text",
                   label: "Grup başlığı",
-                  required: true,
                 },
                 {
                   name: "active",

@@ -145,7 +145,6 @@ function mapFooterGroups(
       if (group.active === false) return [];
 
       const title = getText(group.title);
-      if (title === null) return [];
 
       const groupID =
         getText(group.id) ?? `footer-group-${groupIndex + 1}`;
