@@ -13,6 +13,10 @@ import type {
   PublicArticle,
   PublicArticleTranslation,
 } from "@/content/articles/public-types";
+import {
+  personEntityId,
+  personalBrandName,
+} from "@/content/entity-seo";
 
 export function getArticleCanonicalUrl(article: PublicArticle): string {
   if (article.seo.canonical !== undefined) {
@@ -98,10 +102,17 @@ export function createArticleJsonLd(article: PublicArticle) {
     author:
       author === null
         ? undefined
-        : {
+        : author.name === personalBrandName
+          ? {
+              "@type": "Person",
+              "@id": personEntityId,
+              name: personalBrandName,
+              url: getAbsoluteUrl("/"),
+            }
+          : {
             "@type": "Person",
             name: author.name,
-          },
+            },
     inLanguage: article.language === "tr" ? "tr-TR" : "en",
     mainEntityOfPage: getArticleCanonicalUrl(article),
     image: coverImage === null ? undefined : getAbsoluteUrl(coverImage),

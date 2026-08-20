@@ -17,6 +17,10 @@ import { getAllPublishedBookReviews } from "@/content/books/book-data-source";
 import { bookPageContent } from "@/content/books/book-page-content";
 import { bookListPaths } from "@/content/books/book-routes";
 import type { HomeContent } from "@/content/homeContent";
+import {
+  createHomeEntityJsonLd,
+  serializeJsonLd,
+} from "@/content/entity-seo";
 import { getAllPublishedPhotos } from "@/content/photos/photo-data-source";
 import { photoListPaths } from "@/content/photos/photo-routes";
 
@@ -51,6 +55,12 @@ export default async function HomePage({ content }: { content: HomeContent }) {
 
   return (
     <div id="top" lang={content.locale}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: serializeJsonLd(createHomeEntityJsonLd(content.locale)),
+        }}
+      />
       <Header
         locale={content.locale}
         anchors={content.anchors}
