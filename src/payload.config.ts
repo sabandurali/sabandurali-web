@@ -52,21 +52,22 @@ const database =
         push: process.env.NODE_ENV === "development",
       });
 
-const plugins =
-  storageProvider === "vercel-blob"
-    ? [
-        vercelBlobStorage({
-          clientUploads: false,
-          collections: {
-            media: true,
-          },
-          token: requirePayloadEnvironmentVariable(
+const plugins = [
+  vercelBlobStorage({
+    clientUploads: false,
+    collections: {
+      media: true,
+    },
+    enabled: storageProvider === "vercel-blob",
+    token:
+      storageProvider === "vercel-blob"
+        ? requirePayloadEnvironmentVariable(
             "BLOB_READ_WRITE_TOKEN",
             "PAYLOAD_STORAGE=vercel-blob",
-          ),
-        }),
-      ]
-    : [];
+          )
+        : undefined,
+  }),
+];
 
 export default buildConfig({
   admin: {
