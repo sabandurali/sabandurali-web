@@ -1,6 +1,6 @@
 import Image from "next/image";
 import PayloadRichText from "@/components/articles/PayloadRichText";
-import { AreaIcon } from "@/components/sections/FocusAreas";
+import { FocusAreaCards } from "@/components/sections/FocusAreas";
 import type {
   PublicPageBlock,
   PublicPageLink,
@@ -140,6 +140,15 @@ function CardGroupPageBlock({
 }: {
   block: Extract<PublicPageBlock, { blockType: "cardGroup" }>;
 }) {
+  const cards = block.cards.map((card) => ({
+    id: card.id,
+    icon: card.icon,
+    title: card.title,
+    description: card.description,
+    linkLabel: card.link?.label ?? null,
+    linkHref: card.link?.href ?? null,
+  }));
+
   return (
     <section
       id={block.anchor ?? undefined}
@@ -156,53 +165,39 @@ function CardGroupPageBlock({
             {block.title}
           </h2>
         </div>
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-          {block.cards.map((card) => (
-            <article
-              key={card.id}
-              className="rounded-xl border border-[var(--accent-border-soft)] bg-ivory p-6 shadow-[0_8px_24px_rgba(18,22,25,0.04)] transition duration-200 hover:-translate-y-0.5 hover:border-[var(--accent-border-hover)] md:min-h-72"
-            >
-              {card.image === null ? (
-                <div className="flex size-12 items-center justify-center rounded-full border border-accent bg-ink text-accent-soft">
-                  <AreaIcon icon={card.icon} />
-                </div>
-              ) : card.image.width !== undefined &&
-                card.image.height !== undefined ? (
+        <FocusAreaCards
+          cards={cards}
+          renderVisual={(index, featured) => {
+            const image = block.cards[index]?.image;
+
+            if (image === null || image === undefined) return null;
+
+            const sizes = featured
+              ? "(min-width: 1024px) 40vw, (min-width: 768px) 100vw, 100vw"
+              : "(min-width: 1024px) 30vw, (min-width: 768px) 50vw, 100vw";
+
+            return image.width !== undefined && image.height !== undefined ? (
+              <Image
+                src={image.src}
+                alt={image.alt}
+                width={image.width}
+                height={image.height}
+                sizes={sizes}
+                className="aspect-video w-full rounded-md border border-[var(--accent-border-soft)] object-cover"
+              />
+            ) : (
+              <span className="relative block aspect-video overflow-hidden rounded-md border border-[var(--accent-border-soft)]">
                 <Image
-                  src={card.image.src}
-                  alt={card.image.alt}
-                  width={card.image.width}
-                  height={card.image.height}
-                  className="aspect-video w-full rounded-md border border-[var(--accent-border-soft)] object-cover"
+                  src={image.src}
+                  alt={image.alt}
+                  fill
+                  sizes={sizes}
+                  className="object-cover"
                 />
-              ) : (
-                <span className="relative block aspect-video overflow-hidden rounded-md border border-[var(--accent-border-soft)]">
-                  <Image
-                    src={card.image.src}
-                    alt={card.image.alt}
-                    fill
-                    sizes="(min-width: 1280px) 280px, (min-width: 768px) 50vw, 100vw"
-                    className="object-cover"
-                  />
-                </span>
-              )}
-              <h3 className="mt-6 text-2xl font-semibold tracking-tight">
-                {card.title}
-              </h3>
-              <p className="mt-5 max-w-lg leading-7 text-muted-dark">
-                {card.description}
-              </p>
-              {card.link !== null && (
-                <a
-                  href={card.link.href}
-                  className="mt-8 inline-flex min-h-11 items-center text-sm font-medium text-accent-deep underline decoration-[var(--accent-border-soft)] underline-offset-4 transition-colors hover:text-ink motion-reduce:transition-none"
-                >
-                  {card.link.label}
-                </a>
-              )}
-            </article>
-          ))}
-        </div>
+              </span>
+            );
+          }}
+        />
       </div>
     </section>
   );

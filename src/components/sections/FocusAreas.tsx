@@ -2,11 +2,18 @@ import type {
   FocusAreaIcon,
   FocusAreasContent,
 } from "@/content/homeContent";
+import type { ReactNode } from "react";
 
-export function AreaIcon({ icon }: { icon: FocusAreaIcon }) {
+export function AreaIcon({
+  icon,
+  className = "size-6",
+}: {
+  icon: FocusAreaIcon;
+  className?: string;
+}) {
   const commonProps = {
     "aria-hidden": true,
-    className: "size-6",
+    className,
     fill: "none",
     stroke: "currentColor",
     strokeLinecap: "round" as const,
@@ -74,7 +81,149 @@ type FocusAreasProps = {
   content: FocusAreasContent;
 };
 
+export type FocusAreaCardItem = {
+  id: string;
+  icon: FocusAreaIcon;
+  title: string;
+  description: string;
+  linkLabel: string | null;
+  linkHref: string | null;
+};
+
+type FocusAreaCardsProps = {
+  cards: ReadonlyArray<FocusAreaCardItem>;
+  renderVisual?: (index: number, featured: boolean) => ReactNode;
+};
+
+const cardMotion =
+  "transition-[transform,border-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:border-[var(--accent-border-hover)] motion-reduce:transition-none motion-reduce:hover:translate-y-0";
+
+function FocusAreaCard({
+  card,
+  featured,
+  visual,
+}: {
+  card: FocusAreaCardItem;
+  featured: boolean;
+  visual?: ReactNode;
+}) {
+  return (
+    <article
+      className={`flex min-w-0 flex-col rounded-xl border border-[var(--accent-border-soft)] bg-ivory ${cardMotion} ${
+        featured
+          ? "p-6 shadow-[0_12px_30px_rgba(18,36,43,0.08)] hover:shadow-[0_16px_34px_rgba(18,36,43,0.11)] sm:p-7 md:col-span-2 lg:col-span-1 lg:p-8"
+          : "p-5 shadow-[0_8px_22px_rgba(18,36,43,0.06)] hover:shadow-[0_12px_26px_rgba(18,36,43,0.09)] sm:p-6 lg:p-5 xl:p-6"
+      }`}
+    >
+      {visual ?? (
+        <div
+          className={`flex items-center justify-center rounded-full border bg-ink text-accent-soft ${
+            featured
+              ? "size-14 border-accent"
+              : "size-10 border-[var(--accent-border-soft)]"
+          }`}
+        >
+          <AreaIcon
+            icon={card.icon}
+            className={featured ? "size-7" : "size-5"}
+          />
+        </div>
+      )}
+
+      <h3
+        className={`font-semibold normal-case tracking-tight ${
+          featured
+            ? "mt-7 max-w-lg text-3xl leading-tight sm:text-4xl lg:text-[2.5rem]"
+            : "mt-5 text-xl leading-snug xl:text-2xl"
+        }`}
+      >
+        {card.title}
+      </h3>
+
+      <p
+        className={`line-clamp-3 text-muted-dark ${
+          featured
+            ? "mt-5 max-w-lg leading-7"
+            : "mt-4 text-[0.95rem] leading-6"
+        }`}
+      >
+        {card.description}
+      </p>
+
+      {card.linkLabel !== null &&
+        (card.linkHref !== null ? (
+          <a
+            href={card.linkHref}
+            className={`mt-auto inline-flex min-h-11 items-center self-start text-sm font-medium text-accent-deep underline decoration-[var(--accent-border-soft)] underline-offset-4 transition-colors hover:text-ink motion-reduce:transition-none ${
+              featured ? "pt-8" : "pt-5"
+            }`}
+          >
+            <span>
+              {card.linkLabel}
+              <span aria-hidden="true">&nbsp;→</span>
+            </span>
+          </a>
+        ) : (
+          <p
+            className={`mt-auto text-sm font-medium ${
+              featured ? "pt-8" : "pt-5"
+            }`}
+          >
+            {card.linkLabel}
+          </p>
+        ))}
+    </article>
+  );
+}
+
+export function FocusAreaCards({
+  cards,
+  renderVisual,
+}: FocusAreaCardsProps) {
+  const [featuredCard, ...supportingCards] = cards;
+
+  if (featuredCard === undefined) return null;
+
+  return (
+    <div
+      className={`grid gap-5 md:grid-cols-2 ${
+        supportingCards.length > 0
+          ? "lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:items-stretch"
+          : "lg:grid-cols-1"
+      }`}
+    >
+      <FocusAreaCard
+        card={featuredCard}
+        featured
+        visual={renderVisual?.(0, true)}
+      />
+
+      {supportingCards.length > 0 && (
+        <div className="contents lg:grid lg:min-w-0 lg:grid-cols-2 lg:grid-rows-2 lg:gap-5">
+          {supportingCards.map((card, index) => (
+            <FocusAreaCard
+              key={card.id}
+              card={card}
+              featured={false}
+              visual={renderVisual?.(index + 1, false)}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function FocusAreas({ id, content }: FocusAreasProps) {
+  const cards = content.cards.map((area, index) => ({
+    id: `${area.title}-${index}`,
+    icon: area.icon,
+    title: area.title,
+    description: area.description,
+    linkLabel: area.linkLabel,
+    linkHref: area.linkHref ?? null,
+  }));
+
   return (
     <section id={id} className="scroll-mt-24 bg-ivory-soft text-ink">
       <div className="mx-auto max-w-7xl px-6 py-20 lg:px-10 lg:py-24">
@@ -94,46 +243,7 @@ export default function FocusAreas({ id, content }: FocusAreasProps) {
           )}
         </div>
 
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-6">
-          {content.cards.map((area, index) => (
-            <article
-              key={`${area.title}-${index}`}
-              className={`flex flex-col rounded-xl border border-[var(--accent-border-soft)] bg-ivory p-5 shadow-[0_8px_24px_rgba(18,22,25,0.04)] transition duration-200 hover:-translate-y-0.5 hover:border-[var(--accent-border-hover)] sm:p-6 md:min-h-72 xl:min-h-96 ${
-                index === 3
-                  ? "xl:col-span-2 xl:col-start-2"
-                  : index === 4
-                    ? "xl:col-span-2 xl:col-start-4"
-                    : "xl:col-span-2"
-              }`}
-            >
-              <div className="flex size-12 items-center justify-center rounded-full border border-accent bg-ink text-accent-soft">
-                <AreaIcon icon={area.icon} />
-              </div>
-
-              <h3 className="mt-6 text-2xl font-semibold tracking-tight md:min-h-[3.5rem]">
-                {area.title}
-              </h3>
-
-              <p className="mt-5 max-w-lg leading-7 text-muted-dark">
-                {area.description}
-              </p>
-
-              {area.linkHref ? (
-                <a
-                  href={area.linkHref}
-                  className="mt-auto inline-flex min-h-11 items-center pt-8 text-sm font-medium text-accent-deep underline decoration-[var(--accent-border-soft)] underline-offset-4 transition-colors hover:text-ink motion-reduce:transition-none md:pt-10"
-                >
-                  {area.linkLabel}
-                  <span aria-hidden="true">&nbsp;→</span>
-                </a>
-              ) : (
-                <p className="mt-auto pt-8 text-sm font-medium md:pt-10">
-                  {area.linkLabel}
-                </p>
-              )}
-            </article>
-          ))}
-        </div>
+        <FocusAreaCards cards={cards} />
       </div>
     </section>
   );
