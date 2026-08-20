@@ -35,6 +35,8 @@ export type TurkishHomePageData =
       page: PublicPage | null;
     };
 
+export type EnglishHomePageData = TurkishHomePageData;
+
 export const getTurkishHomePageData = cache(
   async (): Promise<TurkishHomePageData> => {
     if (getPublicPageSource() === "static") {
@@ -44,6 +46,19 @@ export const getTurkishHomePageData = cache(
     return {
       source: "payload",
       page: await payloadPageRepository.findHome("tr"),
+    };
+  },
+);
+
+export const getEnglishHomePageData = cache(
+  async (): Promise<EnglishHomePageData> => {
+    if (getPublicPageSource() === "static") {
+      return { source: "static", page: null };
+    }
+
+    return {
+      source: "payload",
+      page: await payloadPageRepository.findHome("en"),
     };
   },
 );

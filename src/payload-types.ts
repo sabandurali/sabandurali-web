@@ -496,7 +496,7 @@ export interface Page {
             title: string;
             description?: string | null;
             cards: {
-              icon: 'book' | 'city' | 'network' | 'handshake';
+              icon: 'book' | 'city' | 'network' | 'handshake' | 'research' | 'technology';
               title: string;
               description: string;
               linkLabel: string;
@@ -1292,7 +1292,7 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   createdAt?: T;
 }
 /**
- * Türkçe Header, mobil menü ve Footer bağlantılarını yönetin. Taslak, yayınlama ve sürüm geçmişi sağ üstteki belge kontrollerindedir.
+ * Türkçe ve İngilizce Header, mobil menü ve Footer bağlantılarını yönetin. Taslak, yayınlama ve sürüm geçmişi sağ üstteki belge kontrollerindedir.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "navigation".
@@ -1347,9 +1347,57 @@ export interface Navigation {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Desktop and mobile navigation use the same ordered list.
+   */
+  enHeader?:
+    | {
+        label: string;
+        active?: boolean | null;
+        linkType: 'page' | 'internal' | 'external';
+        /**
+         * Yalnız yayımlanmış ve yayın tarihi gelmiş İngilizce sayfalar public menüde bağlantıya dönüşür.
+         */
+        page?: (string | null) | Page;
+        /**
+         * Kökten başlayan bir rota girin. Örnek: /, /makaleler veya /#hakkimda.
+         */
+        internalPath?: string | null;
+        /**
+         * Yalnız https:// ile başlayan güvenli adres kullanın.
+         */
+        externalUrl?: string | null;
+        newTab?: boolean | null;
+        /**
+         * Only one child-menu level is supported.
+         */
+        children?:
+          | {
+              label: string;
+              active?: boolean | null;
+              linkType: 'page' | 'internal' | 'external';
+              /**
+               * Yalnız yayımlanmış ve yayın tarihi gelmiş İngilizce sayfalar public menüde bağlantıya dönüşür.
+               */
+              page?: (string | null) | Page;
+              /**
+               * Kökten başlayan bir rota girin. Örnek: /, /makaleler veya /#hakkimda.
+               */
+              internalPath?: string | null;
+              /**
+               * Yalnız https:// ile başlayan güvenli adres kullanın.
+               */
+              externalUrl?: string | null;
+              newTab?: boolean | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
   footerGroups?:
     | {
-        title: string;
+        title?: string | null;
         active?: boolean | null;
         links?:
           | {
@@ -1358,6 +1406,34 @@ export interface Navigation {
               linkType: 'page' | 'internal' | 'external';
               /**
                * Yalnız yayımlanmış ve yayın tarihi gelmiş Türkçe sayfalar public menüde bağlantıya dönüşür.
+               */
+              page?: (string | null) | Page;
+              /**
+               * Kökten başlayan bir rota girin. Örnek: /, /makaleler veya /#hakkimda.
+               */
+              internalPath?: string | null;
+              /**
+               * https://, mailto: veya tel: adresi kullanın.
+               */
+              externalUrl?: string | null;
+              newTab?: boolean | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  enFooter?:
+    | {
+        title?: string | null;
+        active?: boolean | null;
+        links?:
+          | {
+              label: string;
+              active?: boolean | null;
+              linkType: 'page' | 'internal' | 'external';
+              /**
+               * Yalnız yayımlanmış ve yayın tarihi gelmiş İngilizce sayfalar public menüde bağlantıya dönüşür.
                */
               page?: (string | null) | Page;
               /**
@@ -1408,7 +1484,50 @@ export interface NavigationSelect<T extends boolean = true> {
             };
         id?: T;
       };
+  enHeader?:
+    | T
+    | {
+        label?: T;
+        active?: T;
+        linkType?: T;
+        page?: T;
+        internalPath?: T;
+        externalUrl?: T;
+        newTab?: T;
+        children?:
+          | T
+          | {
+              label?: T;
+              active?: T;
+              linkType?: T;
+              page?: T;
+              internalPath?: T;
+              externalUrl?: T;
+              newTab?: T;
+              id?: T;
+            };
+        id?: T;
+      };
   footerGroups?:
+    | T
+    | {
+        title?: T;
+        active?: T;
+        links?:
+          | T
+          | {
+              label?: T;
+              active?: T;
+              linkType?: T;
+              page?: T;
+              internalPath?: T;
+              externalUrl?: T;
+              newTab?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  enFooter?:
     | T
     | {
         title?: T;

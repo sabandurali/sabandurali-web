@@ -41,8 +41,8 @@ function getPublicNavigationSource(): PublicNavigationSource {
 }
 
 const getPayloadNavigation = cache(
-  async (): Promise<PublicNavigation | null> =>
-    payloadNavigationRepository.findPublished(),
+  async (locale: Locale): Promise<PublicNavigation | null> =>
+    payloadNavigationRepository.findPublished(locale),
 );
 
 export async function getHeaderNavigation(
@@ -51,7 +51,7 @@ export async function getHeaderNavigation(
   content: HeaderContent,
   anchorPrefix: string,
 ): Promise<PublicNavigationLink[]> {
-  if (locale === "en" || getPublicNavigationSource() === "static") {
+  if (getPublicNavigationSource() === "static") {
     return getStaticHeaderNavigationItems({
       locale,
       anchors,
@@ -60,18 +60,37 @@ export async function getHeaderNavigation(
     });
   }
 
-  return (await getPayloadNavigation())?.headerItems ?? [];
+  const navigation = await getPayloadNavigation(locale);
+
+  if (locale === "en" && (navigation?.headerItems.length ?? 0) === 0) {
+    return getStaticHeaderNavigationItems({
+      locale,
+      anchors,
+      content,
+      anchorPrefix,
+    });
+  }
+
+  return navigation?.headerItems ?? [];
 }
 
 export async function getFooterNavigation(
   content: FooterContent,
 ): Promise<PublicFooterGroup[]> {
   if (
-    content.locale === "en" ||
     getPublicNavigationSource() === "static"
   ) {
     return getStaticFooterGroups(content);
   }
 
-  return (await getPayloadNavigation())?.footerGroups ?? [];
+  const navigation = await getPayloadNavigation(content.locale);
+
+  if (
+    content.locale === "en" &&
+    (navigation?.footerGroups.length ?? 0) === 0
+  ) {
+    return getStaticFooterGroups(content);
+  }
+
+  return navigation?.footerGroups ?? [];
 }

@@ -2,18 +2,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import HomePage from "@/components/HomePage";
 import { homeUrls } from "@/config/site";
-import {
-  homeContent,
-  type HomeContent,
-} from "@/content/homeContent";
+import { homeContent } from "@/content/homeContent";
+import { getPayloadHomeContent } from "@/content/pages/home-page-content";
 import { getTurkishHomePageData } from "@/content/pages/page-data-source";
 import { createPublicPageMetadata } from "@/content/pages/page-seo";
-import type {
-  PublicHeroBlock,
-  PublicHomeAboutBlock,
-  PublicHomeFocusAreasBlock,
-  PublicPage,
-} from "@/content/pages/public-types";
 
 const homeAlternates: NonNullable<Metadata["alternates"]> = {
   canonical: homeUrls["tr-TR"],
@@ -36,86 +28,6 @@ const staticMetadata: Metadata = {
     siteName: "Şaban Durali",
   },
 };
-
-function getPayloadHomeContent(page: PublicPage): HomeContent | null {
-  const homeSections = page.layout.filter(
-    (
-      block,
-    ): block is
-      | PublicHeroBlock
-      | PublicHomeAboutBlock
-      | PublicHomeFocusAreasBlock =>
-      block.visible &&
-      (block.blockType === "hero" ||
-        block.blockType === "homeAbout" ||
-        block.blockType === "homeFocusAreas"),
-  );
-  const heroes = homeSections.filter(
-    (block): block is PublicHeroBlock => block.blockType === "hero",
-  );
-  const aboutSections = homeSections.filter(
-    (block): block is PublicHomeAboutBlock =>
-      block.blockType === "homeAbout",
-  );
-  const focusAreaSections = homeSections.filter(
-    (block): block is PublicHomeFocusAreasBlock =>
-      block.blockType === "homeFocusAreas",
-  );
-
-  if (
-    homeSections.length !== 3 ||
-    heroes.length !== 1 ||
-    aboutSections.length !== 1 ||
-    focusAreaSections.length !== 1
-  ) {
-    return null;
-  }
-
-  const hero = heroes[0];
-  const about = aboutSections[0];
-  const focusAreas = focusAreaSections[0];
-
-  return {
-    ...homeContent.tr,
-    hero: {
-      ...homeContent.tr.hero,
-      eyebrow: hero.eyebrow ?? "",
-      titleLines: hero.titleLines,
-      description: hero.description,
-      primaryAction: hero.primaryAction.label,
-      primaryActionHref: hero.primaryAction.href,
-      secondaryAction: hero.secondaryAction.label,
-      secondaryActionHref: hero.secondaryAction.href,
-    },
-    about: {
-      label: about.eyebrow,
-      titleLines: about.titleLines,
-      paragraphs: about.paragraphs,
-      imageAlt: about.imageAlt,
-      ...(about.image === null ? {} : { imageSrc: about.image.src }),
-      ...(about.link === null
-        ? {}
-        : {
-            linkLabel: about.link.label,
-            linkHref: about.link.href,
-          }),
-    },
-    focusAreas: {
-      label: focusAreas.eyebrow,
-      title: focusAreas.title,
-      ...(focusAreas.description === null
-        ? {}
-        : { description: focusAreas.description }),
-      cards: focusAreas.cards.map((card) => ({
-        icon: card.icon,
-        title: card.title,
-        description: card.description,
-        linkLabel: card.linkLabel,
-        ...(card.linkHref === null ? {} : { linkHref: card.linkHref }),
-      })),
-    },
-  };
-}
 
 export async function generateMetadata(): Promise<Metadata> {
   const data = await getTurkishHomePageData();
@@ -144,7 +56,7 @@ export default async function Home() {
 
   if (data.page === null) notFound();
 
-  const content = getPayloadHomeContent(data.page);
+  const content = getPayloadHomeContent(data.page, homeContent.tr);
 
   if (content === null) notFound();
 

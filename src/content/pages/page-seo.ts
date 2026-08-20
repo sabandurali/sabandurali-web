@@ -3,7 +3,11 @@ import { getAbsoluteUrl } from "@/config/site";
 import type { PublicPage } from "@/content/pages/public-types";
 
 export function getPublicPagePath(page: PublicPage): string {
-  return page.pageType === "home" ? "/" : `/${page.slug}`;
+  const localePrefix = page.language === "en" ? "/en" : "";
+
+  return page.pageType === "home"
+    ? localePrefix || "/"
+    : `${localePrefix}/${page.slug}`;
 }
 
 export function createPublicPageMetadata(page: PublicPage): Metadata {
@@ -13,6 +17,8 @@ export function createPublicPageMetadata(page: PublicPage): Metadata {
     page.seo.socialImage === null
       ? undefined
       : getAbsoluteUrl(page.seo.socialImage.src);
+  const locale = page.language === "en" ? "en_US" : "tr_TR";
+  const alternateLocale = page.language === "en" ? "tr_TR" : "en_US";
 
   return {
     title: page.seo.title,
@@ -28,7 +34,8 @@ export function createPublicPageMetadata(page: PublicPage): Metadata {
       title: page.seo.title,
       description: page.seo.description,
       url: canonical,
-      locale: "tr_TR",
+      locale,
+      alternateLocale,
       type: "website",
       siteName: "Şaban Durali",
       ...(socialImage === undefined

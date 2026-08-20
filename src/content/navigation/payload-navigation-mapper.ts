@@ -15,10 +15,14 @@ import type {
 
 type PayloadHeaderItem = NonNullable<
   PayloadNavigation["headerItems"]
+>[number] | NonNullable<
+  PayloadNavigation["enHeader"]
 >[number];
 type PayloadChildItem = NonNullable<PayloadHeaderItem["children"]>[number];
 type PayloadFooterGroup = NonNullable<
   PayloadNavigation["footerGroups"]
+>[number] | NonNullable<
+  PayloadNavigation["enFooter"]
 >[number];
 type PayloadFooterLink = NonNullable<PayloadFooterGroup["links"]>[number];
 type PayloadLink = PayloadHeaderItem | PayloadChildItem | PayloadFooterLink;
@@ -33,8 +37,9 @@ function getText(value: unknown): string | null {
     : null;
 }
 
-function isPublicTurkishPage(
+function isPublicPage(
   value: unknown,
+  language: "en" | "tr",
   now: Date,
 ): value is PayloadPage {
   if (!isRecord(value)) return false;
@@ -45,7 +50,7 @@ function isPublicTurkishPage(
       : Number.NaN;
 
   return (
-    value.language === "tr" &&
+    value.language === language &&
     value._status === "published" &&
     Number.isFinite(publishedAt) &&
     publishedAt <= now.getTime() &&
@@ -54,19 +59,28 @@ function isPublicTurkishPage(
   );
 }
 
-function resolvePageHref(value: unknown, now: Date): string | null {
-  if (!isPublicTurkishPage(value, now)) return null;
+function resolvePageHref(
+  value: unknown,
+  language: "en" | "tr",
+  now: Date,
+): string | null {
+  if (!isPublicPage(value, language, now)) return null;
 
-  return value.pageType === "home" ? "/" : `/${value.slug}`;
+  const localePrefix = language === "en" ? "/en" : "";
+
+  return value.pageType === "home"
+    ? localePrefix || "/"
+    : `${localePrefix}/${value.slug}`;
 }
 
 function resolveHref(
   item: PayloadLink,
   allowContactProtocols: boolean,
+  language: "en" | "tr",
   now: Date,
 ): string | null {
   if (item.linkType === "page") {
-    return resolvePageHref(item.page, now);
+    return resolvePageHref(item.page, language, now);
   }
 
   if (item.linkType === "internal") {
@@ -85,6 +99,7 @@ function mapLink(
   options: {
     allowContactProtocols: boolean;
     allowChildren: boolean;
+    language: "en" | "tr";
     now: Date;
     parentID?: string;
   },
@@ -100,6 +115,7 @@ function mapLink(
   const href = resolveHref(
     item,
     options.allowContactProtocols,
+    options.language,
     options.now,
   );
   const children =
@@ -108,6 +124,7 @@ function mapLink(
           const mapped = mapLink(child, childIndex, {
             allowContactProtocols: false,
             allowChildren: false,
+            language: options.language,
             now: options.now,
             parentID: id,
           });
@@ -137,7 +154,10 @@ function mapLink(
 }
 
 function mapFooterGroups(
-  groups: PayloadNavigation["footerGroups"],
+  groups:
+    | PayloadNavigation["footerGroups"]
+    | PayloadNavigation["enFooter"],
+  language: "en" | "tr",
   now: Date,
 ): PublicFooterGroup[] {
   return (
@@ -153,6 +173,7 @@ function mapFooterGroups(
           const mapped = mapLink(link, linkIndex, {
             allowContactProtocols: true,
             allowChildren: false,
+            language,
             now,
             parentID: groupID,
           });
@@ -168,20 +189,27 @@ function mapFooterGroups(
 
 export function mapPayloadNavigation(
   value: PayloadNavigation,
+  language: "en" | "tr",
   now: Date = new Date(),
 ): PublicNavigation | null {
   if (value._status !== "published") return null;
 
+  const headerItems =
+    language === "en" ? value.enHeader : value.headerItems;
+  const footerGroups =
+    language === "en" ? value.enFooter : value.footerGroups;
+
   return {
     headerItems:
-      value.headerItems?.flatMap((item, index) => {
+      headerItems?.flatMap((item, index) => {
         const mapped = mapLink(item, index, {
           allowContactProtocols: false,
           allowChildren: true,
+          language,
           now,
         });
         return mapped === null ? [] : [mapped];
       }) ?? [],
-    footerGroups: mapFooterGroups(value.footerGroups, now),
+    footerGroups: mapFooterGroups(footerGroups, language, now),
   };
 }

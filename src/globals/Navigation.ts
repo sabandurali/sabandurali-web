@@ -13,6 +13,7 @@ import {
 
 type LinkFieldOptions = {
   allowContactProtocols?: boolean;
+  language?: "en" | "tr";
 };
 
 function hasLinkType(
@@ -69,7 +70,9 @@ function createExternalUrlValidator(
         : true;
 }
 
-function createPageRelationshipField(): RelationshipField {
+function createPageRelationshipField(
+  language: "en" | "tr",
+): RelationshipField {
   return {
     name: "page",
     type: "relationship",
@@ -77,11 +80,13 @@ function createPageRelationshipField(): RelationshipField {
     admin: {
       condition: (_, siblingData) => siblingData.linkType === "page",
       description:
-        "Yalnız yayımlanmış ve yayın tarihi gelmiş Türkçe sayfalar public menüde bağlantıya dönüşür.",
+        language === "tr"
+          ? "Yalnız yayımlanmış ve yayın tarihi gelmiş Türkçe sayfalar public menüde bağlantıya dönüşür."
+          : "Yalnız yayımlanmış ve yayın tarihi gelmiş İngilizce sayfalar public menüde bağlantıya dönüşür.",
     },
     filterOptions: {
       language: {
-        equals: "tr",
+        equals: language,
       },
     },
     relationTo: "pages",
@@ -90,6 +95,7 @@ function createPageRelationshipField(): RelationshipField {
 
 function createNavigationLinkFields({
   allowContactProtocols = false,
+  language = "tr",
 }: LinkFieldOptions = {}): Field[] {
   return [
     {
@@ -116,7 +122,7 @@ function createNavigationLinkFields({
       ],
       required: true,
     },
-    createPageRelationshipField(),
+    createPageRelationshipField(language),
     {
       name: "internalPath",
       type: "text",
@@ -169,7 +175,7 @@ export const Navigation: GlobalConfig = {
   },
   admin: {
     description:
-      "Türkçe Header, mobil menü ve Footer bağlantılarını yönetin. Taslak, yayınlama ve sürüm geçmişi sağ üstteki belge kontrollerindedir.",
+      "Türkçe ve İngilizce Header, mobil menü ve Footer bağlantılarını yönetin. Taslak, yayınlama ve sürüm geçmişi sağ üstteki belge kontrollerindedir.",
     group: "İçerik",
   },
   label: "Navigasyon",
@@ -179,7 +185,7 @@ export const Navigation: GlobalConfig = {
       type: "tabs",
       tabs: [
         {
-          label: "Header menüsü",
+          label: "Türkçe Header menüsü",
           fields: [
             {
               name: "headerItems",
@@ -206,7 +212,33 @@ export const Navigation: GlobalConfig = {
           ],
         },
         {
-          label: "Footer bağlantı grupları",
+          label: "English Header menu",
+          fields: [
+            {
+              name: "enHeader",
+              type: "array",
+              label: "Menu items",
+              admin: {
+                description:
+                  "Desktop and mobile navigation use the same ordered list.",
+              },
+              fields: [
+                ...createNavigationLinkFields({ language: "en" }),
+                {
+                  name: "children",
+                  type: "array",
+                  label: "Child menu items",
+                  admin: {
+                    description: "Only one child-menu level is supported.",
+                  },
+                  fields: createNavigationLinkFields({ language: "en" }),
+                },
+              ],
+            },
+          ],
+        },
+        {
+          label: "Türkçe Footer bağlantı grupları",
           fields: [
             {
               name: "footerGroups",
@@ -230,6 +262,38 @@ export const Navigation: GlobalConfig = {
                   label: "Bağlantılar",
                   fields: createNavigationLinkFields({
                     allowContactProtocols: true,
+                  }),
+                },
+              ],
+            },
+          ],
+        },
+        {
+          label: "English Footer link groups",
+          fields: [
+            {
+              name: "enFooter",
+              type: "array",
+              label: "Link groups",
+              fields: [
+                {
+                  name: "title",
+                  type: "text",
+                  label: "Group title",
+                },
+                {
+                  name: "active",
+                  type: "checkbox",
+                  label: "Show group",
+                  defaultValue: true,
+                },
+                {
+                  name: "links",
+                  type: "array",
+                  label: "Links",
+                  fields: createNavigationLinkFields({
+                    allowContactProtocols: true,
+                    language: "en",
                   }),
                 },
               ],
