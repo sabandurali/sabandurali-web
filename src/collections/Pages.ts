@@ -16,13 +16,22 @@ import { preventDeletingHomePage } from "@/lib/payloadDeleteGuards";
 const RESERVED_TURKISH_SLUGS = new Set([
   "admin",
   "api",
+  "arastirma-ve-analiz",
+  "calisma-alanlari",
   "en",
+  "fotograf",
   "fotograflar",
+  "gayrimenkul-ve-istanbul",
   "geri-bildirim",
+  "hakkimda",
   "iletisim",
+  "istanbul",
   "kitaplar",
+  "kitaplar-ve-ogrenme",
   "kvkk-aydinlatma-metni",
   "makaleler",
+  "satis-ve-muzakere",
+  "yapay-zeka-ve-teknoloji",
   "yonetim",
 ]);
 

@@ -3,6 +3,7 @@ import { cache } from "react";
 import {
   getStaticFooterGroups,
   getStaticHeaderNavigationItems,
+  withTurkishHeaderShortcuts,
 } from "@/components/layout/navigation";
 import { PayloadPublicNavigationRepository } from "@/content/navigation/payload-navigation-repository";
 import type {
@@ -71,7 +72,8 @@ export async function getHeaderNavigation(
     });
   }
 
-  return navigation?.headerItems ?? [];
+  const items = navigation?.headerItems ?? [];
+  return locale === "tr" ? withTurkishHeaderShortcuts(items) : items;
 }
 
 export async function getFooterNavigation(

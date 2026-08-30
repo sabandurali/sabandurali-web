@@ -6,6 +6,9 @@ import {
 import { articleListPaths } from "@/content/articles/article-routes";
 import { bookListPaths } from "@/content/books/book-routes";
 import { photoListPaths } from "@/content/photos/photo-routes";
+import { getDistrictsBySide } from "@/content/districts/district-registry";
+import { getDistrictPath } from "@/content/districts/district-routes";
+import { workspaces } from "@/content/workspaces";
 import type {
   PublicFooterGroup,
   PublicNavigationLink,
@@ -18,6 +21,127 @@ import type {
 } from "@/content/homeContent";
 
 export type HeaderNavigationVariant = "desktop" | "mobile";
+
+function internalLink(
+  id: string,
+  label: string,
+  href: string | null,
+  children: PublicNavigationLink[] = [],
+): PublicNavigationLink {
+  return {
+    id,
+    href,
+    label,
+    ...(href !== null ? { activePathPrefix: href } : {}),
+    external: false,
+    newTab: false,
+    children,
+  };
+}
+
+function districtSideLink(
+  side: "avrupa" | "anadolu",
+  label: string,
+): PublicNavigationLink {
+  return internalLink(
+    `district-side-${side}`,
+    label,
+    null,
+    getDistrictsBySide(side).map((district) =>
+      internalLink(
+        `district-${district.slug}`,
+        district.name,
+        getDistrictPath(district.slug),
+      ),
+    ),
+  );
+}
+
+function workspaceNavigationItems(): PublicNavigationLink[] {
+  return [
+    internalLink(
+      "all-workspaces",
+      "Tüm Çalışma Alanları",
+      "/calisma-alanlari",
+    ),
+    ...workspaces.map((workspace) =>
+      internalLink(
+        `workspace-${workspace.key}`,
+        workspace.title,
+        `/${workspace.key}`,
+        workspace.entries.map((entry) =>
+          internalLink(
+            `workspace-${workspace.key}-${entry.slug}`,
+            entry.title,
+            entry.href,
+            entry.href === "/istanbul/ilceler"
+              ? [
+                  districtSideLink("avrupa", "Avrupa Yakası — 25"),
+                  districtSideLink("anadolu", "Anadolu Yakası — 14"),
+                ]
+              : [],
+          ),
+        ),
+      ),
+    ),
+  ];
+}
+
+function articleNavigationItems(): PublicNavigationLink[] {
+  return [
+    internalLink("all-articles", "Tüm Makaleler", "/makaleler"),
+    ...workspaces.slice(0, 5).map((workspace) =>
+      internalLink(
+        `articles-${workspace.key}`,
+        workspace.title,
+        `/${workspace.key}`,
+      ),
+    ),
+  ];
+}
+
+function booksNavigationItems(): PublicNavigationLink[] {
+  const workspace = workspaces.find(
+    (candidate) => candidate.key === "kitaplar-ve-ogrenme",
+  );
+
+  return [
+    internalLink("all-books", "Tüm Kitaplar", "/kitaplar"),
+    ...(workspace?.entries.map((entry) =>
+      internalLink(`books-${entry.slug}`, entry.title, entry.href),
+    ) ?? []),
+  ];
+}
+
+function photographyNavigationItems(): PublicNavigationLink[] {
+  const workspace = workspaces.find(
+    (candidate) => candidate.key === "fotograf",
+  );
+
+  return [
+    internalLink("all-photos", "Tüm Fotoğraflar", "/fotograflar"),
+    ...(workspace?.entries.map((entry) =>
+      internalLink(`photos-${entry.slug}`, entry.title, entry.href),
+    ) ?? []),
+  ];
+}
+
+export function withTurkishHeaderShortcuts(
+  items: PublicNavigationLink[],
+): PublicNavigationLink[] {
+  const shortcutChildren = new Map<string, PublicNavigationLink[]>([
+    ["/calisma-alanlari", workspaceNavigationItems()],
+    ["/makaleler", articleNavigationItems()],
+    ["/kitaplar", booksNavigationItems()],
+    ["/fotograflar", photographyNavigationItems()],
+  ]);
+
+  return items.map((item) => {
+    const children =
+      item.href === null ? undefined : shortcutChildren.get(item.href);
+    return children === undefined ? item : { ...item, children };
+  });
+}
 
 type GetStaticHeaderNavigationItemsOptions = {
   locale: Locale;
@@ -46,7 +170,7 @@ export function getStaticHeaderNavigationItems({
           },
         ]
       : [];
-  return [
+  const items = [
     {
       id: "about",
       href: locale === "tr" ? "/hakkimda" : `${anchorPrefix}#${anchors.about}`,
@@ -93,6 +217,8 @@ export function getStaticHeaderNavigationItems({
       children: [],
     },
   ];
+
+  return locale === "tr" ? withTurkishHeaderShortcuts(items) : items;
 }
 
 export function getStaticFooterGroups(

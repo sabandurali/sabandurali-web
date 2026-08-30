@@ -57,6 +57,7 @@ export const Photos: CollectionConfig = {
             {
               name: "title",
               type: "text",
+              label: "Başlık",
               localized: true,
               required: true,
             },
@@ -67,11 +68,13 @@ export const Photos: CollectionConfig = {
             {
               name: "description",
               type: "textarea",
+              label: "Kısa açıklama",
               localized: true,
             },
             {
               name: "altText",
               type: "text",
+              label: "Alternatif metin",
               localized: true,
               required: true,
               admin: {
@@ -82,6 +85,11 @@ export const Photos: CollectionConfig = {
             {
               name: "image",
               type: "relationship",
+              label: "Medya dosyası",
+              admin: {
+                description:
+                  "Aynı fiziksel görseli yeniden yüklemeyin; mevcut Media kaydını seçin.",
+              },
               relationTo: "media",
               required: true,
             },
@@ -92,6 +100,11 @@ export const Photos: CollectionConfig = {
               hasMany: true,
               required: true,
               minRows: 1,
+              label: "Kategori / koleksiyon",
+              admin: {
+                description:
+                  "Fotoğraf birden fazla koleksiyonda referanslanabilir.",
+              },
             },
             {
               type: "collapsible",
@@ -109,6 +122,7 @@ export const Photos: CollectionConfig = {
               type: "relationship",
               relationTo: "tags",
               hasMany: true,
+              label: "Etiketler",
             },
             {
               type: "row",
@@ -134,7 +148,7 @@ export const Photos: CollectionConfig = {
                 { name: "creditLicense", type: "text", label: "Kredi / lisans" },
               ],
             },
-            { name: "featured", type: "checkbox", defaultValue: false },
+            { name: "featured", type: "checkbox", defaultValue: false, label: "Öne çıkar" },
           ],
         },
         {
@@ -160,6 +174,7 @@ export const Photos: CollectionConfig = {
             {
               name: "publishedAt",
               type: "date",
+              label: "Yayın tarihi",
               admin: {
                 description: "İlk yayında otomatik atanır; gelecek tarih planlı yayın anlamına gelir.",
               },

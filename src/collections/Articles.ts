@@ -46,10 +46,15 @@ export const Articles: CollectionConfig = {
     group: "İçerik",
     useAsTitle: "title",
   },
+  labels: {
+    plural: "Makaleler & Araştırmalar",
+    singular: "Makale / Araştırma",
+  },
   fields: [
     {
       name: "title",
       type: "text",
+      label: "Başlık",
       localized: true,
       required: true,
     },
@@ -60,6 +65,7 @@ export const Articles: CollectionConfig = {
     {
       name: "excerpt",
       type: "textarea",
+      label: "Kısa özet",
       localized: true,
       maxLength: 320,
       required: true,
@@ -67,6 +73,7 @@ export const Articles: CollectionConfig = {
     {
       name: "content",
       type: "richText",
+      label: "Makale içeriği",
       localized: true,
       admin: {
         description:
@@ -80,10 +87,16 @@ export const Articles: CollectionConfig = {
       index: true,
       relationTo: "categories",
       required: true,
+      label: "Çalışma alanı / kategori",
+      admin: {
+        description:
+          "İçeriğin sitede hangi çalışma alanı ve konu altında bulunacağını seçin.",
+      },
     },
     {
       name: "featuredImage",
       type: "upload",
+      label: "Öne çıkan görsel",
       relationTo: "media",
     },
     {
@@ -105,7 +118,7 @@ export const Articles: CollectionConfig = {
     },
     {
       type: "collapsible",
-      label: "İlçe rehberi ilişkisi",
+      label: "İçerik türü ve ilçe ilişkisi",
       admin: { initCollapsed: true },
       fields: [
         {
@@ -118,6 +131,10 @@ export const Articles: CollectionConfig = {
             { label: "İlçeden haber", value: "district-news" },
           ],
           required: true,
+          admin: {
+            description:
+              "Normal makale, ilçe araştırması veya kaynak bağlantılı ilçe haberi ayrımını yapın.",
+          },
         },
         {
           name: "district",
@@ -150,6 +167,7 @@ export const Articles: CollectionConfig = {
     {
       name: "publishedAt",
       type: "date",
+      label: "Yayın tarihi",
       admin: {
         description:
           "İlk yayında otomatik atanır; gerekirse elle düzenlenebilir.",

@@ -77,7 +77,7 @@ export default function MobileMenu({
       <nav
         id="mobile-navigation"
         aria-label={content.menu.navigationLabel}
-        className={`absolute right-4 top-full z-50 mt-2 w-[calc(100vw-2rem)] max-w-sm overflow-hidden rounded-sm border border-border bg-background shadow-2xl shadow-black/30 sm:right-6 sm:w-[calc(100vw-3rem)] ${
+        className={`absolute right-4 top-full z-50 mt-2 max-h-[calc(100vh-6rem)] w-[calc(100vw-2rem)] max-w-sm overflow-y-auto overscroll-contain rounded-sm border border-border bg-background shadow-2xl shadow-black/30 sm:right-6 sm:w-[calc(100vw-3rem)] ${
           isOpen ? "block" : "hidden"
         }`}
       >
