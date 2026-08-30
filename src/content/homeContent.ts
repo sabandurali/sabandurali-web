@@ -154,14 +154,14 @@ export const homeContent = {
         { text: "bir platform." },
       ],
       description:
-        "Gayrimenkul ve İstanbul, araştırma ve analiz, yapay zekâ ve teknoloji, kitaplar ve öğrenme ile fotoğraf alanlarında güvenilir bilgi ve uygulanabilir analiz üreten bağımsız bir platform oluşturuyorum.",
+        "Gayrimenkul ve İstanbul, satış ve müzakere, araştırma ve analiz, yapay zekâ ve teknoloji, kitaplar ve öğrenme ile fotoğraf alanlarında güvenilir bilgi ve uygulanabilir analiz üreten bağımsız bir platform oluşturuyorum.",
       primaryAction: "Çalışmaları keşfet",
       primaryActionHref: "/calisma-alanlari",
       secondaryAction: "Hakkımda",
       secondaryActionHref: "/hakkimda",
       goalsLabel: "Platform yapısı",
       goals: [
-        { value: "5", label: "odak alanı" },
+        { value: "6", label: "çalışma alanı" },
         { value: "2", label: "Türkçe ve İngilizce" },
         { value: "Bağımsız", label: "araştırma ve yayın platformu" },
       ],
@@ -170,7 +170,7 @@ export const homeContent = {
       label: "Hakkımda",
       titleLines: ["Şaban Durali"],
       paragraphs: [
-        "Gayrimenkul ve İstanbul, araştırma ve analiz, yapay zekâ ve teknoloji, kitaplar ve öğrenme ile fotoğraf alanlarında çalışıyorum. Bu platformu yalnızca içerik yayımlamak için değil; araştırmak, öğrendiklerimi uygulamak ve sürdürülebilir bilgi üretmek için kuruyorum.",
+        "Gayrimenkul ve İstanbul, satış ve müzakere, araştırma ve analiz, yapay zekâ ve teknoloji, kitaplar ve öğrenme ile fotoğraf alanlarında çalışıyorum. Bu platformu yalnızca içerik yayımlamak için değil; araştırmak, öğrendiklerimi uygulamak ve sürdürülebilir bilgi üretmek için kuruyorum.",
         "Uzun vadeli hedefim, yapay zekâ ve dijital sistemleri kullanarak eğitim, araştırma, danışmanlık ve bağımsız yayıncılık alanlarında değer üreten bir yapı oluşturmaktır.",
       ],
       imageAlt: "Şaban Durali portresi",
@@ -186,6 +186,14 @@ export const homeContent = {
             "İstanbul piyasası, değerleme, yatırım, mahalleler ve saha deneyimine dayalı rehberler.",
           linkLabel: "Çalışma alanını aç",
           linkHref: "/gayrimenkul-ve-istanbul",
+        },
+        {
+          icon: "handshake",
+          title: "SATIŞ VE MÜZAKERE",
+          description:
+            "Satış, müzakere, iletişim ve müşteri ilişkileri üzerine uygulanabilir yöntemler.",
+          linkLabel: "Çalışma alanını aç",
+          linkHref: "/satis-ve-muzakere",
         },
         {
           icon: "research",
@@ -246,7 +254,7 @@ export const homeContent = {
       brandName: "ŞABAN DURALİ",
       brandTagline: "ARAŞTIRMA VE BİLGİ PLATFORMU",
       description:
-        "Gayrimenkul ve İstanbul, araştırma, teknoloji, öğrenme ve fotoğraf odaklı bağımsız bilgi ve yayın platformu.",
+        "Gayrimenkul, satış, araştırma, teknoloji, öğrenme ve fotoğraf odaklı bağımsız bilgi ve yayın platformu.",
       copyright: "© 2026 Şaban Durali. Tüm hakları saklıdır.",
       links: {
         contact: "İletişim",
@@ -284,7 +292,7 @@ export const homeContent = {
       languageSwitcherLabel: "Language selection",
     },
     hero: {
-      eyebrow: "REAL ESTATE • CONSULTING • RESEARCH • TECHNOLOGY",
+      eyebrow: "REAL ESTATE • SALES • RESEARCH • TECHNOLOGY",
       titleLines: [
         { text: "A platform that" },
         { text: "researches," },
@@ -292,12 +300,12 @@ export const homeContent = {
         { text: "creates value.", accent: true },
       ],
       description:
-        "I am building an independent platform that produces reliable knowledge, actionable analysis and sustainable value across real estate, consulting, research and technology.",
+        "I am building an independent platform that produces reliable knowledge, actionable analysis and sustainable value across real estate, sales, research, technology, learning and photography.",
       primaryAction: "Explore the work",
       secondaryAction: "About",
       goalsLabel: "Platform structure",
       goals: [
-        { value: "5", label: "focus areas" },
+        { value: "6", label: "focus areas" },
         { value: "2", label: "Turkish and English" },
         { value: "Independent", label: "research and publishing platform" },
       ],
@@ -306,7 +314,7 @@ export const homeContent = {
       label: "ABOUT",
       titleLines: ["Şaban", "Durali"],
       paragraphs: [
-        "I work across real estate and Istanbul, research and analysis, artificial intelligence and technology, sales and negotiation, and lifelong learning. I am building this platform not merely to publish content, but to conduct research, apply what I learn and produce sustainable knowledge.",
+        "I work across real estate and Istanbul, sales and negotiation, research and analysis, artificial intelligence and technology, books and learning, and photography. I am building this platform not merely to publish content, but to conduct research, apply what I learn and produce sustainable knowledge.",
         "My long-term goal is to use artificial intelligence and digital systems to build a sustainable platform that creates value across education, research, consulting and independent publishing.",
       ],
       imageAlt: "Portrait of Şaban Durali",
@@ -321,6 +329,14 @@ export const homeContent = {
           description:
             "Guides grounded in Istanbul’s property market, valuation, investment, neighbourhoods and field experience.",
           linkLabel: "Explore real estate guides",
+          linkHref: "/en/articles",
+        },
+        {
+          icon: "handshake",
+          title: "SALES AND NEGOTIATION",
+          description:
+            "Applicable methods for building trust, managing clients, persuasion and ethical negotiation.",
+          linkLabel: "Explore sales and negotiation",
           linkHref: "/en/articles",
         },
         {
@@ -340,20 +356,20 @@ export const homeContent = {
           linkHref: "/en/articles",
         },
         {
-          icon: "handshake",
-          title: "SALES AND NEGOTIATION",
-          description:
-            "Applicable methods for building trust, managing clients, persuasion and ethical negotiation.",
-          linkLabel: "Explore sales and negotiation",
-          linkHref: "/en/articles",
-        },
-        {
           icon: "book",
           title: "BOOKS AND LEARNING",
           description:
             "Book reviews, learning methods and ideas that can be applied in everyday life.",
           linkLabel: "Browse book reviews",
           linkHref: "/en/books",
+        },
+        {
+          icon: "network",
+          title: "PHOTOGRAPHY",
+          description:
+            "Photography archives of Istanbul, architecture, streets and everyday life.",
+          linkLabel: "Explore photography",
+          linkHref: "/en/photography",
         },
       ],
     },
@@ -382,7 +398,7 @@ export const homeContent = {
       brandName: "ŞABAN DURALİ",
       brandTagline: "RESEARCH AND KNOWLEDGE PLATFORM",
       description:
-        "An independent knowledge and publishing platform focused on real estate, consulting, research and technology.",
+        "An independent knowledge and publishing platform focused on real estate, sales, research, technology, learning and photography.",
       copyright: "© 2026 Şaban Durali. All rights reserved.",
       links: {
         contact: "Contact",

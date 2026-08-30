@@ -2,6 +2,7 @@ import { districtGuidePath } from "@/content/districts/district-routes";
 
 export type WorkspaceKey =
   | "gayrimenkul-ve-istanbul"
+  | "satis-ve-muzakere"
   | "arastirma-ve-analiz"
   | "yapay-zeka-ve-teknoloji"
   | "kitaplar-ve-ogrenme"
@@ -21,7 +22,7 @@ export type Workspace = {
   title: string;
   eyebrow: string;
   description: string;
-  icon: "city" | "research" | "technology" | "book" | "network";
+  icon: "city" | "handshake" | "research" | "technology" | "book" | "network";
   entries: readonly WorkspaceEntry[];
 };
 
@@ -44,9 +45,24 @@ export const workspaces: readonly Workspace[] = [
     ],
   },
   {
+    key: "satis-ve-muzakere",
+    title: "Satış & Müzakere",
+    eyebrow: "02 — Çalışma alanı",
+    description: "Satış, müzakere ve müşteri ilişkileri üzerine uygulamaya dönük yayın girişleri.",
+    icon: "handshake",
+    entries: [
+      { slug: "satis", title: "Satış", description: "Satış pratiğine ilişkin yayınlar.", href: "/satis-ve-muzakere/satis", articleCategory: "sales_and_negotiation" },
+      { slug: "muzakere", title: "Müzakere", description: "Müzakere yöntemleri ve notları.", href: "/satis-ve-muzakere/muzakere", articleCategory: "sales_and_negotiation" },
+      { slug: "iletisim", title: "İletişim", description: "Açık ve güvene dayalı iletişim üzerine içerikler.", href: "/satis-ve-muzakere/iletisim", articleCategory: "sales_and_negotiation" },
+      { slug: "ikna", title: "İkna", description: "Etik ikna ve karar süreçlerine ilişkin yayınlar.", href: "/satis-ve-muzakere/ikna", articleCategory: "sales_and_negotiation" },
+      { slug: "musteri-iliskileri", title: "Müşteri İlişkileri", description: "Müşteri ilişkileri ve uzun vadeli güven üzerine notlar.", href: "/satis-ve-muzakere/musteri-iliskileri", articleCategory: "sales_and_negotiation" },
+      { slug: "rehberler", title: "Rehberler", description: "Uygulanabilir satış ve müzakere rehberleri.", href: "/satis-ve-muzakere/rehberler", articleCategory: "sales_and_negotiation" },
+    ],
+  },
+  {
     key: "arastirma-ve-analiz",
     title: "Araştırma & Analiz",
-    eyebrow: "02 — Çalışma alanı",
+    eyebrow: "03 — Çalışma alanı",
     description: "Veriyi, şehirleri ve güncel başlıkları anlaşılır araştırma ve analizlerle inceleyen yayın alanı.",
     icon: "research",
     entries: [
@@ -59,7 +75,7 @@ export const workspaces: readonly Workspace[] = [
   {
     key: "yapay-zeka-ve-teknoloji",
     title: "Yapay Zekâ & Teknoloji",
-    eyebrow: "03 — Çalışma alanı",
+    eyebrow: "04 — Çalışma alanı",
     description: "Yapay zekâ, teknoloji ve dijital üretimin pratik kullanımına yönelik yayın girişleri.",
     icon: "technology",
     entries: [
@@ -73,7 +89,7 @@ export const workspaces: readonly Workspace[] = [
   {
     key: "kitaplar-ve-ogrenme",
     title: "Kitaplar & Öğrenme",
-    eyebrow: "04 — Çalışma alanı",
+    eyebrow: "05 — Çalışma alanı",
     description: "Kitap incelemeleri, öğrenme pratikleri ve düşünme notlarını bir araya getiren alan.",
     icon: "book",
     entries: [
@@ -86,7 +102,7 @@ export const workspaces: readonly Workspace[] = [
   {
     key: "fotograf",
     title: "Fotoğraf",
-    eyebrow: "05 — Çalışma alanı",
+    eyebrow: "06 — Çalışma alanı",
     description: "İstanbul, şehir ve gündelik hayatı belgeleyen fotoğraf arşivine kategori girişleri.",
     icon: "network",
     entries: [
