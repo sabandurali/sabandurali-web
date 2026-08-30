@@ -25,7 +25,7 @@ export default function EnglishError({
           <button
             type="button"
             onClick={retry}
-            className="inline-flex min-h-11 items-center rounded-sm bg-accent px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-accent-strong motion-reduce:transition-none"
+            className="inline-flex min-h-11 items-center rounded-sm bg-accent px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-accent-strong motion-reduce:transition-none"
           >
             Try again
           </button>

@@ -67,7 +67,7 @@ export default async function AdminBooksPage() {
 
         <Link
           href="/yonetim/kitaplar/yeni"
-          className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-sm bg-accent px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-accent-strong motion-reduce:transition-none"
+          className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-sm bg-accent px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-accent-strong motion-reduce:transition-none"
         >
           Yeni kitap incelemesi prototipi
         </Link>

@@ -34,7 +34,7 @@ export default async function Header({
   );
 
   return (
-    <header className="border-b border-border bg-background/95">
+    <header className="border-b border-border bg-background">
       <div className="relative mx-auto flex min-h-[72px] max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:min-h-[94px] lg:py-4 lg:px-10">
         <a
           href={homeHref}

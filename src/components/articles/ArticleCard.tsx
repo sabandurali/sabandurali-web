@@ -27,7 +27,7 @@ export default function ArticleCard({
   const href = getArticlePath(article.slug, article.language);
 
   return (
-    <article className="group overflow-hidden rounded-sm border border-border bg-surface/75 transition-colors hover:border-[var(--accent-border-hover)] motion-reduce:transition-none">
+    <article className="group overflow-hidden border border-border bg-surface/75 transition-colors hover:border-[var(--accent-border-hover)] motion-reduce:transition-none">
       {coverImage !== null && article.featuredImage !== null && (
         article.featuredImage.width !== undefined &&
         article.featuredImage.height !== undefined ? (

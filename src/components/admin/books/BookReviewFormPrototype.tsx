@@ -864,7 +864,7 @@ export default function BookReviewFormPrototype() {
 
         <button
           type="submit"
-          className="inline-flex min-h-11 w-full items-center justify-center rounded-sm bg-accent px-6 py-3 text-base font-semibold text-ink transition-colors hover:bg-accent-strong focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent motion-reduce:transition-none sm:w-auto"
+          className="inline-flex min-h-11 w-full items-center justify-center rounded-sm bg-accent px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-accent-strong focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent motion-reduce:transition-none sm:w-auto"
         >
           Kitap incelemesini doğrula
         </button>

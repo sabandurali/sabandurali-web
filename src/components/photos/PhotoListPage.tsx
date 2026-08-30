@@ -82,7 +82,7 @@ export default function PhotoListPage({
                 {result.tags.map((item) => <option key={item.id} value={item.slug}>{item.title}</option>)}
               </select>
             </label>
-            <button type="submit" className="min-h-11 self-end rounded-md bg-accent px-5 text-sm font-semibold text-ink hover:bg-accent-strong">{copy.filter}</button>
+            <button type="submit" className="min-h-11 self-end rounded-md bg-accent px-5 text-sm font-semibold text-white hover:bg-accent-strong">{copy.filter}</button>
           </form>
           {result.photos.length === 0 ? (
             <p className="mt-8 rounded-xl border border-border bg-surface p-6 text-muted">{copy.empty}</p>

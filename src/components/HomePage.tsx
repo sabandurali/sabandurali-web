@@ -68,8 +68,8 @@ export default async function HomePage({ content }: { content: HomeContent }) {
       />
       <main>
         <Hero anchors={content.anchors} content={content.hero} />
-        <About id={content.anchors.about} content={content.about} />
         <FocusAreas id={content.anchors.work} content={content.focusAreas} />
+        <About id={content.anchors.about} content={content.about} />
 
         {latestArticles.length > 0 && (
           <HomeListingSection
@@ -108,11 +108,12 @@ export default async function HomePage({ content }: { content: HomeContent }) {
           </HomeListingSection>
         )}
 
-        {latestPhotos.length > 0 && (
-          <HomeListingSection
-            content={content.listingSections.photography}
-            href={photoListPaths[locale]}
-          >
+        <HomeListingSection
+          content={content.listingSections.photography}
+          href={photoListPaths[locale]}
+          tone="light"
+        >
+          {latestPhotos.length > 0 && (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {latestPhotos.map((photo) => (
                 <PhotoCard
@@ -122,8 +123,8 @@ export default async function HomePage({ content }: { content: HomeContent }) {
                 />
               ))}
             </div>
-          </HomeListingSection>
-        )}
+          )}
+        </HomeListingSection>
 
         <ContactCallToAction
           content={content.contactCallToAction}

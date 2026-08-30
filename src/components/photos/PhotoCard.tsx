@@ -15,7 +15,7 @@ export default function PhotoCard({
   const Heading = headingLevel;
 
   return (
-    <article className="overflow-hidden rounded-xl border border-border bg-surface shadow-[0_8px_24px_rgba(0,0,0,0.12)]">
+    <article className="overflow-hidden border border-[var(--accent-border-soft)] bg-surface transition-colors hover:border-[var(--accent-border-hover)] motion-reduce:transition-none">
       <Link
         href={getPhotoPath(photo.slug, photo.language)}
         className="group block focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
@@ -28,7 +28,7 @@ export default function PhotoCard({
               width={photo.image.width}
               height={photo.image.height}
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]"
+              className="h-full w-full object-cover"
             />
           ) : (
             <Image
@@ -36,7 +36,7 @@ export default function PhotoCard({
               alt={photo.image.alt}
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              className="object-cover transition duration-300 group-hover:scale-[1.02]"
+              className="object-cover"
             />
           )}
         </span>

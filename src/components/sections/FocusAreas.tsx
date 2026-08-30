@@ -95,8 +95,8 @@ type FocusAreaCardsProps = {
   renderVisual?: (index: number, featured: boolean) => ReactNode;
 };
 
-const cardMotion =
-  "transition-[transform,border-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:border-[var(--accent-border-hover)] motion-reduce:transition-none motion-reduce:hover:translate-y-0";
+const cardStyle =
+  "relative flex min-w-0 flex-col border border-[var(--accent-border-soft)] transition-colors hover:border-[var(--accent-border-hover)] motion-reduce:transition-none";
 
 function FocusAreaCard({
   card,
@@ -109,15 +109,15 @@ function FocusAreaCard({
 }) {
   return (
     <article
-      className={`flex min-w-0 flex-col rounded-xl border border-[var(--accent-border-soft)] bg-ivory ${cardMotion} ${
+      className={`${cardStyle} ${
         featured
-          ? "p-6 shadow-[0_12px_30px_rgba(18,36,43,0.08)] hover:shadow-[0_16px_34px_rgba(18,36,43,0.11)] sm:p-7 md:col-span-2 lg:col-span-1 lg:p-8"
-          : "p-5 shadow-[0_8px_22px_rgba(18,36,43,0.06)] hover:shadow-[0_12px_26px_rgba(18,36,43,0.09)] sm:p-6 lg:p-5 xl:p-6"
+          ? "bg-white p-6 sm:p-7 md:col-span-2 lg:col-span-1 lg:p-8"
+          : "bg-ivory p-5 sm:p-6 lg:p-5 xl:p-6"
       }`}
     >
       {visual ?? (
         <div
-          className={`flex items-center justify-center rounded-full border bg-ink text-accent-soft ${
+          className={`flex items-center justify-center border bg-ink text-accent-soft ${
             featured
               ? "size-14 border-accent"
               : "size-10 border-[var(--accent-border-soft)]"
@@ -154,7 +154,7 @@ function FocusAreaCard({
         (card.linkHref !== null ? (
           <a
             href={card.linkHref}
-            className={`mt-auto inline-flex min-h-11 items-center self-start text-sm font-medium text-accent-deep underline decoration-[var(--accent-border-soft)] underline-offset-4 transition-colors hover:text-ink motion-reduce:transition-none ${
+            className={`mt-auto inline-flex min-h-11 items-center self-start text-sm font-medium text-accent-deep underline decoration-[var(--accent-border-soft)] underline-offset-4 after:absolute after:inset-0 after:content-[''] focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-[-3px] focus-visible:outline-[var(--focus-ring)] ${
               featured ? "pt-8" : "pt-5"
             }`}
           >
@@ -215,7 +215,11 @@ export function FocusAreaCards({
 }
 
 export default function FocusAreas({ id, content }: FocusAreasProps) {
-  const cards = content.cards.map((area, index) => ({
+  const primaryAreas = content.cards.filter(
+    (area) => area.icon === "city" || area.icon === "technology",
+  );
+  const visibleAreas = primaryAreas.length > 0 ? primaryAreas : content.cards;
+  const cards = visibleAreas.map((area, index) => ({
     id: `${area.title}-${index}`,
     icon: area.icon,
     title: area.title,

@@ -226,11 +226,11 @@ export const homeContent = {
         linkLabel: "Tüm makaleler",
       },
       books: {
-        title: "Kitaplar",
+        title: "Kitaplar & Öğrenme",
         linkLabel: "Tüm kitaplar",
       },
       photography: {
-        title: "Fotoğraflar",
+        title: "Fotoğraf",
         linkLabel: "Tüm fotoğraflar",
       },
     },
@@ -363,7 +363,7 @@ export const homeContent = {
         linkLabel: "View all articles",
       },
       books: {
-        title: "Books",
+        title: "Books & Learning",
         linkLabel: "View all books",
       },
       photography: {

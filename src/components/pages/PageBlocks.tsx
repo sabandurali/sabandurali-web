@@ -24,7 +24,7 @@ function ActionLink({
       rel={external ? "noopener noreferrer" : undefined}
       className={
         primary
-          ? "rounded-md bg-accent px-7 py-3.5 text-center text-sm font-medium text-ink transition hover:bg-accent-strong"
+          ? "rounded-md bg-accent px-7 py-3.5 text-center text-sm font-medium text-white transition hover:bg-accent-strong"
           : "rounded-md border border-ivory/40 px-7 py-3.5 text-center text-sm font-medium text-ivory transition hover:border-accent hover:bg-surface"
       }
     >
@@ -45,16 +45,12 @@ function HeroPageBlock({
     >
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_28%_42%,var(--accent-hero-glow),transparent_34%),linear-gradient(115deg,transparent_0%,transparent_47%,var(--accent-hero-sheen)_47%,var(--accent-hero-sheen)_63%,transparent_63%)]"
-      />
-      <div
-        aria-hidden="true"
         className="absolute inset-y-0 right-[8%] -z-10 hidden w-[42%] grid-cols-4 gap-px opacity-70 lg:grid"
       >
-        <span className="border-x border-border/50 bg-black/10" />
-        <span className="border-r border-border/40 bg-surface/20" />
-        <span className="border-r border-border/50 bg-black/20" />
-        <span className="border-r border-border/30 bg-surface/10" />
+        <span className="border-x border-border/60 bg-white/[0.02]" />
+        <span className="border-r border-border/60 bg-surface/30" />
+        <span className="border-r border-border/60 bg-black/15" />
+        <span className="border-r border-border/60 bg-surface/20" />
       </div>
 
       <div className="mx-auto grid min-h-[calc(100vh-94px)] max-w-7xl items-center gap-14 px-5 py-16 sm:px-6 sm:py-20 lg:grid-cols-[1.2fr_0.8fr] lg:px-10 lg:py-24">

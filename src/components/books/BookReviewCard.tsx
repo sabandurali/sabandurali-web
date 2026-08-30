@@ -31,7 +31,7 @@ export default function BookReviewCard({
   const href = getBookReviewPath(bookReview.slug, bookReview.language);
 
   return (
-    <article className="group overflow-hidden rounded-sm border border-border bg-surface/75 transition-colors hover:border-[var(--accent-border-hover)] motion-reduce:transition-none">
+    <article className="group overflow-hidden border border-border bg-surface/75 transition-colors hover:border-[var(--accent-border-hover)] motion-reduce:transition-none">
       {coverImage !== null && bookReview.coverImage !== null && (
         <Image
           src={coverImage}

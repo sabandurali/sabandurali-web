@@ -485,7 +485,7 @@ export default function ArticleFormPrototype() {
           </p>
           <button
             type="submit"
-            className="inline-flex min-h-12 shrink-0 items-center justify-center rounded-sm bg-accent px-6 py-3 text-sm font-semibold text-ink transition-colors hover:bg-accent-strong motion-reduce:transition-none"
+            className="inline-flex min-h-12 shrink-0 items-center justify-center rounded-sm bg-accent px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-accent-strong motion-reduce:transition-none"
           >
             Makaleyi doğrula
           </button>

@@ -117,7 +117,7 @@ export default function FeedbackForm({ content }: FeedbackFormProps) {
                 <label
                   key={rating}
                   htmlFor={id}
-                  className="flex min-h-12 cursor-pointer items-center justify-center rounded-sm border border-border bg-background text-sm font-medium text-ivory transition-colors hover:border-accent has-[:checked]:border-accent has-[:checked]:bg-accent has-[:checked]:text-ink has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-accent motion-reduce:transition-none"
+                  className="flex min-h-12 cursor-pointer items-center justify-center rounded-sm border border-border bg-background text-sm font-medium text-ivory transition-colors hover:border-accent has-[:checked]:border-accent has-[:checked]:bg-accent has-[:checked]:text-white has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-accent motion-reduce:transition-none"
                 >
                   <input
                     id={id}
@@ -280,7 +280,7 @@ export default function FeedbackForm({ content }: FeedbackFormProps) {
           <button
             type="submit"
             disabled={isLoading}
-            className="flex min-h-12 w-full items-center justify-center rounded-sm bg-accent px-6 py-3 text-sm font-semibold text-ink transition-colors hover:bg-accent-strong disabled:cursor-not-allowed disabled:opacity-45 motion-reduce:transition-none sm:w-auto sm:min-w-56"
+            className="flex min-h-12 w-full items-center justify-center rounded-sm bg-accent px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-accent-strong disabled:cursor-not-allowed disabled:opacity-45 motion-reduce:transition-none sm:w-auto sm:min-w-56"
           >
             {isLoading
               ? content.submission.submitting
