@@ -22,6 +22,20 @@ import type {
 
 export type HeaderNavigationVariant = "desktop" | "mobile";
 
+export function isTurkishWorkspaceNavigationHref(
+  href: string | null,
+): boolean {
+  if (href === null || !href.startsWith("/")) return false;
+
+  const url = new URL(href, "https://navigation.invalid");
+  const pathname = url.pathname.replace(/\/+$/, "") || "/";
+
+  return (
+    pathname === "/calisma-alanlari" ||
+    (pathname === "/" && url.hash === "#calismalar")
+  );
+}
+
 function internalLink(
   id: string,
   label: string,
@@ -129,14 +143,18 @@ function photographyNavigationItems(): PublicNavigationLink[] {
 export function withTurkishHeaderShortcuts(
   items: PublicNavigationLink[],
 ): PublicNavigationLink[] {
+  const workspacesChildren = workspaceNavigationItems();
   const shortcutChildren = new Map<string, PublicNavigationLink[]>([
-    ["/calisma-alanlari", workspaceNavigationItems()],
     ["/makaleler", articleNavigationItems()],
     ["/kitaplar", booksNavigationItems()],
     ["/fotograflar", photographyNavigationItems()],
   ]);
 
   return items.map((item) => {
+    if (isTurkishWorkspaceNavigationHref(item.href)) {
+      return { ...item, children: workspacesChildren };
+    }
+
     const children =
       item.href === null ? undefined : shortcutChildren.get(item.href);
     return children === undefined ? item : { ...item, children };

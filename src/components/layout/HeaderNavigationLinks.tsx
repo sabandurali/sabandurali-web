@@ -3,7 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import NavigationLink from "./NavigationLink";
-import { isHeaderNavigationItemActive, type HeaderNavigationVariant } from "./navigation";
+import {
+  isHeaderNavigationItemActive,
+  isTurkishWorkspaceNavigationHref,
+  type HeaderNavigationVariant,
+} from "./navigation";
 import type { PublicNavigationLink } from "@/content/navigation/public-types";
 
 type Props = { items: PublicNavigationLink[]; variant: HeaderNavigationVariant; onNavigate?: () => void };
@@ -28,7 +32,7 @@ function WorkspaceMegaPanel({ item, pathname }: { item: PublicNavigationLink; pa
 }
 
 function DesktopPanel({ item, pathname }: { item: PublicNavigationLink; pathname: string }) {
-  const isWorkspacePanel = item.href === "/calisma-alanlari";
+  const isWorkspacePanel = isTurkishWorkspaceNavigationHref(item.href);
   return <div className={`max-h-[calc(100vh-8rem)] overflow-y-auto border border-border bg-background p-4 shadow-2xl shadow-black/30 ${isWorkspacePanel ? "w-[min(calc(100vw-2rem),72rem)]" : "w-[min(calc(100vw-2rem),28rem)]"}`}>{isWorkspacePanel ? <WorkspaceMegaPanel item={item} pathname={pathname} /> : <ul className="grid gap-1 sm:grid-cols-2">{item.children.map((child) => <li key={child.id}><DesktopLink item={child} pathname={pathname} className="flex min-h-11 items-center rounded-sm px-3 text-sm text-ivory transition-colors hover:bg-surface hover:text-accent-soft" /></li>)}</ul>}</div>;
 }
 
