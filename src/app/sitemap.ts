@@ -189,6 +189,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly",
       priority: 0.7,
     },
+    {
+      url: getAbsoluteUrl("/hakkimda/biyografi"),
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+    {
+      url: getAbsoluteUrl("/hakkimda/egitim-sertifikalar-diplomalar"),
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
     ...workspaces.flatMap((workspace) => [
       {
         url: getAbsoluteUrl(`/${workspace.key}`),
