@@ -6,7 +6,7 @@ import { privacyContent } from "@/content/privacyContent";
 export const metadata: Metadata = {
   title: "KVKK Aydınlatma Metni | Şaban Durali",
   description:
-    "Şaban Durali iletişim ve beta geri bildirim formlarında kişisel verilerin işlenmesine ilişkin aydınlatma metni.",
+    "Şaban Durali iletişim formunda kişisel verilerin işlenmesine ilişkin aydınlatma metni.",
   alternates: {
     canonical: privacyUrls.tr,
     languages: privacyUrls,

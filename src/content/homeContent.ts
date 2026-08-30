@@ -85,7 +85,6 @@ export type FooterContent = {
   links: {
     contact: string;
     privacy: string;
-    feedback: string;
     email: string;
   };
 };
@@ -250,7 +249,6 @@ export const homeContent = {
       links: {
         contact: "İletişim",
         privacy: "KVKK Aydınlatma Metni",
-        feedback: "Geri Bildirim",
         email: "E-posta",
       },
     },
@@ -387,7 +385,6 @@ export const homeContent = {
       links: {
         contact: "Contact",
         privacy: "Privacy Notice",
-        feedback: "Feedback",
         email: "Email",
       },
     },

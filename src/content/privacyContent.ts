@@ -21,7 +21,7 @@ export const privacyContent = {
     eyebrow: "KİŞİSEL VERİLER",
     heading: "Kişisel Verilerin İşlenmesine İlişkin Aydınlatma Metni",
     introduction:
-      "Bu metin, Şaban Durali internet sitesindeki iletişim ve beta geri bildirim formları üzerinden yürütülen kişisel veri işleme faaliyetleri hakkında 6698 sayılı Kişisel Verilerin Korunması Kanunu kapsamında bilgi vermek amacıyla hazırlanmıştır.",
+      "Bu metin, Şaban Durali internet sitesindeki iletişim formu üzerinden yürütülen kişisel veri işleme faaliyetleri hakkında 6698 sayılı Kişisel Verilerin Korunması Kanunu kapsamında bilgi vermek amacıyla hazırlanmıştır.",
     sections: [
       {
         heading: "1. Veri sorumlusu",
@@ -34,7 +34,6 @@ export const privacyContent = {
         items: [
           "Kimlik ve iletişim bilgileri: ad soyad ve e-posta adresi.",
           "İletişim içeriği: seçilen konu, mesaj ve kullanıcının kendi isteğiyle yazdığı diğer bilgiler.",
-          "Beta geri bildirim formunda verilen değerlendirmeler ve yorumlar.",
           "Form hizmetinin güvenlik ve teslimat amacıyla işleyebileceği sınırlı teknik kayıtlar.",
         ],
       },
@@ -44,14 +43,13 @@ export const privacyContent = {
           "İletişim taleplerini almak ve yanıtlamak.",
           "İş birliği ve danışmanlık taleplerini değerlendirmek.",
           "Teknik bildirimleri incelemek.",
-          "Beta geri bildirimleriyle platformun içerik ve kullanıcı deneyimini geliştirmek.",
           "Kötüye kullanım ve spam girişimlerini önlemek.",
         ],
       },
       {
         heading: "4. Toplama yöntemi",
         paragraphs: [
-          "Kişisel veriler, web sitesindeki iletişim ve beta geri bildirim formları üzerinden elektronik ortamda toplanır.",
+          "Kişisel veriler, web sitesindeki iletişim formu üzerinden elektronik ortamda toplanır.",
         ],
       },
       {
@@ -69,7 +67,7 @@ export const privacyContent = {
       {
         heading: "7. Saklama süresi",
         paragraphs: [
-          "Veriler, iletişim veya geri bildirim talebinin sonuçlandırılması ve ilgili hukuki yükümlülüklerin yerine getirilmesi için gerekli süre boyunca; sonrasında uygulanabilir mevzuatta öngörülen sürelerle sınırlı olarak saklanır.",
+          "Veriler, iletişim talebinin sonuçlandırılması ve ilgili hukuki yükümlülüklerin yerine getirilmesi için gerekli süre boyunca; sonrasında uygulanabilir mevzuatta öngörülen sürelerle sınırlı olarak saklanır.",
         ],
       },
       {
@@ -101,7 +99,7 @@ export const privacyContent = {
     eyebrow: "PERSONAL DATA",
     heading: "Privacy Notice on the Processing of Personal Data",
     introduction:
-      "This notice explains the processing of personal data through the contact and beta feedback forms on the Şaban Durali website in the context of Türkiye’s Personal Data Protection Law No. 6698 (KVKK).",
+      "This notice explains the processing of personal data through the contact form on the Şaban Durali website in the context of Türkiye’s Personal Data Protection Law No. 6698 (KVKK).",
     sections: [
       {
         heading: "1. Data controller",
@@ -114,7 +112,6 @@ export const privacyContent = {
         items: [
           "Identity and contact details: full name and email address.",
           "Communication content: the selected subject, message and any other information the user chooses to provide.",
-          "Ratings and comments submitted through the beta feedback form.",
           "Limited technical records that the form service may process for security and delivery purposes.",
         ],
       },
@@ -124,14 +121,13 @@ export const privacyContent = {
           "Receiving and responding to contact requests.",
           "Evaluating collaboration and consulting enquiries.",
           "Reviewing technical reports.",
-          "Improving the platform’s content and user experience through beta feedback.",
           "Preventing misuse and spam attempts.",
         ],
       },
       {
         heading: "4. Method of collection",
         paragraphs: [
-          "Personal data is collected electronically through the contact and beta feedback forms on this website.",
+          "Personal data is collected electronically through the contact form on this website.",
         ],
       },
       {
@@ -149,7 +145,7 @@ export const privacyContent = {
       {
         heading: "7. Retention",
         paragraphs: [
-          "Data is retained for as long as necessary to conclude the relevant contact or feedback request and meet related legal obligations, and afterwards only for the periods required by applicable legislation.",
+          "Data is retained for as long as necessary to conclude the relevant contact request and meet related legal obligations, and afterwards only for the periods required by applicable legislation.",
         ],
       },
       {

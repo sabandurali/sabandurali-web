@@ -132,6 +132,18 @@ function getPositiveDimension(value: unknown): number | undefined {
     : undefined;
 }
 
+function getArticleType(value: unknown): "article" | "district-research" | "district-news" {
+  return value === "district-research" || value === "district-news" ? value : "article";
+}
+
+function mapExternalSource(value: unknown) {
+  if (!isRecord(value)) return null;
+  const name = getRequiredText(value.name);
+  const url = getRequiredText(value.url);
+  if (name === null || url === null) return null;
+  return { name, url, checkedAt: getRequiredText(value.checkedAt) };
+}
+
 function mapFeaturedImage(
   value: PayloadArticle["featuredImage"],
   localizedAlt: unknown,
@@ -170,6 +182,7 @@ export function mapPayloadArticle(
   const title = getRequiredText(value.title);
   const slug = getRequiredText(value.slug);
   const excerpt = getRequiredText(value.excerpt);
+  const articleType = getArticleType(value.articleType);
 
   if (id === null) {
     return null;
@@ -189,12 +202,18 @@ export function mapPayloadArticle(
     return null;
   }
 
-  if (!isLexicalContent(value.content)) {
+  if (articleType !== "district-news" && !isLexicalContent(value.content)) {
     reportInvalidArticle(
       id,
       locale,
       "Lexical content is missing for the requested locale",
     );
+    return null;
+  }
+
+  const externalSource = mapExternalSource(value.externalSource);
+  if (articleType === "district-news" && externalSource === null) {
+    reportInvalidArticle(id, locale, "news is missing its original source");
     return null;
   }
 
@@ -220,13 +239,17 @@ export function mapPayloadArticle(
     language: locale,
     translationKey: id,
     summary: excerpt,
-    content: {
-      source: "lexical",
-      data: value.content,
-    },
+    content: articleType === "district-news"
+      ? { source: "lexical", data: null }
+      : { source: "lexical", data: value.content },
     categories: mapCategories(value.categories, locale),
     featuredImage,
     featured: value.featured === true,
+    articleType,
+    district: getRequiredText(value.district),
+    districtNeighborhood: getRequiredText(value.districtNeighborhood),
+    newsCategory: getRequiredText(value.newsCategory),
+    externalSource,
     publishedAt: value.publishedAt,
     createdAt: value.createdAt,
     updatedAt: value.updatedAt,
@@ -254,6 +277,11 @@ export function toPublicArticleSummary(
     categories: article.categories,
     featuredImage: article.featuredImage,
     featured: article.featured,
+    articleType: article.articleType,
+    district: article.district,
+    districtNeighborhood: article.districtNeighborhood,
+    newsCategory: article.newsCategory,
+    externalSource: article.externalSource,
     publishedAt: article.publishedAt,
     createdAt: article.createdAt,
     updatedAt: article.updatedAt,

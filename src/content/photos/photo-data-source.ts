@@ -85,3 +85,8 @@ export async function getAllPublishedPhotos(locale: PhotoLanguage) {
     ? payloadPhotoRepository.listAllPublished(locale)
     : [];
 }
+
+export async function getDistrictPhotos(district: string, locale: PhotoLanguage) {
+  const photos = await getAllPublishedPhotos(locale);
+  return photos.filter((photo) => photo.district === district);
+}

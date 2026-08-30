@@ -70,6 +70,7 @@ export interface Config {
     users: User;
     media: Media;
     categories: Category;
+    'district-guides': DistrictGuide;
     articles: Article;
     books: Book;
     pages: Page;
@@ -86,6 +87,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
+    'district-guides': DistrictGuidesSelect<false> | DistrictGuidesSelect<true>;
     articles: ArticlesSelect<false> | ArticlesSelect<true>;
     books: BooksSelect<false> | BooksSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
@@ -204,6 +206,99 @@ export interface Category {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "district-guides".
+ */
+export interface DistrictGuide {
+  id: string;
+  district:
+    | 'arnavutkoy'
+    | 'avcilar'
+    | 'bagcilar'
+    | 'bahcelievler'
+    | 'bakirkoy'
+    | 'basaksehir'
+    | 'bayrampasa'
+    | 'besiktas'
+    | 'beylikduzu'
+    | 'beyoglu'
+    | 'buyukcekmece'
+    | 'catalca'
+    | 'esenler'
+    | 'esenyurt'
+    | 'eyupsultan'
+    | 'fatih'
+    | 'gaziosmanpasa'
+    | 'gungoren'
+    | 'kagithane'
+    | 'kucukcekmece'
+    | 'sariyer'
+    | 'silivri'
+    | 'sultangazi'
+    | 'sisli'
+    | 'zeytinburnu'
+    | 'adalar'
+    | 'atasehir'
+    | 'beykoz'
+    | 'cekmekoy'
+    | 'kadikoy'
+    | 'kartal'
+    | 'maltepe'
+    | 'pendik'
+    | 'sancaktepe'
+    | 'sultanbeyli'
+    | 'sile'
+    | 'tuzla'
+    | 'umraniye'
+    | 'uskudar';
+  history?: string | null;
+  life?: string | null;
+  transportation?: string | null;
+  facts?: {
+    population?: string | null;
+    populationYear?: number | null;
+    areaKm2?: number | null;
+    neighborhoodCount?: number | null;
+    neighboringDistricts?: string | null;
+    locationSummary?: string | null;
+  };
+  neighborhoods?:
+    | {
+        name: string;
+        featured?: boolean | null;
+        description?: string | null;
+        image?: (string | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  housingTexture?: string | null;
+  regionalAssessment?: string | null;
+  marketData?: {
+    salePricePerM2?: number | null;
+    averageRent?: number | null;
+    dataDate?: string | null;
+    source?: string | null;
+    description?: string | null;
+  };
+  planningDevelopments?:
+    | {
+        title: string;
+        summary?: string | null;
+        neighborhood?: string | null;
+        date?: string | null;
+        status?:
+          ('teklif' | 'planlama' | 'belediye-meclisi-karari' | 'onay' | 'aski' | 'uygulama' | 'tamamlandi') | null;
+        officialSource?: string | null;
+        checkedAt?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  publishedAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "articles".
  */
 export interface Article {
@@ -214,7 +309,10 @@ export interface Article {
    */
   slug: string;
   excerpt: string;
-  content: {
+  /**
+   * İlçe haberi türünde tam metin saklanmaz; kısa özgün özet ve kaynak bağlantısı kullanılır.
+   */
+  content?: {
     root: {
       type: string;
       children: {
@@ -228,7 +326,7 @@ export interface Article {
       version: number;
     };
     [k: string]: unknown;
-  };
+  } | null;
   categories: (string | Category)[];
   featuredImage?: (string | null) | Media;
   /**
@@ -236,6 +334,69 @@ export interface Article {
    */
   featuredImageAlt?: string | null;
   featured?: boolean | null;
+  articleType: 'article' | 'district-research' | 'district-news';
+  district?:
+    | (
+        | 'arnavutkoy'
+        | 'avcilar'
+        | 'bagcilar'
+        | 'bahcelievler'
+        | 'bakirkoy'
+        | 'basaksehir'
+        | 'bayrampasa'
+        | 'besiktas'
+        | 'beylikduzu'
+        | 'beyoglu'
+        | 'buyukcekmece'
+        | 'catalca'
+        | 'esenler'
+        | 'esenyurt'
+        | 'eyupsultan'
+        | 'fatih'
+        | 'gaziosmanpasa'
+        | 'gungoren'
+        | 'kagithane'
+        | 'kucukcekmece'
+        | 'sariyer'
+        | 'silivri'
+        | 'sultangazi'
+        | 'sisli'
+        | 'zeytinburnu'
+        | 'adalar'
+        | 'atasehir'
+        | 'beykoz'
+        | 'cekmekoy'
+        | 'kadikoy'
+        | 'kartal'
+        | 'maltepe'
+        | 'pendik'
+        | 'sancaktepe'
+        | 'sultanbeyli'
+        | 'sile'
+        | 'tuzla'
+        | 'umraniye'
+        | 'uskudar'
+      )
+    | null;
+  districtNeighborhood?: string | null;
+  newsCategory?:
+    | (
+        | 'ulasim'
+        | 'sehircilik'
+        | 'belediye'
+        | 'kultur'
+        | 'yasam'
+        | 'gayrimenkul'
+        | 'egitim'
+        | 'cevre'
+        | 'onemli-yerel-gelismeler'
+      )
+    | null;
+  externalSource?: {
+    name?: string | null;
+    url?: string | null;
+    checkedAt?: string | null;
+  };
   /**
    * İlk yayında otomatik atanır; gerekirse elle düzenlenebilir.
    */
@@ -686,6 +847,52 @@ export interface Photo {
   altText: string;
   image: string | Media;
   collections: (string | PhotoCollection)[];
+  district?:
+    | (
+        | 'arnavutkoy'
+        | 'avcilar'
+        | 'bagcilar'
+        | 'bahcelievler'
+        | 'bakirkoy'
+        | 'basaksehir'
+        | 'bayrampasa'
+        | 'besiktas'
+        | 'beylikduzu'
+        | 'beyoglu'
+        | 'buyukcekmece'
+        | 'catalca'
+        | 'esenler'
+        | 'esenyurt'
+        | 'eyupsultan'
+        | 'fatih'
+        | 'gaziosmanpasa'
+        | 'gungoren'
+        | 'kagithane'
+        | 'kucukcekmece'
+        | 'sariyer'
+        | 'silivri'
+        | 'sultangazi'
+        | 'sisli'
+        | 'zeytinburnu'
+        | 'adalar'
+        | 'atasehir'
+        | 'beykoz'
+        | 'cekmekoy'
+        | 'kadikoy'
+        | 'kartal'
+        | 'maltepe'
+        | 'pendik'
+        | 'sancaktepe'
+        | 'sultanbeyli'
+        | 'sile'
+        | 'tuzla'
+        | 'umraniye'
+        | 'uskudar'
+      )
+    | null;
+  neighborhood?: string | null;
+  districtPhotoCategory?: ('mimari' | 'sokak' | 'tarih' | 'yasam' | 'ulasim' | 'doga' | 'gece') | null;
+  dayPeriod?: ('gunduz' | 'gece') | null;
   tags?: (string | Tag)[] | null;
   takenAt?: string | null;
   locationName?: string | null;
@@ -748,6 +955,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'categories';
         value: string | Category;
+      } | null)
+    | ({
+        relationTo: 'district-guides';
+        value: string | DistrictGuide;
       } | null)
     | ({
         relationTo: 'articles';
@@ -862,6 +1073,62 @@ export interface CategoriesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "district-guides_select".
+ */
+export interface DistrictGuidesSelect<T extends boolean = true> {
+  district?: T;
+  history?: T;
+  life?: T;
+  transportation?: T;
+  facts?:
+    | T
+    | {
+        population?: T;
+        populationYear?: T;
+        areaKm2?: T;
+        neighborhoodCount?: T;
+        neighboringDistricts?: T;
+        locationSummary?: T;
+      };
+  neighborhoods?:
+    | T
+    | {
+        name?: T;
+        featured?: T;
+        description?: T;
+        image?: T;
+        id?: T;
+      };
+  housingTexture?: T;
+  regionalAssessment?: T;
+  marketData?:
+    | T
+    | {
+        salePricePerM2?: T;
+        averageRent?: T;
+        dataDate?: T;
+        source?: T;
+        description?: T;
+      };
+  planningDevelopments?:
+    | T
+    | {
+        title?: T;
+        summary?: T;
+        neighborhood?: T;
+        date?: T;
+        status?: T;
+        officialSource?: T;
+        checkedAt?: T;
+        id?: T;
+      };
+  publishedAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "articles_select".
  */
 export interface ArticlesSelect<T extends boolean = true> {
@@ -873,6 +1140,17 @@ export interface ArticlesSelect<T extends boolean = true> {
   featuredImage?: T;
   featuredImageAlt?: T;
   featured?: T;
+  articleType?: T;
+  district?: T;
+  districtNeighborhood?: T;
+  newsCategory?: T;
+  externalSource?:
+    | T
+    | {
+        name?: T;
+        url?: T;
+        checkedAt?: T;
+      };
   publishedAt?: T;
   seo?:
     | T
@@ -1223,6 +1501,10 @@ export interface PhotosSelect<T extends boolean = true> {
   altText?: T;
   image?: T;
   collections?: T;
+  district?: T;
+  neighborhood?: T;
+  districtPhotoCategory?: T;
+  dayPeriod?: T;
   tags?: T;
   takenAt?: T;
   locationName?: T;

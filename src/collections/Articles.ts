@@ -8,6 +8,7 @@ import {
   createLocalizedSlugField,
   createLocalizedSlugHook,
 } from "@/lib/localizedSlug";
+import { districtOptions } from "@/content/districts/district-registry";
 
 const setPublishedAtOnFirstPublish: CollectionBeforeChangeHook = ({
   data,
@@ -67,7 +68,10 @@ export const Articles: CollectionConfig = {
       name: "content",
       type: "richText",
       localized: true,
-      required: true,
+      admin: {
+        description:
+          "İlçe haberi türünde tam metin saklanmaz; kısa özgün özet ve kaynak bağlantısı kullanılır.",
+      },
     },
     {
       name: "categories",
@@ -98,6 +102,50 @@ export const Articles: CollectionConfig = {
         position: "sidebar",
       },
       defaultValue: false,
+    },
+    {
+      type: "collapsible",
+      label: "İlçe rehberi ilişkisi",
+      admin: { initCollapsed: true },
+      fields: [
+        {
+          name: "articleType",
+          type: "select",
+          defaultValue: "article",
+          options: [
+            { label: "Makale", value: "article" },
+            { label: "İlçe araştırması", value: "district-research" },
+            { label: "İlçeden haber", value: "district-news" },
+          ],
+          required: true,
+        },
+        {
+          name: "district",
+          type: "select",
+          options: districtOptions,
+          index: true,
+          label: "İlgili ilçe",
+        },
+        { name: "districtNeighborhood", type: "text", label: "İlgili mahalle" },
+        {
+          name: "newsCategory",
+          type: "select",
+          label: "Haber kategorisi",
+          options: ["ulasim", "sehircilik", "belediye", "kultur", "yasam", "gayrimenkul", "egitim", "cevre", "onemli-yerel-gelismeler"],
+          admin: { condition: (_, siblingData) => siblingData?.articleType === "district-news" },
+        },
+        {
+          name: "externalSource",
+          type: "group",
+          label: "Orijinal kaynak",
+          admin: { condition: (_, siblingData) => siblingData?.articleType === "district-news" },
+          fields: [
+            { name: "name", type: "text", label: "Kaynak adı" },
+            { name: "url", type: "text", label: "Orijinal haber URL'si" },
+            { name: "checkedAt", type: "date", label: "Son kontrol tarihi" },
+          ],
+        },
+      ],
     },
     {
       name: "publishedAt",

@@ -114,6 +114,11 @@ function mapStaticArticle(article: Article): PublicArticle {
             height: article.coverImage.height,
           },
     featured: article.featured,
+    articleType: "article",
+    district: null,
+    districtNeighborhood: null,
+    newsCategory: null,
+    externalSource: null,
     publishedAt: article.publishedAt,
     createdAt: article.createdAt,
     updatedAt: article.updatedAt,
@@ -226,6 +231,24 @@ export async function getAllPublishedArticles(
   return getPublicArticleSource() === "payload"
     ? payloadArticleRepository.listPublished(language)
     : getAllStaticPublishedArticles(language);
+}
+
+export async function getDistrictNews(
+  district: string,
+  language: ArticleLanguage,
+): Promise<PublicArticleSummary[]> {
+  if (getPublicArticleSource() !== "payload") return [];
+  return payloadArticleRepository.listDistrictNews(district, language);
+}
+
+export async function getDistrictResearch(
+  district: string,
+  language: ArticleLanguage,
+): Promise<PublicArticleSummary[]> {
+  const articles = await getAllPublishedArticles(language);
+  return articles.filter(
+    (article) => article.articleType === "district-research" && article.district === district,
+  );
 }
 
 export async function getAllArticles(): Promise<Article[]> {

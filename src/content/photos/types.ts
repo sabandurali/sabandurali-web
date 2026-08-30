@@ -32,6 +32,10 @@ export type PublicPhoto = {
   tags: PublicPhotoTag[];
   takenAt: string | null;
   locationName: string | null;
+  district: string | null;
+  neighborhood: string | null;
+  districtPhotoCategory: string | null;
+  dayPeriod: string | null;
   photographer: string;
   creditLicense: string | null;
   exif: {

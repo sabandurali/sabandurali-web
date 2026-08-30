@@ -111,6 +111,10 @@ export function mapPayloadPhoto(
     tags,
     takenAt: getText(value.takenAt),
     locationName: getText(value.locationName),
+    district: getText(value.district),
+    neighborhood: getText(value.neighborhood),
+    districtPhotoCategory: getText(value.districtPhotoCategory),
+    dayPeriod: getText(value.dayPeriod),
     photographer: getText(value.photographer) ?? "Şaban Durali",
     creditLicense: getText(value.creditLicense),
     exif: {

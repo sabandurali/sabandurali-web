@@ -8,6 +8,7 @@ import {
   createLocalizedSlugField,
   createLocalizedSlugHook,
 } from "@/lib/localizedSlug";
+import { districtOptions } from "@/content/districts/district-registry";
 
 const setPublishedAtOnFirstPublish: CollectionBeforeChangeHook = ({
   data,
@@ -91,6 +92,17 @@ export const Photos: CollectionConfig = {
               hasMany: true,
               required: true,
               minRows: 1,
+            },
+            {
+              type: "collapsible",
+              label: "İlçe rehberi ilişkisi",
+              admin: { initCollapsed: true },
+              fields: [
+                { name: "district", type: "select", options: districtOptions, index: true, label: "İlçe" },
+                { name: "neighborhood", type: "text", localized: true, label: "Mahalle / konum" },
+                { name: "districtPhotoCategory", type: "select", label: "İlçe fotoğraf kategorisi", options: ["mimari", "sokak", "tarih", "yasam", "ulasim", "doga", "gece"] },
+                { name: "dayPeriod", type: "select", label: "Gündüz / gece", options: ["gunduz", "gece"] },
+              ],
             },
             {
               name: "tags",

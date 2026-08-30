@@ -325,6 +325,7 @@ function renderArticleBlock(
 
 export default function ArticleContent({ article, content }: ArticleContentProps) {
   if (article.content.source === "lexical") {
+    if (article.content.data === null || article.content.data === undefined) return null;
     return <PayloadRichText data={article.content.data} />;
   }
 

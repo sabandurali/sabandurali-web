@@ -49,7 +49,10 @@ export class PayloadPublicArticleRepository {
         page,
         sort: "-publishedAt",
         where: {
-          and: createPublishedConditions(now),
+          and: [
+            ...createPublishedConditions(now),
+            { articleType: { not_equals: "district-news" } },
+          ],
         },
       });
 
@@ -100,6 +103,31 @@ export class PayloadPublicArticleRepository {
     return document === undefined
       ? null
       : mapPayloadArticle(document, locale, now);
+  }
+
+  async listDistrictNews(
+    district: string,
+    locale: ArticleLanguage,
+  ): Promise<PublicArticleSummary[]> {
+    const payload = await getPayload({ config });
+    const now = new Date();
+    const articles: PublicArticleSummary[] = [];
+    let page = 1;
+    let totalPages = 1;
+    while (page <= totalPages) {
+      const result = await payload.find({
+        collection: "articles", depth: 1, draft: false, fallbackLocale: false,
+        limit: MAX_ARTICLE_PAGE_SIZE, locale, overrideAccess: false, page, sort: "-publishedAt",
+        where: { and: [...createPublishedConditions(now), { articleType: { equals: "district-news" } }, { district: { equals: district } }] },
+      });
+      for (const document of result.docs) {
+        const article = mapPayloadArticle(document, locale, now);
+        if (article !== null) articles.push(toPublicArticleSummary(article));
+      }
+      totalPages = result.totalPages;
+      page += 1;
+    }
+    return articles;
   }
 
   async findPublishedTranslation(

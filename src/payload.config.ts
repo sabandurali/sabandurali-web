@@ -9,6 +9,7 @@ import sharp from "sharp";
 import { Articles } from "@/collections/Articles";
 import { Books } from "@/collections/Books";
 import { Categories } from "@/collections/Categories";
+import { DistrictGuides } from "@/collections/DistrictGuides";
 import { Media } from "@/collections/Media";
 import { Pages } from "@/collections/Pages";
 import { PhotoCollections } from "@/collections/PhotoCollections";
@@ -89,6 +90,7 @@ export default buildConfig({
     Users,
     Media,
     Categories,
+    DistrictGuides,
     Articles,
     Books,
     Pages,

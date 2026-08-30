@@ -28,6 +28,14 @@ export type PublicArticleSeo = {
   openGraphImage?: string;
 };
 
+export type DistrictArticleType = "article" | "district-research" | "district-news";
+
+export type PublicArticleExternalSource = {
+  name: string;
+  url: string;
+  checkedAt: string | null;
+};
+
 export type PublicArticleSummary = {
   id: string;
   title: string;
@@ -38,6 +46,11 @@ export type PublicArticleSummary = {
   categories: ReadonlyArray<PublicArticleCategory>;
   featuredImage: PublicArticleImage | null;
   featured: boolean;
+  articleType: DistrictArticleType;
+  district: string | null;
+  districtNeighborhood: string | null;
+  newsCategory: string | null;
+  externalSource: PublicArticleExternalSource | null;
   publishedAt: string;
   createdAt: string;
   updatedAt: string;
@@ -60,7 +73,7 @@ export type PublicArticleContent =
     }
   | {
       source: "lexical";
-      data: PayloadArticle["content"];
+      data: PayloadArticle["content"] | null;
     };
 
 export type PublicArticle = PublicArticleSummary & {

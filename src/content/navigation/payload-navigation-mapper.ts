@@ -93,6 +93,10 @@ function resolveHref(
   );
 }
 
+function isRetiredFeedbackHref(href: string | null): boolean {
+  return href === "/geri-bildirim" || href === "/en/feedback";
+}
+
 function mapLink(
   item: PayloadLink,
   index: number,
@@ -118,6 +122,9 @@ function mapLink(
     options.language,
     options.now,
   );
+
+  if (isRetiredFeedbackHref(href)) return null;
+
   const children =
     options.allowChildren && "children" in item
       ? item.children?.flatMap((child, childIndex) => {

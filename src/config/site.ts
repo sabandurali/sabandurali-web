@@ -30,13 +30,3 @@ export const privacyUrls = {
   tr: getAbsoluteUrl(privacyPaths.tr),
   en: getAbsoluteUrl(privacyPaths.en),
 } as const;
-
-export const feedbackPaths = {
-  tr: "/geri-bildirim",
-  en: "/en/feedback",
-} as const;
-
-export const feedbackUrls = {
-  tr: getAbsoluteUrl(feedbackPaths.tr),
-  en: getAbsoluteUrl(feedbackPaths.en),
-} as const;

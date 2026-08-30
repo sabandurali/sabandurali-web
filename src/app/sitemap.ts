@@ -35,6 +35,8 @@ import {
   photoListUrls,
 } from "@/content/photos/photo-routes";
 import type { PublicPhoto, PublicPhotoTranslation } from "@/content/photos/types";
+import { districts } from "@/content/districts/district-registry";
+import { districtGuidePath, getDistrictPath } from "@/content/districts/district-routes";
 
 export const dynamic = "force-dynamic";
 
@@ -174,6 +176,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   });
 
   return [
+    {
+      url: getAbsoluteUrl(districtGuidePath),
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    ...districts.map((district) => ({
+      url: getAbsoluteUrl(getDistrictPath(district.slug)),
+      lastModified,
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    })),
     ...(turkishHomePageData.source === "static" ||
     turkishHomePageData.page?.seo.index === true
       ? [
