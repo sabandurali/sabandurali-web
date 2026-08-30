@@ -35,25 +35,25 @@ export default async function Header({
 
   return (
     <header className="border-b border-border bg-background">
-      <div className="relative mx-auto flex min-h-[72px] max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:min-h-[94px] lg:py-4 lg:px-10">
+      <div className="relative mx-auto flex min-h-[72px] max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 xl:min-h-[94px] xl:py-4 xl:px-8 2xl:px-10">
         <a
           href={homeHref}
-          className="flex shrink-0 items-center gap-2.5 lg:min-w-0 lg:shrink lg:gap-3"
+          className="flex shrink-0 items-center gap-2.5 xl:min-w-0 xl:shrink xl:gap-3"
         >
           <Image
             src="/brand/sd-monogram-light.png"
             alt="Şaban Durali"
             width={606}
             height={669}
-            className="h-10 w-auto shrink-0 object-contain lg:h-[50px]"
+            className="h-10 w-auto shrink-0 object-contain xl:h-[50px]"
             priority
           />
-          <span aria-hidden="true" className="lg:min-w-0">
-            <span className="block whitespace-nowrap font-serif text-base font-semibold tracking-tight text-ivory lg:text-xl lg:uppercase lg:tracking-[0.16em]">
-              <span className="lg:hidden">{content.mobileBrandName}</span>
-              <span className="hidden lg:inline">{content.brandName}</span>
+          <span aria-hidden="true" className="xl:min-w-0">
+            <span className="block whitespace-nowrap font-serif text-base font-semibold tracking-tight text-ivory xl:text-xl xl:uppercase xl:tracking-[0.16em]">
+              <span className="min-[1400px]:hidden">{content.mobileBrandName}</span>
+              <span className="hidden min-[1400px]:inline">{content.brandName}</span>
             </span>
-            <span className="hidden whitespace-nowrap text-[10px] tracking-[0.16em] text-accent-soft lg:block">
+            <span className="hidden whitespace-nowrap text-[10px] tracking-[0.16em] text-accent-soft min-[1400px]:block">
               {content.brandTagline}
             </span>
           </span>
@@ -61,7 +61,7 @@ export default async function Header({
 
         <nav
           aria-label={content.menu.desktopNavigationLabel}
-          className="hidden items-center gap-5 text-sm text-ivory lg:flex lg:gap-7"
+          className="hidden min-w-0 flex-1 items-center justify-center text-xs text-ivory xl:flex"
         >
           <HeaderNavigationLinks
             items={items}
