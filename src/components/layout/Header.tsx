@@ -34,31 +34,34 @@ export default async function Header({
   );
 
   return (
-    <header className="border-b border-border bg-background">
-      <div className="relative mx-auto flex min-h-[68px] max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 xl:min-h-[78px] xl:py-3 xl:px-8 2xl:px-10">
+    <header className="border-b border-[var(--accent-border-soft)] bg-background">
+      <div className="relative mx-auto flex min-h-[76px] max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 min-[1360px]:min-h-[88px] min-[1360px]:px-8 2xl:px-10">
         <a
           href={homeHref}
-          className="flex shrink-0 items-center gap-2.5 xl:min-w-0 xl:shrink xl:gap-3"
+          className="flex shrink-0 items-center gap-3 min-[1360px]:min-w-0 min-[1360px]:shrink min-[1360px]:gap-3.5"
         >
           <Image
             src="/brand/sd-monogram-light.png"
             alt="Şaban Durali"
             width={606}
             height={669}
-            className="h-9 w-auto shrink-0 object-contain xl:h-10"
+            className="h-11 w-auto shrink-0 object-contain min-[1360px]:h-14"
             priority
           />
-          <span aria-hidden="true" className="xl:min-w-0">
-            <span className="block whitespace-nowrap font-serif text-sm font-semibold tracking-[0.08em] text-ivory xl:text-base xl:uppercase xl:tracking-[0.14em]">
-              <span className="min-[1400px]:hidden">{content.mobileBrandName}</span>
-              <span className="hidden min-[1400px]:inline">{content.brandName}</span>
+          <span aria-hidden="true" className="min-[1360px]:min-w-0">
+            <span className="block whitespace-nowrap font-serif text-sm font-semibold tracking-[0.1em] text-ivory min-[1360px]:text-[1.02rem] min-[1360px]:uppercase min-[1360px]:tracking-[0.16em]">
+              <span className="min-[1360px]:hidden">{content.mobileBrandName}</span>
+              <span className="hidden min-[1360px]:inline">{content.brandName}</span>
+            </span>
+            <span className="mt-1 hidden whitespace-nowrap text-[8px] font-medium uppercase tracking-[0.16em] text-accent-soft min-[1360px]:block">
+              {content.brandTagline}
             </span>
           </span>
         </a>
 
         <nav
           aria-label={content.menu.desktopNavigationLabel}
-          className="hidden min-w-0 flex-1 items-center justify-center text-xs text-ivory xl:flex"
+          className="hidden min-w-0 flex-1 items-center justify-center text-[11px] text-ivory min-[1360px]:flex"
         >
           <HeaderNavigationLinks
             items={items}

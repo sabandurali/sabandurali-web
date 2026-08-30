@@ -114,6 +114,7 @@ export default async function HomePage({ content }: { content: HomeContent }) {
           content={content.listingSections.photography}
           href={photoListPaths[locale]}
           tone="light"
+          compact={latestPhotos.length === 0}
         >
           {latestPhotos.length > 0 ? (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -126,11 +127,18 @@ export default async function HomePage({ content }: { content: HomeContent }) {
               ))}
             </div>
           ) : (
-            <p className="max-w-2xl border border-[var(--accent-border-soft)] bg-white p-6 text-base leading-7 text-muted-dark">
-              {locale === "tr"
-                ? "Fotoğraf arşivi yeni çalışmalar eklendikçe burada yer alacak."
-                : "The photography archive will appear here as new work is published."}
-            </p>
+            <div className="max-w-2xl border-l border-[var(--accent-border-soft)] pl-5 text-base leading-7 text-muted-dark">
+              <p>
+                {locale === "tr"
+                  ? "İstanbul, şehir, mimari, sokak, hayvanlar ve doğa odaklı fotoğraf arşivi."
+                  : "A photography archive focused on Istanbul, city life, architecture, streets, animals and nature."}
+              </p>
+              <p className="mt-3 text-sm">
+                {locale === "tr"
+                  ? "Yeni çalışmalar eklendikçe burada yer alacak."
+                  : "New work will appear here as it is published."}
+              </p>
+            </div>
           )}
         </HomeListingSection>
 

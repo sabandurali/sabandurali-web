@@ -44,7 +44,7 @@ export default function MobileMenu({
   }
 
   return (
-    <div className="xl:hidden">
+    <div className="min-[1360px]:hidden">
       <button
         ref={buttonRef}
         type="button"

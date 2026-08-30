@@ -146,7 +146,7 @@ export const homeContent = {
       languageSwitcherLabel: "Dil seçimi",
     },
     hero: {
-      eyebrow: "Gayrimenkul • İstanbul • Araştırma • Teknoloji",
+      eyebrow: "Gayrimenkul • Araştırma • Teknoloji • Danışmanlık",
       titleLines: [
         { text: "Bilgiyi araştıran," },
         { text: "analiz eden ve" },
@@ -155,7 +155,7 @@ export const homeContent = {
       ],
       description:
         "Gayrimenkul ve İstanbul, satış ve müzakere, araştırma ve analiz, yapay zekâ ve teknoloji, kitaplar ve öğrenme ile fotoğraf alanlarında güvenilir bilgi ve uygulanabilir analiz üreten bağımsız bir platform oluşturuyorum.",
-      primaryAction: "Çalışmaları keşfet",
+      primaryAction: "Çalışma Alanlarımız",
       primaryActionHref: "/calisma-alanlari",
       secondaryAction: "Hakkımda",
       secondaryActionHref: "/hakkimda",
@@ -177,7 +177,7 @@ export const homeContent = {
     },
     focusAreas: {
       label: "Ana çalışma alanları",
-      title: "Birbirini besleyen bilgi ve uzmanlık alanları.",
+      title: "Çalışma Alanlarımız",
       cards: [
         {
           icon: "city",

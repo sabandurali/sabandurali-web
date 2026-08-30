@@ -7,6 +7,7 @@ type HomeListingSectionProps = {
   content: HomeListingSectionContent;
   href: string;
   tone?: "default" | "soft" | "light";
+  compact?: boolean;
 };
 
 export default function HomeListingSection({
@@ -14,6 +15,7 @@ export default function HomeListingSection({
   content,
   href,
   tone = "default",
+  compact = false,
 }: HomeListingSectionProps) {
   return (
     <section
@@ -25,8 +27,8 @@ export default function HomeListingSection({
             : "bg-background"
       }
     >
-      <div className="mx-auto max-w-7xl px-6 py-16 sm:py-20 lg:px-10 lg:py-24">
-        <div className="mb-10 flex flex-col gap-5 border-b border-border pb-7 sm:flex-row sm:items-end sm:justify-between">
+      <div className={`mx-auto max-w-7xl px-6 ${compact ? "py-12 sm:py-14 lg:px-10 lg:py-16" : "py-16 sm:py-20 lg:px-10 lg:py-24"}`}>
+        <div className={`${compact ? "mb-7 pb-5" : "mb-10 pb-7"} flex flex-col gap-5 border-b border-border sm:flex-row sm:items-end sm:justify-between`}>
           <h2
             className={`text-4xl font-semibold tracking-tight sm:text-5xl ${
               tone === "default" ? "text-ivory" : "text-ink"

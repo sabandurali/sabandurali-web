@@ -12,7 +12,7 @@ export default function ContactCallToAction({
 }: ContactCallToActionProps) {
   return (
     <section className="border-t border-[var(--accent-border-soft)] bg-ivory-soft">
-      <div className="mx-auto max-w-7xl px-6 py-16 lg:px-10 lg:py-20">
+      <div className="mx-auto max-w-7xl px-6 py-14 lg:px-10 lg:py-16">
         <div className="border border-border bg-background p-8 shadow-xl shadow-black/10 sm:p-10 lg:flex lg:items-center lg:justify-between lg:gap-12">
           <div className="max-w-3xl">
             <h2 className="text-4xl font-semibold tracking-tight text-ivory sm:text-5xl">

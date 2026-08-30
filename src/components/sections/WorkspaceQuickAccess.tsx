@@ -6,22 +6,28 @@ export default function WorkspaceQuickAccess({
 }: {
   content: FocusAreasContent;
 }) {
+  const expertise = [
+    { title: "Araştırmacı", description: "Veriye dayalı analiz ve yorum", icon: "research" as const },
+    { title: "Gayrimenkul Uzmanı", description: "İstanbul odağında rehberler ve analizler", icon: "city" as const },
+    { title: "Öğrenen & Öğreten", description: "Sürekli öğrenme ve bilgiyi paylaşma", icon: "book" as const },
+    { title: "Fotoğrafçı", description: "İstanbul'u belgeleyen görsel arşiv", icon: "network" as const },
+    { title: "Teknoloji Meraklısı", description: "Yapay zekâ ve dijital çözümler", icon: "technology" as const },
+  ];
+
   return (
-    <section aria-label={content.label} className="border-b border-border bg-background">
-      <div className="mx-auto grid max-w-7xl divide-y divide-border px-5 sm:grid-cols-2 sm:divide-x sm:divide-y-0 sm:px-6 lg:grid-cols-3 xl:grid-cols-6 lg:px-10">
-        {content.cards.map((area, index) => (
-          <a
-            key={area.title}
-            href={area.linkHref}
-            className="group min-h-40 px-4 py-5 transition-colors hover:bg-surface focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-[-3px] focus-visible:outline-[var(--focus-ring)] sm:min-h-44 lg:min-w-0 lg:px-4"
-          >
-            <div className="flex items-center justify-between gap-3 text-accent-soft">
-              <span className="text-xs font-semibold tracking-[0.18em]">{String(index + 1).padStart(2, "0")}</span>
-              <AreaIcon icon={area.icon} className="size-5" />
+    <section aria-label={content.label} className="relative z-20 -mt-5 bg-transparent px-4 py-7 sm:-mt-10 sm:px-6 sm:py-9">
+      <div className="mx-auto grid max-w-7xl overflow-hidden rounded-2xl border border-[var(--accent-border-soft)] bg-[#fbfaf7] sm:grid-cols-2 lg:grid-cols-5">
+        {expertise.map((item, index) => (
+          <div key={item.title} className="flex min-w-0 items-center gap-3 border-b border-[var(--accent-border-soft)] px-5 py-5 last:border-b-0 sm:odd:border-r lg:border-b-0 lg:border-r lg:last:border-r-0">
+            <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-accent-soft/20 text-accent-deep">
+              <AreaIcon icon={item.icon} className="size-4" />
             </div>
-            <h2 className="mt-7 font-serif text-lg leading-tight text-ivory group-hover:text-accent-soft">{area.title}</h2>
-            <p className="mt-2 line-clamp-2 text-xs leading-5 text-muted">{area.description}</p>
-          </a>
+            <div>
+              <h2 className="font-serif text-base font-semibold text-ink">{item.title}</h2>
+              <p className="mt-1 text-xs leading-4 text-muted-dark">{item.description}</p>
+            </div>
+            <span aria-hidden="true" className="ml-auto text-xs font-semibold text-accent">0{index + 1}</span>
+          </div>
         ))}
       </div>
     </section>

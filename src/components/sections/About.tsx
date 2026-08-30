@@ -9,8 +9,8 @@ type AboutProps = {
 export default function About({ id, content }: AboutProps) {
   return (
     <section id={id} className="scroll-mt-24 border-y border-[var(--accent-border-soft)] bg-ivory text-ink">
-      <div className="mx-auto max-w-7xl px-6 py-16 sm:py-24 lg:px-10 lg:py-28">
-        <div className="grid items-start gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+      <div className="mx-auto max-w-7xl px-6 py-14 sm:py-18 lg:px-10 lg:py-20">
+        <div className="grid items-start gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:gap-14">
           <div>
             <p className="text-sm font-medium uppercase tracking-[0.24em] text-accent">
               {content.label}
@@ -24,7 +24,7 @@ export default function About({ id, content }: AboutProps) {
             </h2>
           </div>
 
-          <div className="grid gap-8 sm:grid-cols-[minmax(0,1fr)_220px] sm:items-start">
+          <div className="grid gap-9 sm:grid-cols-[minmax(0,1fr)_260px] sm:items-start">
             <div className="max-w-3xl space-y-6 text-lg leading-8 text-muted-dark">
               {content.paragraphs.map((paragraph) => (
                 <p key={paragraph}>{paragraph}</p>
@@ -43,8 +43,8 @@ export default function About({ id, content }: AboutProps) {
               alt={content.imageAlt}
               width={320}
               height={360}
-              sizes="(min-width: 640px) 220px, 100vw"
-              className="h-auto w-full max-w-[280px] justify-self-center border border-[var(--accent-border-soft)] object-cover object-top sm:max-w-none"
+              sizes="(min-width: 640px) 260px, 100vw"
+              className="h-auto w-full max-w-[300px] justify-self-center border border-[var(--accent-border-soft)] object-cover object-top sm:max-w-none"
             />
           </div>
         </div>

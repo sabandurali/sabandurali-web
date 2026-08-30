@@ -93,25 +93,53 @@ export type FocusAreaCardItem = {
 type FocusAreaCardsProps = {
   cards: ReadonlyArray<FocusAreaCardItem>;
   renderVisual?: (index: number, featured: boolean) => ReactNode;
+  variant?: "default" | "home";
 };
 
 const cardStyle =
-  "relative flex min-w-0 flex-col border border-[var(--accent-border-soft)] bg-white p-6 transition-colors hover:border-[var(--accent-border-hover)] motion-reduce:transition-none";
+  "relative flex min-h-72 min-w-0 flex-col border-t border-[var(--accent-border-soft)] py-8 pr-3 transition-colors hover:border-accent motion-reduce:transition-none";
 
 function FocusAreaCard({
   card,
   visual,
+  variant = "default",
 }: {
   card: FocusAreaCardItem;
   visual?: ReactNode;
+  variant?: "default" | "home";
 }) {
+  const isHome = variant === "home";
+  const homeVisuals = [
+    "from-[#172131] via-[#0b1220] to-[#5b4630]",
+    "from-[#322c2a] via-[#111824] to-[#89734d]",
+    "from-[#162837] via-[#111824] to-[#40516a]",
+    "from-[#181f35] via-[#0c1423] to-[#5b5578]",
+    "from-[#333033] via-[#171c26] to-[#846d4a]",
+    "from-[#252b2d] via-[#111824] to-[#596265]",
+  ];
+
+  if (isHome) {
+    return (
+      <a href={card.linkHref ?? "#"} className={`group relative flex min-h-[20rem] min-w-0 overflow-hidden rounded-xl bg-gradient-to-br p-5 text-left shadow-lg shadow-black/15 transition-transform hover:-translate-y-1 focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus-ring)] ${homeVisuals.find((_, index) => card.id.endsWith(`-${index}`)) ?? homeVisuals[0]}`}>
+        <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(145deg,transparent_10%,rgba(0,0,0,0.7)_100%)]" />
+        <span aria-hidden="true" className="absolute -right-10 top-8 size-36 rounded-full border border-accent-soft/20" />
+        <span className="relative flex size-10 items-center justify-center rounded-full bg-accent-soft text-background"><AreaIcon icon={card.icon} className="size-5" /></span>
+        <span className="relative mt-auto block pr-2">
+          <span className="block font-serif text-[1.35rem] font-semibold leading-tight text-white">{card.title}</span>
+          <span className="mt-3 block text-sm leading-5 text-ivory-soft">{card.description}</span>
+        </span>
+        <span aria-hidden="true" className="absolute bottom-5 right-5 flex size-9 items-center justify-center rounded-full border border-ivory/50 text-lg text-ivory transition-colors group-hover:bg-accent-soft group-hover:text-background">→</span>
+      </a>
+    );
+  }
+
   return (
     <article
       className={cardStyle}
     >
       {visual ?? (
         <div
-          className="flex size-11 items-center justify-center border border-[var(--accent-border-soft)] bg-ink text-accent-soft"
+          className="flex size-9 items-center justify-center text-accent"
         >
           <AreaIcon
             icon={card.icon}
@@ -121,13 +149,13 @@ function FocusAreaCard({
       )}
 
       <h3
-        className="mt-6 text-2xl font-semibold leading-snug tracking-tight"
+        className="mt-5 font-serif text-3xl font-semibold leading-[1.08] tracking-tight"
       >
         {card.title}
       </h3>
 
       <p
-        className="mt-4 line-clamp-3 text-[0.95rem] leading-6 text-muted-dark"
+        className="mt-4 line-clamp-3 max-w-md text-base leading-7 text-muted-dark"
       >
         {card.description}
       </p>
@@ -136,7 +164,7 @@ function FocusAreaCard({
         (card.linkHref !== null ? (
           <a
             href={card.linkHref}
-            className="mt-auto inline-flex min-h-11 items-center self-start pt-6 text-sm font-medium text-accent-deep underline decoration-[var(--accent-border-soft)] underline-offset-4 after:absolute after:inset-0 after:content-[''] focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-[-3px] focus-visible:outline-[var(--focus-ring)]"
+            className="mt-auto inline-flex min-h-11 items-center self-start pt-7 text-sm font-medium text-accent-deep underline decoration-[var(--accent-border-soft)] underline-offset-4 after:absolute after:inset-0 after:content-[''] focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-[-3px] focus-visible:outline-[var(--focus-ring)]"
           >
             <span>
               {card.linkLabel}
@@ -145,7 +173,7 @@ function FocusAreaCard({
           </a>
         ) : (
           <p
-            className="mt-auto pt-6 text-sm font-medium"
+            className="mt-auto pt-7 text-sm font-medium"
           >
             {card.linkLabel}
           </p>
@@ -157,14 +185,16 @@ function FocusAreaCard({
 export function FocusAreaCards({
   cards,
   renderVisual,
+  variant = "default",
 }: FocusAreaCardsProps) {
   return (
-    <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+    <div className={variant === "home" ? "grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6" : "grid gap-x-10 gap-y-0 md:grid-cols-2 xl:grid-cols-3"}>
       {cards.map((card, index) => (
         <FocusAreaCard
           key={card.id}
           card={card}
           visual={renderVisual?.(index, false)}
+          variant={variant}
         />
       ))}
     </div>
@@ -183,8 +213,8 @@ export default function FocusAreas({ id, content }: FocusAreasProps) {
 
   return (
     <section id={id} className="scroll-mt-24 bg-ivory-soft text-ink">
-      <div className="mx-auto max-w-7xl px-6 py-20 lg:px-10 lg:py-28">
-        <div className="mb-12 max-w-3xl border-l border-accent pl-5">
+      <div className="mx-auto max-w-[1440px] px-6 py-16 lg:px-10 lg:py-20">
+        <div className="mx-auto mb-10 max-w-3xl text-center">
           <p className="text-sm font-medium uppercase tracking-[0.22em] text-accent-deep">
             {content.label}
           </p>
@@ -194,13 +224,13 @@ export default function FocusAreas({ id, content }: FocusAreasProps) {
           </h2>
 
           {content.description && (
-            <p className="mt-6 max-w-2xl leading-7 text-muted-dark">
+            <p className="mx-auto mt-6 max-w-2xl leading-7 text-muted-dark">
               {content.description}
             </p>
           )}
         </div>
 
-        <FocusAreaCards cards={cards} />
+        <FocusAreaCards cards={cards} variant="home" />
       </div>
     </section>
   );
