@@ -11,9 +11,9 @@ export default function ContactCallToAction({
   href,
 }: ContactCallToActionProps) {
   return (
-    <section className="border-t border-border bg-ivory-soft">
+    <section className="border-t border-[var(--accent-border-soft)] bg-ivory-soft">
       <div className="mx-auto max-w-7xl px-6 py-16 lg:px-10 lg:py-20">
-        <div className="border border-border bg-background p-8 sm:p-10 lg:flex lg:items-center lg:justify-between lg:gap-12">
+        <div className="border border-border bg-background p-8 shadow-xl shadow-black/10 sm:p-10 lg:flex lg:items-center lg:justify-between lg:gap-12">
           <div className="max-w-3xl">
             <h2 className="text-4xl font-semibold tracking-tight text-ivory sm:text-5xl">
               {content.title}
@@ -24,7 +24,7 @@ export default function ContactCallToAction({
           </div>
           <Link
             href={href}
-            className="mt-8 inline-flex min-h-11 items-center justify-center bg-accent px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-[#394a86] motion-reduce:transition-none lg:mt-0 lg:shrink-0"
+            className="mt-8 inline-flex min-h-11 items-center justify-center bg-accent-soft px-7 py-3.5 text-sm font-semibold text-background transition-colors hover:bg-ivory motion-reduce:transition-none lg:mt-0 lg:shrink-0"
           >
             {content.buttonLabel}
           </Link>

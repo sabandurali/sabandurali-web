@@ -7,6 +7,7 @@ import PhotoCard from "@/components/photos/PhotoCard";
 import Hero from "@/components/sections/Hero";
 import About from "@/components/sections/About";
 import FocusAreas from "@/components/sections/FocusAreas";
+import WorkspaceQuickAccess from "@/components/sections/WorkspaceQuickAccess";
 import ContactCallToAction from "@/components/sections/ContactCallToAction";
 import HomeListingSection from "@/components/sections/HomeListingSection";
 import { contactPaths } from "@/config/site";
@@ -68,6 +69,7 @@ export default async function HomePage({ content }: { content: HomeContent }) {
       />
       <main>
         <Hero anchors={content.anchors} content={content.hero} />
+        <WorkspaceQuickAccess content={content.focusAreas} />
         <FocusAreas id={content.anchors.work} content={content.focusAreas} />
         <About id={content.anchors.about} content={content.about} />
 
@@ -113,7 +115,7 @@ export default async function HomePage({ content }: { content: HomeContent }) {
           href={photoListPaths[locale]}
           tone="light"
         >
-          {latestPhotos.length > 0 && (
+          {latestPhotos.length > 0 ? (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {latestPhotos.map((photo) => (
                 <PhotoCard
@@ -123,6 +125,12 @@ export default async function HomePage({ content }: { content: HomeContent }) {
                 />
               ))}
             </div>
+          ) : (
+            <p className="max-w-2xl border border-[var(--accent-border-soft)] bg-white p-6 text-base leading-7 text-muted-dark">
+              {locale === "tr"
+                ? "Fotoğraf arşivi yeni çalışmalar eklendikçe burada yer alacak."
+                : "The photography archive will appear here as new work is published."}
+            </p>
           )}
         </HomeListingSection>
 

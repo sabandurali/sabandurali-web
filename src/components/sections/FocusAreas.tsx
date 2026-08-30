@@ -96,56 +96,38 @@ type FocusAreaCardsProps = {
 };
 
 const cardStyle =
-  "relative flex min-w-0 flex-col border border-[var(--accent-border-soft)] transition-colors hover:border-[var(--accent-border-hover)] motion-reduce:transition-none";
+  "relative flex min-w-0 flex-col border border-[var(--accent-border-soft)] bg-white p-6 transition-colors hover:border-[var(--accent-border-hover)] motion-reduce:transition-none";
 
 function FocusAreaCard({
   card,
-  featured,
   visual,
 }: {
   card: FocusAreaCardItem;
-  featured: boolean;
   visual?: ReactNode;
 }) {
   return (
     <article
-      className={`${cardStyle} ${
-        featured
-          ? "bg-white p-6 sm:p-7 md:col-span-2 lg:col-span-1 lg:p-8"
-          : "bg-ivory p-5 sm:p-6 lg:p-5 xl:p-6"
-      }`}
+      className={cardStyle}
     >
       {visual ?? (
         <div
-          className={`flex items-center justify-center border bg-ink text-accent-soft ${
-            featured
-              ? "size-14 border-accent"
-              : "size-10 border-[var(--accent-border-soft)]"
-          }`}
+          className="flex size-11 items-center justify-center border border-[var(--accent-border-soft)] bg-ink text-accent-soft"
         >
           <AreaIcon
             icon={card.icon}
-            className={featured ? "size-7" : "size-5"}
+            className="size-5"
           />
         </div>
       )}
 
       <h3
-        className={`font-semibold normal-case tracking-tight ${
-          featured
-            ? "mt-7 max-w-lg text-3xl leading-tight sm:text-4xl lg:text-[2.5rem]"
-            : "mt-5 text-xl leading-snug xl:text-2xl"
-        }`}
+        className="mt-6 text-2xl font-semibold leading-snug tracking-tight"
       >
         {card.title}
       </h3>
 
       <p
-        className={`line-clamp-3 text-muted-dark ${
-          featured
-            ? "mt-5 max-w-lg leading-7"
-            : "mt-4 text-[0.95rem] leading-6"
-        }`}
+        className="mt-4 line-clamp-3 text-[0.95rem] leading-6 text-muted-dark"
       >
         {card.description}
       </p>
@@ -154,9 +136,7 @@ function FocusAreaCard({
         (card.linkHref !== null ? (
           <a
             href={card.linkHref}
-            className={`mt-auto inline-flex min-h-11 items-center self-start text-sm font-medium text-accent-deep underline decoration-[var(--accent-border-soft)] underline-offset-4 after:absolute after:inset-0 after:content-[''] focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-[-3px] focus-visible:outline-[var(--focus-ring)] ${
-              featured ? "pt-8" : "pt-5"
-            }`}
+            className="mt-auto inline-flex min-h-11 items-center self-start pt-6 text-sm font-medium text-accent-deep underline decoration-[var(--accent-border-soft)] underline-offset-4 after:absolute after:inset-0 after:content-[''] focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-[-3px] focus-visible:outline-[var(--focus-ring)]"
           >
             <span>
               {card.linkLabel}
@@ -165,9 +145,7 @@ function FocusAreaCard({
           </a>
         ) : (
           <p
-            className={`mt-auto text-sm font-medium ${
-              featured ? "pt-8" : "pt-5"
-            }`}
+            className="mt-auto pt-6 text-sm font-medium"
           >
             {card.linkLabel}
           </p>
@@ -180,36 +158,15 @@ export function FocusAreaCards({
   cards,
   renderVisual,
 }: FocusAreaCardsProps) {
-  const [featuredCard, ...supportingCards] = cards;
-
-  if (featuredCard === undefined) return null;
-
   return (
-    <div
-      className={`grid gap-5 md:grid-cols-2 ${
-        supportingCards.length > 0
-          ? "lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:items-stretch"
-          : "lg:grid-cols-1"
-      }`}
-    >
-      <FocusAreaCard
-        card={featuredCard}
-        featured
-        visual={renderVisual?.(0, true)}
-      />
-
-      {supportingCards.length > 0 && (
-        <div className="contents lg:grid lg:min-w-0 lg:grid-cols-2 lg:grid-rows-2 lg:gap-5">
-          {supportingCards.map((card, index) => (
-            <FocusAreaCard
-              key={card.id}
-              card={card}
-              featured={false}
-              visual={renderVisual?.(index + 1, false)}
-            />
-          ))}
-        </div>
-      )}
+    <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+      {cards.map((card, index) => (
+        <FocusAreaCard
+          key={card.id}
+          card={card}
+          visual={renderVisual?.(index, false)}
+        />
+      ))}
     </div>
   );
 }
@@ -226,8 +183,8 @@ export default function FocusAreas({ id, content }: FocusAreasProps) {
 
   return (
     <section id={id} className="scroll-mt-24 bg-ivory-soft text-ink">
-      <div className="mx-auto max-w-7xl px-6 py-20 lg:px-10 lg:py-24">
-        <div className="mb-14 max-w-3xl">
+      <div className="mx-auto max-w-7xl px-6 py-20 lg:px-10 lg:py-28">
+        <div className="mb-12 max-w-3xl border-l border-accent pl-5">
           <p className="text-sm font-medium uppercase tracking-[0.22em] text-accent-deep">
             {content.label}
           </p>
