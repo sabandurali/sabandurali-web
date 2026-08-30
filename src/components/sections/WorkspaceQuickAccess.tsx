@@ -15,8 +15,8 @@ export default function WorkspaceQuickAccess({
   ];
 
   return (
-    <section aria-label={content.label} className="relative z-20 -mt-5 bg-transparent px-4 py-7 sm:-mt-10 sm:px-6 sm:py-9">
-      <div className="mx-auto grid max-w-7xl overflow-hidden rounded-2xl border border-[var(--accent-border-soft)] bg-[#fbfaf7] sm:grid-cols-2 lg:grid-cols-5">
+    <section aria-label={content.label} className="relative z-20 -mt-5 bg-transparent px-4 py-7 sm:-mt-10 sm:px-6 sm:py-9 lg:py-0">
+      <div className="mx-auto grid max-w-[1400px] overflow-hidden rounded-2xl border border-[var(--accent-border-soft)] bg-[#fbfaf7] sm:grid-cols-2 lg:grid-cols-5">
         {expertise.map((item, index) => (
           <div key={item.title} className="flex min-w-0 items-center gap-3 border-b border-[var(--accent-border-soft)] px-5 py-5 last:border-b-0 sm:odd:border-r lg:border-b-0 lg:border-r lg:last:border-r-0">
             <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-accent-soft/20 text-accent-deep">

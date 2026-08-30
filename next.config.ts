@@ -39,6 +39,9 @@ const nextConfig: NextConfig = {
         pathname: "/brand/**",
       },
       {
+        pathname: "/workspaces/**",
+      },
+      {
         pathname: "/api/media/file/**",
       },
     ],

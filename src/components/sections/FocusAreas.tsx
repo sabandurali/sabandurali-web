@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type {
   FocusAreaIcon,
   FocusAreasContent,
@@ -99,6 +100,15 @@ type FocusAreaCardsProps = {
 const cardStyle =
   "relative flex min-h-72 min-w-0 flex-col border-t border-[var(--accent-border-soft)] py-8 pr-3 transition-colors hover:border-accent motion-reduce:transition-none";
 
+const homeImages = [
+  "/workspaces/gayrimenkul-istanbul.jpg",
+  "/workspaces/satis-muzakere.jpg",
+  "/workspaces/arastirma-analiz.jpg",
+  "/workspaces/yapay-zeka-teknoloji.jpg",
+  "/workspaces/kitaplar-ogrenme.jpg",
+  "/workspaces/fotograf.jpg",
+];
+
 function FocusAreaCard({
   card,
   visual,
@@ -109,19 +119,20 @@ function FocusAreaCard({
   variant?: "default" | "home";
 }) {
   const isHome = variant === "home";
-  const homeVisuals = [
-    "from-[#172131] via-[#0b1220] to-[#5b4630]",
-    "from-[#322c2a] via-[#111824] to-[#89734d]",
-    "from-[#162837] via-[#111824] to-[#40516a]",
-    "from-[#181f35] via-[#0c1423] to-[#5b5578]",
-    "from-[#333033] via-[#171c26] to-[#846d4a]",
-    "from-[#252b2d] via-[#111824] to-[#596265]",
-  ];
+  const imageIndex = Number(card.id.match(/-(\d+)$/)?.[1] ?? 0);
 
   if (isHome) {
     return (
-      <a href={card.linkHref ?? "#"} className={`group relative flex min-h-[20rem] min-w-0 overflow-hidden rounded-xl bg-gradient-to-br p-5 text-left shadow-lg shadow-black/15 transition-transform hover:-translate-y-1 focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus-ring)] ${homeVisuals.find((_, index) => card.id.endsWith(`-${index}`)) ?? homeVisuals[0]}`}>
-        <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(145deg,transparent_10%,rgba(0,0,0,0.7)_100%)]" />
+      <a href={card.linkHref ?? "#"} className="group relative flex min-h-[14.5rem] min-w-0 overflow-hidden rounded-xl bg-background p-5 text-left shadow-lg shadow-black/15 transition-transform hover:-translate-y-1 focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus-ring)]">
+        <Image
+          src={homeImages[imageIndex] ?? homeImages[0]}
+          alt=""
+          aria-hidden="true"
+          fill
+          sizes="(min-width: 1280px) 16vw, (min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
+          className="object-cover"
+        />
+        <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(to_top,rgba(4,10,18,0.96)_0%,rgba(4,10,18,0.72)_38%,rgba(4,10,18,0.12)_100%)]" />
         <span aria-hidden="true" className="absolute -right-10 top-8 size-36 rounded-full border border-accent-soft/20" />
         <span className="relative flex size-10 items-center justify-center rounded-full bg-accent-soft text-background"><AreaIcon icon={card.icon} className="size-5" /></span>
         <span className="relative mt-auto block pr-2">
@@ -213,13 +224,9 @@ export default function FocusAreas({ id, content }: FocusAreasProps) {
 
   return (
     <section id={id} className="scroll-mt-24 bg-ivory-soft text-ink">
-      <div className="mx-auto max-w-[1440px] px-6 py-16 lg:px-10 lg:py-20">
-        <div className="mx-auto mb-10 max-w-3xl text-center">
-          <p className="text-sm font-medium uppercase tracking-[0.22em] text-accent-deep">
-            {content.label}
-          </p>
-
-          <h2 className="mt-5 text-4xl font-semibold tracking-tight sm:text-6xl">
+      <div className="mx-auto max-w-[1440px] px-6 py-6 lg:px-10 lg:pb-16 lg:pt-2">
+        <div className="mx-auto mb-2 max-w-3xl text-center">
+          <h2 className="relative inline-block pb-3 text-3xl font-semibold tracking-tight after:absolute after:bottom-0 after:left-1/2 after:h-px after:w-10 after:-translate-x-1/2 after:bg-accent sm:text-4xl">
             {content.title}
           </h2>
 
