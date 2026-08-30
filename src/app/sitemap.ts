@@ -37,6 +37,7 @@ import {
 import type { PublicPhoto, PublicPhotoTranslation } from "@/content/photos/types";
 import { districts } from "@/content/districts/district-registry";
 import { districtGuidePath, getDistrictPath } from "@/content/districts/district-routes";
+import { workspacePath, workspaces } from "@/content/workspaces";
 
 export const dynamic = "force-dynamic";
 
@@ -176,6 +177,32 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   });
 
   return [
+    {
+      url: getAbsoluteUrl(workspacePath),
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: getAbsoluteUrl("/hakkimda"),
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    ...workspaces.flatMap((workspace) => [
+      {
+        url: getAbsoluteUrl(`/${workspace.key}`),
+        lastModified,
+        changeFrequency: "monthly" as const,
+        priority: 0.7,
+      },
+      ...workspace.entries.map((entry) => ({
+        url: getAbsoluteUrl(entry.href),
+        lastModified,
+        changeFrequency: "monthly" as const,
+        priority: 0.6,
+      })),
+    ]),
     {
       url: getAbsoluteUrl(districtGuidePath),
       lastModified,

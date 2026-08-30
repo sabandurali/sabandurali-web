@@ -146,7 +146,7 @@ export const homeContent = {
       languageSwitcherLabel: "Dil seçimi",
     },
     hero: {
-      eyebrow: "Gayrimenkul • Danışmanlık • Araştırma • Teknoloji",
+      eyebrow: "Gayrimenkul • İstanbul • Araştırma • Teknoloji",
       titleLines: [
         { text: "Bilgiyi araştıran," },
         { text: "analiz eden ve" },
@@ -154,9 +154,11 @@ export const homeContent = {
         { text: "bir platform." },
       ],
       description:
-        "Gayrimenkul, danışmanlık, araştırma ve teknoloji alanlarında güvenilir bilgi, uygulanabilir analiz ve sürdürülebilir değer üreten bağımsız bir platform oluşturuyorum.",
+        "Gayrimenkul ve İstanbul, araştırma ve analiz, yapay zekâ ve teknoloji, kitaplar ve öğrenme ile fotoğraf alanlarında güvenilir bilgi ve uygulanabilir analiz üreten bağımsız bir platform oluşturuyorum.",
       primaryAction: "Çalışmaları keşfet",
+      primaryActionHref: "/calisma-alanlari",
       secondaryAction: "Hakkımda",
+      secondaryActionHref: "/hakkimda",
       goalsLabel: "Platform yapısı",
       goals: [
         { value: "5", label: "odak alanı" },
@@ -168,7 +170,7 @@ export const homeContent = {
       label: "Hakkımda",
       titleLines: ["Şaban Durali"],
       paragraphs: [
-        "Gayrimenkul ve İstanbul, araştırma ve analiz, yapay zekâ ve teknoloji, satış ve müzakere ile yaşam boyu öğrenme alanlarında çalışıyorum. Bu platformu yalnızca içerik yayımlamak için değil; araştırmak, öğrendiklerimi uygulamak ve sürdürülebilir bilgi üretmek için kuruyorum.",
+        "Gayrimenkul ve İstanbul, araştırma ve analiz, yapay zekâ ve teknoloji, kitaplar ve öğrenme ile fotoğraf alanlarında çalışıyorum. Bu platformu yalnızca içerik yayımlamak için değil; araştırmak, öğrendiklerimi uygulamak ve sürdürülebilir bilgi üretmek için kuruyorum.",
         "Uzun vadeli hedefim, yapay zekâ ve dijital sistemleri kullanarak eğitim, araştırma, danışmanlık ve bağımsız yayıncılık alanlarında değer üreten bir yapı oluşturmaktır.",
       ],
       imageAlt: "Şaban Durali portresi",
@@ -182,40 +184,40 @@ export const homeContent = {
           title: "GAYRİMENKUL VE İSTANBUL",
           description:
             "İstanbul piyasası, değerleme, yatırım, mahalleler ve saha deneyimine dayalı rehberler.",
-          linkLabel: "Gayrimenkul rehberlerini keşfet",
-          linkHref: "/makaleler",
+          linkLabel: "Çalışma alanını aç",
+          linkHref: "/gayrimenkul-ve-istanbul",
         },
         {
           icon: "research",
           title: "ARAŞTIRMA VE ANALİZ",
           description:
             "Ekonomi, şehir ve toplumsal konuları güvenilir kaynaklarla karşılaştıran sade ve anlaşılır analizler.",
-          linkLabel: "Analizleri oku",
-          linkHref: "/makaleler",
+          linkLabel: "Çalışma alanını aç",
+          linkHref: "/arastirma-ve-analiz",
         },
         {
           icon: "technology",
           title: "YAPAY ZEKÂ VE TEKNOLOJİ",
           description:
             "Yapay zekâ araçları, dijital üretim ve teknolojinin mesleki ve günlük kullanımına yönelik uygulamalı notlar.",
-          linkLabel: "Teknoloji notlarını keşfet",
-          linkHref: "/makaleler",
-        },
-        {
-          icon: "handshake",
-          title: "SATIŞ VE MÜZAKERE",
-          description:
-            "Güven oluşturma, müşteri yönetimi, ikna ve etik müzakere üzerine uygulanabilir yöntemler.",
-          linkLabel: "Satış ve müzakere içeriklerini incele",
-          linkHref: "/makaleler",
+          linkLabel: "Çalışma alanını aç",
+          linkHref: "/yapay-zeka-ve-teknoloji",
         },
         {
           icon: "book",
           title: "KİTAPLAR VE ÖĞRENME",
           description:
             "Kitap incelemeleri, öğrenme yöntemleri ve hayata uygulanabilecek temel fikirler.",
-          linkLabel: "Kitap incelemelerine göz at",
-          linkHref: "/kitaplar",
+          linkLabel: "Çalışma alanını aç",
+          linkHref: "/kitaplar-ve-ogrenme",
+        },
+        {
+          icon: "network",
+          title: "FOTOĞRAF",
+          description:
+            "İstanbul, mimari, sokak ve gündelik hayata dair fotoğraf arşivleri.",
+          linkLabel: "Çalışma alanını aç",
+          linkHref: "/fotograf",
         },
       ],
     },
@@ -244,7 +246,7 @@ export const homeContent = {
       brandName: "ŞABAN DURALİ",
       brandTagline: "ARAŞTIRMA VE BİLGİ PLATFORMU",
       description:
-        "Gayrimenkul, danışmanlık, araştırma ve teknoloji odaklı bağımsız bilgi ve yayın platformu.",
+        "Gayrimenkul ve İstanbul, araştırma, teknoloji, öğrenme ve fotoğraf odaklı bağımsız bilgi ve yayın platformu.",
       copyright: "© 2026 Şaban Durali. Tüm hakları saklıdır.",
       links: {
         contact: "İletişim",

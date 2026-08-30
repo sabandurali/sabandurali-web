@@ -215,11 +215,7 @@ export function FocusAreaCards({
 }
 
 export default function FocusAreas({ id, content }: FocusAreasProps) {
-  const primaryAreas = content.cards.filter(
-    (area) => area.icon === "city" || area.icon === "technology",
-  );
-  const visibleAreas = primaryAreas.length > 0 ? primaryAreas : content.cards;
-  const cards = visibleAreas.map((area, index) => ({
+  const cards = content.cards.map((area, index) => ({
     id: `${area.title}-${index}`,
     icon: area.icon,
     title: area.title,

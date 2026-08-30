@@ -49,16 +49,18 @@ export function getStaticHeaderNavigationItems({
   return [
     {
       id: "about",
-      href: `${anchorPrefix}#${anchors.about}`,
+      href: locale === "tr" ? "/hakkimda" : `${anchorPrefix}#${anchors.about}`,
       label: content.navigation.about,
+      activePathPrefix: locale === "tr" ? "/hakkimda" : undefined,
       external: false,
       newTab: false,
       children: [],
     },
     {
       id: "work",
-      href: `${anchorPrefix}#${anchors.work}`,
+      href: locale === "tr" ? "/calisma-alanlari" : `${anchorPrefix}#${anchors.work}`,
       label: content.navigation.work,
+      activePathPrefix: locale === "tr" ? "/calisma-alanlari" : undefined,
       external: false,
       newTab: false,
       children: [],
