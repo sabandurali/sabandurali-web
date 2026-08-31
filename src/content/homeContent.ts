@@ -177,7 +177,7 @@ export const homeContent = {
     },
     focusAreas: {
       label: "Ana çalışma alanları",
-      title: "Çalışma Alanlarımız",
+      title: "Çalışma Alanlarım",
       cards: [
         {
           icon: "city",

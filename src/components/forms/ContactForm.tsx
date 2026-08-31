@@ -24,10 +24,10 @@ export default function ContactForm({ content }: ContactFormProps) {
       method="post"
       onSubmit={handleSubmit}
       aria-busy={isLoading}
-      className="space-y-4"
+      className="space-y-4 border-t border-border pt-6 sm:pt-8"
     >
       <fieldset disabled={isLoading} className="space-y-4 border-0 p-0">
-        <div className="grid gap-4 rounded-sm border border-border bg-surface/70 p-5 sm:grid-cols-2 sm:p-6">
+        <div className="grid gap-4 border border-border bg-surface/70 p-5 sm:grid-cols-2 sm:p-6">
           <div>
             <label htmlFor="contact-name">
               <span className="font-medium leading-6 text-ivory">
@@ -69,7 +69,7 @@ export default function ContactForm({ content }: ContactFormProps) {
           </div>
         </div>
 
-        <div className="rounded-sm border border-border bg-surface/70 p-5 sm:p-6">
+        <div className="border border-border bg-surface/70 p-5 sm:p-6">
           <label htmlFor="contact-subject">
             <span className="font-medium leading-6 text-ivory">
               {content.fields.subject}
@@ -96,7 +96,7 @@ export default function ContactForm({ content }: ContactFormProps) {
           </select>
         </div>
 
-        <div className="rounded-sm border border-border bg-surface/70 p-5 sm:p-6">
+        <div className="border border-border bg-surface/70 p-5 sm:p-6">
           <label htmlFor="contact-message">
             <span className="font-medium leading-6 text-ivory">
               {content.fields.message}

@@ -60,14 +60,14 @@ export default function PhotoListPage({
   return (
     <div id="top" lang={locale}>
       <Header locale={locale} anchors={home.anchors} content={home.header} homeHref={homePath} anchorPrefix={homePath} languageHrefs={photoListPaths} />
-      <main className="px-4 py-14 sm:px-6 sm:py-18 lg:py-22">
+      <main className="px-4 py-10 sm:px-6 sm:py-14 lg:py-18">
         <div className="mx-auto max-w-7xl">
           <header className="border-b border-border pb-8 sm:pb-10">
             <p className="text-xs font-semibold tracking-[0.22em] text-accent-soft">{copy.eyebrow}</p>
-            <h1 className="mt-4 text-4xl text-ivory sm:text-5xl">{copy.title}</h1>
+            <h1 className="mt-4 text-4xl leading-[1.05] text-ivory sm:text-5xl">{copy.title}</h1>
             <p className="mt-5 max-w-3xl text-lg leading-8 text-muted">{copy.description}</p>
           </header>
-          <form className="mt-8 grid gap-4 rounded-xl border border-border bg-surface p-5 sm:grid-cols-[1fr_1fr_auto]" action={photoListPaths[locale]}>
+          <form className="mt-7 grid gap-4 rounded-sm border border-border bg-surface p-5 sm:grid-cols-[1fr_1fr_auto] sm:p-6" action={photoListPaths[locale]}>
             <label className="grid gap-2 text-sm font-semibold text-ivory">
               {copy.collection}
               <select name="collection" defaultValue={filters.collection ?? ""} className="min-h-11 rounded-md border border-border bg-background px-3 text-base font-normal text-ivory">

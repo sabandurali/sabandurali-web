@@ -37,7 +37,7 @@ export default function ArticleCard({
             width={article.featuredImage.width}
             height={article.featuredImage.height}
             sizes="(min-width: 1024px) 560px, 100vw"
-            className="aspect-[16/9] w-full object-cover"
+            className="aspect-[16/9] w-full object-cover transition-transform duration-300 group-hover:scale-[1.02] motion-reduce:transition-none"
           />
         ) : (
           <div className="relative aspect-[16/9] w-full">
@@ -46,7 +46,7 @@ export default function ArticleCard({
               alt={article.featuredImage.alt}
               fill
               sizes="(min-width: 1024px) 560px, 100vw"
-              className="object-cover"
+              className="object-cover transition-transform duration-300 group-hover:scale-[1.02] motion-reduce:transition-none"
             />
           </div>
         )

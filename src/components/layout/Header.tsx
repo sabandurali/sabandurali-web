@@ -61,7 +61,7 @@ export default async function Header({
 
         <nav
           aria-label={content.menu.desktopNavigationLabel}
-          className="hidden min-w-0 flex-1 items-center justify-center text-[11px] text-ivory min-[1360px]:flex"
+          className="hidden min-w-0 flex-1 items-center justify-center text-xs text-ivory min-[1360px]:flex"
         >
           <HeaderNavigationLinks
             items={items}

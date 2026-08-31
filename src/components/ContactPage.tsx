@@ -24,13 +24,13 @@ export default function ContactPage({ content }: ContactPageProps) {
         anchorPrefix={homePath}
         languageHrefs={contactPaths}
       />
-      <main className="px-4 py-14 sm:px-6 sm:py-18 lg:py-22">
+      <main className="px-4 py-10 sm:px-6 sm:py-14 lg:py-18">
         <div className="mx-auto max-w-3xl">
-          <header className="mb-10 border-b border-border pb-8 sm:mb-12 sm:pb-10">
+          <header className="mb-8 border-b border-border pb-8 sm:mb-10 sm:pb-10">
             <p className="text-xs font-semibold tracking-[0.22em] text-accent-soft">
               {content.eyebrow}
             </p>
-            <h1 className="mt-4 max-w-2xl text-4xl leading-tight text-ivory sm:text-5xl">
+            <h1 className="mt-4 max-w-2xl text-4xl leading-[1.05] text-ivory sm:text-5xl">
               {content.heading}
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-7 text-muted sm:text-lg sm:leading-8">

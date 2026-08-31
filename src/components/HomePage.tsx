@@ -52,7 +52,7 @@ export default async function HomePage({ content }: { content: HomeContent }) {
     .slice(0, 3);
   const latestPhotos = publishedPhotos
     .toSorted(newestPublicationFirst)
-    .slice(0, 6);
+    .slice(0, 3);
 
   return (
     <div id="top" lang={content.locale}>
@@ -96,14 +96,16 @@ export default async function HomePage({ content }: { content: HomeContent }) {
             content={content.listingSections.books}
             href={bookListPaths[locale]}
             tone="soft"
+            compact={latestBookReviews.length === 1}
           >
-            <div className="grid gap-6 lg:grid-cols-3">
+            <div className={latestBookReviews.length === 1 ? "max-w-5xl" : "grid gap-6 lg:grid-cols-3"}>
               {latestBookReviews.map((bookReview) => (
                 <BookReviewCard
                   key={bookReview.id}
                   bookReview={bookReview}
                   content={bookPageContent[locale]}
                   headingLevel="h3"
+                  featured={latestBookReviews.length === 1}
                 />
               ))}
             </div>

@@ -15,10 +15,10 @@ export default function WorkspaceQuickAccess({
   ];
 
   return (
-    <section aria-label={content.label} className="relative z-20 -mt-3 bg-transparent px-4 py-5 sm:-mt-8 sm:px-6 sm:py-7 lg:py-0">
+    <section aria-label={content.label} className="relative z-20 -mt-3 bg-transparent px-4 py-4 sm:-mt-8 sm:px-6 sm:py-6 lg:py-0">
       <div className="mx-auto grid max-w-[1400px] overflow-hidden rounded-2xl border border-[var(--accent-border-soft)] bg-[#fbfaf7] sm:grid-cols-2 lg:grid-cols-5">
         {expertise.map((item, index) => (
-          <div key={item.title} className="flex min-w-0 items-center gap-2.5 border-b border-[var(--accent-border-soft)] px-4 py-3.5 last:border-b-0 sm:odd:border-r sm:px-5 sm:py-4 lg:border-b-0 lg:border-r lg:last:border-r-0">
+          <div key={item.title} className="flex min-w-0 items-center gap-2.5 border-b border-[var(--accent-border-soft)] px-3 py-2.5 last:border-b-0 sm:odd:border-r sm:px-4 sm:py-3.5 lg:border-b-0 lg:border-r lg:last:border-r-0">
             <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-accent-soft/20 text-accent-deep">
               <AreaIcon icon={item.icon} className="size-3.5" />
             </div>
