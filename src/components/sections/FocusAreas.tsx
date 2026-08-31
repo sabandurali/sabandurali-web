@@ -123,7 +123,7 @@ function FocusAreaCard({
 
   if (isHome) {
     return (
-      <a href={card.linkHref ?? "#"} className="group relative flex min-h-[14.5rem] min-w-0 overflow-hidden rounded-xl bg-background p-5 text-left shadow-lg shadow-black/15 transition-transform hover:-translate-y-1 focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus-ring)]">
+      <a href={card.linkHref ?? "#"} className="group relative flex min-h-[11.75rem] min-w-0 overflow-hidden rounded-xl bg-background p-4 text-left shadow-lg shadow-black/15 transition-transform hover:-translate-y-1 focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus-ring)] sm:min-h-[13rem] sm:p-5">
         <Image
           src={homeImages[imageIndex] ?? homeImages[0]}
           alt=""
@@ -137,9 +137,9 @@ function FocusAreaCard({
         <span className="relative flex size-10 items-center justify-center rounded-full bg-accent-soft text-background"><AreaIcon icon={card.icon} className="size-5" /></span>
         <span className="relative mt-auto block pr-2">
           <span className="block font-serif text-[1.35rem] font-semibold leading-tight text-white">{card.title}</span>
-          <span className="mt-3 block text-sm leading-5 text-ivory-soft">{card.description}</span>
+          <span className="mt-2 block text-[13px] leading-[1.3] text-ivory-soft sm:mt-3 sm:text-sm sm:leading-5">{card.description}</span>
         </span>
-        <span aria-hidden="true" className="absolute bottom-5 right-5 flex size-9 items-center justify-center rounded-full border border-ivory/50 text-lg text-ivory transition-colors group-hover:bg-accent-soft group-hover:text-background">→</span>
+        <span aria-hidden="true" className="absolute bottom-4 right-4 flex size-8 items-center justify-center rounded-full border border-ivory/50 text-base text-ivory transition-colors group-hover:bg-accent-soft group-hover:text-background sm:bottom-5 sm:right-5 sm:size-9 sm:text-lg">→</span>
       </a>
     );
   }
@@ -224,14 +224,14 @@ export default function FocusAreas({ id, content }: FocusAreasProps) {
 
   return (
     <section id={id} className="scroll-mt-24 bg-ivory-soft text-ink">
-      <div className="mx-auto max-w-[1440px] px-6 py-6 lg:px-10 lg:pb-16 lg:pt-2">
-        <div className="mx-auto mb-2 max-w-3xl text-center">
-          <h2 className="relative inline-block pb-3 text-3xl font-semibold tracking-tight after:absolute after:bottom-0 after:left-1/2 after:h-px after:w-10 after:-translate-x-1/2 after:bg-accent sm:text-4xl">
+      <div className="mx-auto max-w-[1440px] px-4 py-5 sm:px-6 sm:py-6 lg:px-10 lg:pb-16 lg:pt-2">
+        <div className="mx-auto mb-4 max-w-3xl text-center lg:mb-2">
+          <h2 className="relative inline-block pb-2 text-[1.7rem] font-semibold tracking-tight after:absolute after:bottom-0 after:left-1/2 after:h-px after:w-10 after:-translate-x-1/2 after:bg-accent sm:pb-3 sm:text-4xl">
             {content.title}
           </h2>
 
           {content.description && (
-            <p className="mx-auto mt-6 max-w-2xl leading-7 text-muted-dark">
+            <p className="mx-auto mt-4 max-w-2xl text-sm leading-6 text-muted-dark sm:mt-6 sm:text-base sm:leading-7">
               {content.description}
             </p>
           )}

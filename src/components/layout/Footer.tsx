@@ -16,7 +16,7 @@ export default async function Footer({ id, content }: FooterProps) {
       id={id}
       className="scroll-mt-24 border-t border-border bg-background"
     >
-      <div className="mx-auto grid max-w-7xl gap-8 px-6 py-12 md:grid-cols-[0.9fr_1.1fr] md:items-center lg:px-10">
+      <div className="mx-auto grid max-w-7xl gap-6 px-5 py-8 sm:px-6 sm:py-12 md:grid-cols-[0.9fr_1.1fr] md:items-center lg:px-10">
         <div className="flex items-center gap-3">
           <Image
             src="/brand/sd-monogram-light.png"
