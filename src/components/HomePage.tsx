@@ -2,7 +2,6 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import BackToTop from "@/components/layout/BackToTop";
 import ArticleCard from "@/components/articles/ArticleCard";
-import BookReviewCard from "@/components/books/BookReviewCard";
 import PhotoCard from "@/components/photos/PhotoCard";
 import Hero from "@/components/sections/Hero";
 import About from "@/components/sections/About";
@@ -13,9 +12,6 @@ import { contactPaths } from "@/config/site";
 import { getAllPublishedArticles } from "@/content/articles/article-data-source";
 import { articlePageContent } from "@/content/articles/article-page-content";
 import { articleListPaths } from "@/content/articles/article-routes";
-import { getAllPublishedBookReviews } from "@/content/books/book-data-source";
-import { bookPageContent } from "@/content/books/book-page-content";
-import { bookListPaths } from "@/content/books/book-routes";
 import type { HomeContent } from "@/content/homeContent";
 import {
   createHomeEntityJsonLd,
@@ -37,18 +33,14 @@ function newestPublicationFirst(
 
 export default async function HomePage({ content }: { content: HomeContent }) {
   const locale = content.locale;
-  const [publishedArticles, publishedBookReviews, publishedPhotos] =
+  const [publishedArticles, publishedPhotos] =
     await Promise.all([
       getAllPublishedArticles(locale),
-      getAllPublishedBookReviews(locale),
       getAllPublishedPhotos(locale),
     ]);
   const latestArticles = publishedArticles
     .toSorted(newestPublicationFirst)
     .slice(0, 4);
-  const latestBookReviews = publishedBookReviews
-    .toSorted(newestPublicationFirst)
-    .slice(0, 1);
   const latestPhotos = publishedPhotos
     .toSorted(newestPublicationFirst)
     .slice(0, 5);
@@ -71,12 +63,12 @@ export default async function HomePage({ content }: { content: HomeContent }) {
         <IstanbulDiscovery />
         <RealEstateIntelligence />
 
-        {latestArticles.length > 0 && (
-          <HomeListingSection
-            content={content.listingSections.articles}
-            href={articleListPaths[locale]}
-          >
-            <SectionMark>03 / Son Araştırmalar</SectionMark>
+        <HomeListingSection
+          content={content.listingSections.articles}
+          href={articleListPaths[locale]}
+        >
+          <SectionMark>03 / Son Araştırmalar</SectionMark>
+          {latestArticles.length > 0 ? (
             <div className="grid gap-6 lg:grid-cols-3">
               {latestArticles.map((article) => (
                 <ArticleCard
@@ -87,31 +79,16 @@ export default async function HomePage({ content }: { content: HomeContent }) {
                 />
               ))}
             </div>
-          </HomeListingSection>
-        )}
+          ) : (
+            <p className="max-w-2xl border-l border-accent-soft pl-5 text-base leading-7 text-muted">
+              {locale === "tr"
+                ? "Yayınlanmış analizler eklendikçe bu seçki burada yer alacak."
+                : "Published analysis will appear here as it becomes available."}
+            </p>
+          )}
+        </HomeListingSection>
 
         <KnowledgeLibrary />
-
-        {latestBookReviews.length > 0 && (
-          <HomeListingSection
-            content={content.listingSections.books}
-            href={bookListPaths[locale]}
-            tone="soft"
-            compact={latestBookReviews.length === 1}
-          >
-            <div className={latestBookReviews.length === 1 ? "max-w-5xl" : "grid gap-6 lg:grid-cols-3"}>
-              {latestBookReviews.map((bookReview) => (
-                <BookReviewCard
-                  key={bookReview.id}
-                  bookReview={bookReview}
-                  content={bookPageContent[locale]}
-                  headingLevel="h3"
-                  featured={latestBookReviews.length === 1}
-                />
-              ))}
-            </div>
-          </HomeListingSection>
-        )}
 
         <HomeListingSection
           content={content.listingSections.photography}

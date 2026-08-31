@@ -173,6 +173,8 @@ export const homeContent = {
         "Gayrimenkul ve İstanbul, satış ve müzakere, araştırma ve analiz, yapay zekâ ve teknoloji, kitaplar ve öğrenme ile fotoğraf alanlarında çalışıyorum. Bu platformu yalnızca içerik yayımlamak için değil; araştırmak, öğrendiklerimi uygulamak ve sürdürülebilir bilgi üretmek için kuruyorum.",
         "Uzun vadeli hedefim, yapay zekâ ve dijital sistemleri kullanarak eğitim, araştırma, danışmanlık ve bağımsız yayıncılık alanlarında değer üreten bir yapı oluşturmaktır.",
       ],
+      linkLabel: "Hakkımda →",
+      linkHref: "/hakkimda",
       imageAlt: "Şaban Durali portresi",
     },
     focusAreas: {
