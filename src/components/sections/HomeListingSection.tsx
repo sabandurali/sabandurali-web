@@ -27,10 +27,10 @@ export default function HomeListingSection({
             : "bg-background"
       }
     >
-      <div className={`mx-auto max-w-7xl px-5 ${compact ? "py-10 sm:py-12 lg:px-10 lg:py-14" : "py-12 sm:py-16 lg:px-10 lg:py-18"}`}>
-        <div className={`${compact ? "mb-7 pb-5" : "mb-10 pb-7"} flex flex-col gap-5 border-b border-border sm:flex-row sm:items-end sm:justify-between`}>
+      <div className={`mx-auto max-w-[1440px] px-5 ${compact ? "py-8 sm:py-10 lg:px-10 lg:py-12" : "py-10 sm:py-12 lg:px-10 lg:py-14"}`}>
+        <div className={`${compact ? "mb-5 pb-4" : "mb-7 pb-5"} flex flex-col gap-4 border-b border-border sm:flex-row sm:items-end sm:justify-between`}>
           <h2
-            className={`text-[2.15rem] font-semibold tracking-tight sm:text-5xl ${
+            className={`text-[2rem] font-semibold tracking-tight sm:text-4xl ${
               tone === "default" ? "text-ivory" : "text-ink"
             }`}
           >

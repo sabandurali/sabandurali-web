@@ -35,7 +35,7 @@ export default async function Header({
 
   return (
     <header className="border-b border-[var(--accent-border-soft)] bg-background">
-      <div className="relative mx-auto flex min-h-[76px] max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 min-[1360px]:min-h-[88px] min-[1360px]:px-8 2xl:px-10">
+      <div className="relative mx-auto flex min-h-[62px] max-w-[1440px] items-center justify-between gap-4 px-4 py-2 sm:px-6 min-[1360px]:min-h-[68px] min-[1360px]:px-8 2xl:px-10">
         <a
           href={homeHref}
           className="flex shrink-0 items-center gap-3 min-[1360px]:min-w-0 min-[1360px]:shrink min-[1360px]:gap-3.5"
@@ -45,7 +45,7 @@ export default async function Header({
             alt="Şaban Durali"
             width={606}
             height={669}
-            className="h-11 w-auto shrink-0 object-contain min-[1360px]:h-14"
+            className="h-9 w-auto shrink-0 object-contain min-[1360px]:h-10"
             priority
           />
           <span aria-hidden="true" className="min-[1360px]:min-w-0">

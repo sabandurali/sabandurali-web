@@ -9,10 +9,10 @@ type AboutProps = {
 export default function About({ id, content }: AboutProps) {
   return (
     <section id={id} className="scroll-mt-24 border-y border-[var(--accent-border-soft)] bg-ivory text-ink">
-      <div className="mx-auto max-w-[1440px] px-5 py-14 sm:px-8 sm:py-20 lg:px-10 lg:py-24">
-        <div className="grid items-start gap-8 lg:grid-cols-[0.72fr_1fr_0.62fr] lg:gap-12">
+      <div className="mx-auto max-w-[1440px] px-5 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-12">
+        <div className="grid items-start gap-6 lg:grid-cols-[0.34fr_1fr_0.76fr] lg:gap-8">
           <div className="order-2 lg:order-1">
-            <div className="max-w-[300px] border border-[var(--accent-border-soft)] bg-ivory-soft p-2">
+            <div className="w-[42vw] max-w-[210px] border border-[var(--accent-border-soft)] bg-ivory-soft p-2 lg:w-full">
               <Image
                 src={content.imageSrc ?? "/brand/saban-durali-profile.jpg"}
                 alt={content.imageAlt}
@@ -50,7 +50,7 @@ export default function About({ id, content }: AboutProps) {
                 </a>
               )}
             </div>
-            <p className="mt-8 border-l-2 border-accent pl-5 font-serif text-2xl leading-snug text-ink">Bilgi, paylaşıldığında büyür. Analiz, doğru sorularla başlar. Değer, tutarlılıkla oluşur.</p>
+            <p className="mt-5 border-l-2 border-accent pl-4 font-serif text-xl leading-snug text-ink">Bilgi, paylaşıldığında büyür. Analiz, doğru sorularla başlar. Değer, tutarlılıkla oluşur.</p>
           </div>
         </div>
       </div>
