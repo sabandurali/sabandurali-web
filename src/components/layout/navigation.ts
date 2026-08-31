@@ -106,15 +106,26 @@ export function withTurkishHeaderShortcuts(
 ): PublicNavigationLink[] {
   const about = items.find((item) => isTurkishAboutNavigationHref(item.href));
   const contact = items.find((item) => item.href === contactPaths.tr);
+  const primaryWorkspaceKeys = [
+    "gayrimenkul-ve-istanbul",
+    "arastirma-ve-analiz",
+    "yapay-zeka-ve-teknoloji",
+    "kitaplar-ve-ogrenme",
+    "fotograf",
+  ] as const;
+  const primaryWorkspaces = workspacePrimaryNavigationItems().filter((item) =>
+    primaryWorkspaceKeys.some((key) => item.id === `workspace-${key}`),
+  );
 
   return [
+    internalLink("home", "Ana Sayfa", "/"),
+    ...primaryWorkspaces,
     {
       ...(about ?? internalLink("about", "Hakkımda", "/hakkimda")),
       href: "/hakkimda",
       activePathPrefix: "/hakkimda",
       children: aboutNavigationItems(),
     },
-    ...workspacePrimaryNavigationItems(),
     {
       ...(contact ?? internalLink("contact", "İletişim", contactPaths.tr)),
       href: contactPaths.tr,

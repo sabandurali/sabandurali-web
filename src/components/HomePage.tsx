@@ -6,10 +6,9 @@ import BookReviewCard from "@/components/books/BookReviewCard";
 import PhotoCard from "@/components/photos/PhotoCard";
 import Hero from "@/components/sections/Hero";
 import About from "@/components/sections/About";
-import FocusAreas from "@/components/sections/FocusAreas";
-import WorkspaceQuickAccess from "@/components/sections/WorkspaceQuickAccess";
 import ContactCallToAction from "@/components/sections/ContactCallToAction";
 import HomeListingSection from "@/components/sections/HomeListingSection";
+import { IstanbulDiscovery, KnowledgeLibrary, RealEstateIntelligence, SectionMark } from "@/components/sections/HomeEditorialSections";
 import { contactPaths } from "@/config/site";
 import { getAllPublishedArticles } from "@/content/articles/article-data-source";
 import { articlePageContent } from "@/content/articles/article-page-content";
@@ -46,13 +45,13 @@ export default async function HomePage({ content }: { content: HomeContent }) {
     ]);
   const latestArticles = publishedArticles
     .toSorted(newestPublicationFirst)
-    .slice(0, 3);
+    .slice(0, 4);
   const latestBookReviews = publishedBookReviews
     .toSorted(newestPublicationFirst)
-    .slice(0, 3);
+    .slice(0, 1);
   const latestPhotos = publishedPhotos
     .toSorted(newestPublicationFirst)
-    .slice(0, 3);
+    .slice(0, 5);
 
   return (
     <div id="top" lang={content.locale}>
@@ -69,15 +68,15 @@ export default async function HomePage({ content }: { content: HomeContent }) {
       />
       <main>
         <Hero anchors={content.anchors} content={content.hero} />
-        <WorkspaceQuickAccess content={content.focusAreas} />
-        <FocusAreas id={content.anchors.work} content={content.focusAreas} />
-        <About id={content.anchors.about} content={content.about} />
+        <IstanbulDiscovery />
+        <RealEstateIntelligence />
 
         {latestArticles.length > 0 && (
           <HomeListingSection
             content={content.listingSections.articles}
             href={articleListPaths[locale]}
           >
+            <SectionMark>03 / Son Araştırmalar</SectionMark>
             <div className="grid gap-6 lg:grid-cols-3">
               {latestArticles.map((article) => (
                 <ArticleCard
@@ -90,6 +89,8 @@ export default async function HomePage({ content }: { content: HomeContent }) {
             </div>
           </HomeListingSection>
         )}
+
+        <KnowledgeLibrary />
 
         {latestBookReviews.length > 0 && (
           <HomeListingSection
@@ -118,6 +119,7 @@ export default async function HomePage({ content }: { content: HomeContent }) {
           tone="light"
           compact={latestPhotos.length === 0}
         >
+          <SectionMark>05 / İstanbul’u Belgeliyorum</SectionMark>
           {latestPhotos.length > 0 ? (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {latestPhotos.map((photo) => (
@@ -143,6 +145,8 @@ export default async function HomePage({ content }: { content: HomeContent }) {
             </div>
           )}
         </HomeListingSection>
+
+        <About id={content.anchors.about} content={content.about} />
 
         <ContactCallToAction
           content={content.contactCallToAction}

@@ -9,9 +9,21 @@ type AboutProps = {
 export default function About({ id, content }: AboutProps) {
   return (
     <section id={id} className="scroll-mt-24 border-y border-[var(--accent-border-soft)] bg-ivory text-ink">
-      <div className="mx-auto max-w-7xl px-5 py-10 sm:px-6 sm:py-12 lg:px-10 lg:py-14">
-        <div className="grid items-start gap-8 lg:grid-cols-[0.78fr_1.22fr] lg:gap-12">
-          <div>
+      <div className="mx-auto max-w-[1440px] px-5 py-14 sm:px-8 sm:py-20 lg:px-10 lg:py-24">
+        <div className="grid items-start gap-8 lg:grid-cols-[0.72fr_1fr_0.62fr] lg:gap-12">
+          <div className="order-2 lg:order-1">
+            <div className="max-w-[300px] border border-[var(--accent-border-soft)] bg-ivory-soft p-2">
+              <Image
+                src={content.imageSrc ?? "/brand/saban-durali-profile.jpg"}
+                alt={content.imageAlt}
+                width={480}
+                height={600}
+                sizes="(min-width: 1024px) 24vw, (min-width: 640px) 320px, 100vw"
+                className="aspect-[4/5] h-auto w-full object-cover object-top"
+              />
+            </div>
+          </div>
+          <div className="order-1 lg:order-2">
             <p className="text-sm font-medium uppercase tracking-[0.24em] text-accent">
               {content.label}
             </p>
@@ -24,7 +36,7 @@ export default function About({ id, content }: AboutProps) {
             </h2>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-[minmax(0,1fr)_240px] sm:items-start sm:gap-9">
+          <div className="order-3">
             <div className="max-w-3xl space-y-4 text-[15px] leading-6 text-muted-dark sm:text-base sm:leading-7">
               {content.paragraphs.map((paragraph) => (
                 <p key={paragraph}>{paragraph}</p>
@@ -38,16 +50,7 @@ export default function About({ id, content }: AboutProps) {
                 </a>
               )}
             </div>
-            <div className="w-full max-w-[190px] justify-self-center border border-[var(--accent-border-soft)] bg-ivory-soft p-2 sm:max-w-none">
-              <Image
-                src={content.imageSrc ?? "/brand/saban-durali-profile.jpg"}
-                alt={content.imageAlt}
-                width={320}
-                height={360}
-                sizes="(min-width: 640px) 240px, 52vw"
-                className="aspect-[4/5] h-auto w-full object-cover object-top"
-              />
-            </div>
+            <p className="mt-8 border-l-2 border-accent pl-5 font-serif text-2xl leading-snug text-ink">Bilgi, paylaşıldığında büyür. Analiz, doğru sorularla başlar. Değer, tutarlılıkla oluşur.</p>
           </div>
         </div>
       </div>

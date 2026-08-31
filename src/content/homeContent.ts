@@ -146,24 +146,24 @@ export const homeContent = {
       languageSwitcherLabel: "Dil seçimi",
     },
     hero: {
-      eyebrow: "Gayrimenkul • Araştırma • Teknoloji • Danışmanlık",
+      eyebrow: "İstanbul • Gayrimenkul • Araştırma",
       titleLines: [
-        { text: "Bilgiyi araştıran," },
-        { text: "analiz eden ve" },
-        { text: "değer üreten", accent: true },
-        { text: "bir platform." },
+        { text: "İstanbul’u anlamak." },
+        { text: "Gayrimenkulü analiz etmek." },
+        { text: "Bilgiyi değere", accent: true },
+        { text: "dönüştürmek." },
       ],
       description:
-        "Gayrimenkul ve İstanbul, satış ve müzakere, araştırma ve analiz, yapay zekâ ve teknoloji, kitaplar ve öğrenme ile fotoğraf alanlarında güvenilir bilgi ve uygulanabilir analiz üreten bağımsız bir platform oluşturuyorum.",
-      primaryAction: "Çalışma Alanlarımız",
-      primaryActionHref: "/calisma-alanlari",
+        "İstanbul, gayrimenkul ve şehir yaşamı odağında; araştırma, analiz ve öğrenme için bağımsız bir bilgi platformu.",
+      primaryAction: "Çalışma Alanlarım",
+      primaryActionHref: "/gayrimenkul-ve-istanbul",
       secondaryAction: "Hakkımda",
       secondaryActionHref: "/hakkimda",
-      goalsLabel: "Platform yapısı",
+      goalsLabel: "İstanbul Intelligence",
       goals: [
-        { value: "6", label: "çalışma alanı" },
-        { value: "2", label: "Türkçe ve İngilizce" },
-        { value: "Bağımsız", label: "araştırma ve yayın platformu" },
+        { value: "39", label: "ilçe" },
+        { value: "25", label: "Avrupa Yakası" },
+        { value: "14", label: "Anadolu Yakası" },
       ],
     },
     about: {
@@ -231,15 +231,15 @@ export const homeContent = {
     },
     listingSections: {
       articles: {
-        title: "Son Yazılar",
+        title: "Güncel analizler, raporlar ve yazılar.",
         linkLabel: "Tüm makaleler",
       },
       books: {
-        title: "Kitaplar & Öğrenme",
+        title: "Bilgi Kütüphanesi",
         linkLabel: "Tüm kitaplar",
       },
       photography: {
-        title: "Fotoğraf",
+        title: "İstanbul’u Belgeliyorum",
         linkLabel: "Tüm fotoğraflar",
       },
     },
