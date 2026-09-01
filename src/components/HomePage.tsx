@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import BackToTop from "@/components/layout/BackToTop";
@@ -66,12 +67,13 @@ export default async function HomePage({ content }: { content: HomeContent }) {
 
         <HomeListingSection
           content={content.listingSections.articles}
+          description={locale === "tr" ? "Güncel araştırma ve analizlerden oluşan seçki." : "A selection of current research and analysis."}
           eyebrow="03 / Son Araştırmalar"
           href={articleListPaths[locale]}
           id="son-arastirmalar"
         >
           {latestArticles.length > 0 ? (
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
               {latestArticles.map((article) => (
                 <ArticleCard
                   key={article.id}
@@ -83,11 +85,20 @@ export default async function HomePage({ content }: { content: HomeContent }) {
               ))}
             </div>
           ) : (
-            <p className="flex min-h-20 items-center border border-[var(--accent-border-soft)] bg-surface px-4 py-4 text-[10px] leading-4 text-muted md:min-h-24">
-              {locale === "tr"
-                ? "Yayınlanmış analizler eklendikçe bu seçki burada yer alacak."
-                : "Published analysis will appear here as it becomes available."}
-            </p>
+            <div className="relative min-h-32 overflow-hidden border border-[var(--accent-border-soft)] bg-surface md:min-h-40">
+              <Image src="/workspaces/arastirma-analiz.jpg" alt="" fill sizes="(min-width: 768px) 30vw, 100vw" className="object-cover opacity-30" />
+              <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,12,22,0.48),rgba(5,12,22,0.97)_55%)]" />
+              <div className="relative ml-auto flex min-h-32 max-w-[68%] flex-col justify-center px-5 py-4 md:min-h-40 md:px-8">
+                <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-accent-soft">
+                  {locale === "tr" ? "Yayın seçkisi" : "Editorial selection"}
+                </p>
+                <p className="mt-3 max-w-xl font-serif text-lg leading-snug text-ivory md:text-xl">
+                  {locale === "tr"
+                    ? "Yayınlanmış analizler eklendikçe bu seçki gerçek içeriklerle şekillenecek."
+                    : "This selection will take shape with published analysis as it becomes available."}
+                </p>
+              </div>
+            </div>
           )}
         </HomeListingSection>
 
@@ -95,12 +106,13 @@ export default async function HomePage({ content }: { content: HomeContent }) {
 
         <HomeListingSection
           content={content.listingSections.photography}
+          description={locale === "tr" ? "İstanbul, şehir, mimari, sokak, hayvanlar ve doğa odaklı fotoğraf arşivi." : "A photography archive focused on Istanbul, city life, architecture, streets, animals and nature."}
           eyebrow="05 / İstanbul’u Belgeliyorum"
           href={photoListPaths[locale]}
           id="fotograf"
         >
           {latestPhotos.length > 0 ? (
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-5">
               {latestPhotos.map((photo) => (
                 <PhotoCard
                   key={photo.id}
@@ -111,17 +123,21 @@ export default async function HomePage({ content }: { content: HomeContent }) {
               ))}
             </div>
           ) : (
-            <div className="flex min-h-28 flex-col justify-center border border-[var(--accent-border-soft)] bg-surface px-4 py-4 text-[10px] leading-4 text-muted md:min-h-32">
-              <p>
+            <div className="relative flex min-h-48 flex-col justify-end overflow-hidden border border-[var(--accent-border-soft)] bg-surface px-5 py-5 text-xs leading-5 text-muted md:min-h-56 md:px-8 md:py-6">
+              <Image src="/workspaces/fotograf.jpg" alt="" fill sizes="(min-width: 768px) 70vw, 100vw" className="object-cover object-center opacity-45" />
+              <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,12,22,0.96),rgba(5,12,22,0.35)_70%,rgba(5,12,22,0.7))]" />
+              <div className="relative max-w-xl border-l border-accent-soft pl-4">
+                <p className="font-serif text-xl leading-snug text-ivory md:text-2xl">
                 {locale === "tr"
                   ? "İstanbul, şehir, mimari, sokak, hayvanlar ve doğa odaklı fotoğraf arşivi."
                   : "A photography archive focused on Istanbul, city life, architecture, streets, animals and nature."}
-              </p>
-              <p className="mt-1 text-[9px]">
+                </p>
+                <p className="mt-3 text-[10px] uppercase tracking-[0.16em] text-accent-soft">
                 {locale === "tr"
                   ? "Yeni çalışmalar eklendikçe burada yer alacak."
                   : "New work will appear here as it is published."}
-              </p>
+                </p>
+              </div>
             </div>
           )}
         </HomeListingSection>

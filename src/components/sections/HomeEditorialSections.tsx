@@ -23,7 +23,7 @@ const plannedTools = ["Kira Çarpanı", "ROI", "İlçe Karşılaştır"] as cons
 
 export function SectionMark({ children }: { children: string }) {
   return (
-    <p className="flex items-center gap-2 text-[9px] font-semibold uppercase tracking-[0.2em] text-accent-soft after:h-px after:w-6 after:bg-accent/70 after:content-['']">
+    <p className="flex items-center gap-2 text-[9px] font-semibold uppercase tracking-[0.2em] text-accent-soft after:h-px after:w-8 after:bg-accent/70 after:content-[''] sm:text-[10px]">
       {children}
     </p>
   );
@@ -49,26 +49,29 @@ export function IstanbulDiscovery() {
       id="istanbul"
       className="scroll-mt-14 border-b border-[var(--accent-border-soft)] bg-background text-ivory"
     >
-      <div className="mx-auto grid max-w-[1440px] gap-4 px-5 py-4 sm:px-8 md:min-h-[9.25rem] md:grid-cols-[0.78fr_0.72fr_1.5fr] md:items-stretch md:gap-3 md:py-4 lg:grid-cols-[0.68fr_0.6fr_1.42fr] lg:gap-4 lg:px-10">
+      <div className="mx-auto grid max-w-[1440px] gap-5 px-5 py-7 sm:px-8 md:min-h-[16.5rem] md:grid-cols-[0.74fr_0.78fr_1.48fr] md:items-stretch md:gap-5 md:py-6 lg:gap-7 lg:px-10">
         <div className="flex flex-col justify-between border-l border-accent-soft pl-3">
           <div>
             <SectionMark>01 / İstanbul’u Keşfet</SectionMark>
-            <h2 className="mt-1.5 text-[1.45rem] font-semibold leading-[0.96] md:text-[1.05rem] lg:text-[1.28rem]">
+            <h2 className="mt-3 text-[1.85rem] font-semibold leading-[0.98] md:text-[1.65rem] lg:text-[2rem]">
               39 İlçe.
               <br />
               Derinlemesine rehberler.
             </h2>
           </div>
+          <p className="mt-4 max-w-xs text-xs leading-5 text-muted md:text-[11px] lg:text-sm lg:leading-6">
+            İstanbul’un Avrupa ve Anadolu yakalarındaki 39 ilçesine dair doğrulanmış rehberler.
+          </p>
           <Link
             href={districtGuidePath}
-            className="mt-1 inline-flex min-h-6 items-center self-start text-[9px] font-semibold text-accent-soft hover:text-ivory"
+            className="mt-4 inline-flex min-h-8 items-center self-start text-[10px] font-semibold text-accent-soft hover:text-ivory"
           >
             Tüm İlçeler →
           </Link>
         </div>
 
         <div className="min-w-0 md:border-l md:border-border md:pl-3">
-          <div className="grid min-h-24 grid-cols-[1.2fr_0.8fr] items-center border border-border bg-surface px-3 py-2 md:h-full md:min-h-0 md:px-3 md:py-2">
+          <div className="grid min-h-48 grid-cols-[1.2fr_0.8fr] items-center border border-border bg-surface px-4 py-5 md:h-full md:min-h-0 md:px-4 md:py-5 lg:px-5">
           <svg
             aria-hidden="true"
             viewBox="0 0 320 150"
@@ -81,11 +84,11 @@ export function IstanbulDiscovery() {
           </svg>
             <dl className="grid gap-2 border-l border-border pl-3 text-[9px]">
             <div>
-              <dt className="font-serif text-xl leading-none text-ivory">{european}</dt>
+              <dt className="font-serif text-2xl leading-none text-ivory lg:text-3xl">{european}</dt>
               <dd className="mt-1 text-muted">Avrupa Yakası</dd>
             </div>
             <div>
-              <dt className="font-serif text-xl leading-none text-ivory">{asian}</dt>
+              <dt className="font-serif text-2xl leading-none text-ivory lg:text-3xl">{asian}</dt>
               <dd className="mt-1 text-muted">Anadolu Yakası</dd>
             </div>
             </dl>
@@ -93,15 +96,15 @@ export function IstanbulDiscovery() {
         </div>
 
         <div className="min-w-0 md:border-l md:border-border md:pl-3">
-          <p className="text-[8px] font-semibold uppercase tracking-[0.2em] text-muted">
+          <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-muted">
             Öne çıkan ilçe rehberleri
           </p>
-          <div className="mt-2 grid grid-cols-3 gap-2">
+          <div className="mt-3 grid grid-cols-3 gap-3">
             {featured.map((district) => (
               <Link
                 key={district.slug}
                 href={getDistrictPath(district.slug)}
-                  className="group relative min-h-24 overflow-hidden border border-border bg-surface sm:min-h-28 md:min-h-[6rem]"
+                  className="group relative min-h-36 overflow-hidden border border-border bg-surface sm:min-h-44 md:min-h-[11.5rem]"
               >
                 <Image
                   src={featuredImages[district.slug as keyof typeof featuredImages]}
@@ -111,14 +114,14 @@ export function IstanbulDiscovery() {
                   className="object-cover opacity-55 transition-transform duration-300 group-hover:scale-[1.03]"
                 />
                 <span className="absolute inset-0 bg-[linear-gradient(0deg,rgba(5,12,22,0.94),rgba(5,12,22,0.06)_72%)]" />
-                <span className="absolute inset-x-0 bottom-0 p-2">
-                  <span className="block text-[7px] font-semibold uppercase tracking-[0.16em] text-accent-soft">
+                <span className="absolute inset-x-0 bottom-0 p-3 lg:p-4">
+                  <span className="block text-[8px] font-semibold uppercase tracking-[0.16em] text-accent-soft">
                     İlçe rehberi
                   </span>
-                  <span className="mt-0.5 block font-serif text-sm leading-tight text-ivory sm:text-base">
+                  <span className="mt-1 block font-serif text-base leading-tight text-ivory sm:text-lg lg:text-xl">
                     {district.name}
                   </span>
-                  <span className="mt-1 block text-[8px] font-semibold text-ivory group-hover:text-accent-soft">
+                  <span className="mt-2 block text-[9px] font-semibold text-ivory group-hover:text-accent-soft">
                     Detaylı Rehber →
                   </span>
                 </span>
@@ -137,11 +140,11 @@ export function RealEstateIntelligence() {
       id="gayrimenkul-intelligence"
       className="scroll-mt-14 border-b border-[var(--accent-border-soft)] bg-background"
     >
-      <div className="mx-auto grid max-w-[1440px] gap-4 px-5 py-4 sm:px-8 md:min-h-[9.5rem] md:grid-cols-[0.72fr_2.28fr] md:gap-3 md:py-4 lg:grid-cols-[0.68fr_2.62fr] lg:gap-4 lg:px-10">
+      <div className="mx-auto grid max-w-[1440px] gap-5 px-5 py-7 sm:px-8 md:min-h-[13rem] md:grid-cols-[0.72fr_2.28fr] md:gap-5 md:py-6 lg:grid-cols-[0.68fr_2.62fr] lg:gap-7 lg:px-10">
         <div className="flex flex-col justify-between border-l border-accent-soft pl-3">
           <div>
             <SectionMark>02 / Gayrimenkul Intelligence</SectionMark>
-            <h2 className="mt-1.5 text-[1.45rem] font-semibold leading-[0.96] text-ivory md:text-[1.05rem] lg:text-[1.28rem]">
+            <h2 className="mt-3 text-[1.85rem] font-semibold leading-[0.98] text-ivory md:text-[1.65rem] lg:text-[2rem]">
               Veriye dayalı kararlar.
               <br />
               Daha doğru analiz.
@@ -149,7 +152,7 @@ export function RealEstateIntelligence() {
           </div>
           <Link
             href="/gayrimenkul-ve-istanbul"
-            className="mt-1 inline-flex min-h-6 items-center self-start text-[9px] font-semibold text-accent-soft hover:text-ivory"
+            className="mt-4 inline-flex min-h-8 items-center self-start text-[10px] font-semibold text-accent-soft hover:text-ivory"
           >
             Alanı keşfet →
           </Link>
@@ -160,32 +163,32 @@ export function RealEstateIntelligence() {
             {intelligenceItems.map(([title, href, icon]) => {
               const body = (
                 <>
-                  <span className="flex size-5 items-center justify-center border border-accent/40 text-accent-soft">
-                    <AreaIcon icon={icon} className="size-2.5" />
+                  <span className="flex size-8 items-center justify-center border border-accent/40 text-accent-soft">
+                    <AreaIcon icon={icon} className="size-4" />
                   </span>
-                  <h3 className="mt-2 font-serif text-[12px] leading-[1.1] text-ivory sm:text-[13px]">
+                  <h3 className="mt-4 font-serif text-sm leading-[1.12] text-ivory sm:text-base">
                     {title}
                   </h3>
-                  <span className="mt-1 block text-[8px] text-muted group-hover:text-accent-soft">
+                  <span className="mt-2 block text-[9px] text-muted group-hover:text-accent-soft">
                     {href === null ? "Yakında" : "İncele →"}
                   </span>
                 </>
               );
 
               return href === null ? (
-                <div key={title} aria-disabled="true" className="group min-h-[4.5rem] bg-surface p-2.5 opacity-70 lg:p-3">
+                <div key={title} aria-disabled="true" className="group min-h-28 bg-surface p-4 opacity-70">
                   {body}
                 </div>
               ) : (
-                <Link key={title} href={href} className="group min-h-[4.5rem] bg-surface p-2.5 transition-colors hover:bg-surface-soft lg:p-3">
+                <Link key={title} href={href} className="group min-h-28 bg-surface p-4 transition-colors hover:bg-surface-soft">
                   {body}
                 </Link>
               );
             })}
           </div>
-          <div className="mt-2 grid grid-cols-3 gap-px border border-[var(--accent-border-soft)] bg-[var(--accent-border-soft)]">
+          <div className="mt-3 grid grid-cols-3 gap-px border border-[var(--accent-border-soft)] bg-[var(--accent-border-soft)]">
             {plannedTools.map((tool) => (
-              <span key={tool} aria-disabled="true" className="bg-surface px-2.5 py-1.5 text-[8px] font-medium text-muted sm:text-[9px]">
+              <span key={tool} aria-disabled="true" className="bg-surface px-3 py-2.5 text-[8px] font-medium text-muted sm:text-[10px]">
                 {tool} <span className="text-accent-soft">· Yakında</span>
               </span>
             ))}
@@ -198,9 +201,9 @@ export function RealEstateIntelligence() {
 
 export function KnowledgeLibrary() {
   const cards = [
-    ["Araştırmalar & Analizler", "/arastirma-ve-analiz", "/workspaces/arastirma-analiz.jpg"],
-    ["Kitaplar & Öğrenme", "/kitaplar-ve-ogrenme", "/workspaces/kitaplar-ogrenme.jpg"],
-    ["Yapay Zekâ & Teknoloji", "/yapay-zeka-ve-teknoloji", "/workspaces/yapay-zeka-teknoloji.jpg"],
+    ["Araştırmalar & Analizler", "Piyasa, şehir ve teknoloji odağında kaynak temelli çalışmalar.", "/arastirma-ve-analiz", "/workspaces/arastirma-analiz.jpg"],
+    ["Kitaplar & Öğrenme", "Okuma notları, kitap incelemeleri ve sürekli öğrenme içerikleri.", "/kitaplar-ve-ogrenme", "/workspaces/kitaplar-ogrenme.jpg"],
+    ["Yapay Zekâ & Teknoloji", "Dijital dönüşüm, üretken yapay zekâ ve teknoloji notları.", "/yapay-zeka-ve-teknoloji", "/workspaces/yapay-zeka-teknoloji.jpg"],
   ] as const;
 
   return (
@@ -208,40 +211,43 @@ export function KnowledgeLibrary() {
       id="bilgi-kutuphanesi"
       className="scroll-mt-14 border-b border-[var(--accent-border-soft)] bg-background text-ivory"
     >
-      <div className="mx-auto grid max-w-[1440px] gap-4 px-5 py-4 sm:px-8 md:min-h-32 md:grid-cols-[0.72fr_2.28fr] md:gap-3 md:py-4 lg:grid-cols-[0.68fr_2.62fr] lg:gap-4 lg:px-10">
+      <div className="mx-auto grid max-w-[1440px] gap-4 px-5 py-5 sm:px-8 md:min-h-[14.5rem] md:grid-cols-[0.72fr_2.28fr] md:gap-5 md:py-6 lg:grid-cols-[0.68fr_2.62fr] lg:gap-7 lg:px-10">
         <div className="border-l border-accent-soft pl-3">
           <SectionMark>04 / Bilgi Kütüphanesi</SectionMark>
-          <h2 className="mt-1.5 text-[1.45rem] font-semibold leading-[0.96] md:text-[1.05rem] lg:text-[1.28rem]">
-            Öğren. Keşfet.
-            <br />
-            Geliştir.
+          <h2 className="mt-3 text-[1.85rem] font-semibold leading-[0.98] md:text-[1.65rem] lg:text-[2rem]">
+            Öğren.
+            <br />Keşfet.
+            <br />Geliştir.
           </h2>
         </div>
-        <div className="grid min-w-0 gap-2 md:border-l md:border-border md:pl-3 sm:grid-cols-3">
-          {cards.map(([title, href, image], index) => (
+        <div className="grid min-w-0 gap-3 md:border-l md:border-border md:pl-5 sm:grid-cols-3">
+          {cards.map(([title, description, href, image], index) => (
             <Link
               key={title}
               href={href}
-              className="group relative min-h-16 overflow-hidden border border-[var(--accent-border-soft)] bg-surface p-2.5 sm:min-h-24 sm:p-3 md:min-h-[6rem] lg:p-3.5"
+              className="group relative min-h-36 overflow-hidden border border-[var(--accent-border-soft)] bg-surface p-4 sm:min-h-48 sm:p-5 md:min-h-40 lg:p-5"
             >
               <Image
                 src={image}
                 alt=""
                 fill
                 sizes="(min-width: 1024px) 24vw, 100vw"
-                className="object-cover opacity-25 transition-transform duration-300 group-hover:scale-[1.02]"
+                className="object-cover opacity-40 transition-transform duration-300 group-hover:scale-[1.02]"
               />
-              <span className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,12,22,0.94),rgba(5,12,22,0.44))]" />
-              <span className="relative flex h-full min-h-10 flex-col justify-between sm:min-h-14">
+              <span className="absolute inset-0 bg-[linear-gradient(0deg,rgba(5,12,22,0.98),rgba(5,12,22,0.34)_85%)]" />
+              <span className="relative flex h-full min-h-28 flex-col justify-between">
                 <span className="text-[8px] font-semibold uppercase tracking-[0.18em] text-accent-soft">
                   0{index + 1}
                 </span>
                 <span>
-                  <span className="block font-serif text-base leading-tight text-ivory sm:text-lg">
+                  <span className="block font-serif text-xl leading-tight text-ivory lg:text-2xl">
                     {title}
                   </span>
-                  <span className="mt-1 block text-[9px] font-semibold text-accent-soft">
-                    İncele →
+                  <span className="mt-3 block max-w-sm text-[10px] leading-4 text-muted lg:text-xs lg:leading-5">
+                    {description}
+                  </span>
+                  <span className="mt-3 block text-[10px] font-semibold text-accent-soft">
+                    Alanı aç →
                   </span>
                 </span>
               </span>

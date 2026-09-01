@@ -14,40 +14,40 @@ export default function About({ id, content, compact = false }: AboutProps) {
         id={id}
         className="scroll-mt-14 border-y border-ink/20 bg-ivory text-ink"
       >
-        <div className="mx-auto grid max-w-[1440px] grid-cols-[5rem_1fr] gap-4 px-5 py-4 sm:grid-cols-[6rem_1fr] sm:px-8 md:min-h-[8.5rem] md:grid-cols-[6.5rem_1.2fr_1fr] md:items-center md:gap-5 md:py-4 lg:gap-6 lg:px-10">
-          <div className="w-20 border border-[var(--accent-border-soft)] bg-ivory-soft p-1 sm:w-24 md:w-[6.5rem]">
+        <div className="mx-auto grid max-w-[1440px] grid-cols-[7rem_1fr] gap-4 px-5 py-7 sm:grid-cols-[9rem_1fr] sm:px-8 md:min-h-[13.5rem] md:grid-cols-[11.25rem_1.2fr_1fr] md:items-center md:gap-8 md:py-6 lg:gap-10 lg:px-10">
+          <div className="w-28 border border-[var(--accent-border-soft)] bg-ivory-soft p-1.5 sm:w-36 md:w-[11.25rem] md:p-2">
             <Image
               src={content.imageSrc ?? "/brand/saban-durali-profile.jpg"}
               alt={content.imageAlt}
               width={480}
               height={600}
-              sizes="104px"
-              className="aspect-square h-auto w-full object-cover object-top"
+              sizes="(min-width: 768px) 180px, 144px"
+              className="aspect-[4/5] h-auto w-full object-cover object-top"
             />
           </div>
 
-          <div className="md:border-l md:border-ink/20 md:pl-4">
-            <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-accent">
+          <div className="md:border-l md:border-ink/20 md:pl-7">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-accent">
               {content.label}
             </p>
-            <h2 className="mt-1.5 font-serif text-2xl font-semibold leading-none text-ink">
+            <h2 className="mt-3 font-serif text-3xl font-semibold leading-none text-ink lg:text-4xl">
               {content.titleLines.join(" ")}
             </h2>
-            <p className="mt-1.5 line-clamp-2 max-w-2xl text-[10px] leading-4 text-muted-dark lg:line-clamp-1">
+            <p className="mt-4 line-clamp-4 max-w-2xl text-xs leading-5 text-muted-dark md:line-clamp-3 lg:text-sm lg:leading-6">
               {content.paragraphs[0]}
             </p>
             {content.linkLabel && content.linkHref && (
               <a
                 href={content.linkHref}
-                className="mt-1 inline-flex min-h-7 items-center text-[10px] font-semibold text-accent hover:text-ink"
+                className="mt-4 inline-flex min-h-9 items-center text-xs font-semibold text-accent hover:text-ink"
               >
                 {content.linkLabel} →
               </a>
             )}
           </div>
 
-          <p className="col-span-2 border-l-2 border-accent pl-4 font-serif text-base leading-snug text-ink md:col-span-1 md:border-l md:border-ink/20 lg:text-lg">
-            Bilgi, paylaşıldığında büyür. Analiz, doğru sorularla başlar. Değer,
+          <p className="col-span-2 border-l-2 border-accent pl-5 font-serif text-lg leading-snug text-ink md:col-span-1 md:border-l md:border-ink/20 md:pl-8 lg:text-2xl lg:leading-snug">
+            Bilgi, paylaşıldığında büyür.<br />Analiz, doğru sorularla başlar.<br />Değer,
             tutarlılıkla oluşur.
           </p>
         </div>
