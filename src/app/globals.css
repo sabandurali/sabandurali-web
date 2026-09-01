@@ -25,6 +25,7 @@
 
 @theme inline {
   --color-background: var(--background);
+  --color-background-deep: var(--background-deep);
   --color-foreground: var(--foreground);
 
   --color-surface: var(--surface);
