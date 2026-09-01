@@ -11,20 +11,20 @@ export default function ContactCallToAction({
   href,
 }: ContactCallToActionProps) {
   return (
-    <section className="border-t border-[var(--accent-border-soft)] bg-ivory-soft">
-      <div className="mx-auto max-w-[1440px] px-5 py-6 sm:px-8 sm:py-8 lg:px-10 lg:py-10">
-        <div className="border border-border bg-background p-5 sm:p-6 lg:flex lg:items-center lg:justify-between lg:gap-12">
-          <div className="max-w-3xl">
-            <h2 className="text-[2rem] font-semibold tracking-tight text-ivory sm:text-4xl">
+    <section className="border-y border-[var(--accent-border-soft)] bg-background-deep">
+      <div className="mx-auto max-w-[1440px] px-5 py-3 sm:px-8 lg:px-10">
+        <div className="flex flex-col gap-3 border border-border bg-surface/40 px-3 py-2 sm:flex-row sm:items-center sm:justify-between sm:gap-8">
+          <div className="max-w-4xl sm:flex sm:items-baseline sm:gap-5">
+            <h2 className="shrink-0 font-serif text-xl font-semibold tracking-tight text-ivory sm:text-2xl">
               {content.title}
             </h2>
-            <p className="mt-3 text-sm leading-6 text-muted sm:mt-5 sm:text-lg sm:leading-7">
+            <p className="mt-1 text-[10px] leading-4 text-muted sm:mt-0 sm:text-[11px]">
               {content.description}
             </p>
           </div>
           <Link
             href={href}
-            className="mt-6 inline-flex min-h-10 items-center justify-center bg-accent-soft px-5 py-2.5 text-sm font-semibold text-background transition-colors hover:bg-ivory motion-reduce:transition-none sm:mt-8 sm:min-h-11 sm:px-7 sm:py-3.5 lg:mt-0 lg:shrink-0"
+            className="inline-flex min-h-8 items-center justify-center bg-accent-soft px-4 py-1.5 text-[10px] font-semibold text-background transition-colors hover:bg-ivory motion-reduce:transition-none sm:shrink-0"
           >
             {content.buttonLabel}
           </Link>

@@ -7,7 +7,7 @@ import Hero from "@/components/sections/Hero";
 import About from "@/components/sections/About";
 import ContactCallToAction from "@/components/sections/ContactCallToAction";
 import HomeListingSection from "@/components/sections/HomeListingSection";
-import { IstanbulDiscovery, KnowledgeLibrary, RealEstateIntelligence, SectionMark } from "@/components/sections/HomeEditorialSections";
+import { IstanbulDiscovery, KnowledgeLibrary, RealEstateIntelligence } from "@/components/sections/HomeEditorialSections";
 import { contactPaths } from "@/config/site";
 import { getAllPublishedArticles } from "@/content/articles/article-data-source";
 import { articlePageContent } from "@/content/articles/article-page-content";
@@ -57,6 +57,7 @@ export default async function HomePage({ content }: { content: HomeContent }) {
         locale={content.locale}
         anchors={content.anchors}
         content={content.header}
+        compact
       />
       <main>
         <Hero anchors={content.anchors} content={content.hero} />
@@ -65,22 +66,24 @@ export default async function HomePage({ content }: { content: HomeContent }) {
 
         <HomeListingSection
           content={content.listingSections.articles}
+          eyebrow="03 / Son Araştırmalar"
           href={articleListPaths[locale]}
+          id="son-arastirmalar"
         >
-          <SectionMark>03 / Son Araştırmalar</SectionMark>
           {latestArticles.length > 0 ? (
-            <div className="grid gap-6 lg:grid-cols-3">
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
               {latestArticles.map((article) => (
                 <ArticleCard
                   key={article.id}
                   article={article}
                   content={articlePageContent[locale]}
                   headingLevel="h3"
+                  compact
                 />
               ))}
             </div>
           ) : (
-            <p className="max-w-2xl border-l border-accent-soft pl-5 text-base leading-7 text-muted">
+            <p className="border border-[var(--accent-border-soft)] bg-surface px-3 py-3 text-[10px] leading-4 text-muted">
               {locale === "tr"
                 ? "Yayınlanmış analizler eklendikçe bu seçki burada yer alacak."
                 : "Published analysis will appear here as it becomes available."}
@@ -92,29 +95,29 @@ export default async function HomePage({ content }: { content: HomeContent }) {
 
         <HomeListingSection
           content={content.listingSections.photography}
+          eyebrow="05 / İstanbul’u Belgeliyorum"
           href={photoListPaths[locale]}
-          tone="light"
-          compact={latestPhotos.length === 0}
+          id="fotograf"
         >
-          <SectionMark>05 / İstanbul’u Belgeliyorum</SectionMark>
           {latestPhotos.length > 0 ? (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
               {latestPhotos.map((photo) => (
                 <PhotoCard
                   key={photo.id}
                   photo={photo}
                   headingLevel="h3"
+                  compact
                 />
               ))}
             </div>
           ) : (
-            <div className="max-w-2xl border-l border-[var(--accent-border-soft)] pl-5 text-base leading-7 text-muted-dark">
+            <div className="border border-[var(--accent-border-soft)] bg-surface px-3 py-3 text-[10px] leading-4 text-muted">
               <p>
                 {locale === "tr"
                   ? "İstanbul, şehir, mimari, sokak, hayvanlar ve doğa odaklı fotoğraf arşivi."
                   : "A photography archive focused on Istanbul, city life, architecture, streets, animals and nature."}
               </p>
-              <p className="mt-3 text-sm">
+              <p className="mt-1 text-[9px]">
                 {locale === "tr"
                   ? "Yeni çalışmalar eklendikçe burada yer alacak."
                   : "New work will appear here as it is published."}
@@ -123,14 +126,14 @@ export default async function HomePage({ content }: { content: HomeContent }) {
           )}
         </HomeListingSection>
 
-        <About id={content.anchors.about} content={content.about} />
+        <About id={content.anchors.about} content={content.about} compact />
 
         <ContactCallToAction
           content={content.contactCallToAction}
           href={contactPaths[locale]}
         />
       </main>
-      <Footer id={content.anchors.contact} content={content.footer} />
+      <Footer id={content.anchors.contact} content={content.footer} compact />
       <BackToTop label={content.backToTopLabel} />
     </div>
   );

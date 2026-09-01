@@ -5,49 +5,38 @@ import type { HomeListingSectionContent } from "@/content/homeContent";
 type HomeListingSectionProps = {
   children: ReactNode;
   content: HomeListingSectionContent;
+  eyebrow: string;
   href: string;
-  tone?: "default" | "soft" | "light";
-  compact?: boolean;
+  id?: string;
 };
 
 export default function HomeListingSection({
   children,
   content,
+  eyebrow,
   href,
-  tone = "default",
-  compact = false,
+  id,
 }: HomeListingSectionProps) {
   return (
-    <section
-      className={
-        tone === "light"
-          ? "bg-ivory text-ink"
-          : tone === "soft"
-            ? "bg-ivory-soft text-ink"
-            : "bg-background"
-      }
-    >
-      <div className={`mx-auto max-w-[1440px] px-5 ${compact ? "py-8 sm:py-10 lg:px-10 lg:py-12" : "py-10 sm:py-12 lg:px-10 lg:py-14"}`}>
-        <div className={`${compact ? "mb-5 pb-4" : "mb-7 pb-5"} flex flex-col gap-4 border-b border-border sm:flex-row sm:items-end sm:justify-between`}>
-          <h2
-            className={`text-[2rem] font-semibold tracking-tight sm:text-4xl ${
-              tone === "default" ? "text-ivory" : "text-ink"
-            }`}
-          >
-            {content.title}
-          </h2>
+    <section id={id} className="scroll-mt-14 border-b border-[var(--accent-border-soft)] bg-background text-ivory">
+      <div className="mx-auto grid max-w-[1440px] gap-4 px-5 py-4 sm:px-8 md:grid-cols-[0.72fr_2.28fr] md:gap-3 md:py-2.5 lg:grid-cols-[0.68fr_2.62fr] lg:gap-4 lg:px-10">
+        <div className="flex flex-col justify-between border-l border-accent-soft pl-3">
+          <div>
+            <p className="flex items-center gap-2 text-[9px] font-semibold uppercase tracking-[0.2em] text-accent-soft after:h-px after:w-6 after:bg-accent/70 after:content-['']">
+              {eyebrow}
+            </p>
+            <h2 className="mt-1.5 text-[1.45rem] font-semibold leading-[0.96] md:text-[1.05rem] lg:text-[1.28rem]">
+              {content.title}
+            </h2>
+          </div>
           <Link
             href={href}
-            className={`inline-flex min-h-11 items-center self-start text-sm font-semibold underline decoration-border underline-offset-4 transition-colors motion-reduce:transition-none sm:self-auto ${
-              tone === "default"
-                ? "text-accent-soft hover:text-ivory"
-                : "text-accent hover:text-ink"
-            }`}
+            className="mt-1 inline-flex min-h-6 items-center self-start text-[9px] font-semibold text-accent-soft transition-colors hover:text-ivory motion-reduce:transition-none"
           >
             {content.linkLabel} →
           </Link>
         </div>
-        {children}
+        <div className="min-w-0 md:border-l md:border-border md:pl-3">{children}</div>
       </div>
     </section>
   );

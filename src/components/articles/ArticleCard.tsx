@@ -12,12 +12,14 @@ type ArticleCardProps = {
   article: PublicArticleSummary;
   content: ArticlePageContent;
   headingLevel?: "h2" | "h3";
+  compact?: boolean;
 };
 
 export default function ArticleCard({
   article,
   content,
   headingLevel = "h2",
+  compact = false,
 }: ArticleCardProps) {
   const Heading = headingLevel;
   const coverImage = getAvailablePublicArticleImage(article.featuredImage);
@@ -27,7 +29,7 @@ export default function ArticleCard({
   const href = getArticlePath(article.slug, article.language);
 
   return (
-    <article className="group overflow-hidden border border-border bg-surface/75 transition-colors hover:border-[var(--accent-border-hover)] motion-reduce:transition-none">
+    <article className={`group overflow-hidden border bg-surface/75 transition-colors hover:border-[var(--accent-border-hover)] motion-reduce:transition-none ${compact ? "border-[var(--accent-border-soft)]" : "border-border"}`}>
       {coverImage !== null && article.featuredImage !== null && (
         article.featuredImage.width !== undefined &&
         article.featuredImage.height !== undefined ? (
@@ -37,10 +39,10 @@ export default function ArticleCard({
             width={article.featuredImage.width}
             height={article.featuredImage.height}
             sizes="(min-width: 1024px) 560px, 100vw"
-            className="aspect-[16/9] w-full object-cover transition-transform duration-300 group-hover:scale-[1.02] motion-reduce:transition-none"
+            className={`${compact ? "aspect-[16/7]" : "aspect-[16/9]"} w-full object-cover transition-transform duration-300 group-hover:scale-[1.02] motion-reduce:transition-none`}
           />
         ) : (
-          <div className="relative aspect-[16/9] w-full">
+          <div className={`relative w-full ${compact ? "aspect-[16/7]" : "aspect-[16/9]"}`}>
             <Image
               src={coverImage}
               alt={article.featuredImage.alt}
@@ -51,11 +53,11 @@ export default function ArticleCard({
           </div>
         )
       )}
-      <div className="p-6 sm:p-7">
-        <p className="text-xs font-semibold tracking-[0.16em] text-accent-soft uppercase">
+      <div className={compact ? "p-2.5" : "p-6 sm:p-7"}>
+        <p className={`${compact ? "text-[8px]" : "text-xs"} font-semibold tracking-[0.16em] text-accent-soft uppercase`}>
           {category}
         </p>
-        <Heading className="mt-3 text-2xl leading-tight text-ivory sm:text-3xl">
+        <Heading className={compact ? "mt-1.5 line-clamp-2 font-serif text-sm leading-tight text-ivory" : "mt-3 text-2xl leading-tight text-ivory sm:text-3xl"}>
           <Link
             href={href}
             aria-label={`${content.readArticle}: ${article.title}`}
@@ -64,10 +66,10 @@ export default function ArticleCard({
             {article.title}
           </Link>
         </Heading>
-        <p className="mt-4 text-sm leading-7 text-muted sm:text-base">
+        <p className={compact ? "mt-1.5 line-clamp-2 text-[9px] leading-4 text-muted" : "mt-4 text-sm leading-7 text-muted sm:text-base"}>
           {article.summary}
         </p>
-        <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-xs text-muted">
+        <div className={`${compact ? "mt-2 gap-x-2 text-[8px]" : "mt-6 gap-x-5 text-xs"} flex flex-wrap gap-y-2 text-muted`}>
           {publishedAt !== null && (
             <span>
               {content.publishedLabel}: {publishedAt}
@@ -81,7 +83,7 @@ export default function ArticleCard({
         </div>
         <Link
           href={href}
-          className="mt-6 inline-flex min-h-11 items-center text-sm font-semibold text-accent-strong underline decoration-border underline-offset-4 transition-colors hover:text-ivory motion-reduce:transition-none"
+          className={compact ? "mt-1.5 inline-flex min-h-7 items-center text-[9px] font-semibold text-accent-strong transition-colors hover:text-ivory" : "mt-6 inline-flex min-h-11 items-center text-sm font-semibold text-accent-strong underline decoration-border underline-offset-4 transition-colors hover:text-ivory motion-reduce:transition-none"}
         >
           {content.readArticle} →
         </Link>

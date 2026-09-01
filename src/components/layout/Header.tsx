@@ -16,6 +16,7 @@ type HeaderProps = {
   homeHref?: string;
   anchorPrefix?: string;
   languageHrefs?: Record<Locale, string>;
+  compact?: boolean;
 };
 
 export default async function Header({
@@ -25,6 +26,7 @@ export default async function Header({
   homeHref = "#top",
   anchorPrefix = "",
   languageHrefs,
+  compact = false,
 }: HeaderProps) {
   const items = await getHeaderNavigation(
     locale,
@@ -35,7 +37,7 @@ export default async function Header({
 
   return (
     <header className="border-b border-[var(--accent-border-soft)] bg-background">
-      <div className="relative mx-auto flex min-h-[62px] max-w-[1440px] items-center justify-between gap-4 px-4 py-2 sm:px-6 min-[1360px]:min-h-[68px] min-[1360px]:px-8 2xl:px-10">
+      <div className={`relative mx-auto flex max-w-[1440px] items-center justify-between gap-4 px-4 py-1.5 sm:px-6 min-[1360px]:px-8 2xl:px-10 ${compact ? "min-h-[50px] min-[1360px]:min-h-[52px]" : "min-h-[62px] py-2 min-[1360px]:min-h-[68px]"}`}>
         <a
           href={homeHref}
           className="flex shrink-0 items-center gap-3 min-[1360px]:min-w-0 min-[1360px]:shrink min-[1360px]:gap-3.5"
@@ -45,7 +47,7 @@ export default async function Header({
             alt="Şaban Durali"
             width={606}
             height={669}
-            className="h-9 w-auto shrink-0 object-contain min-[1360px]:h-10"
+            className={`${compact ? "h-7 min-[1360px]:h-8" : "h-9 min-[1360px]:h-10"} w-auto shrink-0 object-contain`}
             priority
           />
           <span aria-hidden="true" className="min-[1360px]:min-w-0">
