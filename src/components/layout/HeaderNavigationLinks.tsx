@@ -16,17 +16,17 @@ function isOwnLinkActive(item: PublicNavigationLink, pathname: string) {
   return prefix === "/" ? pathname === "/" : prefix !== undefined && (pathname === prefix || pathname.startsWith(`${prefix}/`));
 }
 
-function DesktopLink({ item, pathname, className = "" }: { item: PublicNavigationLink; pathname: string; className?: string }) {
+function DesktopLink({ item, pathname, className = "", onNavigate }: { item: PublicNavigationLink; pathname: string; className?: string; onNavigate?: () => void }) {
   if (item.href === null) return <span className={className}>{item.label}</span>;
-  return <NavigationLink link={item} ariaCurrent={isOwnLinkActive(item, pathname) ? "page" : undefined} className={className}>{item.label}</NavigationLink>;
+  return <NavigationLink link={item} ariaCurrent={isOwnLinkActive(item, pathname) ? "page" : undefined} className={className} onClick={onNavigate}>{item.label}</NavigationLink>;
 }
 
-function DistrictBranches({ items, pathname }: { items: PublicNavigationLink[]; pathname: string }) {
-  return <div className="mt-2 space-y-2">{items.map((side) => <details key={side.id} className="border-t border-border pt-2"><summary className="min-h-9 cursor-pointer list-none text-xs font-semibold text-accent-soft marker:hidden">{side.label} <span aria-hidden="true">▾</span></summary><div className="grid grid-cols-2 gap-x-3 pb-2 pt-1 xl:grid-cols-3">{side.children.map((district) => <DesktopLink key={district.id} item={district} pathname={pathname} className="flex min-h-8 items-center text-xs text-muted transition-colors hover:text-ivory" />)}</div></details>)}</div>;
+function DistrictBranches({ items, pathname, onNavigate }: { items: PublicNavigationLink[]; pathname: string; onNavigate: () => void }) {
+  return <div className="mt-2 space-y-2">{items.map((side) => <details key={side.id} className="border-t border-border pt-2"><summary className="min-h-9 cursor-pointer list-none text-xs font-semibold text-accent-soft marker:hidden">{side.label} <span aria-hidden="true">▾</span></summary><div className="grid grid-cols-2 gap-x-3 pb-2 pt-1 xl:grid-cols-3">{side.children.map((district) => <DesktopLink key={district.id} item={district} pathname={pathname} className="flex min-h-8 items-center text-xs text-muted transition-colors hover:text-ivory" onNavigate={onNavigate} />)}</div></details>)}</div>;
 }
 
-function DesktopPanel({ item, pathname }: { item: PublicNavigationLink; pathname: string }) {
-  return <div className="max-h-[calc(100vh-8rem)] w-[min(calc(100vw-2rem),28rem)] overflow-y-auto border border-[var(--accent-border-soft)] bg-background-deep p-5 shadow-2xl shadow-black/40"><ul className="grid gap-1 sm:grid-cols-2">{item.children.map((child) => <li key={child.id}><DesktopLink item={child} pathname={pathname} className="flex min-h-11 items-center rounded-sm px-3 text-sm text-ivory transition-colors hover:bg-surface hover:text-accent-soft" />{child.children.length > 0 && <DistrictBranches items={child.children} pathname={pathname} />}</li>)}</ul></div>;
+function DesktopPanel({ item, pathname, onNavigate }: { item: PublicNavigationLink; pathname: string; onNavigate: () => void }) {
+  return <div className="max-h-[calc(100vh-8rem)] w-[min(calc(100vw-2rem),28rem)] overflow-y-auto border border-[var(--accent-border-soft)] bg-background-deep p-5 shadow-2xl shadow-black/40"><ul className="grid gap-1 sm:grid-cols-2">{item.children.map((child) => <li key={child.id}><DesktopLink item={child} pathname={pathname} className="flex min-h-11 items-center rounded-sm px-3 text-sm text-ivory transition-colors hover:bg-surface hover:text-accent-soft" onNavigate={onNavigate} />{child.children.length > 0 && <DistrictBranches items={child.children} pathname={pathname} onNavigate={onNavigate} />}</li>)}</ul></div>;
 }
 
 function MobileItem({ item, pathname, level, onNavigate }: { item: PublicNavigationLink; pathname: string; level: number; onNavigate?: () => void }) {
@@ -61,6 +61,6 @@ export default function HeaderNavigationLinks({ items, variant, onNavigate }: Pr
       const linkClassName = `relative py-2 transition-colors hover:text-accent-soft after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:bg-accent-soft after:transition-transform ${isActive ? "font-semibold text-accent-soft after:scale-x-100" : "after:scale-x-0 hover:after:scale-x-100"}`;
       return <div key={item.id} className="flex items-center gap-0.5 2xl:gap-1" onMouseEnter={() => hasChildren && setOpenItemID(item.id)} onFocus={(event) => { if ((event.target as HTMLElement).tagName === "A") setOpenItemID(hasChildren ? item.id : null); }}><DesktopLink item={item} pathname={pathname} className={linkClassName} />{hasChildren && <button type="button" aria-label={`${item.label} alt menüsünü ${isOpen ? "kapat" : "aç"}`} aria-expanded={isOpen} aria-controls={panelID} className="flex size-6 2xl:size-7 items-center justify-center rounded-full text-accent-soft hover:bg-surface hover:text-accent" onClick={() => setOpenItemID((current) => current === item.id ? null : item.id)}><span aria-hidden="true">▾</span></button>}</div>;
     })}
-    {openItem && <div id={`desktop-submenu-${openItem.id}`} className="absolute left-1/2 top-full z-50 mt-5 -translate-x-1/2 pt-2" onMouseEnter={cancelClose}><DesktopPanel item={openItem} pathname={pathname} /></div>}
+    {openItem && <div id={`desktop-submenu-${openItem.id}`} className="absolute left-1/2 top-full z-50 mt-5 -translate-x-1/2 pt-2" onMouseEnter={cancelClose}><DesktopPanel item={openItem} pathname={pathname} onNavigate={() => setOpenItemID(null)} /></div>}
   </div>;
 }

@@ -92,11 +92,11 @@ function workspacePrimaryNavigationItems(): PublicNavigationLink[] {
 function aboutNavigationItems(): PublicNavigationLink[] {
   return [
     internalLink("about", "Hakkımda", "/hakkimda"),
-    internalLink("biography", "Biyografi", "/hakkimda/biyografi"),
+    internalLink("biography", "Biyografi", "/hakkimda#biyografi"),
     internalLink(
       "education-certificates-diplomas",
       "Eğitim, Sertifikalar & Diplomalar",
-      "/hakkimda/egitim-sertifikalar-diplomalar",
+      "/hakkimda#egitim-sertifikalar",
     ),
   ];
 }
