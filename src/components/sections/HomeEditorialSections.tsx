@@ -49,7 +49,7 @@ export function IstanbulDiscovery() {
       id="istanbul"
       className="scroll-mt-14 border-b border-[var(--accent-border-soft)] bg-background text-ivory"
     >
-      <div className="mx-auto grid max-w-[1440px] gap-4 px-5 py-4 sm:px-8 md:grid-cols-[0.78fr_0.72fr_1.5fr] md:items-stretch md:gap-3 md:py-2.5 lg:grid-cols-[0.68fr_0.6fr_1.42fr] lg:gap-4 lg:px-10">
+      <div className="mx-auto grid max-w-[1440px] gap-4 px-5 py-4 sm:px-8 md:min-h-[9.25rem] md:grid-cols-[0.78fr_0.72fr_1.5fr] md:items-stretch md:gap-3 md:py-4 lg:grid-cols-[0.68fr_0.6fr_1.42fr] lg:gap-4 lg:px-10">
         <div className="flex flex-col justify-between border-l border-accent-soft pl-3">
           <div>
             <SectionMark>01 / İstanbul’u Keşfet</SectionMark>
@@ -68,7 +68,7 @@ export function IstanbulDiscovery() {
         </div>
 
         <div className="min-w-0 md:border-l md:border-border md:pl-3">
-          <div className="grid min-h-24 grid-cols-[1.2fr_0.8fr] items-center border border-border bg-surface px-3 py-2 md:min-h-0 md:px-2 md:py-1 lg:px-3">
+          <div className="grid min-h-24 grid-cols-[1.2fr_0.8fr] items-center border border-border bg-surface px-3 py-2 md:h-full md:min-h-0 md:px-3 md:py-2">
           <svg
             aria-hidden="true"
             viewBox="0 0 320 150"
@@ -101,7 +101,7 @@ export function IstanbulDiscovery() {
               <Link
                 key={district.slug}
                 href={getDistrictPath(district.slug)}
-                  className="group relative min-h-24 overflow-hidden border border-border bg-surface sm:min-h-28 md:min-h-[5rem]"
+                  className="group relative min-h-24 overflow-hidden border border-border bg-surface sm:min-h-28 md:min-h-[6rem]"
               >
                 <Image
                   src={featuredImages[district.slug as keyof typeof featuredImages]}
@@ -137,7 +137,7 @@ export function RealEstateIntelligence() {
       id="gayrimenkul-intelligence"
       className="scroll-mt-14 border-b border-[var(--accent-border-soft)] bg-background"
     >
-      <div className="mx-auto grid max-w-[1440px] gap-4 px-5 py-4 sm:px-8 md:grid-cols-[0.72fr_2.28fr] md:gap-3 md:py-2.5 lg:grid-cols-[0.68fr_2.62fr] lg:gap-4 lg:px-10">
+      <div className="mx-auto grid max-w-[1440px] gap-4 px-5 py-4 sm:px-8 md:min-h-[9.5rem] md:grid-cols-[0.72fr_2.28fr] md:gap-3 md:py-4 lg:grid-cols-[0.68fr_2.62fr] lg:gap-4 lg:px-10">
         <div className="flex flex-col justify-between border-l border-accent-soft pl-3">
           <div>
             <SectionMark>02 / Gayrimenkul Intelligence</SectionMark>
@@ -173,11 +173,11 @@ export function RealEstateIntelligence() {
               );
 
               return href === null ? (
-                <div key={title} aria-disabled="true" className="group min-h-[3.8rem] bg-surface p-2 opacity-70">
+                <div key={title} aria-disabled="true" className="group min-h-[4.5rem] bg-surface p-2.5 opacity-70 lg:p-3">
                   {body}
                 </div>
               ) : (
-                <Link key={title} href={href} className="group min-h-[3.8rem] bg-surface p-2 transition-colors hover:bg-surface-soft">
+                <Link key={title} href={href} className="group min-h-[4.5rem] bg-surface p-2.5 transition-colors hover:bg-surface-soft lg:p-3">
                   {body}
                 </Link>
               );
@@ -185,7 +185,7 @@ export function RealEstateIntelligence() {
           </div>
           <div className="mt-2 grid grid-cols-3 gap-px border border-[var(--accent-border-soft)] bg-[var(--accent-border-soft)]">
             {plannedTools.map((tool) => (
-              <span key={tool} aria-disabled="true" className="bg-surface px-2 py-1 text-[8px] font-medium text-muted sm:text-[9px]">
+              <span key={tool} aria-disabled="true" className="bg-surface px-2.5 py-1.5 text-[8px] font-medium text-muted sm:text-[9px]">
                 {tool} <span className="text-accent-soft">· Yakında</span>
               </span>
             ))}
@@ -208,7 +208,7 @@ export function KnowledgeLibrary() {
       id="bilgi-kutuphanesi"
       className="scroll-mt-14 border-b border-[var(--accent-border-soft)] bg-background text-ivory"
     >
-      <div className="mx-auto grid max-w-[1440px] gap-4 px-5 py-4 sm:px-8 md:grid-cols-[0.72fr_2.28fr] md:gap-3 md:py-2.5 lg:grid-cols-[0.68fr_2.62fr] lg:gap-4 lg:px-10">
+      <div className="mx-auto grid max-w-[1440px] gap-4 px-5 py-4 sm:px-8 md:min-h-32 md:grid-cols-[0.72fr_2.28fr] md:gap-3 md:py-4 lg:grid-cols-[0.68fr_2.62fr] lg:gap-4 lg:px-10">
         <div className="border-l border-accent-soft pl-3">
           <SectionMark>04 / Bilgi Kütüphanesi</SectionMark>
           <h2 className="mt-1.5 text-[1.45rem] font-semibold leading-[0.96] md:text-[1.05rem] lg:text-[1.28rem]">
@@ -222,7 +222,7 @@ export function KnowledgeLibrary() {
             <Link
               key={title}
               href={href}
-              className="group relative min-h-16 overflow-hidden border border-[var(--accent-border-soft)] bg-surface p-2.5 sm:min-h-24 sm:p-3 lg:min-h-[5rem]"
+              className="group relative min-h-16 overflow-hidden border border-[var(--accent-border-soft)] bg-surface p-2.5 sm:min-h-24 sm:p-3 md:min-h-[6rem] lg:p-3.5"
             >
               <Image
                 src={image}

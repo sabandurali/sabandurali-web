@@ -14,8 +14,8 @@ export default function About({ id, content, compact = false }: AboutProps) {
         id={id}
         className="scroll-mt-14 border-y border-ink/20 bg-ivory text-ink"
       >
-        <div className="mx-auto grid max-w-[1440px] grid-cols-[5rem_1fr] gap-4 px-5 py-4 sm:grid-cols-[6rem_1fr] sm:px-8 md:grid-cols-[5.5rem_1.2fr_1fr] md:items-center md:gap-4 md:py-2.5 lg:gap-5 lg:px-10">
-          <div className="w-20 border border-[var(--accent-border-soft)] bg-ivory-soft p-1 sm:w-24 lg:w-[5.5rem]">
+        <div className="mx-auto grid max-w-[1440px] grid-cols-[5rem_1fr] gap-4 px-5 py-4 sm:grid-cols-[6rem_1fr] sm:px-8 md:min-h-[8.5rem] md:grid-cols-[6.5rem_1.2fr_1fr] md:items-center md:gap-5 md:py-4 lg:gap-6 lg:px-10">
+          <div className="w-20 border border-[var(--accent-border-soft)] bg-ivory-soft p-1 sm:w-24 md:w-[6.5rem]">
             <Image
               src={content.imageSrc ?? "/brand/saban-durali-profile.jpg"}
               alt={content.imageAlt}

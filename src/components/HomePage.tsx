@@ -83,7 +83,7 @@ export default async function HomePage({ content }: { content: HomeContent }) {
               ))}
             </div>
           ) : (
-            <p className="border border-[var(--accent-border-soft)] bg-surface px-3 py-3 text-[10px] leading-4 text-muted">
+            <p className="flex min-h-20 items-center border border-[var(--accent-border-soft)] bg-surface px-4 py-4 text-[10px] leading-4 text-muted md:min-h-24">
               {locale === "tr"
                 ? "Yayınlanmış analizler eklendikçe bu seçki burada yer alacak."
                 : "Published analysis will appear here as it becomes available."}
@@ -111,7 +111,7 @@ export default async function HomePage({ content }: { content: HomeContent }) {
               ))}
             </div>
           ) : (
-            <div className="border border-[var(--accent-border-soft)] bg-surface px-3 py-3 text-[10px] leading-4 text-muted">
+            <div className="flex min-h-28 flex-col justify-center border border-[var(--accent-border-soft)] bg-surface px-4 py-4 text-[10px] leading-4 text-muted md:min-h-32">
               <p>
                 {locale === "tr"
                   ? "İstanbul, şehir, mimari, sokak, hayvanlar ve doğa odaklı fotoğraf arşivi."
