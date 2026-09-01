@@ -170,7 +170,7 @@ export const homeContent = {
       label: "Hakkımda",
       titleLines: ["Şaban Durali"],
       paragraphs: [
-        "Gayrimenkul ve İstanbul, satış ve müzakere, araştırma ve analiz, yapay zekâ ve teknoloji, kitaplar ve öğrenme ile fotoğraf alanlarında çalışıyorum. Bu platformu yalnızca içerik yayımlamak için değil; araştırmak, öğrendiklerimi uygulamak ve sürdürülebilir bilgi üretmek için kuruyorum.",
+        "Gayrimenkul ve İstanbul, araştırma ve analiz, yapay zekâ ve teknoloji, satış ve müzakere ile yaşam boyu öğrenme alanlarında çalışıyorum. Bu platformda araştırdığım, öğrendiğim ve ürettiğim içerikleri paylaşıyorum.",
         "Uzun vadeli hedefim, yapay zekâ ve dijital sistemleri kullanarak eğitim, araştırma, danışmanlık ve bağımsız yayıncılık alanlarında değer üreten bir yapı oluşturmaktır.",
       ],
       linkLabel: "Hakkımda →",

@@ -12,7 +12,7 @@ export default function About({ id, content, compact = false }: AboutProps) {
     return (
       <section
         id={id}
-        className="scroll-mt-14 border-y border-ink/20 bg-[#F5EFE4] text-ink"
+        className="scroll-mt-14 border-y border-accent/60 bg-[#F5EFE4] text-ink"
       >
         <div className="mx-auto grid max-w-[1440px] grid-cols-[7rem_1fr] gap-4 px-5 py-7 sm:grid-cols-[9rem_1fr] sm:px-8 md:min-h-[13.5rem] md:grid-cols-[11.25rem_1.2fr_1fr] md:items-center md:gap-8 md:py-6 lg:gap-10 lg:px-10">
           <div className="w-28 border border-[var(--accent-border-soft)] bg-ivory-soft p-1.5 sm:w-36 md:w-[11.25rem] md:p-2">
@@ -33,7 +33,7 @@ export default function About({ id, content, compact = false }: AboutProps) {
             <h2 className="mt-3 font-serif text-3xl font-semibold leading-none text-ink lg:text-4xl">
               {content.titleLines.join(" ")}
             </h2>
-            <p className="mt-4 line-clamp-4 max-w-2xl text-xs leading-5 text-muted-dark md:line-clamp-3 lg:text-sm lg:leading-6">
+            <p className="mt-4 max-w-2xl text-xs leading-5 text-muted-dark lg:text-sm lg:leading-6">
               {content.paragraphs[0]}
             </p>
             {content.linkLabel && content.linkHref && (
