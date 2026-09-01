@@ -12,7 +12,7 @@ export default function About({ id, content, compact = false }: AboutProps) {
     return (
       <section
         id={id}
-        className="scroll-mt-14 border-y border-ink/20 bg-ivory text-ink"
+        className="scroll-mt-14 border-y border-ink/20 bg-[#F5EFE4] text-ink"
       >
         <div className="mx-auto grid max-w-[1440px] grid-cols-[7rem_1fr] gap-4 px-5 py-7 sm:grid-cols-[9rem_1fr] sm:px-8 md:min-h-[13.5rem] md:grid-cols-[11.25rem_1.2fr_1fr] md:items-center md:gap-8 md:py-6 lg:gap-10 lg:px-10">
           <div className="w-28 border border-[var(--accent-border-soft)] bg-ivory-soft p-1.5 sm:w-36 md:w-[11.25rem] md:p-2">
@@ -56,7 +56,7 @@ export default function About({ id, content, compact = false }: AboutProps) {
   }
 
   return (
-    <section id={id} className="scroll-mt-24 border-y border-[var(--accent-border-soft)] bg-ivory text-ink">
+    <section id={id} className="scroll-mt-24 border-y border-[var(--accent-border-soft)] bg-[#F5EFE4] text-ink">
       <div className="mx-auto max-w-[1440px] px-5 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-12">
         <div className="grid items-start gap-6 lg:grid-cols-[0.34fr_1fr_0.76fr] lg:gap-8">
           <div className="order-2 lg:order-1">

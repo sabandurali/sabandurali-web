@@ -15,7 +15,7 @@ export default function Hero({ anchors, content }: HeroProps) {
   ] as const;
 
   return (
-    <section className="relative min-h-[25rem] overflow-hidden border-b border-[var(--accent-border-soft)] bg-background-deep sm:min-h-[31rem] md:min-h-[29rem] lg:min-h-[32.5rem]">
+    <section className="relative min-h-[25rem] overflow-hidden border-b border-[var(--accent-border-soft)] bg-background sm:min-h-[31rem] md:min-h-[29rem] lg:min-h-[32.5rem]">
       <Image
         src="/brand/hero-istanbul-bogaz.jpg"
         alt=""

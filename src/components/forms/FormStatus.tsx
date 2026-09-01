@@ -40,7 +40,7 @@ export default function FormStatus({
   if (status === "error") {
     return (
       <p
-        className="mt-4 rounded-sm border border-accent bg-surface px-4 py-3 text-sm leading-6 text-ivory"
+        className="mt-4 rounded-sm border border-accent bg-[#223653] px-4 py-3 text-sm leading-6 text-ivory"
         role="alert"
       >
         {errorKind === "configuration"
@@ -52,7 +52,7 @@ export default function FormStatus({
 
   return (
     <div
-      className="mt-4 rounded-sm border border-accent bg-surface px-4 py-4"
+      className="mt-4 rounded-sm border border-accent bg-[#223653] px-4 py-4"
       role="status"
       aria-live="polite"
       aria-atomic="true"

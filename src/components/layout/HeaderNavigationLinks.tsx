@@ -26,7 +26,7 @@ function DistrictBranches({ items, pathname }: { items: PublicNavigationLink[]; 
 }
 
 function DesktopPanel({ item, pathname }: { item: PublicNavigationLink; pathname: string }) {
-  return <div className="max-h-[calc(100vh-8rem)] w-[min(calc(100vw-2rem),28rem)] overflow-y-auto border border-[var(--accent-border-soft)] bg-[#0a0f18] p-5 shadow-2xl shadow-black/40"><ul className="grid gap-1 sm:grid-cols-2">{item.children.map((child) => <li key={child.id}><DesktopLink item={child} pathname={pathname} className="flex min-h-11 items-center rounded-sm px-3 text-sm text-ivory transition-colors hover:bg-surface hover:text-accent-soft" />{child.children.length > 0 && <DistrictBranches items={child.children} pathname={pathname} />}</li>)}</ul></div>;
+  return <div className="max-h-[calc(100vh-8rem)] w-[min(calc(100vw-2rem),28rem)] overflow-y-auto border border-[var(--accent-border-soft)] bg-background-deep p-5 shadow-2xl shadow-black/40"><ul className="grid gap-1 sm:grid-cols-2">{item.children.map((child) => <li key={child.id}><DesktopLink item={child} pathname={pathname} className="flex min-h-11 items-center rounded-sm px-3 text-sm text-ivory transition-colors hover:bg-surface hover:text-accent-soft" />{child.children.length > 0 && <DistrictBranches items={child.children} pathname={pathname} />}</li>)}</ul></div>;
 }
 
 function MobileItem({ item, pathname, level, onNavigate }: { item: PublicNavigationLink; pathname: string; level: number; onNavigate?: () => void }) {

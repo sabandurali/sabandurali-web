@@ -21,9 +21,9 @@ const intelligenceItems = [
 
 const plannedTools = ["Kira Çarpanı", "ROI", "İlçe Karşılaştır"] as const;
 
-export function SectionMark({ children }: { children: string }) {
+export function SectionMark({ children, tone = "dark" }: { children: string; tone?: "dark" | "light" }) {
   return (
-    <p className="flex items-center gap-2 text-[9px] font-semibold uppercase tracking-[0.2em] text-accent-soft after:h-px after:w-8 after:bg-accent/70 after:content-[''] sm:text-[10px]">
+    <p className={`flex items-center gap-2 text-[9px] font-semibold uppercase tracking-[0.2em] after:h-px after:w-8 after:bg-accent/70 after:content-[''] sm:text-[10px] ${tone === "light" ? "text-ink" : "text-accent-soft"}`}>
       {children}
     </p>
   );
@@ -47,56 +47,56 @@ export function IstanbulDiscovery() {
   return (
     <section
       id="istanbul"
-      className="scroll-mt-14 border-b border-[var(--accent-border-soft)] bg-background text-ivory"
+      className="scroll-mt-14 border-b border-[var(--accent-border-soft)] bg-[#E9E0CF] text-ink"
     >
       <div className="mx-auto grid max-w-[1440px] gap-5 px-5 py-7 sm:px-8 md:min-h-[16.5rem] md:grid-cols-[0.74fr_0.78fr_1.48fr] md:items-stretch md:gap-5 md:py-6 lg:gap-7 lg:px-10">
         <div className="flex flex-col justify-between border-l border-accent-soft pl-3">
           <div>
-            <SectionMark>01 / İstanbul’u Keşfet</SectionMark>
+            <SectionMark tone="light">01 / İstanbul’u Keşfet</SectionMark>
             <h2 className="mt-3 text-[1.85rem] font-semibold leading-[0.98] md:text-[1.65rem] lg:text-[2rem]">
               39 İlçe.
               <br />
               Derinlemesine rehberler.
             </h2>
           </div>
-          <p className="mt-4 max-w-xs text-xs leading-5 text-muted md:text-[11px] lg:text-sm lg:leading-6">
+          <p className="mt-4 max-w-xs text-xs leading-5 text-muted-dark md:text-[11px] lg:text-sm lg:leading-6">
             İstanbul’un Avrupa ve Anadolu yakalarındaki 39 ilçesine dair doğrulanmış rehberler.
           </p>
           <Link
             href={districtGuidePath}
-            className="mt-4 inline-flex min-h-8 items-center self-start text-[10px] font-semibold text-accent-soft hover:text-ivory"
+            className="mt-4 inline-flex min-h-8 items-center self-start text-[10px] font-semibold text-ink hover:text-accent-deep"
           >
             Tüm İlçeler →
           </Link>
         </div>
 
-        <div className="min-w-0 md:border-l md:border-border md:pl-3">
-          <div className="grid min-h-48 grid-cols-[1.2fr_0.8fr] items-center border border-border bg-surface px-4 py-5 md:h-full md:min-h-0 md:px-4 md:py-5 lg:px-5">
+        <div className="min-w-0 md:border-l md:border-ink/20 md:pl-3">
+          <div className="grid min-h-48 grid-cols-[1.2fr_0.8fr] items-center border border-ink/20 bg-[#F5EFE4] px-4 py-5 md:h-full md:min-h-0 md:px-4 md:py-5 lg:px-5">
           <svg
             aria-hidden="true"
             viewBox="0 0 320 150"
-            className="h-auto w-full text-accent-soft"
+            className="h-auto w-full text-accent-deep"
           >
             <path d="M8 82C34 63 64 66 86 48c21-17 42-12 61-30 9 24 4 42-13 55-26 19-59 18-82 38-14 12-28 13-44 8Z" fill="currentColor" opacity=".14" />
             <path d="M178 30c26 10 49 5 72 20 20 13 37 15 62 16-8 24-30 27-50 28-31 2-45 25-76 25-16 0-29-6-41-17 19-20 29-42 33-72Z" fill="currentColor" opacity=".14" />
             <path d="M151 18c8 26 9 48-2 67-8 14-7 32 8 51" fill="none" stroke="currentColor" strokeWidth="2" />
             <path d="M23 96c35-4 59-16 82-36m89 45c27-15 55-21 88-20" fill="none" stroke="currentColor" strokeDasharray="4 8" opacity=".6" />
           </svg>
-            <dl className="grid gap-2 border-l border-border pl-3 text-[9px]">
+            <dl className="grid gap-2 border-l border-ink/20 pl-3 text-[9px]">
             <div>
-              <dt className="font-serif text-2xl leading-none text-ivory lg:text-3xl">{european}</dt>
-              <dd className="mt-1 text-muted">Avrupa Yakası</dd>
+              <dt className="font-serif text-2xl leading-none text-ink lg:text-3xl">{european}</dt>
+              <dd className="mt-1 text-muted-dark">Avrupa Yakası</dd>
             </div>
             <div>
-              <dt className="font-serif text-2xl leading-none text-ivory lg:text-3xl">{asian}</dt>
-              <dd className="mt-1 text-muted">Anadolu Yakası</dd>
+              <dt className="font-serif text-2xl leading-none text-ink lg:text-3xl">{asian}</dt>
+              <dd className="mt-1 text-muted-dark">Anadolu Yakası</dd>
             </div>
             </dl>
           </div>
         </div>
 
-        <div className="min-w-0 md:border-l md:border-border md:pl-3">
-          <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-muted">
+        <div className="min-w-0 md:border-l md:border-ink/20 md:pl-3">
+          <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-muted-dark">
             Öne çıkan ilçe rehberleri
           </p>
           <div className="mt-3 grid grid-cols-3 gap-3">
@@ -138,7 +138,7 @@ export function RealEstateIntelligence() {
   return (
     <section
       id="gayrimenkul-intelligence"
-      className="scroll-mt-14 border-b border-[var(--accent-border-soft)] bg-background"
+      className="scroll-mt-14 border-b border-[var(--accent-border-soft)] bg-[#16243A]"
     >
       <div className="mx-auto grid max-w-[1440px] gap-5 px-5 py-7 sm:px-8 md:min-h-[13rem] md:grid-cols-[0.72fr_2.28fr] md:gap-5 md:py-6 lg:grid-cols-[0.68fr_2.62fr] lg:gap-7 lg:px-10">
         <div className="flex flex-col justify-between border-l border-accent-soft pl-3">
@@ -176,11 +176,11 @@ export function RealEstateIntelligence() {
               );
 
               return href === null ? (
-                <div key={title} aria-disabled="true" className="group min-h-28 bg-surface p-4 opacity-70">
+                <div key={title} aria-disabled="true" className="group min-h-28 bg-[#202E46] p-4 opacity-70">
                   {body}
                 </div>
               ) : (
-                <Link key={title} href={href} className="group min-h-28 bg-surface p-4 transition-colors hover:bg-surface-soft">
+                <Link key={title} href={href} className="group min-h-28 bg-[#202E46] p-4 transition-colors hover:bg-surface-soft">
                   {body}
                 </Link>
               );
@@ -188,7 +188,7 @@ export function RealEstateIntelligence() {
           </div>
           <div className="mt-3 grid grid-cols-3 gap-px border border-[var(--accent-border-soft)] bg-[var(--accent-border-soft)]">
             {plannedTools.map((tool) => (
-              <span key={tool} aria-disabled="true" className="bg-surface px-3 py-2.5 text-[8px] font-medium text-muted sm:text-[10px]">
+              <span key={tool} aria-disabled="true" className="bg-[#202E46] px-3 py-2.5 text-[8px] font-medium text-muted sm:text-[10px]">
                 {tool} <span className="text-accent-soft">· Yakında</span>
               </span>
             ))}
@@ -209,7 +209,7 @@ export function KnowledgeLibrary() {
   return (
     <section
       id="bilgi-kutuphanesi"
-      className="scroll-mt-14 border-b border-[var(--accent-border-soft)] bg-background text-ivory"
+      className="scroll-mt-14 border-b border-[var(--accent-border-soft)] bg-[#30283A] text-ivory"
     >
       <div className="mx-auto grid max-w-[1440px] gap-4 px-5 py-5 sm:px-8 md:min-h-[14.5rem] md:grid-cols-[0.72fr_2.28fr] md:gap-5 md:py-6 lg:grid-cols-[0.68fr_2.62fr] lg:gap-7 lg:px-10">
         <div className="border-l border-accent-soft pl-3">

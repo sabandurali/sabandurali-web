@@ -10,7 +10,7 @@ type ContactFormProps = {
 };
 
 const fieldClassName =
-  "mt-3 min-h-11 w-full rounded-sm border border-border bg-background px-4 py-3 text-base text-ivory outline-none transition-colors placeholder:text-placeholder hover:border-accent focus:border-accent motion-reduce:transition-none";
+  "mt-3 min-h-11 w-full rounded-sm border border-border bg-[#14243A] px-4 py-3 text-base text-ivory outline-none transition-colors placeholder:text-placeholder hover:border-accent focus:border-accent motion-reduce:transition-none";
 
 export default function ContactForm({ content }: ContactFormProps) {
   const { errorKind, handleSubmit, resetStatus, status } =
@@ -27,7 +27,7 @@ export default function ContactForm({ content }: ContactFormProps) {
       className="space-y-4 border-t border-border pt-6 sm:pt-8"
     >
       <fieldset disabled={isLoading} className="space-y-4 border-0 p-0">
-        <div className="grid gap-4 border border-border bg-surface/70 p-5 sm:grid-cols-2 sm:p-6">
+        <div className="grid gap-4 border border-border bg-[#223653] p-5 sm:grid-cols-2 sm:p-6">
           <div>
             <label htmlFor="contact-name">
               <span className="font-medium leading-6 text-ivory">
@@ -69,7 +69,7 @@ export default function ContactForm({ content }: ContactFormProps) {
           </div>
         </div>
 
-        <div className="border border-border bg-surface/70 p-5 sm:p-6">
+        <div className="border border-border bg-[#223653] p-5 sm:p-6">
           <label htmlFor="contact-subject">
             <span className="font-medium leading-6 text-ivory">
               {content.fields.subject}
@@ -96,7 +96,7 @@ export default function ContactForm({ content }: ContactFormProps) {
           </select>
         </div>
 
-        <div className="border border-border bg-surface/70 p-5 sm:p-6">
+        <div className="border border-border bg-[#223653] p-5 sm:p-6">
           <label htmlFor="contact-message">
             <span className="font-medium leading-6 text-ivory">
               {content.fields.message}
@@ -145,7 +145,7 @@ export default function ContactForm({ content }: ContactFormProps) {
           <button
             type="submit"
             disabled={isLoading}
-            className="flex min-h-12 w-full items-center justify-center rounded-sm bg-accent px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-accent-strong disabled:cursor-not-allowed disabled:opacity-45 motion-reduce:transition-none sm:w-auto sm:min-w-56"
+            className="flex min-h-12 w-full items-center justify-center rounded-sm bg-accent px-6 py-3 text-sm font-semibold text-ink transition-colors hover:bg-accent-strong disabled:cursor-not-allowed disabled:opacity-45 motion-reduce:transition-none sm:w-auto sm:min-w-56"
           >
             {isLoading
               ? content.submission.submitting

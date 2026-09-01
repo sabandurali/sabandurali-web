@@ -15,7 +15,7 @@ export default async function Footer({ id, content, compact = false }: FooterPro
   return (
     <footer
       id={id}
-      className="scroll-mt-24 border-t border-[var(--accent-border-soft)] bg-background"
+      className="scroll-mt-24 border-t border-[var(--accent-border-soft)] bg-background-deep"
     >
       <div className={`mx-auto grid max-w-[1440px] px-5 sm:px-8 md:grid-cols-[0.9fr_1.1fr] md:items-center lg:px-10 ${compact ? "gap-6 py-5 md:min-h-[7.5rem]" : "gap-5 py-8 sm:py-10"}`}>
         <div className="flex items-center gap-3">

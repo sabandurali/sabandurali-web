@@ -18,7 +18,7 @@ export default function DistrictNewsListPage({ district, news, page }: { distric
   const href = (target: number) => `${getDistrictPath(district.slug)}/haberler${target === 1 ? "" : `?sayfa=${target}`}`;
   return <div id="top" lang="tr">
     <Header locale="tr" anchors={home.anchors} content={home.header} homeHref="/" anchorPrefix="/" languageHrefs={{ tr: href(currentPage), en: "/en" }} />
-    <main className="px-4 py-10 sm:px-6 sm:py-14 lg:py-18"><div className="mx-auto max-w-6xl">
+    <main className="bg-[#11273A] px-4 py-10 [--surface:#1D3D55] sm:px-6 sm:py-14 lg:py-18"><div className="mx-auto max-w-6xl">
       <nav aria-label="Breadcrumb" className="text-sm text-muted"><Link className="text-accent-soft hover:text-ivory" href={districtGuidePath}>İstanbul İlçe Rehberi</Link><span aria-hidden="true"> / </span><Link className="text-accent-soft hover:text-ivory" href={getDistrictPath(district.slug)}>{district.name}</Link><span aria-hidden="true"> / </span><span>İlçeden Haberler</span></nav>
       <header className="border-b border-border py-10 sm:py-14"><p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent-soft">07 — İLÇEDEN HABERLER</p><h1 className="mt-4 text-5xl text-ivory">{district.name} Haberleri</h1><p className="mt-4 max-w-3xl text-muted">Başlık, özgün kısa özet, tarih ve kaynak bağlantılarıyla yerel gelişmeler.</p></header>
       {visibleNews.length === 0 ? <p className="mt-8 border border-border bg-surface p-5 text-muted">Bu ilçe için yayımlanmış haber bulunmuyor.</p> : <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">{visibleNews.map((item) => <DistrictNewsCard key={item.id} news={item} />)}</div>}

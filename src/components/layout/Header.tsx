@@ -36,7 +36,7 @@ export default async function Header({
   );
 
   return (
-    <header className="border-b border-[var(--accent-border-soft)] bg-background">
+    <header className="border-b border-[var(--accent-border-soft)] bg-background-deep">
       <div className={`relative mx-auto flex max-w-[1440px] items-center justify-between gap-4 px-4 py-1.5 sm:px-6 min-[1360px]:px-8 2xl:px-10 ${compact ? "min-h-[50px] min-[1360px]:min-h-[52px]" : "min-h-[62px] py-2 min-[1360px]:min-h-[68px]"}`}>
         <a
           href={homeHref}

@@ -22,7 +22,7 @@ export default function PrivacyAcknowledgement({
   requiredLabel,
 }: PrivacyAcknowledgementProps) {
   return (
-    <div className="rounded-sm border border-border bg-surface/70 p-5 sm:p-6">
+    <div className="rounded-sm border border-border bg-[#223653] p-5 sm:p-6">
       <label htmlFor={id} className="flex cursor-pointer items-start gap-3">
         <input
           id={id}

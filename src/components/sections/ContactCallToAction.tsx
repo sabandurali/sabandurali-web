@@ -11,7 +11,7 @@ export default function ContactCallToAction({
   href,
 }: ContactCallToActionProps) {
   return (
-    <section className="border-y border-[var(--accent-border-soft)] bg-background-deep">
+    <section className="border-y border-[var(--accent-border-soft)] bg-surface-soft">
       <div className="mx-auto max-w-[1440px] px-5 py-5 sm:px-8 md:min-h-32 lg:px-10">
         <div className="flex min-h-[5rem] flex-col justify-center gap-4 border border-border bg-surface/40 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-10 sm:px-7">
           <div className="max-w-4xl sm:flex sm:items-baseline sm:gap-5">

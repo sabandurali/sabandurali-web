@@ -1,13 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  --background: #081220;
-  --background-deep: #081220;
+  --background: #101d32;
+  --background-deep: #07101c;
   --foreground: #f5f2ec;
-  --surface: #111a2b;
+  --surface: #16243a;
   --surface-soft: #17243a;
   --ivory: #f5f2ec;
-  --ivory-soft: #eee7d9;
+  --ivory-soft: #f5efe4;
   --ink: #081220;
   --muted: #d9d8d2;
   --muted-dark: #46505c;

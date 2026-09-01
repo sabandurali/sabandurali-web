@@ -85,14 +85,14 @@ export default async function HomePage({ content }: { content: HomeContent }) {
               ))}
             </div>
           ) : (
-            <div className="relative min-h-32 overflow-hidden border border-[var(--accent-border-soft)] bg-surface md:min-h-40">
+            <div className="relative min-h-32 overflow-hidden border border-ink/20 bg-[#E4DACA] md:min-h-40">
               <Image src="/workspaces/arastirma-analiz.jpg" alt="" fill sizes="(min-width: 768px) 30vw, 100vw" className="object-cover opacity-30" />
-              <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,12,22,0.48),rgba(5,12,22,0.97)_55%)]" />
+              <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(240,233,222,0.52),rgba(240,233,222,0.98)_55%)]" />
               <div className="relative ml-auto flex min-h-32 max-w-[68%] flex-col justify-center px-5 py-4 md:min-h-40 md:px-8">
-                <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-accent-soft">
+                <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-accent-deep">
                   {locale === "tr" ? "Yayın seçkisi" : "Editorial selection"}
                 </p>
-                <p className="mt-3 max-w-xl font-serif text-lg leading-snug text-ivory md:text-xl">
+                <p className="mt-3 max-w-xl font-serif text-lg leading-snug text-ink md:text-xl">
                   {locale === "tr"
                     ? "Yayınlanmış analizler eklendikçe bu seçki gerçek içeriklerle şekillenecek."
                     : "This selection will take shape with published analysis as it becomes available."}

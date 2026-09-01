@@ -24,7 +24,7 @@ export default function ContactPage({ content }: ContactPageProps) {
         anchorPrefix={homePath}
         languageHrefs={contactPaths}
       />
-      <main className="px-4 py-10 sm:px-6 sm:py-14 lg:py-18">
+      <main className="bg-[#182A42] px-4 py-10 sm:px-6 sm:py-14 lg:py-18">
         <div className="mx-auto max-w-3xl">
           <header className="mb-8 border-b border-border pb-8 sm:mb-10 sm:pb-10">
             <p className="text-xs font-semibold tracking-[0.22em] text-accent-soft">
