@@ -132,7 +132,7 @@ export const bookPageContent = {
     quotesTitle: "Quotes",
     quotePageLabel: "Page",
     quoteNoteLabel: "Note",
-    translationLabel: "Türkçe oku",
+    translationLabel: "Read in Turkish",
     translationAriaLabel: "Read the Turkish translation of this book review",
     readingStatusLabels: {
       planned: "Planned",

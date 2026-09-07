@@ -84,6 +84,7 @@ export default function MobileMenu({
         <div className="flex flex-col p-2 text-sm text-ivory">
           <HeaderNavigationLinks
             items={items}
+            locale={locale}
             variant="mobile"
             onNavigate={closeMenu}
           />

@@ -1,19 +1,14 @@
 import Image from "next/image";
 import type { HeroContent, HomeAnchors } from "@/content/homeContent";
+import type { HomeEditorialContent } from "@/content/homeEditorialContent";
 
 type HeroProps = {
   anchors: HomeAnchors;
   content: HeroContent;
+  intelligence: HomeEditorialContent["heroIntelligence"];
 };
 
-export default function Hero({ anchors, content }: HeroProps) {
-  const verifiedIntelligence = [
-    ["39", "İlçe"],
-    ["25", "Avrupa Yakası"],
-    ["14", "Anadolu Yakası"],
-    ["Bağımsız", "Yayın"],
-  ] as const;
-
+export default function Hero({ anchors, content, intelligence }: HeroProps) {
   return (
     <section className="relative min-h-[25rem] overflow-hidden border-b border-[var(--accent-border-soft)] bg-background sm:min-h-[31rem] md:min-h-[29rem] lg:min-h-[32.5rem]">
       <Image
@@ -58,9 +53,9 @@ export default function Hero({ anchors, content }: HeroProps) {
         </div>
 
         <aside className="border border-white/20 bg-[#081220]/90 p-3 backdrop-blur-[2px] sm:p-4 lg:p-5">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-accent-soft">İstanbul verileri</p>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-accent-soft">{intelligence.label}</p>
           <dl className="mt-3 grid grid-cols-2 border-l border-t border-white/15 lg:mt-4">
-            {verifiedIntelligence.map(([value, label]) => (
+            {intelligence.items.map(([value, label]) => (
               <div key={label} className="min-h-12 border-b border-r border-white/15 p-2.5 sm:min-h-16 sm:p-3 lg:min-h-[5.5rem] lg:p-4">
                 <dt className="font-serif text-lg leading-none text-ivory sm:text-xl lg:text-2xl">{value}</dt>
                 <dd className="mt-1.5 text-[9px] leading-3 text-muted lg:text-[10px]">{label}</dd>

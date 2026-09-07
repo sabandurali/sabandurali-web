@@ -46,7 +46,7 @@ export default function PhotoDetailPage({
   ].filter((item): item is [string, string] => item[1] !== null);
   const labels = locale === "tr"
     ? { back: "Fotoğraflara dön", location: "Konum", date: "Tarih", photographer: "Fotoğrafçı", credit: "Kredi / lisans", exif: "EXIF", related: "İlgili fotoğraflar", translation: "English" }
-    : { back: "Back to photography", location: "Location", date: "Date", photographer: "Photographer", credit: "Credit / license", exif: "EXIF", related: "Related photographs", translation: "Türkçe" };
+    : { back: "Back to photography", location: "Location", date: "Date", photographer: "Photographer", credit: "Credit / license", exif: "EXIF", related: "Related photographs", translation: "View in Turkish" };
 
   return (
     <div id="top" lang={locale}>

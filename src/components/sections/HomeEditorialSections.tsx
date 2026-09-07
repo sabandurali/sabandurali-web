@@ -5,21 +5,8 @@ import {
   districts,
   getDistrictsBySide,
 } from "@/content/districts/district-registry";
-import {
-  districtGuidePath,
-  getDistrictPath,
-} from "@/content/districts/district-routes";
-
-const intelligenceItems = [
-  ["Değerleme Analizleri", "/gayrimenkul-ve-istanbul/gayrimenkul-rehberleri", "network"],
-  ["Yatırım Analizleri", "/gayrimenkul-ve-istanbul/arastirmalar", "research"],
-  ["Kira & Getiri Analizleri", null, "network"],
-  ["Mahalle Analizleri", districtGuidePath, "city"],
-  ["İmar & Plan Bilgileri", "/gayrimenkul-ve-istanbul/sehir-ve-imar", "city"],
-  ["Piyasa Araştırmaları", "/arastirma-ve-analiz", "research"],
-] as const;
-
-const plannedTools = ["Kira Çarpanı", "ROI", "İlçe Karşılaştır"] as const;
+import { getDistrictPath } from "@/content/districts/district-routes";
+import type { HomeEditorialContent } from "@/content/homeEditorialContent";
 
 export function SectionMark({ children, tone = "dark" }: { children: string; tone?: "dark" | "light" }) {
   return (
@@ -29,7 +16,11 @@ export function SectionMark({ children, tone = "dark" }: { children: string; ton
   );
 }
 
-export function IstanbulDiscovery() {
+export function IstanbulDiscovery({
+  content,
+}: {
+  content: HomeEditorialContent["discovery"];
+}) {
   const featuredImages = {
     esenler: "/workspaces/gayrimenkul-istanbul.jpg",
     arnavutkoy: "/brand/hero-istanbul-bogaz.jpg",
@@ -52,22 +43,34 @@ export function IstanbulDiscovery() {
       <div className="mx-auto grid max-w-[1440px] gap-5 px-5 py-7 sm:px-8 md:min-h-[16.5rem] md:grid-cols-[0.74fr_0.78fr_1.48fr] md:items-stretch md:gap-5 md:py-6 lg:gap-7 lg:px-10">
         <div className="flex flex-col justify-between border-l border-accent-soft pl-3">
           <div>
-            <SectionMark tone="light">01 / İstanbul’u Keşfet</SectionMark>
+            <SectionMark tone="light">{content.eyebrow}</SectionMark>
             <h2 className="mt-3 text-[1.85rem] font-semibold leading-[0.98] md:text-[1.65rem] lg:text-[2rem]">
-              39 İlçe.
-              <br />
-              Derinlemesine rehberler.
+              {content.titleLines.map((line, index) => (
+                <span key={line} className="block">
+                  {line}
+                  {index < content.titleLines.length - 1 && " "}
+                </span>
+              ))}
             </h2>
           </div>
           <p className="mt-4 max-w-xs text-xs leading-5 text-muted-dark md:text-[11px] lg:text-sm lg:leading-6">
-            İstanbul’un Avrupa ve Anadolu yakalarındaki 39 ilçesine dair doğrulanmış rehberler.
+            {content.description}
           </p>
-          <Link
-            href={districtGuidePath}
-            className="mt-4 inline-flex min-h-8 items-center self-start text-[10px] font-semibold text-ink hover:text-accent-deep"
-          >
-            Tüm İlçeler →
-          </Link>
+          {content.allDistricts.href === null ? (
+            <span
+              aria-disabled="true"
+              className="mt-4 inline-flex min-h-8 items-center self-start text-[10px] font-semibold text-ink"
+            >
+              {content.allDistricts.label}
+            </span>
+          ) : (
+            <Link
+              href={content.allDistricts.href}
+              className="mt-4 inline-flex min-h-8 items-center self-start text-[10px] font-semibold text-ink hover:text-accent-deep"
+            >
+              {content.allDistricts.label} →
+            </Link>
+          )}
         </div>
 
         <div className="min-w-0 md:border-l md:border-ink/20 md:pl-3">
@@ -85,11 +88,11 @@ export function IstanbulDiscovery() {
             <dl className="grid gap-2 border-l border-ink/20 pl-3 text-[9px]">
             <div>
               <dt className="font-serif text-2xl leading-none text-ink lg:text-3xl">{european}</dt>
-              <dd className="mt-1 text-muted-dark">Avrupa Yakası</dd>
+              <dd className="mt-1 text-muted-dark">{content.europeanSide}</dd>
             </div>
             <div>
               <dt className="font-serif text-2xl leading-none text-ink lg:text-3xl">{asian}</dt>
-              <dd className="mt-1 text-muted-dark">Anadolu Yakası</dd>
+              <dd className="mt-1 text-muted-dark">{content.asianSide}</dd>
             </div>
             </dl>
           </div>
@@ -97,15 +100,12 @@ export function IstanbulDiscovery() {
 
         <div className="min-w-0 md:border-l md:border-ink/20 md:pl-3">
           <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-muted-dark">
-            Öne çıkan ilçe rehberleri
+            {content.featuredLabel}
           </p>
           <div className="mt-3 grid grid-cols-3 gap-3">
-            {featured.map((district) => (
-              <Link
-                key={district.slug}
-                href={getDistrictPath(district.slug)}
-                  className="group relative min-h-36 overflow-hidden border border-border bg-surface sm:min-h-44 md:min-h-[11.5rem]"
-              >
+            {featured.map((district) => {
+              const card = (
+                <>
                 <Image
                   src={featuredImages[district.slug as keyof typeof featuredImages]}
                   alt=""
@@ -116,17 +116,36 @@ export function IstanbulDiscovery() {
                 <span className="absolute inset-0 bg-[linear-gradient(0deg,rgba(5,12,22,0.94),rgba(5,12,22,0.06)_72%)]" />
                 <span className="absolute inset-x-0 bottom-0 p-3 lg:p-4">
                   <span className="block text-[8px] font-semibold uppercase tracking-[0.16em] text-accent-soft">
-                    İlçe rehberi
+                    {content.guideLabel}
                   </span>
                   <span className="mt-1 block font-serif text-base leading-tight text-ivory sm:text-lg lg:text-xl">
                     {district.name}
                   </span>
                   <span className="mt-2 block text-[9px] font-semibold text-ivory group-hover:text-accent-soft">
-                    Detaylı Rehber →
+                    {content.guideAction.label}
+                    {content.guideAction.href !== null && " →"}
                   </span>
                 </span>
-              </Link>
-            ))}
+                </>
+              );
+
+              return content.guideAction.href === null ? (
+                <article
+                  key={district.slug}
+                  className="group relative min-h-36 overflow-hidden border border-border bg-surface sm:min-h-44 md:min-h-[11.5rem]"
+                >
+                  {card}
+                </article>
+              ) : (
+                <Link
+                  key={district.slug}
+                  href={getDistrictPath(district.slug)}
+                  className="group relative min-h-36 overflow-hidden border border-border bg-surface sm:min-h-44 md:min-h-[11.5rem]"
+                >
+                  {card}
+                </Link>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -134,7 +153,11 @@ export function IstanbulDiscovery() {
   );
 }
 
-export function RealEstateIntelligence() {
+export function RealEstateIntelligence({
+  content,
+}: {
+  content: HomeEditorialContent["realEstate"];
+}) {
   return (
     <section
       id="gayrimenkul-intelligence"
@@ -143,24 +166,26 @@ export function RealEstateIntelligence() {
       <div className="mx-auto grid max-w-[1440px] gap-5 px-5 py-7 sm:px-8 md:min-h-[13rem] md:grid-cols-[0.72fr_2.28fr] md:gap-5 md:py-6 lg:grid-cols-[0.68fr_2.62fr] lg:gap-7 lg:px-10">
         <div className="flex flex-col justify-between border-l border-accent-soft pl-3">
           <div>
-            <SectionMark>02 / Gayrimenkul Intelligence</SectionMark>
+            <SectionMark>{content.eyebrow}</SectionMark>
             <h2 className="mt-3 text-[1.85rem] font-semibold leading-[0.98] text-ivory md:text-[1.65rem] lg:text-[2rem]">
-              Veriye dayalı kararlar.
-              <br />
-              Daha doğru analiz.
+              {content.titleLines.map((line) => (
+                <span key={line} className="block">{line}</span>
+              ))}
             </h2>
           </div>
-          <Link
-            href="/gayrimenkul-ve-istanbul"
-            className="mt-4 inline-flex min-h-8 items-center self-start text-[10px] font-semibold text-accent-soft hover:text-ivory"
-          >
-            Alanı keşfet →
-          </Link>
+          {content.explore.href !== null && (
+            <Link
+              href={content.explore.href}
+              className="mt-4 inline-flex min-h-8 items-center self-start text-[10px] font-semibold text-accent-soft hover:text-ivory"
+            >
+              {content.explore.label} →
+            </Link>
+          )}
         </div>
 
         <div className="min-w-0 md:border-l md:border-border md:pl-3">
           <div className="grid grid-cols-2 gap-px border border-[var(--accent-border-soft)] bg-[var(--accent-border-soft)] sm:grid-cols-3 lg:grid-cols-6">
-            {intelligenceItems.map(([title, href, icon]) => {
+            {content.items.map(([title, href, icon]) => {
               const body = (
                 <>
                   <span className="flex size-8 items-center justify-center border border-accent/40 text-accent-soft">
@@ -170,7 +195,7 @@ export function RealEstateIntelligence() {
                     {title}
                   </h3>
                   <span className="mt-2 block text-[9px] text-muted group-hover:text-accent-soft">
-                    {href === null ? "Yakında" : "İncele →"}
+                    {href === null ? content.comingSoonLabel : `${content.viewLabel} →`}
                   </span>
                 </>
               );
@@ -187,9 +212,9 @@ export function RealEstateIntelligence() {
             })}
           </div>
           <div className="mt-3 grid grid-cols-3 gap-px border border-[var(--accent-border-soft)] bg-[var(--accent-border-soft)]">
-            {plannedTools.map((tool) => (
+            {content.plannedTools.map((tool) => (
               <span key={tool} aria-disabled="true" className="bg-[#202E46] px-3 py-2.5 text-[8px] font-medium text-muted sm:text-[10px]">
-                {tool} <span className="text-accent-soft">· Yakında</span>
+                {tool} <span className="text-accent-soft">· {content.comingSoonLabel}</span>
               </span>
             ))}
           </div>
@@ -199,13 +224,11 @@ export function RealEstateIntelligence() {
   );
 }
 
-export function KnowledgeLibrary() {
-  const cards = [
-    ["Araştırmalar & Analizler", "Piyasa, şehir ve teknoloji odağında kaynak temelli çalışmalar.", "/arastirma-ve-analiz", "/workspaces/arastirma-analiz.jpg"],
-    ["Kitaplar & Öğrenme", "Okuma notları, kitap incelemeleri ve sürekli öğrenme içerikleri.", "/kitaplar-ve-ogrenme", "/workspaces/kitaplar-ogrenme.jpg"],
-    ["Yapay Zekâ & Teknoloji", "Dijital dönüşüm, üretken yapay zekâ ve teknoloji notları.", "/yapay-zeka-ve-teknoloji", "/workspaces/yapay-zeka-teknoloji.jpg"],
-  ] as const;
-
+export function KnowledgeLibrary({
+  content,
+}: {
+  content: HomeEditorialContent["knowledge"];
+}) {
   return (
     <section
       id="bilgi-kutuphanesi"
@@ -213,15 +236,15 @@ export function KnowledgeLibrary() {
     >
       <div className="mx-auto grid max-w-[1440px] gap-4 px-5 py-5 sm:px-8 md:min-h-[14.5rem] md:grid-cols-[0.72fr_2.28fr] md:gap-5 md:py-6 lg:grid-cols-[0.68fr_2.62fr] lg:gap-7 lg:px-10">
         <div className="border-l border-accent-soft pl-3">
-          <SectionMark>04 / Bilgi Kütüphanesi</SectionMark>
+          <SectionMark>{content.eyebrow}</SectionMark>
           <h2 className="mt-3 text-[1.85rem] font-semibold leading-[0.98] md:text-[1.65rem] lg:text-[2rem]">
-            Öğren.
-            <br />Keşfet.
-            <br />Geliştir.
+            {content.titleLines.map((line) => (
+              <span key={line} className="block">{line}</span>
+            ))}
           </h2>
         </div>
         <div className="grid min-w-0 gap-3 md:border-l md:border-border md:pl-5 sm:grid-cols-3">
-          {cards.map(([title, description, href, image], index) => (
+          {content.cards.map(([title, description, href, image], index) => (
             <Link
               key={title}
               href={href}
@@ -247,7 +270,7 @@ export function KnowledgeLibrary() {
                     {description}
                   </span>
                   <span className="mt-3 block text-[10px] font-semibold text-accent-soft">
-                    Alanı aç →
+                    {content.openLabel} →
                   </span>
                 </span>
               </span>

@@ -48,6 +48,22 @@ function internalLink(
   };
 }
 
+function englishHomeAnchorLink(
+  id: string,
+  label: string,
+  hash: string,
+  children: PublicNavigationLink[] = [],
+): PublicNavigationLink {
+  return {
+    id,
+    href: `/en#${hash}`,
+    label,
+    external: false,
+    newTab: false,
+    children,
+  };
+}
+
 function districtSideLink(
   side: "avrupa" | "anadolu",
   label: string,
@@ -135,6 +151,63 @@ export function withTurkishHeaderShortcuts(
   ];
 }
 
+export function getEnglishHeaderNavigationItems(): PublicNavigationLink[] {
+  return [
+    internalLink("home", "Home", "/en"),
+    englishHomeAnchorLink(
+      "real-estate-istanbul",
+      "Real Estate & Istanbul",
+      "gayrimenkul-intelligence",
+      [
+        englishHomeAnchorLink(
+          "real-estate-intelligence",
+          "Real Estate Intelligence",
+          "gayrimenkul-intelligence",
+        ),
+      ],
+    ),
+    englishHomeAnchorLink(
+      "research-analysis",
+      "Research & Analysis",
+      "son-arastirmalar",
+      [
+        englishHomeAnchorLink(
+          "latest-research",
+          "Latest Research",
+          "son-arastirmalar",
+        ),
+        internalLink("all-articles", "All Articles", articleListPaths.en),
+      ],
+    ),
+    englishHomeAnchorLink(
+      "ai-technology",
+      "AI & Technology",
+      "bilgi-kutuphanesi",
+      [
+        englishHomeAnchorLink(
+          "ai-technology-library",
+          "AI & Technology Library",
+          "bilgi-kutuphanesi",
+        ),
+      ],
+    ),
+    internalLink("books-learning", "Books & Learning", bookListPaths.en, [
+      internalLink("book-reviews", "Book Reviews", bookListPaths.en),
+    ]),
+    internalLink("photography", "Photography", photoListPaths.en, [
+      internalLink(
+        "photography-archive",
+        "Photography Archive",
+        photoListPaths.en,
+      ),
+    ]),
+    englishHomeAnchorLink("about", "About", "about", [
+      englishHomeAnchorLink("about-saban-durali", "About Şaban Durali", "about"),
+    ]),
+    internalLink("contact", "Contact", contactPaths.en),
+  ];
+}
+
 type GetStaticHeaderNavigationItemsOptions = {
   locale: Locale;
   anchors: HomeAnchors;
@@ -210,7 +283,9 @@ export function getStaticHeaderNavigationItems({
     },
   ];
 
-  return locale === "tr" ? withTurkishHeaderShortcuts(items) : items;
+  return locale === "tr"
+    ? withTurkishHeaderShortcuts(items)
+    : getEnglishHeaderNavigationItems();
 }
 
 export function getStaticFooterGroups(
@@ -257,7 +332,9 @@ export function isHeaderNavigationItemActive(
   const prefix = item.activePathPrefix;
 
   const ownActive =
-    prefix === "/"
+    item.id === "home"
+      ? pathname === prefix
+      : prefix === "/"
       ? pathname === "/"
       : prefix !== undefined &&
         (pathname === prefix || pathname.startsWith(`${prefix}/`));

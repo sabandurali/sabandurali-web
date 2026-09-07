@@ -8,12 +8,13 @@ import {
   type HeaderNavigationVariant,
 } from "./navigation";
 import type { PublicNavigationLink } from "@/content/navigation/public-types";
+import type { Locale } from "@/content/homeContent";
 
-type Props = { items: PublicNavigationLink[]; variant: HeaderNavigationVariant; onNavigate?: () => void };
+type Props = { items: PublicNavigationLink[]; locale: Locale; variant: HeaderNavigationVariant; onNavigate?: () => void };
 
 function isOwnLinkActive(item: PublicNavigationLink, pathname: string) {
   const prefix = item.activePathPrefix;
-  return prefix === "/" ? pathname === "/" : prefix !== undefined && (pathname === prefix || pathname.startsWith(`${prefix}/`));
+  return item.id === "home" ? pathname === prefix : prefix === "/" ? pathname === "/" : prefix !== undefined && (pathname === prefix || pathname.startsWith(`${prefix}/`));
 }
 
 function DesktopLink({ item, pathname, className = "", onNavigate }: { item: PublicNavigationLink; pathname: string; className?: string; onNavigate?: () => void }) {
@@ -29,16 +30,17 @@ function DesktopPanel({ item, pathname, onNavigate }: { item: PublicNavigationLi
   return <div className="max-h-[calc(100vh-8rem)] w-[min(calc(100vw-2rem),28rem)] overflow-y-auto border border-[var(--accent-border-soft)] bg-background-deep p-5 shadow-2xl shadow-black/40"><ul className="grid gap-1 sm:grid-cols-2">{item.children.map((child) => <li key={child.id}><DesktopLink item={child} pathname={pathname} className="flex min-h-11 items-center rounded-sm px-3 text-sm text-ivory transition-colors hover:bg-surface hover:text-accent-soft" onNavigate={onNavigate} />{child.children.length > 0 && <DistrictBranches items={child.children} pathname={pathname} onNavigate={onNavigate} />}</li>)}</ul></div>;
 }
 
-function MobileItem({ item, pathname, level, onNavigate }: { item: PublicNavigationLink; pathname: string; level: number; onNavigate?: () => void }) {
+function MobileItem({ item, locale, pathname, level, onNavigate }: { item: PublicNavigationLink; locale: Locale; pathname: string; level: number; onNavigate?: () => void }) {
   const [isOpen, setIsOpen] = useState(false);
   const hasChildren = item.children.length > 0;
   const submenuID = `mobile-submenu-${item.id}`;
   const isActive = isHeaderNavigationItemActive(item, pathname);
   const linkClassName = `flex min-h-11 flex-1 items-center rounded-sm px-3 transition-colors hover:bg-surface hover:text-accent-soft ${isActive ? "font-semibold text-accent" : "text-ivory"}`;
-  return <div><div className="flex items-center gap-1">{item.href === null ? <button type="button" className={linkClassName} aria-expanded={isOpen} aria-controls={submenuID} onClick={() => setIsOpen((open) => !open)}>{item.label}<span aria-hidden="true" className="ml-auto">▾</span></button> : <NavigationLink link={item} ariaCurrent={isOwnLinkActive(item, pathname) ? "page" : undefined} className={linkClassName} onClick={onNavigate}>{item.label}</NavigationLink>}{hasChildren && item.href !== null && <button type="button" aria-label={`${item.label} alt menüsünü ${isOpen ? "kapat" : "aç"}`} aria-expanded={isOpen} aria-controls={submenuID} className="flex size-11 shrink-0 items-center justify-center rounded-sm text-accent-soft hover:bg-surface hover:text-accent" onClick={() => setIsOpen((open) => !open)}><span aria-hidden="true">▾</span></button>}</div>{hasChildren && <div id={submenuID} className={`${isOpen ? "block" : "hidden"} ml-3 border-l border-border pl-2 ${item.children.length > 10 ? "grid grid-cols-2 gap-x-1" : ""}`}>{item.children.map((child) => <MobileItem key={child.id} item={child} pathname={pathname} level={level + 1} onNavigate={onNavigate} />)}</div>}</div>;
+  const submenuLabel = locale === "tr" ? `${item.label} alt menüsünü ${isOpen ? "kapat" : "aç"}` : `${isOpen ? "Close" : "Open"} ${item.label} submenu`;
+  return <div><div className="flex items-center gap-1">{item.href === null ? <button type="button" className={linkClassName} aria-expanded={isOpen} aria-controls={submenuID} onClick={() => setIsOpen((open) => !open)}>{item.label}<span aria-hidden="true" className="ml-auto">▾</span></button> : <NavigationLink link={item} ariaCurrent={isOwnLinkActive(item, pathname) ? "page" : undefined} className={linkClassName} onClick={onNavigate}>{item.label}</NavigationLink>}{hasChildren && item.href !== null && <button type="button" aria-label={submenuLabel} aria-expanded={isOpen} aria-controls={submenuID} className="flex size-11 shrink-0 items-center justify-center rounded-sm text-accent-soft hover:bg-surface hover:text-accent" onClick={() => setIsOpen((open) => !open)}><span aria-hidden="true">▾</span></button>}</div>{hasChildren && <div id={submenuID} className={`${isOpen ? "block" : "hidden"} ml-3 border-l border-border pl-2 ${item.children.length > 10 ? "grid grid-cols-2 gap-x-1" : ""}`}>{item.children.map((child) => <MobileItem key={child.id} item={child} locale={locale} pathname={pathname} level={level + 1} onNavigate={onNavigate} />)}</div>}</div>;
 }
 
-export default function HeaderNavigationLinks({ items, variant, onNavigate }: Props) {
+export default function HeaderNavigationLinks({ items, locale, variant, onNavigate }: Props) {
   const pathname = usePathname();
   const [openItemID, setOpenItemID] = useState<string | null>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -50,7 +52,7 @@ export default function HeaderNavigationLinks({ items, variant, onNavigate }: Pr
     document.addEventListener("keydown", handleKeyDown);
     return () => { document.removeEventListener("keydown", handleKeyDown); if (closeTimer.current !== null) clearTimeout(closeTimer.current); };
   }, []);
-  if (variant === "mobile") return visibleItems.map((item) => <MobileItem key={item.id} item={item} pathname={pathname} level={0} onNavigate={onNavigate} />);
+  if (variant === "mobile") return visibleItems.map((item) => <MobileItem key={item.id} item={item} locale={locale} pathname={pathname} level={0} onNavigate={onNavigate} />);
   const openItem = visibleItems.find((item) => item.id === openItemID && item.children.length > 0);
   return <div className="static flex items-center gap-2 xl:gap-2.5 2xl:gap-3.5" onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setOpenItemID(null); }} onMouseEnter={cancelClose} onMouseLeave={scheduleClose}>
     {visibleItems.map((item) => {
@@ -59,7 +61,8 @@ export default function HeaderNavigationLinks({ items, variant, onNavigate }: Pr
       const isActive = isHeaderNavigationItemActive(item, pathname);
       const panelID = `desktop-submenu-${item.id}`;
       const linkClassName = `relative py-2 transition-colors hover:text-accent-soft after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:bg-accent-soft after:transition-transform ${isActive ? "font-semibold text-accent-soft after:scale-x-100" : "after:scale-x-0 hover:after:scale-x-100"}`;
-      return <div key={item.id} className="flex items-center gap-0.5 2xl:gap-1" onMouseEnter={() => hasChildren && setOpenItemID(item.id)} onFocus={(event) => { if ((event.target as HTMLElement).tagName === "A") setOpenItemID(hasChildren ? item.id : null); }}><DesktopLink item={item} pathname={pathname} className={linkClassName} />{hasChildren && <button type="button" aria-label={`${item.label} alt menüsünü ${isOpen ? "kapat" : "aç"}`} aria-expanded={isOpen} aria-controls={panelID} className="flex size-6 2xl:size-7 items-center justify-center rounded-full text-accent-soft hover:bg-surface hover:text-accent" onClick={() => setOpenItemID((current) => current === item.id ? null : item.id)}><span aria-hidden="true">▾</span></button>}</div>;
+      const submenuLabel = locale === "tr" ? `${item.label} alt menüsünü ${isOpen ? "kapat" : "aç"}` : `${isOpen ? "Close" : "Open"} ${item.label} submenu`;
+      return <div key={item.id} className="flex items-center gap-0.5 2xl:gap-1" onMouseEnter={() => hasChildren && setOpenItemID(item.id)} onFocus={(event) => { if ((event.target as HTMLElement).tagName === "A") setOpenItemID(hasChildren ? item.id : null); }}><DesktopLink item={item} pathname={pathname} className={linkClassName} />{hasChildren && <button type="button" aria-label={submenuLabel} aria-expanded={isOpen} aria-controls={panelID} className="flex size-6 2xl:size-7 items-center justify-center rounded-full text-accent-soft hover:bg-surface hover:text-accent" onClick={() => setOpenItemID((current) => current === item.id ? null : item.id)}><span aria-hidden="true">▾</span></button>}</div>;
     })}
     {openItem && <div id={`desktop-submenu-${openItem.id}`} className="absolute left-1/2 top-full z-50 mt-5 -translate-x-1/2 pt-2" onMouseEnter={cancelClose}><DesktopPanel item={openItem} pathname={pathname} onNavigate={() => setOpenItemID(null)} /></div>}
   </div>;

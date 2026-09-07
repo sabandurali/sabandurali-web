@@ -1,13 +1,15 @@
 import Image from "next/image";
 import type { AboutContent } from "@/content/homeContent";
+import type { HomeEditorialContent } from "@/content/homeEditorialContent";
 
 type AboutProps = {
   id: string;
   content: AboutContent;
+  manifestoLines: HomeEditorialContent["manifestoLines"];
   compact?: boolean;
 };
 
-export default function About({ id, content, compact = false }: AboutProps) {
+export default function About({ id, content, manifestoLines, compact = false }: AboutProps) {
   if (compact) {
     return (
       <section
@@ -47,8 +49,12 @@ export default function About({ id, content, compact = false }: AboutProps) {
           </div>
 
           <p className="col-span-2 border-l-2 border-accent pl-5 font-serif text-lg leading-snug text-ink md:col-span-1 md:border-l md:border-ink/20 md:pl-8 lg:text-2xl lg:leading-snug">
-            Bilgi, paylaşıldığında büyür.<br />Analiz, doğru sorularla başlar.<br />Değer,
-            tutarlılıkla oluşur.
+            {manifestoLines.map((line, index) => (
+              <span key={line}>
+                {line}
+                {index < manifestoLines.length - 1 && <br />}
+              </span>
+            ))}
           </p>
         </div>
       </section>
@@ -75,7 +81,7 @@ export default function About({ id, content, compact = false }: AboutProps) {
               {content.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
               {content.linkLabel && content.linkHref && <a href={content.linkHref} className="inline-flex min-h-11 items-center text-sm font-medium text-accent underline decoration-accent/40 underline-offset-4 transition-colors hover:text-ink motion-reduce:transition-none">{content.linkLabel}</a>}
             </div>
-            <p className="mt-5 border-l-2 border-accent pl-4 font-serif text-xl leading-snug text-ink">Bilgi, paylaşıldığında büyür. Analiz, doğru sorularla başlar. Değer, tutarlılıkla oluşur.</p>
+            <p className="mt-5 border-l-2 border-accent pl-4 font-serif text-xl leading-snug text-ink">{manifestoLines.join(" ")}</p>
           </div>
         </div>
       </div>

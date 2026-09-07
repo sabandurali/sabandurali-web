@@ -1,6 +1,7 @@
 import "server-only";
 import { cache } from "react";
 import {
+  getEnglishHeaderNavigationItems,
   getStaticFooterGroups,
   getStaticHeaderNavigationItems,
   withTurkishHeaderShortcuts,
@@ -52,6 +53,10 @@ export async function getHeaderNavigation(
   content: HeaderContent,
   anchorPrefix: string,
 ): Promise<PublicNavigationLink[]> {
+  if (locale === "en") {
+    return getEnglishHeaderNavigationItems();
+  }
+
   if (getPublicNavigationSource() === "static") {
     return getStaticHeaderNavigationItems({
       locale,
@@ -63,17 +68,8 @@ export async function getHeaderNavigation(
 
   const navigation = await getPayloadNavigation(locale);
 
-  if (locale === "en" && (navigation?.headerItems.length ?? 0) === 0) {
-    return getStaticHeaderNavigationItems({
-      locale,
-      anchors,
-      content,
-      anchorPrefix,
-    });
-  }
-
   const items = navigation?.headerItems ?? [];
-  return locale === "tr" ? withTurkishHeaderShortcuts(items) : items;
+  return withTurkishHeaderShortcuts(items);
 }
 
 export async function getFooterNavigation(

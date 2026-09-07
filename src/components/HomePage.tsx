@@ -14,6 +14,7 @@ import { getAllPublishedArticles } from "@/content/articles/article-data-source"
 import { articlePageContent } from "@/content/articles/article-page-content";
 import { articleListPaths } from "@/content/articles/article-routes";
 import type { HomeContent } from "@/content/homeContent";
+import { homeEditorialContent } from "@/content/homeEditorialContent";
 import {
   createHomeEntityJsonLd,
   serializeJsonLd,
@@ -34,6 +35,7 @@ function newestPublicationFirst(
 
 export default async function HomePage({ content }: { content: HomeContent }) {
   const locale = content.locale;
+  const editorial = homeEditorialContent[locale];
   const [publishedArticles, publishedPhotos] =
     await Promise.all([
       getAllPublishedArticles(locale),
@@ -61,14 +63,18 @@ export default async function HomePage({ content }: { content: HomeContent }) {
         compact
       />
       <main>
-        <Hero anchors={content.anchors} content={content.hero} />
-        <IstanbulDiscovery />
-        <RealEstateIntelligence />
+        <Hero
+          anchors={content.anchors}
+          content={content.hero}
+          intelligence={editorial.heroIntelligence}
+        />
+        <IstanbulDiscovery content={editorial.discovery} />
+        <RealEstateIntelligence content={editorial.realEstate} />
 
         <HomeListingSection
           content={content.listingSections.articles}
           description={locale === "tr" ? "Güncel araştırma ve analizlerden oluşan seçki." : "A selection of current research and analysis."}
-          eyebrow="03 / Son Araştırmalar"
+          eyebrow={editorial.researchEyebrow}
           href={articleListPaths[locale]}
           id="son-arastirmalar"
         >
@@ -102,12 +108,12 @@ export default async function HomePage({ content }: { content: HomeContent }) {
           )}
         </HomeListingSection>
 
-        <KnowledgeLibrary />
+        <KnowledgeLibrary content={editorial.knowledge} />
 
         <HomeListingSection
           content={content.listingSections.photography}
           description={locale === "tr" ? "İstanbul, şehir, mimari, sokak, hayvanlar ve doğa odaklı fotoğraf arşivi." : "A photography archive focused on Istanbul, city life, architecture, streets, animals and nature."}
-          eyebrow="05 / İstanbul’u Belgeliyorum"
+          eyebrow={editorial.photographyEyebrow}
           href={photoListPaths[locale]}
           id="fotograf"
         >
@@ -142,7 +148,12 @@ export default async function HomePage({ content }: { content: HomeContent }) {
           )}
         </HomeListingSection>
 
-        <About id={content.anchors.about} content={content.about} compact />
+        <About
+          id={content.anchors.about}
+          content={content.about}
+          manifestoLines={editorial.manifestoLines}
+          compact
+        />
 
         <ContactCallToAction
           content={content.contactCallToAction}

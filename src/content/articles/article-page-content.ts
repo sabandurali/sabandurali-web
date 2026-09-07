@@ -87,7 +87,7 @@ export const articlePageContent = {
     updatedLabel: "Updated",
     authorLabel: "Author",
     categoryFallback: "Uncategorised",
-    translationLabel: "Türkçe oku",
+    translationLabel: "Read in Turkish",
     translationAriaLabel: "Read the Turkish translation of this article",
     sourcesTitle: "Sources",
     sourceTypeLabel: "Source type",

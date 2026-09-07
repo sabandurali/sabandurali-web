@@ -67,6 +67,7 @@ export default async function Header({
         >
           <HeaderNavigationLinks
             items={items}
+            locale={locale}
             variant="desktop"
           />
         </nav>
