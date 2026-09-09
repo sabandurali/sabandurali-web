@@ -1,0 +1,3596 @@
+{
+  "schemaVersion": 1,
+  "districts": [
+    {
+      "district": "arnavutkoy",
+      "pdfSha256": "8dd3de0c26d735be6f8d798a0a727d4210f20edd0e881a72d0498a483367c2a3",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Arnavutköy’ün yerleşim geçmişini anlamak için Terkos çevresi ve İstanbul’a su taşıyan tarihî altyapı birlikte ele alınmalıdır.",
+        "history": "Kaymakamlığın tarihçesi, Terkos çevresindeki yerleşimleri İstanbul’un su temini ve savunma geçmişiyle ilişkilendirir. Bölgenin tarihini tek bir kuruluş öyküsüne indirgemek yerine, su yapıları ile eski yerleşimlerin izlerini ayrı ayrı değerlendirmek gerekir.",
+        "geography": "Terkos ve çevresindeki su kaynakları, ilçenin coğrafyasını okumak için temel odaklardan biridir. Durusu ve Terkos, mahalle listesinde ayrı idari kayıtlardır; semt adları ile mahalle sınırları birbirinin yerine kullanılmamalıdır."
+      },
+      "neighborhoods": [
+        "Adnan Menderes",
+        "Anadolu",
+        "Arnavutköy Merkez",
+        "Atatürk",
+        "Baklalı",
+        "Balaban",
+        "Boğazköy İstiklal",
+        "Bolluca",
+        "Boyalık",
+        "Çilingir",
+        "Deliklikaya",
+        "Dursunköy",
+        "Durusu",
+        "Fatih",
+        "Hacımaşlı",
+        "Hadımköy",
+        "Haraççı",
+        "Hastane",
+        "Hicret",
+        "İmrahor",
+        "İslambey",
+        "Karaburun",
+        "Karlıbayır",
+        "Mareşal Fevzi Çakmak",
+        "Mavigöl",
+        "Mehmet Akif Ersoy",
+        "Mustafa Kemal Paşa",
+        "Nenehatun",
+        "Ömerli",
+        "Sazlıbosna",
+        "Taşoluk",
+        "Tayakadın",
+        "Terkos",
+        "Yassıören",
+        "Yavuz Selim",
+        "Yeniköy",
+        "Yeşilbayır",
+        "Yunus Emre"
+      ],
+      "sources": [
+        {
+          "title": "Arnavutköy — Tarihçe",
+          "publisher": "Arnavutköy Kaymakamlığı",
+          "url": "https://arnavutkoy.gov.tr/arnavutkoy-tarihi",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary",
+            "geography"
+          ]
+        },
+        {
+          "title": "Arnavutköy mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/arnavutkoy-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    },
+    {
+      "district": "avcilar",
+      "pdfSha256": "ba57d83cd3be68473045a80b5e176c94ceb61572f8120e6f0cb2cddf9de448f3",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Avcılar, Marmara kıyısı ile Küçükçekmece Gölü arasında uzanan yerleşim alanlarıyla tanınır.",
+        "history": "Avcılar’ın tarihçesi, kıyı yerleşimleri ve tarımsal geçmişten kentleşmeye geçişi anlatır. Cumhuriyet dönemindeki göçler ve İstanbul’un batıya doğru büyümesi, eski yerleşimlerin çevresindeki yapılaşmanın gelişmesinde etkili olmuştur.",
+        "geography": "İlçenin güneyinde Marmara Denizi, doğusunda Küçükçekmece Gölü bulunur. Bu iki su alanı, kıyı ile iç kesimler arasındaki mekânsal farklılıkları anlamak için başlangıç noktasıdır."
+      },
+      "neighborhoods": [
+        "Ambarlı",
+        "Cihangir",
+        "Denizköşkler",
+        "Firuzköy",
+        "Gümüşpala",
+        "Merkez",
+        "Mustafa Kemal Paşa",
+        "Tahtakale",
+        "Üniversite",
+        "Yeşilkent"
+      ],
+      "sources": [
+        {
+          "title": "Avcılar — Tarihçe",
+          "publisher": "Avcılar Kaymakamlığı",
+          "url": "https://avcilar.gov.tr/tarihi",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary"
+          ]
+        },
+        {
+          "title": "Avcılar — Coğrafya / yerleşim",
+          "publisher": "Avcılar Kaymakamlığı",
+          "url": "https://avcilar.gov.tr/cografik-yapi",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "geography",
+            "summary"
+          ]
+        },
+        {
+          "title": "Avcılar mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/avcilar-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    },
+    {
+      "district": "bagcilar",
+      "pdfSha256": "b09911af14f47f03421033b5df3686906795162b309fce3004af207f73e2fe91",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Bağcılar’ın bugünkü ilçe kimliği, Mahmutbey, Kirazlı ve Güneşli çevresindeki yerleşimlerin kentleşme süreciyle bağlantılıdır.",
+        "history": "Bağcılar, 1992’de Bakırköy’den ayrılarak ilçe oldu. Kaymakamlığın tarihçesinde Mahmutbey, Kirazlı ve Güneşli, bu idari oluşumdan önceki yerleşim odakları olarak anlatılır.",
+        "geography": "Mahmutbey, Kirazlı ve Güneşli adları, ilçenin yerleşim geçmişini coğrafyayla birlikte okumaya yardımcı olur. Güncel mahalle listesi aşağıda ayrı verilir; tarihî köy adları bugünkü sınırların tamamını açıklamaz."
+      },
+      "neighborhoods": [
+        "100. Yıl",
+        "15 Temmuz",
+        "Bağlar",
+        "Barbaros",
+        "Çınar",
+        "Demirkapı",
+        "Fatih",
+        "Fevzi Çakmak",
+        "Göztepe",
+        "Güneşli",
+        "Hürriyet",
+        "İnönü",
+        "Kazım Karabekir",
+        "Kemalpaşa",
+        "Kirazlı",
+        "Mahmutbey",
+        "Merkez",
+        "Sancaktepe",
+        "Yavuz Selim",
+        "Yenigün",
+        "Yenimahalle",
+        "Yıldıztepe"
+      ],
+      "sources": [
+        {
+          "title": "Bağcılar — Tarihçe",
+          "publisher": "Bağcılar Kaymakamlığı",
+          "url": "https://bagcilar.gov.tr/tarihce",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary",
+            "geography"
+          ]
+        },
+        {
+          "title": "Bağcılar mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/bagcilar-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    },
+    {
+      "district": "bahcelievler",
+      "pdfSha256": "b5475bde169222488c537893bbff74dfcf2f306ae0408e89f40eb5055bf0228f",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Bahçelievler’in kentleşme öyküsünde eski yerleşimler, ana yollar ve İstanbul’un batıya büyümesi birlikte yer alır.",
+        "history": "Bahçelievler, 1992’de Bakırköy’den ayrılarak ilçe statüsü kazandı. Daha eski yerleşimlerin geçmişi ile bugünkü idari ilçenin kuruluşu farklı zaman ölçeklerinde değerlendirilmelidir.",
+        "geography": "Belediyeleşme öncesindeki yerleşim dokusunun değişiminde Londra Asfaltı çevresindeki gelişme etkili oldu. İlçeyi tanırken yol çevresinde büyüyen yerleşimlerle mahallelerin kendi geçmişini birlikte okumak yararlıdır."
+      },
+      "neighborhoods": [
+        "Bahçelievler",
+        "Cumhuriyet",
+        "Çobançeşme",
+        "Fevzi Çakmak",
+        "Hürriyet",
+        "Kocasinan Merkez",
+        "Siyavuşpaşa",
+        "Soğanlı",
+        "Şirinevler",
+        "Yenibosna Merkez",
+        "Zafer"
+      ],
+      "sources": [
+        {
+          "title": "Bahçelievler — Tarihçe",
+          "publisher": "Bahçelievler Kaymakamlığı",
+          "url": "https://bahcelievler.gov.tr/tarihce",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary"
+          ]
+        },
+        {
+          "title": "Bahçelievler — Coğrafya / yerleşim",
+          "publisher": "Bahçelievler Kaymakamlığı",
+          "url": "https://bahcelievler.gov.tr/bahcelievler-in-tarihcesi",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "geography",
+            "summary"
+          ]
+        },
+        {
+          "title": "Bahçelievler mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/bahcelievler-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        },
+        {
+          "title": "Bahçelievler Belediyesi — mahalleler",
+          "publisher": "Bahçelievler Belediyesi",
+          "url": "https://www.bahcelievler.istanbul/mahalleler",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
+        "specificReview": "Antik Hebdomon/Hepdemon yerleşimini bugünkü ilçeye eşitleyen anlatım çıkarıldı."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    },
+    {
+      "district": "bakirkoy",
+      "pdfSha256": "a1abc6283a41cae0ed75856e1f6ee35794d24639476fea3c0d387fcdcd54cc97",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Bakırköy, eski Makriköy yerleşiminin tarihî mirasını taşıyan bir İstanbul ilçesidir.",
+        "history": "Makriköy adı 1925’te Bakırköy olarak değiştirildi; yerleşim 1926’da ilçe oldu. Kaymakamlık tarihçesindeki eski çağ anlatıları yerine, bu rehberde açıkça izlenebilen yakın dönem idari değişim esas alınmıştır.",
+        "geography": "Bakırköy’ün tarihî merkezi ile sonradan gelişen mahalleleri aynı yerleşim dönemine ait değildir. Ataköy’ün kısım adları, ayrı birer ilçe değil, aşağıdaki resmî mahalle kayıtlarının parçalarıdır."
+      },
+      "neighborhoods": [
+        "Ataköy 1. Kısım",
+        "Ataköy 2. 5. 6. Kısım",
+        "Ataköy 3-4-11. Kısım",
+        "Ataköy 7-8-9-10. Kısım",
+        "Basınköy",
+        "Cevizlik",
+        "Kartaltepe",
+        "Osmaniye",
+        "Sakızağacı",
+        "Şenlikköy",
+        "Yenimahalle",
+        "Yeşilköy",
+        "Yeşilyurt",
+        "Zeytinlik",
+        "Zuhuratbaba"
+      ],
+      "sources": [
+        {
+          "title": "Bakırköy — Tarihçe",
+          "publisher": "Bakırköy Kaymakamlığı",
+          "url": "https://bakirkoy.gov.tr/tarihce",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary",
+            "geography"
+          ]
+        },
+        {
+          "title": "Bakırköy mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/bakirkoy-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
+        "specificReview": "Ataköy kısımları dört birleşik mahalle kaydı; tek tek bağımsız mahallelere bölünmedi. Tarihçedeki Konstantin/384 anlatımı kullanılmadı."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    },
+    {
+      "district": "basaksehir",
+      "pdfSha256": "c9bb748f71a263c2e770afa509f858c7a2388af5b11663fe96b8b5864cfc1cd2",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Başakşehir, farklı yerleşimlerin bir araya gelmesiyle oluşmuş; daha eski su ve üretim yapılarının izlerini de taşıyan bir ilçedir.",
+        "history": "Başakşehir ilçesi 2008’de kuruldu. Belediyenin tarihçesi, bu yeni idari yapıdan önce bölgede var olan yerleşimleri, Şamlar çevresindeki su yapılarını ve baruthane geçmişini ayrı katmanlar halinde ele alır.",
+        "geography": "Bahçeşehir, Kayabaşı ve Şamlar çevresi, ilçenin yerleşim coğrafyasını anlamak için farklı odaklar sunar. Kayaşehir gibi yerleşim adları ile resmî mahalle adları karıştırılmamalıdır; idari liste aşağıda verilmiştir."
+      },
+      "neighborhoods": [
+        "Altınşehir",
+        "Bahçeşehir 1. Kısım",
+        "Bahçeşehir 2. Kısım",
+        "Başak",
+        "Başakşehir",
+        "Güvercintepe",
+        "Kayabaşı",
+        "Şahintepe",
+        "Şamlar",
+        "Ziya Gökalp"
+      ],
+      "sources": [
+        {
+          "title": "Başakşehir — Tarihçe",
+          "publisher": "Başakşehir Belediyesi",
+          "url": "https://www.basaksehir.bel.tr/basaksehir-tarihcesi",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary",
+            "geography"
+          ]
+        },
+        {
+          "title": "Başakşehir mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/basaksehir-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        },
+        {
+          "title": "Başakşehir mahalle listesi — yazım kontrolü",
+          "publisher": "Başakşehir Belediyesi",
+          "url": "https://www.basaksehir.bel.tr/muhtarliklar",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
+        "specificReview": "İBB Şahintepesi yazıyor; belediye muhtarlık sayfasındaki Şahintepe esas alındı. Kayaşehir ayrı mahalle olarak eklenmedi."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    },
+    {
+      "district": "bayrampasa",
+      "pdfSha256": "a19bd5355adac7442f9f5a29822c075e1aadc248673fe513f08bf632b7f7dcc8",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Bayrampaşa’nın yakın dönem geçmişinde Sağmalcılar yerleşimi, göç ve sanayileşme belirleyici yer tutar.",
+        "history": "Kaymakamlık tarihçesi, Balkanlardan gelen göçmenlerin yerleşmesini ve 1950’lerden itibaren atölyeler çevresindeki büyümeyi anlatır. Tarımsal kullanımlardan işçi yerleşimlerine geçiş, ilçenin kentleşme öyküsünün ana başlıklarından biridir.",
+        "geography": "İlçe, İstanbul’un Avrupa Yakası’ndadır. Esenler ve Zeytinburnu çevresindeki yerleşimlerle komşuluğu, kent içindeki konumunu tarif eder; tarihî Sağmalcılar adı bugünkü bütün idari sınırların karşılığı olarak kullanılmaz."
+      },
+      "neighborhoods": [
+        "Altıntepsi",
+        "Cevatpaşa",
+        "İsmetpaşa",
+        "Kartaltepe",
+        "Kocatepe",
+        "Muratpaşa",
+        "Orta",
+        "Terazidere",
+        "Vatan",
+        "Yenidoğan",
+        "Yıldırım"
+      ],
+      "sources": [
+        {
+          "title": "Bayrampaşa — Tarihçe",
+          "publisher": "Bayrampaşa Kaymakamlığı",
+          "url": "https://bayrampasa.gov.tr/tarihce",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary"
+          ]
+        },
+        {
+          "title": "Bayrampaşa — Coğrafya / yerleşim",
+          "publisher": "Bayrampaşa Kaymakamlığı",
+          "url": "https://bayrampasa.gov.tr/cografya",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "geography",
+            "summary"
+          ]
+        },
+        {
+          "title": "Bayrampaşa mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/bayrampasa-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    },
+    {
+      "district": "besiktas",
+      "pdfSha256": "93d881cae2337aa43285016d15868e9becd0573265c901ca3f01eb48131f2a2e",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Beşiktaş’ın tarihî kimliğinde Dolmabahçe, Çırağan ve Yıldız sarayları önemli bir yer tutar.",
+        "history": "Osmanlı yönetiminin son döneminde sarayların bu çevrede yoğunlaşması, Beşiktaş’ın kent içindeki rolünü değiştirdi. Dolmabahçe, Cumhuriyet döneminde de Atatürk’ün İstanbul’daki yaşamı ve çalışmalarıyla ilişkilenen bir mekân oldu.",
+        "geography": "Saraylar ve çevrelerindeki yerleşimler, Beşiktaş’ı tek bir merkezden oluşan bir alan gibi okumamayı gerektirir. Dolmabahçe, Çırağan ve Yıldız, bu tarihî coğrafyanın farklı odaklarıdır."
+      },
+      "neighborhoods": [
+        "Abbasağa",
+        "Akat",
+        "Arnavutköy",
+        "Balmumcu",
+        "Bebek",
+        "Cihannüma",
+        "Dikilitaş",
+        "Etiler",
+        "Gayrettepe",
+        "Konaklar",
+        "Kuruçeşme",
+        "Kültür",
+        "Levazım",
+        "Levent",
+        "Mecidiye",
+        "Muradiye",
+        "Nisbetiye",
+        "Ortaköy",
+        "Sinanpaşa",
+        "Türkali",
+        "Ulus",
+        "Vişnezade",
+        "Yıldız"
+      ],
+      "sources": [
+        {
+          "title": "Beşiktaş — Tarihçe",
+          "publisher": "Beşiktaş Kaymakamlığı",
+          "url": "https://besiktas.gov.tr/tarihce",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary",
+            "geography"
+          ]
+        },
+        {
+          "title": "Beşiktaş mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/besiktas-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    },
+    {
+      "district": "beylikduzu",
+      "pdfSha256": "cc9978d60c7c3f708adc29e47c3d013606f40cd34ea245dc4f9384df6f9bb92f",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Beylikdüzü, İstanbul’un batısında Marmara kıyısına açılan bir ilçedir.",
+        "history": "Beylikdüzü’nün yakın dönem idari geçmişi, Beylikdüzü, Gürpınar ve Yakuplu yerleşimlerinin bir araya gelmesiyle şekillendi. İlçe 2008’de kuruldu; bu tarih bölgedeki yerleşimin başlangıcı anlamına gelmez.",
+        "geography": "Güneyde Marmara Denizi, doğuda Avcılar, kuzeyde Esenyurt ve batıda Büyükçekmece bulunur. Kıyı kesimleri ile iç mahalleler, ilçenin farklı mekânsal yüzlerini oluşturur."
+      },
+      "neighborhoods": [
+        "Adnan Kahveci",
+        "Barış",
+        "Büyükşehir",
+        "Cumhuriyet",
+        "Dereağzı",
+        "Gürpınar",
+        "Kavaklı",
+        "Marmara",
+        "Sahil",
+        "Yakuplu"
+      ],
+      "sources": [
+        {
+          "title": "Beylikdüzü — Tarihçe",
+          "publisher": "Beylikdüzü Kaymakamlığı",
+          "url": "https://www.beylikduzu.gov.tr/beylikduzu-tarihce",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary"
+          ]
+        },
+        {
+          "title": "Beylikdüzü — Coğrafya / yerleşim",
+          "publisher": "Beylikdüzü Kaymakamlığı",
+          "url": "https://beylikduzu.gov.tr/cografya",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "geography",
+            "summary"
+          ]
+        },
+        {
+          "title": "Beylikdüzü mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/beylikduzu-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    },
+    {
+      "district": "beyoglu",
+      "pdfSha256": "78ec178616ed2a0fe1a6989d9c2fba351888c714121b76df681cba0407cff96d",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Beyoğlu’nun kent kimliği, Galata ve Pera çevresindeki ticaret, kültür ve yerleşim geçmişiyle bağlantılıdır.",
+        "history": "Galata’daki ticaret ilişkileri ve Pera çevresinde gelişen elçilikler, ilçenin tarihindeki başlıca katmanlardır. Rehber, adın kökenine ilişkin anlatıları kesin bir kuruluş öyküsü olarak sunmaz.",
+        "geography": "Galata, Tophane ve Kasımpaşa, Beyoğlu’nun tarihî coğrafyasındaki farklı odaklardır. Semt adlarıyla resmî mahalle adları aynı kapsamı taşımayabilir; idari liste bu nedenle ayrıca gösterilir."
+      },
+      "neighborhoods": [
+        "Arap Cami",
+        "Asmalı Mescid",
+        "Bedrettin",
+        "Bereketzade",
+        "Bostan",
+        "Bülbül",
+        "Camiikebir",
+        "Cihangir",
+        "Çatma Mescit",
+        "Çukur",
+        "Emekyemez",
+        "Evliya Çelebi",
+        "Fetihtepe",
+        "Firuzağa",
+        "Gümüşsuyu",
+        "Hacıahmet",
+        "Hacımimi",
+        "Halıcıoğlu",
+        "Hüseyinağa",
+        "İstiklal",
+        "Kadımehmet",
+        "Kalyoncukulluk",
+        "Kamerhatun",
+        "Kaptanpaşa",
+        "Katip Mustafa Çelebi",
+        "Keçecipiri",
+        "Kemankeş Kara Mustafapaşa",
+        "Kılıçali Paşa",
+        "Kocatepe",
+        "Kulaksız",
+        "Kuloğlu",
+        "Küçük Piyale",
+        "Müeyyetzade",
+        "Ömer Avni",
+        "Örnektepe",
+        "Piri Paşa",
+        "Piyalepaşa",
+        "Pürtelaş Hasan Efendi",
+        "Sururi",
+        "Sütlüce",
+        "Şahkulu",
+        "Şehit Muhtar",
+        "Tomtom",
+        "Yahya Kahya",
+        "Yenişehir"
+      ],
+      "sources": [
+        {
+          "title": "Beyoğlu — Tarihçe",
+          "publisher": "Beyoğlu Kaymakamlığı",
+          "url": "https://beyoglu.gov.tr/hukumet-konagi",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary",
+            "geography"
+          ]
+        },
+        {
+          "title": "Beyoğlu mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/beyoglu-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
+        "specificReview": "Kaymakamlık sayfasındaki Galata Kulesi 13. yüzyıl iddiası ve adın tek kökene bağlanması kullanılmadı."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    },
+    {
+      "district": "buyukcekmece",
+      "pdfSha256": "85f124a37dd54b44d8253ae2f321807aa9c6492957f46a5bcf1268f51008dab0",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Büyükçekmece’de göl, Marmara kıyısı ve tarihî geçiş yapıları birlikte okunur.",
+        "history": "Kurşunlu Han ve Kanuni Sultan Süleyman Köprüsü, Büyükçekmece’nin eski ulaşım güzergâhındaki yerini gösteren yapılardır. Kaymakamlığın tanıtımı, bu mirası gölün denizle birleştiği çevreyle ilişkilendirir.",
+        "geography": "Büyükçekmece Gölü ile Marmara Denizi, ilçenin coğrafi kimliğinin iki temel unsurudur. Göl çevresindeki tarihî merkez ile iç kesimlerdeki yerleşimler aynı mekânsal dokuya sahip kabul edilmemelidir."
+      },
+      "neighborhoods": [
+        "19 Mayıs",
+        "Ahmediye",
+        "Alkent 2000",
+        "Atatürk",
+        "Bahçelievler",
+        "Celaliye",
+        "Cumhuriyet",
+        "Çakmaklı",
+        "Dizdariye",
+        "Ekinoba",
+        "Fatih",
+        "Güzelce",
+        "Hürriyet",
+        "Kamiloba",
+        "Karaağaç",
+        "Kumburgaz",
+        "Mimaroba",
+        "Mimarsinan",
+        "Murat Çeşme",
+        "Pınartepe",
+        "Sinanoba",
+        "Türkoba",
+        "Ulus",
+        "Yenimahalle"
+      ],
+      "sources": [
+        {
+          "title": "Büyükçekmece — Tarihçe",
+          "publisher": "Büyükçekmece Kaymakamlığı",
+          "url": "https://buyukcekmece.gov.tr/kervansaray",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary"
+          ]
+        },
+        {
+          "title": "Büyükçekmece — Coğrafya / yerleşim",
+          "publisher": "Büyükçekmece Kaymakamlığı",
+          "url": "https://buyukcekmece.gov.tr/ilcemiztarihce",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "geography",
+            "summary"
+          ]
+        },
+        {
+          "title": "Büyükçekmece mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/buyukcekmece-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    },
+    {
+      "district": "catalca",
+      "pdfSha256": "f690a014ecb9c9aa704920b60c334e8308e73ddb86e5bacfffce974bde4b3232",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Çatalca, İstanbul’un batısındaki yerleşim geçmişini ve kırsal coğrafyasını birlikte incelemek için bir başlangıç noktasıdır.",
+        "history": "Çatalca, 1924’te vilayet merkezi oldu; 1926’da yeniden İstanbul’a bağlı ilçe statüsüne geçti. İlçenin daha eski geçmişi, İnceğiz çevresindeki kalıntılar ve tarihî su yapıları gibi somut izler üzerinden ele alınabilir.",
+        "geography": "Çatalca, İstanbul’un batısında; Büyükçekmece, Silivri ve Arnavutköy çevresindeki yerleşimlerle komşudur. İlçe merkezi ile çevre mahallelerin konumları, geniş bir yerleşim coğrafyası içinde değerlendirilmelidir."
+      },
+      "neighborhoods": [
+        "Akalan",
+        "Atatürk",
+        "Aydınlar",
+        "Bahşayiş",
+        "Başak",
+        "Belgrat",
+        "Celepköy",
+        "Çakıl",
+        "Çanakça",
+        "Çiftlikköy",
+        "Dağyenice",
+        "Elbasan",
+        "Fatih",
+        "Ferhatpaşa",
+        "Gökçeali",
+        "Gümüşpınar",
+        "Hallaçlı",
+        "Hisarbeyli",
+        "İhsaniye",
+        "İnceğiz",
+        "İzzettin",
+        "Kabakça",
+        "Kaleiçi",
+        "Kalfa",
+        "Karacaköy Merkez",
+        "Karamandere",
+        "Kestanelik",
+        "Kızılcaali",
+        "Muratbey Merkez",
+        "Nakkaş",
+        "Oklalı",
+        "Ormanlı",
+        "Ovayenice",
+        "Örcünlü",
+        "Örencik",
+        "Subaşı",
+        "Yalıköy",
+        "Yaylacık",
+        "Yazlık"
+      ],
+      "sources": [
+        {
+          "title": "Çatalca — Tarihçe",
+          "publisher": "Çatalca Kaymakamlığı",
+          "url": "https://catalca.gov.tr/catalca-tarihi",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary",
+            "geography"
+          ]
+        },
+        {
+          "title": "Çatalca mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/catalca-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
+        "specificReview": "MÖ 450 Roma yerleşimi ve duvar büyüklüğü üstünlük iddiaları kullanılmadı."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    },
+    {
+      "district": "esenler",
+      "pdfSha256": "31c2d5e501f27e7ee6a8bef07dbefd2fd117bab42d601fa598701e1d19e0327c",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Esenler’in kentleşme geçmişi, Litros ve Avas adlı eski yerleşimlerden bugünkü ilçe yapısına uzanır.",
+        "history": "Kaymakamlığın tarihçesinde Litros ve Avas, tarımsal geçmişi bulunan yerleşimler olarak anlatılır. Mübadele sonrasındaki nüfus hareketleri bu çevrenin dönüşümünde rol oynadı. Esenler, 1993’te Güngören’den ayrılarak ilçe oldu.",
+        "geography": "Eski Litros ve Avas yerleşimlerinin izleri, ilçenin tarihî coğrafyasını okumaya yardımcı olur. Bunlar güncel mahalle listesinin yerine geçmez; yeni mahallelerin eklenmesi idari kapsamı değiştirebilir."
+      },
+      "neighborhoods": [
+        "15 Temmuz",
+        "Atışalanı",
+        "Birlik",
+        "Çifte Havuzlar",
+        "Davutpaşa",
+        "Fatih",
+        "Fevzi Çakmak",
+        "Kazım Karabekir",
+        "Kemer",
+        "Menderes",
+        "Mimar Sinan",
+        "Namık Kemal",
+        "Nine Hatun",
+        "Oruçreis",
+        "Şehitler",
+        "Tuna",
+        "Turgut Reis",
+        "Yavuz Selim",
+        "Yeşil Vadi"
+      ],
+      "sources": [
+        {
+          "title": "Esenler — Tarihçe",
+          "publisher": "Esenler Kaymakamlığı",
+          "url": "https://esenler.gov.tr/tarihce",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary",
+            "geography"
+          ]
+        },
+        {
+          "title": "Esenler mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/esenler-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        },
+        {
+          "title": "Esenler’e iki yeni mahalle kazandırıldı",
+          "publisher": "Esenler Belediyesi",
+          "url": "https://esenler.bel.tr/haberler/genel/esenlere-iki-yeni-mahalle-kazandirildi/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-01-13T00:00:00Z",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
+        "specificReview": "PDF ve belediyenin eski muhtarlık sayfası 17 kayıt; 13.01.2026 tarihli duyuru ve İBB 19 kayıt. Şehitler ve Yeşil Vadi eklendi."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    },
+    {
+      "district": "esenyurt",
+      "pdfSha256": "277e772de00ab568800a295b45c75a726984412c07f5b8f3ad8b87c7a5bdffbd",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Esenyurt, İstanbul’un batısındaki ilçeleşme sürecinde 2008’de ayrı bir idari yapı kazandı.",
+        "history": "Esenyurt ilçesi, 2008 tarihli düzenlemeyle kuruldu. Bu idari tarih, bölgenin daha eski yerleşim geçmişinden ayrıdır; rehberde kuruluş anlatısı bu ayrım korunarak verilir.",
+        "geography": "İlçe, Avcılar ve Büyükçekmece arasındaki iç kesimlerde yer alır; güneyinde Beylikdüzü bulunur. Kaymakamlık, araziyi genel olarak hafif engebeli olarak tanımlar."
+      },
+      "neighborhoods": [
+        "Akçaburgaz",
+        "Akevler",
+        "Akşemseddin",
+        "Ardıçlı",
+        "Aşık Veysel",
+        "Atatürk",
+        "Balıkyolu",
+        "Barbaros Hayrettin Paşa",
+        "Battalgazi",
+        "Cumhuriyet",
+        "Çınar",
+        "Esenkent",
+        "Fatih",
+        "Gökevler",
+        "Güzelyurt",
+        "Hürriyet",
+        "İncirtepe",
+        "İnönü",
+        "İstiklal",
+        "Koza",
+        "Mehmet Akif Ersoy",
+        "Mehterçeşme",
+        "Merkez",
+        "Mevlana",
+        "Namık Kemal",
+        "Necip Fazıl Kısakürek",
+        "Orhan Gazi",
+        "Osmangazi",
+        "Örnek",
+        "Pınar",
+        "Piri Reis",
+        "Saadetdere",
+        "Selahaddin Eyyubi",
+        "Sultaniye",
+        "Süleymaniye",
+        "Şehitler",
+        "Talatpaşa",
+        "Turgut Özal",
+        "Üçevler",
+        "Yenikent",
+        "Yeşilkent",
+        "Yunus Emre",
+        "Zafer"
+      ],
+      "sources": [
+        {
+          "title": "Esenyurt — Tarihçe",
+          "publisher": "Esenyurt Kaymakamlığı",
+          "url": "https://esenyurt.gov.tr/tarihi-ve-cografi-yapisi",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary",
+            "geography"
+          ]
+        },
+        {
+          "title": "Esenyurt mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/esenyurt-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
+        "specificReview": "PDF liste dökümü Koza maddesinde kesilmiş ve Bağlarçeşme kaydını içeriyor; belediye ve İBB tam listeleri 43 kayıtla uyuşuyor. Bu iki dizinde Bağlarçeşme yok, Şehitler var. Karar tarihi doğrulanmadığı için ad değişikliği tarihi iddiası kurulmadı."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    },
+    {
+      "district": "eyupsultan",
+      "pdfSha256": "b80fabe8fc315ec444993d2ea5181d73b526a1e5824885f3f2120449b462c96e",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Eyüpsultan’ın tarihî merkezini anlamak için Haliç kıyısı ile Eyüp Sultan çevresindeki yerleşim birlikte ele alınır.",
+        "history": "Osmanlı döneminde Eyüp Sultan türbesi ve külliyesi çevresinde gelişen yerleşim, ilçenin tarihî kimliğinin ana unsurlarındandır. Bu merkez, sur dışındaki yerleşim geçmişinin devamı içinde değerlendirilir.",
+        "geography": "Alibeyköy ve Kağıthane derelerinin Haliç’e ulaştığı çevre, tarihî merkezin coğrafi bağlamını oluşturur. Bu anlatım ilçenin bütün güncel sınırlarını kapsamaz; kuzeydeki mahalleler ayrı idari listede yer alır."
+      },
+      "neighborhoods": [
+        "5. Levent",
+        "Ağaçlı",
+        "Akpınar",
+        "Akşemsettin",
+        "Alibeyköy",
+        "Çırçır",
+        "Çiftalan",
+        "Defterdar",
+        "Düğmeciler",
+        "Emniyettepe",
+        "Esentepe",
+        "Eyüp Merkez",
+        "Göktürk Merkez",
+        "Güzeltepe",
+        "Işıklar",
+        "İhsaniye",
+        "İslambey",
+        "Karadolap",
+        "Mimar Sinan",
+        "Mithatpaşa",
+        "Nişanca",
+        "Odayeri",
+        "Pirinçci",
+        "Rami Cuma",
+        "Rami Yeni",
+        "Sakarya",
+        "Silahtarağa",
+        "Topçular",
+        "Yeşilpınar"
+      ],
+      "sources": [
+        {
+          "title": "Eyüpsultan — Tarihçe",
+          "publisher": "Eyüpsultan Kaymakamlığı",
+          "url": "https://eyupsultan.gov.tr/ilcemizin-tarihi",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary",
+            "geography"
+          ]
+        },
+        {
+          "title": "Eyüpsultan mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/eyupsultan-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    },
+    {
+      "district": "fatih",
+      "pdfSha256": "d39d905786dcd733d8bfbdbfb4677518a36e2cbb8b45e5530e5c70604ac8092d",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Fatih, İstanbul’un tarihî yarımadasında farklı dönemlere ait kent izlerini bir araya getirir.",
+        "history": "Bizans ve Osmanlı dönemlerinin yönetim, inanç ve ticaret yapıları, Fatih’in kent dokusunun temel katmanlarını oluşturur. Yenikapı’daki arkeolojik buluntular, yarımadanın geçmişinin bu dönemlerden daha eskiye uzandığını da gösterir.",
+        "geography": "Marmara Denizi, Haliç ve kara surları, tarihî yarımadanın coğrafi çerçevesini tarif eder. Kıyılar, yamaçlar ve iç kesimlerdeki mahalleler bu çerçevenin farklı parçalarıdır."
+      },
+      "neighborhoods": [
+        "Aksaray",
+        "Akşemsettin",
+        "Alemdar",
+        "Ali Kuşçu",
+        "Atikali",
+        "Ayvansaray",
+        "Balabanağa",
+        "Balat",
+        "Beyazıt",
+        "Binbirdirek",
+        "Cankurtaran",
+        "Cerrahpaşa",
+        "Cibali",
+        "Demirtaş",
+        "Derviş Ali",
+        "Emin Sinan",
+        "Hacı Kadın",
+        "Haseki Sultan",
+        "Hırka-İ Şerif",
+        "Hobyar",
+        "Hoca Gıyasettin",
+        "Hocapaşa",
+        "İskenderpaşa",
+        "Kalenderhane",
+        "Karagümrük",
+        "Katip Kasım",
+        "Kemalpaşa",
+        "Koca Mustafapaşa",
+        "Küçük Ayasofya",
+        "Mercan",
+        "Mesihpaşa",
+        "Mevlanakapı",
+        "Mimar Hayrettin",
+        "Mimar Kemalettin",
+        "Molla Fenari",
+        "Molla Gürani",
+        "Molla Hüsrev",
+        "Muhsine Hatun",
+        "Nişanca",
+        "Rüstempaşa",
+        "Saraç İshak",
+        "Sarıdemir",
+        "Seyyid Ömer",
+        "Silivrikapı",
+        "Sultanahmet",
+        "Sururi",
+        "Süleymaniye",
+        "Sümbülefendi",
+        "Şehremini",
+        "Şehsuvarbey",
+        "Tahtakale",
+        "Taya Hatun",
+        "Topkapı",
+        "Yavuz Sinan",
+        "Yavuz Sultan Selim",
+        "Yedikule",
+        "Zeyrek"
+      ],
+      "sources": [
+        {
+          "title": "Fatih — Tarihçe",
+          "publisher": "Fatih Kaymakamlığı",
+          "url": "https://fatih.gov.tr/tarih",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary"
+          ]
+        },
+        {
+          "title": "Fatih — Coğrafya / yerleşim",
+          "publisher": "Fatih Kaymakamlığı",
+          "url": "https://fatih.gov.tr/cografya",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "geography",
+            "summary"
+          ]
+        },
+        {
+          "title": "Fatih mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/fatih-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    },
+    {
+      "district": "gaziosmanpasa",
+      "pdfSha256": "813eee43b8c09ea38ef09b3dfee12c4299e4abb19ce6b3d180106d6ee7c8c6d5",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Gaziosmanpaşa’nın yakın dönem kentleşmesi, Taşlıtarla ve Küçükköy çevresindeki büyümeyle ilişkilidir.",
+        "history": "1950’lerden itibaren göçle büyüyen Taşlıtarla, ilçenin oluşumunda önemli bir odak oldu. Gaziosmanpaşa, 1963’te Eyüp’ten ayrılarak ilçe statüsü kazandı; sonraki idari ayrılmalar nedeniyle eski ilçe sınırları bugünkü kapsamla aynı değildir.",
+        "geography": "İlçenin çevresinde Sultangazi, Eyüpsultan ve Bayrampaşa bulunur. Kaymakamlığın coğrafya anlatısındaki 2008 ayrımı, tarihî Gaziosmanpaşa ile güncel ilçe alanını ayırmak açısından önemlidir."
+      },
+      "neighborhoods": [
+        "Bağlarbaşı",
+        "Barbaros Hayrettin Paşa",
+        "Fevzi Çakmak",
+        "Hürriyet",
+        "Karadeniz",
+        "Karayolları",
+        "Karlıtepe",
+        "Kazım Karabekir",
+        "Merkez",
+        "Mevlana",
+        "Pazariçi",
+        "Sarıgöl",
+        "Şemsipaşa",
+        "Yeni Mahalle",
+        "Yenidoğan",
+        "Yıldıztabya"
+      ],
+      "sources": [
+        {
+          "title": "Gaziosmanpaşa — Tarihçe",
+          "publisher": "Gaziosmanpaşa Kaymakamlığı",
+          "url": "https://gaziosmanpasa.gov.tr/tarihe",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary"
+          ]
+        },
+        {
+          "title": "Gaziosmanpaşa — Coğrafya / yerleşim",
+          "publisher": "Gaziosmanpaşa Kaymakamlığı",
+          "url": "https://gaziosmanpasa.gov.tr/cografi-yapi",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "geography",
+            "summary"
+          ]
+        },
+        {
+          "title": "Gaziosmanpaşa mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/gaziosmanpasa-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    },
+    {
+      "district": "gungoren",
+      "pdfSha256": "08d92a70062cc1d3fd6f10941e248980d640e01e6b6cad4eec9408dceea20700",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Güngören’in geçmişinde köy yerleşimi, göç ve üretim faaliyetlerinin kente dönüşümü görülür.",
+        "history": "Eski Vitos yerleşimi çevresindeki tarımsal doku, zaman içinde yerleşim alanlarına dönüştü. Güngören 1992’de Bakırköy’den ayrılarak ilçe oldu; Esenler’in ayrılması daha sonra gerçekleşti.",
+        "geography": "Güngören, Bahçelievler, Bakırköy, Zeytinburnu, Esenler ve Bağcılar arasındaki kent içi konumuyla tarif edilir. Kaymakamlığın tarihçesi, eski yerleşimin dere yamacı boyunca büyümesini anlatır."
+      },
+      "neighborhoods": [
+        "Abdurrahman Nafiz Gürman",
+        "Akıncılar",
+        "Gençosman",
+        "Güneştepe",
+        "Güven",
+        "Haznedar",
+        "Mareşal Çakmak",
+        "Mehmet Nesih Özmen",
+        "Merkez",
+        "Sanayi",
+        "Tozkoparan"
+      ],
+      "sources": [
+        {
+          "title": "Güngören — Tarihçe",
+          "publisher": "Güngören Kaymakamlığı",
+          "url": "https://www.gungoren.gov.tr/tarihce",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary"
+          ]
+        },
+        {
+          "title": "Güngören — Coğrafya / yerleşim",
+          "publisher": "Güngören Kaymakamlığı",
+          "url": "https://www.gungoren.gov.tr/cografi-durum",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "geography",
+            "summary"
+          ]
+        },
+        {
+          "title": "Güngören mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/gungoren-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    },
+    {
+      "district": "kagithane",
+      "pdfSha256": "f42bd5836b231ec266252b6594a58694c4350b455437b99f386254e10d139ebd",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Kağıthane’nin tarihî kimliği, dere çevresindeki yerleşim ve Sadabad geçmişiyle bağlantılıdır.",
+        "history": "Lale Devri’nde Sadabad çevresindeki saray ve mesire düzenlemeleri, Kağıthane’nin tarihindeki önemli bir katmandır. Sonraki dönemlerde yapıların değişmesi ve yıkılması nedeniyle tarihî anlatıda geçen her yapı bugün ayakta kabul edilmemelidir.",
+        "geography": "Kağıthane Deresi ve Haliç’le ilişkisi, ilçenin tarihî coğrafyasını anlamak için temel bir eksendir. Dere çevresindeki eski mesire alanları ile güncel mahalle yapısı ayrı zaman katmanları olarak okunmalıdır."
+      },
+      "neighborhoods": [
+        "Çağlayan",
+        "Çeliktepe",
+        "Emniyet Evleri",
+        "Gültepe",
+        "Gürsel",
+        "Hamidiye",
+        "Harmantepe",
+        "Hürriyet",
+        "Mehmet Akif Ersoy",
+        "Merkez",
+        "Nurtepe",
+        "Ortabayır",
+        "Seyrantepe",
+        "Sultan Selim",
+        "Şirintepe",
+        "Talatpaşa",
+        "Telsizler",
+        "Yahya Kemal",
+        "Yeşilce"
+      ],
+      "sources": [
+        {
+          "title": "Kağıthane — Tarihçe",
+          "publisher": "Kağıthane Kaymakamlığı",
+          "url": "https://www.kagithane.gov.tr/ilcemizin-tarihcesi",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary",
+            "geography"
+          ]
+        },
+        {
+          "title": "Kağıthane mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/kagithane-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    },
+    {
+      "district": "kucukcekmece",
+      "pdfSha256": "317eac14b828755cb65248e1b29ac0f6fc3a901b3f832ec7ab48b6574a603805",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Küçükçekmece’nin geçmişi, göl çevresi ve İstanbul’un batıya açılan ulaşım güzergâhlarıyla ilişkilidir.",
+        "history": "Küçükçekmece, 1987’de Bakırköy’den ayrılarak ilçe oldu. Kaymakamlığın tarihçesi, bölgenin çok daha eski geçmişini göl çevresindeki buluntular ve tarihî ulaşım yollarıyla birlikte ele alır.",
+        "geography": "Küçükçekmece Gölü, yerleşimin coğrafi bağlamını oluşturan başlıca unsurdur. Göl havzasında anılan bütün tarihî alanlar bugünkü ilçe sınırları içinde kabul edilmemelidir; komşu ilçelere uzanan alanlar ayrıca kontrol gerektirir."
+      },
+      "neighborhoods": [
+        "Atakent",
+        "Atatürk",
+        "Beşyol",
+        "Cennet",
+        "Cumhuriyet",
+        "Fatih",
+        "Fevzi Çakmak",
+        "Gültepe",
+        "Halkalı Merkez",
+        "İnönü",
+        "İstasyon",
+        "Kanarya",
+        "Kartaltepe",
+        "Kemalpaşa",
+        "Mehmet Akif",
+        "Söğütlü Çeşme",
+        "Sultan Murat",
+        "Tevfikbey",
+        "Yarımburgaz",
+        "Yeni Mahalle",
+        "Yeşilova"
+      ],
+      "sources": [
+        {
+          "title": "Küçükçekmece — Tarihçe",
+          "publisher": "Küçükçekmece Kaymakamlığı",
+          "url": "https://www.kucukcekmece.gov.tr/tarihce",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary",
+            "geography"
+          ]
+        },
+        {
+          "title": "Küçükçekmece mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/kucukcekmece-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
+        "specificReview": "Yarımburgaz Mağarası/Bathonea gibi havza alanları otomatik biçimde güncel ilçe sınırına atfedilmedi."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    },
+    {
+      "district": "sariyer",
+      "pdfSha256": "a0d4aaa356121325780167d48573e7591673eaa788ebb13266cbaa00de51f8ee",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Sarıyer, Boğaziçi yerleşimleri ile orman çevresindeki tarihî mirası birlikte barındırır.",
+        "history": "Kaymakamlığın tarihçesi, kıyı yerleşimlerindeki cami, çeşme ve hamamları Osmanlı döneminin izleri arasında sayar. Bölgenin geçmişi tek bir anıta indirgenmez; farklı yerleşimlerin kendi tarihleri bulunur.",
+        "geography": "Boğaziçi kıyısı ve Belgrad Ormanı çevresi, Sarıyer’in farklı coğrafi odaklarıdır. Bu alanlara ilişkin tarihî tanıtımlar, güncel ziyaret koşulları veya erişim garantisi olarak değerlendirilmemelidir."
+      },
+      "neighborhoods": [
+        "Ayazağa",
+        "Bahçeköy Kemer",
+        "Bahçeköy Merkez",
+        "Bahçeköy Yeni",
+        "Baltalimanı",
+        "Büyükdere",
+        "Cumhuriyet",
+        "Çamlıtepe",
+        "Çayırbaşı",
+        "Darüşşafaka",
+        "Demirciköy",
+        "Emirgan",
+        "Fatih Sultan Mehmet",
+        "Ferahevler",
+        "Garipçe",
+        "Gümüşdere",
+        "Huzur",
+        "İstinye",
+        "Kazım Karabekir Paşa",
+        "Kısırkaya",
+        "Kireçburnu",
+        "Kocataş",
+        "Kumköy (Kilyos)",
+        "Maden",
+        "Maslak",
+        "Pınar",
+        "Poligon",
+        "PTT Evleri",
+        "Reşitpaşa",
+        "Rumelifeneri",
+        "Rumelihisarı",
+        "Rumelikavağı",
+        "Sarıyer Merkez",
+        "Tarabya",
+        "Uskumruköy",
+        "Yeni",
+        "Yeniköy",
+        "Zekeriyaköy"
+      ],
+      "sources": [
+        {
+          "title": "Sarıyer — Tarihçe",
+          "publisher": "Sarıyer Kaymakamlığı",
+          "url": "https://www.sariyer.gov.tr/tarihce",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary"
+          ]
+        },
+        {
+          "title": "Sarıyer — Coğrafya / yerleşim",
+          "publisher": "Sarıyer Kaymakamlığı",
+          "url": "https://www.sariyer.gov.tr/tarihi-ve-turistik-yerler",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "geography",
+            "summary"
+          ]
+        },
+        {
+          "title": "Sarıyer mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/sariyer-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    },
+    {
+      "district": "silivri",
+      "pdfSha256": "c82507bd629c2661cc21f82dd9871cd9e7fe53147e9477d445d0d33cabb2c056",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Silivri, Marmara kıyısındaki tarihî merkezinden iç kesimlere uzanan bir yerleşim coğrafyasına sahiptir.",
+        "history": "Antik kaynaklarda Selymbria adıyla anılan yerleşimin çekirdeği, kıyıya hâkim tepe çevresindeydi. Kaymakamlık bu alanı bugünkü Fatih Mahallesi ile ilişkilendirir; kent zaman içinde surların dışına yayıldı.",
+        "geography": "İlçe İstanbul’un batısında, Marmara Denizi kıyısındadır. Kıyıdan kuzeye doğru yükselen hafif dalgalı düzlükler, genel arazi yapısını tanımlar."
+      },
+      "neighborhoods": [
+        "Akören",
+        "Alibey",
+        "Alipaşa",
+        "Bekirli",
+        "Beyciler",
+        "Büyük Çavuşlu",
+        "Büyük Kılıçlı",
+        "Büyük Sinekli",
+        "Cumhuriyet",
+        "Çanta Balaban",
+        "Çanta Sancaktepe",
+        "Çayırdere",
+        "Çeltik",
+        "Danamandıra",
+        "Değirmenköy Fevzipaşa",
+        "Değirmenköy İsmetpaşa",
+        "Fatih",
+        "Fener",
+        "Gazitepe",
+        "Gümüşyaka",
+        "Kadıköy",
+        "Kavaklı Hürriyet",
+        "Kavaklı",
+        "Kurfallı",
+        "Küçük Kılıçlı",
+        "Küçük Sinekli",
+        "Mimar Sinan",
+        "Ortaköy",
+        "Piri Mehmet Paşa",
+        "Sayalar",
+        "Selimpaşa",
+        "Semizkumlar",
+        "Seymen",
+        "Yeni",
+        "Yolçatı"
+      ],
+      "sources": [
+        {
+          "title": "Silivri — Tarihçe",
+          "publisher": "Silivri Kaymakamlığı",
+          "url": "https://silivri.gov.tr/tarihi",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary"
+          ]
+        },
+        {
+          "title": "Silivri — Coğrafya / yerleşim",
+          "publisher": "Silivri Kaymakamlığı",
+          "url": "https://silivri.gov.tr/cografi-konum",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "geography",
+            "summary"
+          ]
+        },
+        {
+          "title": "Silivri mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/silivri-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    },
+    {
+      "district": "sultangazi",
+      "pdfSha256": "433a67c11f8f0c9e2940ed940c34921083f430ffbb6767b6136e9f8a250010b3",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Sultangazi, İstanbul’un kuzeybatısında 2008’de ilçe statüsü kazanan yerleşimlerden biridir.",
+        "history": "Sultangazi ilçesi 2008’de kuruldu. Kaymakamlık tarihçesi, bölgenin daha eski geçmişini İstanbul’a su taşıyan hatların kalıntılarıyla ilişkilendirir; eski yerleşim geçmişi ile yeni idari kuruluş birbirinden ayrılmalıdır.",
+        "geography": "İlçe İstanbul’un kuzeybatısında yer alır. Gaziosmanpaşa ve Başakşehir çevresindeki konumu, kentin iç kesimlerindeki yerleşimlerle ilişkisini tarif eder."
+      },
+      "neighborhoods": [
+        "50. Yıl",
+        "75. Yıl",
+        "Cebeci",
+        "Cumhuriyet",
+        "Esentepe",
+        "Eski Habipler",
+        "Gazi",
+        "Habibler",
+        "İsmetpaşa",
+        "Malkoçoğlu",
+        "Sultançiftliği",
+        "Uğur Mumcu",
+        "Yayla",
+        "Yunus Emre",
+        "Zübeyde Hanım"
+      ],
+      "sources": [
+        {
+          "title": "Sultangazi — Tarihçe",
+          "publisher": "Sultangazi Kaymakamlığı",
+          "url": "https://sultangazi.gov.tr/tarihce",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary",
+            "geography"
+          ]
+        },
+        {
+          "title": "Sultangazi mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/sultangazi-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        },
+        {
+          "title": "Sultangazi Belediyesi — e-Devlet mahalle seçicisi",
+          "publisher": "Sultangazi Belediyesi / e-Devlet Kapısı",
+          "url": "https://www.turkiye.gov.tr/sultangazi-belediyesi-arsa-rayic-degeri-sorgulama-v2",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
+        "specificReview": "İBB dizini 14 kayıtla eksik; belediyenin e-Devlet mahalle seçicisi 15 kayıt içeriyor ve Zübeyde Hanım’ı doğruluyor. e-Devlet listesinin tamamı PDF ile uyuşuyor; güncellenen belediye tanıtım sayfası kanıt sayılmadı."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    },
+    {
+      "district": "sisli",
+      "pdfSha256": "40b7c040e6f09762961d7154719fc006b0a058bc22d07ef3f7cf439efcfab247",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Şişli’nin kent dokusu, konut yerleşimleri ile ticaret ve hizmet alanlarının tarih içinde iç içe geçmesiyle şekillendi.",
+        "history": "Beyoğlu’na bağlı bir bucak olan Şişli, 1954’te ilçe statüsü kazandı. Belediyenin tarihçesi, apartmanlaşma ile Halaskargazi ve çevresindeki caddelerin ticari gelişmesini bu dönüşümün parçaları olarak anlatır.",
+        "geography": "Şişli, Avrupa Yakası’nda Beyoğlu platosunun kuzey uzantısındadır. Kaymakamlık sayfasındaki eski Ayazağa ve Maslak kapsamı güncel sınır olarak kullanılmamıştır; mahalle listesi ayrıca kontrol edilmiştir."
+      },
+      "neighborhoods": [
+        "19 Mayıs",
+        "Bozkurt",
+        "Cumhuriyet",
+        "Duatepe",
+        "Ergenekon",
+        "Esentepe",
+        "Eskişehir",
+        "Feriköy",
+        "Fulya",
+        "Gülbahar",
+        "Halaskargazi",
+        "Halide Edip Adıvar",
+        "Halil Rıfat Paşa",
+        "Harbiye",
+        "İnönü",
+        "İzzet Paşa",
+        "Kaptanpaşa",
+        "Kuştepe",
+        "Mahmut Şevket Paşa",
+        "Mecidiyeköy",
+        "Meşrutiyet",
+        "Paşa",
+        "Merkez",
+        "Teşvikiye",
+        "Yayla"
+      ],
+      "sources": [
+        {
+          "title": "Şişli — Tarihçe",
+          "publisher": "Şişli Belediyesi",
+          "url": "https://sisli.bel.tr/kurumsal/i/sisli-tarihcesi",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary"
+          ]
+        },
+        {
+          "title": "Şişli — Coğrafya / yerleşim",
+          "publisher": "Şişli Kaymakamlığı",
+          "url": "https://sisli.gov.tr/cografi-yapi",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "geography",
+            "summary"
+          ]
+        },
+        {
+          "title": "Şişli mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/sisli-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        },
+        {
+          "title": "Şişli mahalle listesi — yazım kontrolü",
+          "publisher": "Şişli Belediyesi",
+          "url": "https://www.sisli.bel.tr/kurumsal/muhtarliklar-ve-mahalleler",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
+        "specificReview": "Kaymakamlık coğrafya/idari sayfasında Ayazağa/Maslak eski kapsamı bulunuyor; bu kapsam aktarılmadı. Belediye ve İBB listeleri 25."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    },
+    {
+      "district": "zeytinburnu",
+      "pdfSha256": "4698b44bf148f7b999d0de52deabb281a433d4d29d78edc7281c016fa83433fe",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Zeytinburnu’nun tarihî kimliğinde Kazlıçeşme çevresindeki üretim geçmişi ve Marmara kıyısı birlikte yer alır.",
+        "history": "Kazlıçeşme’deki dericilik faaliyetleri, ilçenin üretim tarihinin başlıca katmanlarındandır. Sonraki sanayileşme ve yerleşim süreçleri, bu kıyı çevresinin kentle ilişkisini değiştirdi.",
+        "geography": "İlçe Marmara Denizi kıyısında, Fatih ile Bakırköy çevresindeki yerleşimler arasında bulunur. Arazi genel olarak kıyıdan iç kesimlere doğru yükselir."
+      },
+      "neighborhoods": [
+        "Beştelsiz",
+        "Çırpıcı",
+        "Gökalp",
+        "Kazlıçeşme",
+        "Maltepe",
+        "Merkezefendi",
+        "Nuripaşa",
+        "Seyitnizam",
+        "Sümer",
+        "Telsiz",
+        "Veliefendi",
+        "Yenidoğan",
+        "Yeşiltepe"
+      ],
+      "sources": [
+        {
+          "title": "Zeytinburnu — Tarihçe",
+          "publisher": "Zeytinburnu Kaymakamlığı",
+          "url": "https://www.zeytinburnu.gov.tr/ilcemizin-tarihi",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary"
+          ]
+        },
+        {
+          "title": "Zeytinburnu — Coğrafya / yerleşim",
+          "publisher": "Zeytinburnu Kaymakamlığı",
+          "url": "https://www.zeytinburnu.gov.tr/cografi-yapisi",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "geography",
+            "summary"
+          ]
+        },
+        {
+          "title": "Zeytinburnu mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/zeytinburnu-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    },
+    {
+      "district": "adalar",
+      "pdfSha256": "5122e2800fad5536239d0c5efa0f91323912f648ab67e337df9229f91db9920b",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Adalar, İstanbul’un ada yerleşimlerini ve bu yerleşimlerin farklı tarihî dokularını birlikte inceleyen bir ilçe rehberidir.",
+        "history": "Kaymakamlık tarihçesi, Adalar’ın 19. yüzyılda ilçe yönetimine kavuşmasını anlatır. Büyükada’daki yönetim yapılarının zaman içinde yer değiştirmesi, ilçenin kurumsal geçmişinin bir parçasıdır.",
+        "geography": "Büyükada, Heybeliada, Burgazada ve Kınalıada, ilçenin başlıca yerleşim adalarıdır. Ada adı ile mahalle adı aynı şey değildir: Büyükada’daki Maden ve Nizam ayrı mahalle kayıtlarıdır."
+      },
+      "neighborhoods": [
+        "Burgazada",
+        "Heybeliada",
+        "Kınalıada",
+        "Maden",
+        "Nizam"
+      ],
+      "sources": [
+        {
+          "title": "Adalar — Tarihçe",
+          "publisher": "Adalar Kaymakamlığı",
+          "url": "https://adalar.gov.tr/kaymakamligimizin-tarihcesi",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary"
+          ]
+        },
+        {
+          "title": "Adalar — Coğrafya / yerleşim",
+          "publisher": "Adalar Kaymakamlığı",
+          "url": "https://adalar.gov.tr/cografi-yapi",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "geography",
+            "summary"
+          ]
+        },
+        {
+          "title": "Adalar mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/adalar-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    },
+    {
+      "district": "atasehir",
+      "pdfSha256": "c30cfe883c0a190f956fecbb278f283a88d180524726a991c926f9cdbb8d42c9",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Ataşehir, eski yerleşim odakları ile daha yeni konut ve iş alanlarını aynı ilçe yapısında birleştirir.",
+        "history": "Ataşehir ilçesi 2008’de kuruldu. Kaymakamlık, İçerenköy ve Küçükbakkalköy gibi eski yerleşimleri, 1990’lardan itibaren gelişen Ataşehir yerleşiminden ayrı tarihî katmanlar olarak anlatır.",
+        "geography": "Kayışdağı, ilçenin coğrafi kimliğinde belirgin bir odaktır. Arazi kısmen engebelidir; Kadıköy, Üsküdar, Ümraniye, Maltepe ve Sancaktepe çevresindeki konumu kent içindeki yerini tarif eder."
+      },
+      "neighborhoods": [
+        "Aşık Veysel",
+        "Atatürk",
+        "Barbaros",
+        "Esatpaşa",
+        "Ferhatpaşa",
+        "Fetih",
+        "İçerenköy",
+        "İnönü",
+        "Kayışdağı",
+        "Küçükbakkalköy",
+        "Mevlana",
+        "Mimar Sinan",
+        "Mustafa Kemal",
+        "Örnek",
+        "Yeni Çamlıca",
+        "Yenisahra",
+        "Yenişehir"
+      ],
+      "sources": [
+        {
+          "title": "Ataşehir — Tarihçe",
+          "publisher": "Ataşehir Kaymakamlığı",
+          "url": "https://atasehir.gov.tr/tarihi-ve-cografi-yapisi",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary",
+            "geography"
+          ]
+        },
+        {
+          "title": "Ataşehir mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/atasehir-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    },
+    {
+      "district": "beykoz",
+      "pdfSha256": "5cfac9d53b0026709225f8dff8695dd851712c2250ab22a702ac4f4ae49b4cdc",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Beykoz’un geçmişi, Boğaziçi yerleşimleri, mesire alanları ve üretim yapıları üzerinden okunabilir.",
+        "history": "Kaymakamlık tarihçesi, Göksu ve Küçüksu çevresindeki mesire kültürü ile Beykoz’un sanayi geçmişini birlikte anlatır. Bu katmanlar, ilçeyi yalnızca kıyı yerleşimi olarak tanımlamanın eksik kalacağını gösterir.",
+        "geography": "Beykoz’un Boğaziçi kıyıları kuzeyde Karadeniz’e açılan çevreyle ilişkilidir. Anadolufeneri ve Göksu gibi farklı odaklar, ilçenin kıyı coğrafyasını okumaya yardımcı olur."
+      },
+      "neighborhoods": [
+        "Acarlar",
+        "Akbaba",
+        "Alibahadır",
+        "Anadolu Hisarı",
+        "Anadolu Kavağı",
+        "Anadolufeneri",
+        "Baklacı",
+        "Bozhane",
+        "Cumhuriyet",
+        "Çamlıbahçe",
+        "Çengeldere",
+        "Çiftlik",
+        "Çiğdem",
+        "Çubuklu",
+        "Dereseki",
+        "Elmalı",
+        "Fatih",
+        "Göksu",
+        "Göllü",
+        "Görele",
+        "Göztepe",
+        "Gümüşsuyu",
+        "Incirköy",
+        "Ishaklı",
+        "Kanlıca",
+        "Kavacık",
+        "Kaynarca",
+        "Kılıçlı",
+        "Mahmutşevketpaşa",
+        "Merkez",
+        "Ortaçeşme",
+        "Öğümce",
+        "Örnekköy",
+        "Paşabahçe",
+        "Paşamandıra",
+        "Polonezköy",
+        "Poyrazköy",
+        "Riva",
+        "Rüzgarlıbahçe",
+        "Soğuksu",
+        "Tokatköy",
+        "Yalıköy",
+        "Yavuz Selim",
+        "Yenimahalle",
+        "Zerzavatçı"
+      ],
+      "sources": [
+        {
+          "title": "Beykoz — Tarihçe",
+          "publisher": "Beykoz Kaymakamlığı",
+          "url": "https://www.beykoz.gov.tr/tarihcemiz",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary",
+            "geography"
+          ]
+        },
+        {
+          "title": "Beykoz mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/beykoz-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        },
+        {
+          "title": "Beykoz Belediyesi — e-Devlet mahalle seçicisi",
+          "publisher": "Beykoz Belediyesi / e-Devlet Kapısı",
+          "url": "https://www.turkiye.gov.tr/beykoz-belediyesi-arsa-rayic-degeri-sorgulama-v2",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
+        "specificReview": "e-Devlet belediye kaydıyla Çiğdem, Polonezköy, Zerzavatçı yazımları düzeltildi. PDF Ortaçeşme kaydını atlıyor; Çiftlik ve Çavuşbaşı Çiftlik ayrı mahalle değildir. Tek kayıt ve Ortaçeşme ile 45."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    },
+    {
+      "district": "cekmekoy",
+      "pdfSha256": "7c8331bcfd0a53eee358b4cfb179c3e929061bb5d76dd72da2ca6e0ccbff14d0",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Çekmeköy’de eski köy yerleşimleri ile İstanbul’un Anadolu Yakası’ndaki kentleşme süreci birlikte görülür.",
+        "history": "Kaymakamlığın tarih çalışması, Alemdağ, Ömerli ve çevredeki yerleşimlerin geçmişini arşiv kayıtlarıyla ele alır. Bugünkü ilçe yapısından önce var olan bu yerleşimler, ilçenin tarihini tek bir kuruluş yılına indirgememek gerektiğini gösterir.",
+        "geography": "Çekmeköy, Alemdağ ormanlarının güneybatı çevresinde yer alır. Beykoz, Şile, Ümraniye ve Sancaktepe ile komşuluğu, Anadolu Yakası’nın iç kesimlerindeki konumunu tarif eder."
+      },
+      "neighborhoods": [
+        "Alemdağ",
+        "Aydınlar",
+        "Cumhuriyet",
+        "Çamlık",
+        "Çatalmeşe",
+        "Ekşioğlu",
+        "Güngören",
+        "Hamidiye",
+        "Hüseyinli",
+        "Kirazlıdere",
+        "Koçullu",
+        "Mehmet Akif",
+        "Merkez",
+        "Mimar Sinan",
+        "Nişantepe",
+        "Ömerli",
+        "Reşadiye",
+        "Sırapınar",
+        "Soğukpınar",
+        "Sultançiftliği",
+        "Taşdelen"
+      ],
+      "sources": [
+        {
+          "title": "Çekmeköy — Tarihçe",
+          "publisher": "Çekmeköy Kaymakamlığı",
+          "url": "https://cekmekoy.gov.tr/cekmekoy-tarihi",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary"
+          ]
+        },
+        {
+          "title": "Çekmeköy — Coğrafya / yerleşim",
+          "publisher": "Çekmeköy Kaymakamlığı",
+          "url": "https://cekmekoy.gov.tr/cekmekoy-cografyasi",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "geography",
+            "summary"
+          ]
+        },
+        {
+          "title": "Çekmeköy mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/cekmekoy-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    },
+    {
+      "district": "kadikoy",
+      "pdfSha256": "37958bd6aac286c0e360965ae74d7e13f437e02aaf376c72af7c7f18800ab458",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Kadıköy, Marmara kıyısındaki yerleşimleri ve farklı dönemlerde gelişen mahalle dokularıyla tanınır.",
+        "history": "19. yüzyılda vapur işletmeciliği ve Haydarpaşa demiryolu bağlantısı, Kadıköy’ün gelişmesinde etkili oldu. Kaymakamlık tarihçesi, sonraki dönemde bahçeli yerleşimlerin apartmanlaşmasını ayrı bir kentleşme evresi olarak anlatır. Kadıköy 1930’da ilçe oldu.",
+        "geography": "İlçe, Boğaz’ın Marmara’ya açıldığı çevrenin doğusundadır. Haydarpaşa, Moda ve Bostancı çevresindeki kıyılar ile iç mahalleler farklı konumlar sunar; semt adları resmî mahalle adlarıyla her zaman örtüşmez."
+      },
+      "neighborhoods": [
+        "19 Mayıs",
+        "Acıbadem",
+        "Bostancı",
+        "Caddebostan",
+        "Caferağa",
+        "Dumlupınar",
+        "Eğitim",
+        "Erenköy",
+        "Fenerbahçe",
+        "Feneryolu",
+        "Fikirtepe",
+        "Göztepe",
+        "Hasanpaşa",
+        "Koşuyolu",
+        "Kozyatağı",
+        "Merdivenköy",
+        "Osmanağa",
+        "Rasimpaşa",
+        "Sahrayıcedit",
+        "Suadiye",
+        "Zühtüpaşa"
+      ],
+      "sources": [
+        {
+          "title": "Kadıköy — Tarihçe",
+          "publisher": "Kadıköy Kaymakamlığı",
+          "url": "https://kadikoy.gov.tr/kadikoy-ilce-tarihce",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary"
+          ]
+        },
+        {
+          "title": "Kadıköy — Coğrafya / yerleşim",
+          "publisher": "Kadıköy Belediyesi",
+          "url": "https://www.kadikoy.bel.tr/cografi-konum",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "geography",
+            "summary"
+          ]
+        },
+        {
+          "title": "Kadıköy mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/kadikoy-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    },
+    {
+      "district": "kartal",
+      "pdfSha256": "3c8d5712bbceb80a646bed719dac8772528ac985d94bf251a3b48345b49259f7",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Kartal, Marmara kıyısından Anadolu Yakası’nın iç kesimlerine doğru uzanan yerleşim yapısıyla ele alınır.",
+        "history": "Kaymakamlık tarihçesi, Kartal’ın kıyı yerleşimi geçmişini ve zaman içindeki idari değişimlerini anlatır. Eski Kartal’ın kapsadığı alanlar bugünkü ilçe sınırlarıyla aynı kabul edilmemelidir.",
+        "geography": "Kartal, Kocaeli Yarımadası’nın güneybatısında Marmara kıyısındadır. Kıyı ile Aydos çevresine doğru yükselen iç kesimler, ilçenin coğrafyasını farklılaştırır."
+      },
+      "neighborhoods": [
+        "Atalar",
+        "Cevizli",
+        "Cumhuriyet",
+        "Çavuşoğlu",
+        "Esentepe",
+        "Gümüşpınar",
+        "Hürriyet",
+        "Karlıktepe",
+        "Kordonboyu",
+        "Orhantepe",
+        "Soğanlık Orta",
+        "Petrol İş",
+        "Soğanlık Yeni",
+        "Topselvi",
+        "Uğur Mumcu",
+        "Yakacık Çarşı",
+        "Yakacık Yeni",
+        "Yalı",
+        "Yukarı",
+        "Yunus"
+      ],
+      "sources": [
+        {
+          "title": "Kartal — Tarihçe",
+          "publisher": "Kartal Kaymakamlığı",
+          "url": "https://kartal.gov.tr/tarihce",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary"
+          ]
+        },
+        {
+          "title": "Kartal — Coğrafya / yerleşim",
+          "publisher": "Kartal Kaymakamlığı",
+          "url": "https://kartal.gov.tr/cografi-yapi",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "geography",
+            "summary"
+          ]
+        },
+        {
+          "title": "Kartal mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/kartal-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        },
+        {
+          "title": "Kartal mahalle listesi — yazım kontrolü",
+          "publisher": "Kartal Kaymakamlığı",
+          "url": "https://www.kartal.gov.tr/kartal-ilesi-mahalle-muhtarliklarina-ait-telefon-faks-mail-bilgileri",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    },
+    {
+      "district": "maltepe",
+      "pdfSha256": "ce58474401380ac3ca9f3625264aff25dd2f49481fae159ddc4be312aefbcd02",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Maltepe’nin coğrafi kimliği, Marmara kıyısı ile kuzeye doğru yükselen iç kesimlerin birlikteliğine dayanır.",
+        "history": "Kaymakamlık tarihçesi, Maltepe çevresindeki yerleşimin Bizans ve Osmanlı dönemlerine uzanan geçmişini ele alır. Rehberde, eski yer adlarına ilişkin kesinliği tartışmalı eşleştirmeler ve ayrıntılı kuruluş tarihleri kullanılmamıştır.",
+        "geography": "İlçe, Kocaeli Yarımadası’nın güneybatısında Marmara Denizi kıyısında bulunur. Kıyıdan kuzeye doğru yükselen arazi, düz kesimler ile tepelik alanları bir araya getirir."
+      },
+      "neighborhoods": [
+        "Altayçeşme",
+        "Altıntepe",
+        "Aydınevler",
+        "Bağlarbaşı",
+        "Başıbüyük",
+        "Büyükbakkalköy",
+        "Cevizli",
+        "Çınar",
+        "Esenkent",
+        "Feyzullah",
+        "Fındıklı",
+        "Girne",
+        "Gülensu",
+        "Gülsuyu",
+        "İdealtepe",
+        "Küçükyalı Merkez",
+        "Yalı",
+        "Zümrütevler"
+      ],
+      "sources": [
+        {
+          "title": "Maltepe — Tarihçe",
+          "publisher": "Maltepe Kaymakamlığı",
+          "url": "https://maltepe.gov.tr/tarihce",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary"
+          ]
+        },
+        {
+          "title": "Maltepe — Coğrafya / yerleşim",
+          "publisher": "Maltepe Kaymakamlığı",
+          "url": "https://maltepe.gov.tr/cografi-yapi",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "geography",
+            "summary"
+          ]
+        },
+        {
+          "title": "Maltepe mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/maltepe-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
+        "specificReview": "Bryas eşleştirmesi ve 816/Theophilos anlatımı aktarılmadı."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    },
+    {
+      "district": "pendik",
+      "pdfSha256": "274878900fe2b02fe0d69c981172f3253a933b6e97442483c85c59844774cdcd",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Pendik, Marmara kıyısındaki yerleşimleri ile iç kesimlere uzanan coğrafyası birlikte değerlendirilerek tanınabilir.",
+        "history": "Pendik’in ilçe oluşumuna ilişkin düzenleme 1987’de yapıldı; ilçe teşkilatı 1988’de faaliyete geçti. Tuzla’nın 1992’de ayrılması, sonraki idari değişimlerden biridir.",
+        "geography": "İlçe Marmara Denizi kıyısında yer alır. Kaymakamlığın coğrafya anlatımı, kıyı ile Ömerli Barajı ve Aydos çevresine uzanan iç kesimleri birlikte ele alır."
+      },
+      "neighborhoods": [
+        "Ahmet Yesevi",
+        "Bahçelievler",
+        "Ballıca",
+        "Batı",
+        "Çamçeşme",
+        "Çamlık",
+        "Çınardere",
+        "Doğu",
+        "Dumlupınar",
+        "Emirli",
+        "Ertuğrul Gazi",
+        "Esenler",
+        "Esenyalı",
+        "Fatih",
+        "Fevzi Çakmak",
+        "Göçbeyli",
+        "Güllü Bağlar",
+        "Güzelyalı",
+        "Harmandere",
+        "Kavakpınar",
+        "Kaynarca",
+        "Kurna",
+        "Kurtdoğmuş",
+        "Kurtköy",
+        "Orhangazi",
+        "Orta",
+        "Ramazanoğlu",
+        "Sanayi",
+        "Sapan Bağları",
+        "Sülüntepe",
+        "Şeyhli",
+        "Velibaba",
+        "Yayalar",
+        "Yeni",
+        "Yenişehir",
+        "Yeşilbağlar"
+      ],
+      "sources": [
+        {
+          "title": "Pendik — Tarihçe",
+          "publisher": "Pendik Kaymakamlığı",
+          "url": "https://pendik.gov.tr/cografya",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary",
+            "geography"
+          ]
+        },
+        {
+          "title": "Pendik mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/pendik-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    },
+    {
+      "district": "sancaktepe",
+      "pdfSha256": "7429c724fbec526742c25222a78faded34b00fdd09afd534cfd55a4bb64773e9",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Sancaktepe’nin geçmişi, Samandıra ve Sarıgazi gibi yerleşimlerin bugünkü ilçe yapısında birleşmesiyle okunur.",
+        "history": "Sancaktepe ilçesi 2008’de kuruldu. Samandıra’daki Damatris Sarayı kalıntıları, bölgenin yeni idari kuruluşundan çok daha eski bir yerleşim geçmişine işaret eder.",
+        "geography": "Samandıra ve Sarıgazi, ilçenin yerleşim coğrafyasındaki başlıca tarihî odaklardandır. Bu semt adları güncel mahalle listesinin tamamını karşılamaz; idari kayıtlar ayrı gösterilir."
+      },
+      "neighborhoods": [
+        "Abdurrahmangazi",
+        "Akpınar",
+        "Atatürk",
+        "Emek",
+        "Eyüp Sultan",
+        "Fatih",
+        "Hilal",
+        "İnönü",
+        "Kemal Türkler",
+        "Meclis",
+        "Merve",
+        "Mevlana",
+        "Osmangazi",
+        "Paşaköy",
+        "Safa",
+        "Sarıgazi",
+        "Veysel Karani",
+        "Yenidoğan",
+        "Yunus Emre"
+      ],
+      "sources": [
+        {
+          "title": "Sancaktepe — Tarihçe",
+          "publisher": "Sancaktepe Kaymakamlığı",
+          "url": "https://sancaktepe.gov.tr/tarihce",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary",
+            "geography"
+          ]
+        },
+        {
+          "title": "Sancaktepe mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/sancaktepe-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    },
+    {
+      "district": "sultanbeyli",
+      "pdfSha256": "74cbc64aa17f871c8d8e3708f9cb23902cdb1952dd3828e2148a4d2367a1141c",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Sultanbeyli, Aydos çevresindeki tarihî güzergâhlar ile yakın dönem kentleşmesinin birlikte ele alındığı bir ilçedir.",
+        "history": "Aydos Kalesi ve çevresindeki geçiş yolları, bölgenin tarihî önemini açıklayan somut odaklardır. Sultanbeyli, yakın dönemde köy ve belediye yerleşiminden büyüyerek 1992’de ilçe oldu. Kale hakkında aktarılan efsaneler tarihsel olgu olarak kullanılmamıştır.",
+        "geography": "Sultanbeyli, Anadolu Yakası’nda Aydos ve Teferrüç çevresindeki alanda yer alır. Kaymakamlık sayfasındaki eski idari komşuluk anlatımı güncel sınır bilgisi olarak aktarılmamıştır."
+      },
+      "neighborhoods": [
+        "Abdurrahmangazi",
+        "Adil",
+        "Ahmet Yesevi",
+        "Akşemsettin",
+        "Battalgazi",
+        "Fatih",
+        "Hamidiye",
+        "Hasanpaşa",
+        "Mecidiye",
+        "Mehmet Akif",
+        "Mimar Sinan",
+        "Necip Fazıl",
+        "Orhan Gazi",
+        "Turgut Reis",
+        "Yavuz Selim"
+      ],
+      "sources": [
+        {
+          "title": "Sultanbeyli — Tarihçe",
+          "publisher": "Sultanbeyli Kaymakamlığı",
+          "url": "https://www.sultanbeyli.gov.tr/ilce-tarihi",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary"
+          ]
+        },
+        {
+          "title": "Sultanbeyli — Coğrafya / yerleşim",
+          "publisher": "Sultanbeyli Kaymakamlığı",
+          "url": "https://www.sultanbeyli.gov.tr/cografi-durum",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "geography",
+            "summary"
+          ]
+        },
+        {
+          "title": "Sultanbeyli mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/sultanbeyli-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        },
+        {
+          "title": "Sultanbeyli mahalle listesi — yazım kontrolü",
+          "publisher": "Sultanbeyli Belediyesi",
+          "url": "https://www.sultanbeyli.bel.tr/muhtarliklar/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
+        "specificReview": "İlçe belediyesi Akşemsettin; İBB Akşemseddin yazıyor. İlçe belediyesinin yazımı esas alındı. Eski coğrafya sayfasındaki Paşaköy-Kartal ilişkisi güncel sınır diye aktarılmadı."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    },
+    {
+      "district": "sile",
+      "pdfSha256": "a580d632aad945739736676df191e72b23d6ec8e09a7e164266f819668e285f7",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Şile, Karadeniz kıyısındaki yerleşim geçmişi ve çevresindeki farklı yerleşim odaklarıyla tanınır.",
+        "history": "Kaymakamlık tarihçesi, Şile çevresindeki eski yerleşim izlerini Ağva ve Sahilköy gibi odaklarla birlikte ele alır. Rehber, yer adlarının kökenine ilişkin rivayetleri kesin bilgi olarak sunmaz.",
+        "geography": "Şile, Kocaeli Yarımadası’nın Karadeniz kıyısındadır. Merkez ile Ağva ve çevre mahalleler, tek bir kıyı yerleşiminden daha geniş bir ilçe coğrafyası oluşturur."
+      },
+      "neighborhoods": [
+        "Ağaçdere",
+        "Ağva Merkez",
+        "Ahmetli",
+        "Akçekese",
+        "Alacalı",
+        "Avcıkoru",
+        "Balibey",
+        "Bıçkıdere",
+        "Bozgoca",
+        "Bucaklı",
+        "Çataklı",
+        "Çavuş",
+        "Çayırbaşı",
+        "Çelebi",
+        "Çengilli",
+        "Darlık",
+        "Değirmençayırı",
+        "Doğancılı",
+        "Erenler",
+        "Esenceli",
+        "Geredeli",
+        "Göçe",
+        "Gökmaslı",
+        "Göksu",
+        "Hacı Kasım",
+        "Hacıllı",
+        "Hasanlı",
+        "İmrendere",
+        "İmrenli",
+        "İsaköy",
+        "Kabakoz",
+        "Kadıköy",
+        "Kalemköy",
+        "Karabeyli",
+        "Karacaköy",
+        "Karakiraz",
+        "Karamandere",
+        "Kervansaray",
+        "Kızılcaköy",
+        "Korucuköy",
+        "Kömürlük",
+        "Kumbaba",
+        "Kurfallı",
+        "Kurna",
+        "Meşrutiyet",
+        "Oruçoğlu",
+        "Osmanköy",
+        "Ovacık",
+        "Sahilköy",
+        "Satmazlı",
+        "Sofular",
+        "Soğullu",
+        "Sortullu",
+        "Şuayipli",
+        "Teke",
+        "Ulupelit",
+        "Üvezli",
+        "Yaka",
+        "Yaylalı",
+        "Yazımanayır",
+        "Yeniköy",
+        "Yeşilvadi"
+      ],
+      "sources": [
+        {
+          "title": "Şile — Tarihçe",
+          "publisher": "Şile Kaymakamlığı",
+          "url": "https://sile.gov.tr/tarihce",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary",
+            "geography"
+          ]
+        },
+        {
+          "title": "Şile mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/sile-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        },
+        {
+          "title": "Şile mahalle listesi — yazım kontrolü",
+          "publisher": "Şile Kaymakamlığı",
+          "url": "https://sile.gov.tr/mahalle-ve-koylerimiz",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
+        "specificReview": "Resmî kaynaklar Akçekese/Akçakese yazımında ayrılıyor. Kaymakamlık ve ilçe belediyesindeki Akçekese esas; İBB farkı saklandı."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    },
+    {
+      "district": "tuzla",
+      "pdfSha256": "03fdd747eeb1b6c7808208fde4842ccb7cddfb158ea14095e7b60d984c040a61",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Tuzla’nın geçmişi, kıyı yerleşimi ile Kalekapı çevresindeki arkeolojik izleri birlikte içerir.",
+        "history": "Kalekapı çevresindeki buluntular, Tuzla’nın yerleşim geçmişinin tarih öncesine uzandığını gösterir. Yakın dönem idari gelişiminde ise Tuzla’nın 1992’de Pendik’ten ayrılarak ilçe olması belirleyici bir aşamadır.",
+        "geography": "Tuzla Burnu ve kıyı çevresi, yerleşimin tarihî coğrafyasının temel odaklarındandır. İlçe adını açıklayan farklı tuzla anlatıları, tek ve kesin bir köken açıklaması olarak kullanılmamıştır."
+      },
+      "neighborhoods": [
+        "Akfırat",
+        "Anadolu",
+        "Aydınlı",
+        "Aydıntepe",
+        "Cami",
+        "Evliya Çelebi",
+        "Fatih",
+        "İçmeler",
+        "İstasyon",
+        "Mescit",
+        "Mimar Sinan",
+        "Orhanlı",
+        "Orta",
+        "Postane",
+        "Şifa",
+        "Tepeören",
+        "Yayla"
+      ],
+      "sources": [
+        {
+          "title": "Tuzla — Tarihçe",
+          "publisher": "Tuzla Kaymakamlığı",
+          "url": "https://www.tuzla.gov.tr/tarihsel-gelisim",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary"
+          ]
+        },
+        {
+          "title": "Tuzla — Coğrafya / yerleşim",
+          "publisher": "Tuzla Kaymakamlığı",
+          "url": "https://www.tuzla.gov.tr/tuzlamizin-tarihcesi",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "geography",
+            "summary"
+          ]
+        },
+        {
+          "title": "Tuzla mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/tuzla-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    },
+    {
+      "district": "umraniye",
+      "pdfSha256": "78b4b931cdc864a3ec4811c3db1ed9fd40a608f02ecf8631eb5f2c41ff5c018e",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Ümraniye’nin yakın dönem gelişimi, göç ve sanayileşmeyle büyüyen yerleşim dokusu üzerinden okunur.",
+        "history": "Kaymakamlık tarihçesi, göçmen yerleşimlerini ve 1960’lardan sonraki sanayileşmeyi Ümraniye’nin gelişiminde öne çıkarır. Frigler ve erken dönem savaşları hakkındaki ayrıntılı anlatılar, bu rehberde doğrulanmış tarihsel bilgi olarak kullanılmamıştır.",
+        "geography": "Ümraniye, Anadolu Yakası’nın iç kesimlerinde yer alır. Üsküdar, Ataşehir, Sancaktepe, Çekmeköy ve Beykoz çevresindeki konumu ilçeyi tarif eder; bütün ilçe için genellenmiş zemin güvenliği iddiası kurulmaz."
+      },
+      "neighborhoods": [
+        "Adem Yavuz",
+        "Altınşehir",
+        "Armağanevler",
+        "Aşağı Dudullu",
+        "Atakent",
+        "Atatürk",
+        "Cemil Meriç",
+        "Çakmak",
+        "Çamlık",
+        "Dumlupınar",
+        "Elmalıkent",
+        "Esenevler",
+        "Esenkent",
+        "Esenşehir",
+        "Fatih Sultan Mehmet",
+        "Finanskent",
+        "Hekimbaşı",
+        "Huzur",
+        "Ihlamurkuyu",
+        "İnkilap",
+        "İstiklal",
+        "Kazım Karabekir",
+        "Madenler",
+        "Mehmet Akif",
+        "Namık Kemal",
+        "Necip Fazıl",
+        "Parseller",
+        "Site",
+        "Şerifali",
+        "Tantavi",
+        "Tatlısu",
+        "Tepeüstü",
+        "Topağacı",
+        "Yamanevler",
+        "Yukarı Dudullu"
+      ],
+      "sources": [
+        {
+          "title": "Ümraniye — Tarihçe",
+          "publisher": "Ümraniye Kaymakamlığı",
+          "url": "https://umraniye.gov.tr/umraniyenin-tarihi",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary"
+          ]
+        },
+        {
+          "title": "Ümraniye — Coğrafya / yerleşim",
+          "publisher": "Ümraniye Kaymakamlığı",
+          "url": "https://www.umraniye.gov.tr/cografi-durum",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "geography",
+            "summary"
+          ]
+        },
+        {
+          "title": "Ümraniye mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/umraniye-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
+        "specificReview": "İlçe genelinde sağlam zemin iddiası çıkarıldı. Harun Reşid ve Frigler hakkındaki tartışmalı anlatı yayımlanmadı."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    },
+    {
+      "district": "uskudar",
+      "pdfSha256": "29a2c9b647340173c4bc714c3668912f1722a6d2796f8ea73c65806ab4bec0f1",
+      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "sections": {
+        "summary": "Üsküdar’ın kent kimliğinde iskele çevresi, tarihî yerleşimler ve Anadolu’ya geçiş ilişkisi önemli yer tutar.",
+        "history": "Osmanlı döneminde iskele çevresindeki ticaret ve külliyeler, Üsküdar’ın gelişmesinde rol oynadı. Anadolu yönündeki seferler ve hac yolculukları da ilçenin tarihî ulaşım ve konaklama işlevleri arasında yer aldı.",
+        "geography": "Salacak, Kuzguncuk ve Çamlıca çevresi, Üsküdar’ın farklı coğrafi odaklarıdır. Kıyı yerleşimleri ile tepelerdeki mahalleler aynı yerleşim biçimine indirgenmemelidir."
+      },
+      "neighborhoods": [
+        "Acıbadem",
+        "Ahmediye",
+        "Altunizade",
+        "Aziz Mahmut Hüdayi",
+        "Bahçelievler",
+        "Barbaros",
+        "Beylerbeyi",
+        "Bulgurlu",
+        "Burhaniye",
+        "Cumhuriyet",
+        "Çengelköy",
+        "Ferah",
+        "Güzeltepe",
+        "İcadiye",
+        "Kandilli",
+        "Kısıklı",
+        "Kirazlıtepe",
+        "Kuleli",
+        "Kuzguncuk",
+        "Küçük Çamlıca",
+        "Küçüksu",
+        "Küplüce",
+        "Mehmet Akif Ersoy",
+        "Mimar Sinan",
+        "Muratreis",
+        "Salacak",
+        "Selami Ali",
+        "Selimiye",
+        "Sultantepe",
+        "Ünalan",
+        "Valide-i Atik",
+        "Yavuztürk",
+        "Zeynep Kamil"
+      ],
+      "sources": [
+        {
+          "title": "Üsküdar — Tarihçe",
+          "publisher": "Üsküdar Belediyesi",
+          "url": "https://www.uskudar.bel.tr/tr/main/pages/tarihce/25",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "summary",
+            "geography"
+          ]
+        },
+        {
+          "title": "Üsküdar mahalle muhtarlıkları — gözlenen liste",
+          "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
+          "url": "https://muhtarlikisleri.ibb.istanbul/uskudar-mahalle-muhtarlari/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        },
+        {
+          "title": "Üsküdar mahalle listesi — yazım kontrolü",
+          "publisher": "Üsküdar Belediyesi",
+          "url": "https://www.uskudar.bel.tr/tr/main/mahalleler",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "needsVerification": false,
+          "sections": [
+            "neighborhoods"
+          ]
+        }
+      ],
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      },
+      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+    }
+  ]
+}

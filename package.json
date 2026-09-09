@@ -14,7 +14,12 @@
     "payload:migrate:create": "payload migrate:create",
     "payload:migrate:status": "payload migrate:status",
     "payload:migrate": "payload migrate",
-    "vercel:build": "node scripts/vercel-build.mjs"
+    "vercel:build": "node scripts/vercel-build.mjs",
+    "district:import": "tsx scripts/districts/import.ts",
+    "test:districts": "tsx --test scripts/districts/policy.test.ts",
+    "test:districts:cms": "tsx scripts/districts/check-cms.ts",
+    "test:districts:routes": "node scripts/districts/acceptance.mjs",
+    "test:districts:content": "tsx scripts/districts/check-content.ts"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "3.86.0",

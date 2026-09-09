@@ -250,6 +250,8 @@ export interface DistrictGuide {
     | 'tuzla'
     | 'umraniye'
     | 'uskudar';
+  summary?: string | null;
+  geography?: string | null;
   history?: string | null;
   life?: string | null;
   transportation?: string | null;
@@ -277,6 +279,9 @@ export interface DistrictGuide {
     averageRent?: number | null;
     dataDate?: string | null;
     source?: string | null;
+    sourceUrl?: string | null;
+    checkedAt?: string | null;
+    needsVerification?: boolean | null;
     description?: string | null;
   };
   planningDevelopments?:
@@ -286,12 +291,99 @@ export interface DistrictGuide {
         neighborhood?: string | null;
         date?: string | null;
         status?:
-          ('teklif' | 'planlama' | 'belediye-meclisi-karari' | 'onay' | 'aski' | 'uygulama' | 'tamamlandi') | null;
+          | (
+              | 'teklif'
+              | 'planlama'
+              | 'belediye-meclisi-karari'
+              | 'onay'
+              | 'aski'
+              | 'ihale'
+              | 'insaat'
+              | 'uygulama'
+              | 'tamamlandi'
+              | 'belirsiz'
+            )
+          | null;
         officialSource?: string | null;
         checkedAt?: string | null;
+        needsVerification?: boolean | null;
         id?: string | null;
       }[]
     | null;
+  placesGuide?: string | null;
+  distinctiveFeatures?: string | null;
+  researchTopics?: string | null;
+  /**
+   * Ham PDF metnini onaylamak yerine bölüm metnini düzenleyin ve destekleyen kaynakları kontrol edin. Kaynaksız veya eski dinamik veri public görünmez.
+   */
+  reviewedSections?:
+    | (
+        | 'summary'
+        | 'history'
+        | 'geography'
+        | 'life'
+        | 'transportation'
+        | 'facts'
+        | 'neighborhoods'
+        | 'housingTexture'
+        | 'regionalAssessment'
+        | 'marketData'
+        | 'planningDevelopments'
+        | 'placesGuide'
+        | 'distinctiveFeatures'
+        | 'researchTopics'
+      )[]
+    | null;
+  sources?:
+    | {
+        title: string;
+        publisher: string;
+        url: string;
+        sourceType: 'official' | 'academic' | 'secondary' | 'market' | 'unclassified';
+        primary?: boolean | null;
+        dataDate?: string | null;
+        checkedAt?: string | null;
+        needsVerification?: boolean | null;
+        sections?:
+          | (
+              | 'summary'
+              | 'history'
+              | 'geography'
+              | 'life'
+              | 'transportation'
+              | 'facts'
+              | 'neighborhoods'
+              | 'housingTexture'
+              | 'regionalAssessment'
+              | 'marketData'
+              | 'planningDevelopments'
+              | 'placesGuide'
+              | 'distinctiveFeatures'
+              | 'researchTopics'
+            )[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Ham mahalle listeleri, dinamik iddialar ve PDF kaynak notları. Bu alan public sayfaya gönderilmez.
+   */
+  researchNotes?: string | null;
+  /**
+   * PDF adı/hash, dönüşüm sürümü ve aktarılan alanların fingerprint kaydı.
+   */
+  importProvenance?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * 04 İlçeden Kareler Photos; 06 Araştırmalar ve 07 İlçeden Haberler Articles koleksiyonundaki ilçe ilişkilerinden gelir.
+   */
   publishedAt?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -1077,6 +1169,8 @@ export interface CategoriesSelect<T extends boolean = true> {
  */
 export interface DistrictGuidesSelect<T extends boolean = true> {
   district?: T;
+  summary?: T;
+  geography?: T;
   history?: T;
   life?: T;
   transportation?: T;
@@ -1108,6 +1202,9 @@ export interface DistrictGuidesSelect<T extends boolean = true> {
         averageRent?: T;
         dataDate?: T;
         source?: T;
+        sourceUrl?: T;
+        checkedAt?: T;
+        needsVerification?: T;
         description?: T;
       };
   planningDevelopments?:
@@ -1120,8 +1217,29 @@ export interface DistrictGuidesSelect<T extends boolean = true> {
         status?: T;
         officialSource?: T;
         checkedAt?: T;
+        needsVerification?: T;
         id?: T;
       };
+  placesGuide?: T;
+  distinctiveFeatures?: T;
+  researchTopics?: T;
+  reviewedSections?: T;
+  sources?:
+    | T
+    | {
+        title?: T;
+        publisher?: T;
+        url?: T;
+        sourceType?: T;
+        primary?: T;
+        dataDate?: T;
+        checkedAt?: T;
+        needsVerification?: T;
+        sections?: T;
+        id?: T;
+      };
+  researchNotes?: T;
+  importProvenance?: T;
   publishedAt?: T;
   updatedAt?: T;
   createdAt?: T;
