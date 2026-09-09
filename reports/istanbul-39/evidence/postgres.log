@@ -1,0 +1,9 @@
+{
+  "engine": "PGlite embedded PostgreSQL",
+  "migrations": 7,
+  "target": "20260909_181042_istanbul_district_sources",
+  "preservedExistingDistrict": true,
+  "sourceInsert": true,
+  "tableCount": 115,
+  "productionConnection": false
+}

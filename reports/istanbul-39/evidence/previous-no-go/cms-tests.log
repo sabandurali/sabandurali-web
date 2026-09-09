@@ -1,0 +1,14 @@
+[21:26:36] WARN: No email adapter provided. Email will be written to console. More info at https://payloadcms.com/docs/email/overview.
+{
+  "districts": 39,
+  "unique": 39,
+  "drafts": 39,
+  "anonymousDrafts": 0,
+  "unreviewedPublishBlocked": true,
+  "immutableSlug": true,
+  "manualEditProtected": true,
+  "anonymousSensitiveDataHidden": true,
+  "futurePublishHidden": true,
+  "englishFallbackAbsent": true,
+  "fixturesRestored": true
+}

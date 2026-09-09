@@ -1,0 +1,12 @@
+[⣷] Pulling schema from database...
+[2K[1G[✓] Pulling schema from database...
+[21:54:44] [33mWARN[39m: [36mNo email adapter provided. Email will be written to console. More info at https://payloadcms.com/docs/email/overview.[39m
+{
+  "result": "PASS",
+  "publishedInDisposableDatabase": 39,
+  "anonymousVerifiedGuides": 39,
+  "rawLeak": false,
+  "articlesUnchanged": 2,
+  "photosUnchanged": 0,
+  "productionWrites": 0
+}

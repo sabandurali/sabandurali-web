@@ -1,0 +1,207 @@
+[⣷] Pulling schema from database...
+[✓] Pulling schema from database...
+[21:11:04] WARN: No email adapter provided. Email will be written to console. More info at https://payloadcms.com/docs/email/overview.
+{
+  "mode": "local-draft-import",
+  "create": 39,
+  "update": 0,
+  "skip": 0,
+  "writes": 39,
+  "rows": [
+    {
+      "district": "arnavutkoy",
+      "action": "create",
+      "reason": "new district draft"
+    },
+    {
+      "district": "avcilar",
+      "action": "create",
+      "reason": "new district draft"
+    },
+    {
+      "district": "bagcilar",
+      "action": "create",
+      "reason": "new district draft"
+    },
+    {
+      "district": "bahcelievler",
+      "action": "create",
+      "reason": "new district draft"
+    },
+    {
+      "district": "bakirkoy",
+      "action": "create",
+      "reason": "new district draft"
+    },
+    {
+      "district": "basaksehir",
+      "action": "create",
+      "reason": "new district draft"
+    },
+    {
+      "district": "bayrampasa",
+      "action": "create",
+      "reason": "new district draft"
+    },
+    {
+      "district": "besiktas",
+      "action": "create",
+      "reason": "new district draft"
+    },
+    {
+      "district": "beylikduzu",
+      "action": "create",
+      "reason": "new district draft"
+    },
+    {
+      "district": "beyoglu",
+      "action": "create",
+      "reason": "new district draft"
+    },
+    {
+      "district": "buyukcekmece",
+      "action": "create",
+      "reason": "new district draft"
+    },
+    {
+      "district": "catalca",
+      "action": "create",
+      "reason": "new district draft"
+    },
+    {
+      "district": "esenler",
+      "action": "create",
+      "reason": "new district draft"
+    },
+    {
+      "district": "esenyurt",
+      "action": "create",
+      "reason": "new district draft"
+    },
+    {
+      "district": "eyupsultan",
+      "action": "create",
+      "reason": "new district draft"
+    },
+    {
+      "district": "fatih",
+      "action": "create",
+      "reason": "new district draft"
+    },
+    {
+      "district": "gaziosmanpasa",
+      "action": "create",
+      "reason": "new district draft"
+    },
+    {
+      "district": "gungoren",
+      "action": "create",
+      "reason": "new district draft"
+    },
+    {
+      "district": "kagithane",
+      "action": "create",
+      "reason": "new district draft"
+    },
+    {
+      "district": "kucukcekmece",
+      "action": "create",
+      "reason": "new district draft"
+    },
+    {
+      "district": "sariyer",
+      "action": "create",
+      "reason": "new district draft"
+    },
+    {
+      "district": "silivri",
+      "action": "create",
+      "reason": "new district draft"
+    },
+    {
+      "district": "sultangazi",
+      "action": "create",
+      "reason": "new district draft"
+    },
+    {
+      "district": "sisli",
+      "action": "create",
+      "reason": "new district draft"
+    },
+    {
+      "district": "zeytinburnu",
+      "action": "create",
+      "reason": "new district draft"
+    },
+    {
+      "district": "adalar",
+      "action": "create",
+      "reason": "new district draft"
+    },
+    {
+      "district": "atasehir",
+      "action": "create",
+      "reason": "new district draft"
+    },
+    {
+      "district": "beykoz",
+      "action": "create",
+      "reason": "new district draft"
+    },
+    {
+      "district": "cekmekoy",
+      "action": "create",
+      "reason": "new district draft"
+    },
+    {
+      "district": "kadikoy",
+      "action": "create",
+      "reason": "new district draft"
+    },
+    {
+      "district": "kartal",
+      "action": "create",
+      "reason": "new district draft"
+    },
+    {
+      "district": "maltepe",
+      "action": "create",
+      "reason": "new district draft"
+    },
+    {
+      "district": "pendik",
+      "action": "create",
+      "reason": "new district draft"
+    },
+    {
+      "district": "sancaktepe",
+      "action": "create",
+      "reason": "new district draft"
+    },
+    {
+      "district": "sultanbeyli",
+      "action": "create",
+      "reason": "new district draft"
+    },
+    {
+      "district": "sile",
+      "action": "create",
+      "reason": "new district draft"
+    },
+    {
+      "district": "tuzla",
+      "action": "create",
+      "reason": "new district draft"
+    },
+    {
+      "district": "umraniye",
+      "action": "create",
+      "reason": "new district draft"
+    },
+    {
+      "district": "uskudar",
+      "action": "create",
+      "reason": "new district draft"
+    }
+  ]
+}

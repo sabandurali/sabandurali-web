@@ -1,0 +1,77 @@
+
+> sabandurali-web@0.1.0 build
+> next build
+
+▲ Next.js 16.2.10 (Turbopack)
+- Environments: .env.local
+- Experiments (use with caution):
+  ✓ globalNotFound
+  ⨯ turbopackServerFastRefresh
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 13.6s
+  Running TypeScript ...
+  Finished TypeScript in 4.8s ...
+  Collecting page data using 7 workers ...
+  Generating static pages using 7 workers (0/71) ...
+  Generating static pages using 7 workers (17/71)
+  Generating static pages using 7 workers (35/71)
+  Generating static pages using 7 workers (53/71)
+✓ Generating static pages using 7 workers (71/71) in 344ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ● /[slug]
+├ ƒ /admin/[[...segments]]
+├ ƒ /api/[...slug]
+├ ○ /apple-icon.png
+├ ○ /arastirma-ve-analiz
+├ ƒ /arastirma-ve-analiz/[section]
+├ ○ /calisma-alanlari
+├ ○ /en
+├ ○ /en/articles
+├ ● /en/articles/[slug]
+├ ○ /en/books
+├ ● /en/books/[slug]
+├ ○ /en/contact
+├ ƒ /en/photography
+├ ƒ /en/photography/[slug]
+├ ○ /en/privacy-notice
+├ ○ /fotograf
+├ ƒ /fotograf/[section]
+├ ƒ /fotograflar
+├ ƒ /fotograflar/[slug]
+├ ○ /gayrimenkul-ve-istanbul
+├ ƒ /gayrimenkul-ve-istanbul/[section]
+├ ○ /hakkimda
+├ ○ /hakkimda/biyografi
+├ ○ /hakkimda/egitim-sertifikalar-diplomalar
+├ ○ /icon.png
+├ ○ /iletisim
+├ ƒ /istanbul/ilceler
+├ ƒ /istanbul/ilceler/[district]
+├ ƒ /istanbul/ilceler/[district]/haberler
+├ ○ /kitaplar
+├ ○ /kitaplar-ve-ogrenme
+├ ƒ /kitaplar-ve-ogrenme/[section]
+├ ● /kitaplar/[slug]
+├ ○ /kvkk-aydinlatma-metni
+├ ○ /makaleler
+├ ● /makaleler/[slug]
+├ ○ /robots.txt
+├ ○ /satis-ve-muzakere
+├ ƒ /satis-ve-muzakere/[section]
+├ ƒ /sitemap.xml
+├ ○ /yapay-zeka-ve-teknoloji
+├ ƒ /yapay-zeka-ve-teknoloji/[section]
+├ ○ /yonetim/kitaplar
+├ ○ /yonetim/kitaplar/yeni
+├ ○ /yonetim/makaleler
+└ ○ /yonetim/makaleler/yeni
+
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand

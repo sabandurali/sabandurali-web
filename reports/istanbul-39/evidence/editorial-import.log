@@ -1,0 +1,207 @@
+[⣷] Pulling schema from database...
+[2K[1G[✓] Pulling schema from database...
+[21:51:42] [33mWARN[39m: [36mNo email adapter provided. Email will be written to console. More info at https://payloadcms.com/docs/email/overview.[39m
+{
+  "mode": "local-draft-import",
+  "create": 0,
+  "update": 39,
+  "skip": 0,
+  "writes": 39,
+  "rows": [
+    {
+      "district": "arnavutkoy",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    },
+    {
+      "district": "avcilar",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    },
+    {
+      "district": "bagcilar",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    },
+    {
+      "district": "bahcelievler",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    },
+    {
+      "district": "bakirkoy",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    },
+    {
+      "district": "basaksehir",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    },
+    {
+      "district": "bayrampasa",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    },
+    {
+      "district": "besiktas",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    },
+    {
+      "district": "beylikduzu",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    },
+    {
+      "district": "beyoglu",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    },
+    {
+      "district": "buyukcekmece",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    },
+    {
+      "district": "catalca",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    },
+    {
+      "district": "esenler",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    },
+    {
+      "district": "esenyurt",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    },
+    {
+      "district": "eyupsultan",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    },
+    {
+      "district": "fatih",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    },
+    {
+      "district": "gaziosmanpasa",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    },
+    {
+      "district": "gungoren",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    },
+    {
+      "district": "kagithane",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    },
+    {
+      "district": "kucukcekmece",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    },
+    {
+      "district": "sariyer",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    },
+    {
+      "district": "silivri",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    },
+    {
+      "district": "sultangazi",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    },
+    {
+      "district": "sisli",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    },
+    {
+      "district": "zeytinburnu",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    },
+    {
+      "district": "adalar",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    },
+    {
+      "district": "atasehir",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    },
+    {
+      "district": "beykoz",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    },
+    {
+      "district": "cekmekoy",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    },
+    {
+      "district": "kadikoy",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    },
+    {
+      "district": "kartal",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    },
+    {
+      "district": "maltepe",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    },
+    {
+      "district": "pendik",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    },
+    {
+      "district": "sancaktepe",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    },
+    {
+      "district": "sultanbeyli",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    },
+    {
+      "district": "sile",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    },
+    {
+      "district": "tuzla",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    },
+    {
+      "district": "umraniye",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    },
+    {
+      "district": "uskudar",
+      "action": "update",
+      "reason": "unchanged imported draft; source changed"
+    }
+  ]
+}

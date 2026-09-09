@@ -1,0 +1,18 @@
+{
+  "users": {
+    "count": 1,
+    "unchangedInTestCopy": true
+  },
+  "articles": {
+    "count": 2,
+    "unchangedInTestCopy": true
+  },
+  "photos": {
+    "count": 0,
+    "unchangedInTestCopy": true
+  },
+  "media": {
+    "count": 3,
+    "unchangedInTestCopy": true
+  }
+}

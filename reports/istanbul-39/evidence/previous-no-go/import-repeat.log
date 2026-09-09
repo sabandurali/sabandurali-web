@@ -1,0 +1,207 @@
+[⣷] Pulling schema from database...
+[✓] Pulling schema from database...
+[21:23:10] WARN: No email adapter provided. Email will be written to console. More info at https://payloadcms.com/docs/email/overview.
+{
+  "mode": "local-draft-import",
+  "create": 0,
+  "update": 0,
+  "skip": 39,
+  "writes": 0,
+  "rows": [
+    {
+      "district": "arnavutkoy",
+      "action": "skip",
+      "reason": "unchanged source"
+    },
+    {
+      "district": "avcilar",
+      "action": "skip",
+      "reason": "unchanged source"
+    },
+    {
+      "district": "bagcilar",
+      "action": "skip",
+      "reason": "unchanged source"
+    },
+    {
+      "district": "bahcelievler",
+      "action": "skip",
+      "reason": "unchanged source"
+    },
+    {
+      "district": "bakirkoy",
+      "action": "skip",
+      "reason": "unchanged source"
+    },
+    {
+      "district": "basaksehir",
+      "action": "skip",
+      "reason": "unchanged source"
+    },
+    {
+      "district": "bayrampasa",
+      "action": "skip",
+      "reason": "unchanged source"
+    },
+    {
+      "district": "besiktas",
+      "action": "skip",
+      "reason": "unchanged source"
+    },
+    {
+      "district": "beylikduzu",
+      "action": "skip",
+      "reason": "unchanged source"
+    },
+    {
+      "district": "beyoglu",
+      "action": "skip",
+      "reason": "unchanged source"
+    },
+    {
+      "district": "buyukcekmece",
+      "action": "skip",
+      "reason": "unchanged source"
+    },
+    {
+      "district": "catalca",
+      "action": "skip",
+      "reason": "unchanged source"
+    },
+    {
+      "district": "esenler",
+      "action": "skip",
+      "reason": "unchanged source"
+    },
+    {
+      "district": "esenyurt",
+      "action": "skip",
+      "reason": "unchanged source"
+    },
+    {
+      "district": "eyupsultan",
+      "action": "skip",
+      "reason": "unchanged source"
+    },
+    {
+      "district": "fatih",
+      "action": "skip",
+      "reason": "unchanged source"
+    },
+    {
+      "district": "gaziosmanpasa",
+      "action": "skip",
+      "reason": "unchanged source"
+    },
+    {
+      "district": "gungoren",
+      "action": "skip",
+      "reason": "unchanged source"
+    },
+    {
+      "district": "kagithane",
+      "action": "skip",
+      "reason": "unchanged source"
+    },
+    {
+      "district": "kucukcekmece",
+      "action": "skip",
+      "reason": "unchanged source"
+    },
+    {
+      "district": "sariyer",
+      "action": "skip",
+      "reason": "unchanged source"
+    },
+    {
+      "district": "silivri",
+      "action": "skip",
+      "reason": "unchanged source"
+    },
+    {
+      "district": "sultangazi",
+      "action": "skip",
+      "reason": "unchanged source"
+    },
+    {
+      "district": "sisli",
+      "action": "skip",
+      "reason": "unchanged source"
+    },
+    {
+      "district": "zeytinburnu",
+      "action": "skip",
+      "reason": "unchanged source"
+    },
+    {
+      "district": "adalar",
+      "action": "skip",
+      "reason": "unchanged source"
+    },
+    {
+      "district": "atasehir",
+      "action": "skip",
+      "reason": "unchanged source"
+    },
+    {
+      "district": "beykoz",
+      "action": "skip",
+      "reason": "unchanged source"
+    },
+    {
+      "district": "cekmekoy",
+      "action": "skip",
+      "reason": "unchanged source"
+    },
+    {
+      "district": "kadikoy",
+      "action": "skip",
+      "reason": "unchanged source"
+    },
+    {
+      "district": "kartal",
+      "action": "skip",
+      "reason": "unchanged source"
+    },
+    {
+      "district": "maltepe",
+      "action": "skip",
+      "reason": "unchanged source"
+    },
+    {
+      "district": "pendik",
+      "action": "skip",
+      "reason": "unchanged source"
+    },
+    {
+      "district": "sancaktepe",
+      "action": "skip",
+      "reason": "unchanged source"
+    },
+    {
+      "district": "sultanbeyli",
+      "action": "skip",
+      "reason": "unchanged source"
+    },
+    {
+      "district": "sile",
+      "action": "skip",
+      "reason": "unchanged source"
+    },
+    {
+      "district": "tuzla",
+      "action": "skip",
+      "reason": "unchanged source"
+    },
+    {
+      "district": "umraniye",
+      "action": "skip",
+      "reason": "unchanged source"
+    },
+    {
+      "district": "uskudar",
+      "action": "skip",
+      "reason": "unchanged source"
+    }
+  ]
+}

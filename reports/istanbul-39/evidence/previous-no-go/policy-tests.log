@@ -1,0 +1,20 @@
+
+> sabandurali-web@0.1.0 test:districts
+> tsx --test scripts/districts/policy.test.ts
+
+✔ 39 registry districts, PDF fingerprints, all nine research sections and unique slugs (3.140625ms)
+✔ duplicate/unknown district fails before any DB connection (2.520375ms)
+✔ all 39 raw imports are drafts and have no public content (21.964417ms)
+✔ idempotency and manual changes including nested source edits (1.399209ms)
+✔ section approval alone is not source verification (0.204083ms)
+✔ no javascript/data URLs, embedded credentials or malformed links (0.097583ms)
+✔ periodic facts need dates and primary official evidence (0.10125ms)
+✔ dynamic expiry, row URL mismatch, flagged rows and idempotent public projection (0.45775ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 198.0015

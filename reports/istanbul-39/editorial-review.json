@@ -1,0 +1,2618 @@
+[
+  {
+    "district": "arnavutkoy",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "8dd3de0c26d735be6f8d798a0a727d4210f20edd0e881a72d0498a483367c2a3",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "Adnan Menderes",
+      "Anadolu",
+      "Arnavutköy Merkez",
+      "Atatürk",
+      "Baklalı",
+      "Balaban",
+      "Boğazköy İstiklal",
+      "Bolluca",
+      "Boyalık",
+      "Çilingir",
+      "Deliklikaya",
+      "Dursunköy",
+      "Durusu",
+      "Fatih",
+      "Hacımaşlı",
+      "Hadımköy",
+      "Haraççı",
+      "Hastane",
+      "Hicret",
+      "İmrahor",
+      "İslambey",
+      "Karaburun",
+      "Karlıbayır",
+      "Mareşal Fevzi Çakmak",
+      "Mavigöl",
+      "Mehmet Akif Ersoy",
+      "Mustafa Kemal Paşa",
+      "Nenehatun",
+      "Ömerli",
+      "Sazlıbosna",
+      "Taşoluk",
+      "Tayakadın",
+      "Terkos",
+      "Yassıören",
+      "Yavuz Selim",
+      "Yeniköy",
+      "Yeşilbayır",
+      "Yunus Emre"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "İBB tam tablo kontrolü; ek ilçe kaynağı bulunduğunda karşılaştırıldı. Tarihsiz dizin için yayın tarihi iddiası yok.",
+    "neighborhoodSources": [
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/arnavutkoy-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/arnavutkoy-mahalle-muhtarlari/",
+        "file": "arnavutkoy-35b5e63b5de6.txt",
+        "sha256": "cdc9a0f186a8ad26bff42456ceb6f0636e6573ad92b57aeca3563add1d934fff"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://arnavutkoy.gov.tr/arnavutkoy-tarihi",
+        "sha256": "f840d13f7ef3ef2c7369900e7ce5ee19caef430f474e434101f3d852edf041bb",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "arnavutkoy-c0db545bcb55.txt"
+      }
+    ]
+  },
+  {
+    "district": "avcilar",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "ba57d83cd3be68473045a80b5e176c94ceb61572f8120e6f0cb2cddf9de448f3",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "Ambarlı",
+      "Cihangir",
+      "Denizköşkler",
+      "Firuzköy",
+      "Gümüşpala",
+      "Merkez",
+      "Mustafa Kemal Paşa",
+      "Tahtakale",
+      "Üniversite",
+      "Yeşilkent"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "İBB tam tablo kontrolü; ek ilçe kaynağı bulunduğunda karşılaştırıldı. Tarihsiz dizin için yayın tarihi iddiası yok.",
+    "neighborhoodSources": [
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/avcilar-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/avcilar-mahalle-muhtarlari/",
+        "file": "avcilar-b57b437e068e.txt",
+        "sha256": "3dfd6448821710d05125daadeceb34b34629d4bf90775aec2790f3ff14645e84"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://avcilar.gov.tr/tarihi",
+        "sha256": "3862734d032c809ae04ff8d9f9ab779fc4261dc387784cb004899854ae3bc268",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "avcilar-0.txt"
+      },
+      {
+        "url": "https://avcilar.gov.tr/cografik-yapi",
+        "sha256": "346c11549fd841dceedaed622fdc14be2e275d50be168f70d9877fc8e96a93dc",
+        "selectedFor": [
+          "geography",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "avcilar-cbde822d879a.txt"
+      }
+    ]
+  },
+  {
+    "district": "bagcilar",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "b09911af14f47f03421033b5df3686906795162b309fce3004af207f73e2fe91",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "100. Yıl",
+      "15 Temmuz",
+      "Bağlar",
+      "Barbaros",
+      "Çınar",
+      "Demirkapı",
+      "Fatih",
+      "Fevzi Çakmak",
+      "Göztepe",
+      "Güneşli",
+      "Hürriyet",
+      "İnönü",
+      "Kazım Karabekir",
+      "Kemalpaşa",
+      "Kirazlı",
+      "Mahmutbey",
+      "Merkez",
+      "Sancaktepe",
+      "Yavuz Selim",
+      "Yenigün",
+      "Yenimahalle",
+      "Yıldıztepe"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "İBB tam tablo kontrolü; ek ilçe kaynağı bulunduğunda karşılaştırıldı. Tarihsiz dizin için yayın tarihi iddiası yok.",
+    "neighborhoodSources": [
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/bagcilar-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/bagcilar-mahalle-muhtarlari/",
+        "file": "bagcilar-aa42b0b6e006.txt",
+        "sha256": "991ba36db73aee18d45f7e5839a6e43e494d426fc9b801425e6e483e8168a4e2"
+      },
+      {
+        "url": "https://www.bagcilar.gov.tr/muhtarliklarimiz",
+        "result": "200 https://www.bagcilar.gov.tr/muhtarliklarimiz",
+        "file": "bagcilar-0dd1b7a2a2a3.txt",
+        "sha256": "d8e73a1523fcf8b243d24a447bd1f336292834a1732159b7bbf7508cb02c18b0"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://bagcilar.gov.tr/tarihce",
+        "sha256": "cfb9e76f96e68beefbe8f30f76620cc142da947358f43481db39d13121ab9743",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "bagcilar-13cd8b49f1db.txt"
+      }
+    ]
+  },
+  {
+    "district": "bahcelievler",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "b5475bde169222488c537893bbff74dfcf2f306ae0408e89f40eb5055bf0228f",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "Bahçelievler",
+      "Cumhuriyet",
+      "Çobançeşme",
+      "Fevzi Çakmak",
+      "Hürriyet",
+      "Kocasinan Merkez",
+      "Siyavuşpaşa",
+      "Soğanlı",
+      "Şirinevler",
+      "Yenibosna Merkez",
+      "Zafer"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "Antik Hebdomon/Hepdemon yerleşimini bugünkü ilçeye eşitleyen anlatım çıkarıldı. Kocasinan Merkez yazımı ilçe belediyesinden alındı. bahcelievler.istanbul kimliği e-Devlet belediye profilindeki Web Sayfası bağlantısıyla doğrulandı: https://www.turkiye.gov.tr/bahcelievler-belediyesi?belediye=TumHizmetler",
+    "neighborhoodSources": [
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/bahcelievler-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/bahcelievler-mahalle-muhtarlari/",
+        "file": "bahcelievler-992f601b042d.txt",
+        "sha256": "0a23a7452993137174e2ed460a3a2394ad56e861587f83c9e55251684e53d6e9"
+      },
+      {
+        "url": "https://www.bahcelievler.istanbul/mahalle/",
+        "result": "200 https://www.bahcelievler.istanbul/mahalleler",
+        "file": "bahcelievler-e196e03a9660.txt",
+        "sha256": "ceb4a2de37a5c342b8277c3ecbd35779c01bbf429440ba8629090122bb84b745"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://bahcelievler.gov.tr/tarihce",
+        "sha256": "8c7b1c83d3a5d5911876e0f5cab4537f310b6b116136d9e0120d694f6473c636",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "bahcelievler-b8365761ec83.txt"
+      },
+      {
+        "url": "https://bahcelievler.gov.tr/bahcelievler-in-tarihcesi",
+        "sha256": "5d6c858f4c82606e6bac1621a3569d9ee514cf9ea44192e93abe9be1a4b01626",
+        "selectedFor": [
+          "geography",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "bahcelievler-603930cf575f.txt"
+      }
+    ]
+  },
+  {
+    "district": "bakirkoy",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "a1abc6283a41cae0ed75856e1f6ee35794d24639476fea3c0d387fcdcd54cc97",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "Ataköy 1. Kısım",
+      "Ataköy 2. 5. 6. Kısım",
+      "Ataköy 3-4-11. Kısım",
+      "Ataköy 7-8-9-10. Kısım",
+      "Basınköy",
+      "Cevizlik",
+      "Kartaltepe",
+      "Osmaniye",
+      "Sakızağacı",
+      "Şenlikköy",
+      "Yenimahalle",
+      "Yeşilköy",
+      "Yeşilyurt",
+      "Zeytinlik",
+      "Zuhuratbaba"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "Ataköy kısımları dört birleşik mahalle kaydı; tek tek bağımsız mahallelere bölünmedi. Tarihçedeki Konstantin/384 anlatımı kullanılmadı.",
+    "neighborhoodSources": [
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/bakirkoy-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/bakirkoy-mahalle-muhtarlari/",
+        "file": "bakirkoy-9ba18573e96f.txt",
+        "sha256": "248dc82fb9286d80ea20591ff238d70f6ea92c0c98518aaf51d07bf536490fc3"
+      },
+      {
+        "url": "https://www.bakirkoy.gov.tr/mahalle-muhtarligi-iletisim-adresleri",
+        "result": "200 https://www.bakirkoy.gov.tr/mahalle-muhtarligi-iletisim-adresleri",
+        "file": "bakirkoy-791cc12d2419.txt",
+        "sha256": "1feba3c515a7b66abd408d79173385ac260546229ce6a60161518147b1d19a69"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://bakirkoy.gov.tr/tarihce",
+        "sha256": "a72f0e369a5a9cb87a320a86afc3ad084dbdc87fce698bd3072a629147bc615a",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "bakirkoy-caf9995a5678.txt"
+      }
+    ]
+  },
+  {
+    "district": "basaksehir",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "c9bb748f71a263c2e770afa509f858c7a2388af5b11663fe96b8b5864cfc1cd2",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "Altınşehir",
+      "Bahçeşehir 1. Kısım",
+      "Bahçeşehir 2. Kısım",
+      "Başak",
+      "Başakşehir",
+      "Güvercintepe",
+      "Kayabaşı",
+      "Şahintepe",
+      "Şamlar",
+      "Ziya Gökalp"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "İBB Şahintepesi yazıyor; belediye muhtarlık sayfasındaki Şahintepe esas alındı. Kayaşehir ayrı mahalle olarak eklenmedi.",
+    "neighborhoodSources": [
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/basaksehir-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/basaksehir-mahalle-muhtarlari/",
+        "file": "basaksehir-baa9cea55268.txt",
+        "sha256": "5f6d8144bcfa29655ad14b0b4227457eddd36321646189e88dcc7dda6d0e9305"
+      },
+      {
+        "url": "https://www.basaksehir.bel.tr/muhtarliklar",
+        "result": "200 https://www.basaksehir.bel.tr/muhtarliklar",
+        "file": "basaksehir-68a9b9855564.txt",
+        "sha256": "153aed3f813595e04aedda63b574388518ab466d4721c745d8d6de60dcafe1d7"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://www.basaksehir.bel.tr/basaksehir-tarihcesi",
+        "sha256": "998a6fd4faa881dd22f1202a17728c66d7522d43e41c3f31299a9df9283cd385",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "basaksehir-8a0001619622.txt"
+      }
+    ]
+  },
+  {
+    "district": "bayrampasa",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "a19bd5355adac7442f9f5a29822c075e1aadc248673fe513f08bf632b7f7dcc8",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "Altıntepsi",
+      "Cevatpaşa",
+      "İsmetpaşa",
+      "Kartaltepe",
+      "Kocatepe",
+      "Muratpaşa",
+      "Orta",
+      "Terazidere",
+      "Vatan",
+      "Yenidoğan",
+      "Yıldırım"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "İBB tam tablo kontrolü; ek ilçe kaynağı bulunduğunda karşılaştırıldı. Tarihsiz dizin için yayın tarihi iddiası yok.",
+    "neighborhoodSources": [
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/bayrampasa-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/bayrampasa-mahalle-muhtarlari/",
+        "file": "bayrampasa-7161e4c83b45.txt",
+        "sha256": "091c7745814c477488eec8a071afed2587ac3538599d5d7891e2ccd9291ab039"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://bayrampasa.gov.tr/tarihce",
+        "sha256": "028f7a915ddde9604bb340bd6b5fa3e89fcd3ef82eae86f9e6d9c5c4da4be486",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "bayrampasa-9292c89b0f54.txt"
+      },
+      {
+        "url": "https://bayrampasa.gov.tr/cografya",
+        "sha256": "cdc5d2ad628883d599c1231fdb2a388524cf3ee7793a893378aec45c4bb9e50d",
+        "selectedFor": [
+          "geography",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "bayrampasa-700a988205da.txt"
+      }
+    ]
+  },
+  {
+    "district": "besiktas",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "93d881cae2337aa43285016d15868e9becd0573265c901ca3f01eb48131f2a2e",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "Abbasağa",
+      "Akat",
+      "Arnavutköy",
+      "Balmumcu",
+      "Bebek",
+      "Cihannüma",
+      "Dikilitaş",
+      "Etiler",
+      "Gayrettepe",
+      "Konaklar",
+      "Kuruçeşme",
+      "Kültür",
+      "Levazım",
+      "Levent",
+      "Mecidiye",
+      "Muradiye",
+      "Nisbetiye",
+      "Ortaköy",
+      "Sinanpaşa",
+      "Türkali",
+      "Ulus",
+      "Vişnezade",
+      "Yıldız"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "İBB tam tablo kontrolü; ek ilçe kaynağı bulunduğunda karşılaştırıldı. Tarihsiz dizin için yayın tarihi iddiası yok.",
+    "neighborhoodSources": [
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/besiktas-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/besiktas-mahalle-muhtarlari/",
+        "file": "besiktas-74dfde50203d.txt",
+        "sha256": "867031a8c7fcd987d8414a17be82076f8b009249008560cb0c83763d53f49563"
+      },
+      {
+        "url": "https://besiktas.bel.tr/kurumsal/mahalleler-ve-muhtarliklar/",
+        "result": "200 https://besiktas.bel.tr/kurumsal/mahalleler-ve-muhtarliklar/",
+        "file": "besiktas-35047be44cd6.txt",
+        "sha256": "cf895a45f98ef8464dd6e12b591b93b820c164df7c64353bda7abd809f5476a4"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://besiktas.gov.tr/tarihce",
+        "sha256": "8d78726ad6136d0dde8ffd91c9c684024856381be278e18707672b48a60670de",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "besiktas-d0c6423ead35.txt"
+      }
+    ]
+  },
+  {
+    "district": "beylikduzu",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "cc9978d60c7c3f708adc29e47c3d013606f40cd34ea245dc4f9384df6f9bb92f",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "Adnan Kahveci",
+      "Barış",
+      "Büyükşehir",
+      "Cumhuriyet",
+      "Dereağzı",
+      "Gürpınar",
+      "Kavaklı",
+      "Marmara",
+      "Sahil",
+      "Yakuplu"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "İBB tam tablo kontrolü; ek ilçe kaynağı bulunduğunda karşılaştırıldı. Tarihsiz dizin için yayın tarihi iddiası yok.",
+    "neighborhoodSources": [
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/beylikduzu-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/beylikduzu-mahalle-muhtarlari/",
+        "file": "beylikduzu-1b04a2816bbc.txt",
+        "sha256": "3490246ac037a89716ccfbd4d878efe7fc1704fba43a8e7baa0c078c6bb2c5a0"
+      },
+      {
+        "url": "https://www.beylikduzu.gov.tr/muhtarliklar",
+        "result": "200 https://www.beylikduzu.gov.tr/muhtarliklar",
+        "file": "beylikduzu-b5ae4ab0f004.txt",
+        "sha256": "79be2f8d20cdb1e7008e881c11f804f73d0df3b5b0b4ac664987912952f77a24"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://www.beylikduzu.gov.tr/beylikduzu-tarihce",
+        "sha256": "8e3e9edf6eddd7bd8f578ae7d63179bcb6faf316ec233ef761057ad7d6ebb51d",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "beylikduzu-0.txt"
+      },
+      {
+        "url": "https://beylikduzu.gov.tr/cografya",
+        "sha256": "c9c93f7f73c079729a1a3e405f3fa461b943ba86341fa13abf1aae3b1e23e99a",
+        "selectedFor": [
+          "geography",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "beylikduzu-92ca59e43ca3.txt"
+      }
+    ]
+  },
+  {
+    "district": "beyoglu",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "78ec178616ed2a0fe1a6989d9c2fba351888c714121b76df681cba0407cff96d",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "Arap Cami",
+      "Asmalı Mescid",
+      "Bedrettin",
+      "Bereketzade",
+      "Bostan",
+      "Bülbül",
+      "Camiikebir",
+      "Cihangir",
+      "Çatma Mescit",
+      "Çukur",
+      "Emekyemez",
+      "Evliya Çelebi",
+      "Fetihtepe",
+      "Firuzağa",
+      "Gümüşsuyu",
+      "Hacıahmet",
+      "Hacımimi",
+      "Halıcıoğlu",
+      "Hüseyinağa",
+      "İstiklal",
+      "Kadımehmet",
+      "Kalyoncukulluk",
+      "Kamerhatun",
+      "Kaptanpaşa",
+      "Katip Mustafa Çelebi",
+      "Keçecipiri",
+      "Kemankeş Kara Mustafapaşa",
+      "Kılıçali Paşa",
+      "Kocatepe",
+      "Kulaksız",
+      "Kuloğlu",
+      "Küçük Piyale",
+      "Müeyyetzade",
+      "Ömer Avni",
+      "Örnektepe",
+      "Piri Paşa",
+      "Piyalepaşa",
+      "Pürtelaş Hasan Efendi",
+      "Sururi",
+      "Sütlüce",
+      "Şahkulu",
+      "Şehit Muhtar",
+      "Tomtom",
+      "Yahya Kahya",
+      "Yenişehir"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [
+      "Asmalı Mescid",
+      "Kalyoncukulluk"
+    ],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "Kaymakamlık sayfasındaki Galata Kulesi 13. yüzyıl iddiası ve adın tek kökene bağlanması kullanılmadı. PDF Asmalı Mescit/Kalyoncu Kulluğu; İBB Asmalı Mescid/Kalyoncukulluk. Bunlar yazım farkı olarak raporlandı; mahalle eklendi/kaldırıldı iddiası yok.",
+    "neighborhoodSources": [
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/beyoglu-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/beyoglu-mahalle-muhtarlari/",
+        "file": "beyoglu-e3b77ee9e1c0.txt",
+        "sha256": "58fbf57fae85366b42f1c4fadc7a76c6f8dbc09680372f284897390914c76604"
+      },
+      {
+        "url": "https://www.beyoglu.gov.tr/muhtarlarimiz",
+        "result": "200 https://www.beyoglu.gov.tr/muhtarlarimiz",
+        "file": "beyoglu-63155407fe0e.txt",
+        "sha256": "9e85e9fcbd7a5b6d95525beff7ab6ad3b75f07e45c2af6bf63c2cbba36048599"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://beyoglu.gov.tr/hukumet-konagi",
+        "sha256": "02482605c761c2b14356c520ea9fdca822cc5db201f13aad4dd4fc6b2ed69517",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "beyoglu-baa2587c9280.txt"
+      }
+    ]
+  },
+  {
+    "district": "buyukcekmece",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "85f124a37dd54b44d8253ae2f321807aa9c6492957f46a5bcf1268f51008dab0",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "19 Mayıs",
+      "Ahmediye",
+      "Alkent 2000",
+      "Atatürk",
+      "Bahçelievler",
+      "Celaliye",
+      "Cumhuriyet",
+      "Çakmaklı",
+      "Dizdariye",
+      "Ekinoba",
+      "Fatih",
+      "Güzelce",
+      "Hürriyet",
+      "Kamiloba",
+      "Karaağaç",
+      "Kumburgaz",
+      "Mimaroba",
+      "Mimarsinan",
+      "Murat Çeşme",
+      "Pınartepe",
+      "Sinanoba",
+      "Türkoba",
+      "Ulus",
+      "Yenimahalle"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "İBB tam tablo kontrolü; ek ilçe kaynağı bulunduğunda karşılaştırıldı. Tarihsiz dizin için yayın tarihi iddiası yok.",
+    "neighborhoodSources": [
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/buyukcekmece-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/buyukcekmece-mahalle-muhtarlari/",
+        "file": "buyukcekmece-ab257934986a.txt",
+        "sha256": "619e04581df3ca32a6408c6dbfafd8f338c105ae0144d199ab0f1074e3f48ed2"
+      },
+      {
+        "url": "https://www.bcekmece.bel.tr/buyukcekmece/muhtarliklar",
+        "result": "200 https://www.bcekmece.bel.tr/buyukcekmece/muhtarliklar",
+        "file": "buyukcekmece-67cda0f491c8.txt",
+        "sha256": "f0a6dd24b8e12e9abcd9fc6b8f000f5879fa1e8ae4661e2e169331f0212dc2cd"
+      },
+      {
+        "url": "https://www.bcekmece.bel.tr/buyukcekmece/muhtarliklar?page=2",
+        "result": "200 https://www.bcekmece.bel.tr/buyukcekmece/muhtarliklar?page=2",
+        "file": "buyukcekmece-1fd6af374f8a.txt",
+        "sha256": "46bae831c731fb931741f36cf62b423eaf7f4e47e30f1400b4a3ba59522c7c63"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://buyukcekmece.gov.tr/kervansaray",
+        "sha256": "fd31d9e80a599d49c2b381412a3a9fc0fdcf57b59c627b912dacfaf938bb086d",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "buyukcekmece-bc7b7de57836.txt"
+      },
+      {
+        "url": "https://buyukcekmece.gov.tr/ilcemiztarihce",
+        "sha256": "69d4e8025e72ca15be6d2050913b08fa4e0f1057823270436a632a5b7cbce956",
+        "selectedFor": [
+          "geography",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "buyukcekmece-2511e942887e.txt"
+      }
+    ]
+  },
+  {
+    "district": "catalca",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "f690a014ecb9c9aa704920b60c334e8308e73ddb86e5bacfffce974bde4b3232",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "Akalan",
+      "Atatürk",
+      "Aydınlar",
+      "Bahşayiş",
+      "Başak",
+      "Belgrat",
+      "Celepköy",
+      "Çakıl",
+      "Çanakça",
+      "Çiftlikköy",
+      "Dağyenice",
+      "Elbasan",
+      "Fatih",
+      "Ferhatpaşa",
+      "Gökçeali",
+      "Gümüşpınar",
+      "Hallaçlı",
+      "Hisarbeyli",
+      "İhsaniye",
+      "İnceğiz",
+      "İzzettin",
+      "Kabakça",
+      "Kaleiçi",
+      "Kalfa",
+      "Karacaköy Merkez",
+      "Karamandere",
+      "Kestanelik",
+      "Kızılcaali",
+      "Muratbey Merkez",
+      "Nakkaş",
+      "Oklalı",
+      "Ormanlı",
+      "Ovayenice",
+      "Örcünlü",
+      "Örencik",
+      "Subaşı",
+      "Yalıköy",
+      "Yaylacık",
+      "Yazlık"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "MÖ 450 Roma yerleşimi ve duvar büyüklüğü üstünlük iddiaları kullanılmadı.",
+    "neighborhoodSources": [
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/catalca-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/catalca-mahalle-muhtarlari/",
+        "file": "catalca-641a2154fc71.txt",
+        "sha256": "16a9616a5f2df850e2dadff2fac4385950d66fe7a73d6958b0bccde020ff22b5"
+      },
+      {
+        "url": "https://catalca.bel.tr/muhtarlarimiz",
+        "result": "200 https://catalca.bel.tr/muhtarlarimiz",
+        "file": "catalca-489be460d382.txt",
+        "sha256": "8d3be16a38b874d14d6df55d853f3ebb88ab7a7edac87683a1ca4361db6e9f3e"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://catalca.gov.tr/catalca-tarihi",
+        "sha256": "1314d392c479113e04aa0ce0bb011bc5149603ef1cd193ed9e5053b23b3a867e",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "catalca-1fde0f3fb96c.txt"
+      }
+    ]
+  },
+  {
+    "district": "esenler",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "31c2d5e501f27e7ee6a8bef07dbefd2fd117bab42d601fa598701e1d19e0327c",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "15 Temmuz",
+      "Atışalanı",
+      "Birlik",
+      "Çifte Havuzlar",
+      "Davutpaşa",
+      "Fatih",
+      "Fevzi Çakmak",
+      "Kazım Karabekir",
+      "Kemer",
+      "Menderes",
+      "Mimar Sinan",
+      "Namık Kemal",
+      "Nine Hatun",
+      "Oruçreis",
+      "Şehitler",
+      "Tuna",
+      "Turgut Reis",
+      "Yavuz Selim",
+      "Yeşil Vadi"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [
+      "Şehitler",
+      "Yeşil Vadi"
+    ],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "PDF ve belediyenin eski muhtarlık sayfası 17 kayıt; 13.01.2026 tarihli duyuru ve İBB 19 kayıt. Şehitler ve Yeşil Vadi eklendi.",
+    "neighborhoodSources": [
+      {
+        "url": "https://esenler.bel.tr/haberler/genel/esenlere-iki-yeni-mahalle-kazandirildi/",
+        "result": "200 https://esenler.bel.tr/haberler/genel/esenlere-iki-yeni-mahalle-kazandirildi/",
+        "file": "esenler-bd772fdeb1bc.txt",
+        "sha256": "d56de060664b1c5766ebb3de726325e6574887e2d3257f150106dcc1d20165b9"
+      },
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/esenler-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/esenler-mahalle-muhtarlari/",
+        "file": "esenler-f8e4c637e2ce.txt",
+        "sha256": "46f9237a53b12ce5a48c0b21aba8a22732392e09845c89b8fb5748ae976a0dcb"
+      },
+      {
+        "url": "https://esenler.bel.tr/sehir-rehberi/muhtarliklar/",
+        "result": "200 https://esenler.bel.tr/sehir-rehberi/muhtarliklar/",
+        "file": "esenler-8533c703bb88.txt",
+        "sha256": "2cb5690f8344c946b54d2d51558188e4957d2ac927607817754bbfa5a0989b00"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://esenler.gov.tr/tarihce",
+        "sha256": "aba1539b9f31ebc75091fa8eae13aecb14cadf335a2f854bd65f32dcf3ca9e85",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "esenler-d93375af1bd3.txt"
+      }
+    ]
+  },
+  {
+    "district": "esenyurt",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "277e772de00ab568800a295b45c75a726984412c07f5b8f3ad8b87c7a5bdffbd",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "Akçaburgaz",
+      "Akevler",
+      "Akşemseddin",
+      "Ardıçlı",
+      "Aşık Veysel",
+      "Atatürk",
+      "Balıkyolu",
+      "Barbaros Hayrettin Paşa",
+      "Battalgazi",
+      "Cumhuriyet",
+      "Çınar",
+      "Esenkent",
+      "Fatih",
+      "Gökevler",
+      "Güzelyurt",
+      "Hürriyet",
+      "İncirtepe",
+      "İnönü",
+      "İstiklal",
+      "Koza",
+      "Mehmet Akif Ersoy",
+      "Mehterçeşme",
+      "Merkez",
+      "Mevlana",
+      "Namık Kemal",
+      "Necip Fazıl Kısakürek",
+      "Orhan Gazi",
+      "Osmangazi",
+      "Örnek",
+      "Pınar",
+      "Piri Reis",
+      "Saadetdere",
+      "Selahaddin Eyyubi",
+      "Sultaniye",
+      "Süleymaniye",
+      "Şehitler",
+      "Talatpaşa",
+      "Turgut Özal",
+      "Üçevler",
+      "Yenikent",
+      "Yeşilkent",
+      "Yunus Emre",
+      "Zafer"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [
+      "Mehmet Akif Ersoy",
+      "Mevlana",
+      "Namık Kemal",
+      "Necip Fazıl Kısakürek",
+      "Orhan Gazi",
+      "Osmangazi",
+      "Örnek",
+      "Pınar",
+      "Piri Reis",
+      "Selahaddin Eyyubi",
+      "Sultaniye",
+      "Süleymaniye",
+      "Şehitler",
+      "Talatpaşa",
+      "Üçevler",
+      "Yenikent",
+      "Yunus Emre",
+      "Zafer"
+    ],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "PDF liste dökümü Koza maddesinde kesilmiş ve Bağlarçeşme kaydını içeriyor; belediye ve İBB tam listeleri 43 kayıtla uyuşuyor. Bu iki dizinde Bağlarçeşme yok, Şehitler var. Karar tarihi doğrulanmadığı için ad değişikliği tarihi iddiası kurulmadı.",
+    "neighborhoodSources": [
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/esenyurt-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/esenyurt-mahalle-muhtarlari/",
+        "file": "esenyurt-292b53ed43d0.txt",
+        "sha256": "70ae1fd3e195e55bb98a046f6db254049b3b38c619778259399d69f5ef3e6d58"
+      },
+      {
+        "url": "https://www.esenyurt.bel.tr/muhtarliklar",
+        "result": "200 https://www.esenyurt.bel.tr/muhtarliklar",
+        "file": "esenyurt-fde346e56974.txt",
+        "sha256": "7eccec4abbaaf51dc79d72c8fe16a495b4c87ddf3b55c85f1a7095480b7643be"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://esenyurt.gov.tr/tarihi-ve-cografi-yapisi",
+        "sha256": "96f86e14bf96e8315b439d8b562631f5285486b35c9a448deb0caefedd80aac8",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "esenyurt-c96a314a0796.txt"
+      }
+    ]
+  },
+  {
+    "district": "eyupsultan",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "b80fabe8fc315ec444993d2ea5181d73b526a1e5824885f3f2120449b462c96e",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "5. Levent",
+      "Ağaçlı",
+      "Akpınar",
+      "Akşemsettin",
+      "Alibeyköy",
+      "Çırçır",
+      "Çiftalan",
+      "Defterdar",
+      "Düğmeciler",
+      "Emniyettepe",
+      "Esentepe",
+      "Eyüp Merkez",
+      "Göktürk Merkez",
+      "Güzeltepe",
+      "Işıklar",
+      "İhsaniye",
+      "İslambey",
+      "Karadolap",
+      "Mimar Sinan",
+      "Mithatpaşa",
+      "Nişanca",
+      "Odayeri",
+      "Pirinçci",
+      "Rami Cuma",
+      "Rami Yeni",
+      "Sakarya",
+      "Silahtarağa",
+      "Topçular",
+      "Yeşilpınar"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [
+      "Eyüp Merkez"
+    ],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "İBB tam tablo kontrolü; ek ilçe kaynağı bulunduğunda karşılaştırıldı. Tarihsiz dizin için yayın tarihi iddiası yok. PDF Merkez; İBB Eyüp Merkez. Merkez öneki ve Pirinççi/Pirinçci yazımları yeni mahalle sayılmadı.",
+    "neighborhoodSources": [
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/eyupsultan-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/eyupsultan-mahalle-muhtarlari/",
+        "file": "eyupsultan-4622c3962311.txt",
+        "sha256": "7fbe89ab3e36c484d8003e8abafac472de8f5fdcbb6737359bbad0893c5c47cc"
+      },
+      {
+        "url": "https://eyupsultan.gov.tr/muhtarliklar",
+        "result": "200 https://eyupsultan.gov.tr/muhtarliklar",
+        "file": "eyupsultan-243b7e8443e6.txt",
+        "sha256": "59b12b6e8b69d7a7887ec69fc3c88a525f1dd41cef52f0be7690771a89a401d1"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://eyupsultan.gov.tr/ilcemizin-tarihi",
+        "sha256": "e87b40e125b5283a462600a23f87b6aae31fe1737c72f43d6e8b2c82eea92045",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "eyupsultan-48ba208789fe.txt"
+      }
+    ]
+  },
+  {
+    "district": "fatih",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "d39d905786dcd733d8bfbdbfb4677518a36e2cbb8b45e5530e5c70604ac8092d",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "Aksaray",
+      "Akşemsettin",
+      "Alemdar",
+      "Ali Kuşçu",
+      "Atikali",
+      "Ayvansaray",
+      "Balabanağa",
+      "Balat",
+      "Beyazıt",
+      "Binbirdirek",
+      "Cankurtaran",
+      "Cerrahpaşa",
+      "Cibali",
+      "Demirtaş",
+      "Derviş Ali",
+      "Emin Sinan",
+      "Hacı Kadın",
+      "Haseki Sultan",
+      "Hırka-İ Şerif",
+      "Hobyar",
+      "Hoca Gıyasettin",
+      "Hocapaşa",
+      "İskenderpaşa",
+      "Kalenderhane",
+      "Karagümrük",
+      "Katip Kasım",
+      "Kemalpaşa",
+      "Koca Mustafapaşa",
+      "Küçük Ayasofya",
+      "Mercan",
+      "Mesihpaşa",
+      "Mevlanakapı",
+      "Mimar Hayrettin",
+      "Mimar Kemalettin",
+      "Molla Fenari",
+      "Molla Gürani",
+      "Molla Hüsrev",
+      "Muhsine Hatun",
+      "Nişanca",
+      "Rüstempaşa",
+      "Saraç İshak",
+      "Sarıdemir",
+      "Seyyid Ömer",
+      "Silivrikapı",
+      "Sultanahmet",
+      "Sururi",
+      "Süleymaniye",
+      "Sümbülefendi",
+      "Şehremini",
+      "Şehsuvarbey",
+      "Tahtakale",
+      "Taya Hatun",
+      "Topkapı",
+      "Yavuz Sinan",
+      "Yavuz Sultan Selim",
+      "Yedikule",
+      "Zeyrek"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "İBB tam tablo kontrolü; ek ilçe kaynağı bulunduğunda karşılaştırıldı. Tarihsiz dizin için yayın tarihi iddiası yok.",
+    "neighborhoodSources": [
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/fatih-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/fatih-mahalle-muhtarlari/",
+        "file": "fatih-8f03af322217.txt",
+        "sha256": "f5a655bc525012a9a1a20732b53d6c612f8f97581478678ea46c65facd91926f"
+      },
+      {
+        "url": "https://www.fatih.gov.tr/mahallelerimiz",
+        "result": "200 https://www.fatih.gov.tr/mahallelerimiz",
+        "file": "fatih-2cf6feb9974b.txt",
+        "sha256": "c1bec44b9e6fe435a406323e23b113791d27bc5c96df224e45834676f6aeba46"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://fatih.gov.tr/tarih",
+        "sha256": "8adcca3b22ecc88958aaf0cb22b3337adf81501059a33702fb796c825e3039f7",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "fatih-1f563ecf60cb.txt"
+      },
+      {
+        "url": "https://fatih.gov.tr/cografya",
+        "sha256": "751c2b9d13a1ee46891a4e192f1da66d7cda50f887aaadd2a8188cd5519981f4",
+        "selectedFor": [
+          "geography",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "fatih-e672e4847b26.txt"
+      }
+    ]
+  },
+  {
+    "district": "gaziosmanpasa",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "813eee43b8c09ea38ef09b3dfee12c4299e4abb19ce6b3d180106d6ee7c8c6d5",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "Bağlarbaşı",
+      "Barbaros Hayrettin Paşa",
+      "Fevzi Çakmak",
+      "Hürriyet",
+      "Karadeniz",
+      "Karayolları",
+      "Karlıtepe",
+      "Kazım Karabekir",
+      "Merkez",
+      "Mevlana",
+      "Pazariçi",
+      "Sarıgöl",
+      "Şemsipaşa",
+      "Yeni Mahalle",
+      "Yenidoğan",
+      "Yıldıztabya"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [
+      "Kazım Karabekir"
+    ],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "İBB tam tablo kontrolü; ek ilçe kaynağı bulunduğunda karşılaştırıldı. Tarihsiz dizin için yayın tarihi iddiası yok. PDF Kâzım/İBB Kazım farkı imla normalizasyonudur; liste 16 ile uyuşuyor.",
+    "neighborhoodSources": [
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/gaziosmanpasa-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/gaziosmanpasa-mahalle-muhtarlari/",
+        "file": "gaziosmanpasa-08df84e0d326.txt",
+        "sha256": "1c50661c68c70c09fe79144f522506c73c1a984ba38ef71018aace799bea882b"
+      },
+      {
+        "url": "https://www.gaziosmanpasa.bel.tr/muhtarlar",
+        "result": "200 https://www.gaziosmanpasa.bel.tr/muhtarlar",
+        "file": "gaziosmanpasa-0fad4de024a6.txt",
+        "sha256": "58acfabd2ccc3fc241926767fd6c7ed054d49bfc5f3e378a1bb658a05f442739"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://gaziosmanpasa.gov.tr/tarihe",
+        "sha256": "1cbdb7bddd3635b7c6198d0ffd0b635693bfa1fb795d24f3864053e421a1ecfd",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "gaziosmanpasa-0a38ea035d3d.txt"
+      },
+      {
+        "url": "https://gaziosmanpasa.gov.tr/cografi-yapi",
+        "sha256": "20e4fd8471510359ed3d27fb71cf1f09f9793709d7255d089ea44acabd117f77",
+        "selectedFor": [
+          "geography",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "gaziosmanpasa-86d818c9f3a2.txt"
+      }
+    ]
+  },
+  {
+    "district": "gungoren",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "08d92a70062cc1d3fd6f10941e248980d640e01e6b6cad4eec9408dceea20700",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "Abdurrahman Nafiz Gürman",
+      "Akıncılar",
+      "Gençosman",
+      "Güneştepe",
+      "Güven",
+      "Haznedar",
+      "Mareşal Çakmak",
+      "Mehmet Nesih Özmen",
+      "Merkez",
+      "Sanayi",
+      "Tozkoparan"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "İBB tam tablo kontrolü; ek ilçe kaynağı bulunduğunda karşılaştırıldı. Tarihsiz dizin için yayın tarihi iddiası yok.",
+    "neighborhoodSources": [
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/gungoren-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/gungoren-mahalle-muhtarlari/",
+        "file": "gungoren-66924776d5a6.txt",
+        "sha256": "6128f790e39f0d93eb334988f481ee76dcb637fd9b785d074fb0aca8a6a6db25"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://www.gungoren.gov.tr/tarihce",
+        "sha256": "954afd76cacc0c4a3a95a765ffd9e340f49d55ea71a1b6ce408100c39e69c907",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "gungoren-0.txt"
+      },
+      {
+        "url": "https://www.gungoren.gov.tr/cografi-durum",
+        "sha256": "3aecfd43e54ecbcf5a0d3f831cfdc1c0b8b965c857bf0ef9590db4b07302af1a",
+        "selectedFor": [
+          "geography",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "gungoren-2.txt"
+      }
+    ]
+  },
+  {
+    "district": "kagithane",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "f42bd5836b231ec266252b6594a58694c4350b455437b99f386254e10d139ebd",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "Çağlayan",
+      "Çeliktepe",
+      "Emniyet Evleri",
+      "Gültepe",
+      "Gürsel",
+      "Hamidiye",
+      "Harmantepe",
+      "Hürriyet",
+      "Mehmet Akif Ersoy",
+      "Merkez",
+      "Nurtepe",
+      "Ortabayır",
+      "Seyrantepe",
+      "Sultan Selim",
+      "Şirintepe",
+      "Talatpaşa",
+      "Telsizler",
+      "Yahya Kemal",
+      "Yeşilce"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [
+      "Emniyet Evleri"
+    ],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "İBB tam tablo kontrolü; ek ilçe kaynağı bulunduğunda karşılaştırıldı. Tarihsiz dizin için yayın tarihi iddiası yok. PDF Emniyetevler; İBB Emniyet Evleri. İlçe belediyesi de Emniyet Evleri yazıyor; 19 kayıt korunuyor.",
+    "neighborhoodSources": [
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/kagithane-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/kagithane-mahalle-muhtarlari/",
+        "file": "kagithane-92907805dc15.txt",
+        "sha256": "bbb87bad5fa61f48d0ed7c8439d14024b59d60c05f2ce577b9d3c949429429a3"
+      },
+      {
+        "url": "https://www.kagithane.istanbul/kagithane_hakkinda/detail/Mahalle-Muhtarlari/93/101/101",
+        "result": "200 https://www.kagithane.istanbul/kagithane_hakkinda/detail/Mahalle-Muhtarlari/93/101/101",
+        "file": "kagithane-fa384cbbb6e8.txt",
+        "sha256": "e5a4bf62cf55211dccc49a8947b3cbbea74437faa52966d7c04c60872c02006b"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://www.kagithane.gov.tr/ilcemizin-tarihcesi",
+        "sha256": "e6ea0701e292a9c061f49ca5ae28298bea143f867853a92f8a3fa2ee0fd28e35",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "kagithane-cf0e004d9a70.txt"
+      }
+    ]
+  },
+  {
+    "district": "kucukcekmece",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "317eac14b828755cb65248e1b29ac0f6fc3a901b3f832ec7ab48b6574a603805",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "Atakent",
+      "Atatürk",
+      "Beşyol",
+      "Cennet",
+      "Cumhuriyet",
+      "Fatih",
+      "Fevzi Çakmak",
+      "Gültepe",
+      "Halkalı Merkez",
+      "İnönü",
+      "İstasyon",
+      "Kanarya",
+      "Kartaltepe",
+      "Kemalpaşa",
+      "Mehmet Akif",
+      "Söğütlü Çeşme",
+      "Sultan Murat",
+      "Tevfikbey",
+      "Yarımburgaz",
+      "Yeni Mahalle",
+      "Yeşilova"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "Yarımburgaz Mağarası/Bathonea gibi havza alanları otomatik biçimde güncel ilçe sınırına atfedilmedi.",
+    "neighborhoodSources": [
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/kucukcekmece-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/kucukcekmece-mahalle-muhtarlari/",
+        "file": "kucukcekmece-0bfa5ff2ce23.txt",
+        "sha256": "befe4c10147cdb16c0454d8f87d4b1042d53affc1256a44a08d8584f2a588891"
+      },
+      {
+        "url": "https://kucukcekmece.istanbul/icerikler/kucukcekmece/mahalleler/713",
+        "result": "200 https://kucukcekmece.istanbul/icerikler/kucukcekmece/mahalleler/713",
+        "file": "kucukcekmece-ec09335a914e.txt",
+        "sha256": "1b98ff83f0c95c0554356ad21bdd2d682132b1b93ea24c2f07776928461f8eab"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://www.kucukcekmece.gov.tr/tarihce",
+        "sha256": "138e0c794745552da2535f2af1f09cb85c7cf61b420b2c34d8a5c954b23961c3",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "kucukcekmece-2d5326c8070f.txt"
+      }
+    ]
+  },
+  {
+    "district": "sariyer",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "a0d4aaa356121325780167d48573e7591673eaa788ebb13266cbaa00de51f8ee",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "Ayazağa",
+      "Bahçeköy Kemer",
+      "Bahçeköy Merkez",
+      "Bahçeköy Yeni",
+      "Baltalimanı",
+      "Büyükdere",
+      "Cumhuriyet",
+      "Çamlıtepe",
+      "Çayırbaşı",
+      "Darüşşafaka",
+      "Demirciköy",
+      "Emirgan",
+      "Fatih Sultan Mehmet",
+      "Ferahevler",
+      "Garipçe",
+      "Gümüşdere",
+      "Huzur",
+      "İstinye",
+      "Kazım Karabekir Paşa",
+      "Kısırkaya",
+      "Kireçburnu",
+      "Kocataş",
+      "Kumköy (Kilyos)",
+      "Maden",
+      "Maslak",
+      "Pınar",
+      "Poligon",
+      "PTT Evleri",
+      "Reşitpaşa",
+      "Rumelifeneri",
+      "Rumelihisarı",
+      "Rumelikavağı",
+      "Sarıyer Merkez",
+      "Tarabya",
+      "Uskumruköy",
+      "Yeni",
+      "Yeniköy",
+      "Zekeriyaköy"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "İBB tam tablo kontrolü; ek ilçe kaynağı bulunduğunda karşılaştırıldı. Tarihsiz dizin için yayın tarihi iddiası yok.",
+    "neighborhoodSources": [
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/sariyer-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/sariyer-mahalle-muhtarlari/",
+        "file": "sariyer-a245f5ca8caf.txt",
+        "sha256": "0d485f745658dcca7151b3b8a6475afadbfd62ed81a5bce6fd4107db3ffebaa8"
+      },
+      {
+        "url": "https://www.sariyer.bel.tr/",
+        "result": "200 https://sariyer.bel.tr:443/",
+        "file": "sariyer-364664671995.txt",
+        "sha256": "361b9407e84067bd44122e92a1649ac484c28193b8e281e14512bca24a86c01f"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://www.sariyer.gov.tr/tarihce",
+        "sha256": "e4e11012c42ceec5b7404804009152fbc3bbb0aa429ac29f617f5c1e963695ab",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "sariyer-0fd81929e8ff.txt"
+      },
+      {
+        "url": "https://www.sariyer.gov.tr/tarihi-ve-turistik-yerler",
+        "sha256": "de09fff050c0f69627c3e17334fb5bc6063602c2c87e5f35b295a5ff9c426359",
+        "selectedFor": [
+          "geography",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "sariyer-1.txt"
+      }
+    ]
+  },
+  {
+    "district": "silivri",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "c82507bd629c2661cc21f82dd9871cd9e7fe53147e9477d445d0d33cabb2c056",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "Akören",
+      "Alibey",
+      "Alipaşa",
+      "Bekirli",
+      "Beyciler",
+      "Büyük Çavuşlu",
+      "Büyük Kılıçlı",
+      "Büyük Sinekli",
+      "Cumhuriyet",
+      "Çanta Balaban",
+      "Çanta Sancaktepe",
+      "Çayırdere",
+      "Çeltik",
+      "Danamandıra",
+      "Değirmenköy Fevzipaşa",
+      "Değirmenköy İsmetpaşa",
+      "Fatih",
+      "Fener",
+      "Gazitepe",
+      "Gümüşyaka",
+      "Kadıköy",
+      "Kavaklı Hürriyet",
+      "Kavaklı",
+      "Kurfallı",
+      "Küçük Kılıçlı",
+      "Küçük Sinekli",
+      "Mimar Sinan",
+      "Ortaköy",
+      "Piri Mehmet Paşa",
+      "Sayalar",
+      "Selimpaşa",
+      "Semizkumlar",
+      "Seymen",
+      "Yeni",
+      "Yolçatı"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "İBB tam tablo kontrolü; ek ilçe kaynağı bulunduğunda karşılaştırıldı. Tarihsiz dizin için yayın tarihi iddiası yok.",
+    "neighborhoodSources": [
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/silivri-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/silivri-mahalle-muhtarlari/",
+        "file": "silivri-c2e749534c15.txt",
+        "sha256": "87396f4276ce940048effbe3b5ea1e6de86a5cbabe0c47925d9f302a2494aaf7"
+      },
+      {
+        "url": "https://www.silivri.bel.tr/muhtarliklarimiz",
+        "result": "200 https://www.silivri.bel.tr/muhtarliklarimiz",
+        "file": "silivri-ac2ebe7040fc.txt",
+        "sha256": "dc08754e39a03b5647ad5124cfcd4676e35df08127977e9e3959b777c7e1eb4f"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://silivri.gov.tr/tarihi",
+        "sha256": "27f085445b9352786ac6b2fb43cee9e1c1481199920b331a4de7f0dddf5f5ef0",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "silivri-4a3365916e7f.txt"
+      },
+      {
+        "url": "https://silivri.gov.tr/cografi-konum",
+        "sha256": "0bdee3c797d3b5ec5ce74163bb7e97517dcc464ffe0cab5ed056e1593699dc27",
+        "selectedFor": [
+          "geography",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "silivri-9744ddfb5eb4.txt"
+      }
+    ]
+  },
+  {
+    "district": "sultangazi",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "433a67c11f8f0c9e2940ed940c34921083f430ffbb6767b6136e9f8a250010b3",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "50. Yıl",
+      "75. Yıl",
+      "Cebeci",
+      "Cumhuriyet",
+      "Esentepe",
+      "Eski Habipler",
+      "Gazi",
+      "Habibler",
+      "İsmetpaşa",
+      "Malkoçoğlu",
+      "Sultançiftliği",
+      "Uğur Mumcu",
+      "Yayla",
+      "Yunus Emre",
+      "Zübeyde Hanım"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "İBB dizini 14 kayıtla eksik; belediyenin e-Devlet mahalle seçicisi 15 kayıt içeriyor ve Zübeyde Hanım’ı doğruluyor. e-Devlet listesinin tamamı PDF ile uyuşuyor; güncellenen belediye tanıtım sayfası kanıt sayılmadı.",
+    "neighborhoodSources": [
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/sultangazi-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/sultangazi-mahalle-muhtarlari/",
+        "file": "sultangazi-b44624aeaffb.txt",
+        "sha256": "d66b327a8038f4d61d1a86dcd1a8f814c664947666ad81013281c64f24c64200"
+      },
+      {
+        "url": "https://www.turkiye.gov.tr/sultangazi-belediyesi-arsa-rayic-degeri-sorgulama-v2",
+        "result": "200 https://www.turkiye.gov.tr/sultangazi-belediyesi-arsa-rayic-degeri-sorgulama-v2",
+        "file": "sultangazi-da74edcc8b47.txt",
+        "sha256": "6c134183f5e62d84f2c04a4c683ee5844b0bb189ce4ff5d70f1c4ecc89b1c0cf"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://sultangazi.gov.tr/tarihce",
+        "sha256": "5209045e5940e7943ae3ebeec3b8a8bf92a0108111954a6baa4e53ce180fd757",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "sultangazi-2e45515af764.txt"
+      }
+    ]
+  },
+  {
+    "district": "sisli",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "40b7c040e6f09762961d7154719fc006b0a058bc22d07ef3f7cf439efcfab247",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "19 Mayıs",
+      "Bozkurt",
+      "Cumhuriyet",
+      "Duatepe",
+      "Ergenekon",
+      "Esentepe",
+      "Eskişehir",
+      "Feriköy",
+      "Fulya",
+      "Gülbahar",
+      "Halaskargazi",
+      "Halide Edip Adıvar",
+      "Halil Rıfat Paşa",
+      "Harbiye",
+      "İnönü",
+      "İzzet Paşa",
+      "Kaptanpaşa",
+      "Kuştepe",
+      "Mahmut Şevket Paşa",
+      "Mecidiyeköy",
+      "Meşrutiyet",
+      "Paşa",
+      "Merkez",
+      "Teşvikiye",
+      "Yayla"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "Kaymakamlık coğrafya/idari sayfasında Ayazağa/Maslak eski kapsamı bulunuyor; bu kapsam aktarılmadı. Belediye ve İBB listeleri 25.",
+    "neighborhoodSources": [
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/sisli-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/sisli-mahalle-muhtarlari/",
+        "file": "sisli-2f90c02635c4.txt",
+        "sha256": "d77d59c722ba335f84242ce2cd322c1a83f6ebceb6be67ee8a412001c99fa6eb"
+      },
+      {
+        "url": "https://www.sisli.bel.tr/kurumsal/muhtarliklar-ve-mahalleler",
+        "result": "200 https://www.sisli.bel.tr/kurumsal/muhtarliklar-ve-mahalleler",
+        "file": "sisli-ce0a0c9a895b.txt",
+        "sha256": "b0fa5d77457b0a5c1c871029aef438e41c7c18fb6dabeea2c125b463bddf8f8c"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://sisli.bel.tr/kurumsal/i/sisli-tarihcesi",
+        "sha256": "3aa970ed85d0a69f11ebe7b3df69187f5a741519f68677c33a9324fbd2b7769a",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "sisli-dc99865bb5cf.txt"
+      },
+      {
+        "url": "https://sisli.gov.tr/cografi-yapi",
+        "sha256": "dc0dae06727ababf2d478db6d35d657f634fd84405ef4d7db82b3f39c6c62290",
+        "selectedFor": [
+          "geography",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "sisli-b2daee7ab503.txt"
+      }
+    ]
+  },
+  {
+    "district": "zeytinburnu",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "4698b44bf148f7b999d0de52deabb281a433d4d29d78edc7281c016fa83433fe",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "Beştelsiz",
+      "Çırpıcı",
+      "Gökalp",
+      "Kazlıçeşme",
+      "Maltepe",
+      "Merkezefendi",
+      "Nuripaşa",
+      "Seyitnizam",
+      "Sümer",
+      "Telsiz",
+      "Veliefendi",
+      "Yenidoğan",
+      "Yeşiltepe"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "İBB tam tablo kontrolü; ek ilçe kaynağı bulunduğunda karşılaştırıldı. Tarihsiz dizin için yayın tarihi iddiası yok.",
+    "neighborhoodSources": [
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/zeytinburnu-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/zeytinburnu-mahalle-muhtarlari/",
+        "file": "zeytinburnu-0114b92ddaf7.txt",
+        "sha256": "d497d9ca82f7745fb1f712ae3f6d5b45dae787f41144ccef6318ce3ad767f815"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://www.zeytinburnu.gov.tr/ilcemizin-tarihi",
+        "sha256": "bb56c61f1a86fc18a51d78533b2c9ff3a3437115fa0e1a196589c1e50e9f0d73",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "zeytinburnu-3d66f50de69a.txt"
+      },
+      {
+        "url": "https://www.zeytinburnu.gov.tr/cografi-yapisi",
+        "sha256": "bed84a1ff1305d0af0b5005ee45071189ff85a24a9b1a1fe19a64b43045bbeff",
+        "selectedFor": [
+          "geography",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "zeytinburnu-bef7101afc35.txt"
+      }
+    ]
+  },
+  {
+    "district": "adalar",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "5122e2800fad5536239d0c5efa0f91323912f648ab67e337df9229f91db9920b",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "Burgazada",
+      "Heybeliada",
+      "Kınalıada",
+      "Maden",
+      "Nizam"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "İBB tam tablo kontrolü; ek ilçe kaynağı bulunduğunda karşılaştırıldı. Tarihsiz dizin için yayın tarihi iddiası yok.",
+    "neighborhoodSources": [
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/adalar-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/adalar-mahalle-muhtarlari/",
+        "file": "adalar-1513644c72c9.txt",
+        "sha256": "eed4dd42d5b9ffc42058058fd379c0cb12973ee67e34b09d452c54061f09d990"
+      },
+      {
+        "url": "https://adalar.gov.tr/muhtarlarimiz",
+        "result": "200 https://adalar.gov.tr/muhtarlarimiz",
+        "file": "adalar-e0881f262998.txt",
+        "sha256": "4eb2d56a172e537207ea9220f29dd446a3be7af4920d0327d390816f097afdfa"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://adalar.gov.tr/kaymakamligimizin-tarihcesi",
+        "sha256": "9ca848285e7d730b74e074f07a1032db3045d19fa5dd6933c3094447768282fd",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "adalar-a0e266d88d23.txt"
+      },
+      {
+        "url": "https://adalar.gov.tr/cografi-yapi",
+        "sha256": "5b14729f2ebb8d8be33014484fd5cc25bf72d73d1014fb68d704218514362d1a",
+        "selectedFor": [
+          "geography",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "adalar-3.txt"
+      }
+    ]
+  },
+  {
+    "district": "atasehir",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "c30cfe883c0a190f956fecbb278f283a88d180524726a991c926f9cdbb8d42c9",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "Aşık Veysel",
+      "Atatürk",
+      "Barbaros",
+      "Esatpaşa",
+      "Ferhatpaşa",
+      "Fetih",
+      "İçerenköy",
+      "İnönü",
+      "Kayışdağı",
+      "Küçükbakkalköy",
+      "Mevlana",
+      "Mimar Sinan",
+      "Mustafa Kemal",
+      "Örnek",
+      "Yeni Çamlıca",
+      "Yenisahra",
+      "Yenişehir"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "İBB tam tablo kontrolü; ek ilçe kaynağı bulunduğunda karşılaştırıldı. Tarihsiz dizin için yayın tarihi iddiası yok.",
+    "neighborhoodSources": [
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/atasehir-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/atasehir-mahalle-muhtarlari/",
+        "file": "atasehir-5d1d3061aec5.txt",
+        "sha256": "a34aeccfda135569f9815cd125950034d85d5af4544c02ed34d1a722ecc79ccd"
+      },
+      {
+        "url": "https://www.atasehir.bel.tr/atasehir/muhtarliklar",
+        "result": "200 https://www.atasehir.bel.tr/atasehir/muhtarliklar",
+        "file": "atasehir-4c9debe88c08.txt",
+        "sha256": "cc4ac61943891c9a9d0d89be5ff7a9d57e735a98f6fc012ff6aea5188b1a0013"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://atasehir.gov.tr/tarihi-ve-cografi-yapisi",
+        "sha256": "3b1c83ce9ddde61874e54b54d190ece3656583f01a390f36fc397dc6b9339c7b",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "atasehir-f8aee52bfd9d.txt"
+      }
+    ]
+  },
+  {
+    "district": "beykoz",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "5cfac9d53b0026709225f8dff8695dd851712c2250ab22a702ac4f4ae49b4cdc",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "Acarlar",
+      "Akbaba",
+      "Alibahadır",
+      "Anadolu Hisarı",
+      "Anadolu Kavağı",
+      "Anadolufeneri",
+      "Baklacı",
+      "Bozhane",
+      "Cumhuriyet",
+      "Çamlıbahçe",
+      "Çengeldere",
+      "Çiftlik",
+      "Çiğdem",
+      "Çubuklu",
+      "Dereseki",
+      "Elmalı",
+      "Fatih",
+      "Göksu",
+      "Göllü",
+      "Görele",
+      "Göztepe",
+      "Gümüşsuyu",
+      "Incirköy",
+      "Ishaklı",
+      "Kanlıca",
+      "Kavacık",
+      "Kaynarca",
+      "Kılıçlı",
+      "Mahmutşevketpaşa",
+      "Merkez",
+      "Ortaçeşme",
+      "Öğümce",
+      "Örnekköy",
+      "Paşabahçe",
+      "Paşamandıra",
+      "Polonezköy",
+      "Poyrazköy",
+      "Riva",
+      "Rüzgarlıbahçe",
+      "Soğuksu",
+      "Tokatköy",
+      "Yalıköy",
+      "Yavuz Selim",
+      "Yenimahalle",
+      "Zerzavatçı"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [
+      "Ortaçeşme"
+    ],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "e-Devlet belediye kaydıyla Çiğdem, Polonezköy, Zerzavatçı yazımları düzeltildi. PDF Ortaçeşme kaydını atlıyor; Çiftlik ve Çavuşbaşı Çiftlik ayrı mahalle değildir. Tek kayıt ve Ortaçeşme ile 45.",
+    "neighborhoodSources": [
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/beykoz-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/beykoz-mahalle-muhtarlari/",
+        "file": "beykoz-866b7246a692.txt",
+        "sha256": "6c8ee36d8843cc955e4f4ef0aee358a6b642268e92f7d862bdba93a04bbcfef3"
+      },
+      {
+        "url": "https://www.beykoz.gov.tr/mahallelerimiz",
+        "result": "200 https://www.beykoz.gov.tr/mahallelerimiz",
+        "file": "beykoz-debc47cf342a.txt",
+        "sha256": "ba59bb3f1391ffa7cc8a6112f465d21833b45c082e5b98a8a21314c6413a5c17"
+      },
+      {
+        "url": "https://www.turkiye.gov.tr/beykoz-belediyesi-arsa-rayic-degeri-sorgulama-v2",
+        "result": "200 https://www.turkiye.gov.tr/beykoz-belediyesi-arsa-rayic-degeri-sorgulama-v2",
+        "file": "beykoz-3fc714f9d3cd.txt",
+        "sha256": "f1f66d4ddb4c350b876a9f18681d253e4909bda7e985aa1d61a017c9822c93c0"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://www.beykoz.gov.tr/tarihcemiz",
+        "sha256": "f213f81b7648fb0eee8120b65299c324098b5a78afe655596a0bc3edb4116eb5",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "beykoz-0.txt"
+      }
+    ]
+  },
+  {
+    "district": "cekmekoy",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "7c8331bcfd0a53eee358b4cfb179c3e929061bb5d76dd72da2ca6e0ccbff14d0",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "Alemdağ",
+      "Aydınlar",
+      "Cumhuriyet",
+      "Çamlık",
+      "Çatalmeşe",
+      "Ekşioğlu",
+      "Güngören",
+      "Hamidiye",
+      "Hüseyinli",
+      "Kirazlıdere",
+      "Koçullu",
+      "Mehmet Akif",
+      "Merkez",
+      "Mimar Sinan",
+      "Nişantepe",
+      "Ömerli",
+      "Reşadiye",
+      "Sırapınar",
+      "Soğukpınar",
+      "Sultançiftliği",
+      "Taşdelen"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "İBB tam tablo kontrolü; ek ilçe kaynağı bulunduğunda karşılaştırıldı. Tarihsiz dizin için yayın tarihi iddiası yok.",
+    "neighborhoodSources": [
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/cekmekoy-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/cekmekoy-mahalle-muhtarlari/",
+        "file": "cekmekoy-effc875ac5cc.txt",
+        "sha256": "40747a075c5868d0466863e716135ea2ed0458d9be5f0a7aa64880a27360dc4e"
+      },
+      {
+        "url": "https://www.cekmekoy.bel.tr/cekmekoy/mahalleler",
+        "result": "200 https://cekmekoy.bel.tr/cekmekoy/mahalleler",
+        "file": "cekmekoy-24bfed61a34c.txt",
+        "sha256": "5a6f11c493267d975bc853804c27f7d8827fff34cb288dd2d82f1509981d0d69"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://cekmekoy.gov.tr/cekmekoy-tarihi",
+        "sha256": "7770b4ad5e241aa31a36ad2defe9c8acdc26dd0b898212893259f0d506524dc8",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "cekmekoy-1b479b71cf1c.txt"
+      },
+      {
+        "url": "https://cekmekoy.gov.tr/cekmekoy-cografyasi",
+        "sha256": "74de7d43b6e93216849d624539444e278f5cd17d1444ea768a43d1c10c00a68f",
+        "selectedFor": [
+          "geography",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "cekmekoy-3b7cae2d55d2.txt"
+      }
+    ]
+  },
+  {
+    "district": "kadikoy",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "37958bd6aac286c0e360965ae74d7e13f437e02aaf376c72af7c7f18800ab458",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "19 Mayıs",
+      "Acıbadem",
+      "Bostancı",
+      "Caddebostan",
+      "Caferağa",
+      "Dumlupınar",
+      "Eğitim",
+      "Erenköy",
+      "Fenerbahçe",
+      "Feneryolu",
+      "Fikirtepe",
+      "Göztepe",
+      "Hasanpaşa",
+      "Koşuyolu",
+      "Kozyatağı",
+      "Merdivenköy",
+      "Osmanağa",
+      "Rasimpaşa",
+      "Sahrayıcedit",
+      "Suadiye",
+      "Zühtüpaşa"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "İBB tam tablo kontrolü; ek ilçe kaynağı bulunduğunda karşılaştırıldı. Tarihsiz dizin için yayın tarihi iddiası yok.",
+    "neighborhoodSources": [
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/kadikoy-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/kadikoy-mahalle-muhtarlari/",
+        "file": "kadikoy-cf967bfce544.txt",
+        "sha256": "661c1d005a982623a7dc59c797c2e2f6f8969dd2e6e0a18ee2ca620aafd77abe"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://kadikoy.gov.tr/kadikoy-ilce-tarihce",
+        "sha256": "dd3024939e166f98d986248a2ab8ae5953804f6f8db5ead31e500deedf5cc6e1",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "kadikoy-c458a1620e3c.txt"
+      },
+      {
+        "url": "https://www.kadikoy.bel.tr/cografi-konum",
+        "sha256": "b6266703330dd464af017b43adfc5f89b6b28b09e5064b844fb72505445924a1",
+        "selectedFor": [
+          "geography",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "kadikoy-0.txt"
+      }
+    ]
+  },
+  {
+    "district": "kartal",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "3c8d5712bbceb80a646bed719dac8772528ac985d94bf251a3b48345b49259f7",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "Atalar",
+      "Cevizli",
+      "Cumhuriyet",
+      "Çavuşoğlu",
+      "Esentepe",
+      "Gümüşpınar",
+      "Hürriyet",
+      "Karlıktepe",
+      "Kordonboyu",
+      "Orhantepe",
+      "Soğanlık Orta",
+      "Petrol İş",
+      "Soğanlık Yeni",
+      "Topselvi",
+      "Uğur Mumcu",
+      "Yakacık Çarşı",
+      "Yakacık Yeni",
+      "Yalı",
+      "Yukarı",
+      "Yunus"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [
+      "Soğanlık Orta"
+    ],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "İBB tam tablo kontrolü; ek ilçe kaynağı bulunduğunda karşılaştırıldı. Tarihsiz dizin için yayın tarihi iddiası yok. PDF Orta; Kaymakamlık Soğanlık Orta. Yerel resmî yazım esas alındı; sayısı 20.",
+    "neighborhoodSources": [
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/kartal-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/kartal-mahalle-muhtarlari/",
+        "file": "kartal-be2075b3f237.txt",
+        "sha256": "fcf3a1bb4954bb19171098f117777f8d0644fd6225f1862003d025128a5c2211"
+      },
+      {
+        "url": "https://www.kartal.gov.tr/kartal-ilesi-mahalle-muhtarliklarina-ait-telefon-faks-mail-bilgileri",
+        "result": "200 https://www.kartal.gov.tr/kartal-ilesi-mahalle-muhtarliklarina-ait-telefon-faks-mail-bilgileri",
+        "file": "kartal-5a7a904bba1e.txt",
+        "sha256": "06ef25cc6a3f3ad7471b62fbe4d7893bd2879cb288129871a966f55e4cf32909"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://kartal.gov.tr/tarihce",
+        "sha256": "322866776466b171c25116ed1a7d2e8627d603195d888a6cbf62d46addd62764",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "kartal-9dae70e28232.txt"
+      },
+      {
+        "url": "https://kartal.gov.tr/cografi-yapi",
+        "sha256": "72fc46a9f4857a26e6b5d40cf4de9367f6c2cec0e8e54251fc1bfad8e52569ca",
+        "selectedFor": [
+          "geography",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "kartal-a0e811f2e66c.txt"
+      }
+    ]
+  },
+  {
+    "district": "maltepe",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "ce58474401380ac3ca9f3625264aff25dd2f49481fae159ddc4be312aefbcd02",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "Altayçeşme",
+      "Altıntepe",
+      "Aydınevler",
+      "Bağlarbaşı",
+      "Başıbüyük",
+      "Büyükbakkalköy",
+      "Cevizli",
+      "Çınar",
+      "Esenkent",
+      "Feyzullah",
+      "Fındıklı",
+      "Girne",
+      "Gülensu",
+      "Gülsuyu",
+      "İdealtepe",
+      "Küçükyalı Merkez",
+      "Yalı",
+      "Zümrütevler"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "Bryas eşleştirmesi ve 816/Theophilos anlatımı aktarılmadı.",
+    "neighborhoodSources": [
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/maltepe-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/maltepe-mahalle-muhtarlari/",
+        "file": "maltepe-afdc0aa8056f.txt",
+        "sha256": "92356828f38d6eba4b920d5d21815611bbfd24bb524e883e641f4d99f6d00092"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://maltepe.gov.tr/tarihce",
+        "sha256": "4fc59560e371a3cc67188dd4a742d60c02f4a1b2d9e8c54f044d7e4fd8cefa6a",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "maltepe-842bf4f378da.txt"
+      },
+      {
+        "url": "https://maltepe.gov.tr/cografi-yapi",
+        "sha256": "eb8e1f2f6ab103d40b194a195ac3598a33e3eaafc5f534efc21fd9348efe15fa",
+        "selectedFor": [
+          "geography",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "maltepe-2b9d3f3d5715.txt"
+      }
+    ]
+  },
+  {
+    "district": "pendik",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "274878900fe2b02fe0d69c981172f3253a933b6e97442483c85c59844774cdcd",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "Ahmet Yesevi",
+      "Bahçelievler",
+      "Ballıca",
+      "Batı",
+      "Çamçeşme",
+      "Çamlık",
+      "Çınardere",
+      "Doğu",
+      "Dumlupınar",
+      "Emirli",
+      "Ertuğrul Gazi",
+      "Esenler",
+      "Esenyalı",
+      "Fatih",
+      "Fevzi Çakmak",
+      "Göçbeyli",
+      "Güllü Bağlar",
+      "Güzelyalı",
+      "Harmandere",
+      "Kavakpınar",
+      "Kaynarca",
+      "Kurna",
+      "Kurtdoğmuş",
+      "Kurtköy",
+      "Orhangazi",
+      "Orta",
+      "Ramazanoğlu",
+      "Sanayi",
+      "Sapan Bağları",
+      "Sülüntepe",
+      "Şeyhli",
+      "Velibaba",
+      "Yayalar",
+      "Yeni",
+      "Yenişehir",
+      "Yeşilbağlar"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "İBB tam tablo kontrolü; ek ilçe kaynağı bulunduğunda karşılaştırıldı. Tarihsiz dizin için yayın tarihi iddiası yok.",
+    "neighborhoodSources": [
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/pendik-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/pendik-mahalle-muhtarlari/",
+        "file": "pendik-611736feb472.txt",
+        "sha256": "71e3f51956e6c210ab16847e5292e4ab408d051a99940475b700c17a82b77bd1"
+      },
+      {
+        "url": "https://pendik.gov.tr/muhtarliklar",
+        "result": "200 https://pendik.gov.tr/muhtarliklar",
+        "file": "pendik-e95a600accef.txt",
+        "sha256": "f8c84ef9e61eec767b41a1fae37a7b0a9d21f64644d0163fe6176bd189e64362"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://pendik.gov.tr/cografya",
+        "sha256": "c2c434c8847006d19f371d2617907358b939c7975867987a8d0039f344eaa8c0",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "pendik-1e495f9d25aa.txt"
+      }
+    ]
+  },
+  {
+    "district": "sancaktepe",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "7429c724fbec526742c25222a78faded34b00fdd09afd534cfd55a4bb64773e9",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "Abdurrahmangazi",
+      "Akpınar",
+      "Atatürk",
+      "Emek",
+      "Eyüp Sultan",
+      "Fatih",
+      "Hilal",
+      "İnönü",
+      "Kemal Türkler",
+      "Meclis",
+      "Merve",
+      "Mevlana",
+      "Osmangazi",
+      "Paşaköy",
+      "Safa",
+      "Sarıgazi",
+      "Veysel Karani",
+      "Yenidoğan",
+      "Yunus Emre"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "İBB tam tablo kontrolü; ek ilçe kaynağı bulunduğunda karşılaştırıldı. Tarihsiz dizin için yayın tarihi iddiası yok.",
+    "neighborhoodSources": [
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/sancaktepe-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/sancaktepe-mahalle-muhtarlari/",
+        "file": "sancaktepe-67e4397eef7f.txt",
+        "sha256": "5337111340ef8fff92ad2dce147fee5fb3ae518cf4c7bd6399a1eda24fdd43e0"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://sancaktepe.gov.tr/tarihce",
+        "sha256": "3a8a46ace2e9c02525a13f2c9cbe3a5e96728f9f9a743a07ac0377736e365ca2",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "sancaktepe-20b7717668c4.txt"
+      }
+    ]
+  },
+  {
+    "district": "sultanbeyli",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "74cbc64aa17f871c8d8e3708f9cb23902cdb1952dd3828e2148a4d2367a1141c",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "Abdurrahmangazi",
+      "Adil",
+      "Ahmet Yesevi",
+      "Akşemsettin",
+      "Battalgazi",
+      "Fatih",
+      "Hamidiye",
+      "Hasanpaşa",
+      "Mecidiye",
+      "Mehmet Akif",
+      "Mimar Sinan",
+      "Necip Fazıl",
+      "Orhan Gazi",
+      "Turgut Reis",
+      "Yavuz Selim"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "İlçe belediyesi Akşemsettin; İBB Akşemseddin yazıyor. İlçe belediyesinin yazımı esas alındı. Eski coğrafya sayfasındaki Paşaköy-Kartal ilişkisi güncel sınır diye aktarılmadı.",
+    "neighborhoodSources": [
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/sultanbeyli-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/sultanbeyli-mahalle-muhtarlari/",
+        "file": "sultanbeyli-631f3ec6ff2f.txt",
+        "sha256": "5e0a7b67f963ad45f85e4eea3ba41092cae071757abcbe00af1e4e6f32c4468f"
+      },
+      {
+        "url": "https://www.sultanbeyli.bel.tr/muhtarliklar/",
+        "result": "200 https://www.sultanbeyli.bel.tr/muhtarliklar/",
+        "file": "sultanbeyli-d9c1fa5d2745.txt",
+        "sha256": "9cde4c98fd6d2613b84188adada7655364c9e17447c51d68de5fd94a229f1582"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://www.sultanbeyli.gov.tr/ilce-tarihi",
+        "sha256": "6d8172af6f8c5b14ba8bcb594a6bb294bbfa6efd0a28efa35cebb385d9a5dee1",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "sultanbeyli-6c434ae32691.txt"
+      },
+      {
+        "url": "https://www.sultanbeyli.gov.tr/cografi-durum",
+        "sha256": "0f5d2750d51bf302a012c1d1f507f0df0a2b2adb30b3abd8f18f1ab89f483d17",
+        "selectedFor": [
+          "geography",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "sultanbeyli-0.txt"
+      }
+    ]
+  },
+  {
+    "district": "sile",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "a580d632aad945739736676df191e72b23d6ec8e09a7e164266f819668e285f7",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "Ağaçdere",
+      "Ağva Merkez",
+      "Ahmetli",
+      "Akçekese",
+      "Alacalı",
+      "Avcıkoru",
+      "Balibey",
+      "Bıçkıdere",
+      "Bozgoca",
+      "Bucaklı",
+      "Çataklı",
+      "Çavuş",
+      "Çayırbaşı",
+      "Çelebi",
+      "Çengilli",
+      "Darlık",
+      "Değirmençayırı",
+      "Doğancılı",
+      "Erenler",
+      "Esenceli",
+      "Geredeli",
+      "Göçe",
+      "Gökmaslı",
+      "Göksu",
+      "Hacı Kasım",
+      "Hacıllı",
+      "Hasanlı",
+      "İmrendere",
+      "İmrenli",
+      "İsaköy",
+      "Kabakoz",
+      "Kadıköy",
+      "Kalemköy",
+      "Karabeyli",
+      "Karacaköy",
+      "Karakiraz",
+      "Karamandere",
+      "Kervansaray",
+      "Kızılcaköy",
+      "Korucuköy",
+      "Kömürlük",
+      "Kumbaba",
+      "Kurfallı",
+      "Kurna",
+      "Meşrutiyet",
+      "Oruçoğlu",
+      "Osmanköy",
+      "Ovacık",
+      "Sahilköy",
+      "Satmazlı",
+      "Sofular",
+      "Soğullu",
+      "Sortullu",
+      "Şuayipli",
+      "Teke",
+      "Ulupelit",
+      "Üvezli",
+      "Yaka",
+      "Yaylalı",
+      "Yazımanayır",
+      "Yeniköy",
+      "Yeşilvadi"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [
+      "Akçekese",
+      "Kalemköy",
+      "Kızılcaköy",
+      "Korucuköy"
+    ],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "Resmî kaynaklar Akçekese/Akçakese yazımında ayrılıyor. Kaymakamlık ve ilçe belediyesindeki Akçekese esas; İBB farkı saklandı.",
+    "neighborhoodSources": [
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/sile-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/sile-mahalle-muhtarlari/",
+        "file": "sile-9e0ab08db305.txt",
+        "sha256": "0ccdb1bba99988b0cb8925664ead1c6ff5844e044353da83e40b6c0779457ffe"
+      },
+      {
+        "url": "https://sile.gov.tr/mahalle-ve-koylerimiz",
+        "result": "200 https://sile.gov.tr/mahalle-ve-koylerimiz",
+        "file": "sile-a5521d15d00a.txt",
+        "sha256": "a530073a1ae8017f3a41e906b44eab209634344a32c66a80edebc3ed237519ca"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://sile.gov.tr/tarihce",
+        "sha256": "3c8a8488c1297019421d26244bdcd6f2b1b648ac849265420354a0a20dd40243",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "sile-00c834d4c182.txt"
+      }
+    ]
+  },
+  {
+    "district": "tuzla",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "03fdd747eeb1b6c7808208fde4842ccb7cddfb158ea14095e7b60d984c040a61",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "Akfırat",
+      "Anadolu",
+      "Aydınlı",
+      "Aydıntepe",
+      "Cami",
+      "Evliya Çelebi",
+      "Fatih",
+      "İçmeler",
+      "İstasyon",
+      "Mescit",
+      "Mimar Sinan",
+      "Orhanlı",
+      "Orta",
+      "Postane",
+      "Şifa",
+      "Tepeören",
+      "Yayla"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "İBB tam tablo kontrolü; ek ilçe kaynağı bulunduğunda karşılaştırıldı. Tarihsiz dizin için yayın tarihi iddiası yok.",
+    "neighborhoodSources": [
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/tuzla-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/tuzla-mahalle-muhtarlari/",
+        "file": "tuzla-ef4ce33bf9d8.txt",
+        "sha256": "7af7830833f7674c40559c77c75f76a96a5000540a891285b32fc5a5dce0332e"
+      },
+      {
+        "url": "https://www.tuzla.bel.tr/tuzlada-yasam/mahalleler",
+        "result": "200 https://www.tuzla.bel.tr/tuzlada-yasam/mahalleler",
+        "file": "tuzla-4ecc72f98cc7.txt",
+        "sha256": "0dedd1a8b7126fa52988810986d124d0cbb40b0f72dca00c96056e4dbeb0b80d"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://www.tuzla.gov.tr/tarihsel-gelisim",
+        "sha256": "b65e36918833146cc71e58042d9c6c1738355c98f2526abe06100fca7691b3e0",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "tuzla-1.txt"
+      },
+      {
+        "url": "https://www.tuzla.gov.tr/tuzlamizin-tarihcesi",
+        "sha256": "05c245f193cbeaa6eb3fabbe5482fda49cd737f5bbf398bd260b8eceda7b5127",
+        "selectedFor": [
+          "geography",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "tuzla-02c2c8b9f72c.txt"
+      }
+    ]
+  },
+  {
+    "district": "umraniye",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "78b4b931cdc864a3ec4811c3db1ed9fd40a608f02ecf8631eb5f2c41ff5c018e",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "Adem Yavuz",
+      "Altınşehir",
+      "Armağanevler",
+      "Aşağı Dudullu",
+      "Atakent",
+      "Atatürk",
+      "Cemil Meriç",
+      "Çakmak",
+      "Çamlık",
+      "Dumlupınar",
+      "Elmalıkent",
+      "Esenevler",
+      "Esenkent",
+      "Esenşehir",
+      "Fatih Sultan Mehmet",
+      "Finanskent",
+      "Hekimbaşı",
+      "Huzur",
+      "Ihlamurkuyu",
+      "İnkilap",
+      "İstiklal",
+      "Kazım Karabekir",
+      "Madenler",
+      "Mehmet Akif",
+      "Namık Kemal",
+      "Necip Fazıl",
+      "Parseller",
+      "Site",
+      "Şerifali",
+      "Tantavi",
+      "Tatlısu",
+      "Tepeüstü",
+      "Topağacı",
+      "Yamanevler",
+      "Yukarı Dudullu"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "İlçe genelinde sağlam zemin iddiası çıkarıldı. Harun Reşid ve Frigler hakkındaki tartışmalı anlatı yayımlanmadı.",
+    "neighborhoodSources": [
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/umraniye-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/umraniye-mahalle-muhtarlari/",
+        "file": "umraniye-a7afc2e9558f.txt",
+        "sha256": "de28c0fe89c82149a51cb7a4496fe3df4100776f456722ec903ceca907238a1e"
+      },
+      {
+        "url": "https://umraniye.bel.tr/umraniye/muhtarliklar/",
+        "result": "200 https://umraniye.bel.tr/umraniye/muhtarliklar/",
+        "file": "umraniye-1419860e8653.txt",
+        "sha256": "bce5ff3e5f1294b3e3f513c5b1671be4ac239e19061e36c7738e71b1c813b32f"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://umraniye.gov.tr/umraniyenin-tarihi",
+        "sha256": "2fcfd56429d12272e88cd3965b10d12a8f0901700bfd238c2f8c6dc52c1a4e66",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "umraniye-7e44a12c5827.txt"
+      },
+      {
+        "url": "https://www.umraniye.gov.tr/cografi-durum",
+        "sha256": "7fb222382bb2d3c6e385bd17d430840b0c8ace8188baa15abe67040d34ea4020",
+        "selectedFor": [
+          "geography",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "umraniye-0.txt"
+      }
+    ]
+  },
+  {
+    "district": "uskudar",
+    "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+    "pdfSha256": "29a2c9b647340173c4bc714c3668912f1722a6d2796f8ea73c65806ab4bec0f1",
+    "neighborhoodStatus": "verified-current-directory",
+    "officialNames": [
+      "Acıbadem",
+      "Ahmediye",
+      "Altunizade",
+      "Aziz Mahmut Hüdayi",
+      "Bahçelievler",
+      "Barbaros",
+      "Beylerbeyi",
+      "Bulgurlu",
+      "Burhaniye",
+      "Cumhuriyet",
+      "Çengelköy",
+      "Ferah",
+      "Güzeltepe",
+      "İcadiye",
+      "Kandilli",
+      "Kısıklı",
+      "Kirazlıtepe",
+      "Kuleli",
+      "Kuzguncuk",
+      "Küçük Çamlıca",
+      "Küçüksu",
+      "Küplüce",
+      "Mehmet Akif Ersoy",
+      "Mimar Sinan",
+      "Muratreis",
+      "Salacak",
+      "Selami Ali",
+      "Selimiye",
+      "Sultantepe",
+      "Ünalan",
+      "Valide-i Atik",
+      "Yavuztürk",
+      "Zeynep Kamil"
+    ],
+    "officialNamesNotFoundLiterallyInPdfSection": [],
+    "differenceCaveat": "Yazım, kısaltma ve semt öneki farkları yeni/kaldırılan mahalle anlamına gelmez. Bu alan yalnız normalize metin eşleştirmesidir; esas karar özel not ve resmî listedir.",
+    "note": "İBB tam tablo kontrolü; ek ilçe kaynağı bulunduğunda karşılaştırıldı. Tarihsiz dizin için yayın tarihi iddiası yok.",
+    "neighborhoodSources": [
+      {
+        "url": "https://muhtarlikisleri.ibb.istanbul/uskudar-mahalle-muhtarlari/",
+        "result": "200 https://muhtarlikisleri.ibb.istanbul/uskudar-mahalle-muhtarlari/",
+        "file": "uskudar-035665aa9253.txt",
+        "sha256": "e547132ee67bfc96a7a91841450843b48e3164938165aac236fbbacd0971ca6d"
+      },
+      {
+        "url": "https://www.uskudar.bel.tr/tr/main/mahalleler",
+        "result": "200 https://www.uskudar.bel.tr/tr/main/mahalleler",
+        "file": "uskudar-0f225c05dfe4.txt",
+        "sha256": "5362f79721d2e4afe3be80afa5e9a0b100887f3fcd519f6bf0e06fd832295108"
+      }
+    ],
+    "contentEvidence": [
+      {
+        "url": "https://www.uskudar.bel.tr/tr/main/pages/tarihce/25",
+        "sha256": "428966a8d1ac1e2d758e55e445f2e85681ce5ef45d536b67ac5f210154e0e622",
+        "selectedFor": [
+          "history",
+          "summary"
+        ],
+        "review": "Sınırlı yeniden yazım; tüm sayfa onaylanmış değildir. Yayımlanan iddialar editorial.json içinde.",
+        "cacheFile": "uskudar-0.txt"
+      }
+    ]
+  }
+]

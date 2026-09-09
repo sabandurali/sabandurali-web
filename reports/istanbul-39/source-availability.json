@@ -1,0 +1,496 @@
+{
+  "scope": "Selected official links referenced in the PDFs; HTTP/TLS availability only, not semantic verification",
+  "checkedOn": "2026-09-09",
+  "results": [
+    {
+      "district": "arnavutkoy",
+      "url": "https://www.arnavutkoy.bel.tr/arnavutkoy-mahalleleri",
+      "status": 200,
+      "chars": 11961
+    },
+    {
+      "district": "avcilar",
+      "url": "https://avcilar.gov.tr/tarihi",
+      "status": 200,
+      "chars": 22591
+    },
+    {
+      "district": "bagcilar",
+      "url": "https://www.bagcilar.gov.tr/tarihce",
+      "status": 200,
+      "chars": 9901
+    },
+    {
+      "district": "bagcilar",
+      "url": "https://www.bagcilar.bel.tr/icerik/ilcemizin-tarihi",
+      "status": 200,
+      "chars": 3611
+    },
+    {
+      "district": "bakirkoy",
+      "url": "https://www.bakirkoy.bel.tr/bakirkoy/tarihimiz",
+      "status": 200,
+      "chars": 2792
+    },
+    {
+      "district": "bakirkoy",
+      "url": "https://www.bakirkoy.gov.tr/ilcemizin-tarihi",
+      "status": 200,
+      "chars": 6767
+    },
+    {
+      "district": "basaksehir",
+      "url": "https://www.basaksehir.bel.tr/basaksehir-tarihcesi",
+      "error": "<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>",
+      "systemCurlRetry": {
+        "exitCode": 0,
+        "httpStatus": "200",
+        "error": ""
+      }
+    },
+    {
+      "district": "basaksehir",
+      "url": "https://www.basaksehir.gov.tr/ilcemizin-tarihcesi",
+      "error": "<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'www.basaksehir.gov.tr'. (_ssl.c:1010)>",
+      "systemCurlRetry": {
+        "exitCode": 60,
+        "httpStatus": "000",
+        "error": "curl: (60) SSL: no alternative certificate subject name matches target host name 'www.basaksehir.gov.tr'\nMore details here: https://curl.se/docs/sslcerts.html\n\ncurl failed to verify the legitimacy of the server and therefore could not\nestablish a secure connection to it. To learn more about this situation and\nhow to fix it, please visit the web page mentioned above."
+      }
+    },
+    {
+      "district": "basaksehir",
+      "url": "https://www.basaksehir.bel.tr/belediye-tarihcesi",
+      "error": "<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>",
+      "systemCurlRetry": {
+        "exitCode": 0,
+        "httpStatus": "200",
+        "error": ""
+      }
+    },
+    {
+      "district": "bayrampasa",
+      "url": "https://www.bayrampasa.gov.tr/tarihce",
+      "status": 200,
+      "chars": 16545
+    },
+    {
+      "district": "besiktas",
+      "url": "https://www.atasehir.gov.tr/tarihi-ve-cografi-yapisi",
+      "status": 200,
+      "chars": 9610
+    },
+    {
+      "district": "besiktas",
+      "url": "https://besiktas.bel.tr/kurumsal/mahalleler-ve-muhtarliklar/",
+      "status": 200,
+      "chars": 1112
+    },
+    {
+      "district": "beylikduzu",
+      "url": "https://www.beylikduzu.gov.tr/beylikduzu-tarihce",
+      "status": 200,
+      "chars": 9229
+    },
+    {
+      "district": "beylikduzu",
+      "url": "https://www.beylikduzu.gov.tr/beylikduzu-tarihi-yerler",
+      "status": 200,
+      "chars": 7883
+    },
+    {
+      "district": "beyoglu",
+      "url": "https://beyoglu.bel.tr/beyoglu/tarihce/",
+      "status": 200,
+      "chars": 11367
+    },
+    {
+      "district": "beyoglu",
+      "url": "https://www.uab.gov.tr/haberler/tarihi-gelecege-aktaran-proje",
+      "status": 200,
+      "chars": 10984
+    },
+    {
+      "district": "buyukcekmece",
+      "url": "https://www.bcekmece.bel.tr/belediye/tarihi-mekanlar/kanuni-sultan-suleyman-mimar-sinan-koprusu",
+      "status": 200,
+      "chars": 1418
+    },
+    {
+      "district": "buyukcekmece",
+      "url": "https://www.buyukcekmece.gov.tr/ilcemiztarihce",
+      "status": 200,
+      "chars": 12587
+    },
+    {
+      "district": "catalca",
+      "url": "https://www.catalca.gov.tr/catalca-tarihi",
+      "status": 200,
+      "chars": 13841
+    },
+    {
+      "district": "esenler",
+      "url": "https://www.esenler.gov.tr/tarihce",
+      "status": 200,
+      "chars": 8339
+    },
+    {
+      "district": "esenler",
+      "url": "https://esenler.bel.tr/sehir-rehberi/muhtarliklar/",
+      "status": 200,
+      "chars": 1760
+    },
+    {
+      "district": "esenler",
+      "url": "https://esenler.bel.tr/kentsel-donusum/projeler/15-temmuz-mahallesi-guney-rezerv-yapi-alani/",
+      "status": 200,
+      "chars": 3982
+    },
+    {
+      "district": "esenyurt",
+      "url": "https://www.esenyurt.gov.tr/muhtar-bilgileri",
+      "status": 200,
+      "chars": 8855
+    },
+    {
+      "district": "esenyurt",
+      "url": "https://www.esenyurt.bel.tr/muhtarliklar",
+      "error": "<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>",
+      "systemCurlRetry": {
+        "exitCode": 0,
+        "httpStatus": "200",
+        "error": ""
+      }
+    },
+    {
+      "district": "fatih",
+      "url": "https://www.fatih.bel.tr/tr/main/pages/tarihte-fatih/41",
+      "status": 200,
+      "chars": 295255
+    },
+    {
+      "district": "fatih",
+      "url": "https://www.fatih.gov.tr/mahallelerimiz",
+      "status": 200,
+      "chars": 8958
+    },
+    {
+      "district": "gaziosmanpasa",
+      "url": "https://www.arnavutkoy.gov.tr/arnavutkoy-tarihi",
+      "status": 200,
+      "chars": 14207
+    },
+    {
+      "district": "gaziosmanpasa",
+      "url": "https://www.gaziosmanpasa.bel.tr/muhtarlar",
+      "status": 200,
+      "chars": 4204
+    },
+    {
+      "district": "gaziosmanpasa",
+      "url": "https://www.tbmm.gov.tr/develop/owa/td_v2.tutanak_sonuc?v_meclis&v_donem&v_yasama_yili&v_cilt&v_birlesim&v_sayfa&v_anabaslik=KANUNLAR&v_altbaslik&v_mv&v_sb&v_ozet&v_bastarih&v_bittarih&v_kayit_sayisi=17397&v_gelecek_sayfa=8601&v_kullanici_id=10099032",
+      "status": 200,
+      "chars": 1078
+    },
+    {
+      "district": "gungoren",
+      "url": "https://www.gungoren.gov.tr/tarihce",
+      "status": 200,
+      "chars": 10321
+    },
+    {
+      "district": "gungoren",
+      "url": "https://www.gungoren.bel.tr/kurumsal/tarihce",
+      "status": 200,
+      "chars": 79
+    },
+    {
+      "district": "gungoren",
+      "url": "https://www.gungoren.gov.tr/cografi-durum",
+      "status": 200,
+      "chars": 6929
+    },
+    {
+      "district": "kagithane",
+      "url": "https://www.kagithane.gov.tr/ilcemizin-tarihcesi",
+      "status": 200,
+      "chars": 21765
+    },
+    {
+      "district": "kagithane",
+      "url": "https://www.toki.gov.tr/haber/kagithane-yahya-kemal-mahallesi-kentsel-donusum-projesinde-kura-cekimi-yapildi",
+      "status": 200,
+      "chars": 8324
+    },
+    {
+      "district": "kucukcekmece",
+      "url": "https://www.kucukcekmece.gov.tr/tarihce",
+      "status": 200,
+      "chars": 9005
+    },
+    {
+      "district": "sariyer",
+      "url": "https://www.sariyer.gov.tr/tarihce",
+      "status": 200,
+      "chars": 8201
+    },
+    {
+      "district": "sariyer",
+      "url": "https://www.sariyer.gov.tr/tarihi-ve-turistik-yerler",
+      "status": 200,
+      "chars": 27646
+    },
+    {
+      "district": "silivri",
+      "url": "https://www.istanbul.gov.tr/istanbulun-iki-tarihi-koprusu-restorasyonlarin-ardindan-hizmete-acildi",
+      "status": 200,
+      "chars": 12994
+    },
+    {
+      "district": "silivri",
+      "url": "https://ci.turkpatent.gov.tr/cografi-isaretler/detay/5888",
+      "status": 200,
+      "chars": 512
+    },
+    {
+      "district": "zeytinburnu",
+      "url": "https://www.zeytinburnu.gov.tr/cografi-yapisi",
+      "status": 200,
+      "chars": 7124
+    },
+    {
+      "district": "zeytinburnu",
+      "url": "https://www.zeytinburnu.gov.tr/ilcemizin-tarihi",
+      "status": 200,
+      "chars": 7392
+    },
+    {
+      "district": "adalar",
+      "url": "https://adalar.bel.tr/tarihi-yapilar/",
+      "status": 200,
+      "chars": 2733
+    },
+    {
+      "district": "adalar",
+      "url": "https://adalar.gov.tr/tarihi",
+      "status": 200,
+      "chars": 7509
+    },
+    {
+      "district": "adalar",
+      "url": "https://www.adalar.gov.tr/kaymakamligimizin-tarihcesi",
+      "status": 200,
+      "chars": 7056
+    },
+    {
+      "district": "adalar",
+      "url": "https://adalar.gov.tr/cografi-yapi",
+      "status": 200,
+      "chars": 6775
+    },
+    {
+      "district": "atasehir",
+      "url": "https://www.atasehir.bel.tr/icerik/kurumsal/tarihce",
+      "status": 200,
+      "chars": 5605
+    },
+    {
+      "district": "atasehir",
+      "url": "https://eski.atasehir.bel.tr/tarihce",
+      "status": 200,
+      "chars": 5031
+    },
+    {
+      "district": "atasehir",
+      "url": "https://www.atasehir.gov.tr/tarihce",
+      "status": 200,
+      "chars": 10848
+    },
+    {
+      "district": "atasehir",
+      "url": "https://eski.atasehir.bel.tr/mahalle-ve-muhtarliklar",
+      "status": 200,
+      "chars": 2939
+    },
+    {
+      "district": "beykoz",
+      "url": "https://www.beykoz.gov.tr/tarihcemiz",
+      "status": 200,
+      "chars": 17048
+    },
+    {
+      "district": "beykoz",
+      "url": "https://dokuman.beykoz.bel.tr/sayfalar/beykoz-tarihi",
+      "status": 200,
+      "chars": 13378
+    },
+    {
+      "district": "beykoz",
+      "url": "https://beykoz.bel.tr/ge/detay/haberler/citftlik-mahallesi-beyseme-kavusuyor",
+      "status": 200,
+      "chars": 1599
+    },
+    {
+      "district": "cekmekoy",
+      "url": "https://cekmekoy.gov.tr/ilcemizin-tarihi",
+      "status": 200,
+      "chars": 17144
+    },
+    {
+      "district": "cekmekoy",
+      "url": "https://cekmekoy.bel.tr/icerik/cekmekoy/cekmekoy-tarihi",
+      "error": "<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>",
+      "systemCurlRetry": {
+        "exitCode": 0,
+        "httpStatus": "200",
+        "error": ""
+      }
+    },
+    {
+      "district": "cekmekoy",
+      "url": "https://www.cekmekoy.gov.tr/cekmekoy-tarihi",
+      "status": 200,
+      "chars": 39418
+    },
+    {
+      "district": "kadikoy",
+      "url": "https://www.kadikoy.bel.tr/cografi-konum",
+      "status": 200,
+      "chars": 1510
+    },
+    {
+      "district": "kartal",
+      "url": "https://kartal.gov.tr/tarihi-ve-cografi-yapisi",
+      "status": 200,
+      "chars": 7857
+    },
+    {
+      "district": "kartal",
+      "url": "https://www.kartal.gov.tr/cografi-yapi",
+      "status": 200,
+      "chars": 6559
+    },
+    {
+      "district": "maltepe",
+      "url": "https://www.maltepe.gov.tr/ilcemizin-tarihi",
+      "status": 200,
+      "chars": 8348
+    },
+    {
+      "district": "maltepe",
+      "url": "https://www.maltepe.gov.tr/ilcemizin-cografi-yapisi",
+      "status": 200,
+      "chars": 7090
+    },
+    {
+      "district": "pendik",
+      "url": "https://www.pendik.bel.tr/tr/tarih",
+      "status": 200,
+      "chars": 6786
+    },
+    {
+      "district": "pendik",
+      "url": "https://www.pendik.gov.tr/cografi-durum",
+      "status": 200,
+      "chars": 7706
+    },
+    {
+      "district": "sancaktepe",
+      "url": "https://www.sancaktepe.gov.tr/tarihce",
+      "status": 200,
+      "chars": 10083
+    },
+    {
+      "district": "sultanbeyli",
+      "url": "https://www.sultanbeyli.gov.tr/cografi-durum",
+      "status": 200,
+      "chars": 6666
+    },
+    {
+      "district": "sultanbeyli",
+      "url": "https://www.sultanbeyli.gov.tr/ilce-tarihi",
+      "status": 200,
+      "chars": 11226
+    },
+    {
+      "district": "sultanbeyli",
+      "url": "https://www.sultanbeyli.bel.tr/cografi-durum-ve-nufus/",
+      "error": "<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>",
+      "systemCurlRetry": {
+        "exitCode": 0,
+        "httpStatus": "200",
+        "error": ""
+      }
+    },
+    {
+      "district": "sultanbeyli",
+      "url": "https://www.sultanbeyli.bel.tr/muhtarliklar/",
+      "error": "<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>",
+      "systemCurlRetry": {
+        "exitCode": 0,
+        "httpStatus": "200",
+        "error": ""
+      }
+    },
+    {
+      "district": "sile",
+      "url": "https://www.sile.gov.tr/tarihce",
+      "status": 200,
+      "chars": 9216
+    },
+    {
+      "district": "sile",
+      "url": "https://sile.bel.tr/tr/sile-rehberi/sile-tarihi/",
+      "status": 200,
+      "chars": 5680
+    },
+    {
+      "district": "sile",
+      "url": "https://sile.bel.tr/tr/sile-rehberi/sile-tarihi-yapilari/",
+      "status": 200,
+      "chars": 6832
+    },
+    {
+      "district": "sile",
+      "url": "https://www.sile.gov.tr/silenin-tarihcesi",
+      "status": 200,
+      "chars": 8878
+    },
+    {
+      "district": "tuzla",
+      "url": "https://www.tuzla.gov.tr/tuzlamizin-tarihcesi",
+      "status": 200,
+      "chars": 48066
+    },
+    {
+      "district": "tuzla",
+      "url": "https://www.tuzla.gov.tr/tarihsel-gelisim",
+      "status": 200,
+      "chars": 27549
+    },
+    {
+      "district": "tuzla",
+      "url": "https://www.tuzla.bel.tr/tuzlada-yasam/mahalleler",
+      "status": 200,
+      "chars": 1108
+    },
+    {
+      "district": "umraniye",
+      "url": "https://www.umraniye.gov.tr/cografi-durum",
+      "status": 200,
+      "chars": 8060
+    },
+    {
+      "district": "uskudar",
+      "url": "https://www.uskudar.bel.tr/tr/main/pages/tarihce/25",
+      "status": 200,
+      "chars": 8655
+    },
+    {
+      "district": "uskudar",
+      "url": "https://www.uskudar.gov.tr/tarihcemiz",
+      "status": 200,
+      "chars": 15585
+    }
+  ]
+}

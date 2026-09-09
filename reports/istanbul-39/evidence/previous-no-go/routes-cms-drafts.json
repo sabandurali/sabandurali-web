@@ -1,0 +1,512 @@
+{
+  "origin": "http://localhost:3018",
+  "sourceMode": "payload-sqlite-drafts",
+  "districtCount": 39,
+  "passedRoutes": 39,
+  "rows": [
+    {
+      "district": "arnavutkoy",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/arnavutkoy",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    },
+    {
+      "district": "avcilar",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/avcilar",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    },
+    {
+      "district": "bagcilar",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/bagcilar",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    },
+    {
+      "district": "bahcelievler",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/bahcelievler",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    },
+    {
+      "district": "bakirkoy",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/bakirkoy",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    },
+    {
+      "district": "basaksehir",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/basaksehir",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    },
+    {
+      "district": "bayrampasa",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/bayrampasa",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    },
+    {
+      "district": "besiktas",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/besiktas",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    },
+    {
+      "district": "beylikduzu",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/beylikduzu",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    },
+    {
+      "district": "beyoglu",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/beyoglu",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    },
+    {
+      "district": "buyukcekmece",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/buyukcekmece",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    },
+    {
+      "district": "catalca",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/catalca",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    },
+    {
+      "district": "esenler",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/esenler",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    },
+    {
+      "district": "esenyurt",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/esenyurt",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    },
+    {
+      "district": "eyupsultan",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/eyupsultan",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    },
+    {
+      "district": "fatih",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/fatih",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    },
+    {
+      "district": "gaziosmanpasa",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/gaziosmanpasa",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    },
+    {
+      "district": "gungoren",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/gungoren",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    },
+    {
+      "district": "kagithane",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/kagithane",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    },
+    {
+      "district": "kucukcekmece",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/kucukcekmece",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    },
+    {
+      "district": "sariyer",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/sariyer",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    },
+    {
+      "district": "silivri",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/silivri",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    },
+    {
+      "district": "sultangazi",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/sultangazi",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    },
+    {
+      "district": "sisli",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/sisli",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    },
+    {
+      "district": "zeytinburnu",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/zeytinburnu",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    },
+    {
+      "district": "adalar",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/adalar",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    },
+    {
+      "district": "atasehir",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/atasehir",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    },
+    {
+      "district": "beykoz",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/beykoz",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    },
+    {
+      "district": "cekmekoy",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/cekmekoy",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    },
+    {
+      "district": "kadikoy",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/kadikoy",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    },
+    {
+      "district": "kartal",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/kartal",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    },
+    {
+      "district": "maltepe",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/maltepe",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    },
+    {
+      "district": "pendik",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/pendik",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    },
+    {
+      "district": "sancaktepe",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/sancaktepe",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    },
+    {
+      "district": "sultanbeyli",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/sultanbeyli",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    },
+    {
+      "district": "sile",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/sile",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    },
+    {
+      "district": "tuzla",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/tuzla",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    },
+    {
+      "district": "umraniye",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/umraniye",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    },
+    {
+      "district": "uskudar",
+      "status": 200,
+      "canonical": "https://www.sabandurali.com/istanbul/ilceler/uskudar",
+      "widths": [
+        1440,
+        820,
+        390
+      ],
+      "emptyPhotos": "pass",
+      "metadata": "pass"
+    }
+  ],
+  "regressions": [
+    {
+      "path": "/",
+      "status": 200,
+      "finalUrl": "http://localhost:3018/"
+    },
+    {
+      "path": "/makaleler",
+      "status": 200,
+      "finalUrl": "http://localhost:3018/makaleler"
+    },
+    {
+      "path": "/kitaplar",
+      "status": 200,
+      "finalUrl": "http://localhost:3018/kitaplar"
+    },
+    {
+      "path": "/fotograflar",
+      "status": 200,
+      "finalUrl": "http://localhost:3018/fotograflar"
+    },
+    {
+      "path": "/admin",
+      "status": 200,
+      "finalUrl": "http://localhost:3018/admin"
+    },
+    {
+      "path": "/admin/help",
+      "status": 200,
+      "finalUrl": "http://localhost:3018/admin/help"
+    }
+  ],
+  "failures": [],
+  "serverErrors": [],
+  "pageErrors": [],
+  "authenticatedAdminUI": "not tested; anonymous entrypoints only"
+}

@@ -1,0 +1,1036 @@
+{
+  "checkedAt": "2026-09-09T18:58:33.205Z",
+  "result": "39/39 PASS",
+  "scope": "Kaynak incelemesine bağlı sınırlı yayın içeriği; tüm PDF iddialarının veya bütün bölümlerin doğrulandığı anlamına gelmez.",
+  "rows": [
+    {
+      "district": "arnavutkoy",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 38,
+      "sourceCount": 2,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      }
+    },
+    {
+      "district": "avcilar",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 10,
+      "sourceCount": 3,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      }
+    },
+    {
+      "district": "bagcilar",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 22,
+      "sourceCount": 2,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      }
+    },
+    {
+      "district": "bahcelievler",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 11,
+      "sourceCount": 4,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
+        "specificReview": "Antik Hebdomon/Hepdemon yerleşimini bugünkü ilçeye eşitleyen anlatım çıkarıldı."
+      }
+    },
+    {
+      "district": "bakirkoy",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 15,
+      "sourceCount": 2,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
+        "specificReview": "Ataköy kısımları dört birleşik mahalle kaydı; tek tek bağımsız mahallelere bölünmedi. Tarihçedeki Konstantin/384 anlatımı kullanılmadı."
+      }
+    },
+    {
+      "district": "basaksehir",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 10,
+      "sourceCount": 3,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
+        "specificReview": "İBB Şahintepesi yazıyor; belediye muhtarlık sayfasındaki Şahintepe esas alındı. Kayaşehir ayrı mahalle olarak eklenmedi."
+      }
+    },
+    {
+      "district": "bayrampasa",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 11,
+      "sourceCount": 3,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      }
+    },
+    {
+      "district": "besiktas",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 23,
+      "sourceCount": 2,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      }
+    },
+    {
+      "district": "beylikduzu",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 10,
+      "sourceCount": 3,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      }
+    },
+    {
+      "district": "beyoglu",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 45,
+      "sourceCount": 2,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
+        "specificReview": "Kaymakamlık sayfasındaki Galata Kulesi 13. yüzyıl iddiası ve adın tek kökene bağlanması kullanılmadı."
+      }
+    },
+    {
+      "district": "buyukcekmece",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 24,
+      "sourceCount": 3,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      }
+    },
+    {
+      "district": "catalca",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 39,
+      "sourceCount": 2,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
+        "specificReview": "MÖ 450 Roma yerleşimi ve duvar büyüklüğü üstünlük iddiaları kullanılmadı."
+      }
+    },
+    {
+      "district": "esenler",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 19,
+      "sourceCount": 3,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
+        "specificReview": "PDF ve belediyenin eski muhtarlık sayfası 17 kayıt; 13.01.2026 tarihli duyuru ve İBB 19 kayıt. Şehitler ve Yeşil Vadi eklendi."
+      }
+    },
+    {
+      "district": "esenyurt",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 43,
+      "sourceCount": 2,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
+        "specificReview": "PDF liste dökümü Koza maddesinde kesilmiş ve Bağlarçeşme kaydını içeriyor; belediye ve İBB tam listeleri 43 kayıtla uyuşuyor. Bu iki dizinde Bağlarçeşme yok, Şehitler var. Karar tarihi doğrulanmadığı için ad değişikliği tarihi iddiası kurulmadı."
+      }
+    },
+    {
+      "district": "eyupsultan",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 29,
+      "sourceCount": 2,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      }
+    },
+    {
+      "district": "fatih",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 57,
+      "sourceCount": 3,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      }
+    },
+    {
+      "district": "gaziosmanpasa",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 16,
+      "sourceCount": 3,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      }
+    },
+    {
+      "district": "gungoren",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 11,
+      "sourceCount": 3,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      }
+    },
+    {
+      "district": "kagithane",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 19,
+      "sourceCount": 2,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      }
+    },
+    {
+      "district": "kucukcekmece",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 21,
+      "sourceCount": 2,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
+        "specificReview": "Yarımburgaz Mağarası/Bathonea gibi havza alanları otomatik biçimde güncel ilçe sınırına atfedilmedi."
+      }
+    },
+    {
+      "district": "sariyer",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 38,
+      "sourceCount": 3,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      }
+    },
+    {
+      "district": "silivri",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 35,
+      "sourceCount": 3,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      }
+    },
+    {
+      "district": "sultangazi",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 15,
+      "sourceCount": 3,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
+        "specificReview": "İBB dizini 14 kayıtla eksik; belediyenin e-Devlet mahalle seçicisi 15 kayıt içeriyor ve Zübeyde Hanım’ı doğruluyor. e-Devlet listesinin tamamı PDF ile uyuşuyor; güncellenen belediye tanıtım sayfası kanıt sayılmadı."
+      }
+    },
+    {
+      "district": "sisli",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 25,
+      "sourceCount": 4,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
+        "specificReview": "Kaymakamlık coğrafya/idari sayfasında Ayazağa/Maslak eski kapsamı bulunuyor; bu kapsam aktarılmadı. Belediye ve İBB listeleri 25."
+      }
+    },
+    {
+      "district": "zeytinburnu",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 13,
+      "sourceCount": 3,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      }
+    },
+    {
+      "district": "adalar",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 5,
+      "sourceCount": 3,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      }
+    },
+    {
+      "district": "atasehir",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 17,
+      "sourceCount": 2,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      }
+    },
+    {
+      "district": "beykoz",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 45,
+      "sourceCount": 3,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
+        "specificReview": "e-Devlet belediye kaydıyla Çiğdem, Polonezköy, Zerzavatçı yazımları düzeltildi. PDF Ortaçeşme kaydını atlıyor; Çiftlik ve Çavuşbaşı Çiftlik ayrı mahalle değildir. Tek kayıt ve Ortaçeşme ile 45."
+      }
+    },
+    {
+      "district": "cekmekoy",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 21,
+      "sourceCount": 3,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      }
+    },
+    {
+      "district": "kadikoy",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 21,
+      "sourceCount": 3,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      }
+    },
+    {
+      "district": "kartal",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 20,
+      "sourceCount": 4,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      }
+    },
+    {
+      "district": "maltepe",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 18,
+      "sourceCount": 3,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
+        "specificReview": "Bryas eşleştirmesi ve 816/Theophilos anlatımı aktarılmadı."
+      }
+    },
+    {
+      "district": "pendik",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 36,
+      "sourceCount": 2,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      }
+    },
+    {
+      "district": "sancaktepe",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 19,
+      "sourceCount": 2,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      }
+    },
+    {
+      "district": "sultanbeyli",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 15,
+      "sourceCount": 4,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
+        "specificReview": "İlçe belediyesi Akşemsettin; İBB Akşemseddin yazıyor. İlçe belediyesinin yazımı esas alındı. Eski coğrafya sayfasındaki Paşaköy-Kartal ilişkisi güncel sınır diye aktarılmadı."
+      }
+    },
+    {
+      "district": "sile",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 62,
+      "sourceCount": 3,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
+        "specificReview": "Resmî kaynaklar Akçekese/Akçakese yazımında ayrılıyor. Kaymakamlık ve ilçe belediyesindeki Akçekese esas; İBB farkı saklandı."
+      }
+    },
+    {
+      "district": "tuzla",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 17,
+      "sourceCount": 3,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      }
+    },
+    {
+      "district": "umraniye",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 35,
+      "sourceCount": 3,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
+        "specificReview": "İlçe genelinde sağlam zemin iddiası çıkarıldı. Harun Reşid ve Frigler hakkındaki tartışmalı anlatı yayımlanmadı."
+      }
+    },
+    {
+      "district": "uskudar",
+      "result": "PASS",
+      "verified": [
+        "summary",
+        "history",
+        "geography",
+        "neighborhoods"
+      ],
+      "neighborhoods": 33,
+      "sourceCount": 3,
+      "excluded": {
+        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
+        "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
+        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
+        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
+        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
+        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
+        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
+        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
+        "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
+        "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi."
+      }
+    }
+  ]
+}

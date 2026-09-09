@@ -1,0 +1,11 @@
+{
+  "before": {
+    "sha256": "63dec15182a9e56574307ff90bdced4fbd1068f988fa2ea04472e96017e4150c",
+    "bytes": 17293312
+  },
+  "after": {
+    "sha256": "63dec15182a9e56574307ff90bdced4fbd1068f988fa2ea04472e96017e4150c",
+    "bytes": 17293312
+  },
+  "unchanged": true
+}
