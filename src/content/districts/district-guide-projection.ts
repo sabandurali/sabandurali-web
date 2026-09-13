@@ -159,12 +159,35 @@ export function mapDistrictGuide(
             : null;
         })
       : [],
-    sources: sources.filter((source) =>
-      districtSectionOptions.some(
-        ({ value }) =>
-          reviewed.includes(value) && sourceSupportsSection(source, value, now),
-      ),
-    ),
+    sources: sources.flatMap((source) => {
+      const sections = districtSectionOptions
+        .map(({ value }) => value)
+        .filter(
+          (section) =>
+            reviewed.includes(section) &&
+            sourceSupportsSection(source, section, now),
+        );
+      return sections.length > 0 ? [{ ...source, sections }] : [];
+    }),
     updatedAt: text(item.updatedAt),
   };
+}
+
+/** Defense in depth for page rendering in addition to Payload access/query rules. */
+export function projectPublishedDistrictGuide(
+  value: unknown,
+  now = Date.now(),
+): DistrictGuide | null {
+  const item = record(value);
+  const publishedAt = item ? text(item.publishedAt) : null;
+  if (
+    !item ||
+    item._status !== "published" ||
+    !publishedAt ||
+    !Number.isFinite(Date.parse(publishedAt)) ||
+    Date.parse(publishedAt) > now
+  ) {
+    return null;
+  }
+  return mapDistrictGuide(item, now);
 }
