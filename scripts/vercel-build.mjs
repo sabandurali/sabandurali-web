@@ -5,6 +5,7 @@ const TARGET_PREVIEW_BRANCHES = new Set([
   "codex/project-day-19-photography",
 ]);
 const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
+const requiredProductionApproval = "true";
 
 const isTargetPreview =
   process.env.VERCEL === "1" &&
@@ -23,13 +24,21 @@ function fail(message) {
 
 function requireExactEnvironmentValue(variableName, expectedValue) {
   if (process.env[variableName] !== expectedValue) {
-    fail(`${variableName} must be ${expectedValue} for the target Preview.`);
+    fail(`${variableName} must be ${expectedValue} for this migration target.`);
   }
 }
 
 function requireEnvironmentValue(variableName) {
   if (!process.env[variableName]?.trim()) {
-    fail(`${variableName} is required for the target Preview.`);
+    fail(`${variableName} is required for this migration target.`);
+  }
+}
+
+function requireProductionApproval(variableName, purpose) {
+  if (process.env[variableName] !== requiredProductionApproval) {
+    fail(
+      `Production migration blocked before execution: ${variableName}=true is required to confirm ${purpose}.`,
+    );
   }
 }
 
@@ -52,6 +61,17 @@ function runNpmScript(scriptName) {
   }
 }
 
+if (isProductionMain) {
+  requireProductionApproval(
+    "PRODUCTION_MIGRATION_APPROVED",
+    "explicit per-release migration approval",
+  );
+  requireProductionApproval(
+    "PRODUCTION_PITR_CONFIRMED",
+    "PITR or backup readiness",
+  );
+}
+
 if (isTargetPreview || isProductionMain) {
   requireExactEnvironmentValue("PAYLOAD_DATABASE", "postgres");
   requireExactEnvironmentValue("PAYLOAD_STORAGE", "vercel-blob");
@@ -59,7 +79,10 @@ if (isTargetPreview || isProductionMain) {
   requireEnvironmentValue("PAYLOAD_SECRET");
   requireEnvironmentValue("BLOB_READ_WRITE_TOKEN");
 
-  console.log("Running migrations for the designated Preview branch.");
+  const migrationTarget = isProductionMain
+    ? "Production main deployment"
+    : "designated Preview branch";
+  console.log(`Running migrations for the ${migrationTarget}.`);
   runNpmScript("payload:migrate");
   console.log("Migrations completed. Starting the application build.");
 } else {
