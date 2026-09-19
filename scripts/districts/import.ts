@@ -1,7 +1,12 @@
 /** Local-only operational tool. No production connection is permitted. */
 import { readFile, realpath } from "node:fs/promises";
 import path from "node:path";
-import { attachEditorial, type EditorialBundle } from "./editorial";
+import {
+  assertBatch1PopulationImportPlan,
+  attachEditorial,
+  type Batch1PopulationImportPlan,
+  type EditorialBundle,
+} from "./editorial";
 import { parseArgs } from "node:util";
 import {
   validateBundle,
@@ -106,9 +111,13 @@ if (values["offline-empty"]) {
       depth: 0,
       overrideAccess: true,
     });
-    const count = { create: 0, update: 0, skip: 0 };
-    const rows = [];
-    for (const row of bundle.districts) {
+    const count: Batch1PopulationImportPlan = {
+      create: 0,
+      update: 0,
+      skip: 0,
+      conflict: 0,
+    };
+    const rows = bundle.districts.map((row) => {
       const existing = found.docs.find(
         (item) => item.district === row.district,
       );
@@ -116,9 +125,23 @@ if (values["offline-empty"]) {
         existing as unknown as Record<string, unknown> | undefined,
         row,
       );
-      count[decision.action]++;
-      rows.push({ district: row.district, ...decision });
-      if (!apply || decision.action === "skip") continue;
+      const action =
+        decision.action === "skip" && decision.reason !== "unchanged source"
+          ? "conflict"
+          : decision.action;
+      count[action]++;
+      return { district: row.district, row, existing, action, decision };
+    });
+    // Materialize and validate the complete plan before the first possible write.
+    if (values.editorial) assertBatch1PopulationImportPlan(count);
+    for (const planned of rows) {
+      if (
+        !apply ||
+        planned.action === "skip" ||
+        planned.action === "conflict"
+      )
+        continue;
+      const { row, existing, decision } = planned;
       const data = makeDraft(row);
       const saved =
         decision.action === "create"
@@ -162,7 +185,11 @@ if (values["offline-empty"]) {
           mode: apply ? "local-draft-import" : "dry-run",
           ...count,
           writes: apply ? count.create + count.update : 0,
-          rows,
+          rows: rows.map(({ district, action, decision }) => ({
+            district,
+            action,
+            reason: decision.reason,
+          })),
         },
         null,
         2,

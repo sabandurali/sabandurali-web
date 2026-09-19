@@ -419,6 +419,9 @@ export interface Article {
     };
     [k: string]: unknown;
   } | null;
+  /**
+   * İçeriğin sitede hangi çalışma alanı ve konu altında bulunacağını seçin.
+   */
   categories: (string | Category)[];
   featuredImage?: (string | null) | Media;
   /**
@@ -426,6 +429,9 @@ export interface Article {
    */
   featuredImageAlt?: string | null;
   featured?: boolean | null;
+  /**
+   * Normal makale, ilçe araştırması veya kaynak bağlantılı ilçe haberi ayrımını yapın.
+   */
   articleType: 'article' | 'district-research' | 'district-news';
   district?:
     | (
@@ -937,7 +943,13 @@ export interface Photo {
    * Public görselde önce bu alternatif metin kullanılır.
    */
   altText: string;
+  /**
+   * Aynı fiziksel görseli yeniden yüklemeyin; mevcut Media kaydını seçin.
+   */
   image: string | Media;
+  /**
+   * Fotoğraf birden fazla koleksiyonda referanslanabilir.
+   */
   collections: (string | PhotoCollection)[];
   district?:
     | (

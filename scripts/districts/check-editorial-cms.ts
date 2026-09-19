@@ -1,7 +1,11 @@
 /** Publishes ONLY in the disposable test database to exercise real public content. */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { attachEditorial, type EditorialBundle } from "./editorial";
+import {
+  attachEditorial,
+  batch1PopulationFacts,
+  type EditorialBundle,
+} from "./editorial";
 import { decideImport, type ResearchBundle } from "./import-core";
 const database = process.argv[2];
 if (database !== "/tmp/istanbul-39-audit/editorial-test.db")
@@ -80,7 +84,15 @@ try {
       row.editorial!.neighborhoods,
     );
     assert.ok(!doc.researchNotes && !doc.importProvenance);
-    assert.ok(!doc.marketData && !doc.facts);
+    assert.ok(!doc.marketData);
+    const expectedFacts =
+      batch1PopulationFacts[
+        doc.district as keyof typeof batch1PopulationFacts
+      ];
+    if (expectedFacts) {
+      assert.equal(doc.facts?.population, expectedFacts.population);
+      assert.equal(doc.facts?.populationYear, expectedFacts.populationYear);
+    } else assert.ok(!doc.facts);
     assert.ok(!doc.planningDevelopments?.length);
   }
   assert.deepEqual(

@@ -1,6 +1,12 @@
 import assert from "node:assert/strict";
 import { readFileSync, writeFileSync } from "node:fs";
-import { attachEditorial, type EditorialBundle } from "./editorial";
+import {
+  assertBatch1PopulationImportPlan,
+  attachEditorial,
+  batch1PopulationFacts,
+  batch1PopulationPlan,
+  type EditorialBundle,
+} from "./editorial";
 import { makeDraft, validateBundle, type ResearchBundle } from "./import-core";
 import { mapDistrictGuide } from "../../src/content/districts/district-guide-projection";
 
@@ -46,8 +52,27 @@ const rows = research.districts.map((r, i) => {
       `${r.district}: volatile claim`,
     );
   }
+  const expectedFacts =
+    batch1PopulationFacts[
+      r.district as keyof typeof batch1PopulationFacts
+    ];
+  if (expectedFacts) {
+    assert.deepEqual(projected.facts, expectedFacts, `${r.district}/facts`);
+    assert.ok(
+      projected.sources.some(
+        (source) =>
+          source.publisher === "Türkiye İstatistik Kurumu" &&
+          source.primary === true &&
+          source.needsVerification === false &&
+          source.sections?.includes("facts"),
+      ),
+      `${r.district}/facts TÜİK source`,
+    );
+    assert.ok(!/Nüfus|nüfus yılı/.test(review.excluded.facts));
+  } else {
+    assert.equal(projected.facts, null, `${r.district}/facts must be withheld`);
+  }
   for (const field of [
-    "facts",
     "marketData",
     "transportation",
     "life",
@@ -76,7 +101,13 @@ const rows = research.districts.map((r, i) => {
   return {
     district: r.district,
     result: "PASS",
-    verified: ["summary", "history", "geography", "neighborhoods"],
+    verified: [
+      "summary",
+      "history",
+      "geography",
+      "neighborhoods",
+      ...(expectedFacts ? ["facts"] : []),
+    ],
     neighborhoods: projected.neighborhoods.length,
     sourceCount: projected.sources.length,
     excluded: review.excluded,
@@ -91,6 +122,32 @@ assert.throws(() => attachEditorial(structuredClone(research), invalid));
 const mismatch = structuredClone(editorial);
 mismatch.districts[0].pdfSha256 = "0".repeat(64);
 assert.throws(() => attachEditorial(structuredClone(research), mismatch));
+const invalidPopulation = structuredClone(editorial);
+invalidPopulation.districts.find(
+  (row) => row.district === "bahcelievler",
+)!.facts!.population = "539036";
+assert.throws(() =>
+  attachEditorial(structuredClone(research), invalidPopulation),
+);
+const invalidPopulationSource = structuredClone(editorial);
+invalidPopulationSource.districts
+  .find((row) => row.district === "bahcelievler")!
+  .sources.find((source) => source.sections?.includes("facts"))!.needsVerification =
+  true;
+assert.throws(() =>
+  attachEditorial(structuredClone(research), invalidPopulationSource),
+);
+assertBatch1PopulationImportPlan({ ...batch1PopulationPlan });
+for (const action of Object.keys(batch1PopulationPlan) as Array<
+  keyof typeof batch1PopulationPlan
+>) {
+  assert.throws(() =>
+    assertBatch1PopulationImportPlan({
+      ...batch1PopulationPlan,
+      [action]: batch1PopulationPlan[action] + 1,
+    }),
+  );
+}
 const result = {
   checkedAt: new Date().toISOString(),
   result: "39/39 PASS",
@@ -98,11 +155,12 @@ const result = {
     "Kaynak incelemesine bağlı sınırlı yayın içeriği; tüm PDF iddialarının veya bütün bölümlerin doğrulandığı anlamına gelmez.",
   rows,
 };
-writeFileSync(
-  "reports/istanbul-39/content-acceptance.json",
-  JSON.stringify(result, null, 2) + "\n",
-);
+if (process.env.DISTRICT_CONTENT_WRITE_REPORT !== "0")
+  writeFileSync(
+    "reports/istanbul-39/content-acceptance.json",
+    JSON.stringify(result, null, 2) + "\n",
+  );
 console.log(
   result.result,
-  "— core editorial + 39 official neighborhood lists; unverified fields withheld",
+  "— core editorial + 39 official neighborhood lists; Batch 1 facts verified, other unverified fields withheld",
 );

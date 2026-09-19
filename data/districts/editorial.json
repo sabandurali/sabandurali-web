@@ -258,11 +258,15 @@
     {
       "district": "bahcelievler",
       "pdfSha256": "b5475bde169222488c537893bbff74dfcf2f306ae0408e89f40eb5055bf0228f",
-      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "checkedAt": "2026-09-14T19:53:36.000Z",
       "sections": {
         "summary": "Bahçelievler’in kentleşme öyküsünde eski yerleşimler, ana yollar ve İstanbul’un batıya büyümesi birlikte yer alır.",
         "history": "Bahçelievler, 1992’de Bakırköy’den ayrılarak ilçe statüsü kazandı. Daha eski yerleşimlerin geçmişi ile bugünkü idari ilçenin kuruluşu farklı zaman ölçeklerinde değerlendirilmelidir.",
         "geography": "Belediyeleşme öncesindeki yerleşim dokusunun değişiminde Londra Asfaltı çevresindeki gelişme etkili oldu. İlçeyi tanırken yol çevresinde büyüyen yerleşimlerle mahallelerin kendi geçmişini birlikte okumak yararlıdır."
+      },
+      "facts": {
+        "population": "539035",
+        "populationYear": 2025
       },
       "neighborhoods": [
         "Bahçelievler",
@@ -278,6 +282,19 @@
         "Zafer"
       ],
       "sources": [
+        {
+          "title": "Adrese Dayalı Nüfus Kayıt Sistemi Sonuçları, 2025",
+          "publisher": "Türkiye İstatistik Kurumu",
+          "url": "https://data.tuik.gov.tr/Bulten/Index?p=Adrese-Dayali-Nufus-Kayit-Sistemi-Sonuclari-2025-53899",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-14T19:53:36.000Z",
+          "dataDate": "2025-12-31T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "facts"
+          ]
+        },
         {
           "title": "Bahçelievler — Tarihçe",
           "publisher": "Bahçelievler Kaymakamlığı",
@@ -334,7 +351,7 @@
         }
       ],
       "excluded": {
-        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "facts": "Yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
         "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
         "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
         "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
@@ -426,11 +443,15 @@
     {
       "district": "basaksehir",
       "pdfSha256": "c9bb748f71a263c2e770afa509f858c7a2388af5b11663fe96b8b5864cfc1cd2",
-      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "checkedAt": "2026-09-14T19:53:36.000Z",
       "sections": {
         "summary": "Başakşehir, farklı yerleşimlerin bir araya gelmesiyle oluşmuş; daha eski su ve üretim yapılarının izlerini de taşıyan bir ilçedir.",
         "history": "Başakşehir ilçesi 2008’de kuruldu. Belediyenin tarihçesi, bu yeni idari yapıdan önce bölgede var olan yerleşimleri, Şamlar çevresindeki su yapılarını ve baruthane geçmişini ayrı katmanlar halinde ele alır.",
         "geography": "Bahçeşehir, Kayabaşı ve Şamlar çevresi, ilçenin yerleşim coğrafyasını anlamak için farklı odaklar sunar. Kayaşehir gibi yerleşim adları ile resmî mahalle adları karıştırılmamalıdır; idari liste aşağıda verilmiştir."
+      },
+      "facts": {
+        "population": "536797",
+        "populationYear": 2025
       },
       "neighborhoods": [
         "Altınşehir",
@@ -445,6 +466,19 @@
         "Ziya Gökalp"
       ],
       "sources": [
+        {
+          "title": "Adrese Dayalı Nüfus Kayıt Sistemi Sonuçları, 2025",
+          "publisher": "Türkiye İstatistik Kurumu",
+          "url": "https://data.tuik.gov.tr/Bulten/Index?p=Adrese-Dayali-Nufus-Kayit-Sistemi-Sonuclari-2025-53899",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-14T19:53:36.000Z",
+          "dataDate": "2025-12-31T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "facts"
+          ]
+        },
         {
           "title": "Başakşehir — Tarihçe",
           "publisher": "Başakşehir Belediyesi",
@@ -488,7 +522,7 @@
         }
       ],
       "excluded": {
-        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "facts": "Yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
         "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
         "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
         "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
@@ -1981,11 +2015,15 @@
     {
       "district": "sultangazi",
       "pdfSha256": "433a67c11f8f0c9e2940ed940c34921083f430ffbb6767b6136e9f8a250010b3",
-      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "checkedAt": "2026-09-14T19:53:36.000Z",
       "sections": {
         "summary": "Sultangazi, İstanbul’un kuzeybatısında 2008’de ilçe statüsü kazanan yerleşimlerden biridir.",
         "history": "Sultangazi ilçesi 2008’de kuruldu. Kaymakamlık tarihçesi, bölgenin daha eski geçmişini İstanbul’a su taşıyan hatların kalıntılarıyla ilişkilendirir; eski yerleşim geçmişi ile yeni idari kuruluş birbirinden ayrılmalıdır.",
         "geography": "İlçe İstanbul’un kuzeybatısında yer alır. Gaziosmanpaşa ve Başakşehir çevresindeki konumu, kentin iç kesimlerindeki yerleşimlerle ilişkisini tarif eder."
+      },
+      "facts": {
+        "population": "529306",
+        "populationYear": 2025
       },
       "neighborhoods": [
         "50. Yıl",
@@ -2005,6 +2043,19 @@
         "Zübeyde Hanım"
       ],
       "sources": [
+        {
+          "title": "Adrese Dayalı Nüfus Kayıt Sistemi Sonuçları, 2025",
+          "publisher": "Türkiye İstatistik Kurumu",
+          "url": "https://data.tuik.gov.tr/Bulten/Index?p=Adrese-Dayali-Nufus-Kayit-Sistemi-Sonuclari-2025-53899",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-14T19:53:36.000Z",
+          "dataDate": "2025-12-31T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "facts"
+          ]
+        },
         {
           "title": "Sultangazi — Tarihçe",
           "publisher": "Sultangazi Kaymakamlığı",
@@ -2048,7 +2099,7 @@
         }
       ],
       "excluded": {
-        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "facts": "Yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
         "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
         "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
         "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
@@ -2067,11 +2118,15 @@
     {
       "district": "sisli",
       "pdfSha256": "40b7c040e6f09762961d7154719fc006b0a058bc22d07ef3f7cf439efcfab247",
-      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "checkedAt": "2026-09-14T19:53:36.000Z",
       "sections": {
         "summary": "Şişli’nin kent dokusu, konut yerleşimleri ile ticaret ve hizmet alanlarının tarih içinde iç içe geçmesiyle şekillendi.",
         "history": "Beyoğlu’na bağlı bir bucak olan Şişli, 1954’te ilçe statüsü kazandı. Belediyenin tarihçesi, apartmanlaşma ile Halaskargazi ve çevresindeki caddelerin ticari gelişmesini bu dönüşümün parçaları olarak anlatır.",
         "geography": "Şişli, Avrupa Yakası’nda Beyoğlu platosunun kuzey uzantısındadır. Kaymakamlık sayfasındaki eski Ayazağa ve Maslak kapsamı güncel sınır olarak kullanılmamıştır; mahalle listesi ayrıca kontrol edilmiştir."
+      },
+      "facts": {
+        "population": "261959",
+        "populationYear": 2025
       },
       "neighborhoods": [
         "19 Mayıs",
@@ -2101,6 +2156,19 @@
         "Yayla"
       ],
       "sources": [
+        {
+          "title": "Adrese Dayalı Nüfus Kayıt Sistemi Sonuçları, 2025",
+          "publisher": "Türkiye İstatistik Kurumu",
+          "url": "https://data.tuik.gov.tr/Bulten/Index?p=Adrese-Dayali-Nufus-Kayit-Sistemi-Sonuclari-2025-53899",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-14T19:53:36.000Z",
+          "dataDate": "2025-12-31T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "facts"
+          ]
+        },
         {
           "title": "Şişli — Tarihçe",
           "publisher": "Şişli Belediyesi",
@@ -2157,7 +2225,7 @@
         }
       ],
       "excluded": {
-        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "facts": "Yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
         "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
         "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
         "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
@@ -2408,11 +2476,15 @@
     {
       "district": "beykoz",
       "pdfSha256": "5cfac9d53b0026709225f8dff8695dd851712c2250ab22a702ac4f4ae49b4cdc",
-      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "checkedAt": "2026-09-14T19:53:36.000Z",
       "sections": {
         "summary": "Beykoz’un geçmişi, Boğaziçi yerleşimleri, mesire alanları ve üretim yapıları üzerinden okunabilir.",
         "history": "Kaymakamlık tarihçesi, Göksu ve Küçüksu çevresindeki mesire kültürü ile Beykoz’un sanayi geçmişini birlikte anlatır. Bu katmanlar, ilçeyi yalnızca kıyı yerleşimi olarak tanımlamanın eksik kalacağını gösterir.",
         "geography": "Beykoz’un Boğaziçi kıyıları kuzeyde Karadeniz’e açılan çevreyle ilişkilidir. Anadolufeneri ve Göksu gibi farklı odaklar, ilçenin kıyı coğrafyasını okumaya yardımcı olur."
+      },
+      "facts": {
+        "population": "246833",
+        "populationYear": 2025
       },
       "neighborhoods": [
         "Acarlar",
@@ -2463,6 +2535,19 @@
       ],
       "sources": [
         {
+          "title": "Adrese Dayalı Nüfus Kayıt Sistemi Sonuçları, 2025",
+          "publisher": "Türkiye İstatistik Kurumu",
+          "url": "https://data.tuik.gov.tr/Bulten/Index?p=Adrese-Dayali-Nufus-Kayit-Sistemi-Sonuclari-2025-53899",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-14T19:53:36.000Z",
+          "dataDate": "2025-12-31T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "facts"
+          ]
+        },
+        {
           "title": "Beykoz — Tarihçe",
           "publisher": "Beykoz Kaymakamlığı",
           "url": "https://www.beykoz.gov.tr/tarihcemiz",
@@ -2505,7 +2590,7 @@
         }
       ],
       "excluded": {
-        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "facts": "Yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
         "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
         "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
         "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
@@ -2615,11 +2700,15 @@
     {
       "district": "kadikoy",
       "pdfSha256": "37958bd6aac286c0e360965ae74d7e13f437e02aaf376c72af7c7f18800ab458",
-      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "checkedAt": "2026-09-14T19:53:36.000Z",
       "sections": {
         "summary": "Kadıköy, Marmara kıyısındaki yerleşimleri ve farklı dönemlerde gelişen mahalle dokularıyla tanınır.",
         "history": "19. yüzyılda vapur işletmeciliği ve Haydarpaşa demiryolu bağlantısı, Kadıköy’ün gelişmesinde etkili oldu. Kaymakamlık tarihçesi, sonraki dönemde bahçeli yerleşimlerin apartmanlaşmasını ayrı bir kentleşme evresi olarak anlatır. Kadıköy 1930’da ilçe oldu.",
         "geography": "İlçe, Boğaz’ın Marmara’ya açıldığı çevrenin doğusundadır. Haydarpaşa, Moda ve Bostancı çevresindeki kıyılar ile iç mahalleler farklı konumlar sunar; semt adları resmî mahalle adlarıyla her zaman örtüşmez."
+      },
+      "facts": {
+        "population": "458573",
+        "populationYear": 2025
       },
       "neighborhoods": [
         "19 Mayıs",
@@ -2645,6 +2734,19 @@
         "Zühtüpaşa"
       ],
       "sources": [
+        {
+          "title": "Adrese Dayalı Nüfus Kayıt Sistemi Sonuçları, 2025",
+          "publisher": "Türkiye İstatistik Kurumu",
+          "url": "https://data.tuik.gov.tr/Bulten/Index?p=Adrese-Dayali-Nufus-Kayit-Sistemi-Sonuclari-2025-53899",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-14T19:53:36.000Z",
+          "dataDate": "2025-12-31T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "facts"
+          ]
+        },
         {
           "title": "Kadıköy — Tarihçe",
           "publisher": "Kadıköy Kaymakamlığı",
@@ -2688,7 +2790,7 @@
         }
       ],
       "excluded": {
-        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "facts": "Yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
         "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
         "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
         "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
@@ -2706,11 +2808,15 @@
     {
       "district": "kartal",
       "pdfSha256": "3c8d5712bbceb80a646bed719dac8772528ac985d94bf251a3b48345b49259f7",
-      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "checkedAt": "2026-09-14T19:53:36.000Z",
       "sections": {
         "summary": "Kartal, Marmara kıyısından Anadolu Yakası’nın iç kesimlerine doğru uzanan yerleşim yapısıyla ele alınır.",
         "history": "Kaymakamlık tarihçesi, Kartal’ın kıyı yerleşimi geçmişini ve zaman içindeki idari değişimlerini anlatır. Eski Kartal’ın kapsadığı alanlar bugünkü ilçe sınırlarıyla aynı kabul edilmemelidir.",
         "geography": "Kartal, Kocaeli Yarımadası’nın güneybatısında Marmara kıyısındadır. Kıyı ile Aydos çevresine doğru yükselen iç kesimler, ilçenin coğrafyasını farklılaştırır."
+      },
+      "facts": {
+        "population": "475630",
+        "populationYear": 2025
       },
       "neighborhoods": [
         "Atalar",
@@ -2735,6 +2841,19 @@
         "Yunus"
       ],
       "sources": [
+        {
+          "title": "Adrese Dayalı Nüfus Kayıt Sistemi Sonuçları, 2025",
+          "publisher": "Türkiye İstatistik Kurumu",
+          "url": "https://data.tuik.gov.tr/Bulten/Index?p=Adrese-Dayali-Nufus-Kayit-Sistemi-Sonuclari-2025-53899",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-14T19:53:36.000Z",
+          "dataDate": "2025-12-31T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "facts"
+          ]
+        },
         {
           "title": "Kartal — Tarihçe",
           "publisher": "Kartal Kaymakamlığı",
@@ -2791,7 +2910,7 @@
         }
       ],
       "excluded": {
-        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "facts": "Yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
         "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
         "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
         "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
@@ -3067,11 +3186,15 @@
     {
       "district": "sultanbeyli",
       "pdfSha256": "74cbc64aa17f871c8d8e3708f9cb23902cdb1952dd3828e2148a4d2367a1141c",
-      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "checkedAt": "2026-09-14T19:53:36.000Z",
       "sections": {
         "summary": "Sultanbeyli, Aydos çevresindeki tarihî güzergâhlar ile yakın dönem kentleşmesinin birlikte ele alındığı bir ilçedir.",
         "history": "Aydos Kalesi ve çevresindeki geçiş yolları, bölgenin tarihî önemini açıklayan somut odaklardır. Sultanbeyli, yakın dönemde köy ve belediye yerleşiminden büyüyerek 1992’de ilçe oldu. Kale hakkında aktarılan efsaneler tarihsel olgu olarak kullanılmamıştır.",
         "geography": "Sultanbeyli, Anadolu Yakası’nda Aydos ve Teferrüç çevresindeki alanda yer alır. Kaymakamlık sayfasındaki eski idari komşuluk anlatımı güncel sınır bilgisi olarak aktarılmamıştır."
+      },
+      "facts": {
+        "population": "378908",
+        "populationYear": 2025
       },
       "neighborhoods": [
         "Abdurrahmangazi",
@@ -3091,6 +3214,19 @@
         "Yavuz Selim"
       ],
       "sources": [
+        {
+          "title": "Adrese Dayalı Nüfus Kayıt Sistemi Sonuçları, 2025",
+          "publisher": "Türkiye İstatistik Kurumu",
+          "url": "https://data.tuik.gov.tr/Bulten/Index?p=Adrese-Dayali-Nufus-Kayit-Sistemi-Sonuclari-2025-53899",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-14T19:53:36.000Z",
+          "dataDate": "2025-12-31T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "facts"
+          ]
+        },
         {
           "title": "Sultanbeyli — Tarihçe",
           "publisher": "Sultanbeyli Kaymakamlığı",
@@ -3147,7 +3283,7 @@
         }
       ],
       "excluded": {
-        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
+        "facts": "Yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
         "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
         "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
         "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
