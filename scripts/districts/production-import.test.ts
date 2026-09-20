@@ -235,7 +235,7 @@ test("PostgreSQL dry-run plan is exactly 8 update and 31 skip", async () => {
   assert.equal(repository.updateCalls, 0);
 });
 
-test("an exact draft adoption is safe but any later manual edit conflicts", () => {
+test("an exact editorial adoption stays safe as draft or published", () => {
   const bundle = readBundle();
   const row = bundle.districts.find((item) => item.district === "esenler")!;
   const existing: ProductionImportDocument = {
@@ -259,8 +259,48 @@ test("an exact draft adoption is safe but any later manual edit conflicts", () =
   });
   assert.deepEqual(decideImport({ ...existing, _status: "published" }, row), {
     action: "skip",
-    reason: "published content protected",
+    reason: "unchanged source",
   });
+});
+
+test("published records skip only when managed fingerprints and source match", () => {
+  const bundle = readBundle();
+  const documents: ProductionImportDocument[] = bundle.districts.map(
+    (row, index) => ({
+      ...managedDocument(row, index + 1, true),
+      _status: "published",
+    }),
+  );
+  assert.deepEqual(buildProductionImportPlan(documents, bundle).count, {
+    create: 0,
+    update: 0,
+    skip: 39,
+    conflict: 0,
+  });
+
+  for (const protection of [
+    "fingerprint-mismatch",
+    "unmanaged",
+    "manual-edit",
+    "source-mismatch",
+  ] as const) {
+    const changed = structuredClone(documents);
+    const target = changed[0];
+    if (protection === "fingerprint-mismatch")
+      (target.importProvenance as Record<string, unknown>).fingerprint =
+        "0".repeat(64);
+    if (protection === "unmanaged") delete target.importProvenance;
+    if (protection === "manual-edit") target.history = "manual production edit";
+    if (protection === "source-mismatch")
+      (target.importProvenance as Record<string, unknown>).sourceFingerprint =
+        "0".repeat(64);
+    assert.deepEqual(buildProductionImportPlan(changed, bundle).count, {
+      create: 0,
+      update: 0,
+      skip: 38,
+      conflict: 1,
+    });
+  }
 });
 
 test("manual, unmanaged and published records fail before the first write", async () => {
@@ -316,6 +356,16 @@ test("successful transaction is idempotent on its second plan", async () => {
   });
   const second = buildProductionImportPlan(repository.documents, bundle);
   assert.deepEqual(second.count, {
+    create: 0,
+    update: 0,
+    skip: 39,
+    conflict: 0,
+  });
+  repository.documents.forEach((document) => {
+    document._status = "published";
+  });
+  const afterPublish = buildProductionImportPlan(repository.documents, bundle);
+  assert.deepEqual(afterPublish.count, {
     create: 0,
     update: 0,
     skip: 39,

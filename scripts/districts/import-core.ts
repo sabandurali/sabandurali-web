@@ -183,8 +183,6 @@ export function decideImport(
     string,
     unknown
   > | null;
-  if (existing._status === "published")
-    return { action: "skip", reason: "published content protected" };
   if (
     !provenance?.fingerprint ||
     provenance.fingerprint !== fingerprint(existing)
@@ -208,6 +206,8 @@ export function decideImport(
     provenance.sourceFingerprint === researchFingerprint(row)
   )
     return { action: "skip", reason: "unchanged source" };
+  if (existing._status === "published")
+    return { action: "skip", reason: "published content protected" };
   return {
     action: "update",
     reason: "unchanged imported draft; source changed",
