@@ -23,6 +23,7 @@ import {
   productionImportError,
   readProductionImportPlan,
   safeProductionImportErrorCategory,
+  safeProductionImportErrorReport,
   type ProductionImportDocument,
   type ProductionImportRepository,
   type ProductionImportTransaction,
@@ -242,10 +243,17 @@ test("manual, unmanaged and published records fail before the first write", asyn
     if (protection === "unmanaged") delete target.importProvenance;
     if (protection === "published") target._status = "published";
     const repository = new MemoryRepository(documents);
-    await assert.rejects(
-      applyProductionImport(bundle, repository),
-      /exact 8\/31 gate/,
-    );
+    let failure: unknown;
+    try {
+      await applyProductionImport(bundle, repository);
+    } catch (error) {
+      failure = error;
+    }
+    assert.match((failure as Error).message, /exact 8\/31 gate/);
+    assert.deepEqual(safeProductionImportErrorReport(failure), {
+      error: "planning_failed",
+      plan: { update: 7, skip: 31, create: 0, conflict: 1 },
+    });
     assert.equal(repository.updateCalls, 0);
     assert.equal(
       buildProductionImportPlan(repository.documents, bundle).count.conflict,

@@ -81,19 +81,26 @@ export type ProductionDryRunConfigurationVariable =
 
 export class ProductionImportSafetyError extends Error {
   readonly category: ProductionImportErrorCategory;
+  readonly planCount?: Batch1PopulationImportPlan;
 
-  constructor(category: ProductionImportErrorCategory, message: string) {
+  constructor(
+    category: ProductionImportErrorCategory,
+    message: string,
+    planCount?: Batch1PopulationImportPlan,
+  ) {
     super(message);
     this.name = "ProductionImportSafetyError";
     this.category = category;
+    this.planCount = planCount;
   }
 }
 
 export function productionImportError(
   category: ProductionImportErrorCategory,
   message: string,
+  planCount?: Batch1PopulationImportPlan,
 ): ProductionImportSafetyError {
-  return new ProductionImportSafetyError(category, message);
+  return new ProductionImportSafetyError(category, message, planCount);
 }
 
 export function safeProductionImportErrorCategory(
@@ -102,6 +109,25 @@ export function safeProductionImportErrorCategory(
   return error instanceof ProductionImportSafetyError
     ? error.category
     : "unknown_failed";
+}
+
+export function safeProductionImportErrorReport(error: unknown): {
+  error: ProductionImportErrorCategory;
+  plan?: Batch1PopulationImportPlan;
+} {
+  const category = safeProductionImportErrorCategory(error);
+  if (
+    error instanceof ProductionImportSafetyError &&
+    category === "planning_failed" &&
+    error.planCount
+  ) {
+    const { update, skip, create, conflict } = error.planCount;
+    return {
+      error: category,
+      plan: { update, skip, create, conflict },
+    };
+  }
+  return { error: category };
 }
 
 function requiredValueStatus(
@@ -247,6 +273,7 @@ export function assertProductionImportPlan(plan: ProductionImportPlan): void {
     throw productionImportError(
       "planning_failed",
       "Production import plan does not match the exact 8/31 gate.",
+      plan.count,
     );
   }
   if (
@@ -257,6 +284,7 @@ export function assertProductionImportPlan(plan: ProductionImportPlan): void {
     throw productionImportError(
       "planning_failed",
       "Production import cannot create or overwrite conflicts.",
+      plan.count,
     );
   }
 }

@@ -19,7 +19,7 @@ import {
   productionDryRunConfigurationStatus,
   productionImportError,
   readProductionImportPlan,
-  safeProductionImportErrorCategory,
+  safeProductionImportErrorReport,
   type ProductionImportErrorCategory,
   type ProductionImportDocument,
   type ProductionImportRepository,
@@ -232,11 +232,12 @@ async function main(): Promise<void> {
 main().catch((error) => {
   // Driver errors can contain connection details. Production failures stay
   // intentionally opaque so credentials never reach terminal logs.
-  const category = safeProductionImportErrorCategory(error);
+  const report = safeProductionImportErrorReport(error);
   console.error(
     JSON.stringify({
-      error: category,
-      ...(category === "configuration_failed" || category === "approval_failed"
+      ...report,
+      ...(report.error === "configuration_failed" ||
+      report.error === "approval_failed"
         ? { configuration: productionDryRunConfigurationStatus(process.env) }
         : {}),
     }),
