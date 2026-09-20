@@ -4,8 +4,8 @@ import DistrictGuidePage from "@/components/districts/DistrictGuidePage";
 import { getDistrictGuide } from "@/content/districts/district-guide-data-source";
 import { districts, getDistrict } from "@/content/districts/district-registry";
 import {
-  districtMetadata,
   districtJsonLd,
+  districtMetadata,
 } from "@/content/districts/district-seo";
 import {
   getDistrictNews,
@@ -13,21 +13,22 @@ import {
 } from "@/content/articles/article-data-source";
 import { getDistrictPhotos } from "@/content/photos/photo-data-source";
 import { serializeJsonLd } from "@/content/entity-seo";
-type Props = { params: Promise<{ district: string }> };
-// Re-evaluate source expiry and CMS publication state on every request.
-export const dynamic = "force-dynamic";
 
+type Props = { params: Promise<{ district: string }> };
+// Re-evaluate publication and source freshness instead of caching CMS content indefinitely.
+export const dynamic = "force-dynamic";
 export function generateStaticParams() {
   return districts.map((district) => ({ district: district.slug }));
 }
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { district: slug } = await params;
   const district = getDistrict(slug);
-  if (district === null)
+  if (district === null) {
     return {
       title: "İlçe bulunamadı | Şaban Durali",
       robots: { index: false, follow: false },
     };
+  }
   return districtMetadata(district, await getDistrictGuide(slug));
 }
 export default async function DistrictPage({ params }: Props) {
