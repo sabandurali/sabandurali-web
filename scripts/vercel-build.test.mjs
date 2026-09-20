@@ -98,6 +98,52 @@ test("G: an unreadable migration state stops before migrate and build", async ()
   assert.deepEqual(harness.calls, []);
 });
 
+test("SHA-approved Production dry-run runs read-only script and stops before deployment", async () => {
+  const sha = "a".repeat(40);
+  const harness = createHarness({
+    env: {
+      ...productionEnvironment,
+      PRODUCTION_DISTRICT_DRY_RUN_APPROVED_SHA: sha,
+      VERCEL_GIT_COMMIT_SHA: sha,
+    },
+    pendingMigrationNames: [],
+  });
+  await assert.rejects(
+    runBuild(harness.options),
+    /dry-run completed; stopping before deployment/,
+  );
+  assert.deepEqual(harness.calls, ["district:import:production:dry-run"]);
+});
+
+test("Production dry-run rejects stale commit approval before any script", async () => {
+  const harness = createHarness({
+    env: {
+      ...productionEnvironment,
+      PRODUCTION_DISTRICT_DRY_RUN_APPROVED_SHA: "a".repeat(40),
+      VERCEL_GIT_COMMIT_SHA: "b".repeat(40),
+    },
+    pendingMigrationNames: [],
+  });
+  await assert.rejects(runBuild(harness.options), /does not match this commit/);
+  assert.deepEqual(harness.calls, []);
+});
+
+test("Production dry-run never migrates when a migration is pending", async () => {
+  const sha = "a".repeat(40);
+  const harness = createHarness({
+    env: {
+      ...productionEnvironment,
+      PRODUCTION_DISTRICT_DRY_RUN_APPROVED_SHA: sha,
+      PRODUCTION_MIGRATION_APPROVED: "true",
+      PRODUCTION_PITR_CONFIRMED: "true",
+      VERCEL_GIT_COMMIT_SHA: sha,
+    },
+    pendingMigrationNames: ["20260914_000000_pending"],
+  });
+  await assert.rejects(runBuild(harness.options), /zero pending migrations/);
+  assert.deepEqual(harness.calls, []);
+});
+
 test("H: designated Preview keeps migrate then build behavior", async () => {
   const harness = createHarness({
     env: {

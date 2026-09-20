@@ -125,7 +125,7 @@ async function readRegisteredMigrationNames() {
   return names;
 }
 
-function describeProductionDatabase(connectionString) {
+export function describeProductionDatabase(connectionString) {
   const url = new URL(connectionString);
   if (!new Set(["postgres:", "postgresql:"]).has(url.protocol)) {
     throw new Error("Production database is not PostgreSQL.");
@@ -211,7 +211,21 @@ export async function runBuild(options = {}) {
       fail(unverifiableMessage);
     }
 
-    if (migrationState.pendingMigrationNames.length === 0) {
+    const dryRunApproval = env.PRODUCTION_DISTRICT_DRY_RUN_APPROVED_SHA;
+    if (dryRunApproval) {
+      if (
+        !env.VERCEL_GIT_COMMIT_SHA ||
+        dryRunApproval !== env.VERCEL_GIT_COMMIT_SHA
+      ) {
+        fail("Production district dry-run approval does not match this commit.");
+      }
+      if (migrationState.pendingMigrationNames.length !== 0) {
+        fail("Production district dry-run requires zero pending migrations.");
+      }
+      log("Running the SHA-approved Production district read-only dry-run.");
+      runScript("district:import:production:dry-run");
+      fail("Production district dry-run completed; stopping before deployment.");
+    } else if (migrationState.pendingMigrationNames.length === 0) {
       log(noPendingMessage);
     } else {
       requireProductionApprovals(env);
