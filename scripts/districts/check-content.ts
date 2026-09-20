@@ -56,8 +56,14 @@ const rows = research.districts.map((r, i) => {
     batch1PopulationFacts[
       r.district as keyof typeof batch1PopulationFacts
     ];
+  if (review.facts) {
+    assert.deepEqual(projected.facts, review.facts, `${r.district}/facts`);
+  } else {
+    assert.equal(projected.facts, null, `${r.district}/facts must be withheld`);
+  }
   if (expectedFacts) {
-    assert.deepEqual(projected.facts, expectedFacts, `${r.district}/facts`);
+    assert.equal(review.facts?.population, expectedFacts.population);
+    assert.equal(review.facts?.populationYear, expectedFacts.populationYear);
     assert.ok(
       projected.sources.some(
         (source) =>
@@ -69,11 +75,8 @@ const rows = research.districts.map((r, i) => {
       `${r.district}/facts TÜİK source`,
     );
     assert.ok(!/Nüfus|nüfus yılı/.test(review.excluded.facts));
-  } else {
-    assert.equal(projected.facts, null, `${r.district}/facts must be withheld`);
   }
   for (const field of [
-    "marketData",
     "transportation",
     "life",
     "housingTexture",
@@ -82,13 +85,20 @@ const rows = research.districts.map((r, i) => {
     "distinctiveFeatures",
     "researchTopics",
   ] as const) {
-    assert.equal(
-      projected[field],
-      null,
-      `${r.district}/${field} must be withheld`,
-    );
-    assert.ok(review.excluded[field]);
+    const editorialValue = review.sections[field];
+    if (editorialValue) {
+      assert.equal(projected[field], editorialValue, `${r.district}/${field}`);
+    } else {
+      assert.equal(
+        projected[field],
+        null,
+        `${r.district}/${field} must be withheld`,
+      );
+      assert.ok(review.excluded[field]);
+    }
   }
+  assert.equal(projected.marketData, null, `${r.district}/marketData withheld`);
+  assert.ok(review.excluded.marketData);
   assert.deepEqual(projected.planningDevelopments, []);
   const publicJSON = JSON.stringify(projected);
   assert.ok(!publicJSON.includes(r.sourceAppendix));
@@ -101,13 +111,7 @@ const rows = research.districts.map((r, i) => {
   return {
     district: r.district,
     result: "PASS",
-    verified: [
-      "summary",
-      "history",
-      "geography",
-      "neighborhoods",
-      ...(expectedFacts ? ["facts"] : []),
-    ],
+    verified: draft.reviewedSections,
     neighborhoods: projected.neighborhoods.length,
     sourceCount: projected.sources.length,
     excluded: review.excluded,
@@ -137,6 +141,11 @@ invalidPopulationSource.districts
 assert.throws(() =>
   attachEditorial(structuredClone(research), invalidPopulationSource),
 );
+const invalidAdoption = structuredClone(editorial);
+invalidAdoption.districts.find(
+  (row) => row.district === "esenler",
+)!.adoption!.contentFingerprint = "0".repeat(64);
+assert.throws(() => attachEditorial(structuredClone(research), invalidAdoption));
 assertBatch1PopulationImportPlan({ ...batch1PopulationPlan });
 for (const action of Object.keys(batch1PopulationPlan) as Array<
   keyof typeof batch1PopulationPlan
@@ -162,5 +171,5 @@ if (process.env.DISTRICT_CONTENT_WRITE_REPORT !== "0")
   );
 console.log(
   result.result,
-  "— core editorial + 39 official neighborhood lists; Batch 1 facts verified, other unverified fields withheld",
+  "— reviewed editorial sections + 39 official neighborhood lists; unverified fields withheld",
 );

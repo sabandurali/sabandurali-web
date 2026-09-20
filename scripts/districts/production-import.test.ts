@@ -5,9 +5,11 @@ import { describeProductionDatabase } from "../vercel-build.mjs";
 import {
   attachEditorial,
   batch1PopulationFacts,
+  editorialContentFingerprint,
   type EditorialBundle,
 } from "./editorial";
 import {
+  decideImport,
   fingerprint,
   importVersion,
   makeDraft,
@@ -231,6 +233,34 @@ test("PostgreSQL dry-run plan is exactly 8 update and 31 skip", async () => {
     conflict: 0,
   });
   assert.equal(repository.updateCalls, 0);
+});
+
+test("an exact draft adoption is safe but any later manual edit conflicts", () => {
+  const bundle = readBundle();
+  const row = bundle.districts.find((item) => item.district === "esenler")!;
+  const existing: ProductionImportDocument = {
+    id: 1,
+    ...(makeDraft(row) as Record<string, unknown>),
+    researchNotes: "legacy private review metadata",
+    importProvenance: { fingerprint: "0".repeat(64) },
+  };
+  row.editorial!.adoption = {
+    currentFingerprint: fingerprint(existing),
+    contentFingerprint: editorialContentFingerprint(existing),
+  };
+  assert.deepEqual(decideImport(existing, row), {
+    action: "skip",
+    reason: "unchanged source",
+  });
+  const edited = { ...existing, summary: `${String(existing.summary)} edit` };
+  assert.deepEqual(decideImport(edited, row), {
+    action: "skip",
+    reason: "manual/unmanaged content protected",
+  });
+  assert.deepEqual(decideImport({ ...existing, _status: "published" }, row), {
+    action: "skip",
+    reason: "published content protected",
+  });
 });
 
 test("manual, unmanaged and published records fail before the first write", async () => {

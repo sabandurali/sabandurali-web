@@ -15,6 +15,15 @@ type TextSection = Exclude<
 type EditorialFacts = {
   population: string;
   populationYear: number;
+  areaKm2?: number | null;
+  neighborhoodCount?: number | null;
+  neighboringDistricts?: string | null;
+  locationSummary?: string | null;
+};
+type EditorialMarketData = NonNullable<DistrictGuide["marketData"]>;
+type EditorialAdoption = {
+  currentFingerprint: string;
+  contentFingerprint: string;
 };
 export const batch1PopulationFacts = {
   bahcelievler: { population: "539035", populationYear: 2025 },
@@ -42,8 +51,11 @@ export type EditorialRecord = {
   checkedAt: string;
   sections: Partial<Record<TextSection, string>>;
   facts?: EditorialFacts;
+  marketData?: EditorialMarketData;
   neighborhoods: string[];
   sources: DistrictSource[];
+  reviewedSections?: DistrictSection[];
+  adoption?: EditorialAdoption;
   excluded: Record<string, string>;
   methodology: string;
 };
@@ -56,6 +68,52 @@ const tuikAdnks2025Title =
 const tuikAdnks2025DataDate = "2025-12-31T00:00:00.000Z";
 const tuikAdnks2025Url =
   "https://data.tuik.gov.tr/Bulten/Index?p=Adrese-Dayali-Nufus-Kayit-Sistemi-Sonuclari-2025-53899";
+export const editorialContentFields = [
+  "summary",
+  "history",
+  "geography",
+  "life",
+  "transportation",
+  "housingTexture",
+  "regionalAssessment",
+  "placesGuide",
+  "distinctiveFeatures",
+  "researchTopics",
+  "sources",
+  "reviewedSections",
+  "facts",
+  "marketData",
+] as const;
+
+function canonical(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(canonical);
+  if (value && typeof value === "object")
+    return Object.fromEntries(
+      Object.entries(value)
+        .filter(([key, child]) =>
+          key !== "id" && child !== undefined && child !== null
+        )
+        .sort(([left], [right]) => left.localeCompare(right))
+        .map(([key, child]) => [key, canonical(child)]),
+    );
+  return value;
+}
+
+export function editorialContentFingerprint(
+  document: Record<string, unknown>,
+): string {
+  return createHash("sha256")
+    .update(
+      JSON.stringify(
+        canonical(
+          Object.fromEntries(
+            editorialContentFields.map((field) => [field, document[field]]),
+          ),
+        ),
+      ),
+    )
+    .digest("hex");
+}
 export function assertBatch1PopulationImportPlan(
   plan: Batch1PopulationImportPlan,
 ) {
@@ -78,22 +136,16 @@ export function attachEditorial(
     new Set(editorial.districts.map((r) => r.district)).size !== 39
   )
     throw new Error("Exactly 39 unique editorial reviews required.");
-  const populationDistricts = editorial.districts
-    .filter((review) => review.facts !== undefined)
-    .map((review) => review.district)
-    .sort();
-  const expectedPopulationDistricts = Object.keys(batch1PopulationFacts).sort();
-  if (
-    JSON.stringify(populationDistricts) !==
-    JSON.stringify(expectedPopulationDistricts)
-  )
-    throw new Error("Exactly the eight Batch 1 population facts are required.");
   for (const row of research.districts) {
     const review = editorial.districts.find((r) => r.district === row.district);
     if (!review || review.pdfSha256 !== row.document.sha256)
       throw new Error(`Editorial/PDF mismatch: ${row.district}`);
-    const reviewed = Object.keys(review.sections) as DistrictSection[];
-    if (review.neighborhoods.length) reviewed.push("neighborhoods");
+    const derivedReviewed = Object.keys(review.sections) as DistrictSection[];
+    if (review.neighborhoods.length) derivedReviewed.push("neighborhoods");
+    if (review.facts) derivedReviewed.push("facts");
+    const reviewed = review.reviewedSections ?? derivedReviewed;
+    if (new Set(reviewed).size !== reviewed.length)
+      throw new Error(`Duplicate reviewed section: ${row.district}`);
     const expectedFacts =
       batch1PopulationFacts[
         row.district as keyof typeof batch1PopulationFacts
@@ -116,8 +168,14 @@ export function attachEditorial(
         )
       )
         throw new Error(`Invalid TÜİK population source: ${row.district}`);
-      reviewed.push("facts");
     }
+    if (review.facts && !reviewed.includes("facts"))
+      throw new Error(`Facts must be reviewed: ${row.district}`);
+    for (const section of Object.keys(review.sections) as DistrictSection[])
+      if (!reviewed.includes(section))
+        throw new Error(`Editorial section must be reviewed: ${row.district}/${section}`);
+    if (review.neighborhoods.length && !reviewed.includes("neighborhoods"))
+      throw new Error(`Neighborhoods must be reviewed: ${row.district}`);
     for (const section of ["summary", "history", "geography"] as const)
       if (!review.sections[section]?.trim())
         throw new Error(`Missing core editorial: ${row.district}/${section}`);
@@ -130,6 +188,17 @@ export function attachEditorial(
       new Set(review.neighborhoods).size !== review.neighborhoods.length
     )
       throw new Error(`Incomplete editorial review: ${row.district}`);
+    if (review.adoption) {
+      if (
+        !/^[a-f0-9]{64}$/.test(review.adoption.currentFingerprint) ||
+        !/^[a-f0-9]{64}$/.test(review.adoption.contentFingerprint) ||
+        review.adoption.contentFingerprint !==
+          editorialContentFingerprint(
+            editorialFields(review) as Record<string, unknown>,
+          )
+      )
+        throw new Error(`Invalid editorial adoption: ${row.district}`);
+    }
     row.editorial = review;
   }
   return research;
@@ -137,18 +206,19 @@ export function attachEditorial(
 export function editorialFields(
   review: EditorialRecord,
 ): Partial<DistrictGuide> {
-  const sections = Object.keys(review.sections) as DistrictSection[];
-  if (review.neighborhoods.length) sections.push("neighborhoods");
-  if (review.facts) sections.push("facts");
+  const derivedSections = Object.keys(review.sections) as DistrictSection[];
+  if (review.neighborhoods.length) derivedSections.push("neighborhoods");
+  if (review.facts) derivedSections.push("facts");
   return {
     ...review.sections,
     ...(review.facts ? { facts: { ...review.facts } } : {}),
+    ...(review.marketData ? { marketData: { ...review.marketData } } : {}),
     neighborhoods: review.neighborhoods.map((name) => ({
       name,
       featured: false,
     })),
     sources: review.sources,
-    reviewedSections: sections,
+    reviewedSections: review.reviewedSections ?? derivedSections,
     researchNotes: JSON.stringify(
       {
         methodology: review.methodology,

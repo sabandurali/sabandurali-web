@@ -1078,9 +1078,34 @@
       "pdfSha256": "31c2d5e501f27e7ee6a8bef07dbefd2fd117bab42d601fa598701e1d19e0327c",
       "checkedAt": "2026-09-09T18:50:26.627856+00:00",
       "sections": {
-        "summary": "Esenler’in kentleşme geçmişi, Litros ve Avas adlı eski yerleşimlerden bugünkü ilçe yapısına uzanır.",
-        "history": "Kaymakamlığın tarihçesinde Litros ve Avas, tarımsal geçmişi bulunan yerleşimler olarak anlatılır. Mübadele sonrasındaki nüfus hareketleri bu çevrenin dönüşümünde rol oynadı. Esenler, 1993’te Güngören’den ayrılarak ilçe oldu.",
-        "geography": "Eski Litros ve Avas yerleşimlerinin izleri, ilçenin tarihî coğrafyasını okumaya yardımcı olur. Bunlar güncel mahalle listesinin yerine geçmez; yeni mahallelerin eklenmesi idari kapsamı değiştirebilir."
+        "summary": "Esenler, İstanbul’un Avrupa yakasında, iki metro koridorunun erişim sağladığı ve 19 mahalleden oluşan yoğun bir kent ilçesidir. M1B hattındaki Esenler, Menderes ve Üçyüzlü istasyonları ile M7 hattındaki Giyimkent–Tekstilkent ve Oruç Reis istasyonları ilçenin farklı kesimlerini raylı sisteme bağlar. İlçeyi değerlendirirken 15 Temmuz Millet Bahçesi gibi kamusal alanları, belediye tesislerini ve devam eden dönüşüm süreçlerini birlikte; nüfus, yapı güvenliği ve piyasa verilerini ise mutlaka tarihleriyle okumak gerekir.",
+        "history": "Bugünkü Esenler’in yerleşim geçmişi, kaynaklarda Litros ve Avas adlarıyla geçen iki köye uzanır. Esenler Kaymakamlığı, bu yerleşimlerin Bizans döneminde tarımsal üretimle ilişkili olduğunu; Osmanlı döneminde Mahmutbey nahiyesi içinde kaldığını ve mübadele sonrasında nüfus yapısının değiştiğini aktarır. Litros adı Esenler’e, Avas adı Atışalanı’na 1937–1940 döneminde dönüştürüldü. Cumhuriyet dönemindeki idari yapılanmada bölge önce İstanbul Belediyesi, daha sonra Bakırköy Belediyesi bünyesinde şube müdürlüğü olarak yönetildi. 1992’de Güngören’e bağlanan Esenler’in bağımsız ilçe statüsü, TBMM’nin 27 Aralık 1993’te kabul ettiği 3949 sayılı Kanunla kuruldu; kanun 29 Aralık 1993 tarihli ve 21803 sayılı Resmî Gazete’de yayımlandı. İlçe belediyesi 1994’ten itibaren faaliyete geçti. Belediyenin stratejik planı, 2008’de Başakşehir ve Sultangazi’nin kurulmasıyla bazı mahallelerin ilçe sınırından ayrıldığını da kaydeder. Bu çerçeve, Esenler’in eski köy yerleşimlerinden hızla kentleşen bir İstanbul ilçesine dönüşümünü idari tarihle birlikte okumayı sağlar.",
+        "geography": "Esenler, İstanbul’un Avrupa yakasında yer alır. Esenler Belediyesi 2025–2029 Stratejik Planı ilçenin alanını 18.850.000 metrekare, yani 18,85 km² olarak verir; komşu ilçeleri Bağcılar, Güngören, Sultangazi, Bayrampaşa, Başakşehir, Zeytinburnu ve Gaziosmanpaşa şeklinde sıralar. Aynı belgede yer alan 427.901 kişilik nüfus değeri 2023 TÜİK verisidir ve güncel nüfus gibi okunmamalıdır. 2026’da Şehitler ve Yeşil Vadi mahallelerinin eklenmesiyle idari mahalle sayısı 19’a çıkmıştır. M1B ve M7 metro hatları, ilçenin merkezî ve kuzey kesimlerini İstanbul’un raylı sistem ağına bağlayan başlıca doğrulanmış ulaşım omurgalarıdır. Komşuluk ilişkileri, ilçeyi batı, kuzey ve doğu yönlerindeki farklı kentsel akslarla buluşturur. İlçenin konumu değerlendirilirken küçük yüzölçümü, tarihli nüfus verisi ve dönüşüm alanları birlikte ele alınmalıdır.",
+        "life": "Esenler’de gündelik yaşamı anlatmak için tek bir merkez veya tek bir hizmet türü yeterli değildir. Belediyenin tesis envanteri; kültür merkezleri, gençlik ve spor tesisleri, kütüphaneler, aile ve dayanışma merkezleri ile farklı mahallelere yayılan eğitim odaklı mekânları birlikte gösterir. 15 Temmuz Millet Bahçesi ise yürüyüş ve bisiklet parkuru, çocuk oyun alanı, kütüphane, etkinlik ve spor alanları gibi farklı kullanımları aynı açık alan içinde toplar. Bu resmî envanter, ilçedeki kamusal hizmet çeşitliliğini gösterir; hizmetlerin güncel saatleri, kapasitesi veya kullanıcı deneyimi konusunda tek başına hüküm vermez. Ziyaret planı yapılırken ilgili tesisin güncel duyurusu ayrıca kontrol edilmelidir.",
+        "transportation": "Esenler’in doğrulanmış raylı sistem erişimi iki ana hat üzerinden okunabilir. M1B Yenikapı–Kirazlı hattında Esenler, Menderes ve Üçyüzlü istasyonları bulunur; hat Otogar’dan sonra Esenler ve Bağcılar yönünde ilerleyerek Kirazlı’da M3 hattına bağlanır. M7 Yıldız–Mahmutbey hattı ise Giyimkent–Tekstilkent ve Oruç Reis istasyonlarıyla ilçenin kuzey kesimlerine erişim sağlar. Bu iki hat, Yenikapı, Mecidiyeköy, Kağıthane, Kirazlı ve Mahmutbey yönlerindeki bağlantılar üzerinden daha geniş metro ağına geçiş olanağı sunar. Sefer saatleri ve işletme koşulları değişebileceği için yolculuk öncesinde Metro İstanbul’un güncel hat duyuruları kontrol edilmelidir. Otobüs güzergâhları ve süreleri için bu metinde tarihsiz veya doğrulanmamış bir liste verilmemiştir.",
+        "housingTexture": "Esenler’in konut ve yapı dokusu hakkında güvenli değerlendirme, bina bazında genelleme yapmak yerine resmî süreçleri ve veri sınırlarını belirtmeyi gerektirir. Belediyenin 2025 Faaliyet Raporu riskli yapı başvuruları, ruhsat ve iskân işlemleri ile 15 Temmuz Mahallesi’ndeki kentsel dönüşüm sürecine ilişkin yıllık işlem sayıları yayımlar. Aynı rapor, Ağustos 2025’teki ruhsat artışının Esenler Güney (Metris) Rezerv Yapı Alanı kapsamındaki toplu ruhsatlandırmadan kaynaklanan dönemsel bir hareket olduğunu özellikle açıklar. Bu göstergeler ilçede dönüşüm ve yenileme süreçlerinin bulunduğunu gösterir; herhangi bir binanın güvenliği, yatırım değeri veya hukuki durumu hakkında sonuç üretmez. Taşınmaz bazında güncel imar, tapu, ruhsat ve teknik inceleme ayrıca yapılmalıdır.",
+        "regionalAssessment": "Esenler’in bölgesel profili; küçük yüzölçümü, tarihli nüfus yoğunluğu göstergeleri, M1B ve M7 raylı sistem erişimi, çok sayıda belediye tesisi ve devam eden dönüşüm işlemlerinin kesişiminde şekillenir. Ulaşım bağlantıları ilçenin İstanbul içindeki erişilebilirliğini desteklerken, belediyenin stratejik planı altyapı, ulaşım, otopark, yeşil alan ve sosyal-kültürel hizmetleri öncelikli ihtiyaçlar arasında gösterir. 2025 faaliyet verileri dönüşüm ve ruhsat süreçlerinde yüksek işlem hacmi bulunduğunu ortaya koyar; ancak bu veriler mahalleler arasında yaşam kalitesi, konut güvenliği veya fiyat performansı sıralaması yapmak için yeterli değildir. Bölgesel kararlar güncel saha incelemesi, parsel bazlı resmî kayıtlar ve tarihli ulaşım verileriyle tamamlanmalıdır.",
+        "placesGuide": "15 Temmuz Millet Bahçesi — Açık alan, yürüyüş ve bisiklet parkuru, çocuk alanları, kütüphane ve farklı kamusal kullanımlar için gündüz odaklı başlangıç noktasıdır; ziyaret öncesi güncel erişim bilgisi kontrol edilmelidir.\n\nEsenler Belediyesi Kültür Merkezi ve Dr. Kadir Topbaş Kültür Sanat Merkezi — Programı değişebilen kültür mekânlarıdır; etkinlik takvimi resmî kanaldan doğrulanmalıdır.\n\nProf. Dr. Sadettin Ökten Şehir Düşünce Merkezi — İlçenin şehir ve kültür çalışmalarını izlemek için kurumsal bir duraktır.\n\nEsenler Halk Kütüphanesi, 15 Temmuz Millet Kütüphanesi ve Adnan Büyükdeniz Dijital Kütüphanesi — Çalışma saatleri doğrulanarak ziyaret edilmesi gereken bilgi ve okuma mekânlarıdır.",
+        "distinctiveFeatures": "Esenler’i ayırt eden doğrulanabilir başlıklar, M1B ve M7 metro hatlarının farklı mahallelere erişimi; 2026 itibarıyla 19 mahalleli idari yapı; 15 Temmuz Millet Bahçesi çevresindeki çok işlevli kamusal alan; kültür, kütüphane, gençlik ve spor tesislerinin çeşitliliği; ayrıca belediye faaliyet raporlarında ayrıntılı biçimde izlenen kentsel dönüşüm ve ruhsat süreçleridir. Bu özellikler ilçeyi tek bir “ulaşım”, “konut” veya “yatırım” etiketiyle tanımlamak yerine, ulaşım bağlantıları, kamusal hizmetler ve dönüşüm dinamikleri birlikte değerlendirilerek anlatılmalıdır.",
+        "researchTopics": "• 2025 ADNKS sonuçları yayımlanmış olsa da Esenler’e ait güncel ilçe nüfusu doğrudan TÜİK tablosundan yeniden doğrulanmalı.\n• 2026’da kurulan Şehitler ve Yeşil Vadi mahallelerinin kesin sınırları İBB veya belediyenin güncel coğrafi verisiyle eşleştirilmeli.\n• M1B ve M7 istasyonları için yaya erişimi, aktarma süreleri ve erişilebilirlik özellikleri saha ve güncel işletme verileriyle incelenmeli.\n• 15 Temmuz, Oruç Reis ve Esenler Güney (Metris) dönüşüm süreçleri güncel plan, ruhsat ve hak sahipliği belgeleriyle ayrı ayrı takip edilmeli.\n• Mahalle bazlı konut ve kira verileri ancak yöntemi, kapsama dönemi ve örneklem büyüklüğü açıklanan güvenilir bir kaynak bulunduğunda eklenmeli."
+      },
+      "facts": {
+        "population": "427.901",
+        "populationYear": 2023,
+        "areaKm2": 18.85,
+        "neighborhoodCount": 19,
+        "neighboringDistricts": "Bağcılar, Güngören, Sultangazi, Bayrampaşa, Başakşehir, Zeytinburnu ve Gaziosmanpaşa",
+        "locationSummary": "İstanbul’un Avrupa yakasında; M1B ve M7 metro hatlarının erişim sağladığı, 19 mahalleli ve 18,85 km² yüzölçümüne sahip ilçe."
+      },
+      "marketData": {
+        "salePricePerM2": null,
+        "averageRent": null,
+        "dataDate": null,
+        "source": null,
+        "sourceUrl": null,
+        "checkedAt": null,
+        "needsVerification": true,
+        "description": "Metodolojisi, kapsam dönemi ve örneklem büyüklüğü açık güncel bir kaynak doğrulanmadan fiyat veya kira değeri yayımlanmayacaktır."
       },
       "neighborhoods": [
         "15 Temmuz",
@@ -1105,63 +1130,183 @@
       ],
       "sources": [
         {
-          "title": "Esenler — Tarihçe",
-          "publisher": "Esenler Kaymakamlığı",
-          "url": "https://esenler.gov.tr/tarihce",
+          "title": "3 İlçe Kurulması Hakkında Kanun (Kanun No. 3949)",
+          "publisher": "Türkiye Büyük Millet Meclisi",
+          "url": "https://www5.tbmm.gov.tr/tutanaklar/KANUNLAR_KARARLAR/kanuntbmmc077/kanuntbmmc077/kanuntbmmc07703949.pdf",
           "sourceType": "official",
-          "primary": false,
-          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
-          "dataDate": null,
+          "primary": true,
+          "dataDate": "1993-12-29T00:00:00.000Z",
+          "checkedAt": "2026-09-13T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
-            "history",
-            "summary",
-            "geography"
+            "history"
           ]
         },
         {
-          "title": "Esenler mahalle muhtarlıkları — gözlenen liste",
+          "title": "Esenler — Tarihçe",
+          "publisher": "T.C. Esenler Kaymakamlığı",
+          "url": "https://www.esenler.gov.tr/tarihce",
+          "sourceType": "official",
+          "primary": false,
+          "dataDate": null,
+          "checkedAt": "2026-09-13T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "history"
+          ]
+        },
+        {
+          "title": "Esenler Belediyesi 2025–2029 Stratejik Planı",
+          "publisher": "Esenler Belediyesi",
+          "url": "https://esenler.bel.tr/wp-content/uploads/2024/12/ESENLER-BELEDIYESI-2025-2029-STRATEJIK-PLANI.pdf",
+          "sourceType": "official",
+          "primary": true,
+          "dataDate": "2023-12-31T00:00:00.000Z",
+          "checkedAt": "2026-09-13T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "summary",
+            "history",
+            "geography",
+            "facts",
+            "housingTexture",
+            "regionalAssessment"
+          ]
+        },
+        {
+          "title": "Esenler Mahalle Muhtarları",
           "publisher": "İstanbul Büyükşehir Belediyesi Muhtarlık İşleri Dairesi Başkanlığı",
           "url": "https://muhtarlikisleri.ibb.istanbul/esenler-mahalle-muhtarlari/",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
-          "dataDate": "2026-09-09T18:50:26.627856+00:00",
+          "dataDate": "2026-09-09T00:00:00.000Z",
+          "checkedAt": "2026-09-13T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "neighborhoods"
           ]
         },
         {
-          "title": "Esenler’e iki yeni mahalle kazandırıldı",
+          "title": "Esenler’e İki Yeni Mahalle Kazandırıldı",
           "publisher": "Esenler Belediyesi",
           "url": "https://esenler.bel.tr/haberler/genel/esenlere-iki-yeni-mahalle-kazandirildi/",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
-          "dataDate": "2026-01-13T00:00:00Z",
+          "dataDate": "2026-01-13T00:00:00.000Z",
+          "checkedAt": "2026-09-13T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
-            "neighborhoods"
+            "facts",
+            "neighborhoods",
+            "distinctiveFeatures"
+          ]
+        },
+        {
+          "title": "M1B Yenikapı–Kirazlı Metro Hattı",
+          "publisher": "Metro İstanbul",
+          "url": "https://www.metro.istanbul/Hatlarimiz/HatDetay?hat=M1B",
+          "sourceType": "official",
+          "primary": true,
+          "dataDate": "2026-09-13T00:00:00.000Z",
+          "checkedAt": "2026-09-13T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "summary",
+            "geography",
+            "transportation",
+            "distinctiveFeatures"
+          ]
+        },
+        {
+          "title": "M7 Yıldız–Mahmutbey Metro Hattı",
+          "publisher": "Metro İstanbul",
+          "url": "https://metro.istanbul/Hatlarimiz/HatDetay?hat=M7",
+          "sourceType": "official",
+          "primary": true,
+          "dataDate": "2026-09-13T00:00:00.000Z",
+          "checkedAt": "2026-09-13T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "summary",
+            "geography",
+            "transportation",
+            "distinctiveFeatures"
+          ]
+        },
+        {
+          "title": "Tesislerimiz",
+          "publisher": "Esenler Belediyesi",
+          "url": "https://esenler.bel.tr/hizmetlerimiz/tesislerimiz/",
+          "sourceType": "official",
+          "primary": true,
+          "dataDate": null,
+          "checkedAt": "2026-09-13T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "life",
+            "placesGuide",
+            "distinctiveFeatures"
+          ]
+        },
+        {
+          "title": "15 Temmuz Millet Bahçesi",
+          "publisher": "Esenler Belediyesi",
+          "url": "https://esenler.bel.tr/hizmetlerimiz/tesislerimiz/15-temmuz-millet-bahcesi/",
+          "sourceType": "official",
+          "primary": true,
+          "dataDate": null,
+          "checkedAt": "2026-09-13T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "life",
+            "placesGuide",
+            "distinctiveFeatures"
+          ]
+        },
+        {
+          "title": "Esenler Belediyesi 2025 Faaliyet Raporu",
+          "publisher": "Esenler Belediyesi",
+          "url": "https://esenler.bel.tr/wp-content/uploads/2026/05/Faaliyet-Raporu-2025-Tablo-Nisan-P17-Cift.pdf",
+          "sourceType": "official",
+          "primary": true,
+          "dataDate": "2025-12-31T00:00:00.000Z",
+          "checkedAt": "2026-09-13T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "life",
+            "housingTexture",
+            "regionalAssessment",
+            "distinctiveFeatures",
+            "researchTopics"
           ]
         }
       ],
+      "reviewedSections": [
+        "summary",
+        "history",
+        "geography",
+        "life",
+        "transportation",
+        "facts",
+        "neighborhoods",
+        "housingTexture",
+        "regionalAssessment",
+        "placesGuide",
+        "distinctiveFeatures",
+        "researchTopics"
+      ],
+      "adoption": {
+        "currentFingerprint": "fd45106eea0200e4439ecc927ffa5c22bf77d6d5f83324793c687a64630f8c45",
+        "contentFingerprint": "d27ea83eac3b236db04c95bb086ae6a8ed112b7acf97df914e91a536947efcb7"
+      },
       "excluded": {
-        "facts": "Nüfus, nüfus yılı, yüzölçümü, yoğunluk ve sayısal sıralamalar onaylanmadı; kamuya aktarılmadı.",
-        "transportation": "PDF hat, istasyon, süre ve açılış iddiaları güncel işletmeci kaydıyla tek tek doğrulanmadı; gizli.",
         "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
         "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
-        "housingTexture": "İlçe genelinde yapı güvenliği, kalite ve fiyat segmenti genellemeleri çıkarıldı; bina/parsel incelemesi yerine geçmez.",
-        "regionalAssessment": "Yatırım üstünlüğü ve değerlenme öngörüleri çıkarıldı.",
-        "life": "Güncel tesis hizmetleri ve yaşam kalitesi genellemeleri teyit edilmedi; boş.",
-        "placesGuide": "Güncel ziyaret erişimi ve öneri rotaları doğrulanmadı; boş.",
-        "distinctiveFeatures": "En büyük/ilk/en güvenli gibi üstünlük iddiaları ve yinelenen tanıtım dili çıkarıldı.",
-        "researchTopics": "PDF araştırma önerileri yayımlanmış analiz gibi sunulmadı; Articles ilişkisi korunuyor.",
         "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
         "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
-        "specificReview": "PDF ve belediyenin eski muhtarlık sayfası 17 kayıt; 13.01.2026 tarihli duyuru ve İBB 19 kayıt. Şehitler ve Yeşil Vadi eklendi."
+        "specificReview": "Production draft içeriği; tarihli resmî kaynakları, 19 mahalleli güncel idari yapıyı ve kaynak sınırlarını koruyarak version-controlled editorial kaynağa aktarıldı."
       },
-      "methodology": "39 ilçe PDF havuzundaki başlıklar başlangıç olarak kullanıldı; metin yeniden yazıldı. Yalnız aşağıdaki kaynaklarla desteklenen sınırlı tarih/coğrafya bilgileri onaylandı. Mahalle dizinlerinde gözlenen liste esas alındı; gözlem tarihi kaynak yayın tarihi değildir. Çelişki ve doğrulama açığı olan alanlar kamuya açılmadı. Sayısal piyasa ve proje verileri bu incelemenin onay kapsamı dışındadır."
+      "methodology": "Production draft’taki doğrulanmış editoryal içerik, yalnız tarihli ve bölüm bazında ilişkilendirilmiş resmî kaynaklarla birlikte kaynağa aktarıldı. Değişken ulaşım ve idari veriler tarihleriyle korundu; piyasa değerleri ile planlama kayıtları doğrulanmadığından public onay kapsamı dışında bırakıldı."
     },
     {
       "district": "esenyurt",

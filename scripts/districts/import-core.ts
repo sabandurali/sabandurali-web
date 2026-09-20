@@ -5,7 +5,11 @@ import {
   isPublicSourceUrl,
   type DistrictSource,
 } from "../../src/content/districts/district-content-policy";
-import { editorialFields, type EditorialRecord } from "./editorial";
+import {
+  editorialContentFingerprint,
+  editorialFields,
+  type EditorialRecord,
+} from "./editorial";
 export type ResearchRecord = {
   editorial?: EditorialRecord;
   district: string;
@@ -179,13 +183,25 @@ export function decideImport(
     string,
     unknown
   > | null;
+  if (existing._status === "published")
+    return { action: "skip", reason: "published content protected" };
   if (
     !provenance?.fingerprint ||
     provenance.fingerprint !== fingerprint(existing)
-  )
+  ) {
+    const adoption = row.editorial?.adoption;
+    if (
+      provenance?.fingerprint &&
+      adoption?.currentFingerprint === fingerprint(existing) &&
+      adoption.contentFingerprint === editorialContentFingerprint(existing) &&
+      adoption.contentFingerprint ===
+        editorialContentFingerprint(
+          makeDraft(row) as Record<string, unknown>,
+        )
+    )
+      return { action: "skip", reason: "unchanged source" };
     return { action: "skip", reason: "manual/unmanaged content protected" };
-  if (existing._status === "published")
-    return { action: "skip", reason: "published content protected" };
+  }
   if (
     provenance.sha256 === row.document.sha256 &&
     provenance.version === importVersion &&
