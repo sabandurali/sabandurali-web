@@ -120,6 +120,26 @@ function payloadRepository(payload: Payload): HistoricalRepository {
 async function downloadAndVerify(
   item: HistoricalBatch1Item,
 ): Promise<string> {
+  await mkdir(downloadDirectory, { recursive: true });
+  const filePath = path.join(downloadDirectory, historicalFilename(item));
+  const cachedPaths = [filePath, path.join(downloadDirectory, `${item.district}.jpg`)];
+  for (const cachedPath of cachedPaths) {
+    try {
+      const cached = await readFile(cachedPath);
+      verifyDownloadedBytes(item, cached);
+      const metadata = await sharp(cached).metadata();
+      if (
+        metadata.format !== "jpeg" ||
+        metadata.width !== item.width ||
+        metadata.height !== item.height
+      ) {
+        throw new HistoricalBatch1Error("remote_changed", "Cached historical source image metadata differs from the sealed manifest.");
+      }
+      return cachedPath;
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+    }
+  }
   const response = await fetch(item.downloadUrl, {
     headers: { "User-Agent": "sabandurali.com historical-photo verifier/1.0" },
     redirect: "follow",
@@ -137,8 +157,6 @@ async function downloadAndVerify(
   ) {
     throw new HistoricalBatch1Error("remote_changed", "Historical source image metadata changed after audit.");
   }
-  await mkdir(downloadDirectory, { recursive: true });
-  const filePath = path.join(downloadDirectory, historicalFilename(item));
   await writeFile(filePath, bytes);
   return filePath;
 }
