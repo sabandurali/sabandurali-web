@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import DistrictGuidePage from "@/components/districts/DistrictGuidePage";
-import EsenlerGuidePage from "@/components/districts/EsenlerGuidePage";
+import DistrictEditorialGuidePage from "@/components/districts/DistrictEditorialGuidePage";
 import { getDistrictGuide } from "@/content/districts/district-guide-data-source";
 import { districts, getDistrict } from "@/content/districts/district-registry";
 import {
@@ -50,23 +49,13 @@ export default async function DistrictPage({ params }: Props) {
           __html: serializeJsonLd(districtJsonLd(district, guide)),
         }}
       />
-      {district.slug === "esenler" ? (
-        <EsenlerGuidePage
-          district={district}
-          guide={guide}
-          photos={photos}
-          research={research}
-          news={news}
-        />
-      ) : (
-        <DistrictGuidePage
-          district={district}
-          guide={guide}
-          photos={photos}
-          research={research}
-          news={news}
-        />
-      )}
+      <DistrictEditorialGuidePage
+        district={district}
+        guide={guide}
+        photos={photos}
+        research={research}
+        news={news}
+      />
     </>
   );
 }

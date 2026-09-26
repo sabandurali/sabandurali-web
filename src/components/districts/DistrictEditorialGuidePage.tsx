@@ -17,21 +17,31 @@ import { homeContent } from "@/content/homeContent";
 import type { PublicPhoto } from "@/content/photos/types";
 
 const sections = [
-  ["genel-bakis", "Bir bakışta Esenler", "Esenler'i tek bakışta görmek"],
-  ["tarihce", "Esenler'in hikâyesi", "Litros ve Avas'tan bugünkü Esenler'e"],
-  ["tani", "İlçeyi okumak", "Konum, yoğunluk ve İstanbul'la bağlantı"],
-  ["yasam", "Gündelik yaşam ve ulaşım", "Günlük yaşam nerede akıyor?"],
-  ["mahalleler", "Mahalleler", "Mahalleler, farklı kentsel ritimler"],
-  ["gayrimenkul", "Konut ve yapılaşma", "Veriyi, binayı ve dönüşümü birbirine karıştırmamak"],
-  ["imar", "Dönüşüm ve şehircilik", "İlçenin değişimini belgeyle izlemek"],
-  ["saha", "Görülecek ve fotoğraflanacak yerler", "Esenler'i sahadan okumak"],
-  ["kareler", "Esenler'den kareler", "Fotoğrafla kurulan ikinci anlatı"],
-  ["kimlik", "Esenler'i özel kılanlar", "Ulaşım, kamusal yaşam ve dönüşüm aynı çerçevede"],
+  ["genel-bakis", "Bir bakışta", "Tek bakışta"],
+  ["tarihce", "İlçenin hikâyesi", "Geçmişten bugüne"],
+  ["tani", "İlçeyi okumak", "Konum ve kentsel yapı"],
+  ["yasam", "Gündelik yaşam ve ulaşım", "Gündelik yaşam nasıl akıyor?"],
+  ["mahalleler", "Mahalleler", "Mahalleler"],
+  ["gayrimenkul", "Konut ve yapılaşma", "Konut, yapılaşma ve veri"],
+  ["imar", "Dönüşüm ve şehircilik", "Değişimi belgeyle izlemek"],
+  ["saha", "Görülecek ve fotoğraflanacak yerler", "Sahadan bakış"],
+  ["kareler", "İlçeden kareler", "Fotoğrafla kurulan ikinci anlatı"],
+  ["kimlik", "İlçeyi özel kılanlar", "İlçenin karakteri"],
   ["arastirmalar", "Araştırmalar ve analizler", "Rehberden daha derine"],
-  ["haberler", "İlçeden haberler", "Güncel olanı ana anlatıdan ayırmak"],
+  ["haberler", "İlçeden haberler", "Güncel gelişmeler"],
   ["kaynaklar", "Kaynaklar ve metodoloji", "Kaynağı görünür tutmak"],
   ["guncelleme", "Son güncelleme", "Canlı bir rehber"],
 ] as const;
+
+const warmPaperTones = ["#F4F0E8", "#F5F1E9", "#F3EEE5", "#F6F2EA", "#F2EDE4", "#F5EFE6", "#F3F0E9", "#F6F1E8"] as const;
+const coolPaperTones = ["#F2F1EB", "#F1F2EC", "#F3F2EC", "#EFF1EC", "#F2F0E9", "#F0F2EF", "#F3F1EA", "#EEF1ED"] as const;
+
+function getDistrictPaperTone(district: District): string {
+  if (district.slug === "esenler") return "#F4F0E8";
+  const tones = district.side === "avrupa" ? warmPaperTones : coolPaperTones;
+  const hash = [...district.slug].reduce((sum, character) => sum * 31 + character.charCodeAt(0), 0);
+  return tones[(hash >>> 0) % tones.length];
+}
 
 const planningStatuses: Record<string, string> = {
   teklif: "Teklif",
@@ -83,7 +93,7 @@ function Text({ value }: { value?: string | null }) {
   );
 }
 
-function Section({ index, children }: { index: number; children: ReactNode }) {
+function Section({ index, children, heading: headingOverride }: { index: number; children: ReactNode; heading?: string }) {
   const [id, label, heading] = sections[index];
   return (
     <section id={id} className="scroll-mt-24 border-t border-[#D5CDC1] py-16 sm:py-20 lg:grid lg:grid-cols-[190px_minmax(0,1fr)] lg:gap-10 lg:py-24">
@@ -92,7 +102,7 @@ function Section({ index, children }: { index: number; children: ReactNode }) {
         <p className="mt-3 max-w-[200px] text-sm leading-6 text-[#64707A]">{label}</p>
       </div>
       <div className="mt-7 min-w-0 lg:mt-0">
-        <h2 className="max-w-[820px] font-serif text-[2.1rem] font-semibold leading-[1.1] text-[#18212A] sm:text-[2.6rem]">{heading}</h2>
+        <h2 className="max-w-[820px] font-serif text-[2.1rem] font-semibold leading-[1.1] text-[#18212A] sm:text-[2.6rem]">{headingOverride ?? heading}</h2>
         {children}
       </div>
     </section>
@@ -130,7 +140,7 @@ function EditorialPhoto({ photo, priority = false }: { photo: PublicPhoto; prior
   );
 }
 
-export default function EsenlerGuidePage({
+export default function DistrictEditorialGuidePage({
   district,
   guide,
   photos,
@@ -149,12 +159,11 @@ export default function EsenlerGuidePage({
   const heroPhoto = photos.find((photo) => photo.featured) ?? photos[0];
   const galleryPhotos = heroPhoto ? photos.filter((photo) => photo.id !== heroPhoto.id) : photos;
   const [latitude, longitude] = district.center;
-  const neighborhoodHeading = facts?.neighborhoodCount
-    ? `${facts.neighborhoodCount} mahalle, farklı kentsel ritimler`
-    : sections[4][2];
+  const neighborhoodCount = facts?.neighborhoodCount ?? (guide ? neighborhoods.length : null);
+  const neighborhoodHeading = neighborhoodCount === null ? sections[4][2] : `${neighborhoodCount} mahalle`;
   const factItems = [
     ["Nüfus", facts?.population ?? "—", facts?.populationYear ? `${facts.populationYear} verisi` : null],
-    ["Mahalle", facts?.neighborhoodCount ?? "—", "mahalle"],
+    ["Mahalle", neighborhoodCount ?? "—", "mahalle"],
     ["Yüzölçümü", facts?.areaKm2 == null ? "—" : `${facts.areaKm2} km²`, null],
     ["Yaka", district.side === "avrupa" ? "Avrupa Yakası" : "Anadolu Yakası", null],
   ] as const;
@@ -169,7 +178,7 @@ export default function EsenlerGuidePage({
         anchorPrefix="/"
         languageHrefs={{ tr: getDistrictPath(district.slug), en: "/en" }}
       />
-      <main className="bg-[#F4F0E8] px-4 text-[#18212A] [color-scheme:light] sm:px-6">
+      <main style={{ backgroundColor: getDistrictPaperTone(district) }} className="px-4 text-[#18212A] [color-scheme:light] sm:px-6">
         <div className="mx-auto max-w-[1180px] min-w-0 break-words pb-20 pt-8 sm:pt-10 lg:pb-28">
           <nav aria-label="Breadcrumb" className="flex flex-wrap gap-x-2 gap-y-1 text-xs leading-6 text-[#64707A]">
             <Link className="hover:text-[#A8653A]" href="/">Ana Sayfa</Link><span aria-hidden="true">/</span>
@@ -180,9 +189,9 @@ export default function EsenlerGuidePage({
 
           <header className="grid gap-10 py-14 sm:py-20 lg:grid-cols-[minmax(0,1fr)_330px] lg:items-end lg:gap-20 lg:py-24">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#A8653A]">İstanbul · Avrupa Yakası</p>
-              <h1 className="mt-5 font-serif text-[3.25rem] font-medium leading-[0.95] tracking-[-0.045em] text-[#0B1824] sm:text-[4.5rem]">Esenler</h1>
-              <p className="mt-7 max-w-[760px] text-lg leading-8 text-[#3F4A53]">{facts?.locationSummary ?? guide?.summary ?? "Esenler için doğrulanmış rehber içeriği hazırlanıyor."}</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#A8653A]">İstanbul · {district.side === "avrupa" ? "Avrupa Yakası" : "Anadolu Yakası"}</p>
+              <h1 className="mt-5 font-serif text-[3.25rem] font-medium leading-[0.95] tracking-[-0.045em] text-[#0B1824] sm:text-[4.5rem]">{district.name}</h1>
+              <p className="mt-7 max-w-[760px] text-lg leading-8 text-[#3F4A53]">{facts?.locationSummary ?? guide?.summary ?? `${district.name} için doğrulanmış rehber içeriği hazırlanıyor.`}</p>
             </div>
             <p className="border-l border-[#A8653A] pl-6 font-serif text-lg leading-8 text-[#3F4A53]">Bir ilçeyi yalnız sayılarla değil; tarih, gündelik yaşam, ulaşım, yapılaşma ve saha gözlemiyle birlikte okumak gerekir.</p>
           </header>
@@ -207,7 +216,7 @@ export default function EsenlerGuidePage({
           </details>
 
           <div className="mt-16 sm:mt-20">
-            <Section index={0}>
+            <Section index={0} heading={`${district.name}: tek bakışta`}>
               <Text value={guide?.summary} />
               <p className="mt-9 max-w-[760px] border-l-2 border-[#A8653A] pl-5 text-sm leading-7 text-[#64707A]">Bu rehberde sayısal ve değişken veriler kaynak tarihleriyle birlikte okunur.</p>
             </Section>
@@ -311,9 +320,9 @@ export default function EsenlerGuidePage({
               {!guide?.sources.length ? <EmptyState>Yayımlanan içerikleri destekleyen kontrol edilmiş kaynaklar burada listelenecek. Son kontrol bilgisi kaynak eklendiğinde gösterilecek.</EmptyState> : (
                 <div className="mt-9 border-t border-[#D5CDC1]">
                   {guide.sources.map((source, index) => (
-                    <details key={`${source.url}-${index}`} className="group border-b border-[#D5CDC1] py-6">
-                      <summary className="cursor-pointer list-none pr-8 font-serif text-xl text-[#18212A] marker:hidden">{source.title} <span aria-hidden="true" className="float-right text-[#A8653A] group-open:rotate-45">+</span></summary>
-                      <div className="mt-6 space-y-3 text-[15px] leading-7 text-[#4D5861]"><p>{source.publisher} · {sourceTypes[source.sourceType]} · {source.primary ? "Birincil kaynak" : "İkincil aktarım"}</p><p>Veri/gözlem tarihi: {formatDate(source.dataDate) ?? "Belirtilmemiş"}</p><p>Son kontrol: {formatDate(source.checkedAt) ?? "Belirtilmemiş"}</p><p>İlgili bölümler: {source.sections?.map((section) => districtSectionOptions.find(({ value }) => value === section)?.label).filter(Boolean).join(", ") || "Belirtilmemiş"}</p><a href={source.url} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center font-semibold text-[#A8653A] underline underline-offset-4">Kaynak bağlantısı ↗</a></div>
+                    <details key={`${source.url}-${index}`} className="group min-w-0 border-b border-[#D5CDC1] py-6">
+                      <summary className="cursor-pointer list-none break-words pr-8 font-serif text-xl text-[#18212A] marker:hidden">{source.title} <span aria-hidden="true" className="float-right text-[#A8653A] group-open:rotate-45">+</span></summary>
+                      <div className="mt-6 min-w-0 space-y-3 break-words text-[15px] leading-7 text-[#4D5861]"><p>{source.publisher} · {sourceTypes[source.sourceType]} · {source.primary ? "Birincil kaynak" : "İkincil aktarım"}</p><p>Veri/gözlem tarihi: {formatDate(source.dataDate) ?? "Belirtilmemiş"}</p><p>Son kontrol: {formatDate(source.checkedAt) ?? "Belirtilmemiş"}</p><p>İlgili bölümler: {source.sections?.map((section) => districtSectionOptions.find(({ value }) => value === section)?.label).filter(Boolean).join(", ") || "Belirtilmemiş"}</p><a href={source.url} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center font-semibold text-[#A8653A] underline underline-offset-4">Kaynak bağlantısı ↗</a></div>
                     </details>
                   ))}
                 </div>
