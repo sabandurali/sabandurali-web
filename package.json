@@ -25,7 +25,8 @@
     "test:districts:cms": "tsx scripts/districts/check-cms.ts",
     "test:districts:routes": "node scripts/districts/acceptance.mjs",
     "test:districts:content": "tsx scripts/districts/check-content.ts",
-    "test:districts:production-import": "tsx --test scripts/districts/production-import.test.ts scripts/districts/production-editorial-batch2.test.ts"
+    "test:districts:production-import": "tsx --test scripts/districts/production-import.test.ts scripts/districts/production-editorial-batch2.test.ts",
+    "test:historical-photo-batch1": "tsx --test scripts/photos/historical-district-batch1.test.ts"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "3.86.0",

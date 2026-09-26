@@ -14,6 +14,10 @@ import {
   getDistrictPath,
 } from "@/content/districts/district-routes";
 import { homeContent } from "@/content/homeContent";
+import {
+  selectDistrictGalleryPhotos,
+  selectDistrictHeroPhoto,
+} from "@/content/photos/district-photo-selection";
 import type { PublicPhoto } from "@/content/photos/types";
 
 const sections = [
@@ -159,6 +163,39 @@ function Section({ index, children, heading: headingOverride }: { index: number;
 }
 
 function PhotoCaption({ photo }: { photo: PublicPhoto }) {
+  const isHistorical = photo.districtPhotoCategory === "tarih";
+  if (isHistorical) {
+    const [credit, recordUrl] = photo.creditLicense?.split(
+      " · Kaynak kaydı: ",
+    ) ?? [null, null];
+    return (
+      <figcaption className="mt-4 max-w-[820px] text-xs leading-6 text-[#64707A]">
+        <span className="block font-semibold uppercase tracking-[0.12em] text-[#A8653A]">
+          Tarihî arşiv fotoğrafı
+        </span>
+        <span className="mt-1 block font-semibold text-[#18212A]">
+          {photo.title}
+        </span>
+        {photo.description && <span className="block">{photo.description}</span>}
+        <span className="block">
+          {[photo.photographer, credit].filter(Boolean).join(" · ")}
+          {recordUrl && (
+            <>
+              {" · "}
+              <a
+                className="font-semibold text-[#A8653A] underline underline-offset-4"
+                href={recordUrl}
+                rel="noreferrer"
+                target="_blank"
+              >
+                Kaynak kaydı ↗
+              </a>
+            </>
+          )}
+        </span>
+      </figcaption>
+    );
+  }
   const details = [
     photo.neighborhood ?? photo.locationName,
     formatDate(photo.takenAt),
@@ -182,7 +219,11 @@ function EditorialPhoto({ photo, priority = false }: { photo: PublicPhoto; prior
         height={photo.image.height ?? 900}
         sizes="(max-width: 820px) 100vw, 1180px"
         priority={priority}
-        className="aspect-video w-full object-cover"
+        className={
+          photo.districtPhotoCategory === "tarih"
+            ? "mx-auto h-auto max-h-[780px] w-auto max-w-full object-contain"
+            : "aspect-video w-full object-cover"
+        }
       />
       <PhotoCaption photo={photo} />
     </figure>
@@ -205,8 +246,8 @@ export default function DistrictEditorialGuidePage({
   const home = homeContent.tr;
   const facts = guide?.facts;
   const neighborhoods = guide?.neighborhoods ?? [];
-  const heroPhoto = photos.find((photo) => photo.featured) ?? photos[0];
-  const galleryPhotos = heroPhoto ? photos.filter((photo) => photo.id !== heroPhoto.id) : photos;
+  const heroPhoto = selectDistrictHeroPhoto(photos);
+  const galleryPhotos = selectDistrictGalleryPhotos(photos, heroPhoto);
   const [latitude, longitude] = district.center;
   const neighborhoodCount = facts?.neighborhoodCount ?? (guide ? neighborhoods.length : null);
   const neighborhoodHeading = neighborhoodCount === null ? sections[4][2] : `${neighborhoodCount} mahalle`;
@@ -334,7 +375,7 @@ export default function DistrictEditorialGuidePage({
                   {(galleryPhotos.length ? galleryPhotos : photos).map((photo, index) => (
                     <div key={photo.id} className={index === 0 ? "sm:col-span-2" : ""}>
                       <EditorialPhoto photo={photo} />
-                      {photo.description && <p className="mt-3 text-sm leading-7 text-[#64707A]">{photo.description}</p>}
+                      {photo.description && photo.districtPhotoCategory !== "tarih" && <p className="mt-3 text-sm leading-7 text-[#64707A]">{photo.description}</p>}
                       <p className="mt-2 text-[11px] uppercase tracking-[0.12em] text-[#A8653A]">{photo.districtPhotoCategory}</p>
                     </div>
                   ))}
