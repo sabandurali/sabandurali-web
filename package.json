@@ -18,11 +18,14 @@
     "district:import": "tsx scripts/districts/import.ts",
     "district:import:production": "tsx scripts/districts/import-production.ts",
     "district:import:production:dry-run": "tsx scripts/districts/import-production.ts --dry-run",
+    "district:import:production:batch2:dry-run": "tsx scripts/districts/import-production-editorial-batch2.ts --dry-run",
+    "district:import:production:batch2:apply": "tsx scripts/districts/import-production-editorial-batch2.ts --apply",
+    "district:import:production:batch2:verify": "tsx scripts/districts/import-production-editorial-batch2.ts --dry-run --expect-applied",
     "test:districts": "tsx --test scripts/districts/policy.test.ts",
     "test:districts:cms": "tsx scripts/districts/check-cms.ts",
     "test:districts:routes": "node scripts/districts/acceptance.mjs",
     "test:districts:content": "tsx scripts/districts/check-content.ts",
-    "test:districts:production-import": "tsx --test scripts/districts/production-import.test.ts"
+    "test:districts:production-import": "tsx --test scripts/districts/production-import.test.ts scripts/districts/production-editorial-batch2.test.ts"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "3.86.0",
