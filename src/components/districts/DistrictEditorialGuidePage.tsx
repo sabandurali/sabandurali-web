@@ -33,14 +33,63 @@ const sections = [
   ["guncelleme", "Son güncelleme", "Canlı bir rehber"],
 ] as const;
 
-const warmPaperTones = ["#F4F0E8", "#F5F1E9", "#F3EEE5", "#F6F2EA", "#F2EDE4", "#F5EFE6", "#F3F0E9", "#F6F1E8"] as const;
-const coolPaperTones = ["#F2F1EB", "#F1F2EC", "#F3F2EC", "#EFF1EC", "#F2F0E9", "#F0F2EF", "#F3F1EA", "#EEF1ED"] as const;
+const districtPaperTones: Record<string, string> = {
+  // Historic / inner city — warm parchment
+  beyoglu: "#F3ECE2",
+  eyupsultan: "#F4F0E8",
+  fatih: "#F6EFE5",
+  zeytinburnu: "#F3ECE2",
+
+  // Marmara coast — soft sand / ivory
+  avcilar: "#F3EDDF",
+  bakirkoy: "#F5EEE3",
+  beylikduzu: "#F3EDDF",
+  buyukcekmece: "#F5EEE3",
+  kucukcekmece: "#F3EDDF",
+  silivri: "#F5EEE3",
+
+  // Bosphorus — pearl / cool ivory
+  besiktas: "#F1F2EE",
+  sariyer: "#EEF1EF",
+  beykoz: "#F2F1EC",
+  uskudar: "#F1F2EE",
+
+  // Northern forest / Black Sea — very light sage-stone
+  arnavutkoy: "#EDF1EB",
+  catalca: "#EAF0EC",
+  cekmekoy: "#EFF2ED",
+  sile: "#EAF0EC",
+
+  // Western inland — warm linen
+  bagcilar: "#F6F1E8",
+  bahcelievler: "#F1EAE1",
+  basaksehir: "#F3ECE2",
+  bayrampasa: "#F6EFE5",
+  esenler: "#F4F0E8",
+  esenyurt: "#F1EAE1",
+  gaziosmanpasa: "#F6F1E8",
+  gungoren: "#F3ECE2",
+  kagithane: "#F1EAE1",
+  sultangazi: "#F6EFE5",
+  sisli: "#F4F0E8",
+
+  // Anatolian inland / Marmara transition — neutral stone and sand
+  atasehir: "#EFF0EC",
+  kadikoy: "#F2EFEA",
+  kartal: "#F3EDDF",
+  maltepe: "#F5EEE3",
+  pendik: "#F2EFEA",
+  sancaktepe: "#ECEFEB",
+  sultanbeyli: "#EFF0EC",
+  tuzla: "#F3EDDF",
+  umraniye: "#F2EFEA",
+
+  // Islands — very light sea-pearl
+  adalar: "#EEF1EF",
+};
 
 function getDistrictPaperTone(district: District): string {
-  if (district.slug === "esenler") return "#F4F0E8";
-  const tones = district.side === "avrupa" ? warmPaperTones : coolPaperTones;
-  const hash = [...district.slug].reduce((sum, character) => sum * 31 + character.charCodeAt(0), 0);
-  return tones[(hash >>> 0) % tones.length];
+  return districtPaperTones[district.slug] ?? "#F4F0E8";
 }
 
 const planningStatuses: Record<string, string> = {

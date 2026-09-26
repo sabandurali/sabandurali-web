@@ -16,6 +16,22 @@ const research = JSON.parse(
 const editorial = JSON.parse(
   readFileSync("data/districts/editorial.json", "utf8"),
 ) as EditorialBundle;
+const historicalPhotos = JSON.parse(
+  readFileSync("data/districts/historical-photo-candidates.json", "utf8"),
+) as {
+  schemaVersion: number;
+  districts: Array<{
+    district: string;
+    candidates: Array<{
+      recordUrl: string;
+      publicationSafe: boolean;
+      license: string;
+      requiredAttribution: string;
+      currentDistrictMatch: "verified" | "probable" | "uncertain";
+    }>;
+    notes: string;
+  }>;
+};
 const evidence = JSON.parse(
   readFileSync("reports/istanbul-39/editorial-review.json", "utf8"),
 ) as Array<{
@@ -117,6 +133,87 @@ const rows = research.districts.map((r, i) => {
     excluded: review.excluded,
   };
 });
+
+const completedFields = [
+  "life",
+  "transportation",
+  "housingTexture",
+  "regionalAssessment",
+  "placesGuide",
+  "distinctiveFeatures",
+  "researchTopics",
+] as const;
+const nonEsenler = editorial.districts.filter(
+  (district) => district.district !== "esenler",
+);
+for (const field of completedFields) {
+  const values = nonEsenler.map((district) => district.sections[field]!.trim());
+  assert.ok(values.every(Boolean), `${field}: all 38 districts completed`);
+  assert.equal(
+    new Set(values.map((value) => value.toLocaleLowerCase("tr-TR"))).size,
+    38,
+    `${field}: exact repeated district copy`,
+  );
+}
+const shingleDistricts = new Map<string, Set<string>>();
+for (const district of nonEsenler) {
+  for (const field of completedFields) {
+    const words = district.sections[field]!
+      .toLocaleLowerCase("tr-TR")
+      .replace(/[^\p{L}\p{N}]+/gu, " ")
+      .trim()
+      .split(/\s+/);
+    const local = new Set<string>();
+    for (let i = 0; i <= words.length - 12; i += 1)
+      local.add(words.slice(i, i + 12).join(" "));
+    for (const shingle of local) {
+      const districts = shingleDistricts.get(shingle) ?? new Set<string>();
+      districts.add(district.district);
+      shingleDistricts.set(shingle, districts);
+    }
+  }
+}
+const overusedShingle = [...shingleDistricts].find(
+  ([, districts]) => districts.size > 4,
+);
+assert.equal(
+  overusedShingle,
+  undefined,
+  overusedShingle
+    ? `repeated 12-word copy in ${overusedShingle[1].size} districts: ${overusedShingle[0]}`
+    : "no overused 12-word copy",
+);
+const completedCopy = nonEsenler
+  .flatMap((district) => completedFields.map((field) => district.sections[field]))
+  .join("\n");
+assert.ok(
+  !/İstanbul['’]un önemli ilçelerinden|yatırımcıların gözdesi|yüksek prim potansiyeli|eşsiz yaşam fırsatı/i.test(
+    completedCopy,
+  ),
+  "generic or promotional copy",
+);
+
+assert.equal(historicalPhotos.schemaVersion, 1);
+assert.equal(historicalPhotos.districts.length, 39);
+assert.deepEqual(
+  new Set(historicalPhotos.districts.map((district) => district.district)),
+  new Set(editorial.districts.map((district) => district.district)),
+);
+for (const district of historicalPhotos.districts) {
+  assert.ok(district.notes.trim(), `${district.district}: photo research note`);
+  for (const candidate of district.candidates) {
+    assert.ok(candidate.recordUrl.startsWith("https://"));
+    assert.ok(candidate.license.trim());
+    assert.ok(candidate.requiredAttribution.trim());
+    if (candidate.currentDistrictMatch === "uncertain")
+      assert.equal(candidate.publicationSafe, false);
+    if (candidate.publicationSafe)
+      assert.match(
+        candidate.license,
+        /Public domain|CC0|CC BY(?:-SA)?|No known restrictions/i,
+      );
+  }
+}
 // Content mutation must lose public approval; neither missing provenance nor a wrong section can pass.
 const invalid = structuredClone(editorial);
 invalid.districts[0].sources.forEach((s) => {

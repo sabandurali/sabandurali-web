@@ -1,0 +1,362 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-09-26T21:00:00.000Z",
+  "methodology": "Adaylar kayıt bazında hak beyanı, yaratıcı/kaynak bilgisi ve güncel ilçe sınırı açısından incelendi. Yalnız Public domain, CC0, CC BY, CC BY-SA veya öğe bazında 'No known restrictions on publication' beyanı yayın için güvenli kabul edilebilir; uncertain coğrafi eşleşmeler yayın adayı sayılmaz. Bu dosya yalnız araştırma kataloğudur ve medya yüklemesi yapmaz.",
+  "districts": [
+    {
+      "district": "arnavutkoy",
+      "candidates": [],
+      "notes": "Wikimedia Commons ve Library of Congress üzerinde Arnavutköy, Durusu/Terkos ve Hadımköy adlarıyla tarama yapıldı; hem açık yeniden kullanım hakkı hem de bugünkü ilçe sınırı güvenle doğrulanan güçlü bir fotoğraf/kartpostal kaydı bulunamadı. Aday zorlanmadı."
+    },
+    {
+      "district": "avcilar",
+      "candidates": [],
+      "notes": "Wikimedia Commons ve Library of Congress üzerinde Avcılar, Ambarlı ve Küçükçekmece gölü batı kıyısı adlarıyla tarama yapıldı; hem açık yeniden kullanım hakkı hem de bugünkü ilçe sınırı güvenle doğrulanan güçlü bir fotoğraf/kartpostal kaydı bulunamadı. Aday zorlanmadı."
+    },
+    {
+      "district": "bagcilar",
+      "candidates": [],
+      "notes": "Wikimedia Commons ve Library of Congress üzerinde Bağcılar ve Mahmutbey adlarıyla tarama yapıldı; hem açık yeniden kullanım hakkı hem de bugünkü ilçe sınırı güvenle doğrulanan güçlü bir fotoğraf/kartpostal kaydı bulunamadı. Aday zorlanmadı."
+    },
+    {
+      "district": "bahcelievler",
+      "candidates": [],
+      "notes": "Wikimedia Commons ve Library of Congress üzerinde Bahçelievler, Siyavuşpaşa, Kocasinan ve Yenibosna adlarıyla tarama yapıldı; hem açık yeniden kullanım hakkı hem de bugünkü ilçe sınırı güvenle doğrulanan güçlü bir fotoğraf/kartpostal kaydı bulunamadı. Aday zorlanmadı."
+    },
+    {
+      "district": "bakirkoy",
+      "candidates": [],
+      "notes": "Wikimedia Commons ve Library of Congress üzerinde Bakırköy/Makriköy, Yeşilköy/San Stefano ve Florya adlarıyla tarama yapıldı; hem açık yeniden kullanım hakkı hem de bugünkü ilçe sınırı güvenle doğrulanan güçlü bir fotoğraf/kartpostal kaydı bulunamadı. Aday zorlanmadı."
+    },
+    {
+      "district": "basaksehir",
+      "candidates": [],
+      "notes": "Wikimedia Commons ve Library of Congress üzerinde Başakşehir, Bahçeşehir ve Kayabaşı adlarıyla tarama yapıldı; hem açık yeniden kullanım hakkı hem de bugünkü ilçe sınırı güvenle doğrulanan güçlü bir fotoğraf/kartpostal kaydı bulunamadı. Aday zorlanmadı."
+    },
+    {
+      "district": "bayrampasa",
+      "candidates": [],
+      "notes": "Wikimedia Commons ve Library of Congress üzerinde Bayrampaşa/Sağmalcılar adlarıyla tarama yapıldı; hem açık yeniden kullanım hakkı hem de bugünkü ilçe sınırı güvenle doğrulanan güçlü bir fotoğraf/kartpostal kaydı bulunamadı. Aday zorlanmadı."
+    },
+    {
+      "district": "besiktas",
+      "candidates": [
+        {
+          "title": "Bebek, Beşiktaş, 1880–1893",
+          "depictedPlace": "Bebek kıyısı",
+          "approximateDate": "1880–1893",
+          "creator": "Abdullah Frères",
+          "archive": "Wikimedia Commons",
+          "recordUrl": "https://commons.wikimedia.org/wiki/File:Bebek,_Be%C5%9Fikta%C5%9F_1880-1893_y%C4%B1llar%C4%B1_1.jpg",
+          "downloadUrl": null,
+          "rightsStatement": "Dosya sayfasında Public domain işareti ve Library of Congress kaynak kaydı bulunuyor.",
+          "license": "Public domain",
+          "publicationSafe": true,
+          "requiredAttribution": "Abdullah Frères / Library of Congress / Wikimedia Commons; dosya sayfası bağlantısı.",
+          "currentDistrictMatch": "verified",
+          "notes": "Bebek bugün Beşiktaş ilçesi sınırındadır. Yayın öncesi Commons dosya sayfasındaki güncel hak etiketi yeniden kontrol edilmeli."
+        }
+      ],
+      "notes": "Kayıt bazında hak ve güncel ilçe eşleşmesi kontrol edildi; indirme veya CMS yüklemesi yapılmadı."
+    },
+    {
+      "district": "beylikduzu",
+      "candidates": [],
+      "notes": "Wikimedia Commons ve Library of Congress üzerinde Beylikdüzü, Gürpınar ve Kavaklı adlarıyla tarama yapıldı; hem açık yeniden kullanım hakkı hem de bugünkü ilçe sınırı güvenle doğrulanan güçlü bir fotoğraf/kartpostal kaydı bulunamadı. Aday zorlanmadı."
+    },
+    {
+      "district": "beyoglu",
+      "candidates": [],
+      "notes": "Wikimedia Commons ve Library of Congress üzerinde Beyoğlu/Pera, Galata ve Kasımpaşa adlarıyla tarama yapıldı; hem açık yeniden kullanım hakkı hem de bugünkü ilçe sınırı güvenle doğrulanan güçlü bir fotoğraf/kartpostal kaydı bulunamadı. Aday zorlanmadı."
+    },
+    {
+      "district": "buyukcekmece",
+      "candidates": [],
+      "notes": "Wikimedia Commons ve Library of Congress üzerinde Büyükçekmece köprüsü, göl ve kıyı adlarıyla tarama yapıldı; hem açık yeniden kullanım hakkı hem de bugünkü ilçe sınırı güvenle doğrulanan güçlü bir fotoğraf/kartpostal kaydı bulunamadı. Aday zorlanmadı."
+    },
+    {
+      "district": "catalca",
+      "candidates": [],
+      "notes": "Wikimedia Commons ve Library of Congress üzerinde Çatalca, İnceğiz ve Karacaköy adlarıyla tarama yapıldı; hem açık yeniden kullanım hakkı hem de bugünkü ilçe sınırı güvenle doğrulanan güçlü bir fotoğraf/kartpostal kaydı bulunamadı. Aday zorlanmadı."
+    },
+    {
+      "district": "esenler",
+      "candidates": [],
+      "notes": "Wikimedia Commons ve Library of Congress üzerinde Esenler, Litros ve Avas adlarıyla tarama yapıldı; hem açık yeniden kullanım hakkı hem de bugünkü ilçe sınırı güvenle doğrulanan güçlü bir fotoğraf/kartpostal kaydı bulunamadı. Aday zorlanmadı."
+    },
+    {
+      "district": "esenyurt",
+      "candidates": [],
+      "notes": "Wikimedia Commons ve Library of Congress üzerinde Esenyurt, Kıraç ve Hoşdere adlarıyla tarama yapıldı; hem açık yeniden kullanım hakkı hem de bugünkü ilçe sınırı güvenle doğrulanan güçlü bir fotoğraf/kartpostal kaydı bulunamadı. Aday zorlanmadı."
+    },
+    {
+      "district": "eyupsultan",
+      "candidates": [
+        {
+          "title": "Street in Eyüp, a section of Constantinople",
+          "depictedPlace": "Eyüp yerleşiminde bir sokak",
+          "approximateDate": "yaklaşık 1890",
+          "creator": "Bilinmiyor; Library of Congress kaydı",
+          "archive": "Wikimedia Commons",
+          "recordUrl": "https://commons.wikimedia.org/wiki/File:Street_in_Ey%C3%BCp,_a_section_of_Constantinople,_Turkey_LOC_4210466213.jpg",
+          "downloadUrl": null,
+          "rightsStatement": "Dosya sayfasında Library of Congress kaynağı ve No restrictions etiketi bulunuyor.",
+          "license": "No known restrictions on publication",
+          "publicationSafe": true,
+          "requiredAttribution": "Library of Congress / Wikimedia Commons; eser başlığı ve dosya sayfası bağlantısı.",
+          "currentDistrictMatch": "verified",
+          "notes": "Tarihî Eyüp merkezi bugün Eyüpsultan ilçesindedir. Yayın öncesi bağlı Library of Congress öğe kaydı ve güncel hak notu yeniden kontrol edilmeli."
+        }
+      ],
+      "notes": "Kayıt bazında hak ve güncel ilçe eşleşmesi kontrol edildi; indirme veya CMS yüklemesi yapılmadı."
+    },
+    {
+      "district": "fatih",
+      "candidates": [
+        {
+          "title": "Mosque of Sultan Ahmet I, Istanbul",
+          "depictedPlace": "Sultanahmet Camii ve çevresi",
+          "approximateDate": "yaklaşık 1890",
+          "creator": "Bilinmiyor; Library of Congress kaydı",
+          "archive": "Wikimedia Commons",
+          "recordUrl": "https://commons.wikimedia.org/wiki/File:Mosque_of_Sultan_Ahmet_I,_Istanbul,_Turkey_LOC_4210471537.jpg",
+          "downloadUrl": null,
+          "rightsStatement": "Dosya sayfasında Library of Congress kaynağı ve No restrictions etiketi bulunuyor.",
+          "license": "No known restrictions on publication",
+          "publicationSafe": true,
+          "requiredAttribution": "Library of Congress / Wikimedia Commons; eser başlığı ve dosya sayfası bağlantısı.",
+          "currentDistrictMatch": "verified",
+          "notes": "Sultanahmet Camii bugün Fatih ilçesindedir. Yayın öncesi bağlı Library of Congress öğe kaydı ve güncel hak notu yeniden kontrol edilmeli."
+        }
+      ],
+      "notes": "Kayıt bazında hak ve güncel ilçe eşleşmesi kontrol edildi; indirme veya CMS yüklemesi yapılmadı."
+    },
+    {
+      "district": "gaziosmanpasa",
+      "candidates": [],
+      "notes": "Wikimedia Commons ve Library of Congress üzerinde Gaziosmanpaşa ve Küçükköy adlarıyla tarama yapıldı; hem açık yeniden kullanım hakkı hem de bugünkü ilçe sınırı güvenle doğrulanan güçlü bir fotoğraf/kartpostal kaydı bulunamadı. Aday zorlanmadı."
+    },
+    {
+      "district": "gungoren",
+      "candidates": [],
+      "notes": "Wikimedia Commons ve Library of Congress üzerinde Güngören, Haznedar ve Merter adlarıyla tarama yapıldı; hem açık yeniden kullanım hakkı hem de bugünkü ilçe sınırı güvenle doğrulanan güçlü bir fotoğraf/kartpostal kaydı bulunamadı. Aday zorlanmadı."
+    },
+    {
+      "district": "kagithane",
+      "candidates": [
+        {
+          "title": "Sweet Waters of Europe, 1895",
+          "depictedPlace": "Kağıthane Deresi ve mesire alanı",
+          "approximateDate": "1895",
+          "creator": "F. Marion Crawford yayını; fotoğrafçı belirtilmemiş",
+          "archive": "Wikimedia Commons",
+          "recordUrl": "https://commons.wikimedia.org/wiki/File:Crawford,_F._Marion,_p47_Sweet_Waters_of_Europe.jpg",
+          "downloadUrl": null,
+          "rightsStatement": "Dosya sayfasında Public domain etiketi bulunuyor.",
+          "license": "Public domain",
+          "publicationSafe": true,
+          "requiredAttribution": "F. Marion Crawford yayını / Wikimedia Commons; dosya sayfası bağlantısı.",
+          "currentDistrictMatch": "verified",
+          "notes": "Sweet Waters of Europe adı tarihî Kağıthane mesire alanını tanımlar. Yayın öncesi görüntü türü, kaynak baskı ve güncel hak etiketi yeniden kontrol edilmeli."
+        }
+      ],
+      "notes": "Kayıt bazında hak ve güncel ilçe eşleşmesi kontrol edildi; indirme veya CMS yüklemesi yapılmadı."
+    },
+    {
+      "district": "kucukcekmece",
+      "candidates": [],
+      "notes": "Wikimedia Commons ve Library of Congress üzerinde Küçükçekmece, Halkalı ve Sefaköy adlarıyla tarama yapıldı; hem açık yeniden kullanım hakkı hem de bugünkü ilçe sınırı güvenle doğrulanan güçlü bir fotoğraf/kartpostal kaydı bulunamadı. Aday zorlanmadı."
+    },
+    {
+      "district": "sariyer",
+      "candidates": [
+        {
+          "title": "Le Bosphore, depuis Thérapia",
+          "depictedPlace": "Tarabya'dan Boğaz görünümü",
+          "approximateDate": "1890",
+          "creator": "Bilinmiyor",
+          "archive": "Wikimedia Commons",
+          "recordUrl": "https://commons.wikimedia.org/wiki/File:Le_Bosphore,_depuis_Th%C3%A9rapia,_1890.jpg",
+          "downloadUrl": null,
+          "rightsStatement": "Dosya sayfasında Public domain etiketi bulunuyor.",
+          "license": "Public domain",
+          "publicationSafe": true,
+          "requiredAttribution": "Wikimedia Commons; eser başlığı ve dosya sayfası bağlantısı.",
+          "currentDistrictMatch": "verified",
+          "notes": "Thérapia, bugünkü Tarabya'dır ve Sarıyer ilçesi sınırındadır. Yayın öncesi yaratıcı kaydı ile güncel hak etiketi yeniden kontrol edilmeli."
+        }
+      ],
+      "notes": "Kayıt bazında hak ve güncel ilçe eşleşmesi kontrol edildi; indirme veya CMS yüklemesi yapılmadı."
+    },
+    {
+      "district": "silivri",
+      "candidates": [],
+      "notes": "Wikimedia Commons ve Library of Congress üzerinde Silivri, Selimpaşa ve Selymbria adlarıyla tarama yapıldı; hem açık yeniden kullanım hakkı hem de bugünkü ilçe sınırı güvenle doğrulanan güçlü bir fotoğraf/kartpostal kaydı bulunamadı. Aday zorlanmadı."
+    },
+    {
+      "district": "sultangazi",
+      "candidates": [],
+      "notes": "Wikimedia Commons ve Library of Congress üzerinde Sultangazi, Sultançiftliği ve Cebeci adlarıyla tarama yapıldı; hem açık yeniden kullanım hakkı hem de bugünkü ilçe sınırı güvenle doğrulanan güçlü bir fotoğraf/kartpostal kaydı bulunamadı. Aday zorlanmadı."
+    },
+    {
+      "district": "sisli",
+      "candidates": [],
+      "notes": "Wikimedia Commons ve Library of Congress üzerinde Şişli, Pangaltı, Bomonti ve Feriköy adlarıyla tarama yapıldı; hem açık yeniden kullanım hakkı hem de bugünkü ilçe sınırı güvenle doğrulanan güçlü bir fotoğraf/kartpostal kaydı bulunamadı. Aday zorlanmadı."
+    },
+    {
+      "district": "zeytinburnu",
+      "candidates": [
+        {
+          "title": "General view of Yedikule from the sea side",
+          "depictedPlace": "Yedikule Hisarı'nın deniz yönünden görünümü",
+          "approximateDate": "1880–1893",
+          "creator": "Abdullah Frères",
+          "archive": "Wikimedia Commons",
+          "recordUrl": "https://commons.wikimedia.org/wiki/File:General_view_of_Yedikule_(Seven_Towers)_from_the_sea_side_between_1880_and_1893.jpg",
+          "downloadUrl": null,
+          "rightsStatement": "Dosya sayfasında Public domain etiketi bulunuyor.",
+          "license": "Public domain",
+          "publicationSafe": false,
+          "requiredAttribution": "Abdullah Frères / Wikimedia Commons; dosya sayfası bağlantısı.",
+          "currentDistrictMatch": "uncertain",
+          "notes": "Yedikule Hisarı Fatih sınırında olsa da deniz yönündeki çekim, Zeytinburnu'na özgü bir yer göstermediği için ilçe eşleşmesi tartışmalıdır. Bu nedenle yayıma alınmadan önce kadraj coğrafyası ayrıca doğrulanmalıdır."
+        }
+      ],
+      "notes": "Kayıt bazında hak ve güncel ilçe eşleşmesi kontrol edildi; indirme veya CMS yüklemesi yapılmadı."
+    },
+    {
+      "district": "adalar",
+      "candidates": [
+        {
+          "title": "Büyükada (Princes Islands), 1880–1893",
+          "depictedPlace": "Büyükada kıyısı ve yerleşimi",
+          "approximateDate": "1880–1893",
+          "creator": "Abdullah Frères",
+          "archive": "Wikimedia Commons",
+          "recordUrl": "https://commons.wikimedia.org/wiki/File:B%C3%BCy%C3%BCkada_(Princes_Islands)_1880-1893.jpg",
+          "downloadUrl": null,
+          "rightsStatement": "Dosya sayfasında Public domain işareti ve Library of Congress kaynak kaydı bulunuyor.",
+          "license": "Public domain",
+          "publicationSafe": true,
+          "requiredAttribution": "Abdullah Frères / Library of Congress / Wikimedia Commons; dosya sayfası bağlantısı.",
+          "currentDistrictMatch": "verified",
+          "notes": "Büyükada bugün Adalar ilçesi sınırındadır; kıyı ve yerleşim başlıktan ve dosya açıklamasından doğrulanır. Yayın öncesi Commons dosya sayfasındaki güncel hak etiketi yeniden kontrol edilmeli."
+        }
+      ],
+      "notes": "Kayıt bazında hak ve güncel ilçe eşleşmesi kontrol edildi; indirme veya CMS yüklemesi yapılmadı."
+    },
+    {
+      "district": "atasehir",
+      "candidates": [],
+      "notes": "Wikimedia Commons ve Library of Congress üzerinde Ataşehir, İçerenköy ve Küçükbakkalköy adlarıyla tarama yapıldı; hem açık yeniden kullanım hakkı hem de bugünkü ilçe sınırı güvenle doğrulanan güçlü bir fotoğraf/kartpostal kaydı bulunamadı. Aday zorlanmadı."
+    },
+    {
+      "district": "beykoz",
+      "candidates": [
+        {
+          "title": "Beykoz, İstanbul, 1880–1893",
+          "depictedPlace": "Beykoz kıyısı ve yerleşimi",
+          "approximateDate": "1880–1893",
+          "creator": "Abdullah Frères",
+          "archive": "Wikimedia Commons",
+          "recordUrl": "https://commons.wikimedia.org/wiki/File:Beykoz,_%C4%B0stanbul_1880-1893_y%C4%B1llar%C4%B1.jpg",
+          "downloadUrl": null,
+          "rightsStatement": "Dosya sayfasında Public domain işareti ve Library of Congress kaynak kaydı bulunuyor.",
+          "license": "Public domain",
+          "publicationSafe": true,
+          "requiredAttribution": "Abdullah Frères / Library of Congress / Wikimedia Commons; dosya sayfası bağlantısı.",
+          "currentDistrictMatch": "verified",
+          "notes": "Görüntü doğrudan Beykoz adıyla kataloglanmıştır; Beykoz merkez bugün aynı ilçe sınırındadır. Yayın öncesi güncel hak etiketi yeniden kontrol edilmeli."
+        }
+      ],
+      "notes": "Kayıt bazında hak ve güncel ilçe eşleşmesi kontrol edildi; indirme veya CMS yüklemesi yapılmadı."
+    },
+    {
+      "district": "cekmekoy",
+      "candidates": [],
+      "notes": "Wikimedia Commons ve Library of Congress üzerinde Çekmeköy, Alemdağ ve Taşdelen adlarıyla tarama yapıldı; hem açık yeniden kullanım hakkı hem de bugünkü ilçe sınırı güvenle doğrulanan güçlü bir fotoğraf/kartpostal kaydı bulunamadı. Aday zorlanmadı."
+    },
+    {
+      "district": "kadikoy",
+      "candidates": [
+        {
+          "title": "Kurbağalıdere kartpostalı, 1904",
+          "depictedPlace": "Kurbağalıdere",
+          "approximateDate": "1904",
+          "creator": "Bilinmiyor; Seyhun Binzet Koleksiyonu kaydı",
+          "archive": "Wikimedia Commons",
+          "recordUrl": "https://commons.wikimedia.org/wiki/File:1904_Seyhun_Binzet_Koleksiyonu_Kurba%C4%9Fal%C4%B1dere.jpg",
+          "downloadUrl": null,
+          "rightsStatement": "Dosya sayfasında Public domain etiketi bulunuyor.",
+          "license": "Public domain",
+          "publicationSafe": true,
+          "requiredAttribution": "Seyhun Binzet Koleksiyonu / Wikimedia Commons; dosya sayfası bağlantısı.",
+          "currentDistrictMatch": "verified",
+          "notes": "Kurbağalıdere'nin tarihî görüntüdeki Kadıköy kesimi bugünkü Kadıköy sınırındadır. Yayın öncesi dosya açıklaması ve güncel hak etiketi yeniden kontrol edilmeli."
+        }
+      ],
+      "notes": "Kayıt bazında hak ve güncel ilçe eşleşmesi kontrol edildi; indirme veya CMS yüklemesi yapılmadı."
+    },
+    {
+      "district": "kartal",
+      "candidates": [],
+      "notes": "Wikimedia Commons ve Library of Congress üzerinde Kartal, Yakacık ve Dragos adlarıyla tarama yapıldı; hem açık yeniden kullanım hakkı hem de bugünkü ilçe sınırı güvenle doğrulanan güçlü bir fotoğraf/kartpostal kaydı bulunamadı. Aday zorlanmadı."
+    },
+    {
+      "district": "maltepe",
+      "candidates": [],
+      "notes": "Wikimedia Commons ve Library of Congress üzerinde Maltepe, Küçükyalı ve Dragos adlarıyla tarama yapıldı; hem açık yeniden kullanım hakkı hem de bugünkü ilçe sınırı güvenle doğrulanan güçlü bir fotoğraf/kartpostal kaydı bulunamadı. Aday zorlanmadı."
+    },
+    {
+      "district": "pendik",
+      "candidates": [],
+      "notes": "Wikimedia Commons ve Library of Congress üzerinde Pendik ve Kurtköy adlarıyla tarama yapıldı; hem açık yeniden kullanım hakkı hem de bugünkü ilçe sınırı güvenle doğrulanan güçlü bir fotoğraf/kartpostal kaydı bulunamadı. Aday zorlanmadı."
+    },
+    {
+      "district": "sancaktepe",
+      "candidates": [],
+      "notes": "Wikimedia Commons ve Library of Congress üzerinde Sancaktepe, Samandıra ve Sarıgazi adlarıyla tarama yapıldı; hem açık yeniden kullanım hakkı hem de bugünkü ilçe sınırı güvenle doğrulanan güçlü bir fotoğraf/kartpostal kaydı bulunamadı. Aday zorlanmadı."
+    },
+    {
+      "district": "sultanbeyli",
+      "candidates": [],
+      "notes": "Wikimedia Commons ve Library of Congress üzerinde Sultanbeyli ve Aydos adlarıyla tarama yapıldı; hem açık yeniden kullanım hakkı hem de bugünkü ilçe sınırı güvenle doğrulanan güçlü bir fotoğraf/kartpostal kaydı bulunamadı. Aday zorlanmadı."
+    },
+    {
+      "district": "sile",
+      "candidates": [],
+      "notes": "Wikimedia Commons ve Library of Congress üzerinde Şile, Ağva ve Şile Feneri adlarıyla tarama yapıldı; hem açık yeniden kullanım hakkı hem de bugünkü ilçe sınırı güvenle doğrulanan güçlü bir fotoğraf/kartpostal kaydı bulunamadı. Aday zorlanmadı."
+    },
+    {
+      "district": "tuzla",
+      "candidates": [],
+      "notes": "Wikimedia Commons ve Library of Congress üzerinde Tuzla ve İçmeler adlarıyla tarama yapıldı; hem açık yeniden kullanım hakkı hem de bugünkü ilçe sınırı güvenle doğrulanan güçlü bir fotoğraf/kartpostal kaydı bulunamadı. Aday zorlanmadı."
+    },
+    {
+      "district": "umraniye",
+      "candidates": [],
+      "notes": "Wikimedia Commons ve Library of Congress üzerinde Ümraniye ve Dudullu adlarıyla tarama yapıldı; hem açık yeniden kullanım hakkı hem de bugünkü ilçe sınırı güvenle doğrulanan güçlü bir fotoğraf/kartpostal kaydı bulunamadı. Aday zorlanmadı."
+    },
+    {
+      "district": "uskudar",
+      "candidates": [
+        {
+          "title": "Scutari, Constantinople",
+          "depictedPlace": "Üsküdar kıyısı ve yerleşimi",
+          "approximateDate": "1890–1900",
+          "creator": "Bilinmiyor; Library of Congress kaydı",
+          "archive": "Wikimedia Commons",
+          "recordUrl": "https://commons.wikimedia.org/wiki/File:Scutari,_Constantinople,_Turkey-LCCN2001699436.jpg",
+          "downloadUrl": null,
+          "rightsStatement": "Dosya sayfasında Public domain etiketi ve Library of Congress kayıt numarası bulunuyor.",
+          "license": "Public domain",
+          "publicationSafe": true,
+          "requiredAttribution": "Library of Congress / Wikimedia Commons; eser başlığı ve dosya sayfası bağlantısı.",
+          "currentDistrictMatch": "verified",
+          "notes": "Scutari tarihî Üsküdar adıdır; görüntü bugünkü Üsküdar merkezini gösterir. Yayın öncesi bağlı kurum kaydı ve güncel hak etiketi yeniden kontrol edilmeli."
+        }
+      ],
+      "notes": "Kayıt bazında hak ve güncel ilçe eşleşmesi kontrol edildi; indirme veya CMS yüklemesi yapılmadı."
+    }
+  ]
+}
