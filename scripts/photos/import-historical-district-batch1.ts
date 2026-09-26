@@ -1,6 +1,7 @@
 /** Verified historical district photo importer. Defaults to a read-only dry-run. */
 import { readFile, mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { setTimeout as delay } from "node:timers/promises";
 import { parseArgs } from "node:util";
 import { getPayload, type Payload } from "payload";
 import sharp from "sharp";
@@ -177,7 +178,8 @@ async function main(): Promise<void> {
   validateHistoricalManifest(manifest);
 
   const downloaded = new Map<string, string>();
-  for (const item of manifest.items) {
+  for (const [index, item] of manifest.items.entries()) {
+    if (index > 0) await delay(500);
     downloaded.set(item.recordUrl, await downloadAndVerify(item));
   }
 
