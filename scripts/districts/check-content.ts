@@ -23,11 +23,14 @@ const historicalPhotos = JSON.parse(
   districts: Array<{
     district: string;
     candidates: Array<{
+      archive: string;
       recordUrl: string;
+      rightsStatement: string;
       publicationSafe: boolean;
       license: string;
       requiredAttribution: string;
       currentDistrictMatch: "verified" | "probable" | "uncertain";
+      notes: string;
     }>;
     notes: string;
   }>;
@@ -146,6 +149,91 @@ const completedFields = [
 const nonEsenler = editorial.districts.filter(
   (district) => district.district !== "esenler",
 );
+const requiredEditorialFields = [
+  "summary",
+  "history",
+  "geography",
+  "life",
+  "transportation",
+  "housingTexture",
+  "regionalAssessment",
+  "placesGuide",
+  "distinctiveFeatures",
+  "researchTopics",
+] as const;
+for (const district of nonEsenler) {
+  const facts = district.facts;
+  assert.ok(facts, `${district.district}: facts required`);
+  assert.ok(facts.population?.trim(), `${district.district}: population`);
+  assert.ok(
+    Number.isInteger(facts.populationYear) && facts.populationYear > 0,
+    `${district.district}: populationYear`,
+  );
+  assert.ok(
+    Number.isFinite(facts.areaKm2) && facts.areaKm2! > 0,
+    `${district.district}: areaKm2`,
+  );
+  assert.equal(
+    facts.neighborhoodCount,
+    district.neighborhoods.length,
+    `${district.district}: neighborhoodCount`,
+  );
+  assert.ok(
+    facts.neighboringDistricts?.trim(),
+    `${district.district}: neighboringDistricts`,
+  );
+  assert.ok(
+    facts.locationSummary?.trim(),
+    `${district.district}: locationSummary`,
+  );
+  assert.ok(
+    district.sources.some(
+      (source) =>
+        source.url ===
+          "https://ibb.istanbul/ibb/belediye-hakkinda/yetki-alani/" &&
+        source.sourceType === "official" &&
+        source.needsVerification === false &&
+        source.sections?.includes("facts"),
+    ),
+    `${district.district}: official IBB area source`,
+  );
+  assert.ok(
+    district.sources.some(
+      (source) =>
+        source.sourceType === "official" &&
+        source.needsVerification === false &&
+        source.sections?.includes("geography") &&
+        source.sections.includes("facts"),
+    ),
+    `${district.district}: official neighboring-district source`,
+  );
+  for (const field of requiredEditorialFields) {
+    const value = district.sections[field]?.trim();
+    assert.ok(value, `${district.district}/${field}: required`);
+    assert.ok(
+      !/…|\.{3}/.test(value),
+      `${district.district}/${field}: ellipsis or truncated copy`,
+    );
+  }
+  const topics = district.sections.researchTopics!
+    .split("\n")
+    .map((topic) => topic.trim())
+    .filter(Boolean);
+  assert.ok(
+    topics.length >= 3 && topics.length <= 5,
+    `${district.district}/researchTopics: 3–5 topics required`,
+  );
+  assert.ok(
+    topics.every((topic) => topic.startsWith("• ") && topic.length > 3),
+    `${district.district}/researchTopics: clean bullet format`,
+  );
+  assert.ok(
+    !/Araştırma Teması|Temel Sorunsal|\[cite:|\b(?:Sütun|Kolon)\b/i.test(
+      district.sections.researchTopics!,
+    ),
+    `${district.district}/researchTopics: research artifact`,
+  );
+}
 for (const field of completedFields) {
   const values = nonEsenler.map((district) => district.sections[field]!.trim());
   assert.ok(values.every(Boolean), `${field}: all 38 districts completed`);
@@ -201,17 +289,27 @@ assert.deepEqual(
 );
 for (const district of historicalPhotos.districts) {
   assert.ok(district.notes.trim(), `${district.district}: photo research note`);
+  assert.match(
+    district.notes,
+    /İkinci turda.*SALT.*İBB Atatürk Kitaplığı.*Europeana/i,
+    `${district.district}: second-round archive classes`,
+  );
   for (const candidate of district.candidates) {
     assert.ok(candidate.recordUrl.startsWith("https://"));
+    assert.ok(candidate.archive.trim());
+    assert.ok(candidate.rightsStatement.trim());
     assert.ok(candidate.license.trim());
     assert.ok(candidate.requiredAttribution.trim());
+    assert.ok(candidate.notes.trim());
     if (candidate.currentDistrictMatch === "uncertain")
       assert.equal(candidate.publicationSafe, false);
-    if (candidate.publicationSafe)
+    if (candidate.publicationSafe) {
       assert.match(
         candidate.license,
         /Public domain|CC0|CC BY(?:-SA)?|No known restrictions/i,
       );
+      assert.doesNotMatch(candidate.license, /(?:^|[- ])(?:NC|ND)(?:$|[- ])/i);
+    }
   }
 }
 // Content mutation must lose public approval; neither missing provenance nor a wrong section can pass.
