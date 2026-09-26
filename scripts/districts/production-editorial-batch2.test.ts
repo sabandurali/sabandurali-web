@@ -16,15 +16,18 @@ import {
   applyBatch2ForTest,
   assertBatch2Environment,
   assertBatch2Plan,
-  batch2BaselineSourceFingerprints,
   batch2ConfigurationStatus,
   batch2ExcludedDistrict,
   batch2ImportVersion,
   batch2TargetSlugs,
-  batch2BaselineContentFingerprints,
+  batch2VerifiedBaseline,
+  batch2VerifiedBaselineDeploymentSha,
   buildBatch2PlanForTest,
+  buildBatch2Plan,
   makePublishedEditorialUpdate,
   readBatch2PlanForTest,
+  validateBatch2VerifiedBaseline,
+  type Batch2BaselineFingerprints,
 } from "./production-editorial-batch2-core";
 import type {
   ProductionImportDocument,
@@ -63,9 +66,7 @@ function managedPublishedDocument(
     sourceFingerprint:
       row.district === batch2ExcludedDistrict
         ? researchFingerprint(row)
-        : batch2BaselineSourceFingerprints[
-            row.district as keyof typeof batch2BaselineSourceFingerprints
-          ],
+        : batch2VerifiedBaseline.districts[row.district].sourceFingerprint,
     ...row.document,
     fingerprint: fingerprint(document),
   };
@@ -73,15 +74,31 @@ function managedPublishedDocument(
 }
 
 function batch2Fixture(): {
+  baseline: Batch2BaselineFingerprints;
   bundle: ResearchBundle;
   documents: ProductionImportDocument[];
 } {
   const bundle = readBundle();
+  const documents = bundle.districts.map((row, index) =>
+    managedPublishedDocument(row, index + 1),
+  );
   return {
-    bundle,
-    documents: bundle.districts.map((row, index) =>
-      managedPublishedDocument(row, index + 1),
+    baseline: Object.fromEntries(
+      documents
+        .filter((document) => document.district !== batch2ExcludedDistrict)
+        .map((document) => [
+          document.district as string,
+          {
+            content: fingerprint(document),
+            source: String(
+              (document.importProvenance as Record<string, unknown>)
+                .sourceFingerprint,
+            ),
+          },
+        ]),
     ),
+    bundle,
+    documents,
   };
 }
 
@@ -136,30 +153,47 @@ function target(
   )!;
 }
 
-test("Batch 2 target set is registry minus Esenler", () => {
+test("A: verified baseline contains the exact 38 target districts", () => {
+  assert.equal(batch2VerifiedBaseline.targetCount, 38);
+  assert.equal(Object.keys(batch2VerifiedBaseline.districts).length, 38);
   assert.equal(batch2TargetSlugs.length, 38);
-  assert.ok(!batch2TargetSlugs.includes(batch2ExcludedDistrict));
   assert.deepEqual(
-    new Set(batch2TargetSlugs),
+    new Set(Object.keys(batch2VerifiedBaseline.districts)),
     new Set(
       districts
         .map((district) => district.slug)
         .filter((slug) => slug !== batch2ExcludedDistrict),
     ),
   );
-  assert.deepEqual(
-    new Set(Object.keys(batch2BaselineSourceFingerprints)),
-    new Set(batch2TargetSlugs),
+  assert.doesNotThrow(() =>
+    validateBatch2VerifiedBaseline(batch2VerifiedBaseline),
   );
-  assert.deepEqual(
-    new Set(Object.keys(batch2BaselineContentFingerprints)),
-    new Set(batch2TargetSlugs),
-  );
+});
+
+test("B: Esenler is absent from the verified baseline", () => {
+  assert.equal(batch2VerifiedBaseline.excludedDistrict, "esenler");
+  assert.equal("esenler" in batch2VerifiedBaseline.districts, false);
+  assert.ok(!batch2TargetSlugs.includes(batch2ExcludedDistrict));
+});
+
+test("C: every verified baseline fingerprint is a SHA-256 hash", () => {
   assert.ok(
-    [
-      ...Object.values(batch2BaselineSourceFingerprints),
-      ...Object.values(batch2BaselineContentFingerprints),
-    ].every((value) => /^[a-f0-9]{64}$/.test(value)),
+    Object.values(batch2VerifiedBaseline.districts).every(
+      ({ sourceFingerprint, contentFingerprint }) =>
+        /^[a-f0-9]{64}$/.test(sourceFingerprint) &&
+        /^[a-f0-9]{64}$/.test(contentFingerprint),
+    ),
+  );
+});
+
+test("D: verified baseline is bound to the audited Production deployment", () => {
+  assert.equal(
+    batch2VerifiedBaseline.productionDeploymentSha,
+    "61294853c29348512a37541bc1c4efdd4f473fec",
+  );
+  assert.equal(
+    batch2VerifiedBaseline.productionDeploymentSha,
+    batch2VerifiedBaselineDeploymentSha,
   );
 });
 
@@ -216,10 +250,15 @@ test("Batch 2 uses separate SHA, import, and PITR approvals", () => {
   assert.doesNotMatch(status, /secret|do-not-log|postgresql:/);
 });
 
-test("A: exact initial plan is 38 updates and one Esenler skip", async () => {
-  const { bundle, documents } = batch2Fixture();
+test("E: verified fixture plans exactly 38 updates and one Esenler skip", async () => {
+  const { baseline, bundle, documents } = batch2Fixture();
   const repository = new MemoryRepository(documents);
-  const plan = await readBatch2PlanForTest(bundle, repository, "initial");
+  const plan = await readBatch2PlanForTest(
+    bundle,
+    repository,
+    "initial",
+    baseline,
+  );
   assert.deepEqual(plan.count, {
     create: 0,
     update: 38,
@@ -238,8 +277,8 @@ test("A: exact initial plan is 38 updates and one Esenler skip", async () => {
 });
 
 test("B: a plan that updates Esenler fails closed", () => {
-  const { bundle, documents } = batch2Fixture();
-  const plan = buildBatch2PlanForTest(documents, bundle);
+  const { baseline, bundle, documents } = batch2Fixture();
+  const plan = buildBatch2PlanForTest(documents, bundle, baseline);
   const esenler = plan.entries.find(
     (entry) => entry.district === batch2ExcludedDistrict,
   )!;
@@ -249,32 +288,79 @@ test("B: a plan that updates Esenler fails closed", () => {
   assert.throws(() => assertBatch2Plan(plan, "initial"), /exact initial gate/);
 });
 
+test("F: one changed baseline hash creates one conflict and zero writes", async () => {
+  const { baseline, bundle, documents } = batch2Fixture();
+  const changedBaseline = structuredClone(baseline) as Record<
+    string,
+    { content: string; source: string }
+  >;
+  changedBaseline[batch2TargetSlugs[0]].content = "0".repeat(64);
+  const repository = new MemoryRepository(documents);
+  const plan = buildBatch2PlanForTest(
+    repository.documents,
+    bundle,
+    changedBaseline,
+  );
+  assert.deepEqual(plan.count, {
+    create: 0,
+    update: 37,
+    skip: 1,
+    conflict: 1,
+  });
+  await assert.rejects(
+    applyBatch2ForTest(bundle, repository, changedBaseline),
+    /exact initial gate/,
+  );
+  assert.equal(repository.updateCalls, 0);
+});
+
+test("G: Production planner cannot auto-adopt runtime fingerprints", () => {
+  const { bundle, documents } = batch2Fixture();
+  const plan = buildBatch2Plan(documents, bundle);
+  assert.deepEqual(plan.count, {
+    create: 0,
+    update: 0,
+    skip: 1,
+    conflict: 38,
+  });
+});
+
 for (const [label, mutate] of [
   [
-    "C: one manual edit",
+    "H: one manual edit",
     (document: ProductionImportDocument) => {
       document.history = "manual production edit";
     },
   ],
   [
-    "D: one unmanaged target",
+    "I: one unmanaged target",
     (document: ProductionImportDocument) => {
       delete document.importProvenance;
     },
   ],
   [
-    "E: one provenance fingerprint mismatch",
+    "I: one provenance fingerprint mismatch",
     (document: ProductionImportDocument) => {
       (document.importProvenance as Record<string, unknown>).fingerprint =
         "0".repeat(64);
     },
   ],
+  [
+    "J: one unpublished target",
+    (document: ProductionImportDocument) => {
+      document._status = "draft";
+    },
+  ],
 ] as const) {
   test(`${label} produces conflict and zero writes`, async () => {
-    const { bundle, documents } = batch2Fixture();
+    const { baseline, bundle, documents } = batch2Fixture();
     mutate(target(documents));
     const repository = new MemoryRepository(documents);
-    const plan = buildBatch2PlanForTest(repository.documents, bundle);
+    const plan = buildBatch2PlanForTest(
+      repository.documents,
+      bundle,
+      baseline,
+    );
     assert.deepEqual(plan.count, {
       create: 0,
       update: 37,
@@ -282,34 +368,34 @@ for (const [label, mutate] of [
       conflict: 1,
     });
     await assert.rejects(
-      applyBatch2ForTest(bundle, repository),
+      applyBatch2ForTest(bundle, repository, baseline),
       /exact initial gate/,
     );
     assert.equal(repository.updateCalls, 0);
   });
 }
 
-test("F: update 20 failure rolls back every persistent change", async () => {
-  const { bundle, documents } = batch2Fixture();
+test("K: update 20 failure rolls back every persistent change", async () => {
+  const { baseline, bundle, documents } = batch2Fixture();
   const repository = new MemoryRepository(documents);
   const before = structuredClone(repository.documents);
   repository.failOnUpdateCall = 20;
   await assert.rejects(
-    applyBatch2ForTest(bundle, repository),
+    applyBatch2ForTest(bundle, repository, baseline),
     /fixture Batch 2 write failure/,
   );
   assert.equal(repository.updateCalls, 20);
   assert.deepEqual(repository.documents, before);
 });
 
-test("G–K: success updates 38 once, preserves Esenler/publication, and hides private fields", async () => {
-  const { bundle, documents } = batch2Fixture();
+test("J–L: success preserves publication/private fields and becomes 0/39", async () => {
+  const { baseline, bundle, documents } = batch2Fixture();
   const repository = new MemoryRepository(documents);
   const before = structuredClone(repository.documents);
   const esenlerBefore = before.find(
     (document) => document.district === batch2ExcludedDistrict,
   )!;
-  const plan = await applyBatch2ForTest(bundle, repository);
+  const plan = await applyBatch2ForTest(bundle, repository, baseline);
   assert.deepEqual(plan.count, {
     create: 0,
     update: 38,
@@ -350,6 +436,7 @@ test("G–K: success updates 38 once, preserves Esenler/publication, and hides p
     bundle,
     repository,
     "applied",
+    baseline,
   );
   assert.deepEqual(secondPlan.count, {
     create: 0,
@@ -358,7 +445,7 @@ test("G–K: success updates 38 once, preserves Esenler/publication, and hides p
     conflict: 0,
   });
   await assert.rejects(
-    applyBatch2ForTest(bundle, repository),
+    applyBatch2ForTest(bundle, repository, baseline),
     /exact initial gate/,
   );
   assert.equal(repository.updateCalls, 38);

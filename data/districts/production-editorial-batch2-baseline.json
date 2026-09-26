@@ -1,0 +1,167 @@
+{
+  "schemaVersion": 1,
+  "purpose": "verified-production-baseline-for-editorial-batch-2",
+  "productionDeploymentSha": "61294853c29348512a37541bc1c4efdd4f473fec",
+  "auditedAt": "2026-09-26T19:45:09Z",
+  "excludedDistrict": "esenler",
+  "targetCount": 38,
+  "historicalState": [
+    "2116bcb",
+    "fb1fc29",
+    "18e4cdf"
+  ],
+  "districts": {
+    "adalar": {
+      "sourceFingerprint": "ba17035573a61a4622ad0a5e1ec7eb165cec0c900e71fbe7bb6fd2d74999898f",
+      "contentFingerprint": "ab1a9f27dc888740d178f0650f075a8546407f13a276d01fb692a3b1a9e969fa"
+    },
+    "arnavutkoy": {
+      "sourceFingerprint": "c6c4cdf18e51489f04e956451b8fa3861ea8e5ed094d29bd0a4861da32925415",
+      "contentFingerprint": "de425e8db7f7d6df800e35bc97b60807d162c2e0c3f267cecbfcd2117ef81251"
+    },
+    "atasehir": {
+      "sourceFingerprint": "213a0c3ccac0fdd0d879c2ca49d3132843e9007e393cf25839e59bbb22b13c27",
+      "contentFingerprint": "13cbe6990f200ce6c3947c5cd2a4fc99a6dae1768f093e1ecc41d347e4aa42b3"
+    },
+    "avcilar": {
+      "sourceFingerprint": "4374aa98b99ff9ebe2253462666883f925eff43ab5da996997d9d0f8806ee6b0",
+      "contentFingerprint": "ecdba33b60d099889e778651ee078cccdb15103fec45bc316c008d2542286646"
+    },
+    "bagcilar": {
+      "sourceFingerprint": "03671783b768f84303777bdd6fee8c6f3fff65ac18cdffaf1ba51569e43dfbdd",
+      "contentFingerprint": "a5d4edcb650064c264074afba5afeb587685bad4b160a6cb3f395ee45ca8dcff"
+    },
+    "bahcelievler": {
+      "sourceFingerprint": "426cc9a084001c225fdbfb6fef4457ddb7f8bd5bcf4ad0ce94518d77d1484a1a",
+      "contentFingerprint": "cf70b8d6dab981617bb89e118b690f6ad48fe0a4470f8bb10a8e8cb155a9bcd4"
+    },
+    "bakirkoy": {
+      "sourceFingerprint": "6746becb3e9a511b5dbca6ab668aabeb818863383f0a46d6ff42291549db4c6e",
+      "contentFingerprint": "0e9bf320de560c94ae283d1790c471c255c58756583e4f3c33821daf4519e88c"
+    },
+    "basaksehir": {
+      "sourceFingerprint": "ed5d58231391dd903f3cc78ffaf9b7c3654a105962151005261a5982e5bb6647",
+      "contentFingerprint": "31afe0883301b34d476a056160aa5443ef5d8d91d1d707ba8fee75f9237bd7a0"
+    },
+    "bayrampasa": {
+      "sourceFingerprint": "b73f3ca341e90061e27668a294af6155e4ac05783921a58c9beb631d8c7e7a43",
+      "contentFingerprint": "9d01c54e18c60cf017e8f549570dc6906824fbdf96972c1fea7aee1475332d87"
+    },
+    "besiktas": {
+      "sourceFingerprint": "efcbca80bfa409bc06559863134c6e88df43c247c40c14283ba76b01fde44e2c",
+      "contentFingerprint": "5adf858ca58dcd429e388c0989f2fe591da45e9b320770e67570fcbf76a705e9"
+    },
+    "beykoz": {
+      "sourceFingerprint": "7fe7e826ee903a2ad919fa445856887251e282197489ad73d562983f62617851",
+      "contentFingerprint": "c1d5f70c7ab14ac096c0348e05e2d85e3b0fdbcbc73568d06f4fb1f0f23fde9d"
+    },
+    "beylikduzu": {
+      "sourceFingerprint": "d8d2185de01c3ea7d073143cf61a44ec55d000de10379a39744920b9f15c4491",
+      "contentFingerprint": "7d123fa2aaeecb99c44d483f7a11a7bfc7ce3ee0e32ecd6f54870902f3d2a03d"
+    },
+    "beyoglu": {
+      "sourceFingerprint": "da8914195194df36d01b9780533faf279c7372a6cd3b2e970cb158e3385766df",
+      "contentFingerprint": "ec7e655fd5cb43d0b44db593bb4b4437ad55fc9ba7ac5a026f5fa495af62463c"
+    },
+    "buyukcekmece": {
+      "sourceFingerprint": "7e23ad76c1a606d99ee9a8397321b5a3189773867dac1ea6013c14a71ec08a16",
+      "contentFingerprint": "4994c6e554cef1991a8f5869ba25f669a2d8a435ec356d7ebcad39b89670cfa8"
+    },
+    "catalca": {
+      "sourceFingerprint": "a8d621e16ce3b11b4fe18d533191c5cae4490a351f2cbed66baa529aea6f26f8",
+      "contentFingerprint": "404de0e2d5d74c24d3a740d53dc566b0a2fc63e27420c28223c10d6a4fe98618"
+    },
+    "cekmekoy": {
+      "sourceFingerprint": "c70b6c6623f286fdc9b8a98f355916042ffb5b683c5366a362a8a2236798ce8c",
+      "contentFingerprint": "72aff30229826cfaab21292068c3c9475e60a41a82df2a26cbbb0068d5ac3ff7"
+    },
+    "esenyurt": {
+      "sourceFingerprint": "8797563932222cc8dbd0d0577d98f8dfdf707a5814448455026930b55c04b5cc",
+      "contentFingerprint": "3bc94325a06dea1e4e3106777cda6333a83fea111487a87484b64eafe6e4fb3f"
+    },
+    "eyupsultan": {
+      "sourceFingerprint": "b00d8866ee907df829d0b5192f7b719b9c098a1de399e8e50686c81667d03bba",
+      "contentFingerprint": "f34d0b7486d438c1244a5c38c8e52140752969e97028a8b071d9492deadf2177"
+    },
+    "fatih": {
+      "sourceFingerprint": "9bc07843efd31c6ebf5823f65d5452664263b32700610e7c17dcf2965565933f",
+      "contentFingerprint": "d21686b88a7a359e252990c2b7ceec8dc47f1a25b024ea98feb832a218405669"
+    },
+    "gaziosmanpasa": {
+      "sourceFingerprint": "03518136817ddbf67e787e88bd016449122d81c02eb2ddf6130b451ec8ef3dca",
+      "contentFingerprint": "8c91320e71f776a1b6ea3f570bad7a0e124b195bcdc118772b3ba7162e996a27"
+    },
+    "gungoren": {
+      "sourceFingerprint": "10d1f4238148ca486df98434cae0b2b02129a28037dac999734fb58491ccc85c",
+      "contentFingerprint": "63c93e7417568e7a5a137e45677286768a2b8bfe0b7c6d0e363d171659ecfb60"
+    },
+    "kadikoy": {
+      "sourceFingerprint": "6a9f9ec3599074d8558102b80830705660a68852e32d34d32fd8494be37610e8",
+      "contentFingerprint": "5846f8235b4e54683ab75b6a3b7a31dccb69f6ca0e76c0d102b102903a35d71d"
+    },
+    "kagithane": {
+      "sourceFingerprint": "36619e8bcd7ed5a86d22426f32a241954389d2dda7cb1bfd5d31d3b1d85e57a6",
+      "contentFingerprint": "d1bb4a4b275abf4c6fc5a4afb860330f8cb0512d815b38a4e109267555b2877a"
+    },
+    "kartal": {
+      "sourceFingerprint": "79781e2b6436edbd13b0500300565b9fb3e6774a16b5d8a1280283561c06d460",
+      "contentFingerprint": "be37ed8cc3979edcfed688edfc6cc17e4b19ba2fd8b07992a53d68af14a460ab"
+    },
+    "kucukcekmece": {
+      "sourceFingerprint": "473f39fd0c0b8214ef75edbccc3361717e4f04a94790956384e5e3e02f723485",
+      "contentFingerprint": "94bf304a67d9ab7d7b5906a7f061d0ba48d22d88ced8dc202f40332b4f4310cc"
+    },
+    "maltepe": {
+      "sourceFingerprint": "3fcd1fa3159980b7a7fcf1b7251a3b371f52349f94e3b33e68462ff5d0ce93da",
+      "contentFingerprint": "6fd63b602c31b277eeab829b5b20b7f2f543a1de09211ff0bc8760b23e7810ca"
+    },
+    "pendik": {
+      "sourceFingerprint": "aa0ae9b3ec3caac2830a14ead7e18141c7c28d5820ab64aef8d8a4e395f8bec4",
+      "contentFingerprint": "1c0d62764eeb4b1bf3fdf301efe3ba2772915512b0f1eb4588b3aff00afffd81"
+    },
+    "sancaktepe": {
+      "sourceFingerprint": "948693bd7900390b0925038bcb69b28126d2a4d0007c6de939726b1a19d7389b",
+      "contentFingerprint": "c9e3fe1e08113ebad303bbcdd9fcb79f9a56703e0bed412fb6da96120680c314"
+    },
+    "sariyer": {
+      "sourceFingerprint": "70e61f42e2e1cf35475b8daa62d66599b825c8a0239f7f57c09c63073b81c014",
+      "contentFingerprint": "5466de14ff09bc5f3312892aa471784685f4c0e2c772eaf7f442ebca4badb037"
+    },
+    "sile": {
+      "sourceFingerprint": "19debcff3d2be59a501cb19601ba635b03e57b193aad56f2b9ab4901d942ba83",
+      "contentFingerprint": "db7aa2c04f989ff1ce904ade52fc89044f834f1ec0bca2c635643017a4b936df"
+    },
+    "silivri": {
+      "sourceFingerprint": "6018f7abc4ff7f83558f9886196a14cac4c420ef782b11aa0fbfb5750ac8b516",
+      "contentFingerprint": "91d73c064ce7732378fd618ffa5bce26a4a6a544b1659985a16cf511946be5ad"
+    },
+    "sisli": {
+      "sourceFingerprint": "6ebc08ae685fee3924df083cf46f49cf5617c9368530dc92634b7c5e95a79e9c",
+      "contentFingerprint": "d4291e4e63347dba8309d0a8482aea01ac9fed35b954d56d4e57770a7f34c26f"
+    },
+    "sultanbeyli": {
+      "sourceFingerprint": "741c781075ef6b64cc1540a09b2bcb9bc9a5d2438d121aff6a7ddc56cfee62d3",
+      "contentFingerprint": "501f1cd01c5aa67817e163e4d70550724bce84b8acaee697e125223acb86e7f7"
+    },
+    "sultangazi": {
+      "sourceFingerprint": "91e67173263123af8f6b8e28461dd75f827a4fac26a133801d33366563e206a2",
+      "contentFingerprint": "cc10d1d7a3f4881f11a8e47c629b9995636e4a6ee1bb42e9a9312209f34bf418"
+    },
+    "tuzla": {
+      "sourceFingerprint": "d4279ec3bfe23577c479b61bfeaf8c4f10a75b3da64c3c8ce3b938af6e42800b",
+      "contentFingerprint": "6c22e80379edb8781a6192a5b9a45db30d273814047ab94d0c8ae8c08b96d2ad"
+    },
+    "umraniye": {
+      "sourceFingerprint": "96aaa3173b085c6a42853dd390489c8366eefe49322e30811d1d88ef3121e846",
+      "contentFingerprint": "a46a4756ba82b47bb5d2294ea84e28bb27895781b8942c0395b4e5db0e78fe94"
+    },
+    "uskudar": {
+      "sourceFingerprint": "6133452fe508f094b5c59c2639d4dc05be572be0cd41d4fb7162bbc43ca0e880",
+      "contentFingerprint": "10b91bc93da8155a6c968df36e42102e6f4e3e37648225655bf1516f2733d51c"
+    },
+    "zeytinburnu": {
+      "sourceFingerprint": "cdf8815cc068778a065bb771b2359da332cf9a2b32bda9d11576216c8e1a881a",
+      "contentFingerprint": "3125b3019c5e268ba6a21814c7d9dc8270f5ba9d62994ace312de9b1e06f39d0"
+    }
+  }
+}

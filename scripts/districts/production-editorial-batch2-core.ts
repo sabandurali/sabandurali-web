@@ -1,5 +1,6 @@
 import { districts } from "../../src/content/districts/district-registry";
 import { projectPublishedDistrictGuide } from "../../src/content/districts/district-guide-projection";
+import verifiedBaselineSnapshot from "../../data/districts/production-editorial-batch2-baseline.json";
 import {
   ownedFields,
   fingerprint,
@@ -30,6 +31,70 @@ type Batch2TargetSlug = Exclude<
   (typeof districts)[number]["slug"],
   typeof batch2ExcludedDistrict
 >;
+
+export type Batch2VerifiedBaseline = {
+  schemaVersion: 1;
+  purpose: "verified-production-baseline-for-editorial-batch-2";
+  productionDeploymentSha: string;
+  auditedAt: string;
+  excludedDistrict: typeof batch2ExcludedDistrict;
+  targetCount: 38;
+  historicalState: string[];
+  districts: Record<
+    string,
+    { sourceFingerprint: string; contentFingerprint: string }
+  >;
+};
+
+export const batch2VerifiedBaselineDeploymentSha =
+  "61294853c29348512a37541bc1c4efdd4f473fec";
+
+export function validateBatch2VerifiedBaseline(
+  value: unknown,
+): Batch2VerifiedBaseline {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    throw productionImportError(
+      "input_failed",
+      "Production Editorial Batch 2 verified baseline is invalid.",
+    );
+  }
+  const baseline = value as Partial<Batch2VerifiedBaseline>;
+  const expectedTargets = [...batch2TargetSlugs].sort();
+  const actualTargets = Object.keys(baseline.districts ?? {}).sort();
+  const hashes = Object.values(baseline.districts ?? {}).flatMap((entry) => [
+    entry?.sourceFingerprint,
+    entry?.contentFingerprint,
+  ]);
+  if (
+    baseline.schemaVersion !== 1 ||
+    baseline.purpose !==
+      "verified-production-baseline-for-editorial-batch-2" ||
+    baseline.productionDeploymentSha !==
+      batch2VerifiedBaselineDeploymentSha ||
+    typeof baseline.auditedAt !== "string" ||
+    !Number.isFinite(Date.parse(baseline.auditedAt)) ||
+    baseline.excludedDistrict !== batch2ExcludedDistrict ||
+    baseline.targetCount !== 38 ||
+    actualTargets.length !== expectedTargets.length ||
+    actualTargets.some((slug, index) => slug !== expectedTargets[index]) ||
+    hashes.length !== 76 ||
+    hashes.some(
+      (hash) => typeof hash !== "string" || !/^[a-f0-9]{64}$/.test(hash),
+    )
+  ) {
+    throw productionImportError(
+      "input_failed",
+      "Production Editorial Batch 2 verified baseline contract failed.",
+    );
+  }
+  return baseline as Batch2VerifiedBaseline;
+}
+
+// Audited against the saved Payload documents on 2026-09-26. This checked-in
+// snapshot is SHA-bound evidence, not a runtime trust-on-first-use baseline.
+export const batch2VerifiedBaseline = validateBatch2VerifiedBaseline(
+  verifiedBaselineSnapshot,
+);
 
 // Generated from the validated research + editorial bundle at
 // batch2BaselineCommit. These values bind Batch 2 to the exact managed
@@ -119,7 +184,7 @@ export const batch2BaselineContentFingerprints = {
   uskudar: "fa362942d5fca0ef13fa81a1f2abdcb91437bfd4d87e260182e05c886e78fb7a",
 } as const satisfies Record<Batch2TargetSlug, string>;
 
-type Batch2BaselineFingerprints = Readonly<
+export type Batch2BaselineFingerprints = Readonly<
   Record<string, { content: string; source: string }>
 >;
 
@@ -128,12 +193,8 @@ const productionBaselineFingerprints: Batch2BaselineFingerprints =
     batch2TargetSlugs.map((slug) => [
       slug,
       {
-        content: (batch2BaselineContentFingerprints as Record<string, string>)[
-          slug
-        ],
-        source: (batch2BaselineSourceFingerprints as Record<string, string>)[
-          slug
-        ],
+        content: batch2VerifiedBaseline.districts[slug].contentFingerprint,
+        source: batch2VerifiedBaseline.districts[slug].sourceFingerprint,
       },
     ]),
   );
@@ -439,25 +500,12 @@ export function buildBatch2Plan(
 export function buildBatch2PlanForTest(
   existingDocuments: ProductionImportDocument[],
   bundle: ResearchBundle,
+  baselineFingerprints: Batch2BaselineFingerprints,
 ): Batch2Plan {
   return buildBatch2PlanAgainstBaseline(
     existingDocuments,
     bundle,
-    Object.fromEntries(
-      existingDocuments
-        .filter(
-          (document) =>
-            typeof document.district === "string" &&
-            document.district !== batch2ExcludedDistrict,
-        )
-        .map((document) => [
-          document.district as string,
-          {
-            content: fingerprint(document),
-            source: String(provenance(document)?.sourceFingerprint ?? ""),
-          },
-        ]),
-    ),
+    baselineFingerprints,
   );
 }
 
@@ -534,12 +582,14 @@ export async function readBatch2PlanForTest(
   bundle: ResearchBundle,
   repository: ProductionImportRepository,
   expectation: Batch2PlanExpectation,
+  baselineFingerprints: Batch2BaselineFingerprints,
 ): Promise<Batch2Plan> {
   return readBatch2PlanWithBuilder(
     bundle,
     repository,
     expectation,
-    buildBatch2PlanForTest,
+    (documents, input) =>
+      buildBatch2PlanForTest(documents, input, baselineFingerprints),
   );
 }
 
@@ -626,8 +676,11 @@ export async function applyBatch2(
 export async function applyBatch2ForTest(
   bundle: ResearchBundle,
   repository: ProductionImportRepository,
+  baselineFingerprints: Batch2BaselineFingerprints,
 ): Promise<Batch2Plan> {
-  return applyBatch2WithBuilder(bundle, repository, buildBatch2PlanForTest);
+  return applyBatch2WithBuilder(bundle, repository, (documents, input) =>
+    buildBatch2PlanForTest(documents, input, baselineFingerprints),
+  );
 }
 
 async function applyBatch2WithBuilder(
