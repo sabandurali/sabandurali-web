@@ -30,6 +30,22 @@ export const historicalBatch1Districts = [
   "uskudar",
 ] as const;
 
+export type HistoricalBatchConfig = {
+  name: string;
+  label: string;
+  districts: readonly string[];
+  envPrefix: string;
+  requireExistingCollection: boolean;
+};
+
+export const historicalBatch1Config: HistoricalBatchConfig = {
+  name: historicalBatch1Name,
+  label: "Historical Batch 1",
+  districts: historicalBatch1Districts,
+  envPrefix: "PRODUCTION_HISTORICAL_PHOTO_BATCH1",
+  requireExistingCollection: false,
+};
+
 const allowedLicenses = new Set([
   "Public domain",
   "No known restrictions on publication",
@@ -172,16 +188,19 @@ export function historicalNeighborhood(item: HistoricalBatch1Item): string | nul
   return safe[item.district as (typeof historicalBatch1Districts)[number]] ?? null;
 }
 
-export function validateHistoricalManifest(manifest: HistoricalBatch1Manifest): void {
+export function validateHistoricalManifest(
+  manifest: HistoricalBatch1Manifest,
+  batchConfig: HistoricalBatchConfig = historicalBatch1Config,
+): void {
   if (
     manifest.schemaVersion !== 1 ||
-    manifest.batch !== historicalBatch1Name ||
-    manifest.items.length !== historicalBatch1Districts.length
+    manifest.batch !== batchConfig.name ||
+    manifest.items.length !== batchConfig.districts.length
   ) {
-    throw new HistoricalBatch1Error("input_failed", "Historical Batch 1 manifest header is invalid.");
+    throw new HistoricalBatch1Error("input_failed", `${batchConfig.label} manifest header is invalid.`);
   }
   const knownDistricts = new Set(districts.map(({ slug }) => slug));
-  const expectedDistricts = new Set<string>(historicalBatch1Districts);
+  const expectedDistricts = new Set<string>(batchConfig.districts);
   const seenDistricts = new Set<string>();
   const seenRecords = new Set<string>();
   const seenDownloads = new Set<string>();
@@ -269,11 +288,19 @@ function photoMatches(
 export function buildHistoricalPlan(
   manifest: HistoricalBatch1Manifest,
   snapshot: HistoricalSnapshot,
+  batchConfig: HistoricalBatchConfig = historicalBatch1Config,
 ): HistoricalPlan {
-  validateHistoricalManifest(manifest);
+  validateHistoricalManifest(manifest, batchConfig);
   const collections = snapshot.collections.filter(collectionMatches);
   const collection = collections.length === 1 ? collections[0] : undefined;
-  const collectionAction = collections.length === 0 ? "create" : collections.length === 1 ? "skip" : "conflict";
+  const collectionAction =
+    collections.length === 0
+      ? batchConfig.requireExistingCollection
+        ? "conflict"
+        : "create"
+      : collections.length === 1
+        ? "skip"
+        : "conflict";
   const entries: HistoricalPlanEntry[] = manifest.items.map((item) => {
     const mediaCandidates = snapshot.media.filter((document) => containsSource(document, item));
     if (mediaCandidates.length > 1) {
@@ -348,6 +375,7 @@ export function makeHistoricalPhotoData(
 export function assertHistoricalEnvironment(
   env: Readonly<Record<string, string | undefined>>,
   mode: "dry-run" | "apply" | "verify",
+  batchConfig: HistoricalBatchConfig = historicalBatch1Config,
 ): void {
   if (
     env.PAYLOAD_DATABASE !== "postgres" ||
@@ -363,20 +391,23 @@ export function assertHistoricalEnvironment(
     env.VERCEL_ENV === "production" &&
     env.VERCEL_GIT_COMMIT_REF === "main" &&
     Boolean(env.VERCEL_GIT_COMMIT_SHA) &&
-    env.PRODUCTION_HISTORICAL_PHOTO_BATCH1_DRY_RUN_APPROVED_SHA === env.VERCEL_GIT_COMMIT_SHA;
+    env[`${batchConfig.envPrefix}_DRY_RUN_APPROVED_SHA`] === env.VERCEL_GIT_COMMIT_SHA;
   if (!shaBound) {
-    throw new HistoricalBatch1Error("approval_failed", "Historical Batch 1 requires SHA-bound Production approval.");
+    throw new HistoricalBatch1Error("approval_failed", `${batchConfig.label} requires SHA-bound Production approval.`);
   }
   if (
     mode === "apply" &&
-    (env.PRODUCTION_HISTORICAL_PHOTO_BATCH1_IMPORT_APPROVED !== "true" ||
-      env.PRODUCTION_HISTORICAL_PHOTO_BATCH1_PITR_CONFIRMED !== "true")
+    (env[`${batchConfig.envPrefix}_IMPORT_APPROVED`] !== "true" ||
+      env[`${batchConfig.envPrefix}_PITR_CONFIRMED`] !== "true")
   ) {
-    throw new HistoricalBatch1Error("approval_failed", "Historical Batch 1 apply requires import and PITR approvals.");
+    throw new HistoricalBatch1Error("approval_failed", `${batchConfig.label} apply requires import and PITR approvals.`);
   }
 }
 
-export function configurationStatus(env: Readonly<Record<string, string | undefined>>) {
+export function configurationStatus(
+  env: Readonly<Record<string, string | undefined>>,
+  batchConfig: HistoricalBatchConfig = historicalBatch1Config,
+) {
   const required = [
     "DATABASE_URL",
     "PAYLOAD_SECRET",
@@ -388,9 +419,9 @@ export function configurationStatus(env: Readonly<Record<string, string | undefi
     ...Object.fromEntries(required.map((name) => [name, env[name] ? "PRESENT_VALID" : "MISSING"])),
     VERCEL_ENV: env.VERCEL_ENV === "production" ? "PRESENT_VALID" : env.VERCEL_ENV ? "PRESENT_INVALID" : "MISSING",
     VERCEL_GIT_COMMIT_REF: env.VERCEL_GIT_COMMIT_REF === "main" ? "PRESENT_VALID" : env.VERCEL_GIT_COMMIT_REF ? "PRESENT_INVALID" : "MISSING",
-    SHA_APPROVAL: env.VERCEL_GIT_COMMIT_SHA && env.PRODUCTION_HISTORICAL_PHOTO_BATCH1_DRY_RUN_APPROVED_SHA === env.VERCEL_GIT_COMMIT_SHA ? "PRESENT_VALID" : "PRESENT_INVALID",
-    IMPORT_APPROVAL: env.PRODUCTION_HISTORICAL_PHOTO_BATCH1_IMPORT_APPROVED === "true" ? "PRESENT_VALID" : "MISSING",
-    PITR_CONFIRMATION: env.PRODUCTION_HISTORICAL_PHOTO_BATCH1_PITR_CONFIRMED === "true" ? "PRESENT_VALID" : "MISSING",
+    SHA_APPROVAL: env.VERCEL_GIT_COMMIT_SHA && env[`${batchConfig.envPrefix}_DRY_RUN_APPROVED_SHA`] === env.VERCEL_GIT_COMMIT_SHA ? "PRESENT_VALID" : "PRESENT_INVALID",
+    IMPORT_APPROVAL: env[`${batchConfig.envPrefix}_IMPORT_APPROVED`] === "true" ? "PRESENT_VALID" : "MISSING",
+    PITR_CONFIRMATION: env[`${batchConfig.envPrefix}_PITR_CONFIRMED`] === "true" ? "PRESENT_VALID" : "MISSING",
   };
 }
 
@@ -405,10 +436,11 @@ export async function applyHistoricalPlan(
   manifest: HistoricalBatch1Manifest,
   repository: HistoricalRepository,
   filePaths: ReadonlyMap<string, string>,
+  batchConfig: HistoricalBatchConfig = historicalBatch1Config,
 ): Promise<HistoricalPlan> {
-  const plan = buildHistoricalPlan(manifest, await repository.readSnapshot());
+  const plan = buildHistoricalPlan(manifest, await repository.readSnapshot(), batchConfig);
   if (plan.count.conflict > 0) {
-    throw new HistoricalBatch1Error("conflict", "Historical Batch 1 plan contains a conflict.");
+    throw new HistoricalBatch1Error("conflict", `${batchConfig.label} plan contains a conflict.`);
   }
   const createdPhotos: Array<string | number> = [];
   const createdMedia: Array<string | number> = [];
@@ -431,7 +463,7 @@ export async function applyHistoricalPlan(
         createdPhotos.push(photo.id);
       }
     }
-    const verified = buildHistoricalPlan(manifest, await repository.readSnapshot());
+    const verified = buildHistoricalPlan(manifest, await repository.readSnapshot(), batchConfig);
     if (
       verified.count.conflict !== 0 ||
       verified.count.collectionCreate !== 0 ||

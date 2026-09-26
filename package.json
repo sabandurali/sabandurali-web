@@ -26,7 +26,11 @@
     "test:districts:routes": "node scripts/districts/acceptance.mjs",
     "test:districts:content": "tsx scripts/districts/check-content.ts",
     "test:districts:production-import": "tsx --test scripts/districts/production-import.test.ts scripts/districts/production-editorial-batch2.test.ts",
-    "test:historical-photo-batch1": "tsx --test scripts/photos/historical-district-batch1.test.ts"
+    "test:historical-photo-batch1": "tsx --test scripts/photos/historical-district-batch1.test.ts",
+    "test:historical-photo-batch2": "tsx --test scripts/photos/historical-district-batch2.test.ts",
+    "historical-photo:batch2:dry-run": "tsx scripts/photos/import-historical-district-batch2.ts --dry-run",
+    "historical-photo:batch2:apply": "tsx scripts/photos/import-historical-district-batch2.ts --apply",
+    "historical-photo:batch2:verify": "tsx scripts/photos/import-historical-district-batch2.ts --verify"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "3.86.0",

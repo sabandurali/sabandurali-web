@@ -3,6 +3,7 @@ import { readFile, mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
 import { parseArgs } from "node:util";
+import { pathToFileURL } from "node:url";
 import { getPayload, type Payload } from "payload";
 import sharp from "sharp";
 import {
@@ -15,9 +16,11 @@ import {
   buildHistoricalPlan,
   configurationStatus,
   historicalAlt,
+  historicalBatch1Config,
   historicalDescription,
   historicalFilename,
   HistoricalBatch1Error,
+  type HistoricalBatchConfig,
   type HistoricalBatch1Item,
   type HistoricalBatch1Manifest,
   type HistoricalDocument,
@@ -27,7 +30,11 @@ import {
   verifyDownloadedBytes,
 } from "./historical-district-batch1-core";
 
-const downloadDirectory = "/tmp/historical-district-photos";
+type HistoricalImporterOptions = {
+  batchConfig: HistoricalBatchConfig;
+  defaultManifest: string;
+  downloadDirectory: string;
+};
 
 function payloadRepository(payload: Payload): HistoricalRepository {
   return {
@@ -119,6 +126,7 @@ function payloadRepository(payload: Payload): HistoricalRepository {
 
 async function downloadAndVerify(
   item: HistoricalBatch1Item,
+  downloadDirectory: string,
 ): Promise<string> {
   await mkdir(downloadDirectory, { recursive: true });
   const filePath = path.join(downloadDirectory, historicalFilename(item));
@@ -161,7 +169,11 @@ async function downloadAndVerify(
   return filePath;
 }
 
-async function main(): Promise<void> {
+export async function runHistoricalImporter({
+  batchConfig,
+  defaultManifest,
+  downloadDirectory,
+}: HistoricalImporterOptions): Promise<void> {
   const { values } = parseArgs({
     options: {
       apply: { type: "boolean" },
@@ -169,17 +181,17 @@ async function main(): Promise<void> {
       verify: { type: "boolean" },
       manifest: {
         type: "string",
-        default: "data/districts/historical-photo-batch1.json",
+        default: defaultManifest,
       },
     },
     strict: true,
   });
   const selectedModes = [values.apply, values["dry-run"], values.verify].filter(Boolean).length;
   if (selectedModes > 1) {
-    throw new HistoricalBatch1Error("configuration_failed", "Choose only one Historical Batch 1 mode.");
+    throw new HistoricalBatch1Error("configuration_failed", `Choose only one ${batchConfig.label} mode.`);
   }
   const mode = values.apply ? "apply" : values.verify ? "verify" : "dry-run";
-  assertHistoricalEnvironment(process.env, mode);
+  assertHistoricalEnvironment(process.env, mode, batchConfig);
   describeProductionDatabase(process.env.DATABASE_URL!);
 
   const migrationState = await readProductionMigrationState(process.env);
@@ -193,12 +205,12 @@ async function main(): Promise<void> {
   const manifest = JSON.parse(
     await readFile(values.manifest!, "utf8"),
   ) as HistoricalBatch1Manifest;
-  validateHistoricalManifest(manifest);
+  validateHistoricalManifest(manifest, batchConfig);
 
   const downloaded = new Map<string, string>();
   for (const [index, item] of manifest.items.entries()) {
     if (index > 0) await delay(500);
-    downloaded.set(item.recordUrl, await downloadAndVerify(item));
+    downloaded.set(item.recordUrl, await downloadAndVerify(item, downloadDirectory));
   }
 
   const { default: configPromise } = await import("../../src/payload.config");
@@ -209,10 +221,10 @@ async function main(): Promise<void> {
     const repository = payloadRepository(payload);
     const plan =
       mode === "apply"
-        ? await applyHistoricalPlan(manifest, repository, downloaded)
-        : buildHistoricalPlan(manifest, await repository.readSnapshot());
+        ? await applyHistoricalPlan(manifest, repository, downloaded, batchConfig)
+        : buildHistoricalPlan(manifest, await repository.readSnapshot(), batchConfig);
     if (plan.count.conflict > 0) {
-      throw new HistoricalBatch1Error("conflict", "Historical Batch 1 plan contains conflicts.");
+      throw new HistoricalBatch1Error("conflict", `${batchConfig.label} plan contains conflicts.`);
     }
     if (
       mode === "verify" &&
@@ -221,7 +233,7 @@ async function main(): Promise<void> {
         plan.count.photoCreate !== 0 ||
         plan.count.skip !== manifest.items.length)
     ) {
-      throw new HistoricalBatch1Error("verify_failed", "Historical Batch 1 is not fully applied.");
+      throw new HistoricalBatch1Error("verify_failed", `${batchConfig.label} is not fully applied.`);
     }
     console.log(
       JSON.stringify({
@@ -239,16 +251,27 @@ async function main(): Promise<void> {
   }
 }
 
-main().catch((error) => {
+export function reportHistoricalImporterError(
+  error: unknown,
+  batchConfig: HistoricalBatchConfig,
+): void {
   const category =
     error instanceof HistoricalBatch1Error ? error.category : "unknown_failed";
   console.error(
     JSON.stringify({
       error: category,
       ...((category === "configuration_failed" || category === "approval_failed") && {
-        configuration: configurationStatus(process.env),
+        configuration: configurationStatus(process.env, batchConfig),
       }),
     }),
   );
   process.exitCode = 1;
-});
+}
+
+if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
+  runHistoricalImporter({
+    batchConfig: historicalBatch1Config,
+    defaultManifest: "data/districts/historical-photo-batch1.json",
+    downloadDirectory: "/tmp/historical-district-photos",
+  }).catch((error) => reportHistoricalImporterError(error, historicalBatch1Config));
+}
