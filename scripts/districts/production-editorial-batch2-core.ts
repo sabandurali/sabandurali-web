@@ -338,14 +338,18 @@ function isSelfManaged(document: ProductionImportDocument): boolean {
   );
 }
 
-function targetOwnedFingerprint(
+function batch2Provenance(
   row: ResearchRecord,
-  existing: ProductionImportDocument,
-): string {
-  return fingerprint({
-    ...existing,
-    ...makePublishedEditorialUpdate(row, existing, false),
-  });
+  contentFingerprint: string,
+): Record<string, unknown> {
+  return {
+    version: batch2ImportVersion,
+    batch: "editorial-production-batch-2",
+    sourceCommit: batch2EditorialSourceCommit,
+    sourceFingerprint: researchFingerprint(row),
+    ...row.document,
+    fingerprint: contentFingerprint,
+  };
 }
 
 export function makePublishedEditorialUpdate(
@@ -374,14 +378,7 @@ export function makePublishedEditorialUpdate(
   update.publishedAt = existingPublishedAt;
   if (includeProvenance) {
     const expectedFingerprint = fingerprint({ ...existing, ...update });
-    update.importProvenance = {
-      version: batch2ImportVersion,
-      batch: "editorial-production-batch-2",
-      sourceCommit: batch2EditorialSourceCommit,
-      sourceFingerprint: researchFingerprint(row),
-      ...row.document,
-      fingerprint: expectedFingerprint,
-    };
+    update.importProvenance = batch2Provenance(row, expectedFingerprint);
   }
   return update;
 }
@@ -461,10 +458,12 @@ function buildBatch2PlanAgainstBaseline(
     } else {
       const managed = provenance(existing)!;
       const currentSourceFingerprint = researchFingerprint(row);
-      const expectedTargetFingerprint = targetOwnedFingerprint(row, existing);
       if (
+        managed.version === batch2ImportVersion &&
+        managed.batch === "editorial-production-batch-2" &&
+        managed.sourceCommit === batch2EditorialSourceCommit &&
         managed.sourceFingerprint === currentSourceFingerprint &&
-        fingerprint(existing) === expectedTargetFingerprint
+        isSelfManaged(existing)
       ) {
         action = "skip";
         reason = "Batch 2 content already applied";
@@ -618,7 +617,6 @@ function assertAppliedDocument(
   before: ProductionImportDocument,
   row: ResearchRecord,
 ): void {
-  const expected = makePublishedEditorialUpdate(row, before);
   const managed = provenance(document);
   const projection = projectPublishedDistrictGuide(document);
   if (
@@ -630,8 +628,6 @@ function assertAppliedDocument(
     !isSelfManaged(document) ||
     managed?.version !== batch2ImportVersion ||
     managed?.sourceFingerprint !== researchFingerprint(row) ||
-    fingerprint(document) !==
-      (expected.importProvenance as Record<string, unknown>).fingerprint ||
     !projection ||
     projection.neighborhoods.length !== row.editorial!.neighborhoods.length ||
     projection.sources.length === 0 ||
@@ -706,9 +702,20 @@ async function applyBatch2WithBuilder(
           "Production Editorial Batch 2 update target disappeared.",
         );
       }
+      const persisted = await transaction.updateDistrict(
+        entry.existing.id,
+        makePublishedEditorialUpdate(entry.row, entry.existing, false),
+      );
       const saved = await transaction.updateDistrict(
         entry.existing.id,
-        makePublishedEditorialUpdate(entry.row, entry.existing),
+        {
+          _status: "published",
+          publishedAt: entry.existing.publishedAt,
+          importProvenance: batch2Provenance(
+            entry.row,
+            fingerprint(persisted),
+          ),
+        },
       );
       assertAppliedDocument(saved, entry.existing, entry.row);
     }

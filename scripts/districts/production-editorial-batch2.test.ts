@@ -128,9 +128,23 @@ class MemoryRepository implements ProductionImportRepository {
         }
         const index = this.documents.findIndex((document) => document.id === id);
         if (index < 0) throw new Error("fixture district missing");
+        const persistedData = structuredClone(data);
+        if (Array.isArray(persistedData.sources)) {
+          persistedData.sources = persistedData.sources.map((source) => {
+            const persistedSource = { ...source } as Record<string, unknown>;
+            for (const field of ["dataDate", "checkedAt"] as const) {
+              if (typeof persistedSource[field] === "string") {
+                persistedSource[field] = new Date(
+                  persistedSource[field],
+                ).toISOString();
+              }
+            }
+            return persistedSource;
+          });
+        }
         this.documents[index] = {
           ...this.documents[index],
-          ...structuredClone(data),
+          ...persistedData,
           updatedAt: "2026-09-26T19:00:00.000Z",
         };
         return structuredClone(this.documents[index]);
@@ -402,7 +416,7 @@ test("J–L: success preserves publication/private fields and becomes 0/39", asy
     skip: 1,
     conflict: 0,
   });
-  assert.equal(repository.updateCalls, 38);
+  assert.equal(repository.updateCalls, 76);
   assert.deepEqual(
     repository.documents.find(
       (document) => document.district === batch2ExcludedDistrict,
@@ -448,7 +462,7 @@ test("J–L: success preserves publication/private fields and becomes 0/39", asy
     applyBatch2ForTest(bundle, repository, baseline),
     /exact initial gate/,
   );
-  assert.equal(repository.updateCalls, 38);
+  assert.equal(repository.updateCalls, 76);
 });
 
 test("published update owns only explicit fields and preserves identity metadata", () => {
