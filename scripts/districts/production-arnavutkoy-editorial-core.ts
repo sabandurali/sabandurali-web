@@ -1,8 +1,6 @@
 import { districts } from "../../src/content/districts/district-registry";
 import { projectPublishedDistrictGuide } from "../../src/content/districts/district-guide-projection";
 import {
-  batch2BaselineContentFingerprints,
-  batch2BaselineSourceFingerprints,
   batch2EditorialSourceCommit,
   batch2ImportVersion,
   makePublishedEditorialUpdate,
@@ -22,6 +20,12 @@ import {
 export const arnavutkoyTarget = "arnavutkoy" as const;
 export const arnavutkoyImportVersion = 5;
 export const arnavutkoyImportBatch = "arnavutkoy-editorial-quality-2026";
+// Read-only audited Production state immediately before this single-district
+// update. Both hashes must match; the importer never learns a baseline at run time.
+const arnavutkoyProductionBaseline = {
+  content: "333fb18cd5985c17b692894405c5caa1a6fb2d3d8e6d508a7793793ed5653a76",
+  source: "5f098478277a3cd5140cd6c2793512e7a140da49815f8bbd9ecd8fe0689555ca",
+} as const;
 
 export type ArnavutkoyPlanCount = {
   create: number;
@@ -133,25 +137,30 @@ export function buildArnavutkoyPlan(
     if (!existing) {
       action = "create";
       reason = "missing production district";
+    } else if (row.district !== arnavutkoyTarget) {
+      const managed = provenance(existing);
+      if (
+        existing._status === "published" &&
+        publishedAt(existing) &&
+        managed?.sourceFingerprint === researchFingerprint(row)
+      ) {
+        action = "skip";
+        reason = "protected non-target district is unchanged";
+      } else {
+        action = "conflict";
+        reason = "protected non-target district source changed";
+      }
     } else if (
       existing._status !== "published" ||
       !publishedAt(existing) ||
       !isSelfManaged(existing)
     ) {
       action = "conflict";
-      reason = "record is unpublished, unmanaged, or manually edited";
+      reason = "Arnavutkoy is unpublished, unmanaged, or manually edited";
     } else {
       const managed = provenance(existing)!;
       const sourceFingerprint = researchFingerprint(row);
-      if (row.district !== arnavutkoyTarget) {
-        if (managed.sourceFingerprint === sourceFingerprint) {
-          action = "skip";
-          reason = "non-target district is unchanged";
-        } else {
-          action = "conflict";
-          reason = "non-target district source changed";
-        }
-      } else if (
+      if (
         managed.version === arnavutkoyImportVersion &&
         managed.batch === arnavutkoyImportBatch &&
         managed.sourceCommit === deploymentSha &&
@@ -163,9 +172,8 @@ export function buildArnavutkoyPlan(
         managed.version === batch2ImportVersion &&
         managed.batch === "editorial-production-batch-2" &&
         managed.sourceCommit === batch2EditorialSourceCommit &&
-        managed.sourceFingerprint ===
-          batch2BaselineSourceFingerprints.arnavutkoy &&
-        fingerprint(existing) === batch2BaselineContentFingerprints.arnavutkoy
+        managed.sourceFingerprint === arnavutkoyProductionBaseline.source &&
+        fingerprint(existing) === arnavutkoyProductionBaseline.content
       ) {
         action = "update";
         reason = "exact managed Arnavutkoy Batch 2 baseline";
