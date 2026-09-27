@@ -738,24 +738,24 @@
     {
       "district": "bahcelievler",
       "pdfSha256": "b5475bde169222488c537893bbff74dfcf2f306ae0408e89f40eb5055bf0228f",
-      "checkedAt": "2026-09-26T18:30:00.000Z",
+      "checkedAt": "2026-09-27T07:37:59.000Z",
       "sections": {
-        "summary": "Bahçelievler’in kentleşme öyküsünde eski yerleşimler, ana yollar ve İstanbul’un batıya büyümesi birlikte yer alır.",
-        "history": "Bahçelievler, 1992’de Bakırköy’den ayrılarak ilçe statüsü kazandı. Daha eski yerleşimlerin geçmişi ile bugünkü idari ilçenin kuruluşu farklı zaman ölçeklerinde değerlendirilmelidir.",
-        "geography": "Belediyeleşme öncesindeki yerleşim dokusunun değişiminde Londra Asfaltı çevresindeki gelişme etkili oldu. İlçeyi tanırken yol çevresinde büyüyen yerleşimlerle mahallelerin kendi geçmişini birlikte okumak yararlıdır.",
-        "life": "Gündelik yaşamı sahada okumak için Siyavuşpaşa Kasrı çevresi, Şirinevler Meydanı ve Yenibosna yerleşim aksı birbirini tamamlayan duraklardır. Kocasinan çevresi, merkezdeki hareketten ayrılan yerel ritmiyle bu okumayı genişletir.",
-        "transportation": "M1A ve M9 hatları ile D-100 metrobüs koridoru, Bahçelievler’in merkez ve çevre ilçelerle bağlantısında birlikte rol oynar.",
-        "housingTexture": "İç mahallelerdeki bitişik nizam apartmanlar ile Basın Ekspres çevresindeki daha büyük ölçekli karma yapılar belirgin iki yapılaşma örüntüsü oluşturur. Bu ilçe ölçekli gözlemden tek bir yapı için güvenlik çıkarımı yapılamaz; güncel ruhsat, zemin, plan ve yapı kayıtları ayrıca araştırılmalıdır.",
-        "regionalAssessment": "Bölgesel değerlendirmede D-100 çevresindeki erişim avantajı ile bitişik nizam yerleşimlerin dönüşüm ihtiyacı birlikte okunmalıdır. Sentezin amacı ilçeyi sıralamak değil, katmanlarını birlikte göstermektir; tekil kararlar için güncel belge ve saha çalışması gerekir.",
-        "placesGuide": "Tarihî bağlam ile bugünkü yaşam arasındaki ilişki Siyavuşpaşa Kasrı çevresi, Şirinevler Meydanı, Yenibosna yerleşim aksı, Kocasinan çevresi üzerinden yerinde araştırılabilir. Rota kurulurken mevsim, ulaşım ve ziyaret kısıtları güncel resmî kanallardan kontrol edilmelidir.",
-        "distinctiveFeatures": "Bahçelievler anlatısında D-100 çevresindeki erişim avantajı ile bitişik nizam yerleşimlerin dönüşüm ihtiyacı öne çıkar. Siyavuşpaşa Kasrı çevresi ve Şirinevler Meydanı arasındaki karşıtlık ilçenin tek tip olmayan karakterini gösterir.",
-        "researchTopics": "• Bahçe-kent fikrinden yoğun apartman dokusuna geçiş\n• Ayamama Deresi çevresinde yerleşim ve altyapı ilişkisi\n• Şirinevler ile Yenibosna'da ticaret akslarının gündelik yaşama etkisi"
+        "summary": "Bahçelievler, İstanbul’un Avrupa Yakası iç kesiminde D-100 koridoru boyunca gelişen, yoğun konut dokusu ve güçlü toplu taşıma erişimiyle öne çıkan bir ilçedir. Şirinevler, Yenibosna, Kocasinan ve Bahçelievler merkez farklı mahalle ve ticaret odakları oluştururken Basın Ekspres çevresine yaklaştıkça daha büyük ölçekli iş ve karma kullanım yapıları belirginleşir.",
+        "history": "Bahçelievler Kaymakamlığının tarihçesi, bugünkü ilçe ve yakın çevresiyle ilişkilendirilen tarihsel anlatıları eski ulaşım güzergâhları, tarım ve bağ alanları üzerinden aktarır. Antik dönemle ilgili ad ve yer tarifleri, bugünkü ilçe sınırlarıyla kesin bir eşleştirme olarak değil bölgenin geniş tarihsel çevresine ilişkin kayıtlar olarak okunmalıdır.\n\nKocasinan ve Yenibosna, ilçenin bugünkü idari kuruluşundan önce köy ve yerleşim odakları olarak gelişti. İstanbul’un batıya doğru büyümesi, tarihî yol güzergâhlarının ve daha sonra Londra Asfaltı olarak anılan D-100 çevresinin önemini artırdı.\n\n1950 sonrasında yol boyunca kurulan fabrikalar, artan nüfus ve konut talebi tarım alanlarının hızla kentleşmesine yol açtı. Kocasinan ve Yenibosna’da belde belediyeleri faaliyet gösterdi; bu yapılar 1982’de İstanbul Belediyesine bağlı şube müdürlüğüne dönüştürüldü ve 1984’te büyükşehir uygulamasıyla Bakırköy ilçe belediyesine bağlandı.\n\n3806 sayılı düzenleme uyarınca Bahçelievler, 25 Ağustos 1992’de Bakırköy’den ayrılarak ilçe oldu. Bu idari değişiklik, Bahçelievler merkez ile Kocasinan ve Yenibosna çevresindeki yoğunlaşmış yerleşimleri aynı ilçe örgütlenmesi altında bir araya getirdi.",
+        "geography": "Bahçelievler, Avrupa Yakası’nın denize kıyısı olmayan iç kesiminde; Bakırköy, Küçükçekmece, Bağcılar ve Güngören arasında yer alır. D-100 ilçenin başlıca doğu–batı ulaşım koridorudur; kuzeydeki Yenibosna ve Çobançeşme çevresi Basın Ekspres aksına yaklaşır. İlçe genelinde yapılaşma yoğundur ancak alt bölgeler aynı karakteri taşımaz: Şirinevler’de D-100 ve meydan çevresindeki sıkışık ticaret–konut dokusu, Yenibosna’da konut ile iş alanlarının birlikteliği, Kocasinan’da ise yerleşik mahalle düzeni belirgindir. Büyük kesintisiz açık alanlar sınırlı; parklar, meydanlar ve kamusal tesis çevreleri mahalle yaşamı açısından önemlidir.",
+        "life": "Gündelik yaşam, Şirinevler Meydanı ile Bahçelievler merkezdeki çarşı ve caddelerden Yenibosna ve Kocasinan’ın mahalle merkezlerine uzanan çok odaklı bir yapı gösterir. D-100 çevresinde ulaşım ve ticaret hareketliliği yoğunlaşırken iç mahallelerde semt pazarları, küçük işletmeler ve yerel hizmetler günlük ritmi belirler. Siyavuşpaşa Kasrı ile Milli Egemenlik Parkı çevresi tarihî ve kamusal bir durak; belediyenin mahallelere dağılmış parkları da yerel açık alan kullanımını tamamlar.",
+        "transportation": "Bahçelievler’in ana toplu taşıma omurgası D-100 üzerindeki metrobüs, M1A ve M9 hatları ile İETT otobüslerinden oluşur. M1A Yenikapı–Atatürk Havalimanı hattı Bahçelievler, Ataköy-Şirinevler ve Yenibosna istasyonlarıyla D-100 koridoruna hizmet verir. M9 Ataköy–Olimpiyat hattının Yenibosna ve Çobançeşme istasyonları ilçeye doğrudan erişim sağlar; Ataköy–Bahariye etabı 18 Mart 2024’te hizmete açılmıştır. Yenibosna’da M1A, M9 ve metrobüs arasında aktarma yapılabilir. Metrobüsün Bahçelievler, Şirinevler ve Yenibosna durakları ile İETT otobüsleri mahalleleri bu ana koridora bağlar.",
+        "housingTexture": "Şirinevler ve Kocasinan çevresinde sık parseller üzerinde yükselen çok katlı, bitişik ya da yakın aralıklı apartmanlar yaygındır. Yenibosna’da konut dokusuna zemin kat ticareti, atölye ve iş yerleri eşlik eder; Basın Ekspres yönünde daha büyük ölçekli ofis, ticaret ve karma kullanım yapıları görülür. Yenilenen parseller ile daha eski yapı stoku aynı sokak veya mahallede yan yana bulunabilir. Bu genel doku tarifi hiçbir bina için deprem güvenliği ya da dayanım sonucu üretmez; yapı yaşı, ruhsat, zemin ve güncel plan bilgisi yetkili kurumlardan ayrıca incelenmelidir.",
+        "regionalAssessment": "Bahçelievler’in bölgesel karakteri; yüksek yerleşim yoğunluğu, D-100 ve metrobüs erişimi, M1A–M9 bağlantıları, Şirinevler–Yenibosna ticaret aksları ve eski yoğun mahalle dokusunun birlikte okunmasıyla anlaşılabilir. Basın Ekspres’e yaklaştıkça görülen yeni ölçekli iş ve karma kullanım yapıları, iç mahallelerdeki küçük parsellerden farklı bir gelişme biçimi oluşturur. Bu ilçe ölçekli değerlendirme yatırım tavsiyesi veya taşınmaz sonucu değildir; güncel plan ve proje kararları yetkili kurumlardan izlenmelidir.",
+        "placesGuide": "Siyavuşpaşa Kasrı, Havuzlu Köşk adıyla da anılan tarihî yapı katmanını; çevresindeki Milli Egemenlik Parkı ise güncel kamusal alan kullanımını birlikte okumaya imkân verir. Şirinevler Meydanı D-100 ve toplu taşıma çevresindeki yoğun kent yaşamını, Yenibosna konut–ticaret karmasını, Kocasinan ise yerleşik mahalle dokusunu gösterir. Ziyaret saatleri, erişim koşulları ve tesis kullanımı saha çalışmasından önce ilgili kurumun güncel duyurularından doğrulanmalıdır.",
+        "distinctiveFeatures": "Bahçelievler’i İstanbul içinde ayıran özellik; yoğun iç-kent konut dokusunun D-100/metrobüs koridoru, M1A ve M9 bağlantıları, Şirinevler ile Yenibosna’daki ticaret hareketliliği, tarihî Siyavuşpaşa çevresi ve Basın Ekspres’e yakın iş akslarıyla kısa mesafelerde yan yana gelmesidir.",
+        "researchTopics": "• Kocasinan ve Yenibosna’nın köy ve belde döneminden yoğun kent dokusuna dönüşümü\n• D-100, metrobüs, M1A ve M9’un mahalle hareketliliğine etkisi\n• Şirinevler ve Yenibosna’da ticaret akslarının gündelik yaşamla ilişkisi\n• Yoğun parsel dokusunda kentsel yenilemenin mahalle ölçeğine etkileri"
       },
       "facts": {
         "population": "539035",
         "populationYear": 2025,
         "neighborhoodCount": 11,
-        "locationSummary": "Bahçelievler’in kentleşme öyküsünde eski yerleşimler, ana yollar ve İstanbul’un batıya büyümesi birlikte yer alır.",
+        "locationSummary": "Avrupa Yakası’nın iç kesiminde, D-100 koridorundan Şirinevler, Yenibosna, Kocasinan ve Bahçelievler merkeze uzanan yoğun kentsel ilçedir.",
         "areaKm2": 16.62,
         "neighboringDistricts": "Bakırköy, Küçükçekmece, Bağcılar ve Güngören"
       },
@@ -779,7 +779,7 @@
           "url": "https://data.tuik.gov.tr/Bulten/Index?p=Adrese-Dayali-Nufus-Kayit-Sistemi-Sonuclari-2025-53899",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
+          "checkedAt": "2026-09-27T07:37:59.000Z",
           "dataDate": "2025-12-31T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
@@ -792,7 +792,7 @@
           "url": "https://bahcelievler.gov.tr/tarihce",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
+          "checkedAt": "2026-09-27T07:37:59.000Z",
           "dataDate": null,
           "needsVerification": false,
           "sections": [
@@ -802,17 +802,19 @@
           ]
         },
         {
-          "title": "Bahçelievler — Coğrafya / yerleşim",
+          "title": "Bahçelievler'in Tarihçesi",
           "publisher": "Bahçelievler Kaymakamlığı",
           "url": "https://bahcelievler.gov.tr/bahcelievler-in-tarihcesi",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
+          "checkedAt": "2026-09-27T07:37:59.000Z",
           "dataDate": null,
           "needsVerification": false,
           "sections": [
+            "history",
             "geography",
             "summary",
+            "housingTexture",
             "facts"
           ]
         },
@@ -843,12 +845,12 @@
           ]
         },
         {
-          "title": "Uluslararası Kentsel Dönüşüm Zirvesi",
-          "publisher": "www.bahcelievler.istanbul",
-          "url": "https://www.bahcelievler.istanbul/haber/bahcelievler-belediyesi-1-uluslararasi-kentsel-donusum-zirvesi-duzenledi",
+          "title": "Bahçelievler Belediyesi — Parklarımız",
+          "publisher": "Bahçelievler Belediyesi",
+          "url": "https://www.bahcelievler.istanbul/parklar",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
+          "checkedAt": "2026-09-27T07:37:59.000Z",
           "dataDate": null,
           "needsVerification": false,
           "sections": [
@@ -859,16 +861,18 @@
           ]
         },
         {
-          "title": "Bahçelievler’in tarihçesi",
+          "title": "Bahçelievler’in Tarihçesi — Yerleşim ve İdari Gelişim",
           "publisher": "Bahçelievler Kaymakamlığı",
           "url": "https://www.bahcelievler.gov.tr/bahcelievler-in-tarihcesi",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
+          "checkedAt": "2026-09-27T07:37:59.000Z",
           "dataDate": null,
           "needsVerification": false,
           "sections": [
-            "housingTexture"
+            "history",
+            "housingTexture",
+            "regionalAssessment"
           ]
         },
         {
@@ -877,11 +881,56 @@
           "url": "https://www.metro.istanbul/Hatlarimiz/HatDetay?hat=M9",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
-          "dataDate": "2026-09-26T18:00:00.000Z",
+          "checkedAt": "2026-09-27T07:37:59.000Z",
+          "dataDate": "2026-09-27T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "transportation"
+          ]
+        },
+        {
+          "title": "M1A Yenikapı–Atatürk Havalimanı Metro Hattı",
+          "publisher": "Metro İstanbul",
+          "url": "https://www.metro.istanbul/Hatlarimiz/HatDetay?hat=M1A",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-27T07:37:59.000Z",
+          "dataDate": "2026-09-27T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "transportation",
+            "regionalAssessment",
+            "distinctiveFeatures",
+            "researchTopics"
+          ]
+        },
+        {
+          "title": "Şirinevler Metrobüs Durağı",
+          "publisher": "İETT",
+          "url": "https://iett.istanbul/StationDetail?dkod=900241",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-27T07:37:59.000Z",
+          "dataDate": "2026-09-27T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "transportation",
+            "regionalAssessment"
+          ]
+        },
+        {
+          "title": "Bahçelievler’de Park ve Bisiklet Coşkusu",
+          "publisher": "Bahçelievler Belediyesi",
+          "url": "https://www.bahcelievler.istanbul/haber/bahcelievler-de-park-ve-bisiklet-coskusu",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-27T07:37:59.000Z",
+          "dataDate": "2025-10-09T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "life",
+            "placesGuide",
+            "planningDevelopments"
           ]
         },
         {
@@ -898,15 +947,26 @@
           ]
         }
       ],
+      "planningDevelopments": [
+        {
+          "title": "Atilla Gökçe Parkı Revizyonu",
+          "summary": "Yenibosna Mahallesi’ndeki Atilla Gökçe Parkı, revizyon çalışmalarının ardından 9 Ekim 2025’te yeniden hizmete açıldı. Çalışmayla park alanı büyütüldü; çocuk oyun, spor, peyzaj ve diğer kamusal kullanım alanları yenilendi.",
+          "neighborhood": "Yenibosna Merkez",
+          "date": "2025-10-09T00:00:00.000Z",
+          "status": "tamamlandi",
+          "officialSource": "https://www.bahcelievler.istanbul/haber/bahcelievler-de-park-ve-bisiklet-coskusu",
+          "checkedAt": "2026-09-27T07:37:59.000Z",
+          "needsVerification": false
+        }
+      ],
       "excluded": {
         "marketData": "Karşılaştırılabilir, güncel ve tarihli resmî piyasa serisi bulunmadığından bilinçli olarak boş bırakıldı.",
-        "planningDevelopments": "Yalnız tarihli karar ve uygulama belgeleriyle doğrulanacak proje kayıtları bu içerik tamamlamasına dahil edilmedi.",
         "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
         "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
         "specificReview": "Antik Hebdomon/Hepdemon yerleşimini bugünkü ilçeye eşitleyen anlatım çıkarıldı.",
         "areaKm2Review": "İlçe kurumlarında ölçüm kapsamına göre değişebilen yüzölçümü değerleri bulunduğundan, 39 ilçe için aynı standardı veren İBB İlçe Alan Bilgileri Tablosu'ndaki kara alanı esas alındı."
       },
-      "methodology": "Mevcut araştırma havuzu başlangıç olarak kullanıldı; yayıma açılan her bölüm resmî kurum sayfalarıyla yeniden sınırlandırılıp nötr editoryal dille yazıldı. Güncel ulaşım yalnız işletmeci ağ bilgisiyle, nüfus TÜİK ADNKS 2025 ile, mahalleler mevcut resmî dizinlerle eşleştirildi. Piyasa verileri, yapı güvenliği hükümleri ve doğrulanmamış proje takvimleri yayıma alınmadı.",
+      "methodology": "Mevcut araştırma havuzu başlangıç olarak kullanıldı; yayıma açılan her bölüm resmî kurum sayfalarıyla yeniden sınırlandırılıp nötr editoryal dille yazıldı. Tarihçe Kaymakamlık kayıtlarıyla; M1A, M9 ve 18 Mart 2024 açılışı Metro İstanbul hat bilgileriyle; metrobüs İETT durağıyla; Atilla Gökçe Parkı revizyonu belediyenin tarihli haberiyle doğrulandı. Nüfus TÜİK ADNKS 2025, mahalleler mevcut resmî dizinlerle eşleştirildi; piyasa verileri, yapı güvenliği hükümleri ve doğrulanmamış proje takvimleri yayıma alınmadı.",
       "reviewedSections": [
         "summary",
         "history",
@@ -919,7 +979,8 @@
         "regionalAssessment",
         "placesGuide",
         "distinctiveFeatures",
-        "researchTopics"
+        "researchTopics",
+        "planningDevelopments"
       ]
     },
     {
