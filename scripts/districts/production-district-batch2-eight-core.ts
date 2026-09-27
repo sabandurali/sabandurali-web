@@ -32,14 +32,14 @@ export const districtBatch2EightImportBatch = "districtBatch2Eight-editorial-qua
 // Read-only audited Production state immediately before this eight-district
 // update. Both hashes must match; the importer never learns a baseline at run time.
 const districtBatch2EightProductionBaseline: Record<string, { content: string; source: string }> = {
-  catalca: { content: "404de0e2d5d74c24d3a740d53dc566b0a2fc63e27420c28223c10d6a4fe98618", source: "a8d621e16ce3b11b4fe18d533191c5cae4490a351f2cbed66baa529aea6f26f8" },
-  esenyurt: { content: "3bc94325a06dea1e4e3106777cda6333a83fea111487a87484b64eafe6e4fb3f", source: "8797563932222cc8dbd0d0577d98f8dfdf707a5814448455026930b55c04b5cc" },
-  eyupsultan: { content: "f34d0b7486d438c1244a5c38c8e52140752969e97028a8b071d9492deadf2177", source: "b00d8866ee907df829d0b5192f7b719b9c098a1de399e8e50686c81667d03bba" },
-  fatih: { content: "d21686b88a7a359e252990c2b7ceec8dc47f1a25b024ea98feb832a218405669", source: "9bc07843efd31c6ebf5823f65d5452664263b32700610e7c17dcf2965565933f" },
-  gaziosmanpasa: { content: "8c91320e71f776a1b6ea3f570bad7a0e124b195bcdc118772b3ba7162e996a27", source: "03518136817ddbf67e787e88bd016449122d81c02eb2ddf6130b451ec8ef3dca" },
-  gungoren: { content: "63c93e7417568e7a5a137e45677286768a2b8bfe0b7c6d0e363d171659ecfb60", source: "10d1f4238148ca486df98434cae0b2b02129a28037dac999734fb58491ccc85c" },
-  kagithane: { content: "d1bb4a4b275abf4c6fc5a4afb860330f8cb0512d815b38a4e109267555b2877a", source: "36619e8bcd7ed5a86d22426f32a241954389d2dda7cb1bfd5d31d3b1d85e57a6" },
-  kucukcekmece: { content: "94bf304a67d9ab7d7b5906a7f061d0ba48d22d88ced8dc202f40332b4f4310cc", source: "473f39fd0c0b8214ef75edbccc3361717e4f04a94790956384e5e3e02f723485" },
+  catalca: { content: "c1c59342ad0515802b2e5158a6e268da5cc49878aa08cebe7c8889ee13e3fe2b", source: "c2aceff28755d9954239120c5f151c074da376df9ea7485da2507a30bc10ecf6" },
+  esenyurt: { content: "82b98596abd68d9195c0231f3143259c5cc8f6a8773b30ac839f725cd36c1ad5", source: "81c94d725e34b0377989dc2fe3876f72c759e77bfe392daae8ca7fd1a9c82910" },
+  eyupsultan: { content: "df8a3214544a54fec044f573ce76998f9efc7e38235b2f266734ffaf28fc5c51", source: "10e498666337c6801e831fb6734fd1c77832d663411749d7ac3e2dcfcaba2972" },
+  fatih: { content: "1536c86cfcac8bcece53b2ef39ced8c46493908e783713fff4a3c3925fa05838", source: "d25fd9f657158d73ed23a98a313a668a823951b8254be2a3b22c2f2f2819f9f3" },
+  gaziosmanpasa: { content: "e2776ec4ce0428febc3d9bb957305b2f86fb51857bc0065f5f3f5210382250fc", source: "92cb413c8c79a1dff1e49351490844890ee45b4605cc933aced037b139addb17" },
+  gungoren: { content: "d39fe8616d4eeddd3d468d28cdaa3807aedbd27b2adecf54c81e1bc36d867ce5", source: "421dcb392ce711fa57561a07b3c009375af9e7480c5cc85cbe9095894fa259aa" },
+  kagithane: { content: "0df98d67010e2df69743959671e0aaefde27134804489e0c223abbf99c951948", source: "ed376725d7f69df59aa31da40711bdecf812e15cb2cbbfa5cc5a1593985cd594" },
+  kucukcekmece: { content: "9854020eb83dba8f2ed54d8cb593c2e0b1737eaefd684c7856b6375f4fd3da50", source: "89c2a4664775077e5389a1b5a3277d61ce260f201354a099a27eec53ec504c7e" },
 } as const;
 
 export type DistrictBatch2EightPlanCount = {
