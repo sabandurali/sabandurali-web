@@ -275,18 +275,18 @@
     {
       "district": "avcilar",
       "pdfSha256": "ba57d83cd3be68473045a80b5e176c94ceb61572f8120e6f0cb2cddf9de448f3",
-      "checkedAt": "2026-09-26T18:30:00.000Z",
+      "checkedAt": "2026-09-27T02:41:43.000Z",
       "sections": {
-        "summary": "Avcılar, Marmara kıyısı ile Küçükçekmece Gölü arasında uzanan yerleşim alanlarıyla tanınır.",
-        "history": "Avcılar’ın tarihçesi, kıyı yerleşimleri ve tarımsal geçmişten kentleşmeye geçişi anlatır. Cumhuriyet dönemindeki göçler ve İstanbul’un batıya doğru büyümesi, eski yerleşimlerin çevresindeki yapılaşmanın gelişmesinde etkili olmuştur.",
-        "geography": "İlçenin güneyinde Marmara Denizi, doğusunda Küçükçekmece Gölü bulunur. Bu iki su alanı, kıyı ile iç kesimler arasındaki mekânsal farklılıkları anlamak için başlangıç noktasıdır.",
-        "life": "İlçenin gündelik ritmi Marmara Caddesi ile Avcılar sahili çevresinde belirginleşir; Küçükçekmece Gölü kıyısı açık alan ve yerel kullanım örüntüsünü okumaya yardımcı olur. Ambarlı yerleşimi ise farklı bir yerleşim ölçeği sunar.",
-        "transportation": "Avcılar’da D-100 üzerindeki metrobüs durakları ile sahil ve iç mahallelere dağılan İETT hatları temel toplu taşıma düzenini kurar.",
-        "housingTexture": "D-100’ün güneyindeki yerleşik apartman mahalleleri, Ambarlı çevresindeki üretim-lojistik alanları ve Tahtakale yönündeki site dokusu ilçenin başlıca yapı katmanlarıdır. Buradaki doku tarifi tekil yapıların güvenli olduğuna ilişkin bir hüküm değildir; ruhsat, zemin, yapı yaşı ve plan koşulları resmî belgelerden doğrulanmalıdır.",
-        "regionalAssessment": "Bölgesel değerlendirmede Marmara ve göl kıyıları, D-100 koridoru ve farklı dönemlerde oluşmuş konut dokusu birlikte okunmalıdır. Çerçeve, mahalle ya da parsel düzeyinde değer ve güvenlik hükmü değildir; güncel kurum verileri ile yerinde gözlem ayrıca gerekir.",
-        "placesGuide": "İlçenin farklı dönem ve mekânlarını karşılaştırmak için Marmara Caddesi, Avcılar sahili, Küçükçekmece Gölü kıyısı, Ambarlı yerleşimi anlamlı bir saha dizisi oluşturur. Saha çalışmasından önce güncel açılış ve ulaşım bilgileri yetkili kaynaktan doğrulanmalıdır.",
-        "distinctiveFeatures": "Avcılar için belirleyici olan; Marmara ve göl kıyıları, D-100 koridoru ve farklı dönemlerde oluşmuş konut dokusu. Bu özelliklerin yerel karşılığı Marmara Caddesi ve Avcılar sahili birlikte incelendiğinde daha açık okunur.",
-        "researchTopics": "• Ambarlı çevresinde sanayi ile kıyı kullanımının birlikte gelişimi\n• Küçükçekmece Gölü kıyısında kamusal alanın değişimi\n• D-100 ve metrobüs koridorunun mahalleler arası hareketliliğe etkisi"
+        "summary": "Avcılar, güneyde Marmara Denizi kıyısı ile doğuda Küçükçekmece Gölü arasında, D-100 ve metrobüs koridoru boyunca gelişen bir ilçedir. Avcılar merkez ve Marmara Caddesi yoğun kent yaşamını; Ambarlı üretim, enerji ve kıyı kullanımlarını; Firuzköy ile iç mahalleler farklı yerleşim katmanlarını; üniversite yerleşkesi ise eğitim ve günlük hareketliliği temsil eder. Sahil ve göl çevresiyle Tahtakale ve Yeşilkent yönündeki iç kesimler aynı ilçe içinde farklı mekânsal karakterler taşır.",
+        "history": "Ambarlı, Cumhuriyet öncesinden gelen kıyı yerleşim kimliğiyle Avcılar’ın eski yerleşim odaklarından biridir. 1924’te başlayan mübadele döneminde buradaki nüfus değişmiş; Yunanistan’dan gelen aileler Ambarlı’ya yerleştirilmiştir.\n\nBulgaristan’dan göç eden aileler 1928’de Firuz Çiftliği’ne ulaşmış, 1929’dan itibaren planlı evler kurmuş ve yerleşim 1930’da Firuzköy adıyla muhtarlık statüsü kazanmıştır. Aynı yıllarda Avcılar ve Ambarlı yerleşimleri gelişmiş; 1934’te Avcılar adı altında birleşmiştir.\n\n1950 sonrasında İstanbul’un batıya doğru büyümesi ve yeni konut alanları ilçenin yerleşim ölçeğini değiştirdi. Ambarlı çevresinde 1959’da yakıt dolum tesislerinin, 1964’te termik santralin kurulması; üretim ve enerji işlevlerini güçlendirdi. Avcılar 1966’da belediye statüsü kazandı.\n\n1980’lerde belediye teşkilatı ve bağlılık düzeni değişti; Avcılar önce Bakırköy, ardından Küçükçekmece belediyesi içinde şube müdürlüğü statüsünde yer aldı. 1992’de ilçe statüsüne kavuştu ve aynı yıl belediye teşkilatı yeniden kuruldu.",
+        "geography": "Avcılar’ın doğusunda Küçükçekmece Gölü, güneyinde Marmara Denizi bulunur; D-100 koridoru ilçeyi doğu-batı yönünde kat eder. Marmara kıyısı açık alan ve yerleşim kullanımlarıyla, göl çevresi ise su kıyısı ve iç kesimler arasındaki geçişle öne çıkar. Ambarlı’da sanayi, enerji ve lojistik alanları belirginken; Tahtakale ve Yeşilkent gibi iç mahalleler kıyıdaki yerleşik dokudan farklı yoğunluk ve gelişim örüntüleri taşır. Resmî kaynaklarda farklı ölçüm kapsamları görülebildiğinden yüzölçümünde İBB’nin 42,01 km² standardı esas alınır.",
+        "life": "Avcılar’daki gündelik yaşam birden çok odağa dağılır. Marmara Caddesi merkezde ticaret ve yaya hareketliliğini taşırken Avcılar Sahil rekreasyon ve açık alan kullanımlarını bir araya getirir. Üniversite çevresi öğrenci ve eğitim hareketliliğiyle; Ambarlı kıyı, yerleşim ve çalışma alanlarının birlikteliğiyle; Firuzköy daha içteki yerel merkez karakteriyle ayrışır. Küçükçekmece Gölü kıyısı ise ilçenin Marmara sahilinden farklı bir su kenarı ve kamusal alan deneyimi sunar.",
+        "transportation": "Avcılar’ın toplu taşıma omurgasını D-100 üzerindeki metrobüs durakları oluşturur. İETT otobüsleri merkez, sahil, üniversite çevresi ve iç mahalleler arasında bağlantı kurar; D-100 ile TEM bağlantıları karayolu erişimini tamamlar. Sahil ile Tahtakale, Yeşilkent ve Firuzköy gibi iç kesimler arasındaki yolculuklar otobüs ve aktarmalı ulaşım ağına dayanır. Henüz hizmete girmemiş raylı sistem projeleri mevcut ulaşım seçeneği olarak değerlendirilmez.",
+        "housingTexture": "D-100’ün güneyinde Denizköşkler, Merkez ve Üniversite çevresinde farklı dönemlerde oluşmuş yerleşik apartman dokusu görülür. Ambarlı’da konut alanları üretim, enerji ve lojistik kullanımlarıyla yan yana gelir. Tahtakale ve Yeşilkent yönünde ise daha yeni, yer yer farklı yoğunluklarda gelişmiş konut alanları bulunur. Bu genel doku tarifi hiçbir bina veya parsel için deprem ya da yapı güvenliği sonucu üretmez; yapı yaşı, ruhsat, zemin ve plan koşulları resmî belgelerden ayrıca doğrulanmalıdır.",
+        "regionalAssessment": "Avcılar’ın mekânsal karakteri Marmara kıyısı, Küçükçekmece Gölü, D-100 ulaşım koridoru, Ambarlı’daki enerji-lojistik alanı, üniversite yerleşkesi ve farklı dönemlerde oluşmuş konut dokusunun birlikte değerlendirilmesiyle anlaşılabilir. Kıyı ve göl çevresindeki kamusal alanlar ile yoğun ulaşım ve üretim kullanımları arasında kurulan ilişki ilçenin temel bölgesel meselesidir. Bu değerlendirme yatırım tavsiyesi veya taşınmaz değeri öngörüsü değildir.",
+        "placesGuide": "Avcılar Sahil ile Marmara Caddesi kıyı ve merkez yaşamını; Küçükçekmece Gölü kıyısı ilçenin doğu sınırındaki su-kent ilişkisini; İstanbul Üniversitesi-Cerrahpaşa Avcılar Yerleşkesi çevresi eğitim odağını görünür kılar. Ambarlı üretim, kıyı ve eski yerleşim katmanlarını; Firuzköy ise mübadele sonrası gelişen iç yerleşim tarihini izlemek için saha dizisini tamamlar. Güncel erişim ve kullanım koşulları ziyaret öncesinde ilgili kurumdan doğrulanmalıdır.",
+        "distinctiveFeatures": "Marmara Denizi ile Küçükçekmece Gölü arasında konumlanması, D-100 ve metrobüs koridoru, Ambarlı’daki sanayi-enerji alanı, üniversite yerleşkesi ve canlı kıyı kullanımı Avcılar’ı İstanbul içinde ayıran başlıca unsurlardır; bu katmanlar kıyıdan iç mahallelere değişen yerleşim dokusuyla aynı ilçe sınırlarında buluşur.",
+        "researchTopics": "• Ambarlı ve Firuzköy’ün mübadele sonrası yerleşim tarihi\n• D-100 ve metrobüs koridorunun yerleşim yapısına etkisi\n• Marmara kıyısı ile Küçükçekmece Gölü arasındaki kamusal alan kullanımı\n• Ambarlı enerji ve lojistik alanlarının ilçenin mekânsal gelişimine etkisi"
       },
       "neighborhoods": [
         "Ambarlı",
@@ -299,6 +299,18 @@
         "Tahtakale",
         "Üniversite",
         "Yeşilkent"
+      ],
+      "planningDevelopments": [
+        {
+          "title": "Avcılar Sahil Parkı Yenilemesi",
+          "summary": "İstanbul Büyükşehir Belediyesi tarafından Avcılar Sahil Parkı’nda yürütülen yenileme kapsamında yaya ve bisiklet yolları, spor ve çocuk oyun alanları ile otopark düzeni yeniden ele alınarak kamusal kıyı alanı kullanıma sunuldu.",
+          "neighborhood": "Avcılar Sahil",
+          "date": "2025-12-22T00:00:00.000Z",
+          "status": "tamamlandi",
+          "officialSource": "https://istanbulseninhaber.ibb.istanbul/haber-detay/avcilar-sahil-parki-yenilendi",
+          "checkedAt": "2026-09-27T02:41:43.000Z",
+          "needsVerification": false
+        }
       ],
       "sources": [
         {
@@ -318,6 +330,73 @@
             "placesGuide",
             "distinctiveFeatures",
             "researchTopics",
+            "regionalAssessment"
+          ]
+        },
+        {
+          "title": "Avcılar Tarihi",
+          "publisher": "Avcılar Belediyesi",
+          "url": "https://www.avcilar.bel.tr/sayfa/avcilar-tarihi",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-27T02:41:43.000Z",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "life",
+            "housingTexture",
+            "placesGuide",
+            "distinctiveFeatures",
+            "researchTopics",
+            "regionalAssessment"
+          ]
+        },
+        {
+          "title": "Avcılar Belediyesi 2025–2029 Stratejik Planı",
+          "publisher": "Avcılar Belediyesi",
+          "url": "https://avcilar.bel.tr/upload/files/stratejik-plan/stratejik-plan_1964.pdf",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-27T02:41:43.000Z",
+          "dataDate": "2024-11-26T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "geography",
+            "housingTexture",
+            "regionalAssessment",
+            "distinctiveFeatures",
+            "researchTopics"
+          ]
+        },
+        {
+          "title": "Avcılar Sahil Parkı Yenilendi",
+          "publisher": "İstanbul Büyükşehir Belediyesi",
+          "url": "https://istanbulseninhaber.ibb.istanbul/haber-detay/avcilar-sahil-parki-yenilendi",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-27T02:41:43.000Z",
+          "dataDate": "2025-12-22T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "life",
+            "placesGuide",
+            "planningDevelopments"
+          ]
+        },
+        {
+          "title": "Avcılar Sahil Düzenlemesi Açılışı",
+          "publisher": "İstanbul Büyükşehir Belediyesi",
+          "url": "https://icraat.ibb.istanbul/proje-detay/avcilar-sahil-duzenlemesi-acilisini-yaptik/ec7b3dc2-beb8-48fe-ae02-389b7db6e9f5",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-27T02:41:43.000Z",
+          "dataDate": "2025-12-22T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "life",
+            "placesGuide",
             "regionalAssessment"
           ]
         },
@@ -391,17 +470,16 @@
       ],
       "excluded": {
         "marketData": "Karşılaştırılabilir, güncel ve tarihli resmî piyasa serisi bulunmadığından bilinçli olarak boş bırakıldı.",
-        "planningDevelopments": "Yalnız tarihli karar ve uygulama belgeleriyle doğrulanacak proje kayıtları bu içerik tamamlamasına dahil edilmedi.",
         "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
         "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
         "areaKm2Review": "İlçe kurumlarında ölçüm kapsamına göre değişebilen yüzölçümü değerleri bulunduğundan, 39 ilçe için aynı standardı veren İBB İlçe Alan Bilgileri Tablosu'ndaki kara alanı esas alındı."
       },
-      "methodology": "Mevcut araştırma havuzu başlangıç olarak kullanıldı; yayıma açılan her bölüm resmî kurum sayfalarıyla yeniden sınırlandırılıp nötr editoryal dille yazıldı. Güncel ulaşım yalnız işletmeci ağ bilgisiyle, nüfus TÜİK ADNKS 2025 ile, mahalleler mevcut resmî dizinlerle eşleştirildi. Piyasa verileri, yapı güvenliği hükümleri ve doğrulanmamış proje takvimleri yayıma alınmadı.",
+      "methodology": "Mevcut araştırma havuzu başlangıç olarak kullanıldı; tarih ve yerleşim anlatısı Kaymakamlık ile Belediye kayıtları, güncel ulaşım İETT bilgisi, nüfus TÜİK ADNKS 2025 ve mahalleler resmî dizinlerle sınırlandırılarak nötr editoryal dille yazıldı. Tamamlanmış sahil düzenlemesi tarihli İBB kayıtlarıyla yayıma alındı; piyasa verileri, yapı güvenliği hükümleri ve hizmete girmemiş raylı sistem projeleri mevcut ulaşım gibi sunulmadı.",
       "facts": {
         "population": "440663",
         "populationYear": 2025,
         "neighborhoodCount": 10,
-        "locationSummary": "Avcılar, Marmara kıyısı ile Küçükçekmece Gölü arasında uzanan yerleşim alanlarıyla tanınır.",
+        "locationSummary": "Marmara Denizi kıyısı ile Küçükçekmece Gölü arasında, D-100 koridoru boyunca kıyı ve iç mahallelere yayılan bir ilçedir.",
         "areaKm2": 42.01,
         "neighboringDistricts": "Küçükçekmece, Başakşehir, Esenyurt ve Beylikdüzü"
       },
@@ -417,7 +495,8 @@
         "regionalAssessment",
         "placesGuide",
         "distinctiveFeatures",
-        "researchTopics"
+        "researchTopics",
+        "planningDevelopments"
       ]
     },
     {
