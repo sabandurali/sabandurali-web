@@ -138,17 +138,15 @@ export function buildArnavutkoyPlan(
       action = "create";
       reason = "missing production district";
     } else if (row.district !== arnavutkoyTarget) {
-      const managed = provenance(existing);
       if (
         existing._status === "published" &&
-        publishedAt(existing) &&
-        managed?.sourceFingerprint === researchFingerprint(row)
+        publishedAt(existing)
       ) {
         action = "skip";
-        reason = "protected non-target district is unchanged";
+        reason = "protected non-target district; never written by this batch";
       } else {
         action = "conflict";
-        reason = "protected non-target district source changed";
+        reason = "protected non-target district is not published";
       }
     } else if (
       existing._status !== "published" ||
