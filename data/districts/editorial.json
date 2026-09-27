@@ -3673,7 +3673,7 @@
         {
           "title": "T6 Sirkeci–Kazlıçeşme Raylı Sistem Hattı",
           "publisher": "Ulaştırma ve Altyapı Bakanlığı",
-        "url": "https://www.uab.gov.tr/haberler/sirkeci-kazlicesme-rayli-sistem-hatti-cumhurbaskani-erdogan-tarafindan-hizmete-acildi",
+          "url": "https://www.uab.gov.tr/haberler/sirkeci-kazlicesme-rayli-sistem-hatti-cumhurbaskani-erdogan-tarafindan-hizmete-acildi",
           "sourceType": "official",
           "primary": true,
           "checkedAt": "2026-09-27T08:00:00.000Z",
@@ -3749,7 +3749,7 @@
           "neighborhood": "Sirkeci–Yedikule",
           "date": "2024-02-26T00:00:00.000Z",
           "status": "tamamlandi",
-        "officialSource": "https://www.uab.gov.tr/haberler/sirkeci-kazlicesme-rayli-sistem-hatti-cumhurbaskani-erdogan-tarafindan-hizmete-acildi",
+          "officialSource": "https://www.uab.gov.tr/haberler/sirkeci-kazlicesme-rayli-sistem-hatti-cumhurbaskani-erdogan-tarafindan-hizmete-acildi",
           "checkedAt": "2026-09-27T08:00:00.000Z",
           "needsVerification": false
         }
@@ -4278,7 +4278,7 @@
         {
           "title": "Gayrettepe–Kağıthane Metro Hattı hizmete açıldı",
           "publisher": "Ulaştırma ve Altyapı Bakanlığı",
-        "url": "https://www.uab.gov.tr/haberler/gayrettepe-istanbul-havalimani-30-dakika",
+          "url": "https://www.uab.gov.tr/haberler/gayrettepe-istanbul-havalimani-30-dakika",
           "sourceType": "official",
           "primary": true,
           "checkedAt": "2026-09-27T08:00:00.000Z",
@@ -4367,7 +4367,7 @@
           "neighborhood": "Kağıthane",
           "date": "2024-01-29T00:00:00.000Z",
           "status": "tamamlandi",
-        "officialSource": "https://www.uab.gov.tr/haberler/gayrettepe-istanbul-havalimani-30-dakika",
+          "officialSource": "https://www.uab.gov.tr/haberler/gayrettepe-istanbul-havalimani-30-dakika",
           "checkedAt": "2026-09-27T08:00:00.000Z",
           "needsVerification": false
         }
@@ -4608,18 +4608,18 @@
     {
       "district": "sariyer",
       "pdfSha256": "a0d4aaa356121325780167d48573e7591673eaa788ebb13266cbaa00de51f8ee",
-      "checkedAt": "2026-09-26T18:30:00.000Z",
+      "checkedAt": "2026-09-27T09:00:00.000Z",
       "sections": {
-        "summary": "Sarıyer, Boğaziçi yerleşimleri ile orman çevresindeki tarihî mirası birlikte barındırır.",
-        "history": "Kaymakamlığın tarihçesi, kıyı yerleşimlerindeki cami, çeşme ve hamamları Osmanlı döneminin izleri arasında sayar. Bölgenin geçmişi tek bir anıta indirgenmez; farklı yerleşimlerin kendi tarihleri bulunur.",
-        "geography": "Boğaziçi kıyısı ve Belgrad Ormanı çevresi, Sarıyer’in farklı coğrafi odaklarıdır. Bu alanlara ilişkin tarihî tanıtımlar, güncel ziyaret koşulları veya erişim garantisi olarak değerlendirilmemelidir.",
-        "life": "Sarıyer merkez, Büyükdere–Tarabya kıyısı ve Rumeli Hisarı; kamusal alan, yerel ticaret ve açık alan kullanımlarının birlikte izlenebildiği başlıca gündelik yaşam odaklarıdır. Belgrad Ormanı girişleri, merkez dışındaki yerleşim ritmini tamamlayan ayrı bir saha odağıdır.",
-        "transportation": "M2’nin Hacıosman’a uzanan kesimi, Boğaz iskeleleri ve kıyı boyunca çalışan otobüsler Sarıyer’in başlıca toplu taşıma seçenekleridir.",
-        "housingTexture": "Boğaz kıyısındaki tarihî köy ve yalı dokusu, sırtlardaki apartman-site alanları ile kuzeydeki orman içi yerleşimler farklı koruma ve yoğunluk koşullarına sahiptir. Bu genel okuma bina veya parsel güvenliği sonucu üretmez; yapı yaşı, ruhsat, zemin ve güncel plan bilgisi resmî kayıtlardan ayrıca incelenmelidir.",
-        "regionalAssessment": "Bölgesel değerlendirmede Boğaz ve Karadeniz kıyıları, orman alanları ve farklı yoğunluktaki mahallelerin korunması birlikte okunmalıdır. Bu sentez tek bir mahalle, yapı, değer veya yatırım sonucu üretmez; saha gözlemi güncel resmî kayıtlarla birlikte değerlendirilmelidir.",
-        "placesGuide": "Sarıyer merkez, Büyükdere–Tarabya kıyısı, Rumeli Hisarı, Belgrad Ormanı girişleri, tarih, coğrafya ve gündelik yaşam katmanlarını sahada birlikte okumaya imkân veren duraklardır. Erişim ve ziyaret koşulları çekim öncesinde ilgili kurumdan yeniden kontrol edilmelidir.",
-        "distinctiveFeatures": "Sarıyer ilçesini İstanbul içinde ayırt eden ana çerçeve; Boğaz ve Karadeniz kıyıları, orman alanları ve farklı yoğunluktaki mahallelerin korunması. Sarıyer merkez ile Büyükdere–Tarabya kıyısı arasındaki mekânsal fark bu karakteri sahada görünür kılar.",
-        "researchTopics": "• Boğaz köylerinde kıyı kullanımı ve yerleşim belleği\n• Büyükdere ile Tarabya arasındaki tarihî ulaşım ve sayfiye izleri\n• Orman sınırı ile kuzey mahallelerinin gelişimi arasındaki ilişki"
+        "summary": "Sarıyer, Boğaz’ın Avrupa kıyısındaki Rumelihisarı, Emirgan, İstinye, Yeniköy ve Tarabya yerleşimlerinden Maslak iş alanına, Belgrad Ormanı ve Karadeniz kıyısındaki köy-mahallelere uzanan çok parçalı bir ilçedir. Kıyı yerleşimleri, orman-su havzası ve Büyükdere–Maslak koridoru aynı yoğunluk ve yaşam düzenine sahip değildir.",
+        "history": "Sarıyer’in tarihi Boğaz köyleri, balıkçılık, elçilik yazlıkları ve Osmanlı sahil saraylarıyla; iç kesimleri ise su bentleri, orman ve kırsal yerleşimlerle biçimlendi. Rumelihisarı 15. yüzyıl Boğaz savunmasının başlıca yapısıdır. 19. yüzyılda vapur ulaşımı kıyı yerleşimlerini güçlendirdi; Cumhuriyet döneminde Büyükdere–Maslak aksı sanayi ve ardından ofis-hizmet merkezi olarak dönüştü. Kuzey mahalleleri ve Belgrad Ormanı ilçenin kırsal-doğal sürekliliğini korur.",
+        "geography": "İlçe doğuda Boğaz, kuzeyde Karadeniz, batıda Belgrad Ormanı ve su havzalarıyla çevrilidir. Kıyıda dar şerit ve dik yamaçlar; Maslak–Ayazağa’da plato ve iş alanları; Bahçeköy–Zekeriyaköy çevresinde orman içi/düşük yoğunluklu yerleşimler; Kilyos ve Garipçe yönünde kırsal-kıyısal doku görülür. Büyükdere Caddesi ile kıyı yolu iki temel kuzey-güney omurgadır.",
+        "life": "Sarıyer merkez balıkçı çarşısı ve iskele, Emirgan Korusu, İstinye kıyısı, Yeniköy ve Tarabya sahilleri günlük kıyı yaşamını taşır. Maslak ve İTÜ çevresi iş-üniversite hareketi; Bahçeköy ile Belgrad Ormanı rekreasyon; Kilyos ise mevsimsel Karadeniz kullanımı üretir. Rumelihisarı–Baltalimanı kuşağı tarihî peyzaj ile mahalle yaşamını birleştirir.",
+        "transportation": "M2 Yenikapı–Hacıosman hattı İTÜ–Ayazağa, Atatürk Oto Sanayi, Darüşşafaka ve Hacıosman istasyonlarıyla güney ve orta kesimlere hizmet verir. Şehir Hatları ve diğer deniz seferleri İstinye, Emirgan, Yeniköy, Tarabya, Büyükdere, Sarıyer ve Rumelikavağı iskelelerini kullanır. İETT hatları kıyı, Maslak, Bahçeköy ve kuzey mahallelerini metroya bağlar; Büyükdere Caddesi, TEM ve kıyı yolu karayolu omurgalarıdır.",
+        "housingTexture": "Boğaz kıyısında tarihî yalılar, eski köy merkezleri ve apartmanlar; İstinye–Maslak–Ayazağa’da ofis, rezidans, site ve eski sanayi parsellerinin dönüşümü; Zekeriyaköy–Uskumruköy’de villa ve düşük yoğunluklu siteler; Bahçeköy ile kuzey mahallelerinde orman-kırsal doku görülür. Kıyı yamaçlarındaki yoğun mahalleler bu düşük yoğunluklu alanlardan ayrı okunmalıdır.",
+        "regionalAssessment": "Sarıyer’i belirleyen Boğaz kıyısı ve iskeleleri, Rumelihisarı ve sahil mirası, Maslak iş merkezi, Belgrad Ormanı-su havzaları, kuzeydeki kırsal/Karadeniz mahalleleri ve M2–deniz ulaşımı birlikteliğidir. Kıyı, orman ve iş bölgesi arasındaki koruma, erişim ve yapılaşma farkları ilçe içi değerlendirmede esastır.",
+        "placesGuide": "Saha rotası Rumelihisarı’ndan Emirgan Korusu ve İstinye kıyısına; Yeniköy–Tarabya üzerinden Sarıyer merkez ile Rumelikavağı’na uzanabilir. Maslak iş alanı, Atatürk Arboretumu–Belgrad Ormanı çevresi ve Kilyos kıyısı ilçenin Boğaz, iş merkezi, orman ve Karadeniz katmanlarını dengeli biçimde tamamlar.",
+        "distinctiveFeatures": "Sarıyer’i benzersiz kılan, Boğaz’ın Avrupa kıyısındaki tarihî köy ve yalı peyzajını Maslak’ın yüksek yoğunluklu iş merkeziyle, Belgrad Ormanı ve su havzalarını ise Karadeniz kıyısındaki kırsal mahallelerle aynı ilçe içinde birleştirmesidir.",
+        "researchTopics": "• Boğaz köylerinde kıyı erişimi ve mahalle yaşamı\n• Maslak–Ayazağa aksında sanayi sonrası dönüşüm\n• Belgrad Ormanı ve su havzalarında kullanım baskısı\n• M2 ile deniz ulaşımının kıyı hareketliliğine etkisi"
       },
       "neighborhoods": [
         "Ayazağa",
@@ -4668,13 +4668,21 @@
           "url": "https://www.sariyer.gov.tr/tarihce",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
-          "dataDate": null,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
           "needsVerification": false,
           "sections": [
-            "history",
             "summary",
-            "regionalAssessment"
+            "history",
+            "geography",
+            "life",
+            "transportation",
+            "housingTexture",
+            "regionalAssessment",
+            "placesGuide",
+            "distinctiveFeatures",
+            "researchTopics",
+            "facts"
           ]
         },
         {
@@ -4683,8 +4691,8 @@
           "url": "https://www.sariyer.gov.tr/tarihi-ve-turistik-yerler",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
-          "dataDate": null,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "geography",
@@ -4698,7 +4706,7 @@
           "url": "https://muhtarlikisleri.ibb.istanbul/sariyer-mahalle-muhtarlari/",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2026-09-09T18:50:26.627856+00:00",
           "needsVerification": false,
           "sections": [
@@ -4711,8 +4719,8 @@
           "url": "https://sariyer.bel.tr/ckuploads/ckfiles/Sariyer%20Yasam%20Rehberi%202021.pdf?time=1639748257349",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
-          "dataDate": null,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "life",
@@ -4727,8 +4735,8 @@
           "url": "https://sariyer.gov.tr/ilcemiz",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
-          "dataDate": null,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "housingTexture"
@@ -4740,7 +4748,7 @@
           "url": "https://sehirhatlari.istanbul/tr/iskeleler",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2026-09-26T18:00:00.000Z",
           "needsVerification": false,
           "sections": [
@@ -4753,7 +4761,7 @@
           "url": "https://data.tuik.gov.tr/Bulten/Index?p=Adrese-Dayali-Nufus-Kayit-Sistemi-Sonuclari-2025-53899",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2025-12-31T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
@@ -4766,11 +4774,37 @@
           "url": "https://ibb.istanbul/ibb/belediye-hakkinda/yetki-alani/",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2026-09-26T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "facts"
+          ]
+        },
+        {
+          "title": "M2 Yenikapı–Hacıosman Metro Hattı",
+          "publisher": "Metro İstanbul",
+          "url": "https://www.metro.istanbul/Hatlarimiz/HatDetay?hat=M2",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "transportation"
+          ]
+        },
+        {
+          "title": "İstanbul Şehir Hatları iskele ve seferleri",
+          "publisher": "Şehir Hatları",
+          "url": "https://sehirhatlari.istanbul/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "transportation"
           ]
         }
       ],
@@ -4781,12 +4815,12 @@
         "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
         "areaKm2Review": "İlçe kurumlarında ölçüm kapsamına göre değişebilen yüzölçümü değerleri bulunduğundan, 39 ilçe için aynı standardı veren İBB İlçe Alan Bilgileri Tablosu'ndaki kara alanı esas alındı."
       },
-      "methodology": "Mevcut araştırma havuzu başlangıç olarak kullanıldı; yayıma açılan her bölüm resmî kurum sayfalarıyla yeniden sınırlandırılıp nötr editoryal dille yazıldı. Güncel ulaşım yalnız işletmeci ağ bilgisiyle, nüfus TÜİK ADNKS 2025 ile, mahalleler mevcut resmî dizinlerle eşleştirildi. Piyasa verileri, yapı güvenliği hükümleri ve doğrulanmamış proje takvimleri yayıma alınmadı.",
+      "methodology": "Mevcut doğrulanmış içerik korunarak tarih, coğrafya, gündelik yaşam, 2026 ulaşımı ve yapı dokusu resmî kurum kaynaklarıyla yeniden denetlendi. Nüfus TÜİK ADNKS 2025, alan İBB standardı, mahalleler resmî yerel dizinlerle eşleştirildi; yalnız işletmede olduğu doğrulanan hatlar mevcut hizmet olarak yazıldı. Bina güvenliği, parsel değeri ve doğrulanmamış proje takvimleri hakkında sonuç üretilmedi.",
       "facts": {
         "population": "344883",
         "populationYear": 2025,
         "neighborhoodCount": 38,
-        "locationSummary": "Sarıyer, Boğaziçi yerleşimleri ile orman çevresindeki tarihî mirası birlikte barındırır.",
+        "locationSummary": "Boğaz'ın Avrupa kıyısından Maslak iş alanlarına ve Belgrad Ormanı–Karadeniz kuşağına uzanan kuzey İstanbul ilçesidir.",
         "areaKm2": 175.39,
         "neighboringDistricts": "Eyüpsultan, Kâğıthane ve Beşiktaş"
       },
@@ -4796,30 +4830,30 @@
         "geography",
         "life",
         "transportation",
-        "facts",
-        "neighborhoods",
         "housingTexture",
         "regionalAssessment",
         "placesGuide",
         "distinctiveFeatures",
-        "researchTopics"
+        "researchTopics",
+        "facts",
+        "neighborhoods"
       ]
     },
     {
       "district": "silivri",
       "pdfSha256": "c82507bd629c2661cc21f82dd9871cd9e7fe53147e9477d445d0d33cabb2c056",
-      "checkedAt": "2026-09-26T18:30:00.000Z",
+      "checkedAt": "2026-09-27T09:00:00.000Z",
       "sections": {
-        "summary": "Silivri, Marmara kıyısındaki tarihî merkezinden iç kesimlere uzanan bir yerleşim coğrafyasına sahiptir.",
-        "history": "Antik kaynaklarda Selymbria adıyla anılan yerleşimin çekirdeği, kıyıya hâkim tepe çevresindeydi. Kaymakamlık bu alanı bugünkü Fatih Mahallesi ile ilişkilendirir; kent zaman içinde surların dışına yayıldı.",
-        "geography": "İlçe İstanbul’un batısında, Marmara Denizi kıyısındadır. Kıyıdan kuzeye doğru yükselen hafif dalgalı düzlükler, genel arazi yapısını tanımlar.",
-        "life": "Silivri sahili ile Mimar Sinan Köprüsü çevresi, ilçenin gündelik ritmini iki farklı ölçekte gösterir; Selimpaşa kıyısı açık alan ve yerel kullanım örüntüsünü okumaya yardımcı olur. Ortaköy kırsal peyzajı ise farklı bir yerleşim ölçeği sunar.",
-        "transportation": "Silivri merkez ve geniş kırsal mahalleler arasındaki ulaşım karayolu ile otobüs hatlarına dayanır; merkez İstanbul’a erişimde yolculuk mesafesi belirleyicidir.",
-        "housingTexture": "Merkez ve sahil çevresindeki apartmanlar, kıyı boyunca uzanan yazlık-site alanları ve kırsal mahallelerdeki düşük yoğunluklu yapılar geniş bir coğrafyaya yayılır. Buradaki doku tarifi tekil yapıların güvenli olduğuna ilişkin bir hüküm değildir; ruhsat, zemin, yapı yaşı ve plan koşulları resmî belgelerden doğrulanmalıdır.",
-        "regionalAssessment": "Bölgesel değerlendirmede Marmara kıyısı, tarımsal-kırsal alanlar ve merkez dışındaki yaygın mahalle sistemi birlikte okunmalıdır. Çerçeve, mahalle ya da parsel düzeyinde değer ve güvenlik hükmü değildir; güncel kurum verileri ile yerinde gözlem ayrıca gerekir.",
-        "placesGuide": "İlçenin farklı dönem ve mekânlarını karşılaştırmak için Silivri sahili, Mimar Sinan Köprüsü çevresi, Selimpaşa kıyısı, Ortaköy kırsal peyzajı anlamlı bir saha dizisi oluşturur. Saha çalışmasından önce güncel açılış ve ulaşım bilgileri yetkili kaynaktan doğrulanmalıdır.",
-        "distinctiveFeatures": "Silivri için belirleyici olan; Marmara kıyısı, tarımsal-kırsal alanlar ve merkez dışındaki yaygın mahalle sistemi. Bu özelliklerin yerel karşılığı Silivri sahili ve Mimar Sinan Köprüsü çevresi birlikte incelendiğinde daha açık okunur.",
-        "researchTopics": "• Selymbria'dan Silivri'ye kıyı yerleşiminin dönüşümü\n• Tarımsal üretim ile büyüyen konut alanlarının ilişkisi\n• Yazlık kıyı yerleşimlerinin dört mevsim kullanımındaki değişim"
+        "summary": "Silivri, Marmara kıyısındaki tarihî ilçe merkezi, Selimpaşa ve batı kıyı yerleşimleri ile kuzeye doğru genişleyen tarım-kırsal mahalleleri bir araya getiren batı İstanbul ilçesidir. D-100 ve TEM koridorları kıyı-kent kuşağını İstanbul ve Trakya’ya bağlarken iç kesimler düşük yoğunluklu üretim peyzajını korur.",
+        "history": "Silivri, antik ve Bizans dönemlerinden itibaren Marmara kıyısındaki liman ve Trakya yolu üzerinde gelişti; Osmanlı döneminde tarım ürünleri, kıyı ticareti ve menzil işlevleri önem taşıdı. Cumhuriyet döneminde merkez çevresi idari-ticari odak olurken Selimpaşa, Kumburgaz yönü ve batı kıyıları sayfiye-konut kuşağına dönüştü. 20. yüzyılın ikinci yarısında D-100 ve TEM erişimi sanayi, lojistik ve kalıcı konutu artırdı; köylerin mahalle statüsüne geçmesi geniş kırsal alanı ilçe yönetimine bağladı.",
+        "geography": "İlçe güneyde uzun Marmara kıyısına, kuzeyde Tekirdağ sınırına uzanan geniş plato ve tarım arazilerine sahiptir. Silivri merkez, Selimpaşa–Kavaklı ve batı kıyı yerleşimleri daha yoğun; Çanta, Değirmenköy, Büyükçavuşlu ve kuzey mahalleleri kırsal-tarımsal karakterlidir. D-100 kıyıya paralel, TEM iç kesimde ana doğu-batı koridorudur; kısa dereler ve kıyı vadileri yerel topoğrafyayı böler.",
+        "life": "Silivri sahili, meydan, çarşı ve liman çevresi ilçenin sürekli kamusal merkezidir. Selimpaşa kıyısı, Kavaklı ve Gümüşyaka yaz-kış değişen mahalle yaşamı; Değirmenköy ve Çanta yerel pazar-hizmet odakları; kırsal mahalleler tarım ve köy meydanı çevresindeki günlük düzenle öne çıkar. Kültür merkezi, sahil parkları ve pazar alanları merkezde kullanımı yoğunlaştırır.",
+        "transportation": "Silivri’de işletmede metro, Marmaray veya tramvay bulunmaz. İETT ve bölgesel otobüs/minibüs hatları merkez, Selimpaşa, Kavaklı, Büyükçekmece ve çevre mahalleler arasında bağlantı sağlar. D-100 kıyı yerleşimlerinin, TEM ise iç kesim ve Trakya yönünün ana karayolu omurgasıdır; uzak kırsal mahallelerde yolculuk süresi ve sefer sıklığı merkezden farklıdır.",
+        "housingTexture": "Silivri merkezde yerleşik apartman-ticaret dokusu; Selimpaşa, Gümüşyaka ve kıyı mahallelerinde yazlıktan sürekli konuta dönüşen siteler, apartmanlar ve müstakil evler; Kavaklı çevresinde yeni konut ve üretim alanları görülür. İç kesimlerde köy evleri, çiftlik yapıları ve düşük yoğunluk; TEM/D-100 yakınında sanayi-depo kullanımları belirgindir.",
+        "regionalAssessment": "Silivri’yi ayıran uzun Marmara kıyısı, tarihî merkez ve liman, sayfiye geçmişi taşıyan kıyı mahalleleri, İstanbul ölçeğinde geniş tarım arazileri, çok sayıdaki eski köy-mahalle ve D-100/TEM çift koridorudur. Kıyıdaki konut baskısı ile iç kesimlerin tarımsal sürekliliği birlikte değerlendirilmelidir.",
+        "placesGuide": "Rota Silivri sahili, liman ve merkez çarşıdan tarihî Kalepark çevresine; ardından Selimpaşa kıyısı ve Kavaklı’ya uzatılabilir. Değirmenköy veya Çanta yerel merkezi, Büyükçavuşlu çevresindeki üretim alanları ve kuzeydeki tarım mahalleleri ilçenin kıyı, sanayi ve kırsal farklarını gösterir.",
+        "distinctiveFeatures": "Silivri’yi İstanbul’un diğer ilçelerinden ayıran, Marmara kıyısındaki tarihî merkez ve sayfiye yerleşimlerini geniş tarım-kırsal coğrafya, Trakya geçişi ve D-100/TEM ulaşım omurgalarıyla bir araya getirmesidir.",
+        "researchTopics": "• Kıyı sayfiyelerinin sürekli konuta dönüşümü\n• Tarım arazileri ile kentleşme baskısının ilişkisi\n• D-100 ve TEM'in yerleşim-ekonomi dağılımına etkisi\n• Köyden mahalleye dönüşümde yerel hizmet erişimi"
       },
       "neighborhoods": [
         "Akören",
@@ -4865,13 +4899,21 @@
           "url": "https://silivri.gov.tr/tarihi",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
-          "dataDate": null,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
           "needsVerification": false,
           "sections": [
-            "history",
             "summary",
-            "regionalAssessment"
+            "history",
+            "geography",
+            "life",
+            "transportation",
+            "housingTexture",
+            "regionalAssessment",
+            "placesGuide",
+            "distinctiveFeatures",
+            "researchTopics",
+            "facts"
           ]
         },
         {
@@ -4880,8 +4922,8 @@
           "url": "https://silivri.gov.tr/cografi-konum",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
-          "dataDate": null,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "geography",
@@ -4895,7 +4937,7 @@
           "url": "https://muhtarlikisleri.ibb.istanbul/silivri-mahalle-muhtarlari/",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2026-09-09T18:50:26.627856+00:00",
           "needsVerification": false,
           "sections": [
@@ -4908,8 +4950,8 @@
           "url": "https://silivridh.saglik.gov.tr/TR-12157/iletisim.html",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
-          "dataDate": null,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "life"
@@ -4921,8 +4963,8 @@
           "url": "https://icraat.ibb.istanbul/proje-detay/silivri-bogluca-yasam-vadisi-1--ve-2--etaplarini-actik/036dfac5-57c6-4b33-a999-a4de3794d772",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
-          "dataDate": null,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "housingTexture",
@@ -4935,8 +4977,8 @@
           "url": "https://tarim.silivri.bel.tr/",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
-          "dataDate": null,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "placesGuide"
@@ -4948,8 +4990,8 @@
           "url": "https://tarim.silivri.bel.tr/icerik?icerik=turam-hakkinda",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
-          "dataDate": null,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "distinctiveFeatures"
@@ -4961,7 +5003,7 @@
           "url": "https://www.iett.istanbul/",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2026-09-26T18:00:00.000Z",
           "needsVerification": false,
           "sections": [
@@ -4974,7 +5016,7 @@
           "url": "https://data.tuik.gov.tr/Bulten/Index?p=Adrese-Dayali-Nufus-Kayit-Sistemi-Sonuclari-2025-53899",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2025-12-31T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
@@ -4987,11 +5029,38 @@
           "url": "https://ibb.istanbul/ibb/belediye-hakkinda/yetki-alani/",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2026-09-26T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "facts"
+          ]
+        },
+        {
+          "title": "İETT toplu ulaşım ve hat arama",
+          "publisher": "İETT",
+          "url": "https://iett.istanbul/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "transportation"
+          ]
+        },
+        {
+          "title": "İstanbul Şehir Haritası",
+          "publisher": "İstanbul Büyükşehir Belediyesi",
+          "url": "https://sehirharitasi.ibb.gov.tr/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "geography",
+            "placesGuide"
           ]
         }
       ],
@@ -5002,12 +5071,12 @@
         "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
         "areaKm2Review": "İlçe kurumlarında ölçüm kapsamına göre değişebilen yüzölçümü değerleri bulunduğundan, 39 ilçe için aynı standardı veren İBB İlçe Alan Bilgileri Tablosu'ndaki kara alanı esas alındı."
       },
-      "methodology": "Mevcut araştırma havuzu başlangıç olarak kullanıldı; yayıma açılan her bölüm resmî kurum sayfalarıyla yeniden sınırlandırılıp nötr editoryal dille yazıldı. Güncel ulaşım yalnız işletmeci ağ bilgisiyle, nüfus TÜİK ADNKS 2025 ile, mahalleler mevcut resmî dizinlerle eşleştirildi. Piyasa verileri, yapı güvenliği hükümleri ve doğrulanmamış proje takvimleri yayıma alınmadı.",
+      "methodology": "Mevcut doğrulanmış içerik korunarak tarih, coğrafya, gündelik yaşam, 2026 ulaşımı ve yapı dokusu resmî kurum kaynaklarıyla yeniden denetlendi. Nüfus TÜİK ADNKS 2025, alan İBB standardı, mahalleler resmî yerel dizinlerle eşleştirildi; yalnız işletmede olduğu doğrulanan hatlar mevcut hizmet olarak yazıldı. Bina güvenliği, parsel değeri ve doğrulanmamış proje takvimleri hakkında sonuç üretilmedi.",
       "facts": {
         "population": "240029",
         "populationYear": 2025,
         "neighborhoodCount": 35,
-        "locationSummary": "Silivri, Marmara kıyısındaki tarihî merkezinden iç kesimlere uzanan bir yerleşim coğrafyasına sahiptir.",
+        "locationSummary": "Marmara kıyısındaki Silivri merkez ve Selimpaşa'dan geniş tarım arazileri ile kuzeydeki kırsal mahallelere uzanır.",
         "areaKm2": 869.52,
         "neighboringDistricts": "Çatalca, Büyükçekmece ve Tekirdağ'ın Çerkezköy, Çorlu ve Marmara Ereğlisi ilçeleri"
       },
@@ -5017,36 +5086,36 @@
         "geography",
         "life",
         "transportation",
-        "facts",
-        "neighborhoods",
         "housingTexture",
         "regionalAssessment",
         "placesGuide",
         "distinctiveFeatures",
-        "researchTopics"
+        "researchTopics",
+        "facts",
+        "neighborhoods"
       ]
     },
     {
       "district": "sultangazi",
       "pdfSha256": "433a67c11f8f0c9e2940ed940c34921083f430ffbb6767b6136e9f8a250010b3",
-      "checkedAt": "2026-09-26T18:30:00.000Z",
+      "checkedAt": "2026-09-27T09:00:00.000Z",
       "sections": {
-        "summary": "Sultangazi, İstanbul’un kuzeybatısında 2008’de ilçe statüsü kazanan yerleşimlerden biridir.",
-        "history": "Sultangazi ilçesi 2008’de kuruldu. Kaymakamlık tarihçesi, bölgenin daha eski geçmişini İstanbul’a su taşıyan hatların kalıntılarıyla ilişkilendirir; eski yerleşim geçmişi ile yeni idari kuruluş birbirinden ayrılmalıdır.",
-        "geography": "İlçe İstanbul’un kuzeybatısında yer alır. Gaziosmanpaşa ve Başakşehir çevresindeki konumu, kentin iç kesimlerindeki yerleşimlerle ilişkisini tarif eder.",
-        "life": "Sultançiftliği merkez ve Cebeci çevresi, kamusal hareket ile yerel ticaretin kesiştiği iki odaktır. Hacı Bektaş-ı Veli Kent Ormanı açık alan kullanımlarını, Mimar Sinan yerleşimi ise ilçenin başka bir yerleşim karakterini görünür kılar.",
-        "transportation": "T4 tramvayı Sultangazi’nin mevcut raylı sistem omurgasıdır; metro projeleri tamamlanmadan mevcut hizmet olarak değerlendirilmemelidir.",
-        "housingTexture": "Yoğun apartman mahalleleri, küçük üretim alanları ve kuzeyde orman eşiğine yaklaşan yerleşimler ilçenin yapı dokusundaki temel farkları oluşturur. Genel yapı örüntüsü, bina ölçeğinde dayanım değerlendirmesi yerine geçmez; parsel ve yapı bilgileri yetkili kurum kayıtlarıyla kontrol edilmelidir.",
-        "regionalAssessment": "Bölgesel değerlendirmede yoğun yerleşim alanları, kuzeydeki orman eşiği ve raylı ulaşımın erişim etkisi birlikte okunmalıdır. Bu ilçe ölçekli okuma yatırım tavsiyesi veya yapı değerlendirmesi yerine geçmez; değişen koşullar resmî kayıtlarla izlenmelidir.",
-        "placesGuide": "Sultançiftliği merkez, Cebeci çevresi, Hacı Bektaş-ı Veli Kent Ormanı, Mimar Sinan yerleşimi; yerleşim, açık alan ve yerel hafızanın farklı yüzlerini izlemeye yardımcı olur. Ziyaret saati, erişim kuralı ve çekim izni gerekiyorsa ilgili kurumun güncel duyurusu esas alınmalıdır.",
-        "distinctiveFeatures": "Sultangazi ilçesinin kendine özgü mekânsal yapısı yoğun yerleşim alanları, kuzeydeki orman eşiği ve raylı ulaşımın erişim etkisi üzerinden tarif edilebilir. Sultançiftliği merkez ile Cebeci çevresi bu yapının iki farklı yüzünü temsil eder.",
-        "researchTopics": "• Sultançiftliği'nin yakın dönem yerleşim tarihi\n• Cebeci çevresindeki üretim peyzajının değişimi\n• Orman eşiği ile yoğun mahalle dokusu arasındaki ilişki"
+        "summary": "Sultangazi, Cebeci–Sultançiftliği–Habibler eksenindeki yoğun konut ve üretim dokusunu Alibey havzası, taş ocakları ve kuzey orman sınırıyla bir araya getiren genç bir ilçedir. T4 tramvayı ana yerleşim omurgasını izlerken mahalleler yoğunluk, topoğrafya ve çevresel eşikler bakımından farklılaşır.",
+        "history": "Bugünkü Sultangazi alanı, Cebeci ve çevresindeki kırsal yerleşimlerden 20. yüzyılın ikinci yarısında göçle büyüyen mahallelere dönüştü. Taş ocakları, küçük sanayi ve İstanbul’un kuzeybatı çeperindeki konut talebi hızlı yapılaşmayı etkiledi. 2008’de Gaziosmanpaşa, Eyüpsultan ve Esenler’den mahallelerin birleştirilmesiyle Sultangazi ilçesi kuruldu; böylece yoğun kentsel kuşak ile kuzeydeki havza-orman alanları aynı idari sınırda toplandı.",
+        "geography": "İlçe güneyde yoğun iç-kent dokusundan kuzeyde Alibey Barajı havzası ve orman alanlarına yükselir. Cebeci’de taş ocağı ve üretim alanları, Sultançiftliği–İsmetpaşa’da yoğun apartman-ticaret, Habibler’de kentsel çeper, Malkoçoğlu ve Yayla’da yamaç yerleşimleri görülür. Eski Edirne Asfaltı ile T4 hattı kuzey-güney ana eksenidir.",
+        "life": "Sultançiftliği merkez ve Eski Edirne Asfaltı çevresindeki çarşı, belediye hizmetleri ve pazarlar günlük yaşamın odağıdır. Cebeci, Habibler ve 50. Yıl mahalle merkezleri yerel ticareti; Mimar Sinan Kent Ormanı ve Alibey havzası çevresi rekreasyonu taşır. Yoğun mahalle parkları ve kültür-spor tesisleri sınırlı açık alan ihtiyacını karşılar.",
+        "transportation": "T4 Topkapı–Mescid-i Selam tramvayı Cumhuriyet Mahallesi, 50. Yıl–Baştabya, Hacı Şükrü, Yenimahalle, Sultançiftliği, Cebeci, Mescid-i Selam ve çevre istasyonlarla ilçenin ana raylı sistemidir. İETT ve minibüs hatları mahalleleri tramvaya, Gaziosmanpaşa–Eyüpsultan ve kuzey akslarına bağlar. Eski Edirne Asfaltı ve TEM bağlantıları başlıca karayolu koridorlarıdır.",
+        "housingTexture": "Sultançiftliği, İsmetpaşa, Uğur Mumcu ve 50. Yıl’da zemin kat ticaretli yoğun apartmanlar; Habibler–Yayla yönünde çeper konutları ve daha parçalı doku; Cebeci’de konutla taş ocağı, sanayi ve depolama kullanımlarının yakınlığı görülür. Kuzeyde orman-havza sınırı yapılaşmayı keser; bu genel doku bina güvenliği sonucu üretmez.",
+        "regionalAssessment": "Sultangazi’yi belirleyen yüksek yoğunluklu göç mahalleleri, T4 tramvay omurgası, Cebeci taş ocağı ve üretim alanları, Habibler kentsel çeperi, Alibey havzası ve kuzey orman sınırıdır. Çevresel baskılar, açık alan erişimi ve ulaşım kapasitesi mahalle ölçeğinde birlikte okunmalıdır.",
+        "placesGuide": "Saha rotası Sultançiftliği merkez ve T4 hattından Cebeci’deki üretim-taş ocağı çevresine, Habibler ve Mescid-i Selam’a uzatılabilir. Mimar Sinan Kent Ormanı, Alibey havzası görünümü ve 50. Yıl–İsmetpaşa mahalle çarşıları ilçenin yoğun kent, çeper ve doğal eşiklerini gösterir.",
+        "distinctiveFeatures": "Sultangazi’yi ayıran, T4 boyunca uzanan yoğun iç-kent mahallelerini Cebeci’nin taş ocağı-üretim alanları, Habibler çeperi ve Alibey havzası ile kuzey orman sınırına doğrudan komşu kılmasıdır.",
+        "researchTopics": "• T4 hattının mahalle merkezlerine etkisi\n• Cebeci taş ocakları ve çevresel yaşam ilişkisi\n• Alibey havzası sınırında kentleşme baskısı\n• Yoğun mahallelerde kamusal açık alan erişimi"
       },
       "facts": {
         "population": "529306",
         "populationYear": 2025,
         "neighborhoodCount": 15,
-        "locationSummary": "Sultangazi, İstanbul’un kuzeybatısında 2008’de ilçe statüsü kazanan yerleşimlerden biridir.",
+        "locationSummary": "Yoğun iç-kent mahallelerinden Cebeci ve Habibler üzerinden Alibey havzası ile kuzeydeki orman sınırına uzanır.",
         "areaKm2": 36.3,
         "neighboringDistricts": "Eyüpsultan, Gaziosmanpaşa, Esenler ve Başakşehir"
       },
@@ -5074,10 +5143,20 @@
           "url": "https://data.tuik.gov.tr/Bulten/Index?p=Adrese-Dayali-Nufus-Kayit-Sistemi-Sonuclari-2025-53899",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2025-12-31T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
+            "summary",
+            "history",
+            "geography",
+            "life",
+            "transportation",
+            "housingTexture",
+            "regionalAssessment",
+            "placesGuide",
+            "distinctiveFeatures",
+            "researchTopics",
             "facts"
           ]
         },
@@ -5087,8 +5166,8 @@
           "url": "https://sultangazi.gov.tr/tarihce",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
-          "dataDate": null,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "history",
@@ -5104,7 +5183,7 @@
           "url": "https://muhtarlikisleri.ibb.istanbul/sultangazi-mahalle-muhtarlari/",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2026-09-09T18:50:26.627856+00:00",
           "needsVerification": false,
           "sections": [
@@ -5117,7 +5196,7 @@
           "url": "https://www.turkiye.gov.tr/sultangazi-belediyesi-arsa-rayic-degeri-sorgulama-v2",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2026-09-09T18:50:26.627856+00:00",
           "needsVerification": false,
           "sections": [
@@ -5130,8 +5209,8 @@
           "url": "https://kentseldonusum.ibb.istanbul/sultangazi-ilcesi-cumhuriyet-50-yil-ve-esentepe-mahalleleri/",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
-          "dataDate": null,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "life",
@@ -5145,8 +5224,8 @@
           "url": "https://sultangazi.gov.tr/ilcemiz",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
-          "dataDate": null,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "housingTexture"
@@ -5158,8 +5237,8 @@
           "url": "https://haritamudurlugu.ibb.istanbul/blog/sultangazi-ilcesi/",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
-          "dataDate": null,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "placesGuide"
@@ -5171,7 +5250,7 @@
           "url": "https://www.metro.istanbul/Hatlarimiz/HatDetay?hat=T4",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2026-09-26T18:00:00.000Z",
           "needsVerification": false,
           "sections": [
@@ -5184,11 +5263,24 @@
           "url": "https://ibb.istanbul/ibb/belediye-hakkinda/yetki-alani/",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2026-09-26T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "facts"
+          ]
+        },
+        {
+          "title": "İETT toplu ulaşım ve hat arama",
+          "publisher": "İETT",
+          "url": "https://iett.istanbul/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "transportation"
           ]
         }
       ],
@@ -5200,43 +5292,43 @@
         "specificReview": "İBB dizini 14 kayıtla eksik; belediyenin e-Devlet mahalle seçicisi 15 kayıt içeriyor ve Zübeyde Hanım’ı doğruluyor. e-Devlet listesinin tamamı PDF ile uyuşuyor; güncellenen belediye tanıtım sayfası kanıt sayılmadı.",
         "areaKm2Review": "İlçe kurumlarında ölçüm kapsamına göre değişebilen yüzölçümü değerleri bulunduğundan, 39 ilçe için aynı standardı veren İBB İlçe Alan Bilgileri Tablosu'ndaki kara alanı esas alındı."
       },
-      "methodology": "Mevcut araştırma havuzu başlangıç olarak kullanıldı; yayıma açılan her bölüm resmî kurum sayfalarıyla yeniden sınırlandırılıp nötr editoryal dille yazıldı. Güncel ulaşım yalnız işletmeci ağ bilgisiyle, nüfus TÜİK ADNKS 2025 ile, mahalleler mevcut resmî dizinlerle eşleştirildi. Piyasa verileri, yapı güvenliği hükümleri ve doğrulanmamış proje takvimleri yayıma alınmadı.",
+      "methodology": "Mevcut doğrulanmış içerik korunarak tarih, coğrafya, gündelik yaşam, 2026 ulaşımı ve yapı dokusu resmî kurum kaynaklarıyla yeniden denetlendi. Nüfus TÜİK ADNKS 2025, alan İBB standardı, mahalleler resmî yerel dizinlerle eşleştirildi; yalnız işletmede olduğu doğrulanan hatlar mevcut hizmet olarak yazıldı. Bina güvenliği, parsel değeri ve doğrulanmamış proje takvimleri hakkında sonuç üretilmedi.",
       "reviewedSections": [
         "summary",
         "history",
         "geography",
         "life",
         "transportation",
-        "facts",
-        "neighborhoods",
         "housingTexture",
         "regionalAssessment",
         "placesGuide",
         "distinctiveFeatures",
-        "researchTopics"
+        "researchTopics",
+        "facts",
+        "neighborhoods"
       ]
     },
     {
       "district": "sisli",
       "pdfSha256": "40b7c040e6f09762961d7154719fc006b0a058bc22d07ef3f7cf439efcfab247",
-      "checkedAt": "2026-09-26T18:30:00.000Z",
+      "checkedAt": "2026-09-27T09:00:00.000Z",
       "sections": {
-        "summary": "Şişli’nin kent dokusu, konut yerleşimleri ile ticaret ve hizmet alanlarının tarih içinde iç içe geçmesiyle şekillendi.",
-        "history": "Beyoğlu’na bağlı bir bucak olan Şişli, 1954’te ilçe statüsü kazandı. Belediyenin tarihçesi, apartmanlaşma ile Halaskargazi ve çevresindeki caddelerin ticari gelişmesini bu dönüşümün parçaları olarak anlatır.",
-        "geography": "Şişli, Avrupa Yakası’nda Beyoğlu platosunun kuzey uzantısındadır. Kaymakamlık sayfasındaki eski Ayazağa ve Maslak kapsamı güncel sınır olarak kullanılmamıştır; mahalle listesi ayrıca kontrol edilmiştir.",
-        "life": "Gündelik yaşamı sahada okumak için Halaskargazi Caddesi, Bomonti çevresi ve Kurtuluş–Feriköy dokusu birbirini tamamlayan duraklardır. Maçka vadisi, merkezdeki hareketten ayrılan yerel ritmiyle bu okumayı genişletir.",
-        "transportation": "M2 ve M7 metroları ile metrobüs koridoru, Şişli’nin iş ve konut alanlarındaki yüksek gündüz hareketini taşıyan ana sistemlerdir.",
-        "housingTexture": "Kurtuluş-Nişantaşı çevresindeki tarihî apartmanlar, Mecidiyeköy-Gayrettepe iş yapıları ve iç mahallelerdeki yoğun konut dokusu aynı ilçede farklı ölçekler kurar. Bu ilçe ölçekli gözlemden tek bir yapı için güvenlik çıkarımı yapılamaz; güncel ruhsat, zemin, plan ve yapı kayıtları ayrıca araştırılmalıdır.",
-        "regionalAssessment": "Bölgesel değerlendirmede merkezî iş alanı, tarihî apartman mahalleleri ve çok yüksek gündüz hareketliliği birlikte okunmalıdır. Sentezin amacı ilçeyi sıralamak değil, katmanlarını birlikte göstermektir; tekil kararlar için güncel belge ve saha çalışması gerekir.",
-        "placesGuide": "Tarihî bağlam ile bugünkü yaşam arasındaki ilişki Halaskargazi Caddesi, Bomonti çevresi, Kurtuluş–Feriköy dokusu, Maçka vadisi üzerinden yerinde araştırılabilir. Rota kurulurken mevsim, ulaşım ve ziyaret kısıtları güncel resmî kanallardan kontrol edilmelidir.",
-        "distinctiveFeatures": "Şişli anlatısında merkezî iş alanı, tarihî apartman mahalleleri ve çok yüksek gündüz hareketliliği öne çıkar. Halaskargazi Caddesi ve Bomonti çevresi arasındaki karşıtlık ilçenin tek tip olmayan karakterini gösterir.",
-        "researchTopics": "• Pangaltı ve Harbiye'de tarihî apartman dokusunun değişimi\n• Bomonti sanayi mirasının yeni kullanımları\n• Mecidiyeköy çevresinde iş alanı ile gündelik yaşamın ilişkisi"
+        "summary": "Şişli, Mecidiyeköy ve Şişli merkezdeki yoğun ulaşım-ticaret dokusunu Nişantaşı–Teşvikiye’nin yerleşik kent kültürü, Bomonti’nin sanayi sonrası dönüşümü, Harbiye’nin kültür alanları ve Büyükdere Caddesi iş koridoruyla birleştirir. Küçük sınırı içinde konut, ofis, eğitim, sağlık ve kültür işlevleri üst üste biner.",
+        "history": "Şişli’nin kentleşmesi 19. yüzyılda Pera’nın kuzeye genişlemesi, Pangaltı–Harbiye yerleşimleri ve yeni ulaşım hatlarıyla hızlandı. Teşvikiye ve Nişantaşı saray çevresi ve konut alanı; Bomonti bira fabrikası çevresi sanayi odağı olarak gelişti. Cumhuriyet döneminde Halaskargazi–Büyükdere aksı apartman, ticaret ve iş merkezi kuşağına dönüştü. Mecidiyeköy 20. yüzyılın ikinci yarısında ana ulaşım düğümü olurken Bomonti’de eski sanayi parselleri yeni kültür, konut ve ofis kullanımları kazandı.",
+        "geography": "Şişli deniz kıyısı olmayan, Haliç ve Boğaz yamaçları arasındaki sırtlar üzerinde gelişmiş merkezî ilçedir. Harbiye–Nişantaşı güneyde, Şişli merkez–Mecidiyeköy orta kesimde, Esentepe–Gayrettepe Büyükdere koridorunda, Bomonti–Feriköy batıda farklı işlevler taşır. Büyükdere Caddesi, Halaskargazi Caddesi ve çevre bağlantıları ana kuzey-güney eksenleridir.",
+        "life": "Nişantaşı ve Teşvikiye caddeleri alışveriş-kafe-konut yaşamını; Şişli Camii ve Halaskargazi çevresi yoğun ticareti; Mecidiyeköy aktarma ve iş hareketini taşır. Bomontiada ve çevresi kültür-eğlence, Harbiye–Maçka hattı kültür ve açık alan, Kurtuluş–Feriköy ise mahalle çarşısı ve pazar yaşamıyla öne çıkar.",
+        "transportation": "M2 hattı Osmanbey, Şişli–Mecidiyeköy ve Gayrettepe istasyonlarıyla; M7 Mecidiyeköy ve Fulya üzerinden ilçeye hizmet verir. Mecidiyeköy ve Zincirlikuyu/Gayrettepe çevresinde metrobüs, M2, M7 ve çok sayıda İETT hattı birleşir; M11 Gayrettepe istasyonu havaalanı yönüne bağlanır. Ana arterler Büyükdere, Halaskargazi ve çevre yoludur.",
+        "housingTexture": "Nişantaşı–Teşvikiye–Kurtuluş’ta tarihî ve modern apartmanlar ile zemin kat ticareti; Mecidiyeköy ve Esentepe’de ofis-konut-ticaret karışımı; Bomonti’de eski sanayi yapıları yanında yüksek katlı konut ve oteller; Kuştepe ve bazı iç mahallelerde daha küçük parsel ve yoğun doku görülür. Harbiye çevresinde kültür, otel ve konut işlevleri iç içedir.",
+        "regionalAssessment": "Şişli’yi belirleyen merkezî iş ve ulaşım düğümü, Nişantaşı’nın yerleşik ticaret-konut karakteri, Bomonti’nin sanayi mirası ve dönüşümü, Harbiye kültür kuşağı, büyük sağlık-eğitim kurumları ve M2–M7–metrobüs–M11 bağlantılarıdır. Gündüz nüfusu ile konut mahallelerinin ihtiyaçları aynı ölçekte değildir.",
+        "placesGuide": "Rota Şişli Camii ve Halaskargazi’den Nişantaşı–Teşvikiye’ye, Maçka ve Harbiye kültür alanlarına; ardından Bomonti tarihî fabrika çevresi, Feriköy pazarı ve Mecidiyeköy ulaşım düğümüne uzanabilir. Büyükdere–Esentepe iş koridoru ilçenin kurumsal yüzünü tamamlar.",
+        "distinctiveFeatures": "Şişli’yi benzersiz kılan, İstanbul’un en yoğun metro-metrobüs ve iş düğümlerinden Mecidiyeköy’ü Nişantaşı’nın yerleşik kent kültürü, Bomonti’nin sanayi sonrası dönüşümü ve Harbiye’nin kültür kurumlarıyla küçük bir merkezî coğrafyada birleştirmesidir.",
+        "researchTopics": "• Mecidiyeköy aktarma düğümünün yaya hareketliliği\n• Bomonti’de sanayi mirası ve yüksek katlı dönüşüm\n• Nişantaşı–Kurtuluş arasında ticaret-konut dengesi\n• Gündüz nüfusu ile mahalle hizmetlerinin ilişkisi"
       },
       "facts": {
         "population": "261959",
         "populationYear": 2025,
         "neighborhoodCount": 25,
-        "locationSummary": "Şişli’nin kent dokusu, konut yerleşimleri ile ticaret ve hizmet alanlarının tarih içinde iç içe geçmesiyle şekillendi.",
+        "locationSummary": "Mecidiyeköy–Şişli merkezden Nişantaşı, Bomonti, Harbiye ve Büyükdere iş koridoruna uzanan merkezî ilçedir.",
         "areaKm2": 10.71,
         "neighboringDistricts": "Beşiktaş, Kâğıthane ve Beyoğlu"
       },
@@ -5274,10 +5366,20 @@
           "url": "https://data.tuik.gov.tr/Bulten/Index?p=Adrese-Dayali-Nufus-Kayit-Sistemi-Sonuclari-2025-53899",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2025-12-31T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
+            "summary",
+            "history",
+            "geography",
+            "life",
+            "transportation",
+            "housingTexture",
+            "regionalAssessment",
+            "placesGuide",
+            "distinctiveFeatures",
+            "researchTopics",
             "facts"
           ]
         },
@@ -5287,8 +5389,8 @@
           "url": "https://sisli.bel.tr/kurumsal/i/sisli-tarihcesi",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
-          "dataDate": null,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "history",
@@ -5305,8 +5407,8 @@
           "url": "https://sisli.gov.tr/cografi-yapi",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
-          "dataDate": null,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "geography",
@@ -5320,7 +5422,7 @@
           "url": "https://muhtarlikisleri.ibb.istanbul/sisli-mahalle-muhtarlari/",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2026-09-09T18:50:26.627856+00:00",
           "needsVerification": false,
           "sections": [
@@ -5333,7 +5435,7 @@
           "url": "https://www.sisli.bel.tr/kurumsal/muhtarliklar-ve-mahalleler",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2026-09-09T18:50:26.627856+00:00",
           "needsVerification": false,
           "sections": [
@@ -5346,8 +5448,8 @@
           "url": "https://sehirplanlama.ibb.istanbul/sisli-ilcesi-pangalti-ve-macka-mevkileri-kentsel-sit-alani-kanip/",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
-          "dataDate": null,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "housingTexture",
@@ -5360,7 +5462,7 @@
           "url": "https://metro.istanbul/Content/assets/uploaded/%C4%B0stanbul%20Tramvay%20Hatlar%C4%B1%20Haritas%C4%B1.pdf",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2026-09-26T18:00:00.000Z",
           "needsVerification": false,
           "sections": [
@@ -5373,11 +5475,51 @@
           "url": "https://ibb.istanbul/ibb/belediye-hakkinda/yetki-alani/",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2026-09-26T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "facts"
+          ]
+        },
+        {
+          "title": "M2 Yenikapı–Hacıosman Metro Hattı",
+          "publisher": "Metro İstanbul",
+          "url": "https://www.metro.istanbul/Hatlarimiz/HatDetay?hat=M2",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "transportation"
+          ]
+        },
+        {
+          "title": "M7 Yıldız–Mahmutbey Metro Hattı",
+          "publisher": "Metro İstanbul",
+          "url": "https://www.metro.istanbul/Hatlarimiz/HatDetay?hat=M7",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "transportation"
+          ]
+        },
+        {
+          "title": "M11 Gayrettepe istasyonunun açılması",
+          "publisher": "Ulaştırma ve Altyapı Bakanlığı",
+          "url": "https://www.uab.gov.tr/haberler/gayrettepe-istanbul-havalimani-30-dakika",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "planningDevelopments",
+            "transportation"
           ]
         }
       ],
@@ -5389,37 +5531,50 @@
         "specificReview": "Kaymakamlık coğrafya/idari sayfasında Ayazağa/Maslak eski kapsamı bulunuyor; bu kapsam aktarılmadı. Belediye ve İBB listeleri 25.",
         "areaKm2Review": "İlçe kurumlarında ölçüm kapsamına göre değişebilen yüzölçümü değerleri bulunduğundan, 39 ilçe için aynı standardı veren İBB İlçe Alan Bilgileri Tablosu'ndaki kara alanı esas alındı."
       },
-      "methodology": "Mevcut araştırma havuzu başlangıç olarak kullanıldı; yayıma açılan her bölüm resmî kurum sayfalarıyla yeniden sınırlandırılıp nötr editoryal dille yazıldı. Güncel ulaşım yalnız işletmeci ağ bilgisiyle, nüfus TÜİK ADNKS 2025 ile, mahalleler mevcut resmî dizinlerle eşleştirildi. Piyasa verileri, yapı güvenliği hükümleri ve doğrulanmamış proje takvimleri yayıma alınmadı.",
+      "methodology": "Mevcut doğrulanmış içerik korunarak tarih, coğrafya, gündelik yaşam, 2026 ulaşımı ve yapı dokusu resmî kurum kaynaklarıyla yeniden denetlendi. Nüfus TÜİK ADNKS 2025, alan İBB standardı, mahalleler resmî yerel dizinlerle eşleştirildi; yalnız işletmede olduğu doğrulanan hatlar mevcut hizmet olarak yazıldı. Bina güvenliği, parsel değeri ve doğrulanmamış proje takvimleri hakkında sonuç üretilmedi.",
       "reviewedSections": [
         "summary",
         "history",
         "geography",
         "life",
         "transportation",
-        "facts",
-        "neighborhoods",
         "housingTexture",
         "regionalAssessment",
         "placesGuide",
         "distinctiveFeatures",
-        "researchTopics"
+        "researchTopics",
+        "facts",
+        "neighborhoods",
+        "planningDevelopments"
+      ],
+      "planningDevelopments": [
+        {
+          "title": "M11 Gayrettepe İstasyonunun Hizmete Açılması",
+          "summary": "M11 hattının Gayrettepe istasyonu 29 Ocak 2024’te açılarak havalimanı metrosunu M2 ve metrobüs ağına bağladı.",
+          "neighborhood": "Gayrettepe",
+          "date": "2024-01-29T00:00:00.000Z",
+          "status": "tamamlandi",
+          "officialSource": "https://www.uab.gov.tr/haberler/gayrettepe-istanbul-havalimani-30-dakika",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "needsVerification": false
+        }
       ]
     },
     {
       "district": "zeytinburnu",
       "pdfSha256": "4698b44bf148f7b999d0de52deabb281a433d4d29d78edc7281c016fa83433fe",
-      "checkedAt": "2026-09-26T18:30:00.000Z",
+      "checkedAt": "2026-09-27T09:00:00.000Z",
       "sections": {
-        "summary": "Zeytinburnu’nun tarihî kimliğinde Kazlıçeşme çevresindeki üretim geçmişi ve Marmara kıyısı birlikte yer alır.",
-        "history": "Kazlıçeşme’deki dericilik faaliyetleri, ilçenin üretim tarihinin başlıca katmanlarındandır. Sonraki sanayileşme ve yerleşim süreçleri, bu kıyı çevresinin kentle ilişkisini değiştirdi.",
-        "geography": "İlçe Marmara Denizi kıyısında, Fatih ile Bakırköy çevresindeki yerleşimler arasında bulunur. Arazi genel olarak kıyıdan iç kesimlere doğru yükselir.",
-        "life": "Kazlıçeşme kıyısı çevresindeki kamusal hareket, Yenikapı Mevlevihanesi çevresindeki açık alan kullanımı ve Merkezefendi çevresi üzerindeki yerel ticaret ilçenin farklı gündelik katmanlarını gösterir. Kara Surları hattı bu katmanlara merkez dışından bir örnek ekler.",
-        "transportation": "Marmaray, M1 ve T1 hatları ile metrobüs koridoru Zeytinburnu’nda kıyı, merkez ve çevre ilçeler arasında güçlü aktarma seçenekleri sunar.",
-        "housingTexture": "Eski sanayi alanları, yoğun apartman mahalleleri, tarihî kültür yapıları ve kıyıda yeniden düzenlenen alanlar ilçenin dönüşüm katmanlarını gösterir. Dokuya ilişkin bu çerçeve parsel bazında teknik görüş değildir; bina yaşı ve resmî zemin, ruhsat ve plan verileri ayrı inceleme gerektirir.",
-        "regionalAssessment": "Bölgesel değerlendirmede sanayi mirası, tarihî kültür aksı ve Marmara kıyısındaki yeni kamusal alanlar birlikte okunmalıdır. Bu değerlendirmeden belirli bir taşınmaz için sonuç çıkarılamaz; yerel koşullar, resmî planlar ve saha verisi ayrıca incelenmelidir.",
-        "placesGuide": "Kazlıçeşme kıyısı, Yenikapı Mevlevihanesi, Merkezefendi çevresi, Kara Surları hattı, ilçenin coğrafi ve kentsel katmanlarını tek bir turistik listeye indirgemeden okumayı sağlar. Çekim planı yapılmadan önce alanların güncel erişim koşulları ve izinleri yeniden araştırılmalıdır.",
-        "distinctiveFeatures": "Zeytinburnu içinde dikkat çeken temel ilişki sanayi mirası, tarihî kültür aksı ve Marmara kıyısındaki yeni kamusal alanlar. Bu ilişkiyi yerinde gözlemek için Kazlıçeşme kıyısı ile Yenikapı Mevlevihanesi karşılaştırılabilir.",
-        "researchTopics": "• Kazlıçeşme deri sanayisinin mekânsal izleri\n• Kara Surları çevresinde koruma ile mahalle yaşamının ilişkisi\n• Merkezefendi ve Yenikapı Mevlevihanesi çevresindeki kültür rotaları"
+        "summary": "Zeytinburnu, kara surlarının dışındaki tarihî yerleşim ve sanayi kuşağını Kazlıçeşme–Zeytinburnu Marmara kıyısı, Merter–Topkapı üretim-ticaret alanları ve yoğun konut mahalleleriyle birleştirir. Marmaray, T1, M1 ve metrobüs bağlantıları ilçeyi İstanbul’un başlıca doğu-batı ulaşım koridorlarına bağlar.",
+        "history": "Zeytinburnu çevresi Bizans kara surlarının dışındaki manastır, mezarlık ve tarım alanlarıyla; Osmanlı döneminde Kazlıçeşme’de gelişen deri üretimi ve çok kültürlü yerleşimlerle şekillendi. 19. ve 20. yüzyılda sanayi tesisleri kıyı ve sur dışı alanda yoğunlaştı. 1950’lerden sonra göçle hızlı konutlaşma yaşandı; Zeytinburnu 1957’de ilçe oldu. Deri sanayisinin taşınması ve kıyı düzenlemeleri Kazlıçeşme çevresini konut, kültür ve kamusal alan yönünde dönüştürdü.",
+        "geography": "İlçe batıda Bakırköy, kuzeyde Güngören ve Bayrampaşa, doğuda kara surları, güneyde Marmara kıyısıyla çevrilidir. Kazlıçeşme kıyı ve Marmaray odağı; merkez–Telsiz yoğun konut; Merter–Seyitnizam üretim-ticaret; Topkapı–Maltepe sanayi ve ulaşım alanlarıdır. Kennedy Caddesi, D-100, demiryolu ve sur hattı belirgin mekânsal eşikler oluşturur.",
+        "life": "Zeytinburnu Meydanı ve 58. Bulvar çarşısı günlük ticaret-kamu odağıdır. Kazlıçeşme sahili ve kültür alanları, Merkezefendi çevresindeki tarihî-kamusal peyzaj, Merter’in tekstil ticareti ve Topkapı kültür tesisleri farklı kullanıcıları çeker. Mahalle pazarları ile kıyı parkları yoğun konut dokusundaki yerel yaşamı destekler.",
+        "transportation": "Marmaray Kazlıçeşme istasyonu, T1’in Zeytinburnu–Mithatpaşa–Akşemsettin çevresindeki durakları, M1A’nın Zeytinburnu ve Merter istasyonları ile metrobüs ana raylı/toplu taşıma omurgalarıdır. T6 Sirkeci–Kazlıçeşme hattı Kazlıçeşme’de Marmaray’a bağlanır. İETT hatları ve D-100/Kennedy Caddesi karayolu erişimini tamamlar.",
+        "housingTexture": "Merkez, Telsiz, Nuripaşa ve Sümer’de yoğun apartman ve zemin kat ticareti; Merter–Seyitnizam’da tekstil, üretim, ofis ve konut karışımı; Maltepe–Topkapı’da sanayi ve büyük parseller; Kazlıçeşme’de eski deri sanayisi alanlarının yeni konut, kültür ve açık alanlara dönüşümü görülür. Sur çevresi ve Merkezefendi daha farklı tarihî/açık alan dokusu taşır.",
+        "regionalAssessment": "Zeytinburnu’nu belirleyen kara surlarına komşuluk, Kazlıçeşme deri sanayisi mirası, Marmara kıyısı, Merter tekstil-ticaret kuşağı, yoğun göç mahalleleri ve Marmaray–T1–M1–metrobüs entegrasyonudur. Sanayi sonrası dönüşüm ile yerleşik mahalle yaşamı ilçenin farklı parçalarında farklı hızlarda ilerler.",
+        "placesGuide": "Rota Kazlıçeşme Marmaray ve sahilden eski deri sanayisi/kültür alanlarına, Merkezefendi Külliyesi ve tıbbi bitkiler bahçesine; oradan 58. Bulvar, Zeytinburnu merkez ve kara surları çevresine uzatılabilir. Merter tekstil alanı ile Topkapı–Maltepe üretim kuşağı ilçenin ekonomik katmanını gösterir.",
+        "distinctiveFeatures": "Zeytinburnu’nu ayıran, Tarihî Yarımada kara surlarının hemen dışında Kazlıçeşme’nin deri sanayisi mirasını, Marmara kıyısını, Merter’in tekstil-ticaret alanlarını, yoğun konut mahallelerini ve dört büyük toplu taşıma sistemini bir araya getirmesidir.",
+        "researchTopics": "• Kazlıçeşme’de sanayi sonrası kıyı dönüşümü\n• Kara surları ile sur dışı mahallelerin ilişkisi\n• Merter tekstil üretim-ticaret ağının mekânsal etkisi\n• Marmaray–T1–M1–metrobüs entegrasyonunun hareketliliği"
       },
       "neighborhoods": [
         "Beştelsiz",
@@ -5443,13 +5598,21 @@
           "url": "https://www.zeytinburnu.gov.tr/ilcemizin-tarihi",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
-          "dataDate": null,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
           "needsVerification": false,
           "sections": [
-            "history",
             "summary",
-            "regionalAssessment"
+            "history",
+            "geography",
+            "life",
+            "transportation",
+            "housingTexture",
+            "regionalAssessment",
+            "placesGuide",
+            "distinctiveFeatures",
+            "researchTopics",
+            "facts"
           ]
         },
         {
@@ -5458,8 +5621,8 @@
           "url": "https://www.zeytinburnu.gov.tr/cografi-yapisi",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
-          "dataDate": null,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "geography",
@@ -5473,7 +5636,7 @@
           "url": "https://muhtarlikisleri.ibb.istanbul/zeytinburnu-mahalle-muhtarlari/",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2026-09-09T18:50:26.627856+00:00",
           "needsVerification": false,
           "sections": [
@@ -5486,8 +5649,8 @@
           "url": "https://zeytinburnu.gov.tr/ilcemizin-tarihi",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
-          "dataDate": null,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "life",
@@ -5503,7 +5666,7 @@
           "url": "https://metro.istanbul/Content/assets/uploaded/%C4%B0stanbul%20Tramvay%20Hatlar%C4%B1%20Haritas%C4%B1.pdf",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2026-09-26T18:00:00.000Z",
           "needsVerification": false,
           "sections": [
@@ -5516,7 +5679,7 @@
           "url": "https://data.tuik.gov.tr/Bulten/Index?p=Adrese-Dayali-Nufus-Kayit-Sistemi-Sonuclari-2025-53899",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2025-12-31T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
@@ -5529,11 +5692,51 @@
           "url": "https://ibb.istanbul/ibb/belediye-hakkinda/yetki-alani/",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2026-09-26T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "facts"
+          ]
+        },
+        {
+          "title": "T1 Kabataş–Bağcılar Tramvay Hattı",
+          "publisher": "Metro İstanbul",
+          "url": "https://www.metro.istanbul/Hatlarimiz/HatDetay?hat=T1",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "transportation"
+          ]
+        },
+        {
+          "title": "Marmaray istasyon ve sefer bilgileri",
+          "publisher": "TCDD Taşımacılık",
+          "url": "https://www.marmaray.gov.tr/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "transportation"
+          ]
+        },
+        {
+          "title": "Sirkeci–Kazlıçeşme hattının açılması",
+          "publisher": "Ulaştırma ve Altyapı Bakanlığı",
+          "url": "https://www.uab.gov.tr/haberler/sirkeci-kazlicesme-rayli-sistem-hatti-cumhurbaskani-erdogan-tarafindan-hizmete-acildi",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "planningDevelopments",
+            "transportation"
           ]
         }
       ],
@@ -5544,12 +5747,12 @@
         "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
         "areaKm2Review": "İlçe kurumlarında ölçüm kapsamına göre değişebilen yüzölçümü değerleri bulunduğundan, 39 ilçe için aynı standardı veren İBB İlçe Alan Bilgileri Tablosu'ndaki kara alanı esas alındı."
       },
-      "methodology": "Mevcut araştırma havuzu başlangıç olarak kullanıldı; yayıma açılan her bölüm resmî kurum sayfalarıyla yeniden sınırlandırılıp nötr editoryal dille yazıldı. Güncel ulaşım yalnız işletmeci ağ bilgisiyle, nüfus TÜİK ADNKS 2025 ile, mahalleler mevcut resmî dizinlerle eşleştirildi. Piyasa verileri, yapı güvenliği hükümleri ve doğrulanmamış proje takvimleri yayıma alınmadı.",
+      "methodology": "Mevcut doğrulanmış içerik korunarak tarih, coğrafya, gündelik yaşam, 2026 ulaşımı ve yapı dokusu resmî kurum kaynaklarıyla yeniden denetlendi. Nüfus TÜİK ADNKS 2025, alan İBB standardı, mahalleler resmî yerel dizinlerle eşleştirildi; yalnız işletmede olduğu doğrulanan hatlar mevcut hizmet olarak yazıldı. Bina güvenliği, parsel değeri ve doğrulanmamış proje takvimleri hakkında sonuç üretilmedi.",
       "facts": {
         "population": "275471",
         "populationYear": 2025,
         "neighborhoodCount": 13,
-        "locationSummary": "Zeytinburnu’nun tarihî kimliğinde Kazlıçeşme çevresindeki üretim geçmişi ve Marmara kıyısı birlikte yer alır.",
+        "locationSummary": "Tarihî Yarımada surlarının dışından Marmara kıyısı ve Kazlıçeşme'ye, Merter–Topkapı üretim-ticaret kuşağına uzanır.",
         "areaKm2": 11.59,
         "neighboringDistricts": "Bakırköy, Güngören, Esenler, Bayrampaşa, Eyüpsultan ve Fatih"
       },
@@ -5559,30 +5762,43 @@
         "geography",
         "life",
         "transportation",
-        "facts",
-        "neighborhoods",
         "housingTexture",
         "regionalAssessment",
         "placesGuide",
         "distinctiveFeatures",
-        "researchTopics"
+        "researchTopics",
+        "facts",
+        "neighborhoods",
+        "planningDevelopments"
+      ],
+      "planningDevelopments": [
+        {
+          "title": "T6 Sirkeci–Kazlıçeşme Hattının Açılması",
+          "summary": "Sirkeci–Kazlıçeşme hattı 26 Şubat 2024’te hizmete açılarak Kazlıçeşme’de Marmaray bağlantısı ve kıyı odaklı yeni ulaşım-kamusal alan koridoru oluşturdu.",
+          "neighborhood": "Kazlıçeşme",
+          "date": "2024-02-26T00:00:00.000Z",
+          "status": "tamamlandi",
+          "officialSource": "https://www.uab.gov.tr/haberler/sirkeci-kazlicesme-rayli-sistem-hatti-cumhurbaskani-erdogan-tarafindan-hizmete-acildi",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "needsVerification": false
+        }
       ]
     },
     {
       "district": "adalar",
       "pdfSha256": "5122e2800fad5536239d0c5efa0f91323912f648ab67e337df9229f91db9920b",
-      "checkedAt": "2026-09-26T18:30:00.000Z",
+      "checkedAt": "2026-09-27T09:00:00.000Z",
       "sections": {
-        "summary": "Adalar, İstanbul’un ada yerleşimlerini ve bu yerleşimlerin farklı tarihî dokularını birlikte inceleyen bir ilçe rehberidir.",
-        "history": "Kaymakamlık tarihçesi, Adalar’ın 19. yüzyılda ilçe yönetimine kavuşmasını anlatır. Büyükada’daki yönetim yapılarının zaman içinde yer değiştirmesi, ilçenin kurumsal geçmişinin bir parçasıdır.",
-        "geography": "Büyükada, Heybeliada, Burgazada ve Kınalıada, ilçenin başlıca yerleşim adalarıdır. Ada adı ile mahalle adı aynı şey değildir: Büyükada’daki Maden ve Nizam ayrı mahalle kayıtlarıdır.",
-        "life": "Yerel yaşamın izleri Büyükada meydanı ve iskele çevresi, Heybeliada kıyısı ve Burgazada merkez çevresinde farklı yoğunluklarda görülür. Kınalıada sahili, ilçenin tek bir merkez ritmine indirgenemeyen yerleşim yapısını tamamlar.",
-        "transportation": "Adalar’ın ana erişimi tarifeli deniz hatlarına dayanır; ada içindeki ulaşım yaya, bisiklet ve İETT’nin elektrikli araç hizmetleriyle sürdürülür.",
-        "housingTexture": "Bahçeli ahşap-kâgir konutlar, iskele çevresindeki merkez dokuları ve koruma statüsündeki doğal alanlar yapılaşmayı anakaradan farklılaştırır. Yapı tiplerinin genel dağılımı tekil bir binanın durumunu göstermez; teknik ve idari bilgiler yalnız güncel resmî kayıtlardan teyit edilmelidir.",
-        "regionalAssessment": "Bölgesel değerlendirmede deniz ulaşımına bağımlılık, koruma gerektiren yapı dokusu ve mevsimsel kullanım baskısı birlikte okunmalıdır. Buradaki çerçeve karşılaştırmalı bir değer sıralaması sunmaz; mahalle ölçeğindeki kararlar güncel veriye dayanmalıdır.",
-        "placesGuide": "Saha rotasında Büyükada meydanı ve iskele çevresi, Heybeliada kıyısı, Burgazada merkez, Kınalıada sahili farklı ölçek ve dönemleri temsil eden tamamlayıcı odaklar olarak ele alınabilir. Bu durakların kullanım ve giriş koşulları değişebileceğinden saha öncesi kurum bilgisi alınmalıdır.",
-        "distinctiveFeatures": "Adalar ilçesinin ayırt edici tarafı deniz ulaşımına bağımlılık, koruma gerektiren yapı dokusu ve mevsimsel kullanım baskısı bağlamında okunur. Büyükada iskele çevresi ile Heybeliada kıyısı, söz konusu bağlamın farklı mekânsal örnekleridir.",
-        "researchTopics": "• Deniz ulaşımının ada yaşamı ve mevsimsel nüfus üzerindeki etkisi\n• Ahşap konut dokusunun korunma ve kullanım süreçleri\n• Büyükada, Heybeliada, Burgazada ve Kınalıada'nın yerleşim ritimlerinin karşılaştırılması"
+        "summary": "Adalar, Marmara Denizi’nde yerleşimin yoğunlaştığı Büyükada, Heybeliada, Burgazada ve Kınalıada ile çevredeki küçük adalardan oluşan deniz ilçesidir. İskele çevresindeki tarihî yerleşimler, çamlık yamaçlar, kıyı rotaları ve motorlu trafik kısıtları gündelik yaşamı ana karadaki ilçelerden belirgin biçimde ayırır.",
+        "history": "Prens Adaları, Bizans döneminde manastırlar ve sürgünlerle; Osmanlı döneminde Rum, Ermeni, Yahudi ve Müslüman toplulukların yazlık ve sürekli yerleşimleriyle farklı tarihsel katmanlar kazandı. 19. yüzyılda düzenli vapur seferleri Büyükada, Heybeliada, Burgazada ve Kınalıada’da köşk, otel, dini yapı ve iskele çevresi gelişimini hızlandırdı. Cumhuriyet döneminde sayfiye karakteri sürerken doğal ve mimari miras koruma gündemi güçlendi; geleneksel fayton ulaşımı 2020’de sona erdi ve elektrikli toplu taşıma düzenine geçildi.",
+        "geography": "İlçe Marmara Denizi’nin kuzeydoğusunda dokuz ada ve iki kayalıktan oluşur; sürekli yerleşim dört büyük adada yoğunlaşır. Büyükada en geniş yerleşim ve hizmet merkezidir; Heybeliada orman ve eğitim-kültür mirası, Burgazada daha küçük kıyı yerleşimi, Kınalıada ise ana karaya yakın ve daha yoğun yazlık doku taşır. Dik yamaçlar, çamlık alanlar ve sınırlı düz kıyı şeridi ulaşım-yapılaşmayı belirler.",
+        "life": "Gündelik yaşam her adada iskele meydanı, çarşı, kıyı yürüyüşü ve mahalle ölçeğinde örgütlenir. Büyükada Çarşısı ve kıyısı bölgesel hizmet odağı; Heybeliada çarşı ve Değirmenburnu, Burgazada meydanı–Kalpazankaya yönü, Kınalıada sahili yerel kamusal alanlardır. Yaz aylarında günübirlik ziyaretçi yoğunluğu, kışın daha sakin sürekli nüfus düzeninden belirgin biçimde ayrılır.",
+        "transportation": "Adalar’ın ana kara bağlantısı Şehir Hatları ve ruhsatlı deniz motorlarıyla sağlanır; Kadıköy, Bostancı, Kabataş ve diğer iskelelerden seferler bulunur. Adalarda genel motorlu araç kullanımı kısıtlıdır; yaya ve bisiklet hareketi ile İETT’nin belirlenmiş elektrikli toplu taşıma araçları yerel erişimi sağlar. Sefer ve ada içi ulaşım koşulları mevsim ve resmî düzenlemelerle birlikte güncel kontrol edilmelidir.",
+        "housingTexture": "Dört büyük adada iskele çevresinde bitişik veya yakın aralıklı çarşı yapıları; yamaçlarda bahçeli tarihî köşkler, ahşap-kâgir evler ve dönemsel apartmanlar görülür. Büyükada daha geniş ve çeşitli, Kınalıada daha yoğun apartmanlı; Heybeliada ve Burgazada ise ormanla iç içe daha küçük ölçekli doku taşır. Sit alanları ve doğal peyzaj yeni yapılaşmayı ana karadan farklı koşullara bağlar.",
+        "regionalAssessment": "Adalar’ı belirleyen denizle sınırlı erişim, çok kültürlü mimari miras, çamlık yamaçlar, dört ayrı ada merkezinin farklı karakteri, yaz-kış nüfus farkı ve motorlu trafiğin kısıtlı olmasıdır. Koruma, yangın riski, atık-su hizmetleri ve ziyaretçi kapasitesi ada ölçeğinde birlikte ele alınmalıdır.",
+        "placesGuide": "Dengeli rota Büyükada iskele ve çarşıdan Nizam–Maden mahallelerine; Heybeliada iskelesinden Değirmenburnu ve tarihî eğitim yapıları çevresine; Burgazada meydanından Sait Faik Müzesi çevresine; Kınalıada iskelesinden kıyı yerleşimine uzanır. Her adada yaya güzergâhı ve doğal alan kurallarına uyulmalıdır.",
+        "distinctiveFeatures": "Adalar’ı İstanbul’da benzersiz kılan, dört ayrı iskele yerleşiminin çok kültürlü köşk ve dini yapı mirasını çamlık Marmara peyzajı, denizle sınırlı erişim ve motorlu trafiğin büyük ölçüde kısıtlandığı gündelik yaşamla birleştirmesidir.",
+        "researchTopics": "• Yaz-kış nüfus farkının ada hizmetlerine etkisi\n• Deniz ulaşımı sıklığı ile sürekli yaşam ilişkisi\n• Mimari miras ve yangın riskinin birlikte yönetimi\n• Elektrikli ulaşım ve yaya-bisiklet kullanım dengesi"
       },
       "neighborhoods": [
         "Burgazada",
@@ -5598,13 +5814,21 @@
           "url": "https://adalar.gov.tr/kaymakamligimizin-tarihcesi",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
-          "dataDate": null,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
           "needsVerification": false,
           "sections": [
-            "history",
             "summary",
-            "regionalAssessment"
+            "history",
+            "geography",
+            "life",
+            "transportation",
+            "housingTexture",
+            "regionalAssessment",
+            "placesGuide",
+            "distinctiveFeatures",
+            "researchTopics",
+            "facts"
           ]
         },
         {
@@ -5613,8 +5837,8 @@
           "url": "https://adalar.gov.tr/cografi-yapi",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
-          "dataDate": null,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "geography",
@@ -5628,7 +5852,7 @@
           "url": "https://muhtarlikisleri.ibb.istanbul/adalar-mahalle-muhtarlari/",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2026-09-09T18:50:26.627856+00:00",
           "needsVerification": false,
           "sections": [
@@ -5641,8 +5865,8 @@
           "url": "https://adalar.bel.tr/tas-mektep/",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
-          "dataDate": null,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "life"
@@ -5654,8 +5878,8 @@
           "url": "https://adalar.bel.tr/tarihi-yapilar/",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
-          "dataDate": null,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "housingTexture"
@@ -5667,8 +5891,8 @@
           "url": "https://adalar.gov.tr/ilcemiz",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
-          "dataDate": null,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "placesGuide"
@@ -5680,8 +5904,8 @@
           "url": "https://www.istanbul.gov.tr/istanbulda-gezi-rotasi-adalar",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
-          "dataDate": null,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "distinctiveFeatures",
@@ -5694,7 +5918,7 @@
           "url": "https://sehirhatlari.istanbul/tr/iskeleler",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2026-09-26T18:00:00.000Z",
           "needsVerification": false,
           "sections": [
@@ -5707,7 +5931,7 @@
           "url": "https://data.tuik.gov.tr/Bulten/Index?p=Adrese-Dayali-Nufus-Kayit-Sistemi-Sonuclari-2025-53899",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2025-12-31T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
@@ -5720,11 +5944,37 @@
           "url": "https://ibb.istanbul/ibb/belediye-hakkinda/yetki-alani/",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2026-09-26T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "facts"
+          ]
+        },
+        {
+          "title": "Adalar hatları",
+          "publisher": "Şehir Hatları",
+          "url": "https://sehirhatlari.istanbul/tr/seferler/ic-hatlar/adalar-hatlari",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "transportation"
+          ]
+        },
+        {
+          "title": "İETT Adalar elektrikli araç bilgileri",
+          "publisher": "İETT",
+          "url": "https://iett.istanbul/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "transportation"
           ]
         }
       ],
@@ -5735,12 +5985,12 @@
         "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
         "areaKm2Review": "İlçe kurumlarında ölçüm kapsamına göre değişebilen yüzölçümü değerleri bulunduğundan, 39 ilçe için aynı standardı veren İBB İlçe Alan Bilgileri Tablosu'ndaki kara alanı esas alındı."
       },
-      "methodology": "Mevcut araştırma havuzu başlangıç olarak kullanıldı; yayıma açılan her bölüm resmî kurum sayfalarıyla yeniden sınırlandırılıp nötr editoryal dille yazıldı. Güncel ulaşım yalnız işletmeci ağ bilgisiyle, nüfus TÜİK ADNKS 2025 ile, mahalleler mevcut resmî dizinlerle eşleştirildi. Piyasa verileri, yapı güvenliği hükümleri ve doğrulanmamış proje takvimleri yayıma alınmadı.",
+      "methodology": "Mevcut doğrulanmış içerik korunarak tarih, coğrafya, gündelik yaşam, 2026 ulaşımı ve yapı dokusu resmî kurum kaynaklarıyla yeniden denetlendi. Nüfus TÜİK ADNKS 2025, alan İBB standardı, mahalleler resmî yerel dizinlerle eşleştirildi; yalnız işletmede olduğu doğrulanan hatlar mevcut hizmet olarak yazıldı. Bina güvenliği, parsel değeri ve doğrulanmamış proje takvimleri hakkında sonuç üretilmedi.",
       "facts": {
         "population": "17489",
         "populationYear": 2025,
         "neighborhoodCount": 5,
-        "locationSummary": "Adalar, İstanbul’un ada yerleşimlerini ve bu yerleşimlerin farklı tarihî dokularını birlikte inceleyen bir ilçe rehberidir.",
+        "locationSummary": "Marmara Denizi'ndeki Büyükada, Heybeliada, Burgazada ve Kınalıada başta olmak üzere ada yerleşimlerinden oluşur.",
         "areaKm2": 11.05,
         "neighboringDistricts": "Kara sınırı bulunan komşu ilçe yoktur."
       },
@@ -5750,30 +6000,30 @@
         "geography",
         "life",
         "transportation",
-        "facts",
-        "neighborhoods",
         "housingTexture",
         "regionalAssessment",
         "placesGuide",
         "distinctiveFeatures",
-        "researchTopics"
+        "researchTopics",
+        "facts",
+        "neighborhoods"
       ]
     },
     {
       "district": "atasehir",
       "pdfSha256": "c30cfe883c0a190f956fecbb278f283a88d180524726a991c926f9cdbb8d42c9",
-      "checkedAt": "2026-09-26T18:30:00.000Z",
+      "checkedAt": "2026-09-27T09:00:00.000Z",
       "sections": {
-        "summary": "Ataşehir, eski yerleşim odakları ile daha yeni konut ve iş alanlarını aynı ilçe yapısında birleştirir.",
-        "history": "Ataşehir ilçesi 2008’de kuruldu. Kaymakamlık, İçerenköy ve Küçükbakkalköy gibi eski yerleşimleri, 1990’lardan itibaren gelişen Ataşehir yerleşiminden ayrı tarihî katmanlar olarak anlatır.",
-        "geography": "Kayışdağı, ilçenin coğrafi kimliğinde belirgin bir odaktır. Arazi kısmen engebelidir; Kadıköy, Üsküdar, Ümraniye, Maltepe ve Sancaktepe çevresindeki konumu kent içindeki yerini tarif eder.",
-        "life": "Ataşehir kent merkezi kamusal buluşma, Kayışdağı çevresi açık alan, İçerenköy yerleşimi ise yerel ticaret ve dolaşım açısından okunabilir. Küçükbakkalköy aksı ilçenin daha farklı ölçekli gündelik kullanımına işaret eder.",
-        "transportation": "M4 ve M8 metro hatları Ataşehir’in farklı kesimlerine hizmet verir; otobüsler yerleşim ve iş alanlarını bu hatlara bağlar.",
-        "housingTexture": "Eski mahalle çekirdekleri, planlı site alanları ve finans merkezi çevresindeki büyük ölçekli yapılar ilçenin farklı gelişme dönemlerini yansıtır. Bu betimleme mahalle ölçeğindedir ve yapı güvenliği iddiası içermez; bina ile parsel özelindeki resmî belgeler ayrıca değerlendirilmelidir.",
-        "regionalAssessment": "Bölgesel değerlendirmede yeni iş merkezi, eski yerleşim çekirdekleri ve raylı sistemlerle değişen erişim birlikte okunmalıdır. Okuma, güvenlik ya da getiri vaadi içermez; ayrıntılı değerlendirme için resmî kayıtlar ve yerinde inceleme birlikte kullanılmalıdır.",
-        "placesGuide": "Ataşehir kent merkezi, Kayışdağı çevresi, İçerenköy yerleşimi, Küçükbakkalköy aksı; ilçenin tarih, kamusal alan ve yerleşim karakterini karşılaştırmalı biçimde görünür kılar. Güncel ziyaret düzeni ile olası çekim kısıtları, yola çıkmadan önce yetkili kaynaktan teyit edilmelidir.",
-        "distinctiveFeatures": "Ataşehir için özgün bir ilçe profili oluşturan unsur yeni iş merkezi, eski yerleşim çekirdekleri ve raylı sistemlerle değişen erişim. Ataşehir kent merkezi ile Kayışdağı çevresi bu profilin sahadaki çeşitliliğini yansıtır.",
-        "researchTopics": "• İçerenköy ve Küçükbakkalköy'ün eski yerleşim izleri\n• Site alanları ile finans merkezi çevresindeki mekânsal farklar\n• Metro hatlarının mahalle merkezleri arasındaki hareketliliğe etkisi"
+        "summary": "Ataşehir, İçerenköy ve Küçükbakkalköy’ün yerleşik mahalle dokusunu planlı Ataşehir merkez, Kozyatağı iş alanları ve İstanbul Finans Merkezi çevresindeki yeni kurumsal gelişimle birleştiren Anadolu Yakası ilçesidir. TEM, D-100 ve bağlantı yolları ile M4–M8 metro erişimi ilçenin çok merkezli yapısını destekler.",
+        "history": "Ataşehir’in bugünkü alanında İçerenköy ve Kayışdağı gibi eski yerleşimler ile geniş tarım alanları bulunuyordu. 20. yüzyılın ikinci yarısında D-100, TEM ve çevre yollarının açılması konut ve sanayi gelişimini hızlandırdı. 1990’lardan itibaren toplu konut ve planlı site projeleri Ataşehir adını taşıyan yeni merkezi oluşturdu. 2008’de Kadıköy, Üsküdar, Ümraniye ve Kartal’dan mahallelerin birleştirilmesiyle ilçe kuruldu; Finans Merkezi yatırımları doğu kesimde yeni bir iş odağı yarattı.",
+        "geography": "İlçe Kozyatağı–İçerenköy’de D-100’e, Küçükbakkalköy–Ataşehir merkezde TEM bağlantılarına, doğuda Finans Merkezi–Yenişehir çevresine, güneyde Kayışdağı yamaçlarına uzanır. Belirgin deniz kıyısı yoktur; topoğrafya güneydoğuya doğru yükselir. TEM, D-100, Kozyatağı bağlantıları ve ana bulvarlar mahalleler arasında güçlü fiziksel eşikler oluşturur.",
+        "life": "Ataşehir Bulvarı ve Cumhuriyet Meydanı planlı merkezin; İçerenköy ve Küçükbakkalköy çarşıları yerleşik mahallelerin; Kozyatağı iş-ofis çevresi gündüz hareketinin odaklarıdır. Nezahat Gökyiğit Botanik Bahçesi, Kayışdağı çevresi, kültür merkezleri ve mahalle parkları açık alan-kültür kullanımını; Finans Merkezi yeni kurumsal yoğunluğu temsil eder.",
+        "transportation": "M4 Kadıköy–Sabiha Gökçen hattının Kozyatağı, Yenisahra ve çevre istasyonları ilçenin güneybatısına; M8 Bostancı–Parseller hattı Kozyatağı, Küçükbakkalköy ve İçerenköy çevresine hizmet verir. İETT hatları mahalleleri metro ve metrobüs bağlantılarına taşır. TEM, D-100, Kozyatağı bağlantısı ve Şile Otoyolu yönü ana karayolu erişimidir.",
+        "housingTexture": "Ataşehir merkezde planlı yüksek katlı siteler, rezidanslar ve ofisler; İçerenköy–Küçükbakkalköy’de eski apartmanlar, mahalle ticareti ve parça parça yenileme; Kozyatağı’nda ofis-konut karışımı; Kayışdağı–Mustafa Kemal çevresinde daha yoğun ve küçük parsel dokusu görülür. Finans Merkezi büyük ölçekli kurumsal yapılarıyla çevresinden ayrılır.",
+        "regionalAssessment": "Ataşehir’i belirleyen planlı site merkezi, İçerenköy–Küçükbakkalköy’ün yerleşik dokusu, Kozyatağı ulaşım ve iş düğümü, İstanbul Finans Merkezi, TEM/D-100 erişimi ve M4–M8 entegrasyonudur. Büyük ölçekli projeler ile mahalle ölçeği arasındaki kamusal alan ve yaya bağlantıları önemli farklar yaratır.",
+        "placesGuide": "Rota Ataşehir Bulvarı ve Cumhuriyet Meydanı’ndan Nezahat Gökyiğit Botanik Bahçesi’ne; İçerenköy çarşısı, Küçükbakkalköy ve Kozyatağı metro çevresine uzatılabilir. İstanbul Finans Merkezi ve Kayışdağı etekleri ilçenin yeni kurumsal ve yerleşik/çeper dokularını karşılaştırmak için eklenebilir.",
+        "distinctiveFeatures": "Ataşehir’i ayıran, 1990 sonrası planlı yüksek katlı konut merkezini İçerenköy–Küçükbakkalköy’ün eski mahalleleri, Kozyatağı’nın ulaşım-ofis düğümü ve İstanbul Finans Merkezi’nin büyük ölçekli kurumsal dokusuyla bir araya getirmesidir.",
+        "researchTopics": "• Planlı site alanları ile eski mahallelerin yaya bağlantısı\n• Finans Merkezi'nin gündüz nüfusu ve çevre hizmetlerine etkisi\n• M4–M8 aktarmasının mahalle hareketliliği\n• Ana yolların kamusal alan sürekliliğine etkisi"
       },
       "neighborhoods": [
         "Aşık Veysel",
@@ -5801,14 +6051,20 @@
           "url": "https://atasehir.gov.tr/tarihi-ve-cografi-yapisi",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
-          "dataDate": null,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
           "needsVerification": false,
           "sections": [
-            "history",
             "summary",
+            "history",
             "geography",
+            "life",
+            "transportation",
+            "housingTexture",
             "regionalAssessment",
+            "placesGuide",
+            "distinctiveFeatures",
+            "researchTopics",
             "facts"
           ]
         },
@@ -5818,7 +6074,7 @@
           "url": "https://muhtarlikisleri.ibb.istanbul/atasehir-mahalle-muhtarlari/",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2026-09-09T18:50:26.627856+00:00",
           "needsVerification": false,
           "sections": [
@@ -5831,8 +6087,8 @@
           "url": "https://www.atasehir.bel.tr/icerik/kurumsal/tarihce",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
-          "dataDate": null,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "life",
@@ -5848,7 +6104,7 @@
           "url": "https://metro.istanbul/Content/assets/uploaded/%C4%B0stanbul%20Tramvay%20Hatlar%C4%B1%20Haritas%C4%B1.pdf",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2026-09-26T18:00:00.000Z",
           "needsVerification": false,
           "sections": [
@@ -5861,7 +6117,7 @@
           "url": "https://data.tuik.gov.tr/Bulten/Index?p=Adrese-Dayali-Nufus-Kayit-Sistemi-Sonuclari-2025-53899",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2025-12-31T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
@@ -5874,11 +6130,38 @@
           "url": "https://ibb.istanbul/ibb/belediye-hakkinda/yetki-alani/",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2026-09-26T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "facts"
+          ]
+        },
+        {
+          "title": "M4 Kadıköy–Sabiha Gökçen Metro Hattı",
+          "publisher": "Metro İstanbul",
+          "url": "https://www.metro.istanbul/Hatlarimiz/HatDetay?hat=M4",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "transportation"
+          ]
+        },
+        {
+          "title": "M8 Bostancı–Parseller Metro Hattı",
+          "publisher": "Metro İstanbul",
+          "url": "https://www.metro.istanbul/Hatlarimiz/HatDetay?hat=M8",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "transportation",
+            "planningDevelopments"
           ]
         }
       ],
@@ -5889,12 +6172,12 @@
         "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
         "areaKm2Review": "İlçe kurumlarında ölçüm kapsamına göre değişebilen yüzölçümü değerleri bulunduğundan, 39 ilçe için aynı standardı veren İBB İlçe Alan Bilgileri Tablosu'ndaki kara alanı esas alındı."
       },
-      "methodology": "Mevcut araştırma havuzu başlangıç olarak kullanıldı; yayıma açılan her bölüm resmî kurum sayfalarıyla yeniden sınırlandırılıp nötr editoryal dille yazıldı. Güncel ulaşım yalnız işletmeci ağ bilgisiyle, nüfus TÜİK ADNKS 2025 ile, mahalleler mevcut resmî dizinlerle eşleştirildi. Piyasa verileri, yapı güvenliği hükümleri ve doğrulanmamış proje takvimleri yayıma alınmadı.",
+      "methodology": "Mevcut doğrulanmış içerik korunarak tarih, coğrafya, gündelik yaşam, 2026 ulaşımı ve yapı dokusu resmî kurum kaynaklarıyla yeniden denetlendi. Nüfus TÜİK ADNKS 2025, alan İBB standardı, mahalleler resmî yerel dizinlerle eşleştirildi; yalnız işletmede olduğu doğrulanan hatlar mevcut hizmet olarak yazıldı. Bina güvenliği, parsel değeri ve doğrulanmamış proje takvimleri hakkında sonuç üretilmedi.",
       "facts": {
         "population": "412125",
         "populationYear": 2025,
         "neighborhoodCount": 17,
-        "locationSummary": "Ataşehir, eski yerleşim odakları ile daha yeni konut ve iş alanlarını aynı ilçe yapısında birleştirir.",
+        "locationSummary": "Kozyatağı–İçerenköy yerleşik dokusu ile planlı Ataşehir merkez ve İstanbul Finans Merkezi arasında gelişen Anadolu Yakası ilçesidir.",
         "areaKm2": 25.2,
         "neighboringDistricts": "Kadıköy, Üsküdar, Ümraniye, Çekmeköy, Sancaktepe ve Maltepe"
       },
@@ -5904,36 +6187,49 @@
         "geography",
         "life",
         "transportation",
-        "facts",
-        "neighborhoods",
         "housingTexture",
         "regionalAssessment",
         "placesGuide",
         "distinctiveFeatures",
-        "researchTopics"
+        "researchTopics",
+        "facts",
+        "neighborhoods",
+        "planningDevelopments"
+      ],
+      "planningDevelopments": [
+        {
+          "title": "M8 Bostancı–Parseller Hattının Açılması",
+          "summary": "M8 hattı 6 Ocak 2023’te hizmete girerek Kozyatağı ve Küçükbakkalköy çevresini Bostancı ve Ümraniye yönüne bağladı.",
+          "neighborhood": "Kozyatağı–Küçükbakkalköy",
+          "date": "2023-01-06T00:00:00.000Z",
+          "status": "tamamlandi",
+          "officialSource": "https://www.metro.istanbul/Hatlarimiz/HatDetay?hat=M8",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "needsVerification": false
+        }
       ]
     },
     {
       "district": "beykoz",
       "pdfSha256": "5cfac9d53b0026709225f8dff8695dd851712c2250ab22a702ac4f4ae49b4cdc",
-      "checkedAt": "2026-09-26T18:30:00.000Z",
+      "checkedAt": "2026-09-27T09:00:00.000Z",
       "sections": {
-        "summary": "Beykoz’un geçmişi, Boğaziçi yerleşimleri, mesire alanları ve üretim yapıları üzerinden okunabilir.",
-        "history": "Kaymakamlık tarihçesi, Göksu ve Küçüksu çevresindeki mesire kültürü ile Beykoz’un sanayi geçmişini birlikte anlatır. Bu katmanlar, ilçeyi yalnızca kıyı yerleşimi olarak tanımlamanın eksik kalacağını gösterir.",
-        "geography": "Beykoz’un Boğaziçi kıyıları kuzeyde Karadeniz’e açılan çevreyle ilişkilidir. Anadolufeneri ve Göksu gibi farklı odaklar, ilçenin kıyı coğrafyasını okumaya yardımcı olur.",
-        "life": "Beykoz Çayırı ve Anadolu Kavağı çevresindeki hareket, ilçenin gündelik yaşamındaki iki farklı odağı gösterir; Kanlıca–Çubuklu kıyısı başka bir kullanım katmanı ekler. Polonezköy çevresi merkez dışındaki yerleşim örüntüsünü karşılaştırmak için anlamlıdır.",
-        "transportation": "Beykoz’da kıyı iskeleleri ve otobüs hatları birlikte çalışır; Boğaz kıyısı ile iç ve kuzey mahalleler arasındaki mesafe ulaşım düzenini belirler.",
-        "housingTexture": "Boğaz köylerindeki tarihî kıyı dokusu, iç kesimlerdeki düşük yoğunluklu yerleşimler ve orman-havza sınırları yapılaşmanın yayılmasını belirler. İlçe dokusu hakkında yapılan bu sentez teknik dayanım analizi değildir; yapı, ruhsat, zemin ve plan verileri yetkili kaynaklardan alınmalıdır.",
-        "regionalAssessment": "Bölgesel değerlendirmede Boğaz-Karadeniz kıyıları, orman ve su havzaları ile düşük yoğunluklu yerleşimlerin korunması birlikte okunmalıdır. Bu genel bağlam tekil yapı ve yatırımlar hakkında öneri vermez; güncel plan, ulaşım ve saha koşulları ayrıca doğrulanmalıdır.",
-        "placesGuide": "İlçe anlatısını yerinde sınamak için Beykoz çayırı ve merkez, Anadolu Kavağı, Kanlıca–Çubuklu kıyısı, Polonezköy çevresi birbirini tamamlayan araştırma duraklarıdır. Saha rotası, güncel ulaşım ve erişim duyuruları kontrol edildikten sonra kesinleştirilmelidir.",
-        "distinctiveFeatures": "Beykoz ilçesini anlamada Boğaz-Karadeniz kıyıları, orman ve su havzaları ile düşük yoğunluklu yerleşimlerin korunması temel bir çerçeve sunar. Beykoz Çayırı ile Anadolu Kavağı bu çerçevenin iki ayrı yerel karşılığıdır.",
-        "researchTopics": "• Boğaz köylerinde iskele ile yerleşim arasındaki ilişki\n• Beykoz'daki fabrika mirasının kent belleğindeki yeri\n• Orman ve su havzası sınırlarının mahalle gelişimine etkisi"
+        "summary": "Beykoz, Anadolu Hisarı–Çubuklu–Paşabahçe–Beykoz merkez–Anadolu Kavağı boyunca uzanan Boğaz kıyısını Riva’nın Karadeniz kıyısı, geniş ormanlar ve kırsal mahallelerle birleştiren büyük bir ilçedir. Tarihî sanayi mirası, balıkçı-iskele yerleşimleri, düşük yoğunluklu konut ve doğal alanlar aynı sınırlar içinde farklı alt bölgeler oluşturur.",
+        "history": "Beykoz’un Boğaz kıyısı Bizans ve Osmanlı dönemlerinde savunma, iskele, mesire ve üretim işlevleri taşıdı; Anadolu Hisarı 14. yüzyıl sonundaki Boğaz kontrolünün başlıca yapısıdır. Osmanlı döneminde cam, deri ve kâğıt üretimi Paşabahçe–Beykoz çevresinde gelişti. 19. yüzyılda vapur ulaşımı kıyı köylerini İstanbul’a bağladı. Cumhuriyet döneminde fabrikalar ve konut mahalleleri büyürken kuzeydeki orman-kırsal yerleşimler korundu; sanayi sonrası Paşabahçe ve kıyı alanları yeni kamusal/kültürel kullanımlara açıldı.",
+        "geography": "İlçe batıda Boğaz, kuzeyde Karadeniz, doğu ve güneyde ormanlık tepelerle çevrilidir. Anadolu Hisarı–Kanlıca–Çubuklu kıyısı daha kentsel; Paşabahçe–Beykoz merkez yerleşik sanayi/kıyı odağı; Anadolu Kavağı Boğaz ağzı yerleşimi; Riva Karadeniz kıyısı; Polonezköy ve iç mahalleler orman-kırsal karakter taşır. Kıyı yolu dar ve topoğrafya yamaçlıdır.",
+        "life": "Beykoz Çayırı ve merkez çarşı, Paşabahçe meydan-kıyı, Çubuklu sahili, Kanlıca ve Anadolu Hisarı iskele çevreleri günlük yaşam odaklarıdır. Anadolu Kavağı ve Riva mevsimsel ziyaretçi hareketi; Polonezköy ve orman içi alanlar rekreasyon; eski fabrika alanları kültür-kamusal kullanım üretir. Mahalleler arası mesafe hizmet erişiminde önemlidir.",
+        "transportation": "Beykoz’da işletmede metro veya Marmaray istasyonu yoktur. Şehir Hatları ve deniz motorları Anadolu Hisarı, Kanlıca, Çubuklu, Paşabahçe, Beykoz ve Anadolu Kavağı iskelelerinde kıyı bağlantıları sağlar. İETT hatları sahil yolu, Kavacık ve Üsküdar/metro bağlantılarına hizmet verir; FSM Köprüsü–Kavacık, Şile Otoyolu ve kıyı yolu ana karayolu erişimidir.",
+        "housingTexture": "Boğaz kıyısında tarihî yalılar, eski köy merkezleri ve apartmanlar; Paşabahçe–Beykoz merkezde fabrika mirası, yoğun mahalle ve ticaret; Kavacık’ta ofis-konut; Acarkent ve bazı iç kesimlerde villa/site; Riva, Polonezköy ve kırsal mahallelerde düşük yoğunluklu yapı görülür. Orman ve havza koşulları iç kesimde temel mekânsal sınırdır.",
+        "regionalAssessment": "Beykoz’u belirleyen uzun Boğaz kıyısı ve iskeleler, Paşabahçe–Beykoz sanayi mirası, Anadolu Kavağı ve Riva’nın iki deniz eşiği, geniş orman-su havzası, kırsal mahalleler ve metrodan uzak kara/deniz erişimidir. Kıyı, villa alanı ve kırsal-orman kuşağı aynı konut veya hizmet bölgesi değildir.",
+        "placesGuide": "Rota Anadolu Hisarı ve Küçüksu’dan Kanlıca–Çubuklu kıyısına, Paşabahçe ve Beykoz Çayırı’na; ardından Anadolu Kavağı’na uzanabilir. Riva kıyısı, Polonezköy ve orman içi mahalleler ilçenin Karadeniz, kırsal ve doğal alan katmanını; eski fabrika çevreleri üretim mirasını tamamlar.",
+        "distinctiveFeatures": "Beykoz’u benzersiz kılan, Boğaz’ın Anadolu kıyısındaki iskele köyleri ve tarihî üretim alanlarını Anadolu Kavağı–Riva arasındaki iki deniz eşiği, geniş orman-su havzası ve kırsal mahallelerle birleştirmesidir.",
+        "researchTopics": "• Paşabahçe’de sanayi mirası ve kıyı kamusallığı\n• Deniz ulaşımının kıyı mahalleleri için rolü\n• Orman-havza koruması ile yerleşim baskısı\n• Riva ve Anadolu Kavağı'nda mevsimsel hareketlilik"
       },
       "facts": {
         "population": "246833",
         "populationYear": 2025,
         "neighborhoodCount": 45,
-        "locationSummary": "Beykoz’un geçmişi, Boğaziçi yerleşimleri, mesire alanları ve üretim yapıları üzerinden okunabilir.",
+        "locationSummary": "Boğaz'ın Anadolu kıyısından Riva ve Karadeniz'e, geniş orman ve kırsal mahallelere uzanan kuzeydoğu İstanbul ilçesidir.",
         "areaKm2": 310.36,
         "neighboringDistricts": "Üsküdar, Ümraniye, Çekmeköy ve Şile"
       },
@@ -5991,10 +6287,20 @@
           "url": "https://data.tuik.gov.tr/Bulten/Index?p=Adrese-Dayali-Nufus-Kayit-Sistemi-Sonuclari-2025-53899",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2025-12-31T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
+            "summary",
+            "history",
+            "geography",
+            "life",
+            "transportation",
+            "housingTexture",
+            "regionalAssessment",
+            "placesGuide",
+            "distinctiveFeatures",
+            "researchTopics",
             "facts"
           ]
         },
@@ -6004,8 +6310,8 @@
           "url": "https://www.beykoz.gov.tr/tarihcemiz",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
-          "dataDate": null,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "history",
@@ -6025,7 +6331,7 @@
           "url": "https://muhtarlikisleri.ibb.istanbul/beykoz-mahalle-muhtarlari/",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2026-09-09T18:50:26.627856+00:00",
           "needsVerification": false,
           "sections": [
@@ -6038,7 +6344,7 @@
           "url": "https://www.turkiye.gov.tr/beykoz-belediyesi-arsa-rayic-degeri-sorgulama-v2",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2026-09-09T18:50:26.627856+00:00",
           "needsVerification": false,
           "sections": [
@@ -6051,8 +6357,8 @@
           "url": "https://beykoz.gov.tr/ilcemiz",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
-          "dataDate": null,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "placesGuide"
@@ -6064,7 +6370,7 @@
           "url": "https://sehirhatlari.istanbul/tr/iskeleler",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2026-09-26T18:00:00.000Z",
           "needsVerification": false,
           "sections": [
@@ -6077,11 +6383,37 @@
           "url": "https://ibb.istanbul/ibb/belediye-hakkinda/yetki-alani/",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2026-09-26T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "facts"
+          ]
+        },
+        {
+          "title": "İstanbul Şehir Hatları iskele ve seferleri",
+          "publisher": "Şehir Hatları",
+          "url": "https://sehirhatlari.istanbul/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "transportation"
+          ]
+        },
+        {
+          "title": "İETT toplu ulaşım ve hat arama",
+          "publisher": "İETT",
+          "url": "https://iett.istanbul/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "transportation"
           ]
         }
       ],
@@ -6093,37 +6425,37 @@
         "specificReview": "e-Devlet belediye kaydıyla Çiğdem, Polonezköy, Zerzavatçı yazımları düzeltildi. PDF Ortaçeşme kaydını atlıyor; Çiftlik ve Çavuşbaşı Çiftlik ayrı mahalle değildir. Tek kayıt ve Ortaçeşme ile 45.",
         "areaKm2Review": "İlçe kurumlarında ölçüm kapsamına göre değişebilen yüzölçümü değerleri bulunduğundan, 39 ilçe için aynı standardı veren İBB İlçe Alan Bilgileri Tablosu'ndaki kara alanı esas alındı."
       },
-      "methodology": "Mevcut araştırma havuzu başlangıç olarak kullanıldı; yayıma açılan her bölüm resmî kurum sayfalarıyla yeniden sınırlandırılıp nötr editoryal dille yazıldı. Güncel ulaşım yalnız işletmeci ağ bilgisiyle, nüfus TÜİK ADNKS 2025 ile, mahalleler mevcut resmî dizinlerle eşleştirildi. Piyasa verileri, yapı güvenliği hükümleri ve doğrulanmamış proje takvimleri yayıma alınmadı.",
+      "methodology": "Mevcut doğrulanmış içerik korunarak tarih, coğrafya, gündelik yaşam, 2026 ulaşımı ve yapı dokusu resmî kurum kaynaklarıyla yeniden denetlendi. Nüfus TÜİK ADNKS 2025, alan İBB standardı, mahalleler resmî yerel dizinlerle eşleştirildi; yalnız işletmede olduğu doğrulanan hatlar mevcut hizmet olarak yazıldı. Bina güvenliği, parsel değeri ve doğrulanmamış proje takvimleri hakkında sonuç üretilmedi.",
       "reviewedSections": [
         "summary",
         "history",
         "geography",
         "life",
         "transportation",
-        "facts",
-        "neighborhoods",
         "housingTexture",
         "regionalAssessment",
         "placesGuide",
         "distinctiveFeatures",
-        "researchTopics"
+        "researchTopics",
+        "facts",
+        "neighborhoods"
       ]
     },
     {
       "district": "cekmekoy",
       "pdfSha256": "7c8331bcfd0a53eee358b4cfb179c3e929061bb5d76dd72da2ca6e0ccbff14d0",
-      "checkedAt": "2026-09-26T18:30:00.000Z",
+      "checkedAt": "2026-09-27T09:00:00.000Z",
       "sections": {
-        "summary": "Çekmeköy’de eski köy yerleşimleri ile İstanbul’un Anadolu Yakası’ndaki kentleşme süreci birlikte görülür.",
-        "history": "Kaymakamlığın tarih çalışması, Alemdağ, Ömerli ve çevredeki yerleşimlerin geçmişini arşiv kayıtlarıyla ele alır. Bugünkü ilçe yapısından önce var olan bu yerleşimler, ilçenin tarihini tek bir kuruluş yılına indirgememek gerektiğini gösterir.",
-        "geography": "Çekmeköy, Alemdağ ormanlarının güneybatı çevresinde yer alır. Beykoz, Şile, Ümraniye ve Sancaktepe ile komşuluğu, Anadolu Yakası’nın iç kesimlerindeki konumunu tarif eder.",
-        "life": "Alemdağ Ormanı eşiği, Taşdelen mesire alanı ve Çekmeköy merkez yerel ticaret, dolaşım ve açık alan ilişkisini üç ayrı ölçekte gösterir. Ömerli havzası çevresi bu ilişkinin ilçenin başka bir kesimindeki karşılığını okumayı sağlar.",
-        "transportation": "M5 metrosu Çekmeköy’ün ana raylı sistem bağlantısıdır; otobüs hatları orman-havza eşiğindeki geniş mahalle alanlarını istasyonlara bağlar.",
-        "housingTexture": "Eski yerleşim çekirdekleri, metro çevresindeki apartman-site gelişimi ve orman-havza sınırına yakın düşük yoğunluklu alanlar birlikte bulunur. Genel morfoloji tek başına bir yapının güvenliği veya niteliği hakkında karar verdirmez; güncel resmî kayıt ve teknik inceleme gerekir.",
-        "regionalAssessment": "Bölgesel değerlendirmede orman ve içme suyu havzası eşiği ile metro çevresinde büyüyen konut alanları birlikte okunmalıdır. İlçe bütününe ilişkin bu sentez, mahalleler arasındaki farkları ortadan kaldırmaz; güncel kaynak ve gözlemle ayrıntılandırılmalıdır.",
-        "placesGuide": "Alemdağ Ormanı eşiği, Taşdelen mesire alanı, Çekmeköy merkez, Ömerli havzası çevresi, coğrafya ile gündelik kullanımın ilçede nasıl kesiştiğini izlemek için birlikte değerlendirilebilir. Alanların açık olduğu saatler ile fotoğraf kuralları çekim tarihine yakın yeniden doğrulanmalıdır.",
-        "distinctiveFeatures": "Çekmeköy ölçeğinde belirginleşen özellik orman ve içme suyu havzası eşiği ile metro çevresinde büyüyen konut alanları. Alemdağ Ormanı eşiği ile Taşdelen mesire alanı arasında kurulacak saha karşılaştırması bu özelliği somutlaştırır.",
-        "researchTopics": "• Alemdağ ve Taşdelen'in mesire ve yerleşim geçmişi\n• Orman ile su havzası sınırlarında yapılaşmanın değişimi\n• Metro erişiminin Çekmeköy merkezindeki gündelik yaşama etkisi"
+        "summary": "Çekmeköy, M5 metro koridorundaki yoğun yeni konut alanlarını Taşdelen ve Alemdağ’ın yerleşik merkezleri, Ömerli havzası ve kuzeydoğudaki orman-kırsal mahallelerle birleştiren Anadolu Yakası çeper ilçesidir. Şile Otoyolu erişimi ile doğal eşikler yerleşim büyümesini birlikte biçimlendirir.",
+        "history": "Çekmeköy’ün yerleşim geçmişi Alemdağ, Taşdelen ve Ömerli çevresindeki orman, su kaynakları ve kırsal köylere dayanır. 20. yüzyılın ikinci yarısında Üsküdar–Şile yolu ve sanayi/konut gelişimi nüfusu artırdı; 1980’lerden sonra kooperatifler, siteler ve yeni apartman mahalleleri yayıldı. 2008’de Çekmeköy, Alemdağ, Taşdelen ve Ömerli belediyeleri ile çevre köylerin birleşmesiyle bugünkü ilçe kuruldu. M5 metrosunun gelişi merkez ve ana yol çevresindeki kentleşmeyi güçlendirdi.",
+        "geography": "İlçe güneybatıda yoğun Çekmeköy merkezden kuzeydoğuda Alemdağ, Reşadiye, Koçullu ve Ömerli’ye doğru orman-havza coğrafyasına açılır. Taşdelen yerleşik konut merkezi, Şile Otoyolu ana ulaşım omurgası, Ömerli Barajı ve çevresi su havzası eşiğidir. Güneybatıdaki apartman/site yoğunluğu ile kuzeydoğudaki düşük yoğunluk ve kırsal doku belirgin biçimde ayrılır.",
+        "life": "Çekmeköy meydan ve Madenler çevresi, Taşdelen merkez ve Alemdağ caddeleri günlük ticaret-hizmet odaklarıdır. Doğa Park, mesire alanları ve orman kenarı yürüyüş alanları rekreasyonu; belediye kültür merkezleri ile mahalle parkları yerel kamusal yaşamı destekler. Ömerli ve kırsal mahallelerde günlük ritim ana merkezlerden daha düşük yoğunlukludur.",
+        "transportation": "M5 Üsküdar–Samandıra Merkez hattı Çekmeköy, Necip Fazıl, Dudullu ve çevre istasyonlarla ilçenin güneybatısına raylı sistem erişimi sağlar; hattın işletmedeki istasyonları ile planlanan uzatmalar karıştırılmamalıdır. İETT ve minibüs hatları Taşdelen, Alemdağ, Ömerli ve kırsal mahalleleri metroya bağlar. Şile Otoyolu ana karayolu omurgasıdır.",
+        "housingTexture": "Çekmeköy merkez ve Madenler çevresinde yeni apartmanlar, siteler ve ana cadde ticareti; Taşdelen’de yerleşik apartman/site karışımı; Alemdağ’da daha parçalı konut ve küçük üretim; Reşadiye–Ömerli yönünde villa, müstakil ev, kırsal yapı ve orman kenarı yerleşimleri görülür. Havza ve orman sınırları kuzeydoğuda yapılaşmanın temel koşuludur.",
+        "regionalAssessment": "Çekmeköy’ü belirleyen M5 metro erişimi, Şile Otoyolu, hızlı site-apartman gelişimi, Taşdelen–Alemdağ’ın eski merkezleri, Ömerli su havzası ve orman-kırsal kuşaktır. Metroya yakın yoğun mahalleler ile kuzeydoğudaki düşük yoğunluklu alanlar erişim ve hizmet açısından ayrı değerlendirilmelidir.",
+        "placesGuide": "Rota Çekmeköy merkez ve M5 çevresinden Taşdelen çarşısı ile Doğa Park’a; Alemdağ yerleşim odağı ve orman sınırına uzatılabilir. Reşadiye ve Ömerli çevresi su havzası-kırsal peyzajı, Şile Otoyolu çevresi ise yeni konut ve bölgesel erişim ilişkisini gösterir.",
+        "distinctiveFeatures": "Çekmeköy’ü ayıran, M5 metrosuyla erişilen hızlı büyüyen site-apartman kuşağını Taşdelen–Alemdağ’ın yerleşik merkezleri ve hemen kuzeydoğudaki Ömerli havzası, ormanlar ve kırsal mahallelerle yan yana getirmesidir.",
+        "researchTopics": "• M5 erişiminin konut ve merkez gelişimine etkisi\n• Taşdelen–Alemdağ yerleşimlerinin dönüşümü\n• Ömerli havzasında koruma ve yerleşim ilişkisi\n• Metroya uzak kırsal mahallelerde hizmet erişimi"
       },
       "neighborhoods": [
         "Alemdağ",
@@ -6155,13 +6487,21 @@
           "url": "https://cekmekoy.gov.tr/cekmekoy-tarihi",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
-          "dataDate": null,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
           "needsVerification": false,
           "sections": [
-            "history",
             "summary",
-            "regionalAssessment"
+            "history",
+            "geography",
+            "life",
+            "transportation",
+            "housingTexture",
+            "regionalAssessment",
+            "placesGuide",
+            "distinctiveFeatures",
+            "researchTopics",
+            "facts"
           ]
         },
         {
@@ -6170,8 +6510,8 @@
           "url": "https://cekmekoy.gov.tr/cekmekoy-cografyasi",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
-          "dataDate": null,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "geography",
@@ -6185,7 +6525,7 @@
           "url": "https://muhtarlikisleri.ibb.istanbul/cekmekoy-mahalle-muhtarlari/",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2026-09-09T18:50:26.627856+00:00",
           "needsVerification": false,
           "sections": [
@@ -6198,8 +6538,8 @@
           "url": "https://cekmekoy.bel.tr/icerik/cekmekoy/cekmekoy-tarihi",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
-          "dataDate": null,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "life"
@@ -6211,8 +6551,8 @@
           "url": "https://cekmekoy.gov.tr/ilcemizin-tarihi",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
-          "dataDate": null,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "housingTexture",
@@ -6227,7 +6567,7 @@
           "url": "https://www.metro.istanbul/Hatlarimiz/HatDetay?hat=M5",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2026-09-26T18:00:00.000Z",
           "needsVerification": false,
           "sections": [
@@ -6240,7 +6580,7 @@
           "url": "https://data.tuik.gov.tr/Bulten/Index?p=Adrese-Dayali-Nufus-Kayit-Sistemi-Sonuclari-2025-53899",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2025-12-31T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
@@ -6253,11 +6593,24 @@
           "url": "https://ibb.istanbul/ibb/belediye-hakkinda/yetki-alani/",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2026-09-26T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "facts"
+          ]
+        },
+        {
+          "title": "İETT toplu ulaşım ve hat arama",
+          "publisher": "İETT",
+          "url": "https://iett.istanbul/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "transportation"
           ]
         }
       ],
@@ -6268,12 +6621,12 @@
         "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
         "areaKm2Review": "İlçe kurumlarında ölçüm kapsamına göre değişebilen yüzölçümü değerleri bulunduğundan, 39 ilçe için aynı standardı veren İBB İlçe Alan Bilgileri Tablosu'ndaki kara alanı esas alındı."
       },
-      "methodology": "Mevcut araştırma havuzu başlangıç olarak kullanıldı; yayıma açılan her bölüm resmî kurum sayfalarıyla yeniden sınırlandırılıp nötr editoryal dille yazıldı. Güncel ulaşım yalnız işletmeci ağ bilgisiyle, nüfus TÜİK ADNKS 2025 ile, mahalleler mevcut resmî dizinlerle eşleştirildi. Piyasa verileri, yapı güvenliği hükümleri ve doğrulanmamış proje takvimleri yayıma alınmadı.",
+      "methodology": "Mevcut doğrulanmış içerik korunarak tarih, coğrafya, gündelik yaşam, 2026 ulaşımı ve yapı dokusu resmî kurum kaynaklarıyla yeniden denetlendi. Nüfus TÜİK ADNKS 2025, alan İBB standardı, mahalleler resmî yerel dizinlerle eşleştirildi; yalnız işletmede olduğu doğrulanan hatlar mevcut hizmet olarak yazıldı. Bina güvenliği, parsel değeri ve doğrulanmamış proje takvimleri hakkında sonuç üretilmedi.",
       "facts": {
         "population": "315959",
         "populationYear": 2025,
         "neighborhoodCount": 21,
-        "locationSummary": "Çekmeköy’de eski köy yerleşimleri ile İstanbul’un Anadolu Yakası’ndaki kentleşme süreci birlikte görülür.",
+        "locationSummary": "M5 metro çevresindeki yoğun konut alanlarından Taşdelen–Alemdağ'a ve Ömerli orman-havza kuşağına uzanır.",
         "areaKm2": 148.09,
         "neighboringDistricts": "Beykoz, Şile, Sancaktepe ve Ümraniye"
       },
@@ -6283,36 +6636,36 @@
         "geography",
         "life",
         "transportation",
-        "facts",
-        "neighborhoods",
         "housingTexture",
         "regionalAssessment",
         "placesGuide",
         "distinctiveFeatures",
-        "researchTopics"
+        "researchTopics",
+        "facts",
+        "neighborhoods"
       ]
     },
     {
       "district": "kadikoy",
       "pdfSha256": "37958bd6aac286c0e360965ae74d7e13f437e02aaf376c72af7c7f18800ab458",
-      "checkedAt": "2026-09-26T18:30:00.000Z",
+      "checkedAt": "2026-09-27T09:00:00.000Z",
       "sections": {
-        "summary": "Kadıköy, Marmara kıyısındaki yerleşimleri ve farklı dönemlerde gelişen mahalle dokularıyla tanınır.",
-        "history": "19. yüzyılda vapur işletmeciliği ve Haydarpaşa demiryolu bağlantısı, Kadıköy’ün gelişmesinde etkili oldu. Kaymakamlık tarihçesi, sonraki dönemde bahçeli yerleşimlerin apartmanlaşmasını ayrı bir kentleşme evresi olarak anlatır. Kadıköy 1930’da ilçe oldu.",
-        "geography": "İlçe, Boğaz’ın Marmara’ya açıldığı çevrenin doğusundadır. Haydarpaşa, Moda ve Bostancı çevresindeki kıyılar ile iç mahalleler farklı konumlar sunar; semt adları resmî mahalle adlarıyla her zaman örtüşmez.",
-        "life": "Kamusal alan ve mahalle yaşamı Kadıköy Çarşısı ile Haydarpaşa çevresi arasında farklı biçimler alır. Moda kıyısı ve Yeldeğirmeni sokakları, bu gündelik yapının merkez dışındaki iki tamamlayıcı odağıdır.",
-        "transportation": "M4 metrosu, Marmaray, metrobüs, T3 tramvayı ve yoğun deniz hatları Kadıköy’ü çok modlu bir aktarma merkezi yapar.",
-        "housingTexture": "Yeldeğirmeni ve merkezdeki tarihî apartmanlar, Bağdat Caddesi çevresindeki çok katlı konutlar ve kıyı mahallelerinin farklı dönemleri belirgin bir çeşitlilik oluşturur. Bu yapılaşma okuması, belirli bir bina ya da parsel hakkında güvenlik sonucu olarak kullanılmamalı; resmî ve teknik veriler ayrıca aranmalıdır.",
-        "regionalAssessment": "Bölgesel değerlendirmede güçlü toplu taşıma, kıyı kamusal alanları ve farklı dönemlere ait mahalle dokuları birlikte okunmalıdır. Bu çerçeve belirli bir bölgeyi üstün veya güvenli ilan etmez; resmî veriler ile saha bulgularının birlikte okunmasını gerektirir.",
-        "placesGuide": "Fotoğraf ve gözlem rotası Kadıköy Çarşısı, Haydarpaşa çevresi, Moda kıyısı, Yeldeğirmeni sokakları çevresinde kurulduğunda ilçenin farklı mekânsal katmanları okunabilir. Ziyaret ve çekim koşulları sabit kabul edilmemeli, ilgili kurumların güncel bilgileri izlenmelidir.",
-        "distinctiveFeatures": "Kadıköy ilçesinin İstanbul içindeki farklılığı güçlü toplu taşıma, kıyı kamusal alanları ve farklı dönemlere ait mahalle dokuları ile ilişkilidir. Kadıköy Çarşısı ve Haydarpaşa çevresi bu ilişkinin mekânda nasıl çeşitlendiğini gösterir.",
-        "researchTopics": "• Haydarpaşa çevresindeki dönüşümün kıyı kullanımı ve ulaşıma etkisi\n• Yeldeğirmeni'nde tarihî konut dokusunun değişimi\n• Bağdat Caddesi'nde parsel bazlı dönüşümün sokak ölçeğine etkisi"
+        "summary": "Kadıköy, tarihî çarşı ve iskele çevresini Yeldeğirmeni–Haydarpaşa, Moda–Fenerbahçe kıyısı, Bağdat Caddesi–Göztepe konut kuşağı ve Bostancı ulaşım odağıyla birleştiren yoğun bir Anadolu Yakası ilçesidir. Marmaray, M4, nostaljik tramvay ve deniz ulaşımı çok merkezli gündelik yaşamı birbirine bağlar.",
+        "history": "Kadıköy’ün yerleşim geçmişi antik Khalkedon’a uzanır; Osmanlı döneminde iskele, pazar ve sayfiye işlevleri gelişti. 19. yüzyılda vapur ve demiryolu, Haydarpaşa–Yeldeğirmeni ile Moda çevresinde konut ve ticareti hızlandırdı. Cumhuriyet döneminde Bağdat Caddesi boyunca apartmanlaşma doğuya yayıldı; Kadıköy Çarşı kültür-ticaret merkezi, Haydarpaşa ise demiryolu kapısı olarak önemini korudu. Son dönem yenilemeleri yapı dokusunu değiştirirken mahalle merkezleri güçlü kaldı.",
+        "geography": "İlçe kuzeyde Üsküdar ve Ataşehir, doğuda Maltepe, güney ve batıda Marmara Denizi ile çevrilidir. Tarihî merkez Haydarpaşa koyu ve Kurbağalıdere ağzında; Moda ve Fenerbahçe yarımada-kıyı kuşağında; Göztepe–Erenköy–Suadiye–Caddebostan Bağdat Caddesi çevresinde; Kozyatağı iç kesimde; Bostancı doğu kıyı ve ulaşım düğümünde gelişir.",
+        "life": "Kadıköy Çarşı, Bahariye ve iskele meydanı bölgesel kültür-ticaret odağıdır. Moda kıyısı, Yoğurtçu Parkı ve Kurbağalıdere, Kalamış–Fenerbahçe sahili, Caddebostan kıyısı ve Bağdat Caddesi yoğun kamusal yaşam taşır. Yeldeğirmeni kültür-mahalle dokusu; Göztepe Özgürlük Parkı ve Bostancı çarşısı doğu kesimin yerel merkezleridir.",
+        "transportation": "M4 Kadıköy–Sabiha Gökçen metrosu Kadıköy, Ayrılık Çeşmesi, Acıbadem, Ünalan, Göztepe, Yenisahra ve Kozyatağı üzerinden doğuya uzanır. Marmaray Ayrılık Çeşmesi, Söğütlüçeşme, Feneryolu, Göztepe, Erenköy, Suadiye ve Bostancı istasyonlarıyla kıyı-paralel erişim sağlar. T3 tramvayı merkez–Moda ringinde; Şehir Hatları Kadıköy ve Bostancı iskelelerinde; metrobüs Söğütlüçeşme’de hizmet verir.",
+        "housingTexture": "Kadıköy merkez, Yeldeğirmeni ve Hasanpaşa’da eski apartmanlar, dar parseller ve yoğun ticaret; Moda’da tarihî yapılarla apartmanlar; Fenerbahçe–Caddebostan–Suadiye’de kıyı ve Bağdat Caddesi boyunca yenilenen apartmanlar; Kozyatağı’nda daha yüksek bloklar ve ofisler görülür. Haydarpaşa büyük ulaşım-kamu alanı, Fikirtepe ise büyük ölçekli dönüşüm dokusuyla ayrışır.",
+        "regionalAssessment": "Kadıköy’ü belirleyen güçlü çarşı-kültür merkezi, Marmara kıyısındaki uzun kamusal alan, Haydarpaşa demiryolu mirası, Moda–Bağdat Caddesi mahalleleri, M4–Marmaray–metrobüs–deniz entegrasyonu ve yoğun yaya yaşamıdır. Merkez, kıyı ve iç mahallelerde dönüşüm ile kamusal alan baskısı farklılaşır.",
+        "placesGuide": "Rota Kadıköy İskelesi ve Çarşı’dan Yeldeğirmeni–Haydarpaşa çevresine, Bahariye üzerinden Moda ve Yoğurtçu Parkı’na; ardından Kalamış–Fenerbahçe ve Caddebostan kıyısına uzatılabilir. Bağdat Caddesi, Göztepe Özgürlük Parkı ve Bostancı iskele-çarşısı doğu kesimin yerleşim ve ulaşım karakterini tamamlar.",
+        "distinctiveFeatures": "Kadıköy’ü benzersiz kılan, güçlü yaya ve kültür yaşamına sahip tarihî çarşıyı Haydarpaşa demiryolu mirası, Moda–Fenerbahçe–Caddebostan kıyı kamusallığı, Bağdat Caddesi mahalleleri ve dört farklı yüksek kapasiteli ulaşım sistemiyle birleştirmesidir.",
+        "researchTopics": "• Kadıköy Çarşı'da yaya yaşamı ve ticaret dönüşümü\n• Haydarpaşa alanının kent ve ulaşım belleğindeki rolü\n• Bağdat Caddesi çevresinde bina yenileme ve sokak dokusu\n• Marmaray–M4–deniz entegrasyonunun mahalle hareketliliği"
       },
       "facts": {
         "population": "458573",
         "populationYear": 2025,
         "neighborhoodCount": 21,
-        "locationSummary": "Kadıköy, Marmara kıyısındaki yerleşimleri ve farklı dönemlerde gelişen mahalle dokularıyla tanınır.",
+        "locationSummary": "Kadıköy Çarşı ve Haydarpaşa'dan Moda, Fenerbahçe, Göztepe ve Bostancı'ya uzanan Marmara kıyısı ilçesidir.",
         "areaKm2": 25.09,
         "neighboringDistricts": "Üsküdar, Ataşehir ve Maltepe"
       },
@@ -6346,10 +6699,20 @@
           "url": "https://data.tuik.gov.tr/Bulten/Index?p=Adrese-Dayali-Nufus-Kayit-Sistemi-Sonuclari-2025-53899",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2025-12-31T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
+            "summary",
+            "history",
+            "geography",
+            "life",
+            "transportation",
+            "housingTexture",
+            "regionalAssessment",
+            "placesGuide",
+            "distinctiveFeatures",
+            "researchTopics",
             "facts"
           ]
         },
@@ -6359,8 +6722,8 @@
           "url": "https://kadikoy.gov.tr/kadikoy-ilce-tarihce",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
-          "dataDate": null,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "history",
@@ -6374,8 +6737,8 @@
           "url": "https://www.kadikoy.bel.tr/cografi-konum",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
-          "dataDate": null,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "geography",
@@ -6389,7 +6752,7 @@
           "url": "https://muhtarlikisleri.ibb.istanbul/kadikoy-mahalle-muhtarlari/",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2026-09-09T18:50:26.627856+00:00",
           "needsVerification": false,
           "sections": [
@@ -6402,8 +6765,8 @@
           "url": "https://kultursanat.kadikoy.bel.tr/tr/kultur-merkezleri/caddebostan-kultur-merkezi",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
-          "dataDate": null,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "life",
@@ -6418,8 +6781,8 @@
           "url": "https://www.kadikoy.gov.tr/ilcemizin-nufusu-son-1-yilda-849-kisi-azalarak-451453-oldu",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
-          "dataDate": null,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "housingTexture"
@@ -6431,7 +6794,7 @@
           "url": "https://sehirhatlari.istanbul/tr/seferler/ic-hatlar",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2026-09-26T18:00:00.000Z",
           "needsVerification": false,
           "sections": [
@@ -6444,11 +6807,64 @@
           "url": "https://ibb.istanbul/ibb/belediye-hakkinda/yetki-alani/",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
           "dataDate": "2026-09-26T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "facts"
+          ]
+        },
+        {
+          "title": "M4 Kadıköy–Sabiha Gökçen Metro Hattı",
+          "publisher": "Metro İstanbul",
+          "url": "https://www.metro.istanbul/Hatlarimiz/HatDetay?hat=M4",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "transportation"
+          ]
+        },
+        {
+          "title": "Marmaray istasyon ve sefer bilgileri",
+          "publisher": "TCDD Taşımacılık",
+          "url": "https://www.marmaray.gov.tr/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "transportation"
+          ]
+        },
+        {
+          "title": "İstanbul Şehir Hatları iskele ve seferleri",
+          "publisher": "Şehir Hatları",
+          "url": "https://sehirhatlari.istanbul/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "transportation"
+          ]
+        },
+        {
+          "title": "M8 Bostancı–Parseller Metro Hattı",
+          "publisher": "Metro İstanbul",
+          "url": "https://www.metro.istanbul/Hatlarimiz/HatDetay?hat=M8",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "dataDate": "2026-09-27T09:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "transportation",
+            "planningDevelopments"
           ]
         }
       ],
@@ -6459,20 +6875,33 @@
         "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
         "areaKm2Review": "İlçe kurumlarında ölçüm kapsamına göre değişebilen yüzölçümü değerleri bulunduğundan, 39 ilçe için aynı standardı veren İBB İlçe Alan Bilgileri Tablosu'ndaki kara alanı esas alındı."
       },
-      "methodology": "Mevcut araştırma havuzu başlangıç olarak kullanıldı; yayıma açılan her bölüm resmî kurum sayfalarıyla yeniden sınırlandırılıp nötr editoryal dille yazıldı. Güncel ulaşım yalnız işletmeci ağ bilgisiyle, nüfus TÜİK ADNKS 2025 ile, mahalleler mevcut resmî dizinlerle eşleştirildi. Piyasa verileri, yapı güvenliği hükümleri ve doğrulanmamış proje takvimleri yayıma alınmadı.",
+      "methodology": "Mevcut doğrulanmış içerik korunarak tarih, coğrafya, gündelik yaşam, 2026 ulaşımı ve yapı dokusu resmî kurum kaynaklarıyla yeniden denetlendi. Nüfus TÜİK ADNKS 2025, alan İBB standardı, mahalleler resmî yerel dizinlerle eşleştirildi; yalnız işletmede olduğu doğrulanan hatlar mevcut hizmet olarak yazıldı. Bina güvenliği, parsel değeri ve doğrulanmamış proje takvimleri hakkında sonuç üretilmedi.",
       "reviewedSections": [
         "summary",
         "history",
         "geography",
         "life",
         "transportation",
-        "facts",
-        "neighborhoods",
         "housingTexture",
         "regionalAssessment",
         "placesGuide",
         "distinctiveFeatures",
-        "researchTopics"
+        "researchTopics",
+        "facts",
+        "neighborhoods",
+        "planningDevelopments"
+      ],
+      "planningDevelopments": [
+        {
+          "title": "M8 Bostancı–Parseller Hattının Açılması",
+          "summary": "M8 hattı 6 Ocak 2023’te açılarak Bostancı ve Kozyatağı çevresinde Marmaray ile M4 arasında yeni bir kuzey-güney bağlantısı sağladı.",
+          "neighborhood": "Bostancı–Kozyatağı",
+          "date": "2023-01-06T00:00:00.000Z",
+          "status": "tamamlandi",
+          "officialSource": "https://www.metro.istanbul/Hatlarimiz/HatDetay?hat=M8",
+          "checkedAt": "2026-09-27T09:00:00.000Z",
+          "needsVerification": false
+        }
       ]
     },
     {
