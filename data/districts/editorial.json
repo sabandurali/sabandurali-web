@@ -502,18 +502,18 @@
     {
       "district": "bagcilar",
       "pdfSha256": "b09911af14f47f03421033b5df3686906795162b309fce3004af207f73e2fe91",
-      "checkedAt": "2026-09-26T18:30:00.000Z",
+      "checkedAt": "2026-09-27T07:14:55.000Z",
       "sections": {
-        "summary": "Bağcılar’ın bugünkü ilçe kimliği, Mahmutbey, Kirazlı ve Güneşli çevresindeki yerleşimlerin kentleşme süreciyle bağlantılıdır.",
-        "history": "Bağcılar, 1992’de Bakırköy’den ayrılarak ilçe oldu. Kaymakamlığın tarihçesinde Mahmutbey, Kirazlı ve Güneşli, bu idari oluşumdan önceki yerleşim odakları olarak anlatılır.",
-        "geography": "Mahmutbey, Kirazlı ve Güneşli adları, ilçenin yerleşim geçmişini coğrafyayla birlikte okumaya yardımcı olur. Güncel mahalle listesi aşağıda ayrı verilir; tarihî köy adları bugünkü sınırların tamamını açıklamaz.",
-        "life": "Kirazlı merkez aksı ve Bağcılar Meydanı, kamusal hareket ile yerel ticaretin kesiştiği iki odaktır. Fuat Sezgin Bilim Merkezi açık alan kullanımlarını, Ali Paşa Kemeri çevresi da ilçenin başka bir yerleşim karakterini görünür kılar.",
-        "transportation": "M1B metrosu, T1 tramvayı ve M9 bağlantısı Bağcılar’ın raylı sistem omurgasını oluşturur; otobüs hatları mahalleleri bu istasyonlara bağlar.",
-        "housingTexture": "Bitişik nizam apartman mahalleleri, ana caddelerdeki ticaret yapıları ve dönüşümle yenilenen parseller Bağcılar’ın yoğun yapı karakterini oluşturur. Genel yapı örüntüsü, bina ölçeğinde dayanım değerlendirmesi yerine geçmez; parsel ve yapı bilgileri yetkili kurum kayıtlarıyla kontrol edilmelidir.",
-        "regionalAssessment": "Bölgesel değerlendirmede yüksek yoğunluklu mahalle dokusu, güçlü raylı sistem erişimi ve kamusal merkezlerin dağılımı birlikte okunmalıdır. Bu ilçe ölçekli okuma yatırım tavsiyesi veya yapı değerlendirmesi yerine geçmez; değişen koşullar resmî kayıtlarla izlenmelidir.",
-        "placesGuide": "Kirazlı merkez aksı, Bağcılar Meydanı, Fuat Sezgin Bilim Merkezi, Ali Paşa Kemeri çevresi; yerleşim, açık alan ve yerel hafızanın farklı yüzlerini izlemeye yardımcı olur. Ziyaret saati, erişim kuralı ve çekim izni gerekiyorsa ilgili kurumun güncel duyurusu esas alınmalıdır.",
-        "distinctiveFeatures": "Bağcılar ilçesinin kendine özgü mekânsal yapısı yüksek yoğunluklu mahalle dokusu, güçlü raylı sistem erişimi ve kamusal merkezlerin dağılımı üzerinden tarif edilebilir. Kirazlı merkez aksı ile Bağcılar Meydanı bu yapının iki farklı yüzünü temsil eder.",
-        "researchTopics": "• Mahmutbey, Kirazlı ve Güneşli'nin köy geçmişinden kalan izler\n• Raylı sistem aktarma noktalarının sokak yaşamına etkisi\n• Yoğun parsel dokusunda dönüşümün mahalle ölçeğine etkileri"
+        "summary": "Bağcılar, İstanbul’un Avrupa Yakası’nda kıyısı bulunmayan, yoğun konut dokusu ile ticaret ve üretim alanlarının iç içe geçtiği bir ilçedir. Farklı dönemlerde oluşmuş mahalleleri Bağcılar Meydanı, Kirazlı, Güneşli ve Mahmutbey çevresinde ayrı gündelik yaşam ve iş odakları yaratırken M1B, T1, M3 ve M7 hatları ilçeyi kent ölçeğindeki ulaşım ağına bağlar.",
+        "history": "Bağcılar Kaymakamlığının tarihçesi, bugünkü ilçe sınırları içinde Mahmutbey nahiyesi ve ona bağlı köy yerleşimlerinin bulunduğunu aktarır. Aynı kaynakta Çıfıtburgaz adı, İstanbul’un tarihî su yollarına ilişkin coğrafi bir tarif içinde geçer; bu kayıt ilçe adının kökenine dair kesin bir açıklama olarak değerlendirilmez.\n\nKirazlı, Güneşli ve Mahmutbey, ilçenin idari kuruluşundan önceki yerleşim katmanlarını temsil eder. Tarımsal nitelikli bu çevreler, İstanbul’un batıya doğru büyümesiyle birlikte konut, atölye, sanayi ve ticaret kullanımlarının yoğunlaştığı bir kent dokusuna dönüştü.\n\nÖzellikle 20. yüzyılın ikinci yarısındaki hızlı nüfus artışı ve yapılaşma, eski yerleşim odaklarını birbirine bağladı; ana ulaşım koridorları çevresindeki iş alanları ilçenin ekonomik yapısını çeşitlendirdi. Bu süreç, bugün mahalle ölçeğinde görülen yoğun ve çok katmanlı dokunun temelini oluşturdu.\n\nBağcılar, 3806 sayılı düzenleme kapsamında 1992’de Bakırköy’den ayrılarak ilçe oldu. Kirazlı, Güneşli ve Mahmutbey çevresindeki yerleşimlerin aynı idari yapı altında birleşmesiyle bugünkü ilçe örgütlenmesi kuruldu.",
+        "geography": "Bağcılar, Avrupa Yakası’nın iç kesiminde; Küçükçekmece, Başakşehir, Esenler, Güngören ve Bahçelievler arasında yer alır. Denize kıyısı olmayan ilçenin topografyası, yoğun yapılaşmış plato yüzeyleri ile doğu–batı ve kuzey–güney yönlü ulaşım koridorları boyunca biçimlenen kentsel alanlardan oluşur. Bağcılar Meydanı ve çevresi geleneksel merkez işlevi taşırken Kirazlı raylı sistem odağıyla, Güneşli ticaret ve iş alanlarıyla, Mahmutbey ise üretim, ticaret ve ulaşım bağlantılarıyla ayrışır. Büyük ve kesintisiz açık alanların sınırlı olduğu ilçede mahalle parkları, meydanlar ve kamusal tesis çevreleri gündelik açık alan kullanımında önem kazanır.",
+        "life": "Gündelik yaşam, tek bir merkezden çok mahalle içi çarşılar ve ulaşım odakları arasında dağılır. Bağcılar Meydanı kamu hizmetleri, alışveriş ve T1–M1B aktarmasının yoğunlaştığı ana buluşma alanıdır. Kirazlı çevresi metro bağlantıları ve yerel ticaretle; Güneşli ana caddeleri iş yerleri, mağazalar ve konut yaşamıyla; Mahmutbey ise konut alanlarının yanında üretim ve ticaret kullanımlarıyla öne çıkar. Fuat Sezgin Bilim Merkezi eğitim ve bilim temalı kamusal programlara ev sahipliği yaparken semt pazarları, parklar ve mahalle caddeleri ilçenin günlük sosyal ritmini tamamlar.",
+        "transportation": "Bağcılar’ın raylı sistem ağı dört ana hat üzerinden çalışır. M1B Yenikapı–Kirazlı hattı Bağcılar Meydan ve Kirazlı-Bağcılar istasyonlarıyla ilçeye hizmet verir; T1 Kabataş–Bağcılar tramvayı Bağcılar’da M1B’ye bağlanır. M3 Bakırköy Sahil–Kayaşehir Merkez hattı Yıldıztepe, Molla Gürani, Kirazlı-Bağcılar, Yenimahalle ve Mahmutbey istasyonlarından geçer; Kirazlı’da M1B, Mahmutbey’de M7 ile aktarma sağlar. M7 Yıldız–Mahmutbey hattının son istasyonu Mahmutbey’dir. Otobüs ve minibüs hatları mahalleleri bu istasyonlara ve çevre ilçelere bağlarken, ana caddelerdeki yoğunluk yolculuk sürelerini günün saatine göre değiştirebilir.",
+        "housingTexture": "Bağcılar’ın konut dokusu çoğunlukla sık parsel düzeninde yükselen çok katlı apartmanlardan oluşur. Eski yerleşim odaklarında bitişik ya da yakın aralıklı yapılar ve zemin kat ticareti yaygındır; Güneşli ve Mahmutbey çevresinde konut dokusuna daha büyük ölçekli iş, üretim ve karma kullanım yapıları eşlik eder. Yenilenen parseller ile daha eski yapı stoku aynı mahallede yan yana görülebilir. Bu genel doku tarifi hiçbir bina için güvenlik sonucu üretmez; yapı yaşı, ruhsat, zemin ve güncel plan bilgisi yetkili kurum kayıtlarından ayrıca incelenmelidir.",
+        "regionalAssessment": "Bağcılar’ın bölgesel konumu, Avrupa Yakası’nın iç kesimlerindeki yüksek nüfuslu mahalleler ile Güneşli ve Mahmutbey çevresindeki iş, ticaret ve üretim koridorları arasında bir eşik oluşturur. M1B, T1, M3 ve M7 bağlantıları ilçenin erişilebilirliğini artırırken küçük parseller üzerindeki yerleşik ve yoğun doku; meydan, park ve diğer kamusal merkezlerin kapasitesini önemli kılar. İlçe ölçeğindeki bu değerlendirme yatırım tavsiyesi ya da taşınmaz sonucu değildir; güncel plan ve proje kararları yetkili kurumlardan izlenmelidir.",
+        "placesGuide": "Bağcılar Meydanı, ilçenin kamusal merkezi ve T1–M1B aktarma çevresini birlikte gözlemlemek için başlangıç noktasıdır. Kirazlı çevresi metro odağındaki yerleşim ve ticaret dokusunu; Güneşli ana aksları iş ve konut kullanımlarının birlikteliğini; Mahmutbey ise üretim, ticaret ve ulaşım katmanlarını gösterir. Fuat Sezgin Bilim Merkezi, ilçenin eğitim ve bilim temalı kamusal duraklarından biridir. Ziyaret saatleri, etkinlik programları ve erişim koşulları saha çalışmasından önce ilgili kurumdan doğrulanmalıdır.",
+        "distinctiveFeatures": "Bağcılar’ı İstanbul içinde ayıran başlıca özellik, çok yoğun mahalle dokusunun güçlü bir raylı sistem ağı ve geniş ölçekli ticaret–üretim koridorlarıyla aynı sınırlar içinde buluşmasıdır. Bağcılar Meydanı’nın yerel merkez işlevi, Kirazlı’nın aktarma niteliği, Güneşli’nin iş alanları ve Mahmutbey’in M3–M7 bağlantısı ilçenin tek merkezli olmayan yapısını görünür kılar.",
+        "researchTopics": "• Mahmutbey, Kirazlı ve Güneşli’nin eski yerleşimlerden yoğun kent dokusuna dönüşümü\n• M1B, M3, M7 ve T1 bağlantılarının mahalle hareketliliğine etkisi\n• Mahmutbey ve Güneşli çevresinde ticaret ve üretim alanlarının dönüşümü\n• Yoğun parsel dokusunda kentsel yenilemenin mahalle ölçeğine etkileri"
       },
       "neighborhoods": [
         "100. Yıl",
@@ -571,18 +571,30 @@
           ]
         },
         {
-          "title": "Tarihçe - Bağcılar Kaymakamlığı",
-          "publisher": "Bağcılar Kaymakamlığı",
-          "url": "https://www.bagcilar.gov.tr/tarihce",
+          "title": "Bağcılar’da Fuat Sezgin Bilim Merkezi Kuruldu",
+          "publisher": "Bağcılar Belediyesi",
+          "url": "https://www.bagcilar.bel.tr/haber/4169/bagcilarda-fuat-sezgin-bilim-merkezi-kuruldu",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
+          "checkedAt": "2026-09-27T07:14:55.000Z",
           "dataDate": null,
           "needsVerification": false,
           "sections": [
             "life",
+            "placesGuide"
+          ]
+        },
+        {
+          "title": "İlçemizin Sosyal Yapısı",
+          "publisher": "Bağcılar Belediyesi",
+          "url": "https://bagcilar.bel.tr/icerik/ilcemizin-sosyal-yapisi",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-27T07:14:55.000Z",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
             "housingTexture",
-            "placesGuide",
             "distinctiveFeatures",
             "researchTopics"
           ]
@@ -593,11 +605,64 @@
           "url": "https://www.metro.istanbul/Hatlarimiz/HatDetay?hat=M1B",
           "sourceType": "official",
           "primary": false,
-          "checkedAt": "2026-09-26T18:00:00.000Z",
-          "dataDate": "2026-09-26T18:00:00.000Z",
+          "checkedAt": "2026-09-27T07:14:55.000Z",
+          "dataDate": "2026-09-27T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "transportation"
+          ]
+        },
+        {
+          "title": "T1 Kabataş–Bağcılar Tramvay Hattı",
+          "publisher": "Metro İstanbul",
+          "url": "https://www.metro.istanbul/Hatlarimiz/HatDetay?hat=T1",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-27T07:14:55.000Z",
+          "dataDate": "2026-09-27T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "transportation"
+          ]
+        },
+        {
+          "title": "M3 Bakırköy Sahil–Kayaşehir Merkez Metro Hattı",
+          "publisher": "Metro İstanbul",
+          "url": "https://www.metro.istanbul/Hatlarimiz/HatDetay?hat=M3",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-27T07:14:55.000Z",
+          "dataDate": "2026-09-27T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "transportation"
+          ]
+        },
+        {
+          "title": "M7 Yıldız–Mahmutbey Metro Hattı",
+          "publisher": "Metro İstanbul",
+          "url": "https://www.metro.istanbul/Hatlarimiz/HatDetay?hat=M7",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-27T07:14:55.000Z",
+          "dataDate": "2026-09-27T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "transportation"
+          ]
+        },
+        {
+          "title": "Yıldıztepe İstasyonu Hizmete Açılıyor",
+          "publisher": "Metro İstanbul",
+          "url": "https://www.metro.istanbul/duyuru/detay/yildiztepe-istasyonu-hizmete-aciliyor-071025",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-27T07:14:55.000Z",
+          "dataDate": "2025-10-08T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "transportation",
+            "planningDevelopments"
           ]
         },
         {
@@ -606,7 +671,7 @@
           "url": "https://data.tuik.gov.tr/Bulten/Index?p=Adrese-Dayali-Nufus-Kayit-Sistemi-Sonuclari-2025-53899",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
+          "checkedAt": "2026-09-27T07:14:55.000Z",
           "dataDate": "2025-12-31T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
@@ -627,19 +692,30 @@
           ]
         }
       ],
+      "planningDevelopments": [
+        {
+          "title": "M3 Yıldıztepe İstasyonu'nun Hizmete Açılması",
+          "summary": "M3 Bakırköy Sahil–Kayaşehir Merkez Metro Hattı üzerindeki Yıldıztepe İstasyonu, Metro İstanbul’un duyurusuna göre 8 Ekim 2025 saat 06.00 itibarıyla yolculu işletmeye açılarak Bağcılar’ın mevcut raylı sistem erişimine yeni bir istasyon ekledi.",
+          "neighborhood": "Yıldıztepe",
+          "date": "2025-10-08T00:00:00.000Z",
+          "status": "tamamlandi",
+          "officialSource": "https://www.metro.istanbul/duyuru/detay/yildiztepe-istasyonu-hizmete-aciliyor-071025",
+          "checkedAt": "2026-09-27T07:14:55.000Z",
+          "needsVerification": false
+        }
+      ],
       "excluded": {
         "marketData": "Karşılaştırılabilir, güncel ve tarihli resmî piyasa serisi bulunmadığından bilinçli olarak boş bırakıldı.",
-        "planningDevelopments": "Yalnız tarihli karar ve uygulama belgeleriyle doğrulanacak proje kayıtları bu içerik tamamlamasına dahil edilmedi.",
         "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
         "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
         "areaKm2Review": "İlçe kurumlarında ölçüm kapsamına göre değişebilen yüzölçümü değerleri bulunduğundan, 39 ilçe için aynı standardı veren İBB İlçe Alan Bilgileri Tablosu'ndaki kara alanı esas alındı."
       },
-      "methodology": "Mevcut araştırma havuzu başlangıç olarak kullanıldı; yayıma açılan her bölüm resmî kurum sayfalarıyla yeniden sınırlandırılıp nötr editoryal dille yazıldı. Güncel ulaşım yalnız işletmeci ağ bilgisiyle, nüfus TÜİK ADNKS 2025 ile, mahalleler mevcut resmî dizinlerle eşleştirildi. Piyasa verileri, yapı güvenliği hükümleri ve doğrulanmamış proje takvimleri yayıma alınmadı.",
+      "methodology": "Mevcut araştırma havuzu başlangıç olarak kullanıldı; yayıma açılan her bölüm resmî kurum sayfalarıyla yeniden sınırlandırılıp nötr editoryal dille yazıldı. Tarihçe Kaymakamlık kaydıyla, ulaşım ve tamamlanmış Yıldıztepe gelişmesi Metro İstanbul hat ve duyuru sayfalarıyla, nüfus TÜİK ADNKS 2025 ile, mahalleler mevcut resmî dizinlerle eşleştirildi. Piyasa verileri, yapı güvenliği hükümleri ve doğrulanmamış proje takvimleri yayıma alınmadı.",
       "facts": {
         "population": "707635",
         "populationYear": 2025,
         "neighborhoodCount": 22,
-        "locationSummary": "Bağcılar’ın bugünkü ilçe kimliği, Mahmutbey, Kirazlı ve Güneşli çevresindeki yerleşimlerin kentleşme süreciyle bağlantılıdır.",
+        "locationSummary": "Avrupa Yakası’nın iç kesiminde, Bağcılar Meydanı’ndan Kirazlı, Güneşli ve Mahmutbey yönlerine uzanan yoğun kentsel ilçedir.",
         "areaKm2": 22.36,
         "neighboringDistricts": "Küçükçekmece, Başakşehir, Esenler, Güngören ve Bahçelievler"
       },
@@ -655,7 +731,8 @@
         "regionalAssessment",
         "placesGuide",
         "distinctiveFeatures",
-        "researchTopics"
+        "researchTopics",
+        "planningDevelopments"
       ]
     },
     {
