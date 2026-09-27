@@ -21,6 +21,7 @@ type EditorialFacts = {
   locationSummary?: string | null;
 };
 type EditorialMarketData = NonNullable<DistrictGuide["marketData"]>;
+type EditorialPlanningDevelopments = DistrictGuide["planningDevelopments"];
 type EditorialAdoption = {
   currentFingerprint: string;
   contentFingerprint: string;
@@ -52,6 +53,7 @@ export type EditorialRecord = {
   sections: Partial<Record<TextSection, string>>;
   facts?: EditorialFacts;
   marketData?: EditorialMarketData;
+  planningDevelopments?: EditorialPlanningDevelopments;
   neighborhoods: string[];
   sources: DistrictSource[];
   reviewedSections?: DistrictSection[];
@@ -83,6 +85,7 @@ export const editorialContentFields = [
   "reviewedSections",
   "facts",
   "marketData",
+  "planningDevelopments",
 ] as const;
 
 function canonical(value: unknown): unknown {
@@ -143,6 +146,8 @@ export function attachEditorial(
     const derivedReviewed = Object.keys(review.sections) as DistrictSection[];
     if (review.neighborhoods.length) derivedReviewed.push("neighborhoods");
     if (review.facts) derivedReviewed.push("facts");
+    if (review.planningDevelopments?.length)
+      derivedReviewed.push("planningDevelopments");
     const reviewed = review.reviewedSections ?? derivedReviewed;
     if (new Set(reviewed).size !== reviewed.length)
       throw new Error(`Duplicate reviewed section: ${row.district}`);
@@ -209,10 +214,19 @@ export function editorialFields(
   const derivedSections = Object.keys(review.sections) as DistrictSection[];
   if (review.neighborhoods.length) derivedSections.push("neighborhoods");
   if (review.facts) derivedSections.push("facts");
+  if (review.planningDevelopments?.length)
+    derivedSections.push("planningDevelopments");
   return {
     ...review.sections,
     ...(review.facts ? { facts: { ...review.facts } } : {}),
     ...(review.marketData ? { marketData: { ...review.marketData } } : {}),
+    ...(review.planningDevelopments
+      ? {
+          planningDevelopments: review.planningDevelopments.map((item) => ({
+            ...item,
+          })),
+        }
+      : {}),
     neighborhoods: review.neighborhoods.map((name) => ({
       name,
       featured: false,

@@ -442,7 +442,11 @@ test("J–L: success preserves publication/private fields and becomes 0/39", asy
     const projection = projectPublishedDistrictGuide(current)!;
     assert.ok(projection);
     assert.equal(projection.marketData, null);
-    assert.deepEqual(projection.planningDevelopments, []);
+    assert.equal(
+      projection.planningDevelopments.length,
+      bundle.districts.find((row) => row.district === slug)!.editorial!
+        .planningDevelopments?.length ?? 0,
+    );
     assert.equal("researchNotes" in projection, false);
     assert.equal("importProvenance" in projection, false);
   }

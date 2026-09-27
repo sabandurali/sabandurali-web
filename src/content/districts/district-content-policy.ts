@@ -96,7 +96,7 @@ export function sourceSupportsSection(
     !(source.primary === true && source.sourceType === "official")
   )
     return false;
-  if (["marketData", "planningDevelopments"].includes(section)) {
+  if (section === "marketData") {
     const threshold = now - 90 * 24 * 60 * 60 * 1000;
     if (
       Date.parse(source.checkedAt!) < threshold ||

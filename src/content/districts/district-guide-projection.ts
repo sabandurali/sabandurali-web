@@ -108,6 +108,14 @@ export function mapDistrictGuide(
           now,
         ),
     );
+  const completedPlanningRow = (row: Record<string, unknown>) =>
+    text(row.status) === "tamamlandi";
+  const currentPlanningRow = (row: Record<string, unknown>) => {
+    const threshold = now - 90 * 24 * 60 * 60 * 1000;
+    const checkedAt = Date.parse(text(row.checkedAt) ?? "");
+    const date = Date.parse(text(row.date) ?? "");
+    return checkedAt >= threshold && date >= threshold;
+  };
   return {
     summary: field("summary"),
     history: field("history"),
@@ -144,7 +152,23 @@ export function mapDistrictGuide(
       ? rows(item.planningDevelopments, (row) => {
           const title = text(row.title);
           return title &&
-            freshRow(row, "planningDevelopments", row.officialSource)
+            (completedPlanningRow(row) ||
+              (currentPlanningRow(row) &&
+                freshRow(row, "planningDevelopments", row.officialSource))) &&
+            row.needsVerification === false &&
+            sources.some(
+              (source) =>
+                source.url === row.officialSource &&
+                sourceSupportsSection(
+                  {
+                    ...source,
+                    dataDate: text(row.date),
+                    checkedAt: text(row.checkedAt),
+                  },
+                  "planningDevelopments",
+                  now,
+                ),
+            )
             ? {
                 title,
                 id: text(row.id),
@@ -154,7 +178,7 @@ export function mapDistrictGuide(
                 status: text(row.status),
                 officialSource: text(row.officialSource),
                 checkedAt: text(row.checkedAt),
-                needsVerification: row.needsVerification === true,
+                needsVerification: false,
               }
             : null;
         })

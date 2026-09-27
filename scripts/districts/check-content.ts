@@ -118,7 +118,11 @@ const rows = research.districts.map((r, i) => {
   }
   assert.equal(projected.marketData, null, `${r.district}/marketData withheld`);
   assert.ok(review.excluded.marketData);
-  assert.deepEqual(projected.planningDevelopments, []);
+  assert.equal(
+    projected.planningDevelopments.length,
+    review.planningDevelopments?.length ?? 0,
+    `${r.district}/planningDevelopments`,
+  );
   const publicJSON = JSON.stringify(projected);
   assert.ok(!publicJSON.includes(r.sourceAppendix));
   assert.ok(

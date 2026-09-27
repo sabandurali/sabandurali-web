@@ -147,6 +147,32 @@ test("stale dynamic sources cannot expose planning rows", () => {
   assert.deepEqual(projected?.planningDevelopments, []);
 });
 
+test("completed infrastructure remains public after the dynamic planning window", () => {
+  const completedSource = {
+    ...source,
+    dataDate: "2026-01-01T00:00:00Z",
+    checkedAt: "2026-01-02T00:00:00Z",
+  };
+  const projected = projectPublishedDistrictGuide(
+    {
+      ...published,
+      sources: [completedSource],
+      planningDevelopments: [
+        {
+          title: "Tamamlanan altyapı",
+          status: "tamamlandi",
+          officialSource: completedSource.url,
+          date: completedSource.dataDate,
+          checkedAt: completedSource.checkedAt,
+          needsVerification: false,
+        },
+      ],
+    },
+    now,
+  );
+  assert.equal(projected?.planningDevelopments.length, 1);
+});
+
 test("valid sections pass without exposing private metadata", () => {
   const projected = projectPublishedDistrictGuide(published, now);
   assert.equal(projected?.summary, published.summary);

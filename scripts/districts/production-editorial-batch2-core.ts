@@ -632,7 +632,8 @@ function assertAppliedDocument(
     projection.neighborhoods.length !== row.editorial!.neighborhoods.length ||
     projection.sources.length === 0 ||
     projection.marketData !== null ||
-    projection.planningDevelopments.length !== 0 ||
+    projection.planningDevelopments.length !==
+      (row.editorial!.planningDevelopments?.length ?? 0) ||
     JSON.stringify(projection).includes("researchNotes") ||
     JSON.stringify(projection).includes("importProvenance")
   ) {
