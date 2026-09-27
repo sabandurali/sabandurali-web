@@ -2807,26 +2807,26 @@
     {
       "district": "esenler",
       "pdfSha256": "31c2d5e501f27e7ee6a8bef07dbefd2fd117bab42d601fa598701e1d19e0327c",
-      "checkedAt": "2026-09-09T18:50:26.627856+00:00",
+      "checkedAt": "2026-09-27T00:00:00.000Z",
       "sections": {
-        "summary": "Esenler, İstanbul’un Avrupa yakasında, iki metro koridorunun erişim sağladığı ve 19 mahalleden oluşan yoğun bir kent ilçesidir. M1B hattındaki Esenler, Menderes ve Üçyüzlü istasyonları ile M7 hattındaki Giyimkent–Tekstilkent ve Oruç Reis istasyonları ilçenin farklı kesimlerini raylı sisteme bağlar. İlçeyi değerlendirirken 15 Temmuz Millet Bahçesi gibi kamusal alanları, belediye tesislerini ve devam eden dönüşüm süreçlerini birlikte; nüfus, yapı güvenliği ve piyasa verilerini ise mutlaka tarihleriyle okumak gerekir.",
-        "history": "Bugünkü Esenler’in yerleşim geçmişi, kaynaklarda Litros ve Avas adlarıyla geçen iki köye uzanır. Esenler Kaymakamlığı, bu yerleşimlerin Bizans döneminde tarımsal üretimle ilişkili olduğunu; Osmanlı döneminde Mahmutbey nahiyesi içinde kaldığını ve mübadele sonrasında nüfus yapısının değiştiğini aktarır. Litros adı Esenler’e, Avas adı Atışalanı’na 1937–1940 döneminde dönüştürüldü. Cumhuriyet dönemindeki idari yapılanmada bölge önce İstanbul Belediyesi, daha sonra Bakırköy Belediyesi bünyesinde şube müdürlüğü olarak yönetildi. 1992’de Güngören’e bağlanan Esenler’in bağımsız ilçe statüsü, TBMM’nin 27 Aralık 1993’te kabul ettiği 3949 sayılı Kanunla kuruldu; kanun 29 Aralık 1993 tarihli ve 21803 sayılı Resmî Gazete’de yayımlandı. İlçe belediyesi 1994’ten itibaren faaliyete geçti. Belediyenin stratejik planı, 2008’de Başakşehir ve Sultangazi’nin kurulmasıyla bazı mahallelerin ilçe sınırından ayrıldığını da kaydeder. Bu çerçeve, Esenler’in eski köy yerleşimlerinden hızla kentleşen bir İstanbul ilçesine dönüşümünü idari tarihle birlikte okumayı sağlar.",
-        "geography": "Esenler, İstanbul’un Avrupa yakasında yer alır. Esenler Belediyesi 2025–2029 Stratejik Planı ilçenin alanını 18.850.000 metrekare, yani 18,85 km² olarak verir; komşu ilçeleri Bağcılar, Güngören, Sultangazi, Bayrampaşa, Başakşehir, Zeytinburnu ve Gaziosmanpaşa şeklinde sıralar. Aynı belgede yer alan 427.901 kişilik nüfus değeri 2023 TÜİK verisidir ve güncel nüfus gibi okunmamalıdır. 2026’da Şehitler ve Yeşil Vadi mahallelerinin eklenmesiyle idari mahalle sayısı 19’a çıkmıştır. M1B ve M7 metro hatları, ilçenin merkezî ve kuzey kesimlerini İstanbul’un raylı sistem ağına bağlayan başlıca doğrulanmış ulaşım omurgalarıdır. Komşuluk ilişkileri, ilçeyi batı, kuzey ve doğu yönlerindeki farklı kentsel akslarla buluşturur. İlçenin konumu değerlendirilirken küçük yüzölçümü, tarihli nüfus verisi ve dönüşüm alanları birlikte ele alınmalıdır.",
-        "life": "Esenler’de gündelik yaşamı anlatmak için tek bir merkez veya tek bir hizmet türü yeterli değildir. Belediyenin tesis envanteri; kültür merkezleri, gençlik ve spor tesisleri, kütüphaneler, aile ve dayanışma merkezleri ile farklı mahallelere yayılan eğitim odaklı mekânları birlikte gösterir. 15 Temmuz Millet Bahçesi ise yürüyüş ve bisiklet parkuru, çocuk oyun alanı, kütüphane, etkinlik ve spor alanları gibi farklı kullanımları aynı açık alan içinde toplar. Bu resmî envanter, ilçedeki kamusal hizmet çeşitliliğini gösterir; hizmetlerin güncel saatleri, kapasitesi veya kullanıcı deneyimi konusunda tek başına hüküm vermez. Ziyaret planı yapılırken ilgili tesisin güncel duyurusu ayrıca kontrol edilmelidir.",
-        "transportation": "Esenler’in doğrulanmış raylı sistem erişimi iki ana hat üzerinden okunabilir. M1B Yenikapı–Kirazlı hattında Esenler, Menderes ve Üçyüzlü istasyonları bulunur; hat Otogar’dan sonra Esenler ve Bağcılar yönünde ilerleyerek Kirazlı’da M3 hattına bağlanır. M7 Yıldız–Mahmutbey hattı ise Giyimkent–Tekstilkent ve Oruç Reis istasyonlarıyla ilçenin kuzey kesimlerine erişim sağlar. Bu iki hat, Yenikapı, Mecidiyeköy, Kağıthane, Kirazlı ve Mahmutbey yönlerindeki bağlantılar üzerinden daha geniş metro ağına geçiş olanağı sunar. Sefer saatleri ve işletme koşulları değişebileceği için yolculuk öncesinde Metro İstanbul’un güncel hat duyuruları kontrol edilmelidir. Otobüs güzergâhları ve süreleri için bu metinde tarihsiz veya doğrulanmamış bir liste verilmemiştir.",
-        "housingTexture": "Esenler’in konut ve yapı dokusu hakkında güvenli değerlendirme, bina bazında genelleme yapmak yerine resmî süreçleri ve veri sınırlarını belirtmeyi gerektirir. Belediyenin 2025 Faaliyet Raporu riskli yapı başvuruları, ruhsat ve iskân işlemleri ile 15 Temmuz Mahallesi’ndeki kentsel dönüşüm sürecine ilişkin yıllık işlem sayıları yayımlar. Aynı rapor, Ağustos 2025’teki ruhsat artışının Esenler Güney (Metris) Rezerv Yapı Alanı kapsamındaki toplu ruhsatlandırmadan kaynaklanan dönemsel bir hareket olduğunu özellikle açıklar. Bu göstergeler ilçede dönüşüm ve yenileme süreçlerinin bulunduğunu gösterir; herhangi bir binanın güvenliği, yatırım değeri veya hukuki durumu hakkında sonuç üretmez. Taşınmaz bazında güncel imar, tapu, ruhsat ve teknik inceleme ayrıca yapılmalıdır.",
-        "regionalAssessment": "Esenler’in bölgesel profili; küçük yüzölçümü, tarihli nüfus yoğunluğu göstergeleri, M1B ve M7 raylı sistem erişimi, çok sayıda belediye tesisi ve devam eden dönüşüm işlemlerinin kesişiminde şekillenir. Ulaşım bağlantıları ilçenin İstanbul içindeki erişilebilirliğini desteklerken, belediyenin stratejik planı altyapı, ulaşım, otopark, yeşil alan ve sosyal-kültürel hizmetleri öncelikli ihtiyaçlar arasında gösterir. 2025 faaliyet verileri dönüşüm ve ruhsat süreçlerinde yüksek işlem hacmi bulunduğunu ortaya koyar; ancak bu veriler mahalleler arasında yaşam kalitesi, konut güvenliği veya fiyat performansı sıralaması yapmak için yeterli değildir. Bölgesel kararlar güncel saha incelemesi, parsel bazlı resmî kayıtlar ve tarihli ulaşım verileriyle tamamlanmalıdır.",
-        "placesGuide": "15 Temmuz Millet Bahçesi — Açık alan, yürüyüş ve bisiklet parkuru, çocuk alanları, kütüphane ve farklı kamusal kullanımlar için gündüz odaklı başlangıç noktasıdır; ziyaret öncesi güncel erişim bilgisi kontrol edilmelidir.\n\nEsenler Belediyesi Kültür Merkezi ve Dr. Kadir Topbaş Kültür Sanat Merkezi — Programı değişebilen kültür mekânlarıdır; etkinlik takvimi resmî kanaldan doğrulanmalıdır.\n\nProf. Dr. Sadettin Ökten Şehir Düşünce Merkezi — İlçenin şehir ve kültür çalışmalarını izlemek için kurumsal bir duraktır.\n\nEsenler Halk Kütüphanesi, 15 Temmuz Millet Kütüphanesi ve Adnan Büyükdeniz Dijital Kütüphanesi — Çalışma saatleri doğrulanarak ziyaret edilmesi gereken bilgi ve okuma mekânlarıdır.",
-        "distinctiveFeatures": "Esenler’i ayırt eden doğrulanabilir başlıklar, M1B ve M7 metro hatlarının farklı mahallelere erişimi; 2026 itibarıyla 19 mahalleli idari yapı; 15 Temmuz Millet Bahçesi çevresindeki çok işlevli kamusal alan; kültür, kütüphane, gençlik ve spor tesislerinin çeşitliliği; ayrıca belediye faaliyet raporlarında ayrıntılı biçimde izlenen kentsel dönüşüm ve ruhsat süreçleridir. Bu özellikler ilçeyi tek bir “ulaşım”, “konut” veya “yatırım” etiketiyle tanımlamak yerine, ulaşım bağlantıları, kamusal hizmetler ve dönüşüm dinamikleri birlikte değerlendirilerek anlatılmalıdır.",
-        "researchTopics": "• 2025 ADNKS sonuçları yayımlanmış olsa da Esenler’e ait güncel ilçe nüfusu doğrudan TÜİK tablosundan yeniden doğrulanmalı.\n• 2026’da kurulan Şehitler ve Yeşil Vadi mahallelerinin kesin sınırları İBB veya belediyenin güncel coğrafi verisiyle eşleştirilmeli.\n• M1B ve M7 istasyonları için yaya erişimi, aktarma süreleri ve erişilebilirlik özellikleri saha ve güncel işletme verileriyle incelenmeli.\n• 15 Temmuz, Oruç Reis ve Esenler Güney (Metris) dönüşüm süreçleri güncel plan, ruhsat ve hak sahipliği belgeleriyle ayrı ayrı takip edilmeli.\n• Mahalle bazlı konut ve kira verileri ancak yöntemi, kapsama dönemi ve örneklem büyüklüğü açıklanan güvenilir bir kaynak bulunduğunda eklenmeli."
+        "summary": "Esenler, İstanbul’un Avrupa Yakası iç kesiminde, 18,43 km² kara alanına 19 mahallenin sığdığı yoğun bir kent ilçesidir. Dörtyol–Menderes çevresindeki yerleşik merkez, Davutpaşa’daki üniversite yerleşkesi ve kuzeyde Oruçreis–15 Temmuz dönüşüm alanları birbirinden farklı ölçekler kurar. M1B merkez koridorunu, M7 ise kuzey mahallelerini raylı sisteme bağlar; ilçeyi anlamanın en iyi yolu bu iki hat arasındaki sokak dokusunu, kamusal alanları ve dönüşüm sınırlarını birlikte okumaktır.",
+        "history": "Esenler Kaymakamlığının tarihçe anlatısı, bugünkü ilçe çevresindeki eski yerleşim çekirdeklerini Litros ve Avas adlarıyla kaydeder; bu adlar modern ilçenin bütün alanını kesintisiz biçimde temsil eden antik yerleşimler gibi yorumlanmamalıdır. Kaymakamlık, iki köyün Osmanlı döneminde Mahmutbey nahiyesine bağlı olduğunu, 1923 mübadelesinden sonra nüfus yapısının değiştiğini ve Litros ile Avas adlarının 1937–1940 döneminde Esenler ve Atışalanı olarak değiştirildiğini aktarır. 20. yüzyılın ikinci yarısında İstanbul’un sanayi ve konut alanları batıya büyürken köy çevresindeki bağ ve tarla dokusu yoğun apartman mahallelerine dönüştü. Bölge bir süre Bakırköy, ardından 1992’de kurulan Güngören içinde yönetildi. TBMM’nin 27 Aralık 1993’te kabul ettiği 3949 sayılı Kanun Esenler’i ayrı ilçe yaptı; kanun 29 Aralık 1993 tarihli Resmî Gazete’de yayımlandı ve belediye 1994 yerel seçimleriyle faaliyete geçti. Davutpaşa’nın askerî ve eğitim yapıları ile Atışalanı çevresinin yerleşim gelişimi, bu idari hikâyenin yanında ilçenin farklı tarih katmanlarını taşır.",
+        "geography": "Esenler denize kıyısı olmayan, Avrupa Yakası’nın iç kesiminde küçük alanı ve yoğun yerleşimiyle öne çıkan bir ilçedir. İBB’nin 39 ilçede kullandığı kara alanı standardı Esenler’i 18,43 km² gösterir. İlçe; Bağcılar, Güngören, Sultangazi, Bayrampaşa, Başakşehir, Zeytinburnu ve Gaziosmanpaşa ile komşudur. Güneyde Davutpaşa–Üçyüzlü, ortada Dörtyol–Menderes, kuzeyde Oruçreis–15 Temmuz çevreleri farklı kent dokuları oluşturur. M1B doğu-batı yönündeki merkez kesimi, M7 kuzey kesimini taşırken TEM/O-3 ve bağlantı yolları ilçenin karayolu ölçeğini belirler. 2026’da Şehitler ve Yeşil Vadi’nin kurulmasıyla mahalle sayısı 19’a çıkmıştır.",
+        "life": "Esenler’de gündelik ritim Dörtyol ve Davutpaşa Caddesi çevresindeki yaya hareketi, Menderes ile Nine Hatun’un mahalle çarşıları ve Atışalanı–Oruçreis yönündeki konut alanları arasında değişir. Davutpaşa’da Yıldız Teknik Üniversitesi yerleşkesi gün içindeki öğrenci hareketini ve geniş kampüs ölçeğini sık sokak dokusuna ekler. 15 Temmuz Millet Bahçesi açık alan ve spor kullanımlarını; Esenler Belediyesi Kültür Merkezi, Dr. Kadir Topbaş Kültür Sanat Merkezi ve belediye kütüphaneleri ise programlı kamusal yaşamı taşır. Burası turistik duraklar toplamından çok, metro çıkışları, alışveriş sokakları, okul ve mahalle tesisleri çevresinde işleyen bir ilçedir; etkinlik ve ziyaret saatleri yola çıkmadan önce kurum sayfalarından kontrol edilmelidir.",
+        "transportation": "Eylül 2026 itibarıyla ilçenin açık raylı sistem omurgaları M1B ve M7’dir. M1B Yenikapı–Kirazlı hattının Esenler, Menderes ve Üçyüzlü istasyonları ilçe içindedir; Davutpaşa–YTÜ istasyonu Zeytinburnu sınırındaki kampüs erişimini sağlar. M1A ile ortak işletme Yenikapı–Otogar arasında sürer, fakat Büyük İstanbul Otogarı ve Otogar istasyonu Bayrampaşa’dadır; Esenler’den erişilebilir olması onu ilçe içi durak yapmaz. M1B, Kirazlı’da M3’e aktarma verir; M3 Esenler’in içinden geçen bir hat değildir. M7’nin Giyimkent–Tekstilkent ve Oruç Reis istasyonları kuzey kesime hizmet eder. Karadeniz Mahallesi istasyonu ile T4 hattı komşu Gaziosmanpaşa yönünde bağlantı seçeneğidir, Esenler istasyonu olarak sayılmamalıdır. Otobüs ve minibüsler mahalle–metro bağlantılarını tamamlarken TEM/O-3 ve ana arterlerde yolculuk süresi gün ve saate göre belirgin biçimde değişir.",
+        "housingTexture": "Dörtyol, Menderes, Nine Hatun ve çevresinde bitişik düzene yaklaşan, dar sokaklarla örülmüş eski ve yoğun apartman dokusu baskındır. Ana caddelerde zemin kat ticaretiyle konut üst üste gelir; Atışalanı yönünde yerleşik mahalle dokusu, Oruçreis ve 15 Temmuz çevresinde ise yıkım, transfer ve rezerv yapı alanlarıyla oluşan daha büyük ölçekli bloklar görülür. Davutpaşa’da Yıldız Teknik Üniversitesi yerleşkesinin geniş açık alanı ve kurumsal yapıları konut dokusundan belirgin biçimde ayrılır. Tekstilkent ve Giyimkent adıyla bilinen büyük ticaret kümeleri kuzey sınırında güçlü bir işlevsel ilişki kurar; her yapı ilçenin idari sınırı içinde kabul edilmemelidir. Bu morfolojik ayrımlar hiçbir bina için sağlamlık veya deprem güvenliği sonucu vermez; değerlendirme yapı ve parsel bazında teknik inceleme gerektirir.",
+        "regionalAssessment": "Esenler’i bölgesel ölçekte ayıran başlıca unsurlar, kıyısı olmayan merkezî iç-kent konumu, 18,43 km²’ye yayılan yüksek yerleşim yoğunluğu, M1B ve M7’nin sağladığı iki ayrı raylı sistem koridoru, eski apartman mahallelerinin sık sokak ağı, kuzeydeki dönüşüm baskısı ve Davutpaşa’daki büyük üniversite yerleşkesidir. Karayolu bağlantıları ile komşu ilçelerdeki aktarma noktaları erişimi güçlendirir; aynı ağlar yoğun trafik ve parçalanmış yaya bağlantıları da üretir. İlçenin konut, kampüs, ticaret ve rezerv alanları tek bir yaşam kalitesi ya da yatırım ölçüsüyle karşılaştırılamaz.",
+        "placesGuide": "Dörtyol ve Davutpaşa Caddesi — Esenler’in yaya yoğunluğu, küçük esnafı ve merkez hareketini izlemek için doğal başlangıç noktasıdır.\n\nYıldız Teknik Üniversitesi Davutpaşa Yerleşkesi — Tarihî askerî yapıların, Hünkâr Kasrı’nın ve çağdaş üniversite yaşamının buluştuğu geniş alandır; giriş koşulları önceden kontrol edilmelidir.\n\n15 Temmuz Millet Bahçesi — Yürüyüş, bisiklet, çocuk ve spor alanlarıyla kuzeydeki yeni yerleşim ölçeğini okumaya elverişli kamusal alandır.\n\nAdnan Büyükdeniz Dijital Kütüphanesi — Eski yapı izinin yeni bir kamusal kullanımla buluştuğu, belediye tesis envanterindeki özgün duraklardan biridir.\n\nDr. Kadir Topbaş Kültür Sanat Merkezi — Güncel programı resmî takvimden doğrulanarak ziyaret edilebilecek kültür odağıdır.\n\nOruçreis dönüşüm çevresi — Eski yoğun dokuyla boşaltılan alanlar ve yeni bloklar arasındaki değişimi kamusal sokaklardan gözlemlemek için anlamlıdır; şantiye ve özel alan sınırlarına girilmemelidir.",
+        "distinctiveFeatures": "Esenler’i benzer yoğun iç-kent ilçelerinden ayıran şey, Dörtyol çevresindeki sık mahalle dokusunun bir yanında Davutpaşa’daki geniş tarihî üniversite yerleşkesi, diğer yanında Oruçreis–15 Temmuz ölçeğindeki dönüşüm alanlarıyla karşılaşmasıdır; M1B ve M7 bu üç farklı kent parçasını doğrudan tek hatta birleştirmek yerine ilçenin orta ve kuzey kesimlerine ayrı ayrı bağlanır.",
+        "researchTopics": "• M1B ve M7 istasyonlarının mahalle içi yaya hareketliliğine etkisi\n• Dörtyol–Menderes merkez dokusu ile Oruçreis–15 Temmuz dönüşüm alanlarının mekânsal karşılaştırması\n• Yıldız Teknik Üniversitesi Davutpaşa Yerleşkesi ile çevre mahalleler arasındaki gündelik ilişki\n• 2026’da kurulan Şehitler ve Yeşil Vadi mahallelerinin hizmet ve ulaşım ağlarına eklemlenmesi"
       },
       "facts": {
-        "population": "427.901",
-        "populationYear": 2023,
-        "areaKm2": 18.85,
+        "population": "419.878",
+        "populationYear": 2025,
+        "areaKm2": 18.43,
         "neighborhoodCount": 19,
         "neighboringDistricts": "Bağcılar, Güngören, Sultangazi, Bayrampaşa, Başakşehir, Zeytinburnu ve Gaziosmanpaşa",
-        "locationSummary": "İstanbul’un Avrupa yakasında; M1B ve M7 metro hatlarının erişim sağladığı, 19 mahalleli ve 18,85 km² yüzölçümüne sahip ilçe."
+        "locationSummary": "İstanbul’un Avrupa Yakası iç kesiminde, deniz kıyısı bulunmayan; 18,43 km² kara alanına ve 19 mahalleye sahip yoğun kent ilçesi."
       },
       "marketData": {
         "salePricePerM2": null,
@@ -2867,7 +2867,7 @@
           "sourceType": "official",
           "primary": true,
           "dataDate": "1993-12-29T00:00:00.000Z",
-          "checkedAt": "2026-09-13T00:00:00.000Z",
+          "checkedAt": "2026-09-27T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "history"
@@ -2880,10 +2880,26 @@
           "sourceType": "official",
           "primary": false,
           "dataDate": null,
-          "checkedAt": "2026-09-13T00:00:00.000Z",
+          "checkedAt": "2026-09-27T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "history"
+          ]
+        },
+        {
+          "title": "Adrese Dayalı Nüfus Kayıt Sistemi Sonuçları, 2025",
+          "publisher": "Türkiye İstatistik Kurumu",
+          "url": "https://data.tuik.gov.tr/Bulten/Index?p=Adrese-Dayali-Nufus-Kayit-Sistemi-Sonuclari-2025-53899",
+          "sourceType": "official",
+          "primary": true,
+          "dataDate": "2025-12-31T00:00:00.000Z",
+          "checkedAt": "2026-09-27T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "facts",
+            "summary",
+            "geography",
+            "regionalAssessment"
           ]
         },
         {
@@ -2893,14 +2909,27 @@
           "sourceType": "official",
           "primary": true,
           "dataDate": "2023-12-31T00:00:00.000Z",
-          "checkedAt": "2026-09-13T00:00:00.000Z",
+          "checkedAt": "2026-09-27T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
-            "summary",
             "history",
-            "geography",
-            "facts",
             "housingTexture",
+            "regionalAssessment"
+          ]
+        },
+        {
+          "title": "İstanbul Büyükşehir Belediyesi Yetki Alanı — İlçe Kara Alanları",
+          "publisher": "İstanbul Büyükşehir Belediyesi",
+          "url": "https://ibb.istanbul/ibb/belediye-hakkinda/yetki-alani/",
+          "sourceType": "official",
+          "primary": true,
+          "dataDate": null,
+          "checkedAt": "2026-09-27T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "facts",
+            "summary",
+            "geography",
             "regionalAssessment"
           ]
         },
@@ -2911,7 +2940,7 @@
           "sourceType": "official",
           "primary": true,
           "dataDate": "2026-09-09T00:00:00.000Z",
-          "checkedAt": "2026-09-13T00:00:00.000Z",
+          "checkedAt": "2026-09-27T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "neighborhoods"
@@ -2924,7 +2953,7 @@
           "sourceType": "official",
           "primary": true,
           "dataDate": "2026-01-13T00:00:00.000Z",
-          "checkedAt": "2026-09-13T00:00:00.000Z",
+          "checkedAt": "2026-09-27T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "facts",
@@ -2939,7 +2968,7 @@
           "sourceType": "official",
           "primary": true,
           "dataDate": "2026-09-13T00:00:00.000Z",
-          "checkedAt": "2026-09-13T00:00:00.000Z",
+          "checkedAt": "2026-09-27T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "summary",
@@ -2955,7 +2984,7 @@
           "sourceType": "official",
           "primary": true,
           "dataDate": "2026-09-13T00:00:00.000Z",
-          "checkedAt": "2026-09-13T00:00:00.000Z",
+          "checkedAt": "2026-09-27T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "summary",
@@ -2971,7 +3000,7 @@
           "sourceType": "official",
           "primary": true,
           "dataDate": null,
-          "checkedAt": "2026-09-13T00:00:00.000Z",
+          "checkedAt": "2026-09-27T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "life",
@@ -2980,16 +3009,19 @@
           ]
         },
         {
-          "title": "15 Temmuz Millet Bahçesi",
-          "publisher": "Esenler Belediyesi",
-          "url": "https://esenler.bel.tr/hizmetlerimiz/tesislerimiz/15-temmuz-millet-bahcesi/",
+          "title": "Yıldız Teknik Üniversitesi 2023 Kurum İç Değerlendirme Raporu",
+          "publisher": "Yıldız Teknik Üniversitesi",
+          "url": "https://kalite.yildiz.edu.tr/media/files/YT%C3%9C%202023%20Kurum%20%C4%B0%C3%A7%20De%C4%9Ferlendirme%20Raporu.pdf",
           "sourceType": "official",
           "primary": true,
-          "dataDate": null,
-          "checkedAt": "2026-09-13T00:00:00.000Z",
+          "dataDate": "2023-12-31T00:00:00.000Z",
+          "checkedAt": "2026-09-27T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
+            "history",
             "life",
+            "housingTexture",
+            "regionalAssessment",
             "placesGuide",
             "distinctiveFeatures"
           ]
@@ -3001,12 +3033,13 @@
           "sourceType": "official",
           "primary": true,
           "dataDate": "2025-12-31T00:00:00.000Z",
-          "checkedAt": "2026-09-13T00:00:00.000Z",
+          "checkedAt": "2026-09-27T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
             "life",
             "housingTexture",
             "regionalAssessment",
+            "planningDevelopments",
             "distinctiveFeatures",
             "researchTopics"
           ]
@@ -3028,16 +3061,16 @@
       ],
       "adoption": {
         "currentFingerprint": "fd45106eea0200e4439ecc927ffa5c22bf77d6d5f83324793c687a64630f8c45",
-        "contentFingerprint": "d27ea83eac3b236db04c95bb086ae6a8ed112b7acf97df914e91a536947efcb7"
+        "contentFingerprint": "deca0b007f121f72bd88faf15daa2126580d5f5b325c5e975e3740fb8cc8a7b7"
       },
       "excluded": {
         "marketData": "m² satış fiyatı, kira, amortisman, getiri ve değer artışı tahminleri onaylanmadı; needsVerification.",
-        "planningDevelopments": "Proje yüzdesi, teslim/açılış takvimi, imar ve dönüşüm durumları tarihli karar dosyasıyla doğrulanmadı; boş.",
+        "planningDevelopments": "2025 faaliyet raporundaki Kuzey Rezerv Yapı Alanı yüzdesi Eylül 2026 için güncel uygulama durumu sayılmadı; son 90 gün içinde tarihli resmî ilerleme kaydı bulunmadığından alan boş bırakıldı.",
         "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
         "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
         "specificReview": "Production draft içeriği; tarihli resmî kaynakları, 19 mahalleli güncel idari yapıyı ve kaynak sınırlarını koruyarak version-controlled editorial kaynağa aktarıldı."
       },
-      "methodology": "Production draft’taki doğrulanmış editoryal içerik, yalnız tarihli ve bölüm bazında ilişkilendirilmiş resmî kaynaklarla birlikte kaynağa aktarıldı. Değişken ulaşım ve idari veriler tarihleriyle korundu; piyasa değerleri ile planlama kayıtları doğrulanmadığından public onay kapsamı dışında bırakıldı."
+      "methodology": "Esenler kaydı production’dan salt okunur denetlendi; provenance fingerprint uyuşmazlığı koruma çatışması sayıldı ve production içeriği yeni baseline olarak benimsenmedi. Editoryal aday, 2025 ADNKS, İBB kara alanı standardı, 19 mahalleli güncel idari yapı ve Eylül 2026 raylı sistem durumu üzerinden yeniden doğrulandı. Piyasa değerleri dışarıda bırakıldı; 2025 faaliyet raporundaki devam eden planlama verisi güncellik eşiğini karşılamadığından planlama alanı boş tutuldu."
     },
     {
       "district": "esenyurt",
