@@ -6907,18 +6907,18 @@
     {
       "district": "kartal",
       "pdfSha256": "3c8d5712bbceb80a646bed719dac8772528ac985d94bf251a3b48345b49259f7",
-      "checkedAt": "2026-09-26T18:30:00.000Z",
+      "checkedAt": "2026-09-27T09:30:00.000Z",
       "sections": {
-        "summary": "Kartal, Marmara kıyısından Anadolu Yakası’nın iç kesimlerine doğru uzanan yerleşim yapısıyla ele alınır.",
-        "history": "Kaymakamlık tarihçesi, Kartal’ın kıyı yerleşimi geçmişini ve zaman içindeki idari değişimlerini anlatır. Eski Kartal’ın kapsadığı alanlar bugünkü ilçe sınırlarıyla aynı kabul edilmemelidir.",
-        "geography": "Kartal, Kocaeli Yarımadası’nın güneybatısında Marmara kıyısındadır. Kıyı ile Aydos çevresine doğru yükselen iç kesimler, ilçenin coğrafyasını farklılaştırır.",
-        "life": "Kartal Meydanı ve kıyısı, Dragos çevresi ve Yakacık yerleşimi; kamusal alan, yerel ticaret ve açık alan kullanımlarının birlikte izlenebildiği başlıca gündelik yaşam odaklarıdır. Aydos etekleri, merkez dışındaki yerleşim ritmini tamamlayan ayrı bir saha odağıdır.",
-        "transportation": "M4 metrosu ve Marmaray, Kartal’ın kıyı ile D-100 çevresindeki doğu-batı erişimini taşır; otobüsler kuzey mahallelerine dağılım sağlar.",
-        "housingTexture": "Kıyı ve eski merkez çevresindeki apartmanlar, E-5-metro koridorunda dönüşen alanlar ve kuzeydeki düşük yoğunluklu Yakacık-Aydos çevresi farklılaşır. Bu genel okuma bina veya parsel güvenliği sonucu üretmez; yapı yaşı, ruhsat, zemin ve güncel plan bilgisi resmî kayıtlardan ayrıca incelenmelidir.",
-        "regionalAssessment": "Bölgesel değerlendirmede Marmara kıyısı, E-5 ve metro koridoru ile kuzeydeki Aydos eşiği birlikte okunmalıdır. Bu sentez tek bir mahalle, yapı, değer veya yatırım sonucu üretmez; saha gözlemi güncel resmî kayıtlarla birlikte değerlendirilmelidir.",
-        "placesGuide": "Kartal Meydanı ve kıyısı, Dragos çevresi, Yakacık yerleşimi, Aydos etekleri, tarih, coğrafya ve gündelik yaşam katmanlarını sahada birlikte okumaya imkân veren duraklardır. Erişim ve ziyaret koşulları çekim öncesinde ilgili kurumdan yeniden kontrol edilmelidir.",
-        "distinctiveFeatures": "Kartal ilçesini İstanbul içinde ayırt eden ana çerçeve; Marmara kıyısı, E-5 ve metro koridoru ile kuzeydeki Aydos eşiği. Kartal Meydanı ve kıyısı ile Dragos çevresi arasındaki mekânsal fark bu karakteri sahada görünür kılar.",
-        "researchTopics": "• Demiryolu ile kıyı merkezinin birlikte gelişimi\n• Eski çimento ve üretim alanlarının kent belleğindeki izleri\n• Aydos etekleri ile kıyı mahallelerinin farklı yerleşim örüntüleri"
+        "summary": "Kartal, Marmara kıyısındaki merkez ve Dragos’tan D100 koridoruna, Yakacık ile Aydos eteklerindeki yüksek kesimlere uzanan çok katmanlı bir Anadolu Yakası ilçesidir. Kıyı-demiryolu ekseni ile kuzeydeki eğimli yerleşimler, gündelik yaşam ve erişim bakımından belirgin biçimde ayrışır.",
+        "history": "Kartal’ın tarihsel gelişimi Marmara kıyısındaki iskele ve balıkçı yerleşimi, Anadolu demiryolunun 19. yüzyılın son çeyreğinde kıyı boyunca kurulması ve Cumhuriyet dönemindeki sanayi-konut büyümesi üzerinden okunur. Yakacık, kıyı merkezinden ayrı gelişen eski bir yerleşim odağıdır; Dragos çevresindeki arkeolojik buluntular ilçenin daha erken dönemlerine işaret etse de tartışmalı yapı ve yer adı eşleştirmeleri kesin bilgi olarak kullanılmamalıdır. Kartal 1928’de ilçe statüsü kazandı; sonraki idari ayrılmalar bugünkü sınırları oluşturdu.",
+        "geography": "İlçe güneyde Marmara Denizi’ne açılır; Kordonboyu, Yalı, Orhantepe ve Dragos çevresi kıyı düzlüğü ile sahil kullanımlarını taşır. D100 ve M4 koridorunun kuzeyinde arazi Yakacık ve Aydos yönünde yükselir; eğim, manzara, sokak dokusu ve kıyıya erişim koşulları değişir. Batıda Maltepe, kuzeyde Sancaktepe ve Sultanbeyli, doğuda Pendik ile çevrili bu yapı, kıyı ile iç-yüksek kesimlerin aynı ilçe içinde ayrı okunmasını gerektirir.",
+        "life": "Gündelik yaşam Kartal Meydanı ve Ankara Caddesi çevresindeki ticaret, Kordonboyu sahilindeki yürüyüş-bisiklet kullanımı, Dragos’un kıyı ve yamaçları, Yakacık Çarşı ile Uğur Mumcu–Soğanlık mahalle odakları arasında dağılır. D100 çevresindeki iş ve sağlık yapıları gün içi hareket üretirken M4 ile Marmaray istasyonları mahalleler arası ritmi belirler. Kıyıda rekreasyon ağırlığı artar; kuzeye çıkıldıkça eğimli sokaklar, mahalle merkezleri ve Aydos eşiği öne çıkar.",
+        "transportation": "Eylül 2026 itibarıyla M4 Kadıköy–Sabiha Gökçen Havalimanı hattı D100 boyunca Kartal, Soğanlık ve Hastane-Adliye çevresine; Marmaray ise kıyı-demiryolu koridorunda Atalar, Başak ve Kartal istasyonlarına hizmet verir. Otobüs ve minibüsler Yakacık, Uğur Mumcu ve Aydos eteklerinden bu iki doğu-batı omurgasına dağılım sağlar. Sahil yolu yerel kıyı erişimini, D100 bölgesel karayolu erişimini taşır; iki raylı sistem aynı koridorda değil, farklı kot ve mahallelere hizmet eder.",
+        "housingTexture": "Kartal merkez, Kordonboyu ve Atalar’da yerleşik apartman dokusu ile zemin katta ticaret yaygındır; Dragos’ta apartmanların yanında daha düşük yoğunluklu ve eğime oturan konutlar görülür. D100 çevresinde konut, ofis, sağlık ve dönüşmüş sanayi parselleri karışırken Soğanlık–Uğur Mumcu hattında büyük blok ve site örnekleri artar. Yakacık’ta eski mahalle parçaları, yeni apartmanlar ve Aydos yönünde düşük yoğunluklu doku yan yanadır. Bu morfoloji bina güvenliği veya deprem dayanımı sonucu üretmez.",
+        "regionalAssessment": "Kartal’ı belirleyen unsurlar Marmara kıyısı ve sahil kamusal alanı, Kartal merkez, Dragos sırtı, D100–M4 koridoru, Marmaray erişimi ve Yakacık–Aydos yükseltisidir. Kıyıdaki düz ve yoğun yerleşim ile kuzeydeki eğimli mahallelerin ulaşım seçenekleri aynı değildir. İlçe, doğu-batı raylı sistemleri sayesinde güçlü bölgesel erişime sahip olsa da kuzey-güney bağlantıları büyük ölçüde karayolu ve otobüs aktarmalarına dayanır. Bu değerlendirme yatırım tavsiyesi değildir.",
+        "placesGuide": "Kartal Meydanı ve Ankara Caddesi merkez dokusunu; Kordonboyu sahili kamusal kıyıyı; Dragos Tepesi kıyı-yamaç ilişkisini; Yakacık Çarşı eski yerleşim odağını; Aydos etekleri yüksek kesimlerin peyzajını; Komşuluk ve Dayanışma Meydanı ise Cevizli’deki yeni kamusal alan yaklaşımını okumak için uygundur. Aydos çevresinde ilçe sınırı ve erişim kuralları saha öncesinde kontrol edilmelidir.",
+        "distinctiveFeatures": "Kartal’ın ayırt edici niteliği, Marmara kıyısındaki meydan ve demiryolu yerleşimi ile Dragos üzerinden Yakacık–Aydos yönüne yükselen iç kesimlerin kısa mesafede yan yana gelmesidir. M4 ve Marmaray iki ayrı kotta doğu-batı erişimi sağlar; D100 çevresindeki karma kullanım ile kıyıdaki rekreasyon, ilçenin çalışma ve yaşam coğrafyasını birlikte biçimlendirir.",
+        "researchTopics": "• Kartal merkezinde demiryolu, iskele ve ticaret ilişkisinin tarihsel dönüşümü\n• Dragos yamaçları ile kıyı düzlüğü arasındaki yerleşim farkları\n• D100–M4 koridorunda sanayi parsellerinden karma kullanıma geçiş\n• Yakacık ve Aydos eteklerinde eğim, açık alan ve mahalle erişimi"
       },
       "facts": {
         "population": "475630",
@@ -6957,7 +6957,7 @@
           "url": "https://data.tuik.gov.tr/Bulten/Index?p=Adrese-Dayali-Nufus-Kayit-Sistemi-Sonuclari-2025-53899",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
+          "checkedAt": "2026-09-27T09:30:00.000Z",
           "dataDate": "2025-12-31T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
@@ -7074,11 +7074,52 @@
           "sections": [
             "facts"
           ]
+        },
+        {
+          "title": "Marmaray İstasyon ve Hat Bilgileri",
+          "publisher": "TCDD Taşımacılık",
+          "url": "https://www.marmaray.gov.tr/",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-27T09:30:00.000Z",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "transportation"
+          ]
+        },
+        {
+          "title": "Kartal 2025–2029 Stratejik Planı",
+          "publisher": "Kartal Belediyesi",
+          "url": "https://www.kartal.bel.tr/_Dokumanlar/stratejik_plan_dosyalari/2025_2029_Stratejik_Plan.pdf",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-27T09:30:00.000Z",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "life",
+            "regionalAssessment",
+            "placesGuide"
+          ]
+        },
+        {
+          "title": "Komşuluk ve Dayanışma Meydanı Birinci Etabı",
+          "publisher": "İlgili resmî kurum",
+          "url": "https://www.kartal.bel.tr/Belediyemiz/Haberler/18386",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-27T09:30:00.000Z",
+          "dataDate": "2022-09-24T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "planningDevelopments"
+          ]
         }
       ],
       "excluded": {
         "marketData": "Karşılaştırılabilir, güncel ve tarihli resmî piyasa serisi bulunmadığından bilinçli olarak boş bırakıldı.",
-        "planningDevelopments": "Yalnız tarihli karar ve uygulama belgeleriyle doğrulanacak proje kayıtları bu içerik tamamlamasına dahil edilmedi.",
+        "planningDevelopments": "Yalnız tarihli ve resmî kaynağa bağlı tek gelişme yayımlandı; doğrulanamayan proje ve takvimler dışarıda bırakıldı.",
         "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
         "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
         "areaKm2Review": "İlçe kurumlarında ölçüm kapsamına göre değişebilen yüzölçümü değerleri bulunduğundan, 39 ilçe için aynı standardı veren İBB İlçe Alan Bilgileri Tablosu'ndaki kara alanı esas alındı."
@@ -7096,24 +7137,37 @@
         "regionalAssessment",
         "placesGuide",
         "distinctiveFeatures",
-        "researchTopics"
+        "researchTopics",
+        "planningDevelopments"
+      ],
+      "planningDevelopments": [
+        {
+          "title": "Komşuluk ve Dayanışma Meydanı Birinci Etabı",
+          "summary": "Cevizli’de eski stadyum alanında düzenlenen meydan ve parkın birinci etabı 2022’de kamusal kullanıma açıldı; sonraki sosyal ve kültürel birimler ayrı etaplar olarak tanımlandı.",
+          "neighborhood": "Cevizli",
+          "date": "2022-09-24T00:00:00.000Z",
+          "status": "tamamlandi",
+          "officialSource": "https://www.kartal.bel.tr/Belediyemiz/Haberler/18386",
+          "checkedAt": "2026-09-27T09:30:00.000Z",
+          "needsVerification": false
+        }
       ]
     },
     {
       "district": "maltepe",
       "pdfSha256": "ce58474401380ac3ca9f3625264aff25dd2f49481fae159ddc4be312aefbcd02",
-      "checkedAt": "2026-09-26T18:30:00.000Z",
+      "checkedAt": "2026-09-27T09:30:00.000Z",
       "sections": {
-        "summary": "Maltepe’nin coğrafi kimliği, Marmara kıyısı ile kuzeye doğru yükselen iç kesimlerin birlikteliğine dayanır.",
-        "history": "Kaymakamlık tarihçesi, Maltepe çevresindeki yerleşimin Bizans ve Osmanlı dönemlerine uzanan geçmişini ele alır. Rehberde, eski yer adlarına ilişkin kesinliği tartışmalı eşleştirmeler ve ayrıntılı kuruluş tarihleri kullanılmamıştır.",
-        "geography": "İlçe, Kocaeli Yarımadası’nın güneybatısında Marmara Denizi kıyısında bulunur. Kıyıdan kuzeye doğru yükselen arazi, düz kesimler ile tepelik alanları bir araya getirir.",
-        "life": "Maltepe kıyısı ile Beşçeşmeler, ilçenin gündelik ritmini iki farklı ölçekte gösterir; Başıbüyük–Aydos eşiği açık alan ve yerel kullanım örüntüsünü okumaya yardımcı olur. Küçükyalı yerleşimi ise farklı bir yerleşim ölçeği sunar.",
-        "transportation": "M4 metrosu, Marmaray ve kıyıdaki deniz bağlantıları Maltepe’nin başlıca toplu taşıma seçenekleridir.",
-        "housingTexture": "Kıyı ve demiryolu çevresindeki yerleşik apartman dokusu, E-5’in kuzeyindeki site alanları ve Aydos eteklerine yaklaşan düşük yoğunluklu yerleşimler birlikte görülür. Buradaki doku tarifi tekil yapıların güvenli olduğuna ilişkin bir hüküm değildir; ruhsat, zemin, yapı yaşı ve plan koşulları resmî belgelerden doğrulanmalıdır.",
-        "regionalAssessment": "Bölgesel değerlendirmede kıyı parkı, raylı sistem erişimi ve sahilden Aydos eteklerine değişen yerleşim dokusu birlikte okunmalıdır. Çerçeve, mahalle ya da parsel düzeyinde değer ve güvenlik hükmü değildir; güncel kurum verileri ile yerinde gözlem ayrıca gerekir.",
-        "placesGuide": "İlçenin farklı dönem ve mekânlarını karşılaştırmak için Maltepe kıyısı, Beşçeşmeler çevresi, Başıbüyük–Aydos eşiği, Küçükyalı yerleşimi anlamlı bir saha dizisi oluşturur. Saha çalışmasından önce güncel açılış ve ulaşım bilgileri yetkili kaynaktan doğrulanmalıdır.",
-        "distinctiveFeatures": "Maltepe için belirleyici olan; kıyı parkı, raylı sistem erişimi ve sahilden Aydos eteklerine değişen yerleşim dokusu. Bu özelliklerin yerel karşılığı Maltepe kıyısı ve Beşçeşmeler çevresi birlikte incelendiğinde daha açık okunur.",
-        "researchTopics": "• Demiryolu çevresi ile Beşçeşmeler'in yerleşim tarihi\n• Kıyı parkının kamusal kullanım ve ulaşım üzerindeki etkisi\n• Başıbüyük ve Aydos eteklerinde yerleşim dokusunun değişimi"
+        "summary": "Maltepe, Marmara kıyısındaki uzun sahil parkı ve yerleşik merkezden Küçükyalı–İdealtepe aksına, D100’ün kuzeyindeki Başıbüyük ve Büyükbakkalköy yönüne uzanır. Kıyı, demiryolu, M4 koridoru ve Aydos eteklerine yaklaşan iç kesimler birbirinden farklı gündelik yaşam ve konut çevreleri oluşturur.",
+        "history": "Maltepe’nin gelişimi kıyı boyunca sıralanan eski yerleşimler, 19. yüzyılın son çeyreğinde Anadolu demiryolunun açılması ve Cumhuriyet dönemindeki banliyöleşme üzerinden izlenebilir. Küçükyalı ve İdealtepe kıyı-demiryolu ekseninde, Beşçeşmeler–Maltepe merkez ise ticaret ve kamusal yaşam odağı olarak büyüdü. 20. yüzyılın ikinci yarısındaki hızlı nüfus artışı yerleşimi D100’ün kuzeyine taşıdı; Maltepe 1992’de Kartal’dan ayrılarak ilçe oldu. Antik yer veya yapı eşleştirmeleri tartışmasız gerçek gibi aktarılmamalıdır.",
+        "geography": "Maltepe güneyde Marmara Denizi ve Adalar karşısındaki kıyı düzlüğünden kuzeyde Başıbüyük ile Büyükbakkalköy yönündeki yükseltilere uzanır. Küçükyalı, İdealtepe, Yalı ve Feyzullah çevresinde kıyı-demiryolu ilişkisi baskınken D100’ün kuzeyinde eğim artar ve yerleşim daha parçalı hale gelir. Orhangazi Şehir Parkı’nın bulunduğu dolgu alanı geniş bir kamusal kıyı oluşturur; bu yapay kıyı ile tarihî doğal kıyı çizgisi aynı kabul edilmemelidir.",
+        "life": "Maltepe Cumhuriyet Meydanı, Beşçeşmeler ve çevre çarşı sokakları günlük ticaret ile yaya hareketinin merkezidir. Küçükyalı ve İdealtepe’de Bağdat Caddesi, mahalle ticareti ve Marmaray çevresi birlikte işler; Orhangazi Şehir Parkı ile sahil dolgu alanı yürüyüş, bisiklet, spor ve etkinlik kullanımlarını taşır. Başıbüyük’te üniversite-sağlık işlevleri ve yamaç yerleşimleri, Gülsuyu–Gülensu ile Zümrütevler’de ise iç kesim mahalle yaşamı öne çıkar.",
+        "transportation": "Eylül 2026 itibarıyla Marmaray Küçükyalı, İdealtepe, Süreyya Plajı ve Maltepe istasyonlarıyla kıyı-demiryolu koridoruna hizmet verir. M4 metrosunun Küçükyalı, Maltepe, Huzurevi ve Gülsuyu istasyonları D100 çevresindedir; kıyı mahalleleriyle doğrudan aynı aks üzerinde değildir. İETT ve minibüs bağlantıları sahil, merkez, Başıbüyük ve kuzey mahallelerini bu iki raylı omurgaya bağlar. Maltepe–Adalar deniz seferleri tarifeye bağlıdır; Maltepe Sahil–Samandıra hattı ile Anadolu TRAM Eylül 2026’da işletmede değil, etüt/proje statüsündedir.",
+        "housingTexture": "Küçükyalı, İdealtepe ve Maltepe merkezde yerleşik apartmanlar, zemin kat ticareti ve istasyon çevresi yoğunluğu belirgindir. Sahile yakın Yalı–Feyzullah kesiminde apartman dokusu geniş kamusal dolgu alanına açılır. D100’ün kuzeyinde Zümrütevler ve Başıbüyük çevresinde apartman, büyük site, üniversite-sağlık yerleşkesi ve dönüşüm alanları yan yana gelir; Büyükbakkalköy’de daha düşük yoğunluklu parçalar görülür. İlçe ölçeğindeki bu tarif yapı güvenliği değerlendirmesi değildir.",
+        "regionalAssessment": "Maltepe’nin temel belirleyicileri Marmara kıyısı ve sahil parkı, Cumhuriyet Meydanı–Beşçeşmeler merkezi, Küçükyalı–İdealtepe’nin yerleşik dokusu, Marmaray ile M4’ün paralel fakat farklı koridorları ve Başıbüyük yönündeki yükseliştir. Dolgu kıyısının büyük kamusal kapasitesi ilçeyi bölgesel etkinlik odağı yapar; buna karşılık kuzey-güney erişimi aktarmalıdır. Merkez planlama ve yayalaştırma kararları izlenmeli, mahalleler tek bir piyasa ya da yapı profiline indirgenmemelidir.",
+        "placesGuide": "Maltepe Cumhuriyet Meydanı merkezdeki yeni yaya düzenini; Beşçeşmeler tarihî çarşı odağını; Küçükyalı Arkeoparkı ilçenin arkeoloji katmanını; İdealtepe kıyısı yerleşik sahil mahallesini; Orhangazi Şehir Parkı dolgu alanındaki büyük ölçekli kamusal kullanımı; Başıbüyük–Süreyya Paşa çevresi ise yamaç, sağlık ve eğitim işlevlerini okumak için anlamlı duraklardır.",
+        "distinctiveFeatures": "Maltepe’yi ayıran başlıca özellik, kıyı boyunca kesintisiz uzanan büyük dolgu parkının yerleşik Küçükyalı–İdealtepe mahalleleri ve Beşçeşmeler merkeziyle birlikte işlemesidir. Marmaray kıyıya yakın, M4 ise D100 boyunca daha içeride seyreder; Başıbüyük’e doğru yükselen arazi bu iki ulaşım kuşağının ötesinde farklı bir yerleşim karakteri üretir.",
+        "researchTopics": "• Beşçeşmeler ve Maltepe merkezde meydan-yayalaştırma dönüşümü\n• Küçükyalı ile İdealtepe’de demiryolu ve kıyı yerleşiminin gelişimi\n• Sahil dolgu alanının gündelik kullanım ve büyük etkinlikler üzerindeki etkisi\n• Başıbüyük yönünde topografya, sağlık-eğitim işlevleri ve konut dokusu"
       },
       "neighborhoods": [
         "Altayçeşme",
@@ -7239,7 +7293,7 @@
           "url": "https://data.tuik.gov.tr/Bulten/Index?p=Adrese-Dayali-Nufus-Kayit-Sistemi-Sonuclari-2025-53899",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
+          "checkedAt": "2026-09-27T09:30:00.000Z",
           "dataDate": "2025-12-31T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
@@ -7258,11 +7312,51 @@
           "sections": [
             "facts"
           ]
+        },
+        {
+          "title": "Maltepe Merkez Nazım İmar Planı ve Kentsel Tasarım Rehberi",
+          "publisher": "İstanbul Büyükşehir Belediyesi",
+          "url": "https://sehirplanlama.ibb.istanbul/maltepe-merkez/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-27T09:30:00.000Z",
+          "dataDate": "2026-01-15T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "regionalAssessment",
+            "planningDevelopments"
+          ]
+        },
+        {
+          "title": "Şehir Hatları Sefer Tarifeleri",
+          "publisher": "Şehir Hatları",
+          "url": "https://sehirhatlari.istanbul/tr/seferler",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-27T09:30:00.000Z",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "transportation"
+          ]
+        },
+        {
+          "title": "Maltepe Meydan Düzenlemesinin Tamamlanması",
+          "publisher": "İlgili resmî kurum",
+          "url": "https://icraat.ibb.istanbul/proje-detay/maltepe-meydan-duzenlemesi/badc61a7-bd96-43d2-a90d-813235fd07e1",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-27T09:30:00.000Z",
+          "dataDate": "2023-01-01T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "planningDevelopments"
+          ]
         }
       ],
       "excluded": {
         "marketData": "Karşılaştırılabilir, güncel ve tarihli resmî piyasa serisi bulunmadığından bilinçli olarak boş bırakıldı.",
-        "planningDevelopments": "Yalnız tarihli karar ve uygulama belgeleriyle doğrulanacak proje kayıtları bu içerik tamamlamasına dahil edilmedi.",
+        "planningDevelopments": "Yalnız tarihli ve resmî kaynağa bağlı tek gelişme yayımlandı; doğrulanamayan proje ve takvimler dışarıda bırakıldı.",
         "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
         "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
         "specificReview": "Bryas eşleştirmesi ve 816/Theophilos anlatımı aktarılmadı.",
@@ -7289,24 +7383,37 @@
         "regionalAssessment",
         "placesGuide",
         "distinctiveFeatures",
-        "researchTopics"
+        "researchTopics",
+        "planningDevelopments"
+      ],
+      "planningDevelopments": [
+        {
+          "title": "Maltepe Meydan Düzenlemesinin Tamamlanması",
+          "summary": "İBB’nin Maltepe Meydan düzenlemesi kapsamında taşıt trafiği yer altına alınarak üst kotta yaya meydanı, kültür ve dinlenme birimleri oluşturuldu; resmî proje sayfası yayalaştırma çalışmalarının tamamlandığını kaydediyor.",
+          "neighborhood": "Maltepe merkez",
+          "date": "2023-01-01T00:00:00.000Z",
+          "status": "tamamlandi",
+          "officialSource": "https://icraat.ibb.istanbul/proje-detay/maltepe-meydan-duzenlemesi/badc61a7-bd96-43d2-a90d-813235fd07e1",
+          "checkedAt": "2026-09-27T09:30:00.000Z",
+          "needsVerification": false
+        }
       ]
     },
     {
       "district": "pendik",
       "pdfSha256": "274878900fe2b02fe0d69c981172f3253a933b6e97442483c85c59844774cdcd",
-      "checkedAt": "2026-09-26T18:30:00.000Z",
+      "checkedAt": "2026-09-27T09:30:00.000Z",
       "sections": {
-        "summary": "Pendik, Marmara kıyısındaki yerleşimleri ile iç kesimlere uzanan coğrafyası birlikte değerlendirilerek tanınabilir.",
-        "history": "Pendik’in ilçe oluşumuna ilişkin düzenleme 1987’de yapıldı; ilçe teşkilatı 1988’de faaliyete geçti. Tuzla’nın 1992’de ayrılması, sonraki idari değişimlerden biridir.",
-        "geography": "İlçe Marmara Denizi kıyısında yer alır. Kaymakamlığın coğrafya anlatımı, kıyı ile Ömerli Barajı ve Aydos çevresine uzanan iç kesimleri birlikte ele alır.",
-        "life": "Pendik Çarşısı ve Tersane çevresi, kamusal hareket ile yerel ticaretin kesiştiği iki odaktır. Kurtköy yerleşimi açık alan kullanımlarını, Aydos orman eşiği ise ilçenin başka bir yerleşim karakterini görünür kılar.",
-        "transportation": "M4 metrosu, Marmaray ve YHT istasyonu ile Sabiha Gökçen bağlantısı Pendik’te demiryolu ve hava ulaşımını bir araya getirir.",
-        "housingTexture": "Kıyıdaki eski merkez ve demiryolu çevresi, tersane-sanayi alanları ile Kurtköy ve havaalanı yönündeki yeni konut-site gelişimi farklı katmanlar oluşturur. Genel yapı örüntüsü, bina ölçeğinde dayanım değerlendirmesi yerine geçmez; parsel ve yapı bilgileri yetkili kurum kayıtlarıyla kontrol edilmelidir.",
-        "regionalAssessment": "Bölgesel değerlendirmede demiryolu-kıyı merkezi, havaalanı bağlantısı ve kuzeyde hızla gelişen mahalleler birlikte okunmalıdır. Bu ilçe ölçekli okuma yatırım tavsiyesi veya yapı değerlendirmesi yerine geçmez; değişen koşullar resmî kayıtlarla izlenmelidir.",
-        "placesGuide": "Pendik Çarşısı ve kıyısı, Tersane çevresi, Kurtköy yerleşimi, Aydos orman eşiği; yerleşim, açık alan ve yerel hafızanın farklı yüzlerini izlemeye yardımcı olur. Ziyaret saati, erişim kuralı ve çekim izni gerekiyorsa ilgili kurumun güncel duyurusu esas alınmalıdır.",
-        "distinctiveFeatures": "Pendik ilçesinin kendine özgü mekânsal yapısı demiryolu-kıyı merkezi, havaalanı bağlantısı ve kuzeyde hızla gelişen mahalleler üzerinden tarif edilebilir. Pendik Çarşısı ve kıyısı ile Tersane çevresi bu yapının iki farklı yüzünü temsil eder.",
-        "researchTopics": "• Demiryolu ve kıyı merkezinin tarihsel gelişimi\n• Tersane ve sanayi alanlarının yerleşim üzerindeki etkisi\n• Kurtköy ile havaalanı çevresindeki yeni gelişim alanlarının değişimi"
+        "summary": "Pendik, Marmara kıyısındaki tarihî merkez ve iskeleden D100–Marmaray koridoruna, Kurtköy–Yenişehir ile Sabiha Gökçen Havalimanı çevresine ve kuzeydeki kırsal-orman eşiğine uzanan geniş bir ilçedir. Kıyı, sanayi, havaalanı ve yeni konut alanları aynı idari sınır içinde farklı yaşam çevreleri oluşturur.",
+        "history": "Pendik’te yerleşim izleri kıyıdaki arkeolojik buluntulara kadar uzanır; modern merkez ise Osmanlı döneminin sonlarında demiryolu ve iskele çevresinde gelişti. Cumhuriyet döneminde ulaşım, tersane ve sanayi işlevleri kıyıdaki büyümeyi hızlandırdı; 1987’de ilçe kurulmasına ilişkin düzenleme yapıldı ve teşkilat 1988’de faaliyete geçti. Tuzla’nın 1992’de ayrılması bugünkü güneydoğu sınırını belirledi. Kurtköy ve Yenişehir’in hızlı gelişimi ile Sabiha Gökçen Havalimanı, ilçenin ağırlığını 2000’lerden itibaren iç kesimlere taşıdı.",
+        "geography": "Pendik güneyde Marmara kıyısından kuzeyde Ömerli havzası ve ormanlık-kırsal mahallelere uzanır. Pendik merkez, Batı ve Doğu mahalleleri kıyı ile demiryolu çevresinde yoğunlaşırken Kaynarca–Esenyalı hattında sanayi ve konut iç içedir. Kurtköy ve Yenişehir, havaalanı ile TEM bağlantıları çevresinde yüksek platoda gelişir; Göçbeyli, Kurtdoğmuş ve Emirli gibi kuzey mahalleleri daha düşük yoğunluklu kırsal karakter taşır. Bu geniş coğrafya tek bir kent dokusuyla açıklanamaz.",
+        "life": "Pendik Çarşı ve sahil meydanı yerel ticaret, yaya hareketi ve kıyı kullanımının merkezidir. Marina–Batı Mahallesi kıyısı rekreasyon ve yeme-içme; Kurtköy Meydanı ile Yenişehir iş, konut ve havalimanı bağlantılı gündelik yaşam; Kaynarca ve Esenyalı yoğun mahalle ticareti; Çamlık–Aydos eşiği açık alan kullanımı sunar. Sabiha Gökçen çevresindeki vardiyalı çalışma ve yolcu hareketi, kıyı merkezinden farklı bir günlük ritim üretir.",
+        "transportation": "Eylül 2026 itibarıyla M4 metrosu Pendik merkezden Fevzi Çakmak, Yayalar, Kurtköy ve Sabiha Gökçen Havalimanı’na kesintisiz işletmededir. Marmaray kıyı-demiryolu koridorunda Pendik ve Kaynarca çevresine hizmet verir; Pendik YHT garı şehirlerarası hızlı tren bağlantısı sağlar. Şehir Hatları’nın Tuzla–Pendik–Büyükada seferleri tarifeye bağlı deniz seçeneğidir. D100, TEM ve havalimanı bağlantı yolları karayolu omurgalarıdır; Kaynarca–Pendik–Tuzla metro projesi işletmede değildir ve mevcut hat gibi gösterilmemelidir.",
+        "housingTexture": "Pendik merkez ve demiryolu çevresinde eski-yeni apartmanlar ile zemin kat ticareti; Batı Mahallesi ve marina çevresinde apartman ve karma kullanım; Kaynarca–Esenyalı hattında yoğun konut ile sanayi-depolama alanları görülür. Kurtköy ve Yenişehir’de büyük siteler, rezidanslar, ofisler ve yeni apartmanlar yaygındır. Orhanlı sınırına ve kuzey köylerine yaklaşıldıkça lojistik, müstakil konut ve kırsal doku artar. Bu sınıflandırma yapı dayanımı hakkında hüküm vermez.",
+        "regionalAssessment": "Pendik’i belirleyen unsurlar Marmara kıyısındaki merkez, Marmaray–YHT düğümü, D100 ve M4 koridoru, Sabiha Gökçen Havalimanı, Kurtköy–Yenişehir büyümesi ve kuzeydeki orman-havza alanlarıdır. İlçe hem bölgesel ulaşım merkezi hem üretim-lojistik alanıdır; bu işlevler mahalleler arasında trafik ve arazi kullanımı farkı yaratır. Kıyı merkezinin yaya ölçeği ile havaalanı çevresinin otomobil ve servis odaklı düzeni ayrı değerlendirilmelidir.",
+        "placesGuide": "Pendik Çarşı ve sahil meydanı tarihî merkezi; Pendik Marina kıyıdaki yeni karma kullanımı; Pendik Höyüğü arkeolojik katmanı; Kurtköy Meydanı havaalanı yönündeki mahalle odağını; Yenişehir yerleşimi yeni site-ofis dokusunu; Sabiha Gökçen Havalimanı bölgesel ulaşım işlevini; Çamlık–Aydos eşiği ise açık alan ve yükselti ilişkisini incelemek için kullanılabilir.",
+        "distinctiveFeatures": "Pendik’in ayırt edici özelliği kıyıda Marmaray, YHT ve deniz ulaşımının; iç kesimde M4 ile uluslararası havalimanının aynı ilçede birleşmesidir. Kurtköy–Yenişehir’in yeni konut ve iş alanları, Pendik merkezdeki yerleşik çarşı-kıyı dokusundan; kuzeydeki kırsal mahalleler ise her ikisinden farklıdır.",
+        "researchTopics": "• Pendik merkezde iskele, demiryolu ve çarşının birlikte gelişimi\n• Kurtköy–Yenişehir’de havalimanı ve metro sonrası mekânsal değişim\n• Tersane-sanayi alanları ile kıyı kamusal kullanımları arasındaki ilişki\n• Kuzey kırsal mahallelerinde orman, havza ve yerleşim dengesi"
       },
       "neighborhoods": [
         "Ahmet Yesevi",
@@ -7425,7 +7532,7 @@
           "url": "https://data.tuik.gov.tr/Bulten/Index?p=Adrese-Dayali-Nufus-Kayit-Sistemi-Sonuclari-2025-53899",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
+          "checkedAt": "2026-09-27T09:30:00.000Z",
           "dataDate": "2025-12-31T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
@@ -7444,11 +7551,52 @@
           "sections": [
             "facts"
           ]
+        },
+        {
+          "title": "Tuzla–Pendik–Büyükada Hattı",
+          "publisher": "Şehir Hatları",
+          "url": "https://sehirhatlari.istanbul/tr/seferler/ic-hatlar/adalar-hatlari/tuzla-pendik-buyukada-hatti-3373",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-27T09:30:00.000Z",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "transportation"
+          ]
+        },
+        {
+          "title": "Pendik Belediyesi 2025–2029 Stratejik Planı",
+          "publisher": "Pendik Belediyesi",
+          "url": "https://www.pendik.bel.tr/data/dokumanlar/6708c0a1de2b7_pendik-belediyesi-2025-2029-stratejik-plan.pdf",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-27T09:30:00.000Z",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "life",
+            "regionalAssessment",
+            "planningDevelopments"
+          ]
+        },
+        {
+          "title": "Kurtköy Metro Çıkışı Çevre Düzenlemesi",
+          "publisher": "İlgili resmî kurum",
+          "url": "https://www.pendik.bel.tr/data/dokumanlar/6481a6cd2344f_2022-faaliyet-raporu.pdf",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-27T09:30:00.000Z",
+          "dataDate": "2023-01-01T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "planningDevelopments"
+          ]
         }
       ],
       "excluded": {
         "marketData": "Karşılaştırılabilir, güncel ve tarihli resmî piyasa serisi bulunmadığından bilinçli olarak boş bırakıldı.",
-        "planningDevelopments": "Yalnız tarihli karar ve uygulama belgeleriyle doğrulanacak proje kayıtları bu içerik tamamlamasına dahil edilmedi.",
+        "planningDevelopments": "Yalnız tarihli ve resmî kaynağa bağlı tek gelişme yayımlandı; doğrulanamayan proje ve takvimler dışarıda bırakıldı.",
         "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
         "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
         "areaKm2Review": "İlçe kurumlarında ölçüm kapsamına göre değişebilen yüzölçümü değerleri bulunduğundan, 39 ilçe için aynı standardı veren İBB İlçe Alan Bilgileri Tablosu'ndaki kara alanı esas alındı."
@@ -7474,24 +7622,37 @@
         "regionalAssessment",
         "placesGuide",
         "distinctiveFeatures",
-        "researchTopics"
+        "researchTopics",
+        "planningDevelopments"
+      ],
+      "planningDevelopments": [
+        {
+          "title": "Kurtköy Metro Çıkışı Çevre Düzenlemesi",
+          "summary": "Pendik Belediyesi faaliyet raporunda M4’ün Kurtköy istasyonu çıkışı çevresinde yürüyüş ve dinlenme alanları ile yeşil alan düzenlemesinin tamamlandığı kaydedildi.",
+          "neighborhood": "Kurtköy",
+          "date": "2023-01-01T00:00:00.000Z",
+          "status": "tamamlandi",
+          "officialSource": "https://www.pendik.bel.tr/data/dokumanlar/6481a6cd2344f_2022-faaliyet-raporu.pdf",
+          "checkedAt": "2026-09-27T09:30:00.000Z",
+          "needsVerification": false
+        }
       ]
     },
     {
       "district": "sancaktepe",
       "pdfSha256": "7429c724fbec526742c25222a78faded34b00fdd09afd534cfd55a4bb64773e9",
-      "checkedAt": "2026-09-26T18:30:00.000Z",
+      "checkedAt": "2026-09-27T09:30:00.000Z",
       "sections": {
-        "summary": "Sancaktepe’nin geçmişi, Samandıra ve Sarıgazi gibi yerleşimlerin bugünkü ilçe yapısında birleşmesiyle okunur.",
-        "history": "Sancaktepe ilçesi 2008’de kuruldu. Samandıra’daki Damatris Sarayı kalıntıları, bölgenin yeni idari kuruluşundan çok daha eski bir yerleşim geçmişine işaret eder.",
-        "geography": "Samandıra ve Sarıgazi, ilçenin yerleşim coğrafyasındaki başlıca tarihî odaklardandır. Bu semt adları güncel mahalle listesinin tamamını karşılamaz; idari kayıtlar ayrı gösterilir.",
-        "life": "Gündelik yaşamı sahada okumak için Samandıra merkez, Aydos Ormanı eşiği ve Sarıgazi yerleşimi birbirini tamamlayan duraklardır. Paşaköy çevresi, merkezdeki hareketten ayrılan yerel ritmiyle bu okumayı genişletir.",
-        "transportation": "M5 metrosunun Samandıra kesimi Sancaktepe’nin raylı sistem erişimini sağlar; otobüsler farklı yerleşim merkezlerini istasyonlara bağlar.",
-        "housingTexture": "Sarıgazi ve Samandıra çevresindeki apartman dokusu, yeni site alanları ve Aydos-Paşaköy eşiğindeki düşük yoğunluklu yerleşimler çok merkezli bir yapı gösterir. Bu ilçe ölçekli gözlemden tek bir yapı için güvenlik çıkarımı yapılamaz; güncel ruhsat, zemin, plan ve yapı kayıtları ayrıca araştırılmalıdır.",
-        "regionalAssessment": "Bölgesel değerlendirmede Aydos orman eşiği, çok merkezli mahalle yapısı ve metro sonrası erişim değişimi birlikte okunmalıdır. Sentezin amacı ilçeyi sıralamak değil, katmanlarını birlikte göstermektir; tekil kararlar için güncel belge ve saha çalışması gerekir.",
-        "placesGuide": "Tarihî bağlam ile bugünkü yaşam arasındaki ilişki Samandıra merkez, Aydos Ormanı eşiği, Sarıgazi yerleşimi, Paşaköy çevresi üzerinden yerinde araştırılabilir. Rota kurulurken mevsim, ulaşım ve ziyaret kısıtları güncel resmî kanallardan kontrol edilmelidir.",
-        "distinctiveFeatures": "Sancaktepe anlatısında Aydos orman eşiği, çok merkezli mahalle yapısı ve metro sonrası erişim değişimi öne çıkar. Samandıra merkez ve Aydos Ormanı eşiği arasındaki karşıtlık ilçenin tek tip olmayan karakterini gösterir.",
-        "researchTopics": "• Samandıra ve Sarıgazi'nin ilçe öncesi yerleşim izleri\n• Aydos orman eşiğinde mahalle ve açık alan ilişkisi\n• Metro erişiminin yerel merkezler arasındaki hareketliliğe etkisi"
+        "summary": "Sancaktepe; Sarıgazi, Samandıra ve Yenidoğan çevresinde gelişen yoğun konut alanları ile kuzey ve doğudaki orman-havza eşiğini bir araya getirir. TEM bağlantıları ve 2024–2026 arasında etaplar halinde açılan M5, ilçenin Anadolu Yakası içindeki erişim biçimini değiştirmiştir.",
+        "history": "Bugünkü Sancaktepe, uzun süre ayrı yerleşim odakları olan Sarıgazi, Samandıra ve Yenidoğan’ın çevresinde gelişti. Bu odaklar 20. yüzyılın ikinci yarısında göç, sanayi bölgelerine yakınlık ve karayolu erişimiyle hızla büyüdü. 2008 tarihli idari düzenlemeyle Ümraniye, Kartal ve Pendik’ten ayrılan mahalleler birleştirilerek Sancaktepe ilçesi kuruldu. Yer adlarının kökenine ilişkin rivayetler kesin tarihsel veri gibi sunulmadan, belediye ve kaymakamlık kronolojileri esas alınmalıdır.",
+        "geography": "Sancaktepe Anadolu Yakası’nın iç kesiminde, Ömerli havzası ve orman kuşağının kentleşmiş alanlarla temas ettiği bir eşikte yer alır. Sarıgazi batıda yoğun ve süreklilik gösteren kent dokusuna, Samandıra güneyde TEM ve çevre yollarına, Yenidoğan kuzeyde orman-havza sınırına yakındır. Paşaköy ve doğu kesimlerinde yoğunluk azalır. Dere vadileri, eğim ve koruma alanları mahallelerin yol ağı ile yapılaşma biçimini etkiler.",
+        "life": "Sarıgazi merkez ve Demokrasi Caddesi yoğun ticaret-yaya hareketi üretir; Samandıra Meydanı ile çevresi geleneksel ilçe odağıdır. Yenidoğan’ın mahalle çarşıları kuzeyde ayrı bir günlük merkez oluşturur; Abdurrahmangazi ve Osmangazi’de yeni siteler ile yerel hizmetler birlikte gelişir. Sancaktepe Şehir Hastanesi çevresi sağlık ve ulaşım hareketini artırırken Aydos ile orman kuşağına yakın parklar açık alan ihtiyacını karşılar.",
+        "transportation": "Eylül 2026 itibarıyla M5 Üsküdar–Sultanbeyli hattı ilçede Sarıgazi, Sancaktepe Şehir Hastanesi, Sancaktepe ve Samandıra Merkez istasyonlarıyla açık ve işletmededir; Çekmeköy–Samandıra etabı 16 Mart 2024’te, Samandıra–Sultanbeyli etabı 22 Mayıs 2026’da açılmıştır. İETT hatları Yenidoğan, Paşaköy ve raylı sistemden uzak mahalleleri metro ile TEM bağlantılarına taşır. Yenidoğan–Söğütlüçeşme hattı Eylül 2026’da açık değildir; resmî kaynaklarda planlanan/finansman aranan proje olarak ayrıştırılmalıdır.",
+        "housingTexture": "Sarıgazi ve Samandıra merkezlerinde bitişik ya da yakın nizamlı eski apartmanlar, yoğun cadde ticareti ve daha yeni apartmanlar iç içedir. Abdurrahmangazi, Veysel Karani ve Osmangazi çevresinde büyük bloklar ve güvenlikli siteler artar. Yenidoğan’da yoğun apartman alanları orman-havza eşiğindeki daha parçalı dokuya geçer; Paşaköy çevresinde düşük yoğunluklu ve kırsal parçalar bulunur. Bu gözlem teknik yapı güvenliği değerlendirmesi değildir.",
+        "regionalAssessment": "Sancaktepe’nin temel belirleyicileri Sarıgazi–Samandıra–Yenidoğan’ın çok merkezli yapısı, M5’in etaplar halinde açılması, TEM bağlantıları, yeni konut alanları, şehir hastanesi ve orman-havza sınırıdır. M5 doğu-batı erişimini güçlendirmiştir; kuzeyde Yenidoğan’ın doğrudan raylı sistem beklentisi ise planlanan projeden ayrılmalıdır. Yoğun kentleşme ile koruma alanı temasında güncel plan kararları önem taşır.",
+        "placesGuide": "Sarıgazi merkez ticaret ve yaya yoğunluğunu; Samandıra Meydanı eski yerleşim odağını; Yenidoğan merkez kuzey mahallelerinin ritmini; Sancaktepe Şehir Hastanesi ve M5 istasyonu yeni ulaşım-sağlık düğümünü; Paşaköy çevresi kırsal geçişi; Aydos ve orman kuşağına komşu mahalleler ise kent-doğa sınırını incelemek için uygun duraklardır.",
+        "distinctiveFeatures": "Sancaktepe’yi ayıran özellik, üç eski yerleşim odağının hızla büyüyen konut alanları içinde birleşmesi ve bu dokunun orman-havza kuşağına dayanmasıdır. M5’in 2024 ve 2026 açılışları Sarıgazi–Samandıra hattını Üsküdar ve Sultanbeyli’ye bağlamış; Yenidoğan yönündeki ayrı proje ise henüz işletmeye girmemiştir.",
+        "researchTopics": "• Sarıgazi, Samandıra ve Yenidoğan’ın ayrı merkezlerden tek ilçeye dönüşümü\n• M5 açılışlarının mahalleler arası erişim ve merkez kullanımlarına etkisi\n• Yeni site alanları ile yerleşik apartman dokusunun karşılaştırılması\n• Orman-havza eşiğinde planlama, açık alan ve yerleşim baskısı"
       },
       "neighborhoods": [
         "Abdurrahmangazi",
@@ -7581,7 +7742,7 @@
           "url": "https://data.tuik.gov.tr/Bulten/Index?p=Adrese-Dayali-Nufus-Kayit-Sistemi-Sonuclari-2025-53899",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
+          "checkedAt": "2026-09-27T09:30:00.000Z",
           "dataDate": "2025-12-31T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
@@ -7600,11 +7761,38 @@
           "sections": [
             "facts"
           ]
+        },
+        {
+          "title": "M5 Hattı Samandıra–Sultanbeyli Etabı Hizmete Açıldı",
+          "publisher": "Metro İstanbul",
+          "url": "https://www.metro.istanbul/haber/detay/m5-hattinin-samandira-merkez-sultanbeyli-etabi-hizmete-acildi-220526",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-27T09:30:00.000Z",
+          "dataDate": "2026-05-22T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "transportation",
+            "planningDevelopments"
+          ]
+        },
+        {
+          "title": "Yenidoğan–Söğütlüçeşme Metro Hattı Projesi",
+          "publisher": "İstanbul Büyükşehir Belediyesi Finansman Şube Müdürlüğü",
+          "url": "https://finansman.ibb.istanbul/proje-desteklerimiz/",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-27T09:30:00.000Z",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "transportation"
+          ]
         }
       ],
       "excluded": {
         "marketData": "Karşılaştırılabilir, güncel ve tarihli resmî piyasa serisi bulunmadığından bilinçli olarak boş bırakıldı.",
-        "planningDevelopments": "Yalnız tarihli karar ve uygulama belgeleriyle doğrulanacak proje kayıtları bu içerik tamamlamasına dahil edilmedi.",
+        "planningDevelopments": "Yalnız tarihli ve resmî kaynağa bağlı tek gelişme yayımlandı; doğrulanamayan proje ve takvimler dışarıda bırakıldı.",
         "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
         "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
         "areaKm2Review": "İlçe kurumlarında ölçüm kapsamına göre değişebilen yüzölçümü değerleri bulunduğundan, 39 ilçe için aynı standardı veren İBB İlçe Alan Bilgileri Tablosu'ndaki kara alanı esas alındı."
@@ -7630,24 +7818,37 @@
         "regionalAssessment",
         "placesGuide",
         "distinctiveFeatures",
-        "researchTopics"
+        "researchTopics",
+        "planningDevelopments"
+      ],
+      "planningDevelopments": [
+        {
+          "title": "M5 Samandıra Merkez–Sultanbeyli Etabının Açılması",
+          "summary": "M5’in Samandıra Merkez–Sultanbeyli arasındaki dört istasyonlu son etabı 22 Mayıs 2026’da hizmete açıldı; Sancaktepe’de Samandıra’dan doğuya kesintisiz işletme başladı.",
+          "neighborhood": "Samandıra",
+          "date": "2026-05-22T00:00:00.000Z",
+          "status": "tamamlandi",
+          "officialSource": "https://www.metro.istanbul/haber/detay/m5-hattinin-samandira-merkez-sultanbeyli-etabi-hizmete-acildi-220526",
+          "checkedAt": "2026-09-27T09:30:00.000Z",
+          "needsVerification": false
+        }
       ]
     },
     {
       "district": "sultanbeyli",
       "pdfSha256": "74cbc64aa17f871c8d8e3708f9cb23902cdb1952dd3828e2148a4d2367a1141c",
-      "checkedAt": "2026-09-26T18:30:00.000Z",
+      "checkedAt": "2026-09-27T09:30:00.000Z",
       "sections": {
-        "summary": "Sultanbeyli, Aydos çevresindeki tarihî güzergâhlar ile yakın dönem kentleşmesinin birlikte ele alındığı bir ilçedir.",
-        "history": "Aydos Kalesi ve çevresindeki geçiş yolları, bölgenin tarihî önemini açıklayan somut odaklardır. Sultanbeyli, yakın dönemde köy ve belediye yerleşiminden büyüyerek 1992’de ilçe oldu. Kale hakkında aktarılan efsaneler tarihsel olgu olarak kullanılmamıştır.",
-        "geography": "Sultanbeyli, Anadolu Yakası’nda Aydos ve Teferrüç çevresindeki alanda yer alır. Kaymakamlık sayfasındaki eski idari komşuluk anlatımı güncel sınır bilgisi olarak aktarılmamıştır.",
-        "life": "Sultanbeyli merkez çevresindeki kamusal hareket, Aydos etekleri çevresindeki açık alan kullanımı ve Turgut Reis çevresi üzerindeki yerel ticaret ilçenin farklı gündelik katmanlarını gösterir. TEM koridoru bu katmanlara merkez dışından bir örnek ekler.",
-        "transportation": "M5 hattının Sultanbeyli etabı ilçenin raylı sistem erişimini oluşturur; TEM çevresindeki mahallelerde otobüs beslemesi sürer.",
-        "housingTexture": "TEM çevresindeki yoğun apartman dokusu ile Aydos eteklerine uzanan yerleşimler ve ana caddelerdeki ticaret yapıları ilçenin temel morfolojisini oluşturur. Dokuya ilişkin bu çerçeve parsel bazında teknik görüş değildir; bina yaşı ve resmî zemin, ruhsat ve plan verileri ayrı inceleme gerektirir.",
-        "regionalAssessment": "Bölgesel değerlendirmede Aydos etekleri, TEM koridoru ve yoğun konut dokusunun ulaşım yatırımlarıyla ilişkisi birlikte okunmalıdır. Bu değerlendirmeden belirli bir taşınmaz için sonuç çıkarılamaz; yerel koşullar, resmî planlar ve saha verisi ayrıca incelenmelidir.",
-        "placesGuide": "Sultanbeyli merkez, Aydos etekleri, Turgut Reis çevresi, TEM koridoru, ilçenin coğrafi ve kentsel katmanlarını tek bir turistik listeye indirgemeden okumayı sağlar. Çekim planı yapılmadan önce alanların güncel erişim koşulları ve izinleri yeniden araştırılmalıdır.",
-        "distinctiveFeatures": "Sultanbeyli içinde dikkat çeken temel ilişki Aydos etekleri, TEM koridoru ve yoğun konut dokusunun ulaşım yatırımlarıyla ilişkisi. Bu ilişkiyi yerinde gözlemek için Sultanbeyli merkez ile Aydos etekleri karşılaştırılabilir.",
-        "researchTopics": "• Aydos Kalesi çevresindeki tarihî güzergâhların izleri\n• TEM koridorunun yerleşim dokusuna etkisi\n• Parsel yapısı ile yakın dönem kentleşme sürecinin ilişkisi"
+        "summary": "Sultanbeyli, TEM çevresinde yoğunlaşan konut ve ticaret dokusu, ilçe merkezi ile Aydos Ormanı ve kalesi yönündeki açık alan eşiğiyle tanımlanır. M5’in Samandıra–Sultanbeyli etabı 22 Mayıs 2026’da açılmış; ilçe ilk kez doğrudan metro işletmesine bağlanmıştır.",
+        "history": "Sultanbeyli’nin eski yerleşim izleri Aydos Kalesi ve çevresinde görülür; bugünkü kentsel doku ise ağırlıkla 20. yüzyılın ikinci yarısında karayolu erişimi ve iç göçle büyüdü. TEM’in açılması bölgesel erişimi güçlendirirken hızlı ve yoğun konut gelişimi merkez ile mahallelerin biçimini belirledi. Sultanbeyli 1987’de belediye, 1992’de ilçe statüsü kazandı. Aydos’a ilişkin tarihsel anlatılar resmî arkeoloji ve koruma kaynaklarıyla sınırlandırılmalı; yer adı rivayetleri kesin bilgi olarak verilmemelidir.",
+        "geography": "İlçe Anadolu Yakası’nın iç kesiminde, TEM’in iki yanında ve Aydos yükseltisinin doğu-güneydoğu eteklerinde yer alır. Merkez ve çevre mahallelerde yoğun, kesintisiz yapılaşma görülür; kuzey ve batıda Aydos Ormanı ile koru alanları kentsel dokuya sınır oluşturur. Kartal, Sancaktepe ve Pendik ile komşuluk; TEM, bağlantı yolları ve orman sınırı üzerinden okunur. Kıyısı yoktur ve topoğrafya mahalleler arasında eğim farkları üretir.",
+        "life": "Kent Meydanı, belediye ve çarşı çevresi günlük ticaret ile kamusal buluşmanın ana odağıdır. Fatih Bulvarı ve Bosna Bulvarı boyunca mağazalar, hizmetler ve yoğun yaya hareketi sıralanır. M5 Sultanbeyli, Hasanpaşa ve Veysel Karani istasyonları yeni aktarma odaklarıdır; Aydos Korusu, Fetih Korusu ve Aydos Kalesi çevresi açık alan-kültür kullanımı sunar. TEM’in iki yakasındaki mahallelerde yaya ve araç erişimi farklılaşır.",
+        "transportation": "Eylül 2026 itibarıyla M5 Üsküdar–Sultanbeyli hattının Veysel Karani, Hasanpaşa ve Sultanbeyli istasyonları açıktır; Samandıra Merkez–Sultanbeyli etabı 22 Mayıs 2026’da hizmete girmiştir. Bu nedenle uzatma artık planlanan ya da inşaat halinde değil, işletmededir. İETT hatları mahalleleri metroya ve çevre ilçelere bağlar; TEM ile bağlantı yolları karayolu omurgasıdır. Sabiha Gökçen yönünde doğrudan metro uzatması Eylül 2026 itibarıyla mevcut işletme olarak gösterilmemelidir.",
+        "housingTexture": "Sultanbeyli merkez ve Fatih Bulvarı çevresinde zemin kat ticaretli yoğun apartman dokusu baskındır. TEM yakınında konut, küçük işletme, depo ve servis işlevleri birbirine yaklaşır; Hasanpaşa, Battalgazi ve Adil mahallelerinde eski apartmanlarla yeni bloklar yan yanadır. Aydos yönünde eğim, koru ve orman sınırı nedeniyle doku yer yer seyrelir; site ve daha düşük yoğunluklu konut örnekleri görülür. Bu tarif yapı güvenliği sonucu değildir.",
+        "regionalAssessment": "Sultanbeyli’nin belirleyicileri yoğun konut dokusu, ilçe merkezi ve bulvar ticareti, TEM’in bölücü-bağlayıcı etkisi, Aydos orman-kale çevresi ve 2026’da açılan M5’tir. Metro, Üsküdar’a kesintisiz raylı erişim sağlamış olsa da istasyon dışındaki mahallelerin besleme ulaşımı önemini korur. Açık alanlar ile yoğun yapılaşma arasındaki sınır güncel koruma ve plan kararlarıyla birlikte izlenmelidir.",
+        "placesGuide": "Sultanbeyli Kent Meydanı merkez yaşamını; Fatih Bulvarı ticaret aksını; Aydos Kalesi tarihî peyzajı; Aydos Korusu ve Fetih Korusu kamusal açık alanları; Mimar Sinan Kültür Evi yerel kültür kullanımını; M5 Sultanbeyli istasyonu ise 2026 sonrası oluşan yeni ulaşım odağını okumak için kullanılabilir. Kale ve orman erişimi güncel kurallara göre planlanmalıdır.",
+        "distinctiveFeatures": "Sultanbeyli’yi ayıran temel karşıtlık, TEM çevresindeki çok yoğun konut-ticaret dokusu ile Aydos’un ormanlık ve arkeolojik peyzajının yan yana gelmesidir. 22 Mayıs 2026’da M5’in açılması ilçenin erişim tarihinde yeni bir eşik yaratmış; önceden karayolu ve otobüs ağırlıklı bağlantıya doğrudan metro eklenmiştir.",
+        "researchTopics": "• TEM’in ilçe merkezi ve mahalleler arası erişim üzerindeki etkisi\n• M5’in 2026 açılışı sonrası istasyon çevrelerindeki gündelik değişim\n• Aydos Kalesi ve orman eşiğinde koruma-kamusal kullanım dengesi\n• Yoğun apartman dokusu ile yeni site alanlarının mekânsal karşılaştırması"
       },
       "facts": {
         "population": "378908",
@@ -7681,7 +7882,7 @@
           "url": "https://data.tuik.gov.tr/Bulten/Index?p=Adrese-Dayali-Nufus-Kayit-Sistemi-Sonuclari-2025-53899",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
+          "checkedAt": "2026-09-27T09:30:00.000Z",
           "dataDate": "2025-12-31T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
@@ -7774,11 +7975,53 @@
           "sections": [
             "facts"
           ]
+        },
+        {
+          "title": "M5 Üsküdar–Sultanbeyli Metro Hattı",
+          "publisher": "Metro İstanbul",
+          "url": "https://www.metro.istanbul/Hatlarimiz/HatDetay?hat=M5",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-27T09:30:00.000Z",
+          "dataDate": "2026-05-22T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "transportation",
+            "planningDevelopments"
+          ]
+        },
+        {
+          "title": "M5 Hattı Samandıra–Sultanbeyli Etabı Hizmete Açıldı",
+          "publisher": "Metro İstanbul",
+          "url": "https://www.metro.istanbul/haber/detay/m5-hattinin-samandira-merkez-sultanbeyli-etabi-hizmete-acildi-220526",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-27T09:30:00.000Z",
+          "dataDate": "2026-05-22T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "transportation",
+            "planningDevelopments"
+          ]
+        },
+        {
+          "title": "Sultanbeyli Projeleri",
+          "publisher": "Sultanbeyli Belediyesi",
+          "url": "https://www.sultanbeyli.bel.tr/proje/",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-27T09:30:00.000Z",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "life",
+            "placesGuide"
+          ]
         }
       ],
       "excluded": {
         "marketData": "Karşılaştırılabilir, güncel ve tarihli resmî piyasa serisi bulunmadığından bilinçli olarak boş bırakıldı.",
-        "planningDevelopments": "Yalnız tarihli karar ve uygulama belgeleriyle doğrulanacak proje kayıtları bu içerik tamamlamasına dahil edilmedi.",
+        "planningDevelopments": "Yalnız tarihli ve resmî kaynağa bağlı tek gelişme yayımlandı; doğrulanamayan proje ve takvimler dışarıda bırakıldı.",
         "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
         "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
         "specificReview": "İlçe belediyesi Akşemsettin; İBB Akşemseddin yazıyor. İlçe belediyesinin yazımı esas alındı. Eski coğrafya sayfasındaki Paşaköy-Kartal ilişkisi güncel sınır diye aktarılmadı.",
@@ -7797,24 +8040,37 @@
         "regionalAssessment",
         "placesGuide",
         "distinctiveFeatures",
-        "researchTopics"
+        "researchTopics",
+        "planningDevelopments"
+      ],
+      "planningDevelopments": [
+        {
+          "title": "M5 Samandıra Merkez–Sultanbeyli Etabının Açılması",
+          "summary": "M5’in 4,4 kilometrelik Samandıra Merkez–Sultanbeyli uzatması 22 Mayıs 2026’da açılarak Veysel Karani, Hasanpaşa ve Sultanbeyli istasyonlarını işletmeye aldı.",
+          "neighborhood": "Sultanbeyli merkez",
+          "date": "2026-05-22T00:00:00.000Z",
+          "status": "tamamlandi",
+          "officialSource": "https://www.metro.istanbul/haber/detay/m5-hattinin-samandira-merkez-sultanbeyli-etabi-hizmete-acildi-220526",
+          "checkedAt": "2026-09-27T09:30:00.000Z",
+          "needsVerification": false
+        }
       ]
     },
     {
       "district": "sile",
       "pdfSha256": "a580d632aad945739736676df191e72b23d6ec8e09a7e164266f819668e285f7",
-      "checkedAt": "2026-09-26T18:30:00.000Z",
+      "checkedAt": "2026-09-27T09:30:00.000Z",
       "sections": {
-        "summary": "Şile, Karadeniz kıyısındaki yerleşim geçmişi ve çevresindeki farklı yerleşim odaklarıyla tanınır.",
-        "history": "Kaymakamlık tarihçesi, Şile çevresindeki eski yerleşim izlerini Ağva ve Sahilköy gibi odaklarla birlikte ele alır. Rehber, yer adlarının kökenine ilişkin rivayetleri kesin bilgi olarak sunmaz.",
-        "geography": "Şile, Kocaeli Yarımadası’nın Karadeniz kıyısındadır. Merkez ile Ağva ve çevre mahalleler, tek bir kıyı yerleşiminden daha geniş bir ilçe coğrafyası oluşturur.",
-        "life": "Şile Deniz Feneri, Şile Kalesi ve Ağva nehir kıyıları çevresinde yerel yaşam farklı yoğunluklarda görülür. Şile Yeryüzü Pazarı, ilçenin tek bir merkez ritmine indirgenemeyen yerleşim yapısını tamamlar.",
-        "transportation": "Şile merkez, Ağva ve kırsal mahalleler arasındaki ulaşım karayolu ve İETT otobüsleriyle sağlanır; ilçe içinde mesafeler geniş coğrafya nedeniyle uzundur.",
-        "housingTexture": "Şile merkezindeki apartman ve ticaret dokusu, Ağva’daki turizm yapıları ve kırsal mahallelerdeki müstakil-köy yerleşimleri geniş coğrafyada farklılaşır. Yapı tiplerinin genel dağılımı tekil bir binanın durumunu göstermez; teknik ve idari bilgiler yalnız güncel resmî kayıtlardan teyit edilmelidir.",
-        "regionalAssessment": "Bölgesel değerlendirmede Karadeniz kıyısı, geniş orman-kırsal alan ve merkez ile Ağva arasındaki farklı yaşam ritimleri birlikte okunmalıdır. Buradaki çerçeve karşılaştırmalı bir değer sıralaması sunmaz; mahalle ölçeğindeki kararlar güncel veriye dayanmalıdır.",
-        "placesGuide": "Saha rotasında Şile Deniz Feneri, Şile Kalesi ve liman, Ağva nehir kıyıları, Şile Yeryüzü Pazarı farklı ölçek ve dönemleri temsil eden tamamlayıcı odaklar olarak ele alınabilir. Bu durakların kullanım ve giriş koşulları değişebileceğinden saha öncesi kurum bilgisi alınmalıdır.",
-        "distinctiveFeatures": "Şile ilçesinin ayırt edici tarafı Karadeniz kıyısı, geniş orman-kırsal alan ve merkez ile Ağva arasındaki farklı yaşam ritimleri bağlamında okunur. Şile Deniz Feneri ile Şile Kalesi, söz konusu bağlamın farklı mekânsal örnekleridir.",
-        "researchTopics": "• Şile bezinin üretim ve gündelik yaşam belleğindeki yeri\n• Kırsal mahallelerde nüfus ve geleneksel üretimin değişimi\n• Ağva'da nehir ile kıyı kullanımının mevsimsel dönüşümü"
+        "summary": "Şile, İstanbul’un Karadeniz kıyısında; Şile merkez ve Ağva gibi sahil odaklarıyla geniş orman alanları, dere vadileri ve 62 kırsal-kentsel mahalleyi bir araya getiren düşük yoğunluklu bir ilçedir. Yaz turizmi ilçenin ritmini değiştirir; yıl boyu yerel yaşam, ormancılık, balıkçılık ve kırsal üretimle birlikte düşünülmelidir.",
+        "history": "Şile’nin bilinen geçmişi Karadeniz kıyısındaki liman ve gözetleme işlevleri, Ceneviz ve Osmanlı dönemlerinden kalan yapılar ile kırsal yerleşim ağı üzerinden izlenir. Şile Kalesi ve deniz feneri kıyı tarihinin görünür öğeleridir; 19. yüzyılda kurulan fener uluslararası deniz trafiği açısından önem taşır. Ağva, Göksu ve Yeşilçay arasında gelişen ayrı bir kıyı odağıdır. Şile 1926’dan beri İstanbul’a bağlıdır; antik ad ve kuruluş rivayetleri farklı kaynaklarda değiştiğinden kesin hüküm gibi aktarılmamalıdır.",
+        "geography": "İlçe kuzeyde uzun ve girintili Karadeniz kıyısına, güneyde orman ve havza alanlarına yayılır. Şile merkez kayalık burun, liman ve kumsallar çevresinde; Ağva ise Göksu ile Yeşilçay’ın denize ulaştığı alanda kuruludur. Kıyı boyunca falez, koy ve plajlar; içeride orman, dere vadisi, tarım açıklıkları ve dağınık köy yerleşimleri bulunur. Mevsimsel deniz koşulları ve uzak mahalleler arasındaki mesafeler gündelik erişimi doğrudan etkiler.",
+        "life": "Şile merkezde Üsküdar Caddesi, çarşı, liman ve fener çevresi yıl boyu ticaret ve kamu hizmetlerinin odağıdır. Ağva’da Göksu–Yeşilçay kıyıları ile merkez, turizm ve yerel yaşamı birlikte taşır. Kabakoz, Akçakese, Sahilköy ve diğer kırsal mahallelerde tarım, ormancılık ve mahalle ölçekli hizmetler öne çıkar; pazarlar ve Şile bezi üretimi yerel ekonominin görünür parçalarıdır. Yaz aylarında plajlar ve ikinci konutlar nüfus-hareket yoğunluğunu belirgin biçimde artırır.",
+        "transportation": "Eylül 2026 itibarıyla Şile’de metro, Marmaray veya başka bir raylı sistem işletmesi yoktur. İlçenin toplu ulaşımı İETT’nin Üsküdar–Şile–Ağva ve bağlantılı otobüs hatları ile yerel karayolu servislerine dayanır; D020/Şile Otoyolu İstanbul iç kesimleriyle ana bağlantıdır. Ağva ve uzak kırsal mahallelerde sefer sıklığı ile yolculuk süresi merkez mahallelerden farklıdır. Planlanan olası raylı sistemler mevcut ulaşım gibi sunulmamalıdır.",
+        "housingTexture": "Şile merkezde eski köy-kasaba evleri, bahçeli yapılar, apartmanlar ve turizm işletmeleri iç içedir. Ağva’da pansiyon, küçük otel, müstakil konut ve nehir kıyısı turizm yapıları görülür. Kıyı mahallelerinde yazlık ve ikinci konutlar; iç kesimlerde bahçeli köy evleri, tarımsal yapılar ve seyrek yerleşim baskındır. Orman içi ve koruma alanlarına yakın yapılaşma güncel plan ve izinlerle değerlendirilmelidir; bu doku tarifi yapı güvenliği sonucu üretmez.",
+        "regionalAssessment": "Şile’nin temel belirleyicileri Karadeniz kıyısı, Şile merkez, Ağva’nın iki dere arasındaki yerleşimi, geniş orman-havza alanları, dağınık 62 mahalle ve güçlü mevsimselliktir. Turizm kıyıda gelir ve hizmet üretirken yaz trafiği, atık, su ve kıyı güvenliği üzerinde baskı yaratabilir. İlçenin İstanbul’a idari bağlılığı, merkez kentsel alanlardan çok farklı bir düşük yoğunluk ve erişim coğrafyasını ortadan kaldırmaz.",
+        "placesGuide": "Şile Feneri denizcilik mirasını; Şile Kalesi liman peyzajını; Şile Limanı ve çarşı yıl boyu merkezi; Ağva Göksu ile Yeşilçay kıyıları turizm-yerel yaşam dengesini; Hacıllı çevresi orman ve dere coğrafyasını; Akçakese–Kabakoz kıyısı küçük sahil yerleşimlerini incelemek için uygundur. Plaj ve doğa rotalarında hava, akıntı, yangın ve erişim duyuruları önceden kontrol edilmelidir.",
+        "distinctiveFeatures": "Şile’yi İstanbul içinde ayıran nitelik, Karadeniz kıyısı ile geniş ormanlık kırsal alanın 62 mahalle boyunca birlikte var olmasıdır. Şile merkez ve Ağva turizm odakları olsa da ilçe yalnızca hafta sonu destinasyonu değildir; uzak köylerin yıl boyu hizmet erişimi, yerel üretim ve doğal alan yönetimi aynı çerçevenin parçasıdır.",
+        "researchTopics": "• Şile merkezde liman, fener ve çarşının tarihsel ilişkisi\n• Ağva’da turizm ile yıl boyu yerel yaşamın mevsimsel dengesi\n• Kırsal mahallelerde orman, tarım ve temel hizmetlere erişim\n• Karadeniz kıyısında plaj kullanımı, akıntı riski ve kamusal yönetim"
       },
       "neighborhoods": [
         "Ağaçdere",
@@ -7984,7 +8240,7 @@
           "url": "https://data.tuik.gov.tr/Bulten/Index?p=Adrese-Dayali-Nufus-Kayit-Sistemi-Sonuclari-2025-53899",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
+          "checkedAt": "2026-09-27T09:30:00.000Z",
           "dataDate": "2025-12-31T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
@@ -8003,11 +8259,42 @@
           "sections": [
             "facts"
           ]
+        },
+        {
+          "title": "Ağva",
+          "publisher": "Şile Kaymakamlığı",
+          "url": "https://sile.gov.tr/agva",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-27T09:30:00.000Z",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "geography",
+            "life",
+            "placesGuide"
+          ]
+        },
+        {
+          "title": "Şile’nin Tarihine ve Doğasına Kültür Yolculuğu: Ağva",
+          "publisher": "Şile Belediyesi",
+          "url": "https://sile.bel.tr/tr/haber/silenin-tarihine-ve-dogasina-kultur-yolculugu-agva-rotasi-kesfedildi/",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-27T09:30:00.000Z",
+          "dataDate": "2026-04-19T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "life",
+            "placesGuide",
+            "planningDevelopments"
+          ]
         }
       ],
       "excluded": {
         "marketData": "Karşılaştırılabilir, güncel ve tarihli resmî piyasa serisi bulunmadığından bilinçli olarak boş bırakıldı.",
-        "planningDevelopments": "Yalnız tarihli karar ve uygulama belgeleriyle doğrulanacak proje kayıtları bu içerik tamamlamasına dahil edilmedi.",
+        "planningDevelopments": "Yalnız tarihli ve resmî kaynağa bağlı tek gelişme yayımlandı; doğrulanamayan proje ve takvimler dışarıda bırakıldı.",
         "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
         "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
         "specificReview": "Resmî kaynaklar Akçekese/Akçakese yazımında ayrılıyor. Kaymakamlık ve ilçe belediyesindeki Akçekese esas; İBB farkı saklandı.",
@@ -8034,24 +8321,37 @@
         "regionalAssessment",
         "placesGuide",
         "distinctiveFeatures",
-        "researchTopics"
+        "researchTopics",
+        "planningDevelopments"
+      ],
+      "planningDevelopments": [
+        {
+          "title": "Ağva Kültür Rotası Saha Çalışması",
+          "summary": "Şile Belediyesi 19 Nisan 2026’da Ağva’nın tarihî kuruluş alanı ve Kilimli çevresini kapsayan kültür rotası çalışmasını gerçekleştirdi; çalışma kültürel mirasın yerinde tanıtımına dönük kamusal program olarak kayda geçti.",
+          "neighborhood": "Ağva",
+          "date": "2026-04-19T00:00:00.000Z",
+          "status": "tamamlandi",
+          "officialSource": "https://sile.bel.tr/tr/haber/silenin-tarihine-ve-dogasina-kultur-yolculugu-agva-rotasi-kesfedildi/",
+          "checkedAt": "2026-09-27T09:30:00.000Z",
+          "needsVerification": false
+        }
       ]
     },
     {
       "district": "tuzla",
       "pdfSha256": "03fdd747eeb1b6c7808208fde4842ccb7cddfb158ea14095e7b60d984c040a61",
-      "checkedAt": "2026-09-26T18:30:00.000Z",
+      "checkedAt": "2026-09-27T09:30:00.000Z",
       "sections": {
-        "summary": "Tuzla’nın geçmişi, kıyı yerleşimi ile Kalekapı çevresindeki arkeolojik izleri birlikte içerir.",
-        "history": "Kalekapı çevresindeki buluntular, Tuzla’nın yerleşim geçmişinin tarih öncesine uzandığını gösterir. Yakın dönem idari gelişiminde ise Tuzla’nın 1992’de Pendik’ten ayrılarak ilçe olması belirleyici bir aşamadır.",
-        "geography": "Tuzla Burnu ve kıyı çevresi, yerleşimin tarihî coğrafyasının temel odaklarındandır. İlçe adını açıklayan farklı tuzla anlatıları, tek ve kesin bir köken açıklaması olarak kullanılmamıştır.",
-        "life": "Tuzla sahili kamusal buluşma, Postane Mahallesi açık alan, İçmeler çevresi ise yerel ticaret ve dolaşım açısından okunabilir. Aydınlı yerleşimi ilçenin daha farklı ölçekli gündelik kullanımına işaret eder.",
-        "transportation": "Marmaray ve otobüs hatları Tuzla’nın ana toplu taşıma omurgasını oluşturur; tarifeli deniz seferleri belirli gün ve saatlerde tamamlayıcıdır.",
-        "housingTexture": "Tarihî merkez ve sahil yerleşimleri, tersane-sanayi alanları ile Aydınlı-Orhanlı yönündeki yeni konut ve üretim bölgeleri belirgin yapı katmanlarıdır. Bu betimleme mahalle ölçeğindedir ve yapı güvenliği iddiası içermez; bina ile parsel özelindeki resmî belgeler ayrıca değerlendirilmelidir.",
-        "regionalAssessment": "Bölgesel değerlendirmede Marmara kıyısı, sanayi-tersane işlevleri ve kuzeydeki yeni konut alanları birlikte okunmalıdır. Okuma, güvenlik ya da getiri vaadi içermez; ayrıntılı değerlendirme için resmî kayıtlar ve yerinde inceleme birlikte kullanılmalıdır.",
-        "placesGuide": "Tuzla sahili, Postane Mahallesi, İçmeler çevresi, Aydınlı yerleşimi; ilçenin tarih, kamusal alan ve yerleşim karakterini karşılaştırmalı biçimde görünür kılar. Güncel ziyaret düzeni ile olası çekim kısıtları, yola çıkmadan önce yetkili kaynaktan teyit edilmelidir.",
-        "distinctiveFeatures": "Tuzla için özgün bir ilçe profili oluşturan unsur Marmara kıyısı, sanayi-tersane işlevleri ve kuzeydeki yeni konut alanları. Tuzla sahili ile Postane Mahallesi bu profilin sahadaki çeşitliliğini yansıtır.",
-        "researchTopics": "• Mübadele döneminin kıyı mahallelerinde bıraktığı izler\n• Tersane bölgesinin çalışma yaşamı ve kıyı kullanımına etkisi\n• Aydınlı ve Orhanlı çevresinde konut ile üretim alanlarının değişimi"
+        "summary": "Tuzla, Marmara kıyısındaki tarihî merkez ve İçmeler’den Aydınlı–Orhanlı–Tepeören yönündeki sanayi, lojistik ve konut alanlarına uzanır. Kıyı yaşamı, tersaneler, organize sanayi bölgeleri ve TEM–D100 bağlantıları ilçenin farklı kesimlerinde belirgin biçimde ayrışır.",
+        "history": "Tuzla’nın tarihsel çekirdeği Marmara kıyısındaki balıkçı ve sayfiye yerleşimidir; İçmeler ise şifalı su ve istasyon çevresiyle ayrı bir odak olarak gelişti. Cumhuriyet döneminde demiryolu ve karayolu erişimi, 20. yüzyılın ikinci yarısından itibaren tersaneler ile sanayi alanlarının taşınması ilçenin ekonomik ve mekânsal yapısını dönüştürdü. Tuzla 1992’de Pendik’ten ayrılarak ilçe oldu. Kalekapı çevresindeki arkeolojik izler erken yerleşime işaret eder; etimoloji ve dönemlendirme iddiaları resmî kazı kaynakları olmadan kesinleştirilmemelidir.",
+        "geography": "İlçe güneyde Marmara Denizi kıyısından kuzeyde Tepeören ve Akfırat’ın ormanlık-açık alanlarına uzanır. Tuzla merkez ve Postane kıyı yerleşimi; İçmeler D100 ve Marmaray geçişi; Aydınlı ile Orhanlı ise iç kesimde sanayi, lojistik ve konut karışımıyla öne çıkar. Tersaneler kıyının doğu bölümünde geniş çalışma alanları oluşturur. Pendik ve Kocaeli sınırı, ilçeyi İstanbul’un doğu girişindeki bölgesel üretim-ulaşım kuşağına yerleştirir.",
+        "life": "Tuzla sahili, çarşı ve marina çevresi yürüyüş, yeme-içme ve yerel ticaretin; İçmeler istasyon çevresi aktarma ve mahalle hizmetlerinin odağıdır. Aydınlı ile Orhanlı’da sanayi vardiyaları, servis hareketi ve konut yaşamı aynı günlük ritmi paylaşır. Viaport Marina, Mercan kıyısı ve Tuzla Belediyesi Şelale Parkı farklı ölçeklerde kamusal kullanımlar sunar; Tepeören–Akfırat çevresinde düşük yoğunluklu konut ve açık alan kullanımı artar.",
+        "transportation": "Eylül 2026 itibarıyla Marmaray İçmeler ve Aydıntepe üzerinden Tuzla’nın kıyı-D100 kuşağına hizmet verir; İETT ve minibüs hatları Tuzla merkez, Aydınlı, Orhanlı, Tepeören ve sanayi bölgelerini istasyonlara bağlar. D100, TEM, Şekerpınar ve Sabiha Gökçen bağlantıları karayolu erişiminin ana unsurlarıdır. Şehir Hatları’nın Tuzla–Pendik–Büyükada seferi tarifeye bağlıdır. Kaynarca–Pendik–Tuzla metro projesi Eylül 2026’da işletmede değildir; inşaat/finansman durumu mevcut hatlardan ayrı anlatılmalıdır.",
+        "housingTexture": "Tuzla merkez, Postane ve Cami mahallelerinde eski apartmanlar, bahçeli yapılar ve yeni konutlar kıyı ticaretiyle iç içedir. İçmeler ve Aydıntepe’de demiryolu-D100 çevresinde yoğun apartman dokusu görülür. Aydınlı ve Orhanlı’da yeni siteler, geleneksel mahalle konutları, sanayi ve depolama alanları yan yana gelir; Tepeören ve Akfırat’ta villa ile düşük yoğunluklu site dokusu artar. Tersane kuşağı konuttan farklı bir çalışma peyzajıdır; bu tarif güvenlik hükmü değildir.",
+        "regionalAssessment": "Tuzla’yı belirleyen unsurlar Marmara kıyısındaki merkez, tersane ve deniz endüstrisi, Marmaray–D100 koridoru, Aydınlı–Orhanlı sanayi-lojistik alanları, TEM bağlantısı ve Tepeören–Akfırat’ın düşük yoğunluklu dokusudur. Kıyı rekreasyonu ile üretim kıyısı aynı karakterde değildir. Vardiyalı istihdam ve ağır taşıt hareketi ulaşım talebini biçimlendirir; planlanan metro mevcut erişim kapasitesine dahil edilmemelidir.",
+        "placesGuide": "Tuzla sahili ve çarşı tarihî merkezi; İçmeler istasyon çevresi ulaşım-konut ilişkisini; Mercan kıyısı yerleşik sahil dokusunu; tersaneler bölgesi yalnız kamusal ve güvenli gözlem noktalarından deniz endüstrisini; Aydınlı–Orhanlı hattı sanayi-konut karışımını; Tuzla Belediyesi Şelale Parkı kamusal açık alanı; Tepeören ise düşük yoğunluklu iç kesimi okumak için uygundur.",
+        "distinctiveFeatures": "Tuzla’nın ayırt edici yönü, sayfiye geçmişi taşıyan Marmara kıyısının Türkiye’nin önemli tersane ve sanayi kümelerinden biriyle aynı ilçede bulunmasıdır. Marmaray kıyı-D100 kuşağını bağlarken Orhanlı, Aydınlı ve Tepeören yönündeki iç kesimler daha çok karayolu ve otobüs ağına dayanır.",
+        "researchTopics": "• Tuzla merkez ve İçmeler’de demiryolu-kıyı yerleşiminin gelişimi\n• Tersaneler ile konut ve kamusal kıyı kullanımları arasındaki sınırlar\n• Aydınlı–Orhanlı’da sanayi, lojistik ve yeni konut alanlarının ilişkisi\n• Marmaray erişimi ile iç kesim mahallelerinin besleme ulaşımı"
       },
       "neighborhoods": [
         "Akfırat",
@@ -8164,7 +8464,7 @@
           "url": "https://data.tuik.gov.tr/Bulten/Index?p=Adrese-Dayali-Nufus-Kayit-Sistemi-Sonuclari-2025-53899",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
+          "checkedAt": "2026-09-27T09:30:00.000Z",
           "dataDate": "2025-12-31T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
@@ -8183,11 +8483,38 @@
           "sections": [
             "facts"
           ]
+        },
+        {
+          "title": "Menzil Sokak Yol Düzenlemesi",
+          "publisher": "Tuzla Belediyesi",
+          "url": "https://www.tuzla.bel.tr/guncel/haberler/tuzlada-10-yillik-menzil-sokak-sorunu-sona-eriyor-2026-05-12",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-27T09:30:00.000Z",
+          "dataDate": "2026-05-12T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "transportation",
+            "planningDevelopments"
+          ]
+        },
+        {
+          "title": "Cami Mahallesi Park ve Yaşam Alanı",
+          "publisher": "İlgili resmî kurum",
+          "url": "https://www.tuzla.bel.tr/kurumsal/kentimiz/haberler/cami-mahallesine-4-bin-metrekarelik-yeni-yasam-alani-2026-09-04",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-27T09:30:00.000Z",
+          "dataDate": "2026-09-04T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "planningDevelopments"
+          ]
         }
       ],
       "excluded": {
         "marketData": "Karşılaştırılabilir, güncel ve tarihli resmî piyasa serisi bulunmadığından bilinçli olarak boş bırakıldı.",
-        "planningDevelopments": "Yalnız tarihli karar ve uygulama belgeleriyle doğrulanacak proje kayıtları bu içerik tamamlamasına dahil edilmedi.",
+        "planningDevelopments": "Yalnız tarihli ve resmî kaynağa bağlı tek gelişme yayımlandı; doğrulanamayan proje ve takvimler dışarıda bırakıldı.",
         "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
         "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
         "areaKm2Review": "İlçe kurumlarında ölçüm kapsamına göre değişebilen yüzölçümü değerleri bulunduğundan, 39 ilçe için aynı standardı veren İBB İlçe Alan Bilgileri Tablosu'ndaki kara alanı esas alındı."
@@ -8213,24 +8540,37 @@
         "regionalAssessment",
         "placesGuide",
         "distinctiveFeatures",
-        "researchTopics"
+        "researchTopics",
+        "planningDevelopments"
+      ],
+      "planningDevelopments": [
+        {
+          "title": "Cami Mahallesi Park ve Yaşam Alanı",
+          "summary": "Tuzla Belediyesi, Cami Mahallesi’nde çocuk oyun, spor, dinlenme ve peyzaj alanlarını içeren yeni parkın yapımını 4 Eylül 2026 tarihli duyurusunda devam eden uygulama olarak açıkladı.",
+          "neighborhood": "Cami",
+          "date": "2026-09-04T00:00:00.000Z",
+          "status": "uygulama",
+          "officialSource": "https://www.tuzla.bel.tr/kurumsal/kentimiz/haberler/cami-mahallesine-4-bin-metrekarelik-yeni-yasam-alani-2026-09-04",
+          "checkedAt": "2026-09-27T09:30:00.000Z",
+          "needsVerification": false
+        }
       ]
     },
     {
       "district": "umraniye",
       "pdfSha256": "78b4b931cdc864a3ec4811c3db1ed9fd40a608f02ecf8631eb5f2c41ff5c018e",
-      "checkedAt": "2026-09-26T18:30:00.000Z",
+      "checkedAt": "2026-09-27T09:30:00.000Z",
       "sections": {
-        "summary": "Ümraniye’nin yakın dönem gelişimi, göç ve sanayileşmeyle büyüyen yerleşim dokusu üzerinden okunur.",
-        "history": "Kaymakamlık tarihçesi, göçmen yerleşimlerini ve 1960’lardan sonraki sanayileşmeyi Ümraniye’nin gelişiminde öne çıkarır. Frigler ve erken dönem savaşları hakkındaki ayrıntılı anlatılar, bu rehberde doğrulanmış tarihsel bilgi olarak kullanılmamıştır.",
-        "geography": "Ümraniye, Anadolu Yakası’nın iç kesimlerinde yer alır. Üsküdar, Ataşehir, Sancaktepe, Çekmeköy ve Beykoz çevresindeki konumu ilçeyi tarif eder; bütün ilçe için genellenmiş zemin güvenliği iddiası kurulmaz.",
-        "life": "Ümraniye Çarşısı ile Dudullu sanayi çevresindeki hareket, ilçenin gündelik yaşamındaki iki farklı odağı gösterir; Ihlamurkuyu yerleşimi başka bir kullanım katmanı ekler. Yamanevler aksı merkez dışındaki yerleşim örüntüsünü karşılaştırmak için anlamlıdır.",
-        "transportation": "M5 ve M8 hatları Ümraniye’nin raylı sistem omurgasını oluşturur; yapımı süren hatlar mevcut işletmeden ayrı izlenmelidir.",
-        "housingTexture": "Merkezdeki yoğun apartman-ticaret dokusu, Dudullu’daki üretim alanları ve kuzey-doğu yönündeki site gelişimi farklı işlevleri bir araya getirir. İlçe dokusu hakkında yapılan bu sentez teknik dayanım analizi değildir; yapı, ruhsat, zemin ve plan verileri yetkili kaynaklardan alınmalıdır.",
-        "regionalAssessment": "Bölgesel değerlendirmede yoğun konut-ticaret dokusu, Dudullu üretim alanları ve iki metro koridoru birlikte okunmalıdır. Bu genel bağlam tekil yapı ve yatırımlar hakkında öneri vermez; güncel plan, ulaşım ve saha koşulları ayrıca doğrulanmalıdır.",
-        "placesGuide": "İlçe anlatısını yerinde sınamak için Ümraniye Çarşısı, Dudullu sanayi çevresi, Ihlamurkuyu yerleşimi, Yamanevler aksı birbirini tamamlayan araştırma duraklarıdır. Saha rotası, güncel ulaşım ve erişim duyuruları kontrol edildikten sonra kesinleştirilmelidir.",
-        "distinctiveFeatures": "Ümraniye ilçesini anlamada yoğun konut-ticaret dokusu, Dudullu üretim alanları ve iki metro koridoru temel bir çerçeve sunar. Ümraniye Çarşısı ve Dudullu sanayi çevresi bu çerçevenin iki ayrı yerel karşılığıdır.",
-        "researchTopics": "• Dudullu sanayisinin mahallelerin gelişimindeki rolü\n• Ümraniye Çarşısı'nda ticaret ve yaya kullanımının dönüşümü\n• Finans merkezi çevresi ile yerleşik mahalleler arasındaki mekânsal ilişki"
+        "summary": "Ümraniye, yoğun konut-ticaret merkezi, Çakmak–Ihlamurkuyu yerleşimleri, Dudullu üretim alanları ve TEM çevresindeki iş merkezleriyle Anadolu Yakası’nın büyük iç kesim ilçelerindendir. M5 ilçenin doğu-batı, M8 ise Dudullu üzerinden kuzey-güney erişimini güçlendirir.",
+        "history": "Ümraniye’nin kırsal yerleşimden büyük kent ilçesine dönüşümü özellikle 1950’lerden sonraki iç göç ve 1960’lardan itibaren gelişen sanayiyle hızlandı. Dudullu’daki üretim alanları istihdam ve konut büyümesini tetiklerken Ümraniye Çarşı çevresi idari-ticari merkez oldu. Ümraniye 1987’de Üsküdar’dan ayrılarak ilçe statüsü kazandı; 2008’de Çekmeköy ve Sancaktepe’nin kurulmasıyla sınırları değişti. Erken dönemlere ilişkin rivayetler ve geniş zemin genellemeleri doğrulanmış tarihsel bilgi olarak kullanılmamalıdır.",
+        "geography": "Ümraniye Boğaz kıyısından içeride, Üsküdar sırtlarından Dudullu ve Çekmeköy sınırına uzanan dalgalı plato üzerinde yer alır. Batıda Altunizade-Üsküdar yönü, güneyde Ataşehir, doğuda Sancaktepe ve Çekmeköy, kuzeyde Beykoz ile çevrilidir. Çakmak ve Ihlamurkuyu yoğun konut kuşağında; Aşağı ve Yukarı Dudullu üretim-ulaşım koridorunda; Hekimbaşı ise kuzeyde orman ve havza eşiğine yakın konumdadır.",
+        "life": "Ümraniye Çarşı, Alemdağ Caddesi ve belediye çevresi yoğun perakende, yaya ve kamu hizmeti odağıdır. Çakmak ile Ihlamurkuyu’da mahalle ticareti ve M5 istasyonları günlük hareketi biçimlendirir. Dudullu OSB ve çevresi vardiyalı üretim yaşamı; Şerifali–Tatlısu hattı ofis, ticaret ve yeni konut; Yamanevler–Canpark çevresi alışveriş ve aktarma kullanımı üretir. Hekimbaşı ve kuzey mahallelerinde doku daha parçalıdır.",
+        "transportation": "Eylül 2026 itibarıyla M5 Üsküdar–Sultanbeyli hattı Ümraniye, Çarşı, Yamanevler, Çakmak, Ihlamurkuyu, Altınşehir, İmam Hatip Lisesi, Dudullu ve Necip Fazıl istasyonlarıyla ilçenin ana doğu-batı omurgasıdır. M8 Bostancı–Parseller hattı Dudullu’da M5’e bağlanır; hattın Ümraniye’deki erişimi Dudullu ve Parseller çevresiyle sınırlıdır, bütün ilçeyi kapsamaz. TEM ve Şile Yolu karayolu omurgalarıdır. M12 Göztepe–Ümraniye hattı inşaat halindedir; açık hat gibi gösterilmemelidir.",
+        "housingTexture": "Ümraniye merkez, Çakmak ve Ihlamurkuyu’da yoğun apartmanlar ile zemin kat ticareti baskındır. Dudullu’da konut adaları organize sanayi, küçük üretim ve depolama alanlarıyla komşudur. Şerifali, Tatlısu ve Finanskent çevresinde yeni site, rezidans, ofis ve karma kullanım artar; Hekimbaşı ile kuzey sınırında daha düşük yoğunluklu parçalar bulunur. Çok farklı dönemlerde oluşmuş bu doku, tekil binaların dayanımına ilişkin sonuç vermez.",
+        "regionalAssessment": "Ümraniye’nin belirleyicileri yoğun çarşı-konut merkezi, Dudullu sanayi ve istihdam alanları, TEM–Şile Yolu bağlantısı, M5’in geniş istasyon ağı, M8’in Dudullu aktarması ve büyüyen ofis-ticaret kuşağıdır. M8’in etkisi ilçe genelinden çok Dudullu–Parseller aksında yoğunlaşır. İnşaat halindeki M12 gelecekte merkez bağlantısını değiştirebilir; mevcut erişim değerlendirmesine tamamlanmış kapasite olarak eklenmemelidir.",
+        "placesGuide": "Ümraniye Çarşı ve Alemdağ Caddesi yoğun merkez dokusunu; Çakmak ile Ihlamurkuyu M5 çevresindeki mahalle yaşamını; Dudullu OSB üretim peyzajını; Dudullu M5–M8 istasyonu raylı sistem aktarmasını; Şerifali–Tatlısu karma kullanım alanlarını; Hekimbaşı ise kuzeydeki kent-doğa geçişini okumak için uygun saha odaklarıdır.",
+        "distinctiveFeatures": "Ümraniye’yi ayıran özellik, çok yoğun konut ve çarşı dokusunun Dudullu’daki büyük üretim alanları ve TEM çevresindeki yeni iş-ticaret merkezleriyle kesişmesidir. M5 ilçeyi batı-doğu doğrultusunda kat ederken M8 yalnız Dudullu–Parseller kesiminde kuzey-güney bağlantısı kurar; bu erişim sınırı açıkça korunmalıdır.",
+        "researchTopics": "• Ümraniye Çarşı ve Alemdağ Caddesi’nde ticaret-yaya ilişkisinin dönüşümü\n• Dudullu sanayisinin konut gelişimi ve gündelik ulaşım üzerindeki etkisi\n• M5 ile M8 aktarmasının Dudullu–Parseller çevresine etkileri\n• Şerifali–Tatlısu hattında ofis, ticaret ve yeni konutun birlikte gelişimi"
       },
       "neighborhoods": [
         "Adem Yavuz",
@@ -8337,7 +8677,7 @@
           "url": "https://data.tuik.gov.tr/Bulten/Index?p=Adrese-Dayali-Nufus-Kayit-Sistemi-Sonuclari-2025-53899",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
+          "checkedAt": "2026-09-27T09:30:00.000Z",
           "dataDate": "2025-12-31T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
@@ -8356,11 +8696,54 @@
           "sections": [
             "facts"
           ]
+        },
+        {
+          "title": "M8 Bostancı–Parseller Metro Hattı",
+          "publisher": "Metro İstanbul",
+          "url": "https://www.metro.istanbul/Hatlarimiz/HatDetay?hat=M8",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-27T09:30:00.000Z",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "transportation",
+            "planningDevelopments"
+          ]
+        },
+        {
+          "title": "Ümraniye Proje Haritası",
+          "publisher": "Ümraniye Belediyesi",
+          "url": "https://umraniye.bel.tr/umraniye/proje-haritasi/",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-27T09:30:00.000Z",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "life",
+            "placesGuide",
+            "planningDevelopments"
+          ]
+        },
+        {
+          "title": "Ümraniye–Ataşehir–Göztepe Metro Hattı",
+          "publisher": "Metro İstanbul",
+          "url": "https://www.metro.istanbul/Hatlarimiz/ProjeHalindekiHatlar?projeInsaat=1&q=29",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-27T09:30:00.000Z",
+          "dataDate": "2026-09-27T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "transportation",
+            "planningDevelopments"
+          ]
         }
       ],
       "excluded": {
         "marketData": "Karşılaştırılabilir, güncel ve tarihli resmî piyasa serisi bulunmadığından bilinçli olarak boş bırakıldı.",
-        "planningDevelopments": "Yalnız tarihli karar ve uygulama belgeleriyle doğrulanacak proje kayıtları bu içerik tamamlamasına dahil edilmedi.",
+        "planningDevelopments": "Yalnız tarihli ve resmî kaynağa bağlı tek gelişme yayımlandı; doğrulanamayan proje ve takvimler dışarıda bırakıldı.",
         "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
         "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
         "specificReview": "İlçe genelinde sağlam zemin iddiası çıkarıldı. Harun Reşid ve Frigler hakkındaki tartışmalı anlatı yayımlanmadı.",
@@ -8387,24 +8770,37 @@
         "regionalAssessment",
         "placesGuide",
         "distinctiveFeatures",
-        "researchTopics"
+        "researchTopics",
+        "planningDevelopments"
+      ],
+      "planningDevelopments": [
+        {
+          "title": "M12 Ümraniye–Ataşehir–Göztepe Metro İnşaatı",
+          "summary": "Ümraniye, Ataşehir ve Göztepe’yi bağlayacak M12 hattı Eylül 2026 itibarıyla inşaat halindedir; Ümraniye Çarşı’da M5 ile entegrasyon hedeflenmektedir ve hat henüz yolculu işletmede değildir.",
+          "neighborhood": "Ümraniye Çarşı",
+          "date": "2026-09-27T00:00:00.000Z",
+          "status": "insaat",
+          "officialSource": "https://www.metro.istanbul/Hatlarimiz/ProjeHalindekiHatlar?projeInsaat=1&q=29",
+          "checkedAt": "2026-09-27T09:30:00.000Z",
+          "needsVerification": false
+        }
       ]
     },
     {
       "district": "uskudar",
       "pdfSha256": "29a2c9b647340173c4bc714c3668912f1722a6d2796f8ea73c65806ab4bec0f1",
-      "checkedAt": "2026-09-26T18:30:00.000Z",
+      "checkedAt": "2026-09-27T09:30:00.000Z",
       "sections": {
-        "summary": "Üsküdar’ın kent kimliğinde iskele çevresi, tarihî yerleşimler ve Anadolu’ya geçiş ilişkisi önemli yer tutar.",
-        "history": "Osmanlı döneminde iskele çevresindeki ticaret ve külliyeler, Üsküdar’ın gelişmesinde rol oynadı. Anadolu yönündeki seferler ve hac yolculukları da ilçenin tarihî ulaşım ve konaklama işlevleri arasında yer aldı.",
-        "geography": "Salacak, Kuzguncuk ve Çamlıca çevresi, Üsküdar’ın farklı coğrafi odaklarıdır. Kıyı yerleşimleri ile tepelerdeki mahalleler aynı yerleşim biçimine indirgenmemelidir.",
-        "life": "Üsküdar Meydanı, Kuzguncuk–Beylerbeyi kıyısı ve Çamlıca tepeleri yerel ticaret, dolaşım ve açık alan ilişkisini üç ayrı ölçekte gösterir. Salacak sahili bu ilişkinin ilçenin başka bir kesimindeki karşılığını okumayı sağlar.",
-        "transportation": "Marmaray ve M5 metrosu ile Boğaz iskeleleri Üsküdar’ın Avrupa Yakası ve Anadolu içleriyle bağlantısını kuran ana sistemlerdir.",
-        "housingTexture": "Boğaz kıyısındaki tarihî yapılar ve ahşap-kâgir mahalle dokuları, iç kesimlerdeki apartmanlar ve Çamlıca yamaçlarındaki düşük yoğunluklu alanlarla çeşitlenir. Genel morfoloji tek başına bir yapının güvenliği veya niteliği hakkında karar verdirmez; güncel resmî kayıt ve teknik inceleme gerekir.",
-        "regionalAssessment": "Bölgesel değerlendirmede Boğaz kıyısı, tarihî semtler, tepe yerleşimleri ve güçlü deniz-raylı sistem bağlantısı birlikte okunmalıdır. İlçe bütününe ilişkin bu sentez, mahalleler arasındaki farkları ortadan kaldırmaz; güncel kaynak ve gözlemle ayrıntılandırılmalıdır.",
-        "placesGuide": "Üsküdar Meydanı, Kuzguncuk–Beylerbeyi kıyısı, Çamlıca tepeleri, Salacak sahili, coğrafya ile gündelik kullanımın ilçede nasıl kesiştiğini izlemek için birlikte değerlendirilebilir. Alanların açık olduğu saatler ile fotoğraf kuralları çekim tarihine yakın yeniden doğrulanmalıdır.",
-        "distinctiveFeatures": "Üsküdar ölçeğinde belirginleşen özellik Boğaz kıyısı, tarihî semtler, tepe yerleşimleri ve güçlü deniz-raylı sistem bağlantısı. Üsküdar Meydanı ile Kuzguncuk–Beylerbeyi kıyısı arasında kurulacak saha karşılaştırması bu özelliği somutlaştırır.",
-        "researchTopics": "• Üsküdar İskelesi çevresinde ulaşım ve kamusal alanın değişimi\n• Kuzguncuk ile Beylerbeyi'nde tarihî kıyı dokusunun korunması\n• Çamlıca tepeleri ile çevre mahallelerin yerleşim ilişkisi"
+        "summary": "Üsküdar, Boğaz kıyısındaki meydan ve iskelelerden Kuzguncuk, Beylerbeyi ve Çengelköy’ün tarihî kıyı yerleşimlerine; Altunizade ve Çamlıca’nın iç-yüksek kesimlerine uzanır. Marmaray, M5, metrobüs ve yoğun deniz ulaşımı ilçeyi İstanbul’un başlıca aktarma düğümlerinden biri yapar.",
+        "history": "Üsküdar, Boğaz’ın Anadolu yakasındaki liman ve geçiş noktası olarak Bizans döneminden Osmanlı’ya uzanan bir yerleşim sürekliliği taşır. Osmanlı döneminde iskele, menzil, ticaret ve vakıf külliyeleri çevresinde büyüdü; Mihrimah Sultan, Yeni Valide ve Atik Valide külliyeleri bu katmanın önemli örnekleridir. Kuzguncuk, Beylerbeyi ve Çengelköy farklı inanç toplulukları, saray-köşk çevreleri ve kıyı ekonomileriyle ayrı tarihsel dokular geliştirdi. 19. ve 20. yüzyıllarda vapur, karayolu ve köprü bağlantıları iç kesimlerdeki büyümeyi hızlandırdı.",
+        "geography": "Üsküdar batıda Boğaz kıyısı boyunca Harem’den Küçüksu’ya uzanır; dar kıyı şeridinin gerisinde Çamlıca, Kısıklı ve Altunizade yönünde arazi hızla yükselir. Kuzguncuk, Beylerbeyi ve Çengelköy dere vadileri ile koylar çevresinde; Üsküdar Meydanı ise geniş bir ulaşım-kamusal alan düzlüğünde gelişmiştir. İç kesimlerde Ünalan–Acıbadem aksı D100 ve metrobüs bağlantılarına açılır. Kıyı semtleriyle tepe mahalleleri aynı yerleşim ve erişim koşullarına sahip değildir.",
+        "life": "Üsküdar Meydanı, çarşı ve iskeleler gün boyu vapur, Marmaray, M5, yaya ve otobüs hareketini birleştirir. Kuzguncuk İcadiye Caddesi mahalle ticareti ve tarihî sokak yaşamını; Beylerbeyi ile Çengelköy kıyıları iskele, yeme-içme ve Boğaz kullanımını; Altunizade iş, eğitim, sağlık ve aktarma yoğunluğunu; Salacak sahili yürüyüş ve seyir kullanımını; Bağlarbaşı ise kültür ve mahalle hizmetlerini taşır.",
+        "transportation": "Eylül 2026 itibarıyla Marmaray Üsküdar istasyonunda Avrupa ve Anadolu yakalarını bağlar; M5 Üsküdar–Sultanbeyli hattı Üsküdar, Fıstıkağacı, Bağlarbaşı, Altunizade, Kısıklı ve Bulgurlu üzerinden doğuya uzanır. Altunizade’de metrobüse aktarma vardır; metrobüs Boğaz kıyısına değil D100 koridoruna hizmet eder. Şehir Hatları ve diğer yetkili işletmeler Üsküdar, Çengelköy ve Boğaz iskelelerinden tarifeli seferler yürütür. Otobüsler kıyı ile Çamlıca ve iç mahalleler arasında dağılım sağlar.",
+        "housingTexture": "Kuzguncuk, Beylerbeyi ve Çengelköy’de korunmuş ahşap-kâgir yapılar, yalılar, apartmanlar ve dar sokaklar yan yana gelir. Üsküdar merkez ve Salacak’ta tarihî yapılar yoğun apartman dokusu ile karışır; Altunizade, Acıbadem ve Ünalan’da büyük apartman, site, ofis, sağlık ve eğitim yapıları artar. Çamlıca yamaçlarında villa, koru ve düşük yoğunluklu alanların yanında çok katlı konutlar bulunur. Bu morfoloji yapı güvenliği hakkında hüküm vermez.",
+        "regionalAssessment": "Üsküdar’ın belirleyicileri Boğaz kıyısı, tarihî semtler, Üsküdar Meydanı’nın çok modlu aktarma işlevi, Marmaray–M5 bağlantısı, Altunizade metrobüs düğümü ve Çamlıca yükseltisidir. Kıyıdaki vapur odaklı erişim ile iç kesimdeki D100-karayolu erişimi farklıdır. Ziyaretçi yoğunluğu özellikle meydan, Kuzguncuk ve Çengelköy’de yerel yaşamla birlikte yönetilmelidir; değerlendirme yatırım tavsiyesi değildir.",
+        "placesGuide": "Üsküdar Meydanı ve Mihrimah Sultan çevresi tarih-ulaşım ilişkisini; Salacak kıyısı Boğaz kamusal alanını; Kuzguncuk İcadiye Caddesi mahalle dokusunu; Beylerbeyi Sarayı ve iskelesi saray-kıyı katmanını; Çengelköy Meydanı ile iskelesi yerel kıyı yaşamını; Altunizade metrobüs–M5 düğümü iç kesim erişimini; Büyük Çamlıca tepesi ise topografya ve kent manzarasını okumak için uygundur.",
+        "distinctiveFeatures": "Üsküdar’ı ayıran özellik, Boğaz’daki yoğun deniz ulaşımının Marmaray ve M5 ile aynı meydanda birleşmesi; tarihî kıyı semtlerinin kısa mesafede Altunizade ve Çamlıca’nın yüksek, karayolu ağırlıklı dokusuna geçmesidir. Kuzguncuk, Beylerbeyi ve Çengelköy ortak bir Boğaz kimliği taşısa da ayrı tarihsel ve gündelik merkezlerdir.",
+        "researchTopics": "• Üsküdar Meydanı’nda vapur, Marmaray ve M5 aktarmasının kamusal alana etkisi\n• Kuzguncuk, Beylerbeyi ve Çengelköy’de tarihî kıyı dokusunun karşılaştırılması\n• Altunizade’de metrobüs, M5, eğitim ve sağlık işlevlerinin kesişimi\n• Salacak–Çamlıca arasında topografyanın yerleşim ve yaya erişimine etkisi"
       },
       "neighborhoods": [
         "Acıbadem",
@@ -8521,7 +8917,7 @@
           "url": "https://data.tuik.gov.tr/Bulten/Index?p=Adrese-Dayali-Nufus-Kayit-Sistemi-Sonuclari-2025-53899",
           "sourceType": "official",
           "primary": true,
-          "checkedAt": "2026-09-26T18:30:00.000Z",
+          "checkedAt": "2026-09-27T09:30:00.000Z",
           "dataDate": "2025-12-31T00:00:00.000Z",
           "needsVerification": false,
           "sections": [
@@ -8540,11 +8936,65 @@
           "sections": [
             "facts"
           ]
+        },
+        {
+          "title": "M5 Üsküdar–Sultanbeyli Metro Hattı",
+          "publisher": "Metro İstanbul",
+          "url": "https://www.metro.istanbul/Hatlarimiz/HatDetay?hat=M5",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-27T09:30:00.000Z",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "transportation",
+            "planningDevelopments"
+          ]
+        },
+        {
+          "title": "Şehir Hatları Sefer Tarifeleri",
+          "publisher": "Şehir Hatları",
+          "url": "https://sehirhatlari.istanbul/tr/seferler",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-27T09:30:00.000Z",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "transportation"
+          ]
+        },
+        {
+          "title": "Beylerbeyi Sarayı",
+          "publisher": "Millî Saraylar Başkanlığı",
+          "url": "https://www.millisaraylar.gov.tr/Lokasyon/3/beylerbeyi-sarayi",
+          "sourceType": "official",
+          "primary": false,
+          "checkedAt": "2026-09-27T09:30:00.000Z",
+          "dataDate": null,
+          "needsVerification": false,
+          "sections": [
+            "history",
+            "placesGuide"
+          ]
+        },
+        {
+          "title": "M5 Samandıra–Sultanbeyli Etabının Açılması",
+          "publisher": "İlgili resmî kurum",
+          "url": "https://www.metro.istanbul/haber/detay/m5-hattinin-samandira-merkez-sultanbeyli-etabi-hizmete-acildi-220526",
+          "sourceType": "official",
+          "primary": true,
+          "checkedAt": "2026-09-27T09:30:00.000Z",
+          "dataDate": "2026-05-22T00:00:00.000Z",
+          "needsVerification": false,
+          "sections": [
+            "planningDevelopments"
+          ]
         }
       ],
       "excluded": {
         "marketData": "Karşılaştırılabilir, güncel ve tarihli resmî piyasa serisi bulunmadığından bilinçli olarak boş bırakıldı.",
-        "planningDevelopments": "Yalnız tarihli karar ve uygulama belgeleriyle doğrulanacak proje kayıtları bu içerik tamamlamasına dahil edilmedi.",
+        "planningDevelopments": "Yalnız tarihli ve resmî kaynağa bağlı tek gelişme yayımlandı; doğrulanamayan proje ve takvimler dışarıda bırakıldı.",
         "history": "Kaynak seçimi dışındaki eski çağ tarihleri, etimoloji rivayetleri ve önemli desteksiz iddialar aktarılmadı.",
         "newsPhotos": "Yalnız mevcut Articles/Photos ilişkileri; yeni/sentetik kayıt üretilmedi.",
         "areaKm2Review": "İlçe kurumlarında ölçüm kapsamına göre değişebilen yüzölçümü değerleri bulunduğundan, 39 ilçe için aynı standardı veren İBB İlçe Alan Bilgileri Tablosu'ndaki kara alanı esas alındı."
@@ -8570,7 +9020,20 @@
         "regionalAssessment",
         "placesGuide",
         "distinctiveFeatures",
-        "researchTopics"
+        "researchTopics",
+        "planningDevelopments"
+      ],
+      "planningDevelopments": [
+        {
+          "title": "M5 Samandıra–Sultanbeyli Etabının Açılması",
+          "summary": "M5’in son uzatma etabının 22 Mayıs 2026’da açılmasıyla Üsküdar’dan Sultanbeyli’ye kesintisiz işletme başladı; Üsküdar istasyonunun Marmaray ve deniz ulaşımıyla aktarma işlevi genişledi.",
+          "neighborhood": "Üsküdar Meydanı",
+          "date": "2026-05-22T00:00:00.000Z",
+          "status": "tamamlandi",
+          "officialSource": "https://www.metro.istanbul/haber/detay/m5-hattinin-samandira-merkez-sultanbeyli-etabi-hizmete-acildi-220526",
+          "checkedAt": "2026-09-27T09:30:00.000Z",
+          "needsVerification": false
+        }
       ]
     }
   ]
