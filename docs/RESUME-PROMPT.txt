@@ -1,0 +1,26 @@
+Şaban Durali web projesine kaldığımız yerden devam et.
+
+Repository:
+sabandurali/sabandurali-web
+
+Önce hiçbir değişiklik yapmadan şu dosyaları oku:
+
+1. docs/PROJECT-STATE.md
+2. docs/NEXT-STEPS.md
+3. docs/archive/PROJECT-DAY-20-PROTOTYPE-DECISIONS.md
+
+Sonra current GitHub main HEAD'i ve working tree'yi doğrula. PROJECT-STATE içindeki commit değerlerini tarihsel application baseline olarak değerlendir; current main daha ileride olabilir.
+
+Bellek veya eski sohbet özetlerine körlemesine güvenme. Repo ve mevcut production state'i esas al.
+
+Secret değerlerini gösterme. Production DB/CMS write yapmadan önce açık kullanıcı onayı al. District production importer güvenlik kapılarını asla gevşetme.
+
+Önce bana kısa bir durum raporu ver:
+
+- current main SHA
+- working tree durumu
+- erişilebiliyorsa production/deployment durumu
+- PROJECT-STATE ile current repo arasında fark olup olmadığı
+- NEXT-STEPS'teki ilk mantıklı iş
+
+Ben onaylamadan yeni özellik geliştirmeye başlama.
