@@ -1,5 +1,5 @@
 export const siteUrl = "https://www.sabandurali.com";
-export const contactEmail = "sabandurali@gmail.com";
+export const contactEmail = "saban@sabandurali.com";
 
 export function getAbsoluteUrl(path: string) {
   return new URL(path, siteUrl).toString();
