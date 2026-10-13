@@ -31,8 +31,10 @@ Kaynaklar:
 - `git diff --check`: geçti.
 - Kaynaklarda ve Git'in takip ettiği metin dosyalarında eski Gmail adresi bulunmadı; `.env` ve yedek dosyaları tarama/çıktı kapsamı dışında tutuldu. Git geçmişi değiştirilmedi.
 - Önceki normal `npm run lint` denemesi, `ml-env` içindeki üçüncü taraf JavaScript dosyaları da tarandığı için başarısızdı. ESLint yapılandırması değiştirilmedi.
-- `npm run build`: Turbopack derleme aşamasında ilerleme göstermedi; durduruldu. Başarılı değildir.
-- `npm run build -- --webpack`: `fonts.googleapis.com` için `ENOTFOUND` nedeniyle Geist/Geist Mono indirilemedi ve build başarısız oldu. Bu ortam/Google Fonts erişim sorunudur; tam production build henüz doğrulanmadı.
+- İlk sandbox içi `npm run build` denemesi Turbopack derleme aşamasında ilerleme göstermedi ve durduruldu. Sandbox içi Webpack denemesinde `fonts.googleapis.com` için `ENOTFOUND` nedeniyle Geist/Geist Mono indirilemedi.
+- 13 Ekim 2026 tarihli ağ erişimi olan ortamda `npm run build`: geçti. Turbopack derlemesi, TypeScript kontrolü ve 71/71 statik sayfanın üretimi tamamlandı (çıkış kodu 0).
+- Aynı ağ erişimiyle `npm run build -- --webpack`: geçti (çıkış kodu 0; bağımlılık uyarıları var). Google Fonts hatası ortamın ağ kısıtıyla ayrıştırıldı; fontlarda veya uygulama kodunda düzeltme gerekmedi.
+- Üretilen production HTML'lerinde `/iletisim`, `/en/contact`, `/kvkk-aydinlatma-metni` ve `/en/privacy-notice` için yeni adres, `mailto:` hedefleri ve eski adresin yokluğu doğrulandı. İletişim sayfalarının form alanları da kontrol edildi.
 - Gerçek Formspree gönderimi, e-posta teslimi ve Gmail üzerinden kurumsal göndericiyle yanıt testi yapılmadı.
 
 ## Git ve yayın durumu
@@ -41,16 +43,18 @@ Kaynaklar:
 - Çalışma klasörü: `/Users/saban/Documents/Codex/sabandurali-web`. Eski `Documents/GitHub/sabandurali-web` klasörü mevcut değil.
 - Başlangıç branch'i `codex/development`, başlangıç HEAD'i `07dada7b676d6839edf6d587e99d3c3cebac9cac` idi. Önceden bulunan yerel geliştirme rehberi commit'i korundu.
 - GitHub `main` ucu `22fd7be1e6b891942a5a23236d2bb80c4a99474f` olarak doğrulandı. GitHub'da `codex/development` branch'i bulunmadı ve yerel branch'in upstream'i yoktu.
-- Vercel'in güncel Production Branch/Branch Tracking ayarı doğrulanamadığından push yapılmayacak; hazırlık yerel commit olarak tutulacak. `vercel.json` bu ayarı kanıtlamaz.
+- Hazırlık commit'i `cdd18aebcb5b6b7a4a71fa3abc6766d11863305a` korunarak ayrı `codex/corporate-contact-email` feature branch'i oluşturuldu. `main`, `origin/main` ve GitHub `main` uçlarının aynı olduğu tekrar doğrulandı.
+- Kullanıcı 13 Ekim 2026 tarihinde Vercel Production Branch/Branch Tracking değerinin `main` olduğunu doğruladı. Push hedefi yalnızca `codex/corporate-contact-email` feature branch'idir. Production branch'e push veya main'e merge bu hazırlığın kapsamı dışındadır.
 - Production deployment, merge, veritabanı yazma veya migration çalıştırılmadı. Bu hazırlık canlı siteye aktarılmadı.
 - [Vercel Git deployment davranışı](https://vercel.com/docs/git): production branch'e push otomatik production deployment oluşturabilir. Push öncesi proje panelindeki güncel branch ayarı doğrulanmalıdır.
 
 ## Yayın kapıları
 
 - [ ] Yeni kurumsal posta kutusunun aktif olduğunu ve dışarıdan e-posta alabildiğini doğrula. Aktif değilken yeni `mailto:` adresine gönderilen iletiler ulaşmayabilir.
-- [ ] Google Fonts erişimi olan uygun ortamda production build'i başarıyla tamamla.
+- [x] Google Fonts erişimi olan uygun ortamda production build'i başarıyla tamamla.
 - [ ] Canlı Payload navigasyon/sayfa içeriğinde kurumsal iletişim adresini kontrol et; yönetici/servis/hesap adreslerine dokunma. Veritabanı değişikliği gerekiyorsa ayrı onay al.
-- [ ] Vercel'in production branch ve otomatik deployment ayarını doğrula. Production deployment oluşturacak push yapma; canlı yayın için ayrıca açık onay al.
+- [x] Vercel production branch'inin `main` olduğu kullanıcı tarafından doğrulandı; push hedefi farklı feature branch olarak seçildi.
+- [ ] Canlı yayın için ayrıca açık onay al; production deployment oluşturacak push veya main merge'i yapma.
 - [ ] Formspree'nin mevcut alıcısını koru. İleride alıcı değişikliği istenirse yeni adresi Formspree'de doğrulayıp ayrı onayla güncelle.
 
 ## Yayın sonrası doğrulama kontrol listesi
