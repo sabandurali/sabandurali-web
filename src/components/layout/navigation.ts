@@ -161,20 +161,20 @@ export function getEnglishHeaderNavigationItems(): PublicNavigationLink[] {
       [
         englishHomeAnchorLink(
           "real-estate-intelligence",
-          "Real Estate Intelligence",
+          "Real Estate Analysis",
           "gayrimenkul-intelligence",
         ),
       ],
     ),
-    englishHomeAnchorLink(
+    internalLink(
       "research-analysis",
       "Research & Analysis",
-      "son-arastirmalar",
+      articleListPaths.en,
       [
-        englishHomeAnchorLink(
+        internalLink(
           "latest-research",
           "Latest Research",
-          "son-arastirmalar",
+          articleListPaths.en,
         ),
         internalLink("all-articles", "All Articles", articleListPaths.en),
       ],

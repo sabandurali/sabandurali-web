@@ -211,13 +211,6 @@ export function RealEstateIntelligence({
               );
             })}
           </div>
-          <div className="mt-3 grid grid-cols-3 gap-px border border-[var(--accent-border-soft)] bg-[var(--accent-border-soft)]">
-            {content.plannedTools.map((tool) => (
-              <span key={tool} aria-disabled="true" className="bg-[#202E46] px-3 py-2.5 text-[8px] font-medium text-muted sm:text-[10px]">
-                {tool} <span className="text-accent-soft">· {content.comingSoonLabel}</span>
-              </span>
-            ))}
-          </div>
         </div>
       </div>
     </section>

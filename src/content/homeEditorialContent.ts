@@ -29,7 +29,6 @@ export type HomeEditorialContent = {
     items: ReadonlyArray<
       readonly [title: string, href: string | null, icon: FocusAreaIcon]
     >;
-    plannedTools: ReadonlyArray<string>;
     viewLabel: string;
     comingSoonLabel: string;
   };
@@ -54,7 +53,6 @@ export const homeEditorialContent = {
         ["39", "İlçe"],
         ["25", "Avrupa Yakası"],
         ["14", "Anadolu Yakası"],
-        ["Bağımsız", "Yayın"],
       ],
     },
     discovery: {
@@ -70,7 +68,7 @@ export const homeEditorialContent = {
       guideAction: { href: districtGuidePath, label: "Detaylı Rehber" },
     },
     realEstate: {
-      eyebrow: "02 / Gayrimenkul Intelligence",
+      eyebrow: "02 / Gayrimenkul Analizleri",
       titleLines: ["Veriye dayalı kararlar.", "Daha doğru analiz."],
       explore: {
         href: "/gayrimenkul-ve-istanbul",
@@ -96,7 +94,6 @@ export const homeEditorialContent = {
         ],
         ["Piyasa Araştırmaları", "/arastirma-ve-analiz", "research"],
       ],
-      plannedTools: ["Kira Çarpanı", "ROI", "İlçe Karşılaştır"],
       viewLabel: "İncele",
       comingSoonLabel: "Yakında",
     },
@@ -140,7 +137,6 @@ export const homeEditorialContent = {
         ["39", "Districts"],
         ["25", "European Side"],
         ["14", "Asian Side"],
-        ["Independent", "Publishing"],
       ],
     },
     discovery: {
@@ -156,7 +152,7 @@ export const homeEditorialContent = {
       guideAction: { href: null, label: "Detailed Guide" },
     },
     realEstate: {
-      eyebrow: "02 / Real Estate Intelligence",
+      eyebrow: "02 / Real Estate Analysis",
       titleLines: ["Data-driven decisions.", "Better analysis."],
       explore: { href: "/en/articles", label: "Explore the Area" },
       items: [
@@ -167,7 +163,6 @@ export const homeEditorialContent = {
         ["Zoning & Planning", "/en/articles", "city"],
         ["Market Research", "/en/articles", "research"],
       ],
-      plannedTools: ["Rent Multiplier", "ROI", "Compare Districts"],
       viewLabel: "Explore",
       comingSoonLabel: "Coming Soon",
     },

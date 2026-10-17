@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import HomePage from "@/components/HomePage";
-import { homeUrls } from "@/config/site";
+import { homeUrls, siteSocialImage } from "@/config/site";
 import { homeContent } from "@/content/homeContent";
 import { getPayloadHomeContent } from "@/content/pages/home-page-content";
 import { getTurkishHomePageData } from "@/content/pages/page-data-source";
@@ -26,6 +26,11 @@ const staticMetadata: Metadata = {
     alternateLocale: "en_US",
     type: "website",
     siteName: "Şaban Durali",
+    images: [siteSocialImage],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: [siteSocialImage],
   },
 };
 

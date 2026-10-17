@@ -54,7 +54,7 @@ export default function Hero({ anchors, content, intelligence }: HeroProps) {
 
         <aside className="border border-white/20 bg-[#081220]/90 p-3 backdrop-blur-[2px] sm:p-4 lg:p-5">
           <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-accent-soft">{intelligence.label}</p>
-          <dl className="mt-3 grid grid-cols-2 border-l border-t border-white/15 lg:mt-4">
+          <dl className="mt-3 grid grid-cols-3 md:grid-cols-1 border-l border-t border-white/15 lg:mt-4">
             {intelligence.items.map(([value, label]) => (
               <div key={label} className="min-h-12 border-b border-r border-white/15 p-2.5 sm:min-h-16 sm:p-3 lg:min-h-[5.5rem] lg:p-4">
                 <dt className="font-serif text-lg leading-none text-ivory sm:text-xl lg:text-2xl">{value}</dt>

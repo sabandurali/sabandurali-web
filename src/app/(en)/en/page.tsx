@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import HomePage from "@/components/HomePage";
-import { homeUrls } from "@/config/site";
+import { homeUrls, siteSocialImage } from "@/config/site";
 import { homeContent } from "@/content/homeContent";
 import { getPayloadHomeContent } from "@/content/pages/home-page-content";
 import { getEnglishHomePageData } from "@/content/pages/page-data-source";
@@ -25,6 +25,11 @@ const staticMetadata: Metadata = {
     alternateLocale: "tr_TR",
     type: "website",
     siteName: "Şaban Durali",
+    images: [siteSocialImage],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: [siteSocialImage],
   },
 };
 

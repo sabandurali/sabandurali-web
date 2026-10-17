@@ -5,6 +5,13 @@ export function getAbsoluteUrl(path: string) {
   return new URL(path, siteUrl).toString();
 }
 
+export const siteSocialImage = {
+  url: getAbsoluteUrl("/brand/site-og.jpg"),
+  width: 1200,
+  height: 630,
+  alt: "Şaban Durali — Araştırma ve Bilgi Platformu / Research and Knowledge Platform",
+};
+
 export const homeUrls = {
   "tr-TR": getAbsoluteUrl("/"),
   en: getAbsoluteUrl("/en"),

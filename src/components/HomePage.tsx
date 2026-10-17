@@ -71,14 +71,14 @@ export default async function HomePage({ content }: { content: HomeContent }) {
         <IstanbulDiscovery content={editorial.discovery} />
         <RealEstateIntelligence content={editorial.realEstate} />
 
-        <HomeListingSection
-          content={content.listingSections.articles}
-          description={locale === "tr" ? "Güncel araştırma ve analizlerden oluşan seçki." : "A selection of current research and analysis."}
-          eyebrow={editorial.researchEyebrow}
-          href={articleListPaths[locale]}
-          id="son-arastirmalar"
-        >
-          {latestArticles.length > 0 ? (
+        {latestArticles.length > 0 && (
+          <HomeListingSection
+            content={content.listingSections.articles}
+            description={locale === "tr" ? "Güncel araştırma ve analizlerden oluşan seçki." : "A selection of current research and analysis."}
+            eyebrow={editorial.researchEyebrow}
+            href={articleListPaths[locale]}
+            id="son-arastirmalar"
+          >
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
               {latestArticles.map((article) => (
                 <ArticleCard
@@ -90,23 +90,8 @@ export default async function HomePage({ content }: { content: HomeContent }) {
                 />
               ))}
             </div>
-          ) : (
-            <div className="relative min-h-32 overflow-hidden border border-ink/20 bg-[#E4DACA] md:min-h-40">
-              <Image src="/workspaces/arastirma-analiz.jpg" alt="" fill sizes="(min-width: 768px) 30vw, 100vw" className="object-cover opacity-30" />
-              <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(240,233,222,0.52),rgba(240,233,222,0.98)_55%)]" />
-              <div className="relative ml-auto flex min-h-32 max-w-[68%] flex-col justify-center px-5 py-4 md:min-h-40 md:px-8">
-                <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-accent-deep">
-                  {locale === "tr" ? "Yayın seçkisi" : "Editorial selection"}
-                </p>
-                <p className="mt-3 max-w-xl font-serif text-lg leading-snug text-ink md:text-xl">
-                  {locale === "tr"
-                    ? "Yayınlanmış analizler eklendikçe bu seçki gerçek içeriklerle şekillenecek."
-                    : "This selection will take shape with published analysis as it becomes available."}
-                </p>
-              </div>
-            </div>
-          )}
-        </HomeListingSection>
+          </HomeListingSection>
+        )}
 
         <KnowledgeLibrary content={editorial.knowledge} />
 
