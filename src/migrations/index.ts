@@ -5,6 +5,7 @@ import * as migration_20260820_100000_day21_versioned_focus_area_icons from './2
 import * as migration_20260820_103626_day22_bilingual_navigation from './20260820_103626_day22_bilingual_navigation';
 import * as migration_20260830_151918_istanbul_district_guides from './20260830_151918_istanbul_district_guides';
 import * as migration_20260909_181042_istanbul_district_sources from './20260909_181042_istanbul_district_sources';
+import * as migration_20261017_210129_payload_3_91_security_schema from './20261017_210129_payload_3_91_security_schema';
 
 export const migrations = [
   {
@@ -40,6 +41,11 @@ export const migrations = [
   {
     up: migration_20260909_181042_istanbul_district_sources.up,
     down: migration_20260909_181042_istanbul_district_sources.down,
-    name: '20260909_181042_istanbul_district_sources'
+    name: '20260909_181042_istanbul_district_sources',
+  },
+  {
+    up: migration_20261017_210129_payload_3_91_security_schema.up,
+    down: migration_20261017_210129_payload_3_91_security_schema.down,
+    name: '20261017_210129_payload_3_91_security_schema'
   },
 ];
