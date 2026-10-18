@@ -1,0 +1,29 @@
+{
+  "apply": false,
+  "collection": "pages",
+  "instructions": "Find the existing published home page for each language. Patch only the existing homeAbout block paragraphs by block ID; preserve the rest of the layout, media and links. Save a backup before approval. This file is a review artifact, not an executable import.",
+  "languages": {
+    "tr": {
+      "blockType": "homeAbout",
+      "paragraphs": [
+        {
+          "text": "1996’dan bu yana muhasebe ve mali işler alanında çalışıyorum. Tekstil sektöründe başlayan mesleki yolculuğum, turizm ve seyahat şirketlerinde muhasebe ve finans yönetimi görevleriyle devam etti. Kurucu ortaklık deneyimim de işletmelerin günlük işleyişine ve karar süreçlerine farklı bir açıdan bakmamı sağladı."
+        },
+        {
+          "text": "Bu birikim; finansal disiplin, rakamları bağlamıyla yorumlama ve bilgiyi kaynaklarıyla değerlendirme yaklaşımımı besliyor. İstanbul ve gayrimenkul araştırmalarında da aynı özeni gözetiyor, verileri tarihleri ve sınırlarıyla ele alıyorum. Şaban Durali platformunda araştırma ve analiz, yapay zekâ ve teknoloji, satış ve müzakere, kitaplar, öğrenme ve fotoğraf alanlarındaki çalışmalarımı paylaşıyorum."
+        }
+      ]
+    },
+    "en": {
+      "blockType": "homeAbout",
+      "paragraphs": [
+        {
+          "text": "I have worked in accounting and finance since 1996. My career began in textiles and continued in accounting and financial management at tourism and travel companies, alongside experience as a founding partner."
+        },
+        {
+          "text": "This background informs my financial discipline, interpretation of figures and source-based research. On the Şaban Durali platform, I share work on Istanbul and real estate, research and analysis, AI and technology, sales and negotiation, books, learning and photography."
+        }
+      ]
+    }
+  }
+}

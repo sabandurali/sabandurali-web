@@ -1,3 +1,4 @@
+import { biography } from "./biography";
 export type Locale = "tr" | "en";
 
 export type HomeAnchors = {
@@ -169,10 +170,7 @@ export const homeContent = {
     about: {
       label: "Hakkımda",
       titleLines: ["Şaban Durali"],
-      paragraphs: [
-        "Gayrimenkul ve İstanbul, araştırma ve analiz, yapay zekâ ve teknoloji, satış ve müzakere ile yaşam boyu öğrenme alanlarında çalışıyorum. Bu platformda araştırdığım, öğrendiğim ve ürettiğim içerikleri paylaşıyorum.",
-        "Uzun vadeli hedefim, yapay zekâ ve dijital sistemleri kullanarak eğitim, araştırma, danışmanlık ve bağımsız yayıncılık alanlarında değer üreten bir yapı oluşturmaktır.",
-      ],
+      paragraphs: biography.tr,
       linkLabel: "Hakkımda →",
       linkHref: "/hakkimda",
       imageAlt: "Şaban Durali portresi",
@@ -315,10 +313,7 @@ export const homeContent = {
     about: {
       label: "ABOUT",
       titleLines: ["Şaban", "Durali"],
-      paragraphs: [
-        "I work across real estate and Istanbul, sales and negotiation, research and analysis, artificial intelligence and technology, books and learning, and photography. I am building this platform not merely to publish content, but to conduct research, apply what I learn and produce sustainable knowledge.",
-        "My long-term goal is to use artificial intelligence and digital systems to build a sustainable platform that creates value across education, research, consulting and independent publishing.",
-      ],
+      paragraphs: biography.en,
       imageAlt: "Portrait of Şaban Durali",
     },
     focusAreas: {

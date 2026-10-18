@@ -1,3 +1,4 @@
+import { education, experience, softwareExperience, biographyNotice } from "@/content/biography";
 import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
@@ -9,24 +10,6 @@ import ContactCallToAction from "@/components/sections/ContactCallToAction";
 import { contactPaths, getAbsoluteUrl } from "@/config/site";
 import { homeContent } from "@/content/homeContent";
 import { workspaces } from "@/content/workspaces";
-
-const educationSections = [
-  {
-    title: "Eğitim",
-    description:
-      "Doğrulanmış eğitim geçmişi bu alanda yayınlanmak üzere hazırlanmaktadır.",
-  },
-  {
-    title: "Sertifikalar",
-    description:
-      "Mesleki eğitim ve sertifika bilgileri bu alanda yayınlanmak üzere hazırlanmaktadır.",
-  },
-  {
-    title: "Diplomalar",
-    description:
-      "Resmî diploma ve mezuniyet bilgileri bu alanda yayınlanmak üzere hazırlanmaktadır.",
-  },
-] as const;
 
 export const metadata: Metadata = {
   title: "Hakkımda | Şaban Durali",
@@ -104,6 +87,19 @@ export default function AboutPage() {
           </div>
         </section>
 
+        <section id="deneyim" className="scroll-mt-24 border-b border-border bg-surface text-ivory">
+          <div className="mx-auto max-w-[1440px] px-5 py-12 sm:px-8 lg:px-10">
+            <p className="text-xs uppercase tracking-[0.2em] text-accent-strong">02 / Mesleki deneyim</p>
+            <h2 className="mt-4 font-serif text-4xl">1996’dan bugüne</h2>
+            <ol className="mt-8 divide-y divide-border">
+              {experience.map(([period, role, company]) => <li key={`${period}-${company}`} className="grid gap-2 py-5 sm:grid-cols-[140px_1fr]"><p className="text-accent-soft">{period}</p><div><h3 className="text-lg">{role}</h3><p className="mt-1 text-muted">{company}</p></div></li>)}
+            </ol>
+            <h3 className="mt-8 text-xl">Yazılım deneyimi</h3>
+            <p className="mt-3 text-muted">{softwareExperience}</p>
+            <p className="mt-6 text-sm leading-7 text-muted">{biographyNotice}</p>
+          </div>
+        </section>
+
         <section
           data-about-section="work-areas"
           className="border-b border-[var(--accent-border-soft)] bg-ivory-soft text-ink"
@@ -111,7 +107,7 @@ export default function AboutPage() {
           <div className="mx-auto max-w-[1440px] px-5 py-12 sm:px-8 sm:py-16 lg:px-10 lg:py-20">
             <div className="max-w-3xl">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent-deep">
-                02 / Çalışma ve İlgi Alanları
+                03 / Çalışma ve İlgi Alanları
               </p>
               <h2 className="mt-4 font-serif text-4xl font-semibold leading-tight sm:text-5xl">
                 Birbirini besleyen altı çalışma alanı.
@@ -153,18 +149,18 @@ export default function AboutPage() {
           <div className="mx-auto max-w-[1440px] px-5 py-12 sm:px-8 sm:py-16 lg:px-10 lg:py-20">
             <div className="max-w-3xl">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent-strong">
-                03 / Doğrulanmış Kayıtlar
+                04 / Eğitim
               </p>
               <h2 className="mt-4 font-serif text-4xl font-semibold leading-tight sm:text-5xl">
-                Eğitim ve Sertifikalar
+                Eğitim
               </h2>
               <p className="mt-5 max-w-2xl text-base leading-7 text-muted">
-                Bu bölüm yalnızca doğrulanmış bilgilerle güncellenecektir; yayımlanmamış okul, tarih, unvan veya sertifika bilgisi eklenmemiştir.
+                {biographyNotice}
               </p>
             </div>
 
-            <div className="mt-10 grid border-y border-border md:grid-cols-3 md:divide-x md:divide-border">
-              {educationSections.map((section) => (
+            <div className="mt-10 grid border-y border-border md:grid-cols-2 md:divide-x md:divide-border">
+              {education.map((section) => (
                 <article
                   key={section.title}
                   className="border-b border-border py-6 last:border-b-0 md:border-b-0 md:px-7 md:first:pl-0 md:last:pr-0"
@@ -188,7 +184,7 @@ export default function AboutPage() {
           <div className="mx-auto grid max-w-[1440px] gap-10 px-5 py-12 sm:px-8 sm:py-16 md:grid-cols-[1fr_0.8fr] md:items-center lg:px-10 lg:py-20">
             <div className="max-w-3xl">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent-deep">
-                04 / Platformun Amacı
+                05 / Platformun Amacı
               </p>
               <h2 className="mt-4 font-serif text-4xl font-semibold leading-tight sm:text-5xl">
                 Bilgiyi araştırmak, uygulamak ve paylaşmak.

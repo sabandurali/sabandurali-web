@@ -1,0 +1,27 @@
+✔ 39 district metadata: unique, complete, canonical, OG, Twitter, no fictitious EN (1.216917ms)
+✔ presentation preserves data, years and localized decimals (15.51875ms)
+✔ all empty/published section combinations remain consecutive (0.198166ms)
+✔ user CV preserves eleven roles and ongoing education (0.195458ms)
+✔ 39 registry districts, PDF fingerprints, all nine research sections and unique slugs (1.555458ms)
+✔ duplicate/unknown district fails before any DB connection (4.117292ms)
+✔ all 39 raw imports are drafts and have no public content (20.521084ms)
+✔ idempotency and manual changes including nested source edits (1.627125ms)
+✔ section approval alone is not source verification (0.235459ms)
+✔ no javascript/data URLs, embedded credentials or malformed links (0.11ms)
+✔ periodic facts need dates and primary official evidence (0.091791ms)
+✔ dynamic expiry, row URL mismatch, flagged rows and idempotent public projection (0.581208ms)
+✔ draft and future records cannot become a public page projection (0.448875ms)
+✔ review and source gates both apply to public fields (0.656333ms)
+✔ unverified market and planning rows remain private (0.273584ms)
+✔ stale dynamic sources cannot expose planning rows (0.136792ms)
+✔ completed infrastructure remains public after the dynamic planning window (0.219708ms)
+✔ valid sections pass without exposing private metadata (0.214541ms)
+✔ SEO uses only the public projection (0.390708ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 143.785625

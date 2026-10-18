@@ -1,3 +1,4 @@
+import { verifiedDistrictImages } from "@/content/photos/verified-district-images";
 import Link from "next/link";
 import Image from "next/image";
 import { AreaIcon } from "./FocusAreas";
@@ -21,11 +22,6 @@ export function IstanbulDiscovery({
 }: {
   content: HomeEditorialContent["discovery"];
 }) {
-  const featuredImages = {
-    esenler: "/workspaces/gayrimenkul-istanbul.jpg",
-    arnavutkoy: "/brand/hero-istanbul-bogaz.jpg",
-    kadikoy: "/workspaces/fotograf.jpg",
-  } as const;
   const featured = ["esenler", "arnavutkoy", "kadikoy"]
     .map((slug) => districts.find((district) => district.slug === slug))
     .filter(
@@ -102,17 +98,13 @@ export function IstanbulDiscovery({
           <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-muted-dark">
             {content.featuredLabel}
           </p>
+          <details className="mt-2 text-[10px] leading-5"><summary className="cursor-pointer">Fotoğraf kaynakları / Photo credits</summary>{Object.entries(verifiedDistrictImages).map(([slug, image]) => <p key={slug}><a href={image.recordUrl} className="underline">{image.credit}</a> · <a href={image.licenseUrl} className="underline">Lisans / License</a></p>)}</details>
           <div className="mt-3 grid grid-cols-3 gap-3">
             {featured.map((district) => {
+              const image = verifiedDistrictImages[district.slug];
               const card = (
                 <>
-                <Image
-                  src={featuredImages[district.slug as keyof typeof featuredImages]}
-                  alt=""
-                  fill
-                  sizes="(min-width: 1024px) 15vw, 30vw"
-                  className="object-cover opacity-55 transition-transform duration-300 group-hover:scale-[1.03]"
-                />
+                {image && <Image src={image.src} alt={image.alt} fill sizes="(min-width: 1024px) 15vw, 30vw" className="object-cover opacity-65" />}
                 <span className="absolute inset-0 bg-[linear-gradient(0deg,rgba(5,12,22,0.94),rgba(5,12,22,0.06)_72%)]" />
                 <span className="absolute inset-x-0 bottom-0 p-3 lg:p-4">
                   <span className="block text-[8px] font-semibold uppercase tracking-[0.16em] text-accent-soft">

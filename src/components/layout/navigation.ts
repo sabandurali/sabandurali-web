@@ -88,7 +88,7 @@ function workspacePrimaryNavigationItems(): PublicNavigationLink[] {
       `workspace-${workspace.key}`,
       workspace.title,
       `/${workspace.key}`,
-      workspace.entries.map((entry) =>
+      workspace.entries.filter((entry) => entry.slug !== "hesaplama-araclari").map((entry) =>
         internalLink(
           `workspace-${workspace.key}-${entry.slug}`,
           entry.title,
@@ -111,7 +111,7 @@ function aboutNavigationItems(): PublicNavigationLink[] {
     internalLink("biography", "Biyografi", "/hakkimda#biyografi"),
     internalLink(
       "education-certificates-diplomas",
-      "Eğitim, Sertifikalar & Diplomalar",
+      "Eğitim",
       "/hakkimda#egitim-sertifikalar",
     ),
   ];
@@ -125,6 +125,7 @@ export function withTurkishHeaderShortcuts(
   const primaryWorkspaceKeys = [
     "gayrimenkul-ve-istanbul",
     "arastirma-ve-analiz",
+    "satis-ve-muzakere",
     "yapay-zeka-ve-teknoloji",
     "kitaplar-ve-ogrenme",
     "fotograf",

@@ -1,3 +1,5 @@
+import DistrictFactContext from "./DistrictFactContext";
+import { formatDistrictNumber, visibleDistrictSection, districtSectionNumber } from "@/content/districts/district-presentation";
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
@@ -146,12 +148,12 @@ function Text({ value }: { value?: string | null }) {
   );
 }
 
-function Section({ index, children, heading: headingOverride }: { index: number; children: ReactNode; heading?: string }) {
+function Section({ index, number, children, heading: headingOverride }: { index: number; number?: string; children: ReactNode; heading?: string }) {
   const [id, label, heading] = sections[index];
   return (
     <section id={id} className="scroll-mt-24 border-t border-[#D5CDC1] py-16 sm:py-20 lg:grid lg:grid-cols-[190px_minmax(0,1fr)] lg:gap-10 lg:py-24">
       <div className="lg:pt-2">
-        <p className="text-xs font-semibold tracking-[0.2em] text-[#A8653A]">{String(index + 1).padStart(2, "0")}</p>
+        <p className="text-xs font-semibold tracking-[0.2em] text-[#A8653A]">{number ?? String(index + 1).padStart(2, "0")}</p>
         <p className="mt-3 max-w-[200px] text-sm leading-6 text-[#64707A]">{label}</p>
       </div>
       <div className="mt-7 min-w-0 lg:mt-0">
@@ -211,7 +213,7 @@ function PhotoCaption({ photo }: { photo: PublicPhoto }) {
 
 function EditorialPhoto({ photo, priority = false }: { photo: PublicPhoto; priority?: boolean }) {
   return (
-    <figure>
+    <figure className={photo.districtPhotoCategory === "tarih" ? "border border-[#D5CDC1] bg-[#FAF7F1] p-4 sm:p-6" : undefined}>
       <Image
         src={photo.image.src}
         alt={photo.image.alt}
@@ -252,9 +254,9 @@ export default function DistrictEditorialGuidePage({
   const neighborhoodCount = facts?.neighborhoodCount ?? (guide ? neighborhoods.length : null);
   const neighborhoodHeading = neighborhoodCount === null ? sections[4][2] : `${neighborhoodCount} mahalle`;
   const factItems = [
-    ["Nüfus", facts?.population ?? "—", facts?.populationYear ? `${facts.populationYear} verisi` : null],
+    ["Nüfus", formatDistrictNumber(facts?.population) ?? "—", facts?.populationYear ? `${facts.populationYear} verisi` : null],
     ["Mahalle", neighborhoodCount ?? "—", "mahalle"],
-    ["Yüzölçümü", facts?.areaKm2 == null ? "—" : `${facts.areaKm2} km²`, null],
+    ["Yüzölçümü", facts?.areaKm2 == null ? "—" : `${formatDistrictNumber(facts.areaKm2)} km²`, null],
     ["Yaka", district.side === "avrupa" ? "Avrupa Yakası" : "Anadolu Yakası", null],
   ] as const;
 
@@ -297,22 +299,23 @@ export default function DistrictEditorialGuidePage({
               </div>
             ))}
           </dl>
+          <DistrictFactContext district={district.slug} guide={guide} />
 
           <details className="group mt-12 border-b border-[#D5CDC1] pb-5 sm:mt-16">
             <summary className="cursor-pointer list-none py-2 text-sm font-semibold text-[#18212A] marker:hidden">Bu rehberde neler var? <span aria-hidden="true" className="inline-block text-[#A8653A] transition-transform group-open:rotate-180">↓</span></summary>
             <nav aria-label="Rehber bölümleri" className="mt-5 grid gap-x-10 gap-y-3 text-sm text-[#64707A] sm:grid-cols-2 lg:grid-cols-3">
-              {sections.map(([id, label], index) => <a key={id} href={`#${id}`} className="py-1 hover:text-[#A8653A]">{String(index + 1).padStart(2, "0")} — {label}</a>)}
+              {sections.filter((_, index) => visibleDistrictSection(index, research.length, news.length)).map(([id, label], index) => <a key={id} href={`#${id}`} className="py-1 hover:text-[#A8653A]">{String(index + 1).padStart(2, "0")} — {label}</a>)}
             </nav>
           </details>
 
           <div className="mt-16 sm:mt-20">
-            <Section index={0} heading={`${district.name}: tek bakışta`}>
+            <Section index={0} number={districtSectionNumber(0, research.length, news.length)} heading={`${district.name}: tek bakışta`}>
               <Text value={guide?.summary} />
               <p className="mt-9 max-w-[760px] border-l-2 border-[#A8653A] pl-5 text-sm leading-7 text-[#64707A]">Bu rehberde sayısal ve değişken veriler kaynak tarihleriyle birlikte okunur.</p>
             </Section>
-            <Section index={1}><Text value={guide?.history} /></Section>
-            <Section index={2}><Text value={guide?.geography} /></Section>
-            <Section index={3}>
+            <Section index={1} number={districtSectionNumber(1, research.length, news.length)}><Text value={guide?.history} /></Section>
+            <Section index={2} number={districtSectionNumber(2, research.length, news.length)}><Text value={guide?.geography} /></Section>
+            <Section index={3} number={districtSectionNumber(3, research.length, news.length)}>
               <Text value={guide?.life} />
               <h3 className="mt-12 font-serif text-2xl text-[#18212A]">İstanbul&apos;a nasıl bağlanıyor?</h3>
               <Text value={guide?.transportation} />
@@ -337,9 +340,11 @@ export default function DistrictEditorialGuidePage({
                 </div>
               </div>
             </section>
-            <Section index={5}>
+            <Section index={5} number={districtSectionNumber(5, research.length, news.length)}>
               <Text value={guide?.housingTexture} />
               {guide?.regionalAssessment && <Text value={guide.regionalAssessment} />}
+            {guide?.marketData?.sourceUrl && <p className="mt-5 text-sm"><a className="underline" href={guide.marketData.sourceUrl}>Fiyat ve kira verisinin kaynağı ↗</a> · Son kontrol: {formatDate(guide.marketData.checkedAt) ?? "Belirtilmemiş"}</p>}
+            {!guide?.marketData && <p className="mt-6 text-sm leading-7">Kaynak ve tarihi doğrulanmış ilçe ölçeğinde satış fiyatı, kira ve m² göstergesi henüz yayımlanmadı. Konut anlatımı sayısal değerleme içermez.</p>}
               {guide?.marketData && (
                 <dl className="mt-10 grid gap-x-8 gap-y-6 border-y border-[#D5CDC1] py-7 sm:grid-cols-2">
                   {[
@@ -351,9 +356,9 @@ export default function DistrictEditorialGuidePage({
                   ].filter((item): item is [string, string] => Boolean(item[1])).map(([label, value]) => <div key={label}><dt className="text-xs uppercase tracking-[0.14em] text-[#A8653A]">{label}</dt><dd className="mt-2 text-sm leading-6 text-[#3F4A53]">{value}</dd></div>)}
                 </dl>
               )}
-              <p className="mt-9 max-w-[820px] border-l-2 border-[#A8653A] bg-[#ECE5DA]/60 px-5 py-4 text-sm leading-7 text-[#3F4A53]">Bu içerik yatırım tavsiyesi değildir. Gayrimenkul verileri belirtilen veri tarihindeki piyasa göstergelerini yansıtır.</p>
+              <p className="mt-9 max-w-[820px] border-l-2 border-[#A8653A] bg-[#ECE5DA]/60 px-5 py-4 text-sm leading-7 text-[#3F4A53]">Bu içerik yatırım tavsiyesi değildir. Konut anlatımı ilçe ölçeğindedir; tek bir taşınmazın değerini veya imar durumunu belirlemez. Fiyat ve kira göstergeleri yalnız kaynak ve veri tarihi doğrulandığında gösterilir.</p>
             </Section>
-            <Section index={6}>
+            <Section index={6} number={districtSectionNumber(6, research.length, news.length)} heading={guide?.planningDevelopments.length === 1 && /\bM8\b/i.test(guide.planningDevelopments[0].title) ? "Ulaşım gelişmesi: M8" : undefined}>
               {!guide?.planningDevelopments.length ? <EmptyState>Bu ilçe için kaynak ve tarihi doğrulanmış şehircilik gelişmesi henüz eklenmedi.</EmptyState> : (
                 <div className="mt-9 border-t border-[#D5CDC1]">
                   {guide.planningDevelopments.map((item) => (
@@ -368,30 +373,30 @@ export default function DistrictEditorialGuidePage({
               )}
               <p className="mt-8 text-sm leading-7 text-[#64707A]">Taşınmaza özgü imar durumu için ilgili kurumun güncel resmî kayıtları esas alınmalıdır.</p>
             </Section>
-            <Section index={7}><Text value={guide?.placesGuide} /></Section>
-            <Section index={8}>
+            <Section index={7} number={districtSectionNumber(7, research.length, news.length)}><Text value={guide?.placesGuide} /></Section>
+            <Section index={8} number={districtSectionNumber(8, research.length, news.length)}>
               {!photos.length ? <EmptyState>Bu ilçeden seçilmiş fotoğraflar henüz eklenmedi.</EmptyState> : (
                 <div className="mt-10 grid gap-8 sm:grid-cols-2">
                   {(galleryPhotos.length ? galleryPhotos : photos).map((photo, index) => (
                     <div key={photo.id} className={index === 0 ? "sm:col-span-2" : ""}>
                       <EditorialPhoto photo={photo} />
                       {photo.description && photo.districtPhotoCategory !== "tarih" && <p className="mt-3 text-sm leading-7 text-[#64707A]">{photo.description}</p>}
-                      <p className="mt-2 text-[11px] uppercase tracking-[0.12em] text-[#A8653A]">{photo.districtPhotoCategory}</p>
+                      <p className="mt-2 text-[11px] uppercase tracking-[0.12em] text-[#A8653A]">{photo.districtPhotoCategory === "tarih" ? "Tarihî arşiv" : photo.districtPhotoCategory?.replaceAll("-", " ")}</p>
                     </div>
                   ))}
                 </div>
               )}
             </Section>
-            <Section index={9}><Text value={guide?.distinctiveFeatures} /></Section>
-            <Section index={10}>
+            <Section index={9} number={districtSectionNumber(9, research.length, news.length)}><Text value={guide?.distinctiveFeatures} /></Section>
+            {research.length > 0 && (<Section index={10} number={districtSectionNumber(10, research.length, news.length)}>
               {guide?.researchTopics && <Text value={guide.researchTopics} />}
               {!research.length ? <EmptyState>Bu ilçeye ilişkin yayımlanmış araştırma ve analiz henüz eklenmedi.</EmptyState> : (
                 <div className="mt-10 border-t border-[#D5CDC1]">
                   {research.map((item) => <article key={item.id} className="border-b border-[#D5CDC1] py-8"><h3 className="font-serif text-2xl text-[#18212A]">{item.title}</h3><p className="mt-4 max-w-[760px] text-sm leading-7 text-[#64707A]">{item.summary}</p><Link href={`/makaleler/${item.slug}`} className="mt-5 inline-flex min-h-11 items-center text-sm font-semibold text-[#A8653A]">Araştırmayı oku →</Link></article>)}
                 </div>
               )}
-            </Section>
-            <Section index={11}>
+            </Section>)}
+            {news.length > 0 && (<Section index={11} number={districtSectionNumber(11, research.length, news.length)}>
               {!news.length ? <EmptyState>Bu ilçeye ilişkin seçilmiş güncel haberler henüz eklenmedi.</EmptyState> : (
                 <div className="mt-10 divide-y divide-[#D5CDC1] border-y border-[#D5CDC1]">
                   {news.slice(0, 3).map((item) => {
@@ -404,21 +409,21 @@ export default function DistrictEditorialGuidePage({
                 </div>
               )}
               <Link href={getDistrictNewsPath(district.slug)} className="mt-7 inline-flex min-h-11 items-center border-b border-[#A8653A] text-sm font-semibold text-[#18212A]">Tüm ilçe haberleri →</Link>
-            </Section>
-            <Section index={12}>
+            </Section>)}
+            <Section index={12} number={districtSectionNumber(12, research.length, news.length)}>
               <p className="mt-8 max-w-[820px] text-base leading-8 text-[#3F4A53]">Araştırma belgeleri başlangıç kaynağıdır. Nüfus, mahalle ve ulaşım bilgileri kaynak ve veri tarihiyle değerlendirilir. Piyasa ve proje durumları son doğrulama tarihine göre yeniden incelenir; doğrulanmamış bilgiler yayımlanmaz. Kaynak listesinde veriyi barındıran gerçek yayıncı gösterilir. Tarihsiz mahalle dizinlerinde veri tarihi, listenin gözlendiği gündür; kurumun yayın tarihi olarak yorumlanmamalıdır. Resmî sayfalardaki her iddia otomatik olarak onaylanmaz.</p>
               {!guide?.sources.length ? <EmptyState>Yayımlanan içerikleri destekleyen kontrol edilmiş kaynaklar burada listelenecek. Son kontrol bilgisi kaynak eklendiğinde gösterilecek.</EmptyState> : (
                 <div className="mt-9 border-t border-[#D5CDC1]">
                   {guide.sources.map((source, index) => (
                     <details key={`${source.url}-${index}`} className="group min-w-0 border-b border-[#D5CDC1] py-6">
                       <summary className="cursor-pointer list-none break-words pr-8 font-serif text-xl text-[#18212A] marker:hidden">{source.title} <span aria-hidden="true" className="float-right text-[#A8653A] group-open:rotate-45">+</span></summary>
-                      <div className="mt-6 min-w-0 space-y-3 break-words text-[15px] leading-7 text-[#4D5861]"><p>{source.publisher} · {sourceTypes[source.sourceType]} · {source.primary ? "Birincil kaynak" : "İkincil aktarım"}</p><p>Veri/gözlem tarihi: {formatDate(source.dataDate) ?? "Belirtilmemiş"}</p><p>Son kontrol: {formatDate(source.checkedAt) ?? "Belirtilmemiş"}</p><p>İlgili bölümler: {source.sections?.map((section) => districtSectionOptions.find(({ value }) => value === section)?.label).filter(Boolean).join(", ") || "Belirtilmemiş"}</p><a href={source.url} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center font-semibold text-[#A8653A] underline underline-offset-4">Kaynak bağlantısı ↗</a></div>
+                      <div className="mt-6 min-w-0 space-y-3 break-words text-[15px] leading-7 text-[#4D5861]"><p>{source.publisher} · {sourceTypes[source.sourceType]} · {source.primary ? "Birincil kaynak" : "İkincil aktarım"}</p><p>Veri/gözlem tarihi: {(source.url.includes("ilcemizin-nufusu-son-1-yilda") ? "2017 nüfus verisi; kayıtlı tarih kaynak gözlemidir" : formatDate(source.dataDate)) ?? "Belirtilmemiş"}</p><p>Son kontrol: {formatDate(source.checkedAt) ?? "Belirtilmemiş"}</p><p>İlgili bölümler: {source.sections?.map((section) => districtSectionOptions.find(({ value }) => value === section)?.label).filter(Boolean).join(", ") || "Belirtilmemiş"}</p><a href={source.url} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center font-semibold text-[#A8653A] underline underline-offset-4">Kaynak bağlantısı ↗</a></div>
                     </details>
                   ))}
                 </div>
               )}
             </Section>
-            <Section index={13}>
+            <Section index={13} number={districtSectionNumber(13, research.length, news.length)}>
               <p className="mt-7 text-[15px] leading-7 text-[#64707A]">{guide?.updatedAt ? `İçerik güncellemesi: ${formatDate(guide.updatedAt)}. Verilerin kontrol tarihleri kaynak listesinde ayrı gösterilir.` : "İçerik güncellemesi: Bu rehberin doğrulanmış içerik yayını henüz tamamlanmadı."}</p>
             </Section>
           </div>

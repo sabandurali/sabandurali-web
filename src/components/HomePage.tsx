@@ -44,8 +44,9 @@ export default async function HomePage({ content }: { content: HomeContent }) {
   const latestArticles = publishedArticles
     .toSorted(newestPublicationFirst)
     .slice(0, 4);
+  const photoPriority = (photo: (typeof publishedPhotos)[number]) => photo.district || photo.districtPhotoCategory === "tarih" || photo.collections.some((collection) => /istanbul|mimari|architecture/i.test(collection.slug)) ? 1 : 0;
   const latestPhotos = publishedPhotos
-    .toSorted(newestPublicationFirst)
+    .toSorted((a, b) => photoPriority(b) - photoPriority(a) || newestPublicationFirst(a, b))
     .slice(0, 5);
 
   return (
@@ -93,12 +94,12 @@ export default async function HomePage({ content }: { content: HomeContent }) {
           </HomeListingSection>
         )}
 
-        <KnowledgeLibrary content={editorial.knowledge} />
+        <KnowledgeLibrary content={{ ...editorial.knowledge, eyebrow: editorial.knowledge.eyebrow.replace(/^\d+/, latestArticles.length ? "04" : "03") }} />
 
         <HomeListingSection
           content={content.listingSections.photography}
           description={locale === "tr" ? "İstanbul, şehir, mimari, sokak, hayvanlar ve doğa odaklı fotoğraf arşivi." : "A photography archive focused on Istanbul, city life, architecture, streets, animals and nature."}
-          eyebrow={editorial.photographyEyebrow}
+          eyebrow={editorial.photographyEyebrow.replace(/^\d+/, latestArticles.length ? "05" : "04")}
           href={photoListPaths[locale]}
           id="fotograf"
         >

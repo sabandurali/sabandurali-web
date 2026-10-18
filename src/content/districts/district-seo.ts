@@ -1,5 +1,6 @@
+import { verifiedDistrictImages } from "@/content/photos/verified-district-images";
 import type { Metadata } from "next";
-import { getAbsoluteUrl } from "@/config/site";
+import { getAbsoluteUrl, siteSocialImage } from "@/config/site";
 import { districtGuidePath, getDistrictUrl } from "./district-routes";
 import type { District } from "./district-registry";
 import type { DistrictGuide } from "./district-guide-projection";
@@ -7,9 +8,7 @@ import type { DistrictGuide } from "./district-guide-projection";
 function metaDescription(district: District, guide: DistrictGuide | null) {
   const fallback = `${district.name} için kaynak temelli ilçe rehberi; doğrulanmış tarih, yaşam, ulaşım, mahalle ve yapı dokusu içerikleri yayımlandıkça güncellenir.`;
   const value = guide?.summary?.replace(/\s+/g, " ").trim() || fallback;
-  if (value.length <= 160) return value;
-  const shortened = value.slice(0, 157).replace(/\s+\S*$/, "");
-  return `${shortened}…`;
+  return value;
 }
 
 export function districtMetadata(
@@ -19,6 +18,8 @@ export function districtMetadata(
   const title = `${district.name} Rehberi | Tarih, Yaşam, Ulaşım ve Gayrimenkul | Şaban Durali`;
   const description = metaDescription(district, guide);
   const url = getDistrictUrl(district.slug);
+  const photo = verifiedDistrictImages[district.slug];
+  const image = photo ? { url: getAbsoluteUrl(photo.src), alt: photo.alt } : siteSocialImage;
   return {
     title,
     description,
@@ -30,7 +31,9 @@ export function districtMetadata(
       type: "website",
       locale: "tr_TR",
       siteName: "Şaban Durali",
+      images: [image],
     },
+    twitter: { card: "summary_large_image", title, description, images: [image.url] },
     robots: { index: true, follow: true },
   };
 }

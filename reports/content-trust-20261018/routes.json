@@ -1,0 +1,272 @@
+[
+  {
+    "slug": "arnavutkoy",
+    "status": 200,
+    "image": "https://www.sabandurali.com/brand/site-og.jpg",
+    "imageStatus": 200
+  },
+  {
+    "slug": "avcilar",
+    "status": 200,
+    "image": "https://www.sabandurali.com/brand/site-og.jpg",
+    "imageStatus": 200
+  },
+  {
+    "slug": "bagcilar",
+    "status": 200,
+    "image": "https://www.sabandurali.com/brand/site-og.jpg",
+    "imageStatus": 200
+  },
+  {
+    "slug": "bahcelievler",
+    "status": 200,
+    "image": "https://www.sabandurali.com/brand/site-og.jpg",
+    "imageStatus": 200
+  },
+  {
+    "slug": "bakirkoy",
+    "status": 200,
+    "image": "https://www.sabandurali.com/brand/site-og.jpg",
+    "imageStatus": 200
+  },
+  {
+    "slug": "basaksehir",
+    "status": 200,
+    "image": "https://www.sabandurali.com/brand/site-og.jpg",
+    "imageStatus": 200
+  },
+  {
+    "slug": "bayrampasa",
+    "status": 200,
+    "image": "https://www.sabandurali.com/brand/site-og.jpg",
+    "imageStatus": 200
+  },
+  {
+    "slug": "besiktas",
+    "status": 200,
+    "image": "https://www.sabandurali.com/brand/site-og.jpg",
+    "imageStatus": 200
+  },
+  {
+    "slug": "beylikduzu",
+    "status": 200,
+    "image": "https://www.sabandurali.com/brand/site-og.jpg",
+    "imageStatus": 200
+  },
+  {
+    "slug": "beyoglu",
+    "status": 200,
+    "image": "https://www.sabandurali.com/brand/site-og.jpg",
+    "imageStatus": 200
+  },
+  {
+    "slug": "buyukcekmece",
+    "status": 200,
+    "image": "https://www.sabandurali.com/brand/site-og.jpg",
+    "imageStatus": 200
+  },
+  {
+    "slug": "catalca",
+    "status": 200,
+    "image": "https://www.sabandurali.com/brand/site-og.jpg",
+    "imageStatus": 200
+  },
+  {
+    "slug": "esenler",
+    "status": 200,
+    "image": "https://www.sabandurali.com/workspaces/districts/esenler.jpg",
+    "imageStatus": 200
+  },
+  {
+    "slug": "esenyurt",
+    "status": 200,
+    "image": "https://www.sabandurali.com/brand/site-og.jpg",
+    "imageStatus": 200
+  },
+  {
+    "slug": "eyupsultan",
+    "status": 200,
+    "image": "https://www.sabandurali.com/brand/site-og.jpg",
+    "imageStatus": 200
+  },
+  {
+    "slug": "fatih",
+    "status": 200,
+    "image": "https://www.sabandurali.com/brand/site-og.jpg",
+    "imageStatus": 200
+  },
+  {
+    "slug": "gaziosmanpasa",
+    "status": 200,
+    "image": "https://www.sabandurali.com/brand/site-og.jpg",
+    "imageStatus": 200
+  },
+  {
+    "slug": "gungoren",
+    "status": 200,
+    "image": "https://www.sabandurali.com/brand/site-og.jpg",
+    "imageStatus": 200
+  },
+  {
+    "slug": "kagithane",
+    "status": 200,
+    "image": "https://www.sabandurali.com/brand/site-og.jpg",
+    "imageStatus": 200
+  },
+  {
+    "slug": "kucukcekmece",
+    "status": 200,
+    "image": "https://www.sabandurali.com/brand/site-og.jpg",
+    "imageStatus": 200
+  },
+  {
+    "slug": "sariyer",
+    "status": 200,
+    "image": "https://www.sabandurali.com/brand/site-og.jpg",
+    "imageStatus": 200
+  },
+  {
+    "slug": "silivri",
+    "status": 200,
+    "image": "https://www.sabandurali.com/brand/site-og.jpg",
+    "imageStatus": 200
+  },
+  {
+    "slug": "sultangazi",
+    "status": 200,
+    "image": "https://www.sabandurali.com/brand/site-og.jpg",
+    "imageStatus": 200
+  },
+  {
+    "slug": "sisli",
+    "status": 200,
+    "image": "https://www.sabandurali.com/brand/site-og.jpg",
+    "imageStatus": 200
+  },
+  {
+    "slug": "zeytinburnu",
+    "status": 200,
+    "image": "https://www.sabandurali.com/brand/site-og.jpg",
+    "imageStatus": 200
+  },
+  {
+    "slug": "adalar",
+    "status": 200,
+    "image": "https://www.sabandurali.com/brand/site-og.jpg",
+    "imageStatus": 200
+  },
+  {
+    "slug": "atasehir",
+    "status": 200,
+    "image": "https://www.sabandurali.com/brand/site-og.jpg",
+    "imageStatus": 200
+  },
+  {
+    "slug": "beykoz",
+    "status": 200,
+    "image": "https://www.sabandurali.com/brand/site-og.jpg",
+    "imageStatus": 200
+  },
+  {
+    "slug": "cekmekoy",
+    "status": 200,
+    "image": "https://www.sabandurali.com/brand/site-og.jpg",
+    "imageStatus": 200
+  },
+  {
+    "slug": "kadikoy",
+    "status": 200,
+    "image": "https://www.sabandurali.com/workspaces/districts/kadikoy.jpg",
+    "imageStatus": 200
+  },
+  {
+    "slug": "kartal",
+    "status": 200,
+    "image": "https://www.sabandurali.com/brand/site-og.jpg",
+    "imageStatus": 200
+  },
+  {
+    "slug": "maltepe",
+    "status": 200,
+    "image": "https://www.sabandurali.com/brand/site-og.jpg",
+    "imageStatus": 200
+  },
+  {
+    "slug": "pendik",
+    "status": 200,
+    "image": "https://www.sabandurali.com/brand/site-og.jpg",
+    "imageStatus": 200
+  },
+  {
+    "slug": "sancaktepe",
+    "status": 200,
+    "image": "https://www.sabandurali.com/brand/site-og.jpg",
+    "imageStatus": 200
+  },
+  {
+    "slug": "sultanbeyli",
+    "status": 200,
+    "image": "https://www.sabandurali.com/brand/site-og.jpg",
+    "imageStatus": 200
+  },
+  {
+    "slug": "sile",
+    "status": 200,
+    "image": "https://www.sabandurali.com/brand/site-og.jpg",
+    "imageStatus": 200
+  },
+  {
+    "slug": "tuzla",
+    "status": 200,
+    "image": "https://www.sabandurali.com/brand/site-og.jpg",
+    "imageStatus": 200
+  },
+  {
+    "slug": "umraniye",
+    "status": 200,
+    "image": "https://www.sabandurali.com/brand/site-og.jpg",
+    "imageStatus": 200
+  },
+  {
+    "slug": "uskudar",
+    "status": 200,
+    "image": "https://www.sabandurali.com/brand/site-og.jpg",
+    "imageStatus": 200
+  },
+  {
+    "path": "/",
+    "status": 200
+  },
+  {
+    "path": "/en",
+    "status": 200
+  },
+  {
+    "path": "/hakkimda",
+    "status": 200
+  },
+  {
+    "path": "/satis-ve-muzakere",
+    "status": 200
+  },
+  {
+    "path": "/satis-ve-muzakere/satis",
+    "status": 200
+  },
+  {
+    "path": "/gayrimenkul-ve-istanbul/hesaplama-araclari",
+    "status": 200
+  },
+  {
+    "path": "/en/articles",
+    "status": 200
+  },
+  {
+    "path": "/en/books",
+    "status": 200
+  },
+  {
+    "path": "/en/photography",
+    "status": 200
+  }
+]

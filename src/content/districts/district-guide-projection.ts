@@ -35,6 +35,8 @@ export type DistrictGuide = {
     averageRent?: number | null;
     dataDate?: string | null;
     source?: string | null;
+    sourceUrl?: string | null;
+    checkedAt?: string | null;
     description?: string | null;
   } | null;
   planningDevelopments: Array<{
