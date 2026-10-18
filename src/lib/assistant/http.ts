@@ -1,6 +1,7 @@
 import { allowedPreviewHosts, isAssistantPreview } from "./environment";
 import { answerFromPassages, parseInput, selectPassages } from "./research";
 import { claudeConfigured, selectWithClaude } from "./claude";
+import { PilotLimitError, pilotGuard } from "./pilot-policy";
 
 export function createLimiter(limit = 20, windowMs = 60000) {
   let start = 0;
@@ -30,6 +31,7 @@ export async function handleResearch(
   env: NodeJS.ProcessEnv = process.env,
   quota = allow,
   transport: typeof fetch = fetch,
+  guard = pilotGuard,
 ) {
   const url = new URL(request.url);
   const preview = isAssistantPreview(env);
@@ -77,7 +79,8 @@ export async function handleResearch(
         400,
       );
     }
-    const candidates = selectPassages(input);
+    const found = selectPassages(input);
+    const candidates = input.districts.every(d => found.some(p => p.district === d)) ? found : [];
     if (preview || !claudeConfigured(env) || !candidates.length)
       return reply(answerFromPassages(input, candidates));
     try {
@@ -86,9 +89,12 @@ export async function handleResearch(
         candidates,
         env,
         transport,
+        guard,
+        request.signal,
       );
-      return reply(answerFromPassages(input, selected, "claude"));
-    } catch {
+      return reply({ ...answerFromPassages(input, selected.passages, "claude"), usage: selected.usage });
+    } catch (error) {
+      if (error instanceof PilotLimitError) return reply({ error: "Yerel Claude pilot sınırına ulaşıldı. Oturum, süre veya bütçe onayını kontrol edin." }, 429);
       return reply(
         {
           error:

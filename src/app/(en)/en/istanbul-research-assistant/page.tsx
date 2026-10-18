@@ -43,10 +43,10 @@ export default function ProductPage() {
         <section>
           <h2 className="text-2xl">Claude integration</h2>
           <p className="mt-4 text-muted">
-            A server-side Messages API adapter is prepared for opt-in testing.
+            A server-only Claude Haiku 5.5 Messages API adapter is ready for an explicitly approved local pilot.
             Claude selects relevant evidence IDs; the application validates them
             and renders original excerpts. Live Claude evaluation has not yet
-            been performed.
+            been performed. The hosted demo always uses the free evidence mode; no Claude API key is required.
           </p>
         </section>
         <section>
@@ -62,8 +62,8 @@ export default function ProductPage() {
       <section className="mt-12 border-t border-border pt-8">
         <h2 className="text-2xl">Next milestone</h2>
         <p className="mt-4 text-muted">
-          Evaluate retrieval and citation quality with a small, budget-capped
-          Claude pilot, then user-test the Turkish experience. This is a
+          Evaluate retrieval and citation quality with a small, time-limited
+          Claude pilot with request and token limits, then user-test the Turkish experience. Process-local spending estimates are safeguards, not a guaranteed account-wide billing cap. This is a
           prototype; no customer, revenue, funding or usage claims are made.
         </p>
       </section>

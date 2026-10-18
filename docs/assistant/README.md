@@ -38,33 +38,24 @@ Yerel mod anahtar sözcük temelli seçicidir, dil modeli değildir. Ulaşım, t
 
 Canlı/nicel/yüksek riskli sorularda yanıt vermekten kaçınır. Bazı geçerli sorular kelime eşleştirmesi nedeniyle yanıtsız kalabilir. Bu prototip sınırıdır; serbest sohbet veya profesyonel yatırım danışmanı değildir.
 
-## Claude entegrasyonu — hazır, gerçek çağrı yapılmadı
+## Claude entegrasyonu — Aşama 17
 
-Resmî Messages API: https://platform.claude.com/docs/en/api/messages/create
+Sunucu modülü `server-only` ile istemci importuna kapalıdır. Sabit Anthropic endpoint'lerine doğrudan HTTPS kullanılır; SDK/abonelik eklenmedi. Gerçek çağrı yapılmadı. Ücretsiz demo (varsayılan) ve onaylı **yerel** Claude pilotu birbirinden ayrıdır. Vercel'de ücretli çalışma kod düzeyinde kapalı kalır.
 
-Sunucu tarafındaki `claude.ts`, sabit `https://api.anthropic.com/v1/messages` endpoint'ini kullanır. API key yalnız header'da, model yalnız sunucu ayarında; istemciye gönderilmez. SDK veya yeni servis eklenmedi.
+Ayrıntılı onay, limit, fiyat ve paylaşım planı: [CLAUDE-PILOT.md](CLAUDE-PILOT.md).
 
-Sonraki onaylı pilotta gereken **sunucu** değişkenleri:
+Claude'a yalnız soru ve en fazla altı kaynaklı kamu alıntısı; alıntı kimliği, ilçe, başlık, tarih ve kaynak kimlikleri gönderilir. Modele CMS, medya, özel veri veya araç erişimi verilmez. Model yalnız alıntı kimlikleri seçer; uygulama orijinal metinleri ve önceden doğrulanmış kaynak bağlantılarını gösterir. Yeni iddia veya serbest model metni gösterilmez. Karşılaştırmada iki ilçe de temsil edilmezse sonuç reddedilir. Bilgi yoksa açık kapsam dışı mesajı döner.
 
-| Ad                      | Gereken değer                                             | Varsayılan davranış    |
-| ----------------------- | --------------------------------------------------------- | ---------------------- |
-| ASSISTANT_ENABLE_CLAUDE | Açık maliyet onayından sonra `true`                       | Kapalı                 |
-| ANTHROPIC_API_KEY       | Kullanıcının Console'da güvenli oluşturduğu gizli anahtar | Yok                    |
-| ANTHROPIC_MODEL         | Console'da erişimi doğrulanmış tam model kimliği          | Yok; model varsayılmaz |
+## Sınırlar
 
-Yerel launcher bu değişkenleri bilerek geçirmez; anahtar eklemek tek başına gerçek çağrı başlatmaz. Ücretli pilot için ayrıca onaylanmış başlatma işlemi gerekir. Vercel ortamında gerçek Claude çağrısı kod düzeyinde kapalıdır. Yalnız korumalı asistan Preview dalında ücretsiz kaynak seçici açıktır. Gerçek Claude pilotunda bu kilidin kontrollü açılması, kimlik doğrulama ve dağıtık kota/bütçe tasarımının tamamlanması gerekir.
-
-Claude'a yalnız soru ve en fazla 6 kamu metni (id, text, updatedAt) gönderilir. Model yalnız ilgili alıntı kimliklerini seçer. Bilinmeyen/tekrarlı kimlikler, tek taraflı karşılaştırma, kesilmiş/bozuk yanıt reddedilir; serbest üretilen metin gösterilmez. Böylece yeni istatistik/iddia eklenmez. Bu yaklaşım güvenli ilk prototiptir; gerçek Claude ile anlamsal başarı henüz ölçülmedi.
-
-## Sınırlar ve korumalar
-
-- 1–2 farklı ilçe, 4–600 karakter soru, 4096 bayt istek, süreç genelinde 20 istek/dakika.
-- Same-origin + yerelde loopback Host; Preview’da yalnız VERCEL_URL/VERCEL_BRANCH_URL ve tam asistan dalı kabul edilir. Production ve başka dalların API erişimi reddedilir.
-- Claude 400 çıkış token'ı, 20 saniye timeout, tek istek; otomatik tekrar yok.
-- Hatalarda 400/403/413/415/429/502, gizli upstream hata gövdesi gösterilmez. İstemcide 25 saniye timeout.
-- Dağıtık kota veya kesin parasal bütçe kontrolü değildir; süreç yeniden başlarsa sayaç sıfırlanır. Genel erişim veya ücretli pilot öncesi Console harcama sınırı ve kimlik doğrulama gerekir.
-- Demo sayfaları noindex; bu tek başına erişim koruması sayılmaz. `vercel.json` yeni dalın otomatik deployment'ını kapatır. Preview yayın yöntemi ve dal ayarları PREVIEW.md dosyasındadır.
+- 1–2 farklı ilçe, 4–600 karakter soru, 4096 bayt istek; süreç başına 20 istek/dakika.
+- Claude pilotu: 5 deneme/dakika, eşzamanlı 1 çağrı; açık onayla en fazla 100 deneme ve en fazla 24 saat. Bütçe ayarı 0.0015–1 USD, her denemede 0.0015 USD tahmini rezerv; başarısız denemede iade yok.
+- 24 KB model bağlamı; ücretsiz token ön sayımı 6000 giriş token'ını aşarsa ücretli çağrı yok. Sayım sağlayıcıya göre tahmindir.
+- Çıkış en fazla 800 token (düşünme dahil), düşük düşünme eforu; sayım + üretim + yanıt okuma için toplam 20 saniye, yanıt en fazla 32 KB. Otomatik tekrar yok. İstemci 25 saniyede bırakır; sunucuya ulaşan iptal sinyali upstream'e aktarılır. İptal, sağlayıcı ücretinin sıfırlanacağı anlamına gelmez.
+- Same-origin ve yerel loopback Host; Preview yalnız doğru asistan dalı/host'u. Production ve diğer dallar reddedilir. API cevapları `no-store`, hatalar gizli sağlayıcı metni içermez.
+- Süreç başlatılınca sayaçlar sıfırlanır. Çoklu süreç/yeniden başlatma/sağlayıcı fiyatı/sayım farkı nedeniyle **kesin hesap harcama limiti değildir**. Gerçek pilot, Console bütçe ayarlarının kontrolü ve insan gözetimi gerektirir.
+- Preview yalnız demo rotalarını sunar; `/admin` ve CMS API'leri kapalıdır. `noindex` erişim kontrolü değildir; Vercel Authentication korunur. Kaynaklara giderken paylaşım token'ı referrer ile aktarılmaması için `no-referrer` ve dış bağlantılarda `noreferrer` kullanılır.
 
 ## Sonraki adım
 
-Korumalı Preview demosunu değerlendirin. Gerçek Claude pilotu için model, harcama üst sınırı, kimlik doğrulama/kota ve güvenli anahtar yönetimine ayrı onay gerekir. Başvuru gönderilmedi. Production/CMS/migration işlemi bu prototip için gerekli değildir.
+Yerel geliştirme tamamlandıktan sonra ayrı onayla gerçek model pilotu ve/veya güncel ücretsiz Preview paylaşımı yapılabilir. Başvuru gönderilmez; programın açık olması ve şirket bilgilerinin doğruluğu ayrıca kontrol edilir. Production/CMS/migration gerekmez.

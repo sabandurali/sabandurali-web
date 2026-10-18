@@ -9,6 +9,7 @@ import {
   safeSourceUrl,
 } from "../../src/lib/assistant/research";
 import { createLimiter, handleResearch } from "../../src/lib/assistant/http";
+import { CLAUDE_MODEL, createPilotGuard } from "../../src/lib/assistant/pilot-policy";
 import { selectWithClaude } from "../../src/lib/assistant/claude";
 const input = {
   question: "Kadıköy ve Beşiktaş ulaşım ve yaşam karşılaştırması",
@@ -20,7 +21,11 @@ const claudeEnv = {
   ...localEnv,
   ASSISTANT_ENABLE_CLAUDE: "true",
   ANTHROPIC_API_KEY: "test-only-not-a-key",
-  ANTHROPIC_MODEL: "mock-model",
+  ANTHROPIC_MODEL: CLAUDE_MODEL,
+  ASSISTANT_CLAUDE_PILOT: "local",
+  ASSISTANT_CLAUDE_APPROVED_UNTIL: new Date(Date.now() + 3600000).toISOString(),
+  ASSISTANT_CLAUDE_BUDGET_USD: "0.10",
+  ASSISTANT_CLAUDE_MAX_CALLS: "20",
 };
 const request = (
   body: unknown = input,
@@ -212,22 +217,28 @@ test("Claude request is bounded, server authenticated, and receives only selecte
   let called = 0;
   const mock: typeof fetch = async (url, options) => {
     called++;
-    assert.equal(url, "https://api.anthropic.com/v1/messages");
+    assert(["https://api.anthropic.com/v1/messages", "https://api.anthropic.com/v1/messages/count_tokens"].includes(String(url)));
     assert(options?.signal);
     assert.equal(options?.redirect, "error");
     const body = JSON.parse(options?.body as string);
-    assert.equal(body.max_tokens, 400);
-    assert.equal(body.model, "mock-model");
+    if (String(url).endsWith("count_tokens")) {
+      assert.equal(body.max_tokens, undefined);
+      return Response.json({ input_tokens: 3000 });
+    }
+    assert.equal(body.max_tokens, 800);
+    assert.equal(body.output_config.effort, "low");
+    assert.equal(body.model, CLAUDE_MODEL);
     const context = JSON.parse(body.messages[0].content);
     assert.equal(context.passages.length, passages.length);
     assert(
       context.passages.every(
         (p: Record<string, unknown>) =>
-          Object.keys(p).sort().join(",") === "id,text,updatedAt",
+          Object.keys(p).sort().join(",") === "district,id,sourceIds,text,title,updatedAt",
       ),
     );
     return Response.json({
       stop_reason: "end_turn",
+      usage: { input_tokens: 3000, output_tokens: 200 },
       content: [
         {
           type: "text",
@@ -245,9 +256,11 @@ test("Claude request is bounded, server authenticated, and receives only selecte
     passages,
     claudeEnv,
     mock,
+    createPilotGuard(),
   );
-  assert.equal(called, 1);
-  assert.equal(selected.length, 2);
+  assert.equal(called, 2);
+  assert.equal(selected.passages.length, 2);
+  assert.equal(selected.usage.estimatedCostUsd, 0.0004);
 });
 test("API failure, timeout, truncated and fabricated output fail closed without leaking details", async () => {
   for (const mock of [
@@ -266,7 +279,8 @@ test("API failure, timeout, truncated and fabricated output fail closed without 
       request(),
       claudeEnv,
       () => true,
-      mock as typeof fetch,
+      (async (url, options) => String(url).endsWith("count_tokens") ? Response.json({ input_tokens: 3000 }) : (mock as typeof fetch)(url, options)),
+      createPilotGuard(),
     );
     assert.equal(res.status, 502);
     assert(!(await res.text()).includes("secret-upstream-text"));

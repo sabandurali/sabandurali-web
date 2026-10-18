@@ -21,6 +21,7 @@ export type Passage = {
 };
 export type ResearchInput = { question: string; districts: string[] };
 export type ResearchAnswer = {
+  usage?: { model: string; inputTokens: number; outputTokens: number; estimatedCostUsd: number };
   mode: "local" | "claude";
   message: string;
   passages: Passage[];

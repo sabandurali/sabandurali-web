@@ -15,9 +15,9 @@ No application, subscription, account creation or paid API request was performed
 
 Şaban Durali is developing a Turkish research experience that helps readers explore and compare districts using published editorial guides, linked sources and review dates. The prototype covers transport, history, urban life, geography and housing texture. It makes uncertainty visible and avoids unsupported prices, investment promises and live statistical claims.
 
-The current local demo uses deterministic retrieval and displays original, attributed excerpts. A server-side Claude Messages API integration is prepared for a controlled pilot: Claude selects relevant evidence IDs from a bounded public corpus, and the application validates those IDs before displaying the corresponding excerpts. No private CMS data is sent. Real Claude evaluation has not yet been conducted.
+The current protected Preview demo uses deterministic retrieval and displays original, attributed excerpts. A server-side Claude Messages API integration is prepared for a controlled pilot: Claude selects relevant evidence IDs from a bounded public corpus, and the application validates those IDs before displaying the corresponding excerpts. No private CMS data is sent. Real Claude evaluation has not yet been conducted. Claude Haiku 5.5 is the candidate model for a supervised local pilot. Live mode is off by default and requires an API key plus explicit, expiring spending approval. Process-local estimates are not a guaranteed account-wide billing limit. The external demo remains free and cannot invoke Claude.
 
-Our next milestone is to evaluate source selection and user comprehension with a small, budget-capped Claude pilot and a documented question set. Future development will depend on observed evidence quality and real user feedback.
+Our next milestone is to evaluate source selection and user comprehension with a small, time-limited Claude pilot with token and request limits and a documented question set. Future development will depend on observed evidence quality and real user feedback.
 
 ## Suggested application answers
 
@@ -28,7 +28,7 @@ A source-linked research assistant for Istanbul. Readers ask questions in Turkis
 We intend to test Claude’s ability to select relevant evidence for Turkish local research questions from a constrained source corpus. Citation validation, explicit uncertainty and bounded inputs are central to the design. We have not yet measured real-model accuracy or cost.
 
 **Current stage / traction**
-Local prototype with 39 publicly published district guides and 391 source records in the demo corpus. A free local mode works without an API key. The integration has mocked contract tests; a live Claude pilot is pending approval. Customer numbers, active users, revenue, funding and retention have not been supplied and must not be inferred from content volume.
+Protected Preview prototype with 39 publicly published district guides and 391 source records in the demo corpus. A free local mode works without an API key. The integration has mocked contract tests; a live Claude pilot is pending approval. Customer numbers, active users, revenue, funding and retention have not been supplied and must not be inferred from content volume.
 
 **Team / company**
 Brand: Şaban Durali. Public website: https://www.sabandurali.com. Contact: saban@sabandurali.com. Legal entity, registration date, team size and founder roles require confirmation before submission.

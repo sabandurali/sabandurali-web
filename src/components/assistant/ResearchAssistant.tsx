@@ -186,7 +186,7 @@ export default function ResearchAssistant({
             <i />{" "}
             {mode === "local"
               ? "Ücretsiz kaynak temelli demo"
-              : "Claude ile kaynak seçimi"}
+              : "Claude ile kontrollü kaynak seçimi"}
           </span>
         </div>
         <div className={styles.workspace}>
@@ -233,7 +233,7 @@ export default function ResearchAssistant({
               <div className={styles.cardHeading}>
                 <h2 id="research-title">İstanbul Araştırma Asistanı</h2>
                 <span className={styles.badge}>
-                  {mode === "local" ? "ÜCRETSİZ DEMO" : "CLAUDE"}
+                  {mode === "local" ? "ÜCRETSİZ DEMO" : "CLAUDE PİLOT"}
                 </span>
               </div>
               <div
@@ -334,7 +334,7 @@ export default function ResearchAssistant({
                 <p className={styles.privacy} id="privacy">
                   {mode === "local"
                     ? "Bu mod yapay zekâ yanıtı üretmez; Claude API çağrısı ve API ücreti yoktur."
-                    : "Sorunuz ve seçilen herkese açık alıntılar Claude API’ye gönderilir."}{" "}
+                    : "Onaylı ücretli pilot: sorunuz ve kamuya açık alıntılar Anthropic’e gönderilir. Sağlayıcının veri işleme koşulları geçerlidir."}{" "}
                   Sorgular uygulama tarafından kaydedilmez.
                 </p>
               </form>
@@ -357,6 +357,13 @@ export default function ResearchAssistant({
                 <p className={styles.eyebrow}>ARAŞTIRMA NOTU</p>
                 <h2 id="answer-title">{answer.question}</h2>
                 <p className={styles.answerNotice}>{answer.message}</p>
+                {answer.usage ? (
+                  <p className={styles.sourceNote}>
+                    {answer.usage.model} · {answer.usage.inputTokens} giriş / {answer.usage.outputTokens} çıkış token’ı ·
+                    tahmini çağrı bedeli ${answer.usage.estimatedCostUsd.toFixed(6)}.
+                    Bu tutar fatura veya hesap genelinde harcama limiti değildir.
+                  </p>
+                ) : null}
                 <div className={styles.results}>
                   {Array.from(
                     new Set(answer.passages.map((p) => p.district)),
@@ -454,7 +461,9 @@ export default function ResearchAssistant({
               değerlendirmesi sunmaz. En fazla iki ilçe ve 600 karakterlik soru
               kabul eder. Sunucu süreci başına dakikada 20 istek sınırı
               vardır. Karşılaştırma, ilgili alıntıları yan yana gösterir;
-              ilçeleri puanlamaz.
+              ilçeleri puanlamaz. Claude pilotu yalnız açık onaylı yerel
+              oturumda çalışır; çevrimiçi demo Claude çağrısı yapmaz. Pilotun
+              süreç içi kullanım sayacı, hesap genelinde kesin harcama sınırı değildir.
             </p>
           </div>
         </section>

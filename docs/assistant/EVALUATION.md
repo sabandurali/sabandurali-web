@@ -22,3 +22,9 @@ Kabul ölçütleri: 39 ilçenin tamamında kaynaklı genel özet; görüntülene
 Otomatik testler gerçek ağ çağrısı yapmaz. Claude HTTP isteği/başlık/bağlam/çıktı sözleşmesi taklit transport ile doğrulanır. Upstream hata, timeout, bozuk veya uydurulmuş alıntılar sonuç gösterilmeden reddedilir.
 
 Gerçek model pilotunda önerilen ölçümler: doğru konu seçimi, doğru ilçe kapsamı, kaynak seçiminin editör tarafından uygunluğu, desteklenmeyen soruda kaçınma, süre ve gerçek token maliyeti. Sonuç ölçmeden başarı yüzdesi veya ürün çekişi iddia edilmemeli.
+
+## Aşama 17 pilot kabul kaydı
+
+İlk onaylı oturum: en fazla 20 deneme, 0.03 USD süreç içi tahmini rezerv, en fazla 24 saat; gerçek hesap limiti değildir. Her sonuç için konu uygunluğu (editör), iki ilçenin temsili, kaynak kimliği geçerliliği, kaçınma, süre, API usage ve tahmini maliyet kaydedilir. Gerçek soru veya kişisel veri loglama eklenmez. Görüntülenen metinlerin tamamı özgün alıntı olmalı; uydurma kaynak/istatistik sıfır olmalı. Semantik başarı oranı pilot yapılmadan yazılmaz.
+
+Yeni otomatik kontroller: açık onay ve model allowlist'i, onay süresi, eşzamanlılık, 5/dakika ve oturum kotası, tahmini rezerv, ön token sayımında durma, 24 KB bağlam ve 32 KB yanıt sınırları, iptal, ortak zaman aşımı sinyali, otomatik tekrar olmaması, güvenli hata ve kullanım metaverisi. Gerçek ağ çağrısı yapılmaz.
