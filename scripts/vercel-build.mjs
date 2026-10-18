@@ -192,6 +192,21 @@ export async function runBuild(options = {}) {
   const runScript =
     options.runNpmScript ?? ((scriptName) => runNpmScript(scriptName, env));
 
+  if (env.VERCEL_GIT_COMMIT_REF === "codex/istanbul-research-assistant") {
+    for (const [key, value] of Object.entries({
+      VERCEL: "1", VERCEL_ENV: "preview", ASSISTANT_DEMO_ONLY: "true",
+      ASSISTANT_ENABLE_CLAUDE: "false", PAYLOAD_DATABASE: "sqlite",
+      PAYLOAD_STORAGE: "local", DATABASE_URL: "file::memory:",
+      PAGE_PUBLIC_SOURCE: "static", NAVIGATION_PUBLIC_SOURCE: "static",
+      ARTICLE_PUBLIC_SOURCE: "static", BOOK_PUBLIC_SOURCE: "static", PHOTO_PUBLIC_SOURCE: "static",
+    })) requireExactEnvironmentValue(env, key, value);
+    if (env.ANTHROPIC_API_KEY || env.ANTHROPIC_MODEL) fail("Assistant demo must not have Claude credentials.");
+    requireEnvironmentValue(env, "PAYLOAD_SECRET");
+    log("Isolated assistant Preview: static snapshot, no database connection or migrations, Claude disabled.");
+    runScript("build");
+    return;
+  }
+
   const isTargetPreview =
     env.VERCEL === "1" &&
     env.VERCEL_ENV === "preview" &&

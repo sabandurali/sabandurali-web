@@ -197,3 +197,22 @@ test("migration comparison fails closed for duplicate and unknown state", () => 
     /not a registry prefix/,
   );
 });
+
+const assistantEnv = {
+  VERCEL: '1', VERCEL_ENV: 'preview', VERCEL_GIT_COMMIT_REF: 'codex/istanbul-research-assistant',
+  ASSISTANT_DEMO_ONLY: 'true', ASSISTANT_ENABLE_CLAUDE: 'false', PAYLOAD_DATABASE: 'sqlite',
+  PAYLOAD_STORAGE: 'local', DATABASE_URL: 'file::memory:', PAYLOAD_SECRET: 'test-only',
+  PAGE_PUBLIC_SOURCE: 'static', NAVIGATION_PUBLIC_SOURCE: 'static', ARTICLE_PUBLIC_SOURCE: 'static', BOOK_PUBLIC_SOURCE: 'static', PHOTO_PUBLIC_SOURCE: 'static',
+};
+test('assistant Preview never inspects database or runs migrations', async () => {
+  const calls = [];
+  await runBuild({ env: assistantEnv, log: () => {}, detectMigrationState: () => { throw Error('Database must not be accessed'); }, runNpmScript: s => calls.push(s) });
+  assert.deepEqual(calls, ['build']);
+});
+test('assistant build rejects Production, unsafe database/CMS sources and Claude credentials before work', async () => {
+  for (const override of [{VERCEL_ENV:'production'}, {DATABASE_URL:'postgres://example.invalid'}, {PAGE_PUBLIC_SOURCE:'payload'}, {ASSISTANT_DEMO_ONLY:'false'}, {ANTHROPIC_API_KEY:'test-only'}]) {
+    const calls = [];
+    await assert.rejects(runBuild({env:{...assistantEnv,...override}, log:()=>{}, runNpmScript:s=>calls.push(s)}));
+    assert.deepEqual(calls, []);
+  }
+});
