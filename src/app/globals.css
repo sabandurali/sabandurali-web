@@ -1,0 +1,103 @@
+@import "tailwindcss";
+
+:root {
+  --background: #101d32;
+  --background-deep: #07101c;
+  --foreground: #f5f2ec;
+  --surface: #16243a;
+  --surface-soft: #17243a;
+  --ivory: #f5f2ec;
+  --ivory-soft: #f5efe4;
+  --ink: #081220;
+  --muted: #d9d8d2;
+  --muted-dark: #46505c;
+  --placeholder: #8c939c;
+  --border: rgba(247, 245, 240, 0.18);
+  --accent: #c9a24a;
+  --accent-strong: #e6d6b3;
+  --accent-soft: #c9a24a;
+  --accent-deep: #806328;
+  --accent-hero-glow: rgba(201, 162, 74, 0.1);
+  --accent-border-soft: rgba(201, 162, 74, 0.28);
+  --accent-border-hover: rgba(201, 162, 74, 0.72);
+  --focus-ring: #e6d6b3;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-background-deep: var(--background-deep);
+  --color-foreground: var(--foreground);
+
+  --color-surface: var(--surface);
+  --color-surface-soft: var(--surface-soft);
+  --color-ivory: var(--ivory);
+  --color-ivory-soft: var(--ivory-soft);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-muted-dark: var(--muted-dark);
+  --color-placeholder: var(--placeholder);
+  --color-border: var(--border);
+
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-deep: var(--accent-deep);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+
+  background: var(--background);
+
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  line-height: 1.6;
+}
+
+main {
+  overflow: clip;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: Georgia, "Times New Roman", serif;
+  letter-spacing: -0.02em;
+}
+
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--ink);
+}

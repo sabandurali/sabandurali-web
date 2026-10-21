@@ -1,0 +1,69 @@
+import { withPayload } from "@payloadcms/next/withPayload";
+import type { NextConfig } from "next";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { assertProductionPayloadInfrastructure } from "./src/lib/payloadInfrastructure";
+
+const filename = fileURLToPath(import.meta.url);
+const dirname = path.dirname(filename);
+
+assertProductionPayloadInfrastructure();
+
+const nextConfig: NextConfig = {
+  async redirects() {
+    return [
+      {
+        source: "/en/photos",
+        destination: "/en/photography",
+        permanent: true,
+      },
+      {
+        source: "/en/photos/:path*",
+        destination: "/en/photography/:path*",
+        permanent: true,
+      },
+    ];
+  },
+  experimental: {
+    globalNotFound: true,
+  },
+  images: {
+    localPatterns: [
+      {
+        pathname: "/articles/**",
+      },
+      {
+        pathname: "/books/**",
+      },
+      {
+        pathname: "/brand/**",
+      },
+      {
+        pathname: "/workspaces/**",
+      },
+      {
+        pathname: "/api/media/file/**",
+      },
+    ],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**.blob.vercel-storage.com",
+      },
+    ],
+  },
+  webpack: (webpackConfig) => {
+    webpackConfig.resolve.extensionAlias = {
+      ".cjs": [".cts", ".cjs"],
+      ".js": [".ts", ".tsx", ".js", ".jsx"],
+      ".mjs": [".mts", ".mjs"],
+    };
+
+    return webpackConfig;
+  },
+  turbopack: {
+    root: path.resolve(dirname),
+  },
+};
+
+export default withPayload(nextConfig, { devBundleServerPackages: false });
