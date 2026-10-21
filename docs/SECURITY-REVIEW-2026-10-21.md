@@ -1,5 +1,7 @@
 # Güvenlik takibi — 21 Ekim 2026
 
+> Güncel takip: Aşağıdaki ilk erişim engelleri tarihsel durumu gösterir. Canlı PostgreSQL/Blob yedeği ve şifreli SSD geri yüklemesi sonradan doğrulandı. Son uyumluluk, kalan sınırlar ve geri dönüş yöntemi [dağıtım öncesi raporda](DEPLOYMENT-READINESS-2026-10-21.md).
+
 Dal: `codex/security-followup-2026-10-21`. Başlangıç:
 `d47df10d773fc6a7b2f491e5df24cbe889d9d60d`. İlk yedek dalı ve
 `backup-2026-10-21` etiketi değiştirilmedi. Canlı dağıtım, main'e birleştirme,

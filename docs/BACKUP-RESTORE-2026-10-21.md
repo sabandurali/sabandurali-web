@@ -1,5 +1,7 @@
 # 21 Ekim 2026 yedeği ve geri yükleme
 
+> Güncel takip: Aşağıdaki ilk erişim engelleri tarihsel durumu gösterir. Canlı PostgreSQL/Blob yedeği ve şifreli SSD geri yüklemesi sonradan doğrulandı. Son uyumluluk, kalan sınırlar ve geri dönüş yöntemi [dağıtım öncesi raporda](DEPLOYMENT-READINESS-2026-10-21.md).
+
 ## Kapsam ve sınırlar
 
 Kaynak proje: `sabandurali/sabandurali-web`; başlangıç commit'i
