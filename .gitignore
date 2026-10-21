@@ -46,3 +46,7 @@ next-env.d.ts
 !/.data/.gitkeep
 /public/media/*
 !/public/media/.gitkeep
+
+# Private backup and isolated verification data
+/.private-backups/
+/ml-env/

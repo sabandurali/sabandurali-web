@@ -10,6 +10,30 @@ const dirname = path.dirname(filename);
 assertProductionPayloadInfrastructure();
 
 const nextConfig: NextConfig = {
+  poweredByHeader: false,
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=()",
+          },
+          {
+            key: "Content-Security-Policy",
+            // Keep Next.js static hydration, Payload editor workers and image
+            // previews working. A strict script policy needs a separate rollout.
+            value:
+              "object-src 'none'; base-uri 'self'; frame-ancestors 'self'; form-action 'self' https://formspree.io",
+          },
+        ],
+      },
+    ];
+  },
   async redirects() {
     return [
       {
