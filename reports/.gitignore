@@ -8,3 +8,7 @@
 # Inputs that a test or a pending, not yet applied CMS change still reads.
 !istanbul-39/editorial-review.json
 !content-trust-20261018/cms-home-about.json
+
+# Private release evidence stays out of Git entirely (see the root .gitignore);
+# this must come after the !*/ rule above.
+/production-release-20261018/
