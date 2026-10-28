@@ -1,0 +1,546 @@
+/**
+ * End-to-end checks of the Payload configuration against a throwaway SQLite
+ * database (schema pushed from the config) and a temporary media folder.
+ * Nothing touches `.data/`, `public/media` or any remote service.
+ */
+import assert from "node:assert/strict";
+import { existsSync } from "node:fs";
+import { mkdtemp, rm } from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
+import { after, test } from "node:test";
+import type { Payload, PayloadRequest, SanitizedConfig } from "payload";
+import sharp from "sharp";
+import type { Article } from "../payload-types";
+
+const temporaryDirectory = await mkdtemp(
+  path.join(os.tmpdir(), "cms-integration-"),
+);
+const databaseUrl = `file:${path.join(temporaryDirectory, "cms.db")}`;
+const mediaDirectory = path.join(temporaryDirectory, "media");
+
+Object.assign(process.env, {
+  DATABASE_URL: databaseUrl,
+  PAYLOAD_DATABASE: "sqlite",
+  PAYLOAD_SECRET: process.env.PAYLOAD_SECRET || "integration-test-only-secret",
+  PAYLOAD_STORAGE: "local",
+});
+
+const { default: configPromise } = await import("../payload.config");
+const { sqliteAdapter } = await import("@payloadcms/db-sqlite");
+const { getPayload } = await import("payload");
+const { limitAnonymousRestQueries } = await import("../lib/payloadAccess");
+
+const config: SanitizedConfig = await configPromise;
+config.typescript.autoGenerate = false;
+Object.assign(
+  config.db,
+  sqliteAdapter({ client: { url: databaseUrl }, idType: "uuid", push: true }),
+);
+for (const collection of config.collections) {
+  if (collection.slug === "media" && collection.upload) {
+    collection.upload.staticDir = mediaDirectory;
+  }
+}
+
+const payload: Payload = await getPayload({ config });
+
+after(async () => {
+  await payload.destroy();
+  await rm(temporaryDirectory, { force: true, recursive: true });
+});
+
+/** A request as an anonymous REST client would make it. */
+function anonymousRest(): Partial<PayloadRequest> {
+  return { payloadAPI: "REST" };
+}
+
+function hasStatus(status: number, pattern?: RegExp) {
+  return (error: unknown) =>
+    error instanceof Error &&
+    "status" in error &&
+    error.status === status &&
+    (pattern === undefined || pattern.test(error.message));
+}
+
+function validationPaths(error: unknown): string[] {
+  assert.ok(error instanceof Error && "data" in error, String(error));
+  const errors = (error.data as { errors?: Array<{ path: string }> }).errors;
+  assert.ok(Array.isArray(errors));
+  return errors.map((entry) => entry.path);
+}
+
+const paragraph = (text: string): NonNullable<Article["content"]> => ({
+  root: {
+    children: [
+      {
+        children: [
+          {
+            detail: 0,
+            format: 0,
+            mode: "normal",
+            style: "",
+            text,
+            type: "text",
+            version: 1,
+          },
+        ],
+        direction: "ltr",
+        format: "",
+        indent: 0,
+        type: "paragraph",
+        version: 1,
+      },
+    ],
+    direction: "ltr",
+    format: "",
+    indent: 0,
+    type: "root",
+    version: 1,
+  },
+});
+
+test("configuration: depth cap, anonymous REST limits and a rich text editor the site can render", () => {
+  assert.equal(config.maxDepth, 2);
+
+  for (const slug of [
+    "users",
+    "media",
+    "categories",
+    "district-guides",
+    "articles",
+    "books",
+    "pages",
+    "photo-collections",
+    "tags",
+    "photos",
+  ]) {
+    const collection = config.collections.find((entry) => entry.slug === slug);
+    assert.ok(collection, slug);
+    assert.equal(
+      collection.hooks.beforeOperation[0],
+      limitAnonymousRestQueries,
+      slug,
+    );
+  }
+
+  const editorConfig = (
+    config.editor as unknown as {
+      editorConfig: {
+        resolvedFeatureMap: Map<
+          string,
+          { sanitizedServerFeatureProps?: Record<string, unknown> }
+        >;
+      };
+    }
+  ).editorConfig;
+  const features = editorConfig.resolvedFeatureMap;
+
+  assert.equal(features.has("relationship"), false);
+  assert.deepEqual(
+    features.get("heading")?.sanitizedServerFeatureProps?.enabledHeadingSizes,
+    ["h2", "h3", "h4"],
+  );
+  assert.deepEqual(
+    features.get("link")?.sanitizedServerFeatureProps?.enabledCollections,
+    [],
+  );
+  assert.ok(features.has("upload") && features.has("paragraph"));
+});
+
+test("users: first account is admin, new accounts are editors, the last admin is protected", async () => {
+  const owner = await payload.create({
+    collection: "users",
+    data: {
+      email: "owner@example.com",
+      password: "Correct-Horse-1",
+      role: "editor",
+    },
+  });
+  assert.equal(owner.role, "admin");
+
+  // @ts-expect-error `role` is omitted on purpose: the default must apply.
+  const colleague = await payload.create({
+    collection: "users",
+    data: { email: "editor@example.com", password: "Correct-Horse-2" },
+  });
+  assert.equal(colleague.role, "editor");
+
+  await assert.rejects(
+    payload.update({
+      collection: "users",
+      data: { role: "editor" },
+      id: owner.id,
+    }),
+    hasStatus(409, /son yönetici/),
+  );
+  await assert.rejects(
+    payload.delete({ collection: "users", id: owner.id }),
+    hasStatus(409, /son yönetici/),
+  );
+
+  await payload.update({
+    collection: "users",
+    data: { role: "admin" },
+    id: colleague.id,
+  });
+  const demoted = await payload.update({
+    collection: "users",
+    data: { role: "editor" },
+    id: owner.id,
+  });
+  assert.equal(demoted.role, "editor");
+
+  await assert.rejects(
+    payload.forgotPassword({
+      collection: "users",
+      data: { email: "owner@example.com" },
+      disableEmail: true,
+    }),
+    hasStatus(501),
+  );
+});
+
+test("media: uploads lose EXIF and GPS data and are capped at 3200 px", async () => {
+  const original = await sharp({
+    create: { background: "#7a7a7a", channels: 3, height: 3000, width: 4000 },
+  })
+    .jpeg()
+    .withExif({
+      IFD0: { Make: "IntegrationCam", Model: "GPS-1" },
+      IFD3: { GPSLatitude: "41/1 2/1 0/1", GPSLatitudeRef: "N" },
+    })
+    .toBuffer();
+  assert.ok((await sharp(original).metadata()).exif, "fixture carries EXIF");
+
+  const media = await payload.create({
+    collection: "media",
+    data: { alt: "Gri test görseli" },
+    file: {
+      data: original,
+      mimetype: "image/jpeg",
+      name: "konumlu-fotograf.jpg",
+      size: original.length,
+    },
+  });
+
+  assert.ok(media.filename);
+  const stored = path.join(mediaDirectory, media.filename);
+  assert.ok(existsSync(stored));
+
+  const metadata = await sharp(stored).metadata();
+  assert.equal(metadata.exif, undefined, "EXIF and GPS are removed");
+  assert.ok((metadata.width ?? 0) <= 3200 && (metadata.height ?? 0) <= 3200);
+  assert.equal(media.width, 3200);
+  assert.equal(media.height, 2400);
+});
+
+test("anonymous REST: media cannot be listed, other lists are capped, population still works", async () => {
+  await assert.rejects(
+    payload.find({
+      collection: "media",
+      overrideAccess: false,
+      req: anonymousRest(),
+    }),
+    hasStatus(403),
+  );
+
+  // Serving `/api/media/file/<filename>` from Vercel Blob runs the storage
+  // plugin's anonymous lookup; it must keep working for every visitor.
+  const [upload] = (await payload.find({ collection: "media", limit: 1 })).docs;
+  assert.ok(upload?.filename);
+  const mediaConfig = config.collections.find(
+    (collection) => collection.slug === "media",
+  );
+  assert.ok(mediaConfig);
+  const { getFilePrefix } =
+    await import("@payloadcms/plugin-cloud-storage/utilities");
+  const { createLocalReq } = await import("payload");
+  const fileRequest = await createLocalReq(
+    {
+      req: {
+        payloadAPI: "REST",
+        routeParams: { collection: "media", filename: upload.filename },
+      },
+    },
+    payload,
+  );
+  assert.equal(
+    await getFilePrefix({
+      collection: mediaConfig,
+      filename: upload.filename,
+      req: fileRequest,
+    }),
+    "",
+  );
+
+  const category = await payload.create({
+    collection: "categories",
+    data: { name: "Gayrimenkul", slug: "gayrimenkul" },
+  });
+  const [image] = (await payload.find({ collection: "media", limit: 1 })).docs;
+  assert.ok(image);
+
+  await payload.create({
+    collection: "articles",
+    data: {
+      _status: "published",
+      articleType: "article",
+      categories: [category.id],
+      content: paragraph("Kentsel dönüşüm üzerine kısa bir not."),
+      excerpt: "Kentsel dönüşüm",
+      featuredImage: image.id,
+      slug: "kentsel-donusum-notu",
+      title: "Kentsel dönüşüm notu",
+    },
+  });
+
+  const result = await payload.find({
+    collection: "articles",
+    depth: 1,
+    limit: 0,
+    overrideAccess: false,
+    pagination: false,
+    req: anonymousRest(),
+  });
+
+  assert.equal(result.limit, 50, "limit=0 is capped");
+  assert.equal(result.docs.length, 1);
+  const featuredImage = result.docs[0].featuredImage;
+  assert.ok(
+    typeof featuredImage === "object" && featuredImage !== null,
+    "media relationships still populate for anonymous readers",
+  );
+  assert.equal(featuredImage.id, image.id);
+});
+
+test("articles: district news need an https source, other articles need body text; writes never fail on revalidation", async () => {
+  const [category] = (
+    await payload.find({ collection: "categories", limit: 1 })
+  ).docs;
+  assert.ok(category);
+
+  await assert.rejects(
+    payload.create({
+      collection: "articles",
+      data: {
+        _status: "published",
+        articleType: "district-news",
+        categories: [category.id],
+        excerpt: "Haber özeti",
+        externalSource: {
+          name: "Esenler Belediyesi",
+          url: "http://esenler.bel.tr",
+        },
+        slug: "ilce-haberi",
+        title: "İlçe haberi",
+      },
+    }),
+    (error: unknown) => validationPaths(error).includes("externalSource.url"),
+  );
+
+  await assert.rejects(
+    payload.create({
+      collection: "articles",
+      data: {
+        _status: "published",
+        articleType: "article",
+        categories: [category.id],
+        excerpt: "Boş makale",
+        slug: "bos-makale",
+        title: "Boş makale",
+      },
+    }),
+    (error: unknown) => validationPaths(error).includes("content"),
+  );
+
+  // Drafts may stay incomplete.
+  const draft = await payload.create({
+    collection: "articles",
+    data: {
+      _status: "draft",
+      categories: [category.id],
+      excerpt: "Taslak",
+      slug: "taslak",
+      title: "Taslak",
+    },
+    draft: true,
+  });
+
+  const published = await payload.update({
+    collection: "articles",
+    data: {
+      _status: "published",
+      content: paragraph("Artık içerik var."),
+      seo: { canonical: "/makaleler/taslak" },
+    },
+    id: draft.id,
+  });
+  assert.equal(published._status, "published");
+  assert.equal(published.seo?.index, true);
+  assert.equal(published.author?.name, "Şaban Durali");
+
+  await assert.rejects(
+    payload.update({
+      collection: "articles",
+      data: { seo: { canonical: "https://example.com/kopya" } },
+      id: draft.id,
+    }),
+    (error: unknown) => validationPaths(error).includes("seo.canonical"),
+  );
+
+  // Unpublish and delete run the revalidation hooks outside Next.js.
+  await payload.update({
+    collection: "articles",
+    data: { _status: "draft" },
+    id: draft.id,
+  });
+  await payload.delete({ collection: "articles", id: draft.id });
+});
+
+test("books: publishing runs the public rules and the database enforces one slug per language", async () => {
+  const base = {
+    language: "tr" as const,
+    personalEvaluation: "Kişisel değerlendirme",
+    readingStatus: "planned" as const,
+    reviewStatus: "draft" as const,
+    seo: {
+      description: "Açıklama",
+      follow: true,
+      index: false,
+      title: "Başlık",
+    },
+    summary: "Özet",
+    title: "Derin Çalışma",
+    translationStatus: "none" as const,
+  };
+
+  const draft = await payload.create({
+    collection: "books",
+    data: base,
+    draft: true,
+  });
+
+  await assert.rejects(
+    payload.update({
+      collection: "books",
+      data: { _status: "published" },
+      id: draft.id,
+    }),
+    (error: unknown) => validationPaths(error).includes("reviewStatus"),
+  );
+
+  await assert.rejects(
+    payload.update({
+      collection: "books",
+      data: { _status: "published", reviewStatus: "published" },
+      id: draft.id,
+    }),
+    (error: unknown) => {
+      const paths = validationPaths(error);
+      return [
+        "seo.index",
+        "authors",
+        "category",
+        "coverImage",
+        "rating",
+        "publishedAt",
+      ].every((expected) => paths.includes(expected));
+    },
+  );
+
+  // The unique index works even when the hook is bypassed.
+  await assert.rejects(
+    payload.db.create({
+      collection: "books",
+      data: { ...base, _status: "draft", slug: "derin-calisma" },
+      req: {},
+    }),
+    // The database adapter turns the unique-constraint violation into a
+    // "Value must be unique" validation error.
+    (error: unknown) =>
+      error instanceof Error &&
+      "data" in error &&
+      /must be unique/i.test(JSON.stringify(error.data)),
+  );
+
+  // A different language may reuse the slug.
+  await assert.doesNotReject(
+    payload.db.create({
+      collection: "books",
+      data: {
+        ...base,
+        _status: "draft",
+        language: "en",
+        slug: "derin-calisma",
+      },
+      req: {},
+    }),
+  );
+});
+
+test("pages: English standard pages stay drafts and the home renders only its own blocks", async () => {
+  await assert.rejects(
+    payload.create({
+      collection: "pages",
+      data: {
+        _status: "published",
+        language: "en",
+        pageType: "standard",
+        slug: "about",
+        summary: "About",
+        title: "About",
+      },
+    }),
+    (error: unknown) => validationPaths(error).includes("language"),
+  );
+
+  await assert.rejects(
+    payload.create({
+      collection: "pages",
+      data: {
+        _status: "published",
+        language: "tr",
+        layout: [
+          {
+            action: { href: "/iletisim", label: "İletişim" },
+            blockType: "cta",
+            title: "Bize ulaşın",
+          },
+        ],
+        pageType: "home",
+        slug: "ana-sayfa",
+        summary: "Ana sayfa",
+        title: "Ana sayfa",
+      },
+    }),
+    (error: unknown) => validationPaths(error).includes("layout"),
+  );
+});
+
+test("district guides: anonymous readers cannot filter on hidden fields", async () => {
+  await assert.rejects(
+    payload.find({
+      collection: "district-guides",
+      overrideAccess: false,
+      where: { "marketData.salePricePerM2": { greater_than: 0 } },
+    }),
+    hasStatus(403),
+  );
+  await assert.rejects(
+    payload.count({
+      collection: "district-guides",
+      overrideAccess: false,
+      req: anonymousRest(),
+      where: { "sources.url": { like: "gov" } },
+    }),
+    hasStatus(403),
+  );
+
+  const visible = await payload.find({
+    collection: "district-guides",
+    overrideAccess: false,
+    where: { district: { equals: "esenler" } },
+  });
+  assert.equal(visible.totalDocs, 0);
+});

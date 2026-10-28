@@ -1,14 +1,60 @@
-import type { CollectionConfig } from "payload";
-import { preventDeletingLastAdmin } from "@/lib/payloadDeleteGuards";
+import {
+  APIError,
+  type CollectionBeforeChangeHook,
+  type CollectionBeforeOperationHook,
+  type CollectionConfig,
+} from "payload";
+import { isAdmin } from "@/lib/payloadAccess";
+import {
+  preventDeletingLastAdmin,
+  preventDemotingLastAdmin,
+} from "@/lib/payloadDeleteGuards";
+import { isHttpsDeployment } from "@/lib/payloadInfrastructure";
 
-type UserWithRole = {
-  id: number | string;
-  role?: unknown;
+/** Failed logins before Payload locks an account, and for how long. */
+export const MAX_LOGIN_ATTEMPTS = 5;
+export const LOGIN_LOCK_TIME_MS = 10 * 60 * 1000;
+
+/**
+ * New accounts get the least privilege. The very first account is the only
+ * exception: it must be an admin, otherwise nobody could ever manage users.
+ */
+export const assignFirstUserAdminRole: CollectionBeforeChangeHook = async ({
+  data,
+  operation,
+  req,
+}) => {
+  if (operation !== "create") return data;
+
+  const { totalDocs } = await req.payload.count({
+    collection: "users",
+    overrideAccess: true,
+    req,
+  });
+
+  return totalDocs === 0 ? { ...data, role: "admin" } : data;
 };
 
-function isAdmin(user: UserWithRole | null | undefined): boolean {
-  return user?.role === "admin";
-}
+/**
+ * There is no email adapter yet (see `payload.config.ts`), so a reset email
+ * would never arrive. Payload would still create a reset token and the admin
+ * would claim the email was sent. Refuse the request explicitly instead; the
+ * message is the same for every address, so it reveals no account.
+ */
+export const refusePasswordResetWithoutEmail: CollectionBeforeOperationHook = ({
+  args,
+  operation,
+  req,
+}) => {
+  if (operation === "forgotPassword" && req.payload.email.name === "console") {
+    throw new APIError(
+      "Parola sıfırlama e-postası henüz yapılandırılmadı. Parolanızı başka bir yönetici sıfırlayabilir.",
+      501,
+    );
+  }
+
+  return args;
+};
 
 export const Users: CollectionConfig = {
   slug: "users",
@@ -30,7 +76,18 @@ export const Users: CollectionConfig = {
   admin: {
     useAsTitle: "email",
   },
-  auth: true,
+  auth: {
+    cookies: {
+      // Lax keeps the session for a top-level navigation from another site
+      // (an admin link in an email) while browsers withhold the cookie from
+      // cross-site POST, PATCH and DELETE requests. Secure on every HTTPS
+      // (Vercel) deployment; plain-HTTP `next start` on localhost keeps working.
+      sameSite: "Lax",
+      secure: isHttpsDeployment(),
+    },
+    lockTime: LOGIN_LOCK_TIME_MS,
+    maxLoginAttempts: MAX_LOGIN_ATTEMPTS,
+  },
   fields: [
     {
       name: "role",
@@ -38,7 +95,11 @@ export const Users: CollectionConfig = {
       access: {
         update: ({ req }) => isAdmin(req.user),
       },
-      defaultValue: "admin",
+      admin: {
+        description:
+          "Editor içerik ekler ve düzenler. Admin ayrıca kullanıcıları yönetir ve içerik siler. Sistemde her zaman en az bir Admin kalır.",
+      },
+      defaultValue: "editor",
       options: [
         { label: "Admin", value: "admin" },
         { label: "Editor", value: "editor" },
@@ -48,6 +109,8 @@ export const Users: CollectionConfig = {
     },
   ],
   hooks: {
+    beforeChange: [assignFirstUserAdminRole, preventDemotingLastAdmin],
     beforeDelete: [preventDeletingLastAdmin],
+    beforeOperation: [refusePasswordResetWithoutEmail],
   },
 };

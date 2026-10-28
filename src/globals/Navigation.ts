@@ -4,8 +4,10 @@ import type {
   GlobalConfig,
   RelationshipField,
   TextFieldSingleValidation,
+  Where,
 } from "payload";
 import { adminOrEditor } from "@/lib/payloadAccess";
+import { revalidateNavigationAfterChange } from "@/lib/revalidation";
 import {
   normalizeExternalNavigationUrl,
   normalizeInternalNavigationPath,
@@ -67,6 +69,19 @@ function createExternalUrlValidator(
         : true;
 }
 
+/**
+ * Pages a navigation link may point at. Turkish standard pages live at
+ * `/<slug>`; English standard pages have no route yet (`/en/<slug>` would be
+ * a 404), so English links may only target the English home page.
+ */
+export function getNavigationPageFilter(language: "en" | "tr"): Where {
+  return language === "tr"
+    ? { language: { equals: "tr" } }
+    : {
+        and: [{ language: { equals: "en" } }, { pageType: { equals: "home" } }],
+      };
+}
+
 function createPageRelationshipField(language: "en" | "tr"): RelationshipField {
   return {
     name: "page",
@@ -77,13 +92,9 @@ function createPageRelationshipField(language: "en" | "tr"): RelationshipField {
       description:
         language === "tr"
           ? "Yalnız yayımlanmış ve yayın tarihi gelmiş Türkçe sayfalar public menüde bağlantıya dönüşür."
-          : "Yalnız yayımlanmış ve yayın tarihi gelmiş İngilizce sayfalar public menüde bağlantıya dönüşür.",
+          : "Yalnız İngilizce Ana sayfa seçilebilir; İngilizce standart sayfaların henüz bir site adresi yok.",
     },
-    filterOptions: {
-      language: {
-        equals: language,
-      },
-    },
+    filterOptions: getNavigationPageFilter(language),
     relationTo: "pages",
   };
 }
@@ -168,7 +179,7 @@ export const Navigation: GlobalConfig = {
   },
   admin: {
     description:
-      "Türkçe ve İngilizce Header, mobil menü ve Footer bağlantılarını yönetin. Taslak, yayınlama ve sürüm geçmişi sağ üstteki belge kontrollerindedir.",
+      "Türkçe Header ve mobil menü ile Türkçe ve İngilizce Footer bağlantılarını yönetin. İngilizce Header menüsü site kodunda sabittir. Taslak, yayınlama ve sürüm geçmişi sağ üstteki belge kontrollerindedir.",
     group: "İçerik",
   },
   label: "Navigasyon",
@@ -205,6 +216,13 @@ export const Navigation: GlobalConfig = {
         },
         {
           label: "English Header menu",
+          // The English header is fixed in code
+          // (`getEnglishHeaderNavigationItems`); this field is never read.
+          // It stays in the schema so existing data and its migration remain
+          // intact, but editors no longer see a menu that changes nothing.
+          admin: {
+            condition: () => false,
+          },
           fields: [
             {
               name: "enHeader",
@@ -212,7 +230,8 @@ export const Navigation: GlobalConfig = {
               label: "Menu items",
               admin: {
                 description:
-                  "Desktop and mobile navigation use the same ordered list.",
+                  "Not used: the English header menu is defined in the site code.",
+                hidden: true,
               },
               fields: [
                 ...createNavigationLinkFields({ language: "en" }),
@@ -295,6 +314,9 @@ export const Navigation: GlobalConfig = {
       ],
     },
   ],
+  hooks: {
+    afterChange: [revalidateNavigationAfterChange],
+  },
   versions: {
     drafts: {
       validate: true,

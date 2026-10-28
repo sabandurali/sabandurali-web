@@ -1,6 +1,11 @@
 import { postgresAdapter } from "@payloadcms/db-postgres";
 import { sqliteAdapter } from "@payloadcms/db-sqlite";
-import { lexicalEditor } from "@payloadcms/richtext-lexical";
+import {
+  HeadingFeature,
+  LinkFeature,
+  lexicalEditor,
+  type LexicalEditorProps,
+} from "@payloadcms/richtext-lexical";
 import { vercelBlobStorage } from "@payloadcms/storage-vercel-blob";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -17,9 +22,11 @@ import { Photos } from "@/collections/Photos";
 import { Tags } from "@/collections/Tags";
 import { Users } from "@/collections/Users";
 import { Navigation } from "@/globals/Navigation";
+import { withAnonymousRestLimits } from "@/lib/payloadAccess";
 import {
   assertProductionPayloadInfrastructure,
   getPayloadDatabaseProvider,
+  getPayloadSecret,
   getPayloadStorageProvider,
   requirePayloadEnvironmentVariable,
 } from "@/lib/payloadInfrastructure";
@@ -30,6 +37,51 @@ const databaseProvider = getPayloadDatabaseProvider();
 const storageProvider = getPayloadStorageProvider();
 
 assertProductionPayloadInfrastructure();
+
+/**
+ * Largest upload the admin accepts. Uploads go through a Vercel Function,
+ * whose request body limit is 4.5 MB; a larger file would fail there with an
+ * opaque 413 instead of this message. Images are re-encoded to at most 3200
+ * px on the long edge (see `Media`), so 4 MiB originals are plenty. Direct
+ * browser-to-Blob uploads (`clientUploads`) would lift the limit but must be
+ * verified on a Preview deployment first.
+ */
+export const MAX_UPLOAD_BYTES = 4 * 1024 * 1024;
+
+/** Heading levels editors may use: the page title is the only `h1`. */
+export const RICH_TEXT_HEADING_SIZES = ["h2", "h3", "h4"] as const;
+
+type RichTextFeatures = Exclude<
+  NonNullable<LexicalEditorProps["features"]>,
+  (...args: never[]) => unknown
+>;
+
+/**
+ * The default Lexical features, adjusted to what the public renderer shows:
+ *
+ * - headings: `h2`–`h4` only;
+ * - links: custom URLs only. Internal document links have no public URL
+ *   resolver, so they would render as plain text;
+ * - relationship blocks: removed, the public site cannot render them.
+ */
+export function configureRichTextFeatures(
+  defaultFeatures: RichTextFeatures,
+): RichTextFeatures {
+  return defaultFeatures.flatMap((feature) => {
+    switch (feature.key) {
+      case "heading":
+        return [
+          HeadingFeature({ enabledHeadingSizes: [...RICH_TEXT_HEADING_SIZES] }),
+        ];
+      case "link":
+        return [LinkFeature({ enabledCollections: [] })];
+      case "relationship":
+        return [];
+      default:
+        return [feature];
+    }
+  });
+}
 
 const database =
   databaseProvider === "postgres"
@@ -69,6 +121,15 @@ const plugins =
       ]
     : [];
 
+// Email: no adapter is configured, so Payload only logs that an email was
+// attempted, and the Users collection refuses password-reset requests (see
+// `refusePasswordResetWithoutEmail`). Recovery today: a second admin account
+// resets the password from the admin. To enable reset emails, add a provider
+// package and these environment variables, then pass `email` here:
+// - Resend (`@payloadcms/email-resend`): RESEND_API_KEY, EMAIL_FROM_ADDRESS,
+//   EMAIL_FROM_NAME.
+// - SMTP (`@payloadcms/email-nodemailer`): SMTP_HOST, SMTP_PORT, SMTP_USER,
+//   SMTP_PASS, EMAIL_FROM_ADDRESS, EMAIL_FROM_NAME.
 export default buildConfig({
   admin: {
     components: {
@@ -86,21 +147,27 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
+  // Order matters for the database: Payload names compound indexes after
+  // their fields (`language_slug_idx`) and suffixes the later duplicates, so
+  // Pages must stay ahead of Books to keep its existing index name.
   collections: [
     Users,
     Media,
     Categories,
     DistrictGuides,
     Articles,
-    Books,
     Pages,
+    Books,
     PhotoCollections,
     Tags,
     Photos,
-  ],
+  ].map(withAnonymousRestLimits),
   globals: [Navigation],
   db: database,
-  editor: lexicalEditor(),
+  editor: lexicalEditor({
+    features: ({ defaultFeatures }) =>
+      configureRichTextFeatures(defaultFeatures),
+  }),
   localization: {
     defaultLocale: "tr",
     fallback: false,
@@ -109,8 +176,12 @@ export default buildConfig({
       { code: "en", label: "English" },
     ],
   },
+  // The public site needs two levels (photo -> collection -> parent). A
+  // higher `?depth=` would let one anonymous request expand relationships
+  // (book translations point at each other) into a huge response.
+  maxDepth: 2,
   plugins,
-  secret: process.env.PAYLOAD_SECRET || "",
+  secret: getPayloadSecret(),
   sharp,
   typescript: {
     outputFile: path.resolve(dirname, "payload-types.ts"),
@@ -118,11 +189,12 @@ export default buildConfig({
   upload: {
     abortOnLimit: true,
     limits: {
-      fileSize: 10 * 1024 * 1024,
+      fileSize: MAX_UPLOAD_BYTES,
       files: 1,
     },
     preserveExtension: 10,
-    responseOnLimit: "File exceeds the 10 MiB upload limit.",
+    responseOnLimit:
+      "Dosya 4 MiB yükleme sınırını aşıyor. Görseli küçültüp (ör. uzun kenarı 3200 piksel, JPEG) yeniden yükleyin.",
     safeFileNames: true,
   },
 });

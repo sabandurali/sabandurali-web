@@ -5,6 +5,9 @@ import {
   createLocalizedSlugHook,
 } from "@/lib/localizedSlug";
 import { preventDeletingReferencedPhotoCollection } from "@/lib/payloadDeleteGuards";
+import { createRevalidationHooks } from "@/lib/revalidation";
+
+const revalidation = createRevalidationHooks("photo-collections");
 
 export const PhotoCollections: CollectionConfig = {
   slug: "photo-collections",
@@ -58,6 +61,8 @@ export const PhotoCollections: CollectionConfig = {
     },
   ],
   hooks: {
+    afterChange: [revalidation.afterChange],
+    afterDelete: [revalidation.afterDelete],
     beforeDelete: [preventDeletingReferencedPhotoCollection],
     beforeValidate: [
       createLocalizedSlugHook({

@@ -6,14 +6,26 @@ import {
   type Where,
 } from "payload";
 import { pageBlocks } from "@/blocks/pageBlocks";
+import { getText, imageMediaFilter, isRecord } from "@/collections/validation";
 import {
+  adminOnly,
   adminOrEditor,
   publishedPageOrAdminOrEditor,
 } from "@/lib/payloadAccess";
 import { normalizeSlug } from "@/lib/localizedSlug";
 import { preventDeletingHomePage } from "@/lib/payloadDeleteGuards";
+import { createRevalidationHooks } from "@/lib/revalidation";
 
-const RESERVED_TURKISH_SLUGS = new Set([
+const revalidation = createRevalidationHooks("pages");
+
+/**
+ * Turkish standard pages are served at `/<slug>`, below every other top-level
+ * Turkish route. A slug in this list would be shadowed by that route (or by
+ * the admin, the API or the English tree). `collections.test.ts` compares the
+ * list with the route folders in `src/app`, so a new top-level route cannot
+ * be forgotten. `geri-bildirim` stays reserved for the retired feedback page.
+ */
+export const RESERVED_TURKISH_SLUGS: ReadonlySet<string> = new Set([
   "admin",
   "api",
   "arastirma-ve-analiz",
@@ -35,15 +47,19 @@ const RESERVED_TURKISH_SLUGS = new Set([
   "yonetim",
 ]);
 
-function getText(value: unknown): string | null {
-  return typeof value === "string" && value.trim().length > 0
-    ? value.trim()
-    : null;
-}
+/**
+ * Slug of the legacy Turkish home: a standard page that `/` falls back to
+ * when no "Ana sayfa" record exists. `/ana-sayfa` redirects to `/` (see
+ * `next.config.ts`), so no other page may take this slug.
+ */
+export const LEGACY_TURKISH_HOME_SLUG = "ana-sayfa";
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
-}
+/** The only blocks the home page renders. */
+export const HOME_BLOCK_TYPES: ReadonlySet<string> = new Set([
+  "hero",
+  "homeAbout",
+  "homeFocusAreas",
+]);
 
 function countVisibleHomeBlocks(
   layout: unknown,
@@ -59,7 +75,20 @@ function countVisibleHomeBlocks(
   ).length;
 }
 
-const validatePageIdentity: CollectionBeforeValidateHook = async ({
+function getVisibleUnsupportedHomeBlocks(layout: unknown): string[] {
+  if (!Array.isArray(layout)) return [];
+
+  return layout.flatMap((block) =>
+    isRecord(block) &&
+    block.visible !== false &&
+    typeof block.blockType === "string" &&
+    !HOME_BLOCK_TYPES.has(block.blockType)
+      ? [block.blockType]
+      : [],
+  );
+}
+
+export const validatePageIdentity: CollectionBeforeValidateHook = async ({
   data,
   operation,
   originalDoc,
@@ -81,6 +110,8 @@ const validatePageIdentity: CollectionBeforeValidateHook = async ({
   const pageType =
     getText(data.pageType) ?? getText(originalDoc?.pageType) ?? "standard";
   const currentID = getText(data.id) ?? getText(originalDoc?.id);
+  const status =
+    getText(data._status) ?? getText(originalDoc?._status) ?? "draft";
 
   data.slug = slug;
   data.language = language;
@@ -103,6 +134,29 @@ const validatePageIdentity: CollectionBeforeValidateHook = async ({
     errors.push({
       message: "Bu slug mevcut özel bir Türkçe rota için ayrılmıştır.",
       path: "slug",
+    });
+  }
+
+  if (
+    pageType === "standard" &&
+    language === "tr" &&
+    slug === LEGACY_TURKISH_HOME_SLUG &&
+    previousSlug !== LEGACY_TURKISH_HOME_SLUG
+  ) {
+    errors.push({
+      message:
+        "ana-sayfa adresi eski Ana Sayfa kaydına ayrılmıştır ve / adresine yönlenir. Ana sayfa için Sayfa türünü 'Ana sayfa' seçin.",
+      path: "slug",
+    });
+  }
+
+  // There is no English standard-page route yet (/en/<slug> returns 404), so
+  // such a page can be drafted but not published.
+  if (pageType === "standard" && language === "en" && status === "published") {
+    errors.push({
+      message:
+        "İngilizce standart sayfaların henüz bir site adresi yok. Yalnız İngilizce Ana sayfa yayınlanabilir; bu sayfayı taslak olarak saklayın.",
+      path: "language",
     });
   }
 
@@ -157,8 +211,6 @@ const validatePageIdentity: CollectionBeforeValidateHook = async ({
       });
     }
 
-    const status =
-      getText(data._status) ?? getText(originalDoc?._status) ?? "draft";
     const layout = Array.isArray(data.layout)
       ? data.layout
       : originalDoc?.layout;
@@ -172,6 +224,15 @@ const validatePageIdentity: CollectionBeforeValidateHook = async ({
       errors.push({
         message:
           "Yayındaki Ana Sayfa tam olarak bir görünür Hero, Hakkımda ve Çalışma Alanları bloğu içermelidir.",
+        path: "layout",
+      });
+    }
+
+    const unsupportedBlocks = getVisibleUnsupportedHomeBlocks(layout);
+
+    if (status === "published" && unsupportedBlocks.length > 0) {
+      errors.push({
+        message: `Ana Sayfa yalnız Hero, Hakkımda ve Çalışma Alanları bloklarını gösterir. Şu blokları silin veya gizleyin: ${[...new Set(unsupportedBlocks)].join(", ")}.`,
         path: "layout",
       });
     }
@@ -213,7 +274,9 @@ export const Pages: CollectionConfig = {
   slug: "pages",
   access: {
     create: adminOrEditor,
-    delete: adminOrEditor,
+    // Deleting removes every version too; only an admin may do it. Editors
+    // unpublish instead.
+    delete: adminOnly,
     read: publishedPageOrAdminOrEditor,
     update: adminOrEditor,
   },
@@ -363,6 +426,7 @@ export const Pages: CollectionConfig = {
                   type: "upload",
                   label: "Sosyal paylaşım görseli",
                   relationTo: "media",
+                  filterOptions: imageMediaFilter,
                 },
               ],
             },
@@ -372,6 +436,8 @@ export const Pages: CollectionConfig = {
     },
   ],
   hooks: {
+    afterChange: [revalidation.afterChange],
+    afterDelete: [revalidation.afterDelete],
     beforeChange: [setPublishedAtOnFirstPublish],
     beforeDelete: [preventDeletingHomePage],
     beforeValidate: [validatePageIdentity],
