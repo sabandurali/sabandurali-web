@@ -250,7 +250,7 @@ yalnızca etkileşim gerektirenlerdir: `SkipLink`, `Disclosure`, `NavMenu`, `For
 | `EmptyState` | Veri yoksa taramalı panel ve düz cümle ("… henüz eklenmedi."). |
 | `Pagination` | Önceki/sonraki ve sayfa numaraları; geçerli sayfa `aria-current`; tek sayfada hiçbir şey çizmez. |
 | `Field` + `Input` / `Textarea` | Görünen `label`, `hint` ve `error` kontrolün `aria-describedby` listesine bağlanır, hata `aria-invalid` ve "Hata:" önekiyle gelir, zorunlu alanlar "(zorunlu)" yazar. |
-| `FormStatus` | İki kalıcı canlı bölge: ilerleme/başarı `role="status"`, hata `role="alert"`; yalnızca metin değişir, sonuçta odak mesaja taşınır (FE-21). `aria-busy` kapsayıcısının dışında durur. |
+| `FormStatus` | İki kalıcı canlı bölge: ilerleme/başarı `role="status"`, hata `role="alert"`; yalnızca metin değişir, yeni bir sonuçta odak mesaja taşınır (ilk çizimde ve mesajsız sonuçta taşınmaz) (FE-21). `aria-busy` kapsayıcısının dışında durur. |
 | `StationDiagram` | Hat şeması: yalnızca metinde adı geçen duraklar; ilçeye hizmet eden duraklar turuncu ve aralarında düz çizgi, ilçe dışı kesim noktalı. Dar kapsayıcıda dikey liste (390 px'te etiketler sıkışmaz), 36 rem'den itibaren yatay. Yanına `Legend` ile "yalnız metinde adı geçen istasyonlar" notunu koyun. |
 | `Legend` | Harita ve şema sembollerinin anahtarı; her sembol metinle adlandırılır. |
 | `DistrictTileMap` | 39 ilçelik atlas. Bir sonraki bölüme bakın. |

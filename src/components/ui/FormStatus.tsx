@@ -23,13 +23,15 @@ type FormStatusProps = {
 /**
  * Which region receives focus when the state changes from `previous` to
  * `next`: only a new result moves focus, never the first render (a page
- * that loads with an error must not steal focus) and never progress.
+ * that loads with an error must not steal focus), never progress, and
+ * never a result without a message (focus would land on an empty box).
  */
 export function resultFocusTarget(
   previous: FormStatusState,
   next: FormStatusState,
+  hasMessage = true,
 ): "status" | "alert" | null {
-  if (previous === next) return null;
+  if (previous === next || !hasMessage) return null;
   if (next === "success") return "status";
   if (next === "error") return "alert";
   return null;
@@ -54,19 +56,19 @@ export default function FormStatus({
   const statusRef = useRef<HTMLDivElement>(null);
   const alertRef = useRef<HTMLDivElement>(null);
   const previousState = useRef(state);
-
-  useEffect(() => {
-    const target = resultFocusTarget(previousState.current, state);
-    previousState.current = state;
-    if (!focusResult || target === null) return;
-    (target === "status" ? statusRef : alertRef).current?.focus();
-  }, [state, focusResult]);
-
   const hasMessage =
     message !== undefined &&
     message !== null &&
     message !== false &&
     message !== "";
+
+  useEffect(() => {
+    const target = resultFocusTarget(previousState.current, state, hasMessage);
+    previousState.current = state;
+    if (!focusResult || target === null) return;
+    (target === "status" ? statusRef : alertRef).current?.focus();
+  }, [state, focusResult, hasMessage]);
+
   const showStatus =
     hasMessage && (state === "submitting" || state === "success");
   const showAlert = hasMessage && state === "error";

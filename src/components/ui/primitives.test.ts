@@ -585,4 +585,10 @@ test("FormStatus moves focus only to a new result, never on first render", () =>
   assert.equal(resultFocusTarget("submitting", "error"), "alert");
   assert.equal(resultFocusTarget("error", "success"), "status");
   assert.equal(resultFocusTarget("success", "idle"), null);
+  assert.equal(
+    resultFocusTarget("submitting", "success", false),
+    null,
+    "an empty region never takes focus",
+  );
+  assert.equal(resultFocusTarget("submitting", "error", false), null);
 });
