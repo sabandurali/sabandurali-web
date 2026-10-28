@@ -26,7 +26,8 @@ Object.assign(process.env, {
   PAYLOAD_STORAGE: "local",
 });
 
-const { default: configPromise } = await import("../payload.config");
+const { default: configPromise, MAX_UPLOAD_BYTES } =
+  await import("../payload.config");
 const { sqliteAdapter } = await import("@payloadcms/db-sqlite");
 const { getPayload } = await import("payload");
 const { limitAnonymousRestQueries } = await import("../lib/payloadAccess");
@@ -102,6 +103,13 @@ const paragraph = (text: string): NonNullable<Article["content"]> => ({
 
 test("configuration: depth cap, anonymous REST limits and a rich text editor the site can render", () => {
   assert.equal(config.maxDepth, 2);
+  // Uploads pass through a Vercel Function (4.5 MB request body limit):
+  // the admin must refuse a larger file itself, with a readable message.
+  assert.equal(MAX_UPLOAD_BYTES, 4 * 1024 * 1024);
+  assert.ok(MAX_UPLOAD_BYTES < 4.5 * 1000 * 1000);
+  assert.equal(config.upload.limits?.fileSize, MAX_UPLOAD_BYTES);
+  assert.equal(config.upload.abortOnLimit, true);
+  assert.match(String(config.upload.responseOnLimit), /4 MiB/);
   // Deliberate refusals are named Forbidden and logged at info level.
   assert.equal(config.loggingLevels.Forbidden, "info");
 
