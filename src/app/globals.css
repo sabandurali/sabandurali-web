@@ -1,103 +1,480 @@
 @import "tailwindcss";
 
-:root {
-  --background: #101d32;
-  --background-deep: #07101c;
-  --foreground: #f5f2ec;
-  --surface: #16243a;
-  --surface-soft: #17243a;
-  --ivory: #f5f2ec;
-  --ivory-soft: #f5efe4;
-  --ink: #081220;
-  --muted: #d9d8d2;
-  --muted-dark: #46505c;
-  --placeholder: #8c939c;
-  --border: rgba(247, 245, 240, 0.18);
-  --accent: #c9a24a;
-  --accent-strong: #e6d6b3;
-  --accent-soft: #c9a24a;
-  --accent-deep: #806328;
-  --accent-hero-glow: rgba(201, 162, 74, 0.1);
-  --accent-border-soft: rgba(201, 162, 74, 0.28);
-  --accent-border-hover: rgba(201, 162, 74, 0.72);
-  --focus-ring: #e6d6b3;
+/*
+ * İstanbul Atlası — design tokens, base styles and type styles.
+ *
+ * Read docs/DESIGN-SYSTEM.md before changing this file. The contrast pairs,
+ * the 12 px minimum size and the layering below are enforced by
+ * src/components/ui/design-tokens.test.ts.
+ *
+ * Layers: tokens live in @theme, element defaults in @layer base, and type
+ * styles are @utility classes. Nothing here is unlayered, so every Tailwind
+ * utility (and every `focus-visible:` variant) can override a base default.
+ */
+
+/* ---------------------------------------------------------------- Tokens */
+
+/* Colours and widths are `static` so they are always available as CSS
+   variables (SVG fills, inline styles), not only when a utility uses them. */
+@theme static {
+  /* Grounds: cool map paper. */
+  --color-paper: #eef2f1;
+  --color-land: #f8faf9;
+  --color-band: #e4ebea;
+  --color-mist: #dce7ec;
+
+  /* Ink: every text colour on a light ground. */
+  --color-ink: #0a3352;
+  --color-ink-muted: #4a6377;
+
+  /* Sea (Boğaz blue) as a ground, and the colours that sit on it. */
+  --color-sea: #0a3352;
+  --color-on-sea: #ffffff;
+  --color-on-sea-soft: #dce7ec;
+  --color-on-sea-muted: #b9d0df;
+  --color-sea-line: #2c5577;
+  --color-sea-track: #6f93ae;
+
+  /* Signal orange, the only accent. On light grounds it is a fill under ink,
+     never text; small orange text on light grounds uses signal-ink. */
+  --color-signal: #f47a2e;
+  --color-signal-ink: #a8410e;
+
+  /* Lines and status. Hairlines are decorative; tile edges bound links. */
+  --color-hairline: #b8c7cd;
+  --color-tile-edge: #6b8496;
+  --color-keymap: #c3d1d8;
+  --color-danger: #a3261b;
+
+  /* Archivo and Martian Mono width axis (font-stretch). */
+  --stretch-wide: 125%;
+  --stretch-title: 112%;
+  --stretch-subhead: 95%;
+  --stretch-heading: 92%;
+  --stretch-display: 88%;
+  --stretch-compact: 82%;
+  --stretch-tile: 76%;
+  --stretch-mono: 87.5%;
+}
+
+@theme {
+  /* Type scale. 12 px (0.75rem) is the floor: nothing smaller exists. */
+  --text-label: 0.75rem;
+  --text-label--line-height: 1.35;
+  --text-caption: 0.8125rem;
+  --text-caption--line-height: 1.5;
+  --text-small: 0.9375rem;
+  --text-small--line-height: 1.55;
+  --text-body: 1.0625rem;
+  --text-body--line-height: 1.65;
+  --text-lead: clamp(1.1875rem, 1.05rem + 0.55vw, 1.5rem);
+  --text-lead--line-height: 1.4;
+  --text-tile: 0.875rem;
+  --text-tile--line-height: 1.08;
+  --text-sign: 1.0625rem;
+  --text-sign--line-height: 1.2;
+  --text-wordmark: 1.0625rem;
+  --text-wordmark--line-height: 1;
+  --text-data: clamp(1.0625rem, 0.9rem + 0.55vw, 1.375rem);
+  --text-data--line-height: 1.2;
+  --text-h4: 1.125rem;
+  --text-h4--line-height: 1.3;
+  --text-h3: clamp(1.25rem, 1.1rem + 0.45vw, 1.5rem);
+  --text-h3--line-height: 1.25;
+  --text-card-title: clamp(1.625rem, 1.35rem + 0.75vw, 2rem);
+  --text-card-title--line-height: 1.05;
+  --text-h2: clamp(1.625rem, 1.3rem + 1vw, 2.125rem);
+  --text-h2--line-height: 1.1;
+  --text-h2-lg: clamp(1.75rem, 1.25rem + 1.55vw, 2.625rem);
+  --text-h2-lg--line-height: 1.08;
+  --text-display: clamp(2.125rem, 1.2rem + 3.2vw, 3.75rem);
+  --text-display--line-height: 1.02;
+  --text-plate: clamp(2.75rem, 0.6rem + 9.6vw, 9.375rem);
+  --text-plate--line-height: 0.94;
+
+  /* Layout. */
+  --spacing-gutter: clamp(1rem, 4vw, 4.5rem);
+  --spacing-section: clamp(3.5rem, 7vw, 6.5rem);
+  --spacing-section-sm: clamp(2.5rem, 4.4vw, 4rem);
+  --spacing-tap: 2.75rem;
+  --container-page: 90rem;
+  --container-measure: 66ch;
+  --container-measure-wide: 76ch;
+
+  /* Shape and depth. The atlas is flat: only floating panels cast a shadow. */
+  --radius-tile: 2px;
+  --radius-card: 3px;
+  --radius-control: 4px;
+  --radius-chip: 6px;
+  --shadow-panel:
+    0 1px 0 rgb(10 51 82 / 0.06), 0 16px 32px -16px rgb(10 51 82 / 0.4);
+  --ease-atlas: cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* Typefaces come from src/app/fonts.ts (class names on <html>). `inline`
+   resolves the variables where they are used, and the fallbacks keep a page
+   without those classes (for example global-not-found) on a sans-serif. */
+@theme inline {
+  --font-sans: var(--font-archivo, "Helvetica Neue", Arial, sans-serif);
+  --font-mono: var(
+    --font-martian-mono,
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Consolas,
+    monospace
+  );
+}
+
+/* ----------------------------------------------------------- Base styles */
+
+@layer base {
+  :root {
+    color-scheme: light;
+
+    /* Two-tone focus indicator: an ink ring around a white halo is visible
+       on every ground (ink ≥ 10:1 on light grounds, white 13:1 on sea).
+       Dark containers may swap the two values; see Section tone="sea". */
+    --focus-ring: var(--color-ink);
+    --focus-halo: #ffffff;
+    --focus-ring-width: 3px;
+    --focus-ring-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    min-height: 100vh;
+    margin: 0;
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: 1.6;
+    font-kerning: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  main {
+    overflow: clip;
+  }
+
+  /* A skip-link target is focused programmatically; it is not a control. */
+  main[tabindex="-1"]:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: 800;
+    font-stretch: var(--stretch-heading);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+
+  p,
+  li,
+  dd,
+  figcaption {
+    text-wrap: pretty;
+  }
+
+  code,
+  kbd,
+  samp,
+  pre {
+    font-family: var(--font-mono);
+    font-stretch: var(--stretch-mono);
+  }
+
+  a {
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+
+  a,
+  button,
+  summary {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* The halo is also handed to Tailwind's shadow stack: every shadow-* and
+     ring-* utility composes var(--tw-ring-offset-shadow) into box-shadow,
+     so a focused element with its own shadow keeps the halo. Without it
+     the ink ring alone would vanish on a dark ground. To drop the halo on
+     purpose, use focus-visible:[box-shadow:none] (not shadow-none). */
+  :focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+    --tw-ring-offset-shadow: 0 0 0 var(--focus-ring-offset) var(--focus-halo);
+    box-shadow: 0 0 0 var(--focus-ring-offset) var(--focus-halo);
+  }
+
+  ::selection {
+    background-color: var(--color-signal);
+    color: var(--color-ink);
+  }
+
+  @media (forced-colors: active) {
+    :focus-visible {
+      outline-color: Highlight;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* ----------------------------------------------------------- Type styles */
+
+/* One class per typographic role: size, leading, weight, tracking and the
+   Archivo width axis travel together. Do not add font-size utilities on top. */
+
+/* The plate title shrinks to fit its container on one line: --plate-chars
+   (set by <PlateTitle>) times 0.82 em covers the widest of the 39 district
+   names at 125 % width. It never drops below 36 px; past that, soft hyphens
+   and overflow-wrap break it instead of overflowing. */
+@utility type-plate {
+  font-size: min(
+    var(--text-plate),
+    max(2.25rem, calc(100cqi / (var(--plate-chars, 7) * 0.82)))
+  );
+  line-height: var(--text-plate--line-height);
+  font-weight: 800;
+  font-stretch: var(--stretch-wide);
+  letter-spacing: -0.03em;
+  overflow-wrap: anywhere;
+}
+
+@utility type-display {
+  font-size: var(--text-display);
+  line-height: var(--text-display--line-height);
+  font-weight: 800;
+  font-stretch: var(--stretch-display);
+  letter-spacing: -0.018em;
+}
+
+@utility type-h2-lg {
+  font-size: var(--text-h2-lg);
+  line-height: var(--text-h2-lg--line-height);
+  font-weight: 800;
+  font-stretch: var(--stretch-heading);
+  letter-spacing: -0.012em;
+}
+
+@utility type-h2 {
+  font-size: var(--text-h2);
+  line-height: var(--text-h2--line-height);
+  font-weight: 800;
+  font-stretch: var(--stretch-heading);
+  letter-spacing: -0.01em;
+}
+
+@utility type-card-title {
+  font-size: var(--text-card-title);
+  line-height: var(--text-card-title--line-height);
+  font-weight: 800;
+  font-stretch: var(--stretch-title);
+  letter-spacing: -0.01em;
+}
+
+@utility type-h3 {
+  font-size: var(--text-h3);
+  line-height: var(--text-h3--line-height);
+  font-weight: 800;
+  font-stretch: var(--stretch-subhead);
+  letter-spacing: 0;
+}
+
+@utility type-h4 {
+  font-size: var(--text-h4);
+  line-height: var(--text-h4--line-height);
+  font-weight: 700;
+  font-stretch: 100%;
+  letter-spacing: 0;
+}
+
+@utility type-lead {
+  font-size: var(--text-lead);
+  line-height: var(--text-lead--line-height);
+  font-weight: 500;
+  font-stretch: 100%;
+}
+
+@utility type-body {
+  font-size: var(--text-body);
+  line-height: var(--text-body--line-height);
+  font-weight: 400;
+  font-stretch: 100%;
+}
+
+@utility type-small {
+  font-size: var(--text-small);
+  line-height: var(--text-small--line-height);
+  font-stretch: 100%;
+}
+
+@utility type-caption {
+  font-size: var(--text-caption);
+  line-height: var(--text-caption--line-height);
+  font-stretch: 100%;
+}
+
+@utility type-label {
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
+  font-weight: 600;
+  font-stretch: 100%;
+}
+
+@utility type-sign {
+  font-size: var(--text-sign);
+  line-height: var(--text-sign--line-height);
+  font-weight: 700;
+  font-stretch: 100%;
+}
+
+@utility type-tile {
+  font-size: var(--text-tile);
+  line-height: var(--text-tile--line-height);
+  font-weight: 600;
+  font-stretch: var(--stretch-tile);
+}
+
+@utility type-region {
+  font-size: var(--text-caption);
+  line-height: 1.15;
+  font-weight: 700;
+  font-stretch: var(--stretch-wide);
+  letter-spacing: 0.16em;
+}
+
+@utility type-wordmark {
+  font-size: var(--text-wordmark);
+  line-height: var(--text-wordmark--line-height);
+  font-weight: 800;
+  font-stretch: var(--stretch-wide);
+  letter-spacing: 0.07em;
+}
+
+@utility type-tagline {
+  font-size: var(--text-label);
+  line-height: 1.2;
+  font-weight: 600;
+  font-stretch: 100%;
+  letter-spacing: 0.05em;
+}
+
+/* Martian Mono: values, units, dates, grid references and codes. */
+@utility type-data {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
+  font-weight: 600;
+  font-stretch: var(--stretch-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+@utility type-data-md {
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  line-height: var(--text-caption--line-height);
+  font-weight: 500;
+  font-stretch: var(--stretch-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+@utility type-data-lg {
+  font-family: var(--font-mono);
+  font-size: var(--text-data);
+  line-height: var(--text-data--line-height);
+  font-weight: 700;
+  font-stretch: var(--stretch-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The focus indicator of the base layer, for an element that shows the
+   focus of a descendant (a card around its title link). */
+@utility focus-ring {
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: 0 0 0 var(--focus-ring-offset) var(--focus-halo);
+}
+
+/* "No data yet" panels: the only pattern on the site, never a gradient wash. */
+@utility bg-hatch {
+  background-color: var(--color-land);
+  background-image: repeating-linear-gradient(
+    135deg,
+    var(--color-land) 0 7px,
+    var(--color-band) 7px 9px
+  );
+}
+
+/* ---------------------------------------------------------------- Legacy */
+
+/*
+ * Deprecated pre-atlas palette (dark navy and gold). It only keeps pages that
+ * have not been rebuilt with src/components/ui readable. Do not use it in new
+ * code; delete each token when its last usage is gone. `--ink` and
+ * `--focus-ring` moved into the atlas tokens above (same role, AA everywhere).
+ */
+@layer base {
+  :root {
+    --background: #101d32;
+    --background-deep: #07101c;
+    --foreground: #f5f2ec;
+    --surface: #16243a;
+    --surface-soft: #17243a;
+    --ivory: #f5f2ec;
+    --ivory-soft: #f5efe4;
+    --muted: #d9d8d2;
+    --muted-dark: #46505c;
+    --placeholder: #8c939c;
+    --border: rgba(247, 245, 240, 0.18);
+    --accent: #c9a24a;
+    --accent-strong: #e6d6b3;
+    --accent-soft: #c9a24a;
+    --accent-deep: #806328;
+    --accent-hero-glow: rgba(201, 162, 74, 0.1);
+    --accent-border-soft: rgba(201, 162, 74, 0.28);
+    --accent-border-hover: rgba(201, 162, 74, 0.72);
+  }
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-background-deep: var(--background-deep);
   --color-foreground: var(--foreground);
-
   --color-surface: var(--surface);
   --color-surface-soft: var(--surface-soft);
   --color-ivory: var(--ivory);
   --color-ivory-soft: var(--ivory-soft);
-  --color-ink: var(--ink);
   --color-muted: var(--muted);
   --color-muted-dark: var(--muted-dark);
   --color-placeholder: var(--placeholder);
   --color-border: var(--border);
-
   --color-accent: var(--accent);
   --color-accent-strong: var(--accent-strong);
   --color-accent-soft: var(--accent-soft);
   --color-accent-deep: var(--accent-deep);
-
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-html {
-  scroll-behavior: smooth;
-  color-scheme: dark;
-}
-
-body {
-  min-height: 100vh;
-  margin: 0;
-
-  background: var(--background);
-
-  color: var(--foreground);
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
-  line-height: 1.6;
-}
-
-main {
-  overflow: clip;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: Georgia, "Times New Roman", serif;
-  letter-spacing: -0.02em;
-}
-
-a,
-button {
-  -webkit-tap-highlight-color: transparent;
-}
-
-a:focus-visible,
-button:focus-visible,
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible {
-  outline: 3px solid var(--focus-ring);
-  outline-offset: 4px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-}
-
-::selection {
-  background: var(--accent);
-  color: var(--ink);
 }
