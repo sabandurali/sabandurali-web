@@ -12,8 +12,8 @@
  *   as uploaded: `createSocialImage`.
  * - A content image reused for sharing (a photo, a district photo, an
  *   article's featured image) can be several megabytes and too large for
- *   WhatsApp, LinkedIn or X previews, so it is served through the Next.js
- *   image optimizer at 1200 px wide: `createOptimizedSocialImage`.
+ *   WhatsApp, LinkedIn or X previews, so a site path is served through the
+ *   Next.js image optimizer at 1200 px wide: `createOptimizedSocialImage`.
  */
 import type { Metadata } from "next";
 import { getAbsoluteUrl, siteSocialImage } from "@/config/site";
