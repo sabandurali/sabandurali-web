@@ -1,3 +1,4 @@
+import { isRecord } from "@/content/guards";
 import {
   districtSectionOptions,
   sectionIsPublic,
@@ -5,6 +6,7 @@ import {
   type DistrictSection,
   type DistrictSource,
 } from "./district-content-policy";
+
 export type DistrictGuide = {
   summary: string | null;
   history: string | null;
@@ -38,6 +40,8 @@ export type DistrictGuide = {
     sourceUrl?: string | null;
     checkedAt?: string | null;
     description?: string | null;
+    /** Always false when public; kept so the projection is idempotent. */
+    needsVerification?: boolean | null;
   } | null;
   planningDevelopments: Array<{
     id?: string | null;
@@ -48,29 +52,131 @@ export type DistrictGuide = {
     status?: string | null;
     officialSource?: string | null;
     checkedAt?: string | null;
+    needsVerification?: boolean | null;
   }>;
   sources: DistrictSource[];
   updatedAt: string | null;
 };
+
 function text(value: unknown): string | null {
   return typeof value === "string" && value.trim() ? value.trim() : null;
 }
-function record(value: unknown): Record<string, unknown> | null {
-  return typeof value === "object" && value !== null && !Array.isArray(value)
-    ? (value as Record<string, unknown>)
-    : null;
+
+/*
+ * Allowlist copies. Every public object is built key by key, so a field that
+ * is added to the collection later (an internal note, a verification
+ * comment) never reaches the public page, REST API or page props unless it
+ * is added here on purpose. Only keys present in the input are copied, so
+ * the projection of an already projected guide is unchanged.
+ */
+/** The value when it is a string or null; undefined means "do not copy". */
+function stringField(value: unknown): string | null | undefined {
+  return typeof value === "string" || value === null ? value : undefined;
 }
+
+function numberField(value: unknown): number | null | undefined {
+  return (typeof value === "number" && Number.isFinite(value)) || value === null
+    ? value
+    : undefined;
+}
+
+function booleanField(value: unknown): boolean | null | undefined {
+  return typeof value === "boolean" || value === null ? value : undefined;
+}
+
+/** Copies only defined values, so absent keys stay absent. */
+function definedEntries<T extends object>(value: T): Partial<T> {
+  const result: Partial<T> = {};
+
+  for (const key of Object.keys(value) as Array<keyof T>) {
+    if (value[key] !== undefined) result[key] = value[key];
+  }
+
+  return result;
+}
+
+type DistrictFacts = NonNullable<DistrictGuide["facts"]>;
+type DistrictMarketData = NonNullable<DistrictGuide["marketData"]>;
+
+function copyFacts(value: Record<string, unknown>): DistrictFacts {
+  return definedEntries<DistrictFacts>({
+    population: stringField(value.population),
+    populationYear: numberField(value.populationYear),
+    areaKm2: numberField(value.areaKm2),
+    neighborhoodCount: numberField(value.neighborhoodCount),
+    neighboringDistricts: stringField(value.neighboringDistricts),
+    locationSummary: stringField(value.locationSummary),
+  });
+}
+
+function copyMarketData(value: Record<string, unknown>): DistrictMarketData {
+  return definedEntries<DistrictMarketData>({
+    salePricePerM2: numberField(value.salePricePerM2),
+    averageRent: numberField(value.averageRent),
+    dataDate: stringField(value.dataDate),
+    source: stringField(value.source),
+    sourceUrl: stringField(value.sourceUrl),
+    checkedAt: stringField(value.checkedAt),
+    description: stringField(value.description),
+    needsVerification: booleanField(value.needsVerification),
+  });
+}
+
+const sourceTypes: ReadonlyArray<DistrictSource["sourceType"]> = [
+  "official",
+  "academic",
+  "secondary",
+  "market",
+  "unclassified",
+];
+const sectionValues: ReadonlyArray<string> = districtSectionOptions.map(
+  ({ value }) => value,
+);
+
+function isDistrictSection(value: unknown): value is DistrictSection {
+  return typeof value === "string" && sectionValues.includes(value);
+}
+
+function isSourceType(value: unknown): value is DistrictSource["sourceType"] {
+  return sourceTypes.some((type) => type === value);
+}
+
+/** A source reduced to the fields of DistrictSource with checked types. */
+function sanitizeSource(value: Record<string, unknown>): DistrictSource {
+  const optional = definedEntries({
+    primary: booleanField(value.primary),
+    dataDate: stringField(value.dataDate),
+    checkedAt: stringField(value.checkedAt),
+    needsVerification: booleanField(value.needsVerification),
+  });
+
+  return {
+    title: typeof value.title === "string" ? value.title : "",
+    publisher: typeof value.publisher === "string" ? value.publisher : "",
+    url: typeof value.url === "string" ? value.url : "",
+    sourceType: isSourceType(value.sourceType)
+      ? value.sourceType
+      : "unclassified",
+    ...optional,
+    ...(Array.isArray(value.sections)
+      ? { sections: value.sections.filter(isDistrictSection) }
+      : value.sections === null
+        ? { sections: null }
+        : {}),
+  };
+}
+
 export function mapDistrictGuide(
   value: unknown,
   now = Date.now(),
 ): DistrictGuide | null {
-  const item = record(value);
-  if (!item) return null;
+  if (!isRecord(value)) return null;
+  const item = value;
   const reviewed = Array.isArray(item.reviewedSections)
     ? item.reviewedSections.filter((x): x is string => typeof x === "string")
     : [];
   const sources = Array.isArray(item.sources)
-    ? (item.sources.filter((x) => record(x)) as DistrictSource[])
+    ? item.sources.filter(isRecord).map(sanitizeSource)
     : [];
   const can = (section: DistrictSection) =>
     sectionIsPublic(section, reviewed, sources, now);
@@ -81,9 +187,9 @@ export function mapDistrictGuide(
     map: (row: Record<string, unknown>) => T | null,
   ): T[] =>
     Array.isArray(raw)
-      ? raw.map(record).flatMap((row) => (row === null ? [] : (map(row) ?? [])))
+      ? raw.filter(isRecord).flatMap((row) => map(row) ?? [])
       : [];
-  const market = record(item.marketData);
+  const market = isRecord(item.marketData) ? item.marketData : null;
   const marketSource =
     market &&
     sources.find(
@@ -127,7 +233,7 @@ export function mapDistrictGuide(
     placesGuide: field("placesGuide"),
     distinctiveFeatures: field("distinctiveFeatures"),
     researchTopics: field("researchTopics"),
-    facts: can("facts") ? (record(item.facts) as DistrictGuide["facts"]) : null,
+    facts: can("facts") && isRecord(item.facts) ? copyFacts(item.facts) : null,
     neighborhoods: can("neighborhoods")
       ? rows(item.neighborhoods, (row) => {
           const name = text(row.name);
@@ -148,7 +254,7 @@ export function mapDistrictGuide(
       market &&
       marketSource &&
       freshRow(market, "marketData", market.sourceUrl)
-        ? (market as DistrictGuide["marketData"])
+        ? copyMarketData(market)
         : null,
     planningDevelopments: can("planningDevelopments")
       ? rows(item.planningDevelopments, (row) => {
@@ -204,7 +310,7 @@ export function projectPublishedDistrictGuide(
   value: unknown,
   now = Date.now(),
 ): DistrictGuide | null {
-  const item = record(value);
+  const item = isRecord(value) ? value : null;
   const publishedAt = item ? text(item.publishedAt) : null;
   if (
     !item ||
@@ -216,4 +322,63 @@ export function projectPublishedDistrictGuide(
     return null;
   }
   return mapDistrictGuide(item, now);
+}
+
+/** Top-level keys of a district guide document that anonymous readers get. */
+export const PUBLIC_DISTRICT_GUIDE_DOCUMENT_KEYS = [
+  "id",
+  "district",
+  "_status",
+  "publishedAt",
+  "createdAt",
+  "reviewedSections",
+  "summary",
+  "history",
+  "geography",
+  "life",
+  "transportation",
+  "placesGuide",
+  "distinctiveFeatures",
+  "researchTopics",
+  "facts",
+  "neighborhoods",
+  "housingTexture",
+  "regionalAssessment",
+  "marketData",
+  "planningDevelopments",
+  "sources",
+  "updatedAt",
+] as const;
+
+/**
+ * The anonymous (REST and Local API) view of a district guide document: an
+ * explicit allowlist of identity fields plus the public projection, instead
+ * of the stored document with a few fields blanked out. `reviewedSections`
+ * is reduced to the sections that are actually public, which keeps the
+ * projection idempotent when the page projects the document again.
+ */
+export function projectPublicDistrictGuideDocument(
+  value: unknown,
+  now = Date.now(),
+): Record<string, unknown> {
+  if (!isRecord(value)) return {};
+
+  const guide = mapDistrictGuide(value, now);
+  if (guide === null) return {};
+
+  const publicSections = new Set(
+    guide.sources.flatMap((source) => source.sections ?? []),
+  );
+
+  return {
+    id: value.id,
+    district: value.district,
+    _status: value._status,
+    publishedAt: value.publishedAt,
+    createdAt: value.createdAt,
+    reviewedSections: districtSectionOptions
+      .map(({ value: section }) => section)
+      .filter((section) => publicSections.has(section)),
+    ...guide,
+  };
 }

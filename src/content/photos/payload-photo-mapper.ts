@@ -1,5 +1,12 @@
-import { getSafePayloadMediaPath } from "@/content/articles/article-images";
-import type { Media, Photo, PhotoCollection, Tag } from "@/payload-types";
+import { reportContentIssue } from "@/content/content-log";
+import {
+  getFiniteNumber,
+  getText,
+  isPublishedBy,
+  isRecord,
+} from "@/content/guards";
+import { mapMediaImage } from "@/content/media";
+import type { Photo } from "@/payload-types";
 import type {
   PhotoLanguage,
   PublicPhoto,
@@ -8,36 +15,25 @@ import type {
   PublicPhotoTag,
 } from "@/content/photos/types";
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
-}
+function mapImage(
+  value: unknown,
+  alt: string,
+  locale: PhotoLanguage,
+): PublicPhotoImage | null {
+  const image = mapMediaImage(value, { alt, fallbackAlt: alt, locale });
 
-function getText(value: unknown): string | null {
-  return typeof value === "string" && value.trim() !== "" ? value.trim() : null;
-}
+  if (image === null) return null;
 
-function getPositiveNumber(value: unknown): number | undefined {
-  return typeof value === "number" && Number.isFinite(value) && value > 0
-    ? value
-    : undefined;
-}
-
-function mapImage(value: unknown, alt: string): PublicPhotoImage | null {
-  if (!isRecord(value)) return null;
-  const media = value as unknown as Media;
-  const src = getSafePayloadMediaPath(media.url);
-  if (src === null || !getText(media.mimeType)?.startsWith("image/"))
-    return null;
   return {
-    src,
-    alt,
-    width: getPositiveNumber(media.width),
-    height: getPositiveNumber(media.height),
+    src: image.src,
+    alt: image.alt,
+    width: image.width ?? undefined,
+    height: image.height ?? undefined,
   };
 }
 
-function mapCollection(
-  value: string | PhotoCollection,
+export function mapPhotoCollection(
+  value: unknown,
 ): PublicPhotoCollection | null {
   if (!isRecord(value)) return null;
   const id = getText(value.id);
@@ -56,11 +52,11 @@ function mapCollection(
     title,
     slug,
     parentId,
-    sortOrder: typeof value.sortOrder === "number" ? value.sortOrder : 0,
+    sortOrder: getFiniteNumber(value.sortOrder) ?? 0,
   };
 }
 
-function mapTag(value: string | Tag): PublicPhotoTag | null {
+export function mapPhotoTag(value: unknown): PublicPhotoTag | null {
   if (!isRecord(value)) return null;
   const id = getText(value.id);
   const title = getText(value.title);
@@ -80,35 +76,43 @@ export function mapPayloadPhoto(
   const slug = getText(value.slug);
   const altText = getText(value.altText);
   const publishedAt = getText(value.publishedAt);
-  if (
-    id === null ||
-    value._status !== "published" ||
-    title === null ||
-    slug === null ||
-    altText === null ||
-    publishedAt === null ||
-    !Number.isFinite(Date.parse(publishedAt)) ||
-    Date.parse(publishedAt) > now.getTime()
-  )
-    return null;
 
-  const image = mapImage(value.image, altText);
-  const collections = value.collections
-    .map(mapCollection)
+  if (id === null) return null;
+
+  const skip = (reason: string): null => {
+    reportContentIssue({ scope: "photos", id, locale, reason });
+    return null;
+  };
+
+  if (value._status !== "published" || !isPublishedBy(publishedAt, now)) {
+    return skip("status or publication date is not public");
+  }
+
+  if (title === null || slug === null || altText === null) {
+    return skip("title, slug or alt text is missing for the requested locale");
+  }
+
+  const image = mapImage(value.image, altText, locale);
+  const collections = (
+    Array.isArray(value.collections) ? value.collections : []
+  )
+    .map(mapPhotoCollection)
     .filter((item): item is PublicPhotoCollection => item !== null)
     .toSorted(
       (left, right) =>
         left.sortOrder - right.sortOrder ||
         left.title.localeCompare(right.title, locale),
     );
-  if (image === null || collections.length === 0) return null;
+
+  if (image === null) return skip("image is missing or not a servable image");
+  if (collections.length === 0) return skip("no public photo collection");
 
   const tags = (value.tags ?? [])
-    .map(mapTag)
+    .map(mapPhotoTag)
     .filter((item): item is PublicPhotoTag => item !== null)
     .toSorted((left, right) => left.title.localeCompare(right.title, locale));
   const fallbackDescription = getText(value.description) ?? "";
-  const ogImage = mapImage(value.seo?.openGraphImage, altText);
+  const ogImage = mapImage(value.seo?.openGraphImage, altText, locale);
 
   return {
     id,

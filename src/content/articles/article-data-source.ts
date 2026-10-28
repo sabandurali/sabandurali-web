@@ -5,7 +5,7 @@ import {
   exampleEnglishArticle,
   exampleTurkishArticle,
 } from "@/content/articles/examples";
-import { ARTICLE_CATEGORY_LABELS } from "@/content/articles/constants";
+import { isOfferedTranslationPair } from "@/content/articles/article-translation";
 import { PayloadPublicArticleRepository } from "@/content/articles/payload-article-repository";
 import {
   toPublicArticleSummary,
@@ -13,136 +13,53 @@ import {
 } from "@/content/articles/payload-article-mapper";
 import type {
   PublicArticle,
-  PublicArticleCategory,
   PublicArticleSummary,
   PublicArticleTranslation,
 } from "@/content/articles/public-types";
-import { ArticleQueryService } from "@/content/articles/repository/article-query-service";
-import { InMemoryArticleRepository } from "@/content/articles/repository/in-memory-article-repository";
-import { MAX_ARTICLE_PAGE_SIZE } from "@/content/articles/repository/types";
+import {
+  findStaticArticleTranslation,
+  findStaticPublishedArticle,
+  listStaticPublishedArticles,
+  mapStaticArticle,
+} from "@/content/articles/static-articles";
 import type { Article, ArticleLanguage } from "@/content/articles/types";
-import { assertProductionPayloadInfrastructure } from "@/lib/payloadInfrastructure";
+import { readPublicSource } from "@/content/public-source";
 
-const staticArticleFixtures =
+// Repository fixtures exercise the article templates locally. Production
+// builds never serve them, whatever the public source is.
+const staticArticleFixtures: ReadonlyArray<Article> =
   process.env.NODE_ENV === "production"
     ? []
     : [exampleTurkishArticle, exampleEnglishArticle, exampleDraftArticle];
 
-const articleRepository = new InMemoryArticleRepository(staticArticleFixtures);
 const payloadArticleRepository = new PayloadPublicArticleRepository();
-
-export const articleQueryService = new ArticleQueryService(articleRepository);
 
 export type PublishedArticlePageData = {
   article: PublicArticle | null;
   translation: PublicArticleTranslation | null;
 };
 
-type PublicArticleSource = "payload" | "static";
-
-function getPublicArticleSource(): PublicArticleSource {
-  const source = process.env.ARTICLE_PUBLIC_SOURCE;
-
-  if (source === undefined || source === "static") {
-    return "static";
-  }
-
-  if (source === "payload") {
-    assertProductionPayloadInfrastructure();
-    return "payload";
-  }
-
-  throw new Error(
-    `Invalid ARTICLE_PUBLIC_SOURCE value "${source}". Expected "static" or "payload".`,
-  );
-}
-
-function mapStaticCategory(article: Article): PublicArticleCategory[] {
-  if (article.category === null) {
-    return [];
-  }
-
-  return [
-    {
-      id: article.category,
-      name: ARTICLE_CATEGORY_LABELS[article.category][article.language],
-      slug: article.category,
-      sortOrder: 0,
-    },
-  ];
-}
-
-function mapStaticArticle(article: Article): PublicArticle {
-  if (article.publishedAt === null) {
-    throw new Error(
-      `Published static article ${article.id} is missing publishedAt.`,
-    );
-  }
-
-  return {
-    id: article.id,
-    title: article.title,
-    slug: article.slug,
-    language: article.language,
-    translationKey: article.translationGroupId,
-    summary: article.summary,
-    content: {
-      source: "static",
-      blocks: article.content,
-      details: {
-        author: article.author,
-        faq: article.faq,
-        legalNotice: article.legalNotice,
-        sources: article.sources,
-      },
-    },
-    categories: mapStaticCategory(article),
-    featuredImage:
-      article.coverImage === null
-        ? null
-        : {
-            source: "static",
-            src: article.coverImage.src,
-            alt: article.coverImage.alt,
-            caption: article.coverImage.caption,
-            width: article.coverImage.width,
-            height: article.coverImage.height,
-          },
-    featured: article.featured,
-    articleType: "article",
-    district: null,
-    districtNeighborhood: null,
-    newsCategory: null,
-    externalSource: null,
-    publishedAt: article.publishedAt,
-    createdAt: article.createdAt,
-    updatedAt: article.updatedAt,
-    seo: {
-      title: article.seo.title,
-      description: article.seo.description,
-      canonical: article.seo.canonical,
-      index: article.seo.index,
-      follow: article.seo.follow,
-      openGraphTitle: article.seo.openGraphTitle,
-      openGraphDescription: article.seo.openGraphDescription,
-      openGraphImage: article.seo.openGraphImage,
-    },
-  };
-}
-
 async function getStaticPublishedArticlePageData(
   slug: string,
   language: ArticleLanguage,
 ): Promise<PublishedArticlePageData> {
-  const article = await articleQueryService.getPublishedArticle(slug, language);
+  const now = new Date();
+  const article = findStaticPublishedArticle(
+    staticArticleFixtures,
+    slug,
+    language,
+    now,
+  );
 
   if (article === null) {
     return { article: null, translation: null };
   }
 
-  const translation = await articleQueryService.getArticleTranslation(
-    article.id,
+  const translation = findStaticArticleTranslation(
+    staticArticleFixtures,
+    article,
     language === "tr" ? "en" : "tr",
+    now,
   );
 
   return {
@@ -158,9 +75,11 @@ async function getPayloadPublishedArticlePageData(
   slug: string,
   language: ArticleLanguage,
 ): Promise<PublishedArticlePageData> {
+  const now = new Date();
   const article = await payloadArticleRepository.findPublishedBySlug(
     slug,
     language,
+    now,
   );
 
   if (article === null) {
@@ -170,12 +89,29 @@ async function getPayloadPublishedArticlePageData(
   const translation = await payloadArticleRepository.findPublishedTranslation(
     article.id,
     language === "tr" ? "en" : "tr",
+    now,
   );
+
+  // The Turkish version is the source of every English page: an English
+  // translation that does not cover it is neither served nor linked.
+  if (language === "en") {
+    return isOfferedTranslationPair(article, translation)
+      ? {
+          article,
+          translation:
+            translation === null
+              ? null
+              : toPublicArticleTranslation(translation),
+        }
+      : { article: null, translation: null };
+  }
 
   return {
     article,
     translation:
-      translation === null ? null : toPublicArticleTranslation(translation),
+      translation !== null && isOfferedTranslationPair(translation, article)
+        ? toPublicArticleTranslation(translation)
+        : null,
   };
 }
 
@@ -184,85 +120,71 @@ export const getPublishedArticlePageData = cache(
     slug: string,
     language: ArticleLanguage,
   ): Promise<PublishedArticlePageData> =>
-    getPublicArticleSource() === "payload"
+    readPublicSource("ARTICLE_PUBLIC_SOURCE") === "payload"
       ? getPayloadPublishedArticlePageData(slug, language)
       : getStaticPublishedArticlePageData(slug, language),
 );
 
-async function getAllStaticPublishedArticles(
+function getAllStaticPublishedArticles(
   language: ArticleLanguage,
-): Promise<PublicArticleSummary[]> {
-  const articles: PublicArticleSummary[] = [];
-  let page = 1;
-  let totalPages = 1;
-
-  while (page <= totalPages) {
-    const result = await articleQueryService.getPublishedArticles({
-      language,
-      pagination: {
-        page,
-        pageSize: MAX_ARTICLE_PAGE_SIZE,
-      },
-    });
-
-    articles.push(
-      ...result.items.map((article) =>
-        toPublicArticleSummary(mapStaticArticle(article)),
-      ),
-    );
-    totalPages = result.totalPages;
-    page += 1;
-  }
-
-  return articles;
+): PublicArticleSummary[] {
+  return listStaticPublishedArticles(
+    staticArticleFixtures,
+    language,
+    new Date(),
+  ).map((article) => toPublicArticleSummary(mapStaticArticle(article)));
 }
 
-export async function getAllPublishedArticles(
-  language: ArticleLanguage,
-): Promise<PublicArticleSummary[]> {
-  return getPublicArticleSource() === "payload"
-    ? payloadArticleRepository.listPublished(language)
-    : getAllStaticPublishedArticles(language);
-}
+/** Every public standalone article (district news excluded), newest first. */
+export const getAllPublishedArticles = cache(
+  async (language: ArticleLanguage): Promise<PublicArticleSummary[]> =>
+    readPublicSource("ARTICLE_PUBLIC_SOURCE") === "payload"
+      ? payloadArticleRepository.listPublished(language)
+      : getAllStaticPublishedArticles(language),
+);
 
-export async function getDistrictNews(
-  district: string,
-  language: ArticleLanguage,
-): Promise<PublicArticleSummary[]> {
-  if (getPublicArticleSource() !== "payload") return [];
-  return payloadArticleRepository.listDistrictNews(district, language);
-}
+/**
+ * Public articles in one category, filtered in the database. Use this
+ * instead of filtering getAllPublishedArticles() in a page.
+ */
+export const getPublishedArticlesByCategory = cache(
+  async (
+    categorySlug: string,
+    language: ArticleLanguage,
+  ): Promise<PublicArticleSummary[]> =>
+    readPublicSource("ARTICLE_PUBLIC_SOURCE") === "payload"
+      ? payloadArticleRepository.listByCategory(categorySlug, language)
+      : getAllStaticPublishedArticles(language).filter((article) =>
+          article.categories.some((category) => category.slug === categorySlug),
+        ),
+);
 
-export async function getDistrictResearch(
-  district: string,
-  language: ArticleLanguage,
-): Promise<PublicArticleSummary[]> {
-  const articles = await getAllPublishedArticles(language);
-  return articles.filter(
-    (article) =>
-      article.articleType === "district-research" &&
-      article.district === district,
-  );
-}
+/** Source-linked district news; the static source has none. */
+export const getDistrictNews = cache(
+  async (
+    district: string,
+    language: ArticleLanguage,
+  ): Promise<PublicArticleSummary[]> =>
+    readPublicSource("ARTICLE_PUBLIC_SOURCE") === "payload"
+      ? payloadArticleRepository.listDistrictArticles(
+          "district-news",
+          district,
+          language,
+        )
+      : [],
+);
 
-export async function getAllArticles(): Promise<Article[]> {
-  const articles: Article[] = [];
-  let page = 1;
-  let totalPages = 1;
-
-  while (page <= totalPages) {
-    const result = await articleQueryService.getArticles({
-      sort: "updatedAt_desc",
-      pagination: {
-        page,
-        pageSize: MAX_ARTICLE_PAGE_SIZE,
-      },
-    });
-
-    articles.push(...result.items);
-    totalPages = result.totalPages;
-    page += 1;
-  }
-
-  return articles;
-}
+/** District research articles, filtered in the database. */
+export const getDistrictResearch = cache(
+  async (
+    district: string,
+    language: ArticleLanguage,
+  ): Promise<PublicArticleSummary[]> =>
+    readPublicSource("ARTICLE_PUBLIC_SOURCE") === "payload"
+      ? payloadArticleRepository.listDistrictArticles(
+          "district-research",
+          district,
+          language,
+        )
+      : [],
+);

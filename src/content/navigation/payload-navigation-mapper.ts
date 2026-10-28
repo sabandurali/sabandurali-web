@@ -1,3 +1,4 @@
+import { getText, isRecord } from "@/content/guards";
 import {
   isExternalNavigationHref,
   normalizeExternalNavigationUrl,
@@ -22,16 +23,6 @@ type PayloadFooterGroup =
   | NonNullable<PayloadNavigation["enFooter"]>[number];
 type PayloadFooterLink = NonNullable<PayloadFooterGroup["links"]>[number];
 type PayloadLink = PayloadHeaderItem | PayloadChildItem | PayloadFooterLink;
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
-}
-
-function getText(value: unknown): string | null {
-  return typeof value === "string" && value.trim().length > 0
-    ? value.trim()
-    : null;
-}
 
 function isPublicPage(
   value: unknown,

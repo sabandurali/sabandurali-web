@@ -6,26 +6,17 @@ import type {
   PhotoListFilters,
   PublicPhoto,
   PublicPhotoTranslation,
+  PublishedPhotoList,
 } from "@/content/photos/types";
-import { assertProductionPayloadInfrastructure } from "@/lib/payloadInfrastructure";
-
-type PublicPhotoSource = "payload" | "static";
+import { readPublicSource } from "@/content/public-source";
 
 const payloadPhotoRepository = new PayloadPublicPhotoRepository();
 
-function getPublicPhotoSource(): PublicPhotoSource {
-  const source = process.env.PHOTO_PUBLIC_SOURCE;
-  if (source === undefined || source === "static") return "static";
-  if (source === "payload") {
-    assertProductionPayloadInfrastructure();
-    return "payload";
-  }
-  throw new Error(
-    `Invalid PHOTO_PUBLIC_SOURCE value "${source}". Expected "static" or "payload".`,
-  );
+function isPayloadSource(): boolean {
+  return readPublicSource("PHOTO_PUBLIC_SOURCE") === "payload";
 }
 
-function emptyList() {
+function emptyList(): PublishedPhotoList {
   return {
     photos: [],
     collections: [],
@@ -36,11 +27,12 @@ function emptyList() {
   };
 }
 
+/** One list page; collection and tag filters run in the database. */
 export async function getPublishedPhotos(
   locale: PhotoLanguage,
   filters: PhotoListFilters = {},
-) {
-  return getPublicPhotoSource() === "payload"
+): Promise<PublishedPhotoList> {
+  return isPayloadSource()
     ? payloadPhotoRepository.listPublished(locale, filters)
     : emptyList();
 }
@@ -53,7 +45,7 @@ export const getPublishedPhotoPageData = cache(
     photo: PublicPhoto | null;
     translation: PublicPhotoTranslation | null;
   }> => {
-    if (getPublicPhotoSource() === "static") {
+    if (!isPayloadSource()) {
       return { photo: null, translation: null };
     }
     const photo = await payloadPhotoRepository.findPublishedBySlug(
@@ -80,22 +72,35 @@ export const getPublishedPhotoPageData = cache(
   },
 );
 
-export async function getRelatedPublishedPhotos(photo: PublicPhoto) {
-  return getPublicPhotoSource() === "payload"
-    ? payloadPhotoRepository.related(photo)
-    : [];
+/** Up to four photos sharing a collection or tag, found in the database. */
+export async function getRelatedPublishedPhotos(
+  photo: PublicPhoto,
+): Promise<PublicPhoto[]> {
+  return isPayloadSource() ? payloadPhotoRepository.related(photo) : [];
 }
 
-export async function getAllPublishedPhotos(locale: PhotoLanguage) {
-  return getPublicPhotoSource() === "payload"
-    ? payloadPhotoRepository.listAllPublished(locale)
-    : [];
-}
+/** Every public photo (sitemap, home page), newest first. */
+export const getAllPublishedPhotos = cache(
+  async (locale: PhotoLanguage): Promise<PublicPhoto[]> =>
+    isPayloadSource() ? payloadPhotoRepository.listAllPublished(locale) : [],
+);
 
-export async function getDistrictPhotos(
-  district: string,
-  locale: PhotoLanguage,
-) {
-  const photos = await getAllPublishedPhotos(locale);
-  return photos.filter((photo) => photo.district === district);
-}
+/** Photos of one district, filtered in the database. */
+export const getDistrictPhotos = cache(
+  async (district: string, locale: PhotoLanguage): Promise<PublicPhoto[]> =>
+    isPayloadSource()
+      ? payloadPhotoRepository.listByDistrict(district, locale)
+      : [],
+);
+
+/**
+ * Photos of a workspace section: a collection or a tag with this slug,
+ * filtered in the database. Use this instead of filtering
+ * getAllPublishedPhotos() in a page.
+ */
+export const getPublishedPhotosByCollectionOrTag = cache(
+  async (slug: string, locale: PhotoLanguage): Promise<PublicPhoto[]> =>
+    isPayloadSource()
+      ? payloadPhotoRepository.listByCollectionOrTag(slug, locale)
+      : [],
+);

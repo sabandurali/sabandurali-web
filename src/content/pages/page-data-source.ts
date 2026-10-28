@@ -1,39 +1,27 @@
 import "server-only";
 import { cache } from "react";
+import { homeContent } from "@/content/homeContent";
+import {
+  resolveHomeContent,
+  type HomePageData,
+  type ResolvedHomeContent,
+} from "@/content/pages/home-page-content";
 import { PayloadPublicPageRepository } from "@/content/pages/payload-page-repository";
 import type { PublicPage } from "@/content/pages/public-types";
-import { assertProductionPayloadInfrastructure } from "@/lib/payloadInfrastructure";
+import {
+  readPublicSource,
+  type PublicContentSource,
+} from "@/content/public-source";
 
-export type PublicPageSource = "payload" | "static";
+export type PublicPageSource = PublicContentSource;
 
 const payloadPageRepository = new PayloadPublicPageRepository();
 
 export function getPublicPageSource(): PublicPageSource {
-  const source = process.env.PAGE_PUBLIC_SOURCE;
-
-  if (source === undefined || source === "static") {
-    return "static";
-  }
-
-  if (source === "payload") {
-    assertProductionPayloadInfrastructure();
-    return "payload";
-  }
-
-  throw new Error(
-    `Invalid PAGE_PUBLIC_SOURCE value "${source}". Expected "static" or "payload".`,
-  );
+  return readPublicSource("PAGE_PUBLIC_SOURCE");
 }
 
-export type TurkishHomePageData =
-  | {
-      source: "static";
-      page: null;
-    }
-  | {
-      source: "payload";
-      page: PublicPage | null;
-    };
+export type TurkishHomePageData = HomePageData;
 
 export type EnglishHomePageData = TurkishHomePageData;
 
@@ -63,6 +51,20 @@ export const getEnglishHomePageData = cache(
   },
 );
 
+/**
+ * Home content for one locale: the CMS home page when it is public and
+ * complete, otherwise the static home content (never a 404).
+ */
+export const getHomeContent = cache(
+  async (locale: "tr" | "en"): Promise<ResolvedHomeContent> =>
+    resolveHomeContent(
+      locale === "tr"
+        ? await getTurkishHomePageData()
+        : await getEnglishHomePageData(),
+      homeContent[locale],
+    ),
+);
+
 export const getPublishedTurkishPageBySlug = cache(
   async (slug: string): Promise<PublicPage | null> => {
     if (getPublicPageSource() === "static") return null;
@@ -71,10 +73,9 @@ export const getPublishedTurkishPageBySlug = cache(
   },
 );
 
-export async function getAllPublishedTurkishStandardPages(): Promise<
-  PublicPage[]
-> {
-  if (getPublicPageSource() === "static") return [];
-
-  return payloadPageRepository.listStandards("tr");
-}
+export const getAllPublishedTurkishStandardPages = cache(
+  async (): Promise<PublicPage[]> =>
+    getPublicPageSource() === "static"
+      ? []
+      : payloadPageRepository.listStandards("tr"),
+);

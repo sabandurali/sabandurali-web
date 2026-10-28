@@ -1,0 +1,259 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+import {
+  lexical,
+  link,
+  mediaDocument,
+  paragraph,
+  relationship,
+  upload,
+} from "./lexical-fixtures";
+import { getInternalDocumentPath, prepareRichText } from "./prepare-rich-text";
+
+const now = new Date("2026-10-28T12:00:00Z");
+const past = "2026-10-01T09:00:00Z";
+const future = "2026-11-01T09:00:00Z";
+
+function internal(relationTo: string, value: unknown) {
+  return { relationTo, value };
+}
+
+test("articles and photos link to the page locale", () => {
+  const article = {
+    id: "a1",
+    slug: "kadikoy-rehberi",
+    _status: "published",
+    publishedAt: past,
+  };
+
+  assert.equal(
+    getInternalDocumentPath(internal("articles", article), "tr", now),
+    "/makaleler/kadikoy-rehberi",
+  );
+  assert.equal(
+    getInternalDocumentPath(internal("articles", article), "en", now),
+    "/en/articles/kadikoy-rehberi",
+  );
+  assert.equal(
+    getInternalDocumentPath(
+      internal("photos", {
+        id: "p1",
+        slug: "galata",
+        _status: "published",
+        publishedAt: past,
+      }),
+      "en",
+      now,
+    ),
+    "/en/photography/galata",
+  );
+});
+
+test("unpublished, scheduled, unpopulated and district news targets do not resolve", () => {
+  const base = { id: "a1", slug: "x", _status: "published", publishedAt: past };
+
+  for (const value of [
+    { ...base, _status: "draft" },
+    { ...base, publishedAt: future },
+    { ...base, publishedAt: undefined },
+    { ...base, slug: "  " },
+    { ...base, articleType: "district-news" },
+    "a1", // Payload keeps only the ID when the target is not readable.
+  ]) {
+    assert.equal(
+      getInternalDocumentPath(internal("articles", value), "tr", now),
+      null,
+    );
+  }
+  assert.equal(getInternalDocumentPath(null, "tr", now), null);
+  assert.equal(
+    getInternalDocumentPath(
+      internal("categories", { id: "c1", slug: "x" }),
+      "tr",
+      now,
+    ),
+    null,
+  );
+});
+
+test("pages and book reviews use their own language", () => {
+  const page = { id: "pg", _status: "published", publishedAt: past };
+
+  assert.equal(
+    getInternalDocumentPath(
+      internal("pages", {
+        ...page,
+        language: "tr",
+        pageType: "standard",
+        slug: "hakkimda-detay",
+      }),
+      "en",
+      now,
+    ),
+    "/hakkimda-detay",
+  );
+  assert.equal(
+    getInternalDocumentPath(
+      internal("pages", {
+        ...page,
+        language: "en",
+        pageType: "home",
+        slug: "home",
+      }),
+      "tr",
+      now,
+    ),
+    "/en",
+  );
+  // English standard pages have no public route.
+  assert.equal(
+    getInternalDocumentPath(
+      internal("pages", {
+        ...page,
+        language: "en",
+        pageType: "standard",
+        slug: "about",
+      }),
+      "en",
+      now,
+    ),
+    null,
+  );
+
+  const book = {
+    id: "b1",
+    slug: "deep-work",
+    language: "en",
+    _status: "published",
+    reviewStatus: "published",
+    publishedAt: past,
+    seo: { index: true },
+  };
+  assert.equal(
+    getInternalDocumentPath(internal("books", book), "tr", now),
+    "/en/books/deep-work",
+  );
+  assert.equal(
+    getInternalDocumentPath(
+      internal("books", { ...book, seo: { index: false } }),
+      "tr",
+      now,
+    ),
+    null,
+  );
+  assert.equal(
+    getInternalDocumentPath(
+      internal("books", { ...book, reviewStatus: "draft" }),
+      "tr",
+      now,
+    ),
+    null,
+  );
+});
+
+test("district guides link to every registered district page", () => {
+  assert.equal(
+    getInternalDocumentPath(
+      internal("district-guides", {
+        id: "d",
+        district: "kadikoy",
+        _status: "draft",
+      }),
+      "tr",
+      now,
+    ),
+    "/istanbul/ilceler/kadikoy",
+  );
+  assert.equal(
+    getInternalDocumentPath(
+      internal("district-guides", { id: "d", district: "atlantis" }),
+      "tr",
+      now,
+    ),
+    null,
+  );
+});
+
+test("internal links become paths and never keep the populated document", () => {
+  const article = {
+    id: "a1",
+    slug: "kadikoy-rehberi",
+    _status: "published",
+    publishedAt: past,
+    content: "secret body",
+  };
+  const prepared = prepareRichText(
+    lexical(
+      paragraph(
+        link({
+          linkType: "internal",
+          newTab: false,
+          doc: internal("articles", article),
+        }),
+        link({
+          linkType: "internal",
+          newTab: false,
+          doc: internal("articles", "a2"),
+        }),
+        link({ linkType: "custom", newTab: true, url: "https://example.org" }),
+      ),
+    ),
+    "tr",
+    now,
+  );
+  const serialized = JSON.stringify(prepared);
+  const links = (prepared as ReturnType<typeof lexical>).root.children[0] as {
+    children: Array<{ fields: Record<string, unknown> }>;
+  };
+
+  assert.deepEqual(links.children[0]?.fields, {
+    linkType: "custom",
+    newTab: false,
+    doc: null,
+    url: "/makaleler/kadikoy-rehberi",
+  });
+  assert.deepEqual(links.children[1]?.fields, {
+    linkType: "internal",
+    newTab: false,
+    doc: null,
+  });
+  assert.deepEqual(links.children[2]?.fields, {
+    linkType: "custom",
+    newTab: true,
+    url: "https://example.org",
+  });
+  assert.equal(serialized.includes("secret body"), false);
+});
+
+test("uploads keep public fields only; captions are Turkish-only, credits stay", () => {
+  const turkish = JSON.stringify(prepareRichText(lexical(upload()), "tr", now));
+  const english = JSON.stringify(prepareRichText(lexical(upload()), "en", now));
+
+  for (const serialized of [turkish, english]) {
+    assert.ok(serialized.includes(mediaDocument.sourceCopyright));
+    assert.ok(serialized.includes(mediaDocument.url));
+    assert.equal(serialized.includes("private-object-key"), false);
+    assert.equal(serialized.includes("filesize"), false);
+  }
+  assert.ok(turkish.includes(mediaDocument.description));
+  assert.equal(english.includes(mediaDocument.description), false);
+});
+
+test("relationship nodes lose their populated document", () => {
+  const prepared = prepareRichText(
+    lexical(relationship({ id: "a9", title: "Gizli taslak" })),
+    "tr",
+    now,
+  );
+
+  assert.equal(JSON.stringify(prepared).includes("Gizli taslak"), false);
+  assert.equal(
+    (prepared as ReturnType<typeof lexical>).root.children[0] !== undefined,
+    true,
+  );
+});
+
+test("non-Lexical values pass through unchanged", () => {
+  assert.equal(prepareRichText(null, "tr", now), null);
+  assert.deepEqual(prepareRichText({ root: "x" }, "tr", now), { root: "x" });
+});

@@ -1,27 +1,23 @@
-import { getSafePayloadMediaPath } from "@/content/articles/article-images";
 import type {
+  DistrictArticleType,
   PublicArticle,
   PublicArticleCategory,
+  PublicArticleExternalSource,
   PublicArticleImage,
   PublicArticleSummary,
   PublicArticleTranslation,
 } from "@/content/articles/public-types";
 import type { ArticleLanguage } from "@/content/articles/types";
-import type {
-  Article as PayloadArticle,
-  Category as PayloadCategory,
-  Media as PayloadMedia,
-} from "@/payload-types";
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
-}
-
-function getRequiredText(value: unknown): string | null {
-  return typeof value === "string" && value.trim().length > 0
-    ? value.trim()
-    : null;
-}
+import { reportContentIssue } from "@/content/content-log";
+import {
+  getFiniteNumber,
+  getText,
+  isPublishedBy,
+  isRecord,
+} from "@/content/guards";
+import { mapMediaImage } from "@/content/media";
+import { prepareRichText } from "@/content/rich-text/prepare-rich-text";
+import type { Article as PayloadArticle } from "@/payload-types";
 
 function hasMeaningfulLexicalNode(value: unknown): boolean {
   if (!isRecord(value)) {
@@ -29,7 +25,7 @@ function hasMeaningfulLexicalNode(value: unknown): boolean {
   }
 
   if (value.type === "text") {
-    return getRequiredText(value.text) !== null;
+    return getText(value.text) !== null;
   }
 
   if (value.type === "upload") {
@@ -51,37 +47,22 @@ function isLexicalContent(value: unknown): value is PayloadArticle["content"] {
   );
 }
 
-function isPublishedAtPublic(value: unknown, now: Date): value is string {
-  if (typeof value !== "string") {
-    return false;
-  }
-
-  const timestamp = Date.parse(value);
-  return Number.isFinite(timestamp) && timestamp <= now.getTime();
-}
-
 function reportInvalidArticle(
   articleID: string,
   locale: ArticleLanguage,
   reason: string,
 ): void {
-  if (process.env.NODE_ENV === "development") {
-    console.warn(
-      `[public-articles] Payload article ${articleID} was skipped for locale ${locale}: ${reason}`,
-    );
-  }
+  reportContentIssue({ scope: "articles", id: articleID, locale, reason });
 }
 
-function mapCategory(
-  value: string | PayloadCategory,
-): PublicArticleCategory | null {
+function mapCategory(value: unknown): PublicArticleCategory | null {
   if (!isRecord(value)) {
     return null;
   }
 
-  const id = getRequiredText(value.id);
-  const name = getRequiredText(value.name);
-  const slug = getRequiredText(value.slug);
+  const id = getText(value.id);
+  const name = getText(value.name);
+  const slug = getText(value.slug);
 
   if (id === null || name === null || slug === null) {
     return null;
@@ -91,10 +72,7 @@ function mapCategory(
     id,
     name,
     slug,
-    sortOrder:
-      typeof value.sortOrder === "number" && Number.isFinite(value.sortOrder)
-        ? value.sortOrder
-        : 0,
+    sortOrder: getFiniteNumber(value.sortOrder) ?? 0,
   };
 }
 
@@ -106,7 +84,7 @@ function mapCategories(
     sensitivity: "base",
   });
 
-  return values
+  return (Array.isArray(values) ? values : [])
     .map(mapCategory)
     .filter((category): category is PublicArticleCategory => category !== null)
     .toSorted(
@@ -116,51 +94,42 @@ function mapCategories(
     );
 }
 
-function getPositiveDimension(value: unknown): number | undefined {
-  return typeof value === "number" && Number.isFinite(value) && value > 0
-    ? value
-    : undefined;
-}
-
-function getArticleType(
-  value: unknown,
-): "article" | "district-research" | "district-news" {
+function getArticleType(value: unknown): DistrictArticleType {
   return value === "district-research" || value === "district-news"
     ? value
     : "article";
 }
 
-function mapExternalSource(value: unknown) {
+function mapExternalSource(value: unknown): PublicArticleExternalSource | null {
   if (!isRecord(value)) return null;
-  const name = getRequiredText(value.name);
-  const url = getRequiredText(value.url);
+  const name = getText(value.name);
+  const url = getText(value.url);
   if (name === null || url === null) return null;
-  return { name, url, checkedAt: getRequiredText(value.checkedAt) };
+  return { name, url, checkedAt: getText(value.checkedAt) };
 }
 
 function mapFeaturedImage(
   value: PayloadArticle["featuredImage"],
   localizedAlt: unknown,
   title: string,
+  locale: ArticleLanguage,
 ): PublicArticleImage | null {
-  if (!isRecord(value)) {
-    return null;
-  }
+  const image = mapMediaImage(value, {
+    alt: localizedAlt,
+    fallbackAlt: title,
+    locale,
+  });
 
-  const media = value as PayloadMedia;
-  const mimeType = getRequiredText(media.mimeType);
-  const src = getSafePayloadMediaPath(media.url);
-
-  if (mimeType === null || !mimeType.startsWith("image/") || src === null) {
-    return null;
-  }
+  if (image === null) return null;
 
   return {
     source: "payload",
-    src,
-    alt: getRequiredText(localizedAlt) ?? getRequiredText(media.alt) ?? title,
-    width: getPositiveDimension(media.width),
-    height: getPositiveDimension(media.height),
+    src: image.src,
+    alt: image.alt,
+    ...(image.caption === null ? {} : { caption: image.caption }),
+    ...(image.credit === null ? {} : { credit: image.credit }),
+    ...(image.width === null ? {} : { width: image.width }),
+    ...(image.height === null ? {} : { height: image.height }),
   };
 }
 
@@ -169,10 +138,10 @@ export function mapPayloadArticle(
   locale: ArticleLanguage,
   now: Date = new Date(),
 ): PublicArticle | null {
-  const id = getRequiredText(value.id);
-  const title = getRequiredText(value.title);
-  const slug = getRequiredText(value.slug);
-  const excerpt = getRequiredText(value.excerpt);
+  const id = getText(value.id);
+  const title = getText(value.title);
+  const slug = getText(value.slug);
+  const excerpt = getText(value.excerpt);
   const articleType = getArticleType(value.articleType);
 
   if (id === null) {
@@ -193,7 +162,13 @@ export function mapPayloadArticle(
     return null;
   }
 
-  if (articleType !== "district-news" && !isLexicalContent(value.content)) {
+  // Internal links are resolved here, where the locale is known.
+  const content =
+    articleType === "district-news"
+      ? null
+      : prepareRichText(value.content, locale, now);
+
+  if (articleType !== "district-news" && !isLexicalContent(content)) {
     reportInvalidArticle(
       id,
       locale,
@@ -208,7 +183,7 @@ export function mapPayloadArticle(
     return null;
   }
 
-  if (!isPublishedAtPublic(value.publishedAt, now)) {
+  if (!isPublishedBy(value.publishedAt, now)) {
     reportInvalidArticle(
       id,
       locale,
@@ -221,6 +196,7 @@ export function mapPayloadArticle(
     value.featuredImage,
     value.featuredImageAlt,
     title,
+    locale,
   );
 
   return {
@@ -230,24 +206,24 @@ export function mapPayloadArticle(
     language: locale,
     translationKey: id,
     summary: excerpt,
-    content:
-      articleType === "district-news"
-        ? { source: "lexical", data: null }
-        : { source: "lexical", data: value.content },
+    content: {
+      source: "lexical",
+      data: isLexicalContent(content) ? content : null,
+    },
     categories: mapCategories(value.categories, locale),
     featuredImage,
     featured: value.featured === true,
     articleType,
-    district: getRequiredText(value.district),
-    districtNeighborhood: getRequiredText(value.districtNeighborhood),
-    newsCategory: getRequiredText(value.newsCategory),
+    district: getText(value.district),
+    districtNeighborhood: getText(value.districtNeighborhood),
+    newsCategory: getText(value.newsCategory),
     externalSource,
     publishedAt: value.publishedAt,
     createdAt: value.createdAt,
     updatedAt: value.updatedAt,
     seo: {
-      title: getRequiredText(value.seo?.metaTitle) ?? title,
-      description: getRequiredText(value.seo?.metaDescription) ?? excerpt,
+      title: getText(value.seo?.metaTitle) ?? title,
+      description: getText(value.seo?.metaDescription) ?? excerpt,
       index: true,
       follow: true,
       openGraphImage: featuredImage?.src,

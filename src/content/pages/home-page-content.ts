@@ -1,3 +1,4 @@
+import { reportContentIssue } from "@/content/content-log";
 import type { HomeContent } from "@/content/homeContent";
 import type {
   PublicHeroBlock,
@@ -88,4 +89,64 @@ export function getPayloadHomeContent(
       })),
     },
   };
+}
+
+/** What the home page data source returns for one locale. */
+export type HomePageData =
+  | {
+      source: "static";
+      page: null;
+    }
+  | {
+      source: "payload";
+      page: PublicPage | null;
+    };
+
+export type ResolvedHomeContent = {
+  content: HomeContent;
+  /** The CMS page behind `content`; null when the static content is served. */
+  page: PublicPage | null;
+};
+
+/**
+ * The home page never 404s. When the CMS home record is missing, unpublished,
+ * scheduled or has incomplete blocks, the static home content is served and
+ * the problem is logged as an error, because "/" is the most important URL of
+ * the site and is prerendered at build time.
+ */
+export function resolveHomeContent(
+  data: HomePageData,
+  fallback: HomeContent,
+): ResolvedHomeContent {
+  if (data.source === "static") return { content: fallback, page: null };
+
+  if (data.page === null) {
+    reportContentIssue(
+      {
+        scope: "home",
+        locale: fallback.locale,
+        reason: "no public CMS home page; static home content served",
+      },
+      "error",
+    );
+    return { content: fallback, page: null };
+  }
+
+  const content = getPayloadHomeContent(data.page, fallback);
+
+  if (content === null) {
+    reportContentIssue(
+      {
+        scope: "home",
+        id: data.page.id,
+        locale: fallback.locale,
+        reason:
+          "CMS home page blocks are incomplete; static home content served",
+      },
+      "error",
+    );
+    return { content: fallback, page: null };
+  }
+
+  return { content, page: data.page };
 }

@@ -1,10 +1,6 @@
-const INTERNAL_ORIGIN = "https://internal.sabandurali.invalid";
+import { getText } from "@/content/guards";
 
-function getText(value: unknown): string | null {
-  return typeof value === "string" && value.trim().length > 0
-    ? value.trim()
-    : null;
-}
+const INTERNAL_ORIGIN = "https://internal.sabandurali.invalid";
 
 function hasUnsafeCharacters(value: string): boolean {
   return /[\u0000-\u001F\u007F\\]/.test(value);

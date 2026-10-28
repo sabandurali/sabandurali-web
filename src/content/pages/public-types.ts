@@ -16,6 +16,9 @@ export type PublicPageImage = {
   alt: string;
   width?: number;
   height?: number;
+  caption?: string;
+  /** Source / copyright line that must be shown with the image. */
+  credit?: string;
 };
 
 type PublicPageBlockBase = {
