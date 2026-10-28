@@ -50,8 +50,10 @@ Before any production change:
 
 ## 5. Repository housekeeping
 
+- Delete `origin/codex/project-day-17-production-infra` and `origin/codex/project-day-19-photography` first: their own old build script still migrates its Preview database without checks (`docs/PROJECT-STATE.md` §N).
 - Review and optionally delete `origin/codex/project-day-22-admin-help` after handoff; do not merge it.
 - Keep or later delete `origin/codex/project-day-20-full-site-prototype`; its decisions are now archived in the repository.
+- Branch hygiene rule: delete a remote branch once its pull request is merged or abandoned, and review the remaining remote branches at every release. A branch that should stay but must never deploy goes into `git.deploymentEnabled` in `vercel.json`; that setting only applies to commits that contain it.
 - `.next` and `node_modules` are recreatable caches/dependencies.
 - Never delete `.env.production.backup` until the user intentionally decides after confirming secure external storage.
 - The local Payload DB has a verified external backup; do not casually delete either copy.

@@ -220,6 +220,58 @@ The safety model matters more than internal hashes: exact approved baseline, dep
 
 Production imports must preserve document identity, creation/publication metadata where required, publication state, non-target content, and private-field boundaries.
 
+The applied district importers, their cores and tests are kept for audit in `scripts/districts/archive/` (see its README). They have no npm scripts any more; running one is a production operation under the rules above.
+
+### K.1 Production build gate
+
+`npm run vercel:build` (`scripts/vercel-build.mjs`) is the Vercel build command. It fails closed:
+
+- A Production build (`VERCEL_ENV=production`) must run on Vercel (`VERCEL=1`), from `main` (`VERCEL_GIT_COMMIT_REF=main`) and for a full 40-character `VERCEL_GIT_COMMIT_SHA`. Any other ref (for example `vercel deploy --prod` from a feature branch, a promoted Preview or a changed Production Branch setting) stops before the database is read. Keep the Vercel Production Branch locked to `main` and limit who can deploy to Production from the CLI.
+- Production requires PostgreSQL, Vercel Blob, `DATABASE_URL`, `PAYLOAD_SECRET` and `BLOB_READ_WRITE_TOKEN`, checks the database fingerprint, and reads the applied migrations in a read-only transaction. An applied migration that the registry does not know, or applied migrations that are not a prefix of the registry, stop the build.
+- Previews and local builds never migrate. No Preview branch is designated for migrations any more, and a non-Production build whose `DATABASE_URL` resolves to the Production fingerprint refuses to build.
+- The build-time district dry-run (`PRODUCTION_DISTRICT_DRY_RUN_APPROVED_SHA`) is retired: if that variable is set, the build stops before reading anything. Remove it from the Production environment.
+- The boolean `PRODUCTION_MIGRATION_APPROVED` and `PRODUCTION_PITR_CONFIRMED` no longer approve a migration; the build logs that it ignores them. Remove them from Vercel. (`PRODUCTION_PITR_CONFIRMED` is still read by the archived original importer, never by the build.)
+
+### K.2 Approving a Production migration
+
+A migration is approved for one commit and one exact set of migrations:
+
+1. Merge the reviewed pull request (CI replays every migration in PGlite). The Production build of the merge commit stops with `Pending migrations detected; approval required.` and lists the pending migration names. Nothing is migrated.
+2. Verify point-in-time recovery for the Production Neon branch: the restore window covers the current time and a restore target can be chosen. Note the time you checked.
+3. Set three Production environment variables in Vercel, all for that deployment only:
+   - `PRODUCTION_MIGRATION_APPROVED_SHA` — the full commit SHA of the deployment (`VERCEL_GIT_COMMIT_SHA`, 40 lowercase hex characters, no whitespace).
+   - `PRODUCTION_MIGRATION_APPROVED_NAMES` — the pending migration names exactly as the failed build listed them, in order, separated by commas.
+   - `PRODUCTION_MIGRATION_PITR_CONFIRMED_SHA` — the same commit SHA, set only after step 2. It is separate from every import PITR variable.
+4. Redeploy that same deployment (a redeploy keeps the commit SHA). The gate checks the three values against the commit and the pending list, runs `payload:migrate`, reads the state again and builds only when nothing is pending.
+5. Remove the three variables right after the deployment. They cannot approve another commit or another migration set, but they must not linger.
+6. Check the live site and record the deployment, commit and migration names in the release notes.
+
+A missing value, a SHA of another commit, a different or reordered name list, a migration that does not reach the registry head and an unreadable state all stop the build with an explicit reason.
+
+### K.3 Failure reasons
+
+Build failures name a category and, when there is one, a standard error code (PostgreSQL SQLSTATE or a Node.js/TLS code). Connection strings, hosts, users, passwords and driver messages are never printed. `Migration state could not be verified (<category>[, <code>]); stopping.`:
+
+| Category | Meaning |
+| --- | --- |
+| `database_url_invalid`, `database_identity_incomplete` | `DATABASE_URL` is not a complete PostgreSQL URL |
+| `database_identity_mismatch` | `DATABASE_URL` is not the Production database fingerprint (see K.4) |
+| `connection_failed`, `tls_failed` | Network, DNS, timeout or TLS failure |
+| `authentication_failed` | Wrong database credentials (`28P01`, `28000`) |
+| `database_not_found` | The database name does not exist (`3D000`) |
+| `connected_database_mismatch` | The server reports another database than the URL |
+| `migration_table_missing` | `payload_migrations` does not exist |
+| `migration_registry_invalid`, `migration_state_inconsistent` | The committed registry is invalid, or the applied migrations do not match it |
+| `query_failed`, `unknown_failed` | Any other database or unexpected error |
+
+### K.4 Rotating the database fingerprint after a restore
+
+The Production database identity (sha256 of `host:port/database`) is a reviewed constant, `productionDatabaseFingerprint` in `scripts/vercel-build.mjs`. A point-in-time restore onto a new endpoint, or a new database name, changes it, and every Production build then stops with `database_identity_mismatch`. To rotate it:
+
+1. Confirm the new endpoint is the intended Production database.
+2. Compute its fingerprint without printing the URL: `read -rs DATABASE_URL; export DATABASE_URL; node scripts/database-fingerprint.mjs; unset DATABASE_URL` (paste the value from Vercel; the script prints only the fingerprint).
+3. Change `productionDatabaseFingerprint` in a reviewed pull request, merge it, and let the Production build verify the migration state against the restored database.
+
 ## L. Historical photos
 
 Publication-safe rights are restricted to item-level evidence such as:
@@ -257,6 +309,12 @@ Secure backup:
 `.vercel` contains regenerable linkage metadata and can be recreated with `vercel link`.
 
 ## N. Old branches
+
+### `origin/codex/project-day-17-production-infra` and `origin/codex/project-day-19-photography`
+
+- Both are merged and stale (August 2026). Their own copy of `scripts/vercel-build.mjs` still runs `payload:migrate` for its Preview build without a database identity or approval check.
+- The gate on `main` no longer designates any Preview branch, but a push or a Redeploy of these branches builds their old script, and the `vercel.json` of `main` does not apply to their commits.
+- Delete both remote branches (owner action; it needs push rights). Until then, do not push to them or redeploy their Previews.
 
 ### `origin/codex/project-day-20-full-site-prototype`
 

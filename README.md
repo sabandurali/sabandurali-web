@@ -92,11 +92,13 @@ and the definition of done.
 - Vercel deploys `main` to production and every other pushed branch to a
   Preview, except the branches disabled in `vercel.json`.
 - The build command is `npm run vercel:build` (`scripts/vercel-build.mjs`).
-  On `main` it requires PostgreSQL, Vercel Blob and the server secrets, checks
-  the database fingerprint and stops when migrations are pending unless the
-  production migration and point-in-time recovery approvals are set. The two
-  Preview branches named in the script migrate their configured database;
-  every other context builds without migrating.
+  A Production build runs only from `main`. It requires PostgreSQL, Vercel
+  Blob and the server secrets, checks the database fingerprint and stops when
+  migrations are pending unless an approval bound to the commit SHA, the exact
+  pending migration names and a point-in-time recovery confirmation for the
+  same commit is set ([docs/PROJECT-STATE.md](docs/PROJECT-STATE.md) §K).
+  Previews and local builds never migrate and refuse to build against the
+  Production database.
 - PostgreSQL schema push is disabled in production. Every collection, field or
   index change needs a generated, reviewed migration in `src/migrations/`
   (`npm run payload:migrate:create`). `npm test` replays all migrations, but
