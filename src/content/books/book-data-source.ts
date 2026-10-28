@@ -67,10 +67,10 @@ export const getPublishedBookReviewPageData = cache(
   },
 );
 
-export async function getAllPublishedBookReviews(
-  language: BookReviewLanguage,
-): Promise<BookReview[]> {
-  return readPublicSource("BOOK_PUBLIC_SOURCE") === "payload"
-    ? payloadBookReviewRepository.listPublished(language)
-    : listStaticPublishedBookReviews(staticBookReviews, language, new Date());
-}
+/** Every public review of one language, newest first. */
+export const getAllPublishedBookReviews = cache(
+  async (language: BookReviewLanguage): Promise<BookReview[]> =>
+    readPublicSource("BOOK_PUBLIC_SOURCE") === "payload"
+      ? payloadBookReviewRepository.listPublished(language)
+      : listStaticPublishedBookReviews(staticBookReviews, language, new Date()),
+);

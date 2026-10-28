@@ -73,10 +73,9 @@ export const getPublishedTurkishPageBySlug = cache(
   },
 );
 
-export async function getAllPublishedTurkishStandardPages(): Promise<
-  PublicPage[]
-> {
-  if (getPublicPageSource() === "static") return [];
-
-  return payloadPageRepository.listStandards("tr");
-}
+export const getAllPublishedTurkishStandardPages = cache(
+  async (): Promise<PublicPage[]> =>
+    getPublicPageSource() === "static"
+      ? []
+      : payloadPageRepository.listStandards("tr"),
+);
