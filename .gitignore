@@ -61,3 +61,7 @@ next-env.d.ts
 *.db
 *.db-wal
 *.db-shm
+
+# Claude Code agent worktrees and local state
+/.claude/worktrees/
+/.claude/settings.local.json

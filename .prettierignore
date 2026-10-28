@@ -10,6 +10,7 @@ coverage/
 ml-env/
 public/
 reports/
+.claude/
 next-env.d.ts
 *.tsbuildinfo
 
