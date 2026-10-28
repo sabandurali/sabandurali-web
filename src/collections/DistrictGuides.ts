@@ -8,12 +8,30 @@ import {
   type DistrictSource,
 } from "@/content/districts/district-content-policy";
 import { districtOptions } from "@/content/districts/district-registry";
+import { imageMediaFilter } from "@/collections/validation";
 import {
   adminOnly,
   adminOrEditor,
+  createAnonymousQueryAllowlist,
   isAdminOrEditor,
   publishedOrAdminOrEditor,
 } from "@/lib/payloadAccess";
+import { createRevalidationHooks } from "@/lib/revalidation";
+
+const revalidation = createRevalidationHooks("district-guides");
+
+/**
+ * Fields anonymous readers may filter and sort by. Everything else can hold
+ * unreviewed or unsourced values that `afterRead` hides from them.
+ */
+export const PUBLIC_DISTRICT_GUIDE_QUERY_PATHS = [
+  "_status",
+  "createdAt",
+  "district",
+  "id",
+  "publishedAt",
+  "updatedAt",
+] as const;
 
 const setPublishedAtOnFirstPublish: CollectionBeforeChangeHook = ({
   data,
@@ -162,6 +180,7 @@ export const DistrictGuides: CollectionConfig = {
                   name: "image",
                   type: "upload",
                   relationTo: "media",
+                  filterOptions: imageMediaFilter,
                   label: "Fotoğraf",
                 },
               ],
@@ -388,7 +407,15 @@ export const DistrictGuides: CollectionConfig = {
     },
   ],
   hooks: {
+    afterChange: [revalidation.afterChange],
+    afterDelete: [revalidation.afterDelete],
     beforeChange: [protectDistrictPublication, setPublishedAtOnFirstPublish],
+    // `afterRead` hides raw values from anonymous readers, but `where` and
+    // `sort` run on the stored columns; without this allowlist a query such
+    // as `where[marketData.salePricePerM2][greater_than]=N` would reveal them.
+    beforeOperation: [
+      createAnonymousQueryAllowlist(PUBLIC_DISTRICT_GUIDE_QUERY_PATHS),
+    ],
     afterRead: [
       ({ doc, req, overrideAccess }) => {
         if (overrideAccess || isAdminOrEditor(req.user)) return doc;

@@ -2,13 +2,28 @@ import { withPayload } from "@payloadcms/next/withPayload";
 import type { NextConfig } from "next";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { assertProductionPayloadInfrastructure } from "./src/lib/payloadInfrastructure";
+import {
+  assertProductionPayloadInfrastructure,
+  getPayloadStorageProvider,
+  getVercelBlobStoreHostname,
+} from "./src/lib/payloadInfrastructure";
 import { securityHeaders } from "./src/lib/securityHeaders";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 
 assertProductionPayloadInfrastructure();
+
+/**
+ * Payload serves media through `/api/media/file/*`, so the optimizer only
+ * needs a remote pattern for direct Blob URLs, and only for this project's
+ * own store. Without a Blob token (local storage, CI) there is none, so no
+ * other Blob store can be proxied through `/_next/image`.
+ */
+const blobStoreHostname =
+  getPayloadStorageProvider() === "vercel-blob"
+    ? getVercelBlobStoreHostname()
+    : null;
 
 const nextConfig: NextConfig = {
   // withPayload adds "X-Powered-By: Next.js, Payload" unless this is false.
@@ -33,6 +48,13 @@ const nextConfig: NextConfig = {
         destination: "/en/photography/:path*",
         permanent: true,
       },
+      // The legacy Turkish home record (a standard page with this slug) is
+      // rendered at `/`; one URL per document.
+      {
+        source: "/ana-sayfa",
+        destination: "/",
+        permanent: true,
+      },
     ];
   },
   experimental: {
@@ -48,25 +70,21 @@ const nextConfig: NextConfig = {
       { pathname: "/workspaces/**", search: "" },
       { pathname: "/api/media/file/**", search: "" },
     ],
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "**.blob.vercel-storage.com",
-        port: "",
-        pathname: "/**",
-        search: "",
-      },
-    ],
+    remotePatterns:
+      blobStoreHostname === null
+        ? []
+        : [
+            {
+              protocol: "https",
+              hostname: blobStoreHostname,
+              port: "",
+              pathname: "/**",
+              search: "",
+            },
+          ],
   },
-  webpack: (webpackConfig) => {
-    webpackConfig.resolve.extensionAlias = {
-      ".cjs": [".cts", ".cjs"],
-      ".js": [".ts", ".tsx", ".js", ".jsx"],
-      ".mjs": [".mts", ".mjs"],
-    };
-
-    return webpackConfig;
-  },
+  // Turbopack builds and serves the app (`next dev` and `next build`); a
+  // `webpack()` hook would never run, so there is none.
   turbopack: {
     root: path.resolve(dirname),
   },

@@ -5,6 +5,9 @@ import {
   createLocalizedSlugHook,
 } from "@/lib/localizedSlug";
 import { preventDeletingReferencedTag } from "@/lib/payloadDeleteGuards";
+import { createRevalidationHooks } from "@/lib/revalidation";
+
+const revalidation = createRevalidationHooks("tags");
 
 export const Tags: CollectionConfig = {
   slug: "tags",
@@ -41,6 +44,8 @@ export const Tags: CollectionConfig = {
     },
   ],
   hooks: {
+    afterChange: [revalidation.afterChange],
+    afterDelete: [revalidation.afterDelete],
     beforeDelete: [preventDeletingReferencedTag],
     beforeValidate: [
       createLocalizedSlugHook({

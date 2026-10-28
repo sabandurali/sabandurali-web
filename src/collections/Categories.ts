@@ -5,6 +5,9 @@ import {
   createLocalizedSlugHook,
 } from "@/lib/localizedSlug";
 import { preventDeletingReferencedCategory } from "@/lib/payloadDeleteGuards";
+import { createRevalidationHooks } from "@/lib/revalidation";
+
+const revalidation = createRevalidationHooks("categories");
 
 export const Categories: CollectionConfig = {
   slug: "categories",
@@ -47,6 +50,8 @@ export const Categories: CollectionConfig = {
     },
   ],
   hooks: {
+    afterChange: [revalidation.afterChange],
+    afterDelete: [revalidation.afterDelete],
     beforeDelete: [preventDeletingReferencedCategory],
     beforeValidate: [
       createLocalizedSlugHook({

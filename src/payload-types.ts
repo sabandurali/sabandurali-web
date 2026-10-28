@@ -72,8 +72,8 @@ export interface Config {
     categories: Category;
     'district-guides': DistrictGuide;
     articles: Article;
-    books: Book;
     pages: Page;
+    books: Book;
     'photo-collections': PhotoCollection;
     tags: Tag;
     photos: Photo;
@@ -89,8 +89,8 @@ export interface Config {
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     'district-guides': DistrictGuidesSelect<false> | DistrictGuidesSelect<true>;
     articles: ArticlesSelect<false> | ArticlesSelect<true>;
-    books: BooksSelect<false> | BooksSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
+    books: BooksSelect<false> | BooksSelect<true>;
     'photo-collections': PhotoCollectionsSelect<false> | PhotoCollectionsSelect<true>;
     tags: TagsSelect<false> | TagsSelect<true>;
     photos: PhotosSelect<false> | PhotosSelect<true>;
@@ -143,6 +143,9 @@ export interface UserAuthOperations {
  */
 export interface User {
   id: string;
+  /**
+   * Editor içerik ekler ve düzenler. Admin ayrıca kullanıcıları yönetir ve içerik siler. Sistemde her zaman en az bir Admin kalır.
+   */
   role: 'admin' | 'editor';
   updatedAt: string;
   createdAt: string;
@@ -165,6 +168,8 @@ export interface User {
   collection: 'users';
 }
 /**
+ * Yüklenen her dosya, adresini bilen herkes tarafından açılabilir; kişisel veya gizli belge yüklemeyin. Görseller uzun kenarı en fazla 3200 piksel olacak biçimde yeniden kaydedilir ve konum, cihaz ve çekim zamanı (EXIF) bilgileri silinir.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
@@ -185,6 +190,8 @@ export interface Media {
   filesize?: number | null;
   width?: number | null;
   height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -403,7 +410,7 @@ export interface Article {
   slug: string;
   excerpt: string;
   /**
-   * İlçe haberi türünde tam metin saklanmaz; kısa özgün özet ve kaynak bağlantısı kullanılır.
+   * İlçe haberi türünde tam metin saklanmaz; kısa özgün özet ve kaynak bağlantısı kullanılır. Diğer türlerde yayın için içerik zorunludur.
    */
   content?: {
     root: {
@@ -430,6 +437,12 @@ export interface Article {
    */
   featuredImageAlt?: string | null;
   featured?: boolean | null;
+  author?: {
+    /**
+     * Yapılandırılmış veride (JSON-LD) ve paylaşım etiketlerinde yazar olarak görünür. Boş bırakılırsa Şaban Durali kullanılır.
+     */
+    name?: string | null;
+  };
   /**
    * Normal makale, ilçe araştırması veya kaynak bağlantılı ilçe haberi ayrımını yapın.
    */
@@ -491,168 +504,27 @@ export interface Article {
         | 'onemli-yerel-gelismeler'
       )
     | null;
+  /**
+   * İlçe haberi yayınlanırken kaynak adı ve https:// ile başlayan orijinal haber adresi zorunludur.
+   */
   externalSource?: {
     name?: string | null;
     url?: string | null;
     checkedAt?: string | null;
   };
   /**
-   * İlk yayında otomatik atanır; gerekirse elle düzenlenebilir.
+   * İlk yayında otomatik atanır; gerekirse elle düzenlenebilir. Gelecek tarih planlı yayın anlamına gelir.
    */
   publishedAt?: string | null;
   seo?: {
     metaTitle?: string | null;
     metaDescription?: string | null;
-  };
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "books".
- */
-export interface Book {
-  id: string;
-  title: string;
-  /**
-   * Başlıktan otomatik oluşur; gerekirse elle düzenlenebilir.
-   */
-  slug: string;
-  language: 'tr' | 'en';
-  originalTitle?: string | null;
-  authors?:
-    | {
-        name: string;
-        slug: string;
-        id?: string | null;
-      }[]
-    | null;
-  translator?: string | null;
-  publisher?: string | null;
-  originalPublisher?: string | null;
-  publicationYear?: number | null;
-  originalPublicationYear?: number | null;
-  edition?: string | null;
-  pageCount?: number | null;
-  isbn10?: string | null;
-  isbn13?: string | null;
-  coverImage?: (string | null) | Media;
-  /**
-   * Boş bırakılırsa medya kaydındaki alternatif metin kullanılır.
-   */
-  coverImageAlt?: string | null;
-  category?:
-    | (
-        | 'business_and_management'
-        | 'psychology_and_behavior'
-        | 'sales_and_negotiation'
-        | 'learning_and_education'
-        | 'artificial_intelligence_and_technology'
-        | 'real_estate_and_investment'
-        | 'personal_development'
-        | 'biography_and_history'
-        | 'economics_and_finance'
-        | 'other'
-      )
-    | null;
-  tags?:
-    | {
-        slug: string;
-        labelTr: string;
-        labelEn: string;
-        aliases?:
-          | {
-              value: string;
-              id?: string | null;
-            }[]
-          | null;
-        id?: string | null;
-      }[]
-    | null;
-  readingStatus: 'planned' | 'reading' | 'completed' | 'paused' | 'abandoned';
-  /**
-   * Public erişim için published seçilmeli; yayın tarihi gelmiş ve SEO index açık olmalıdır.
-   */
-  reviewStatus: 'draft' | 'in_review' | 'scheduled' | 'published' | 'archived';
-  startedAt?: string | null;
-  completedAt?: string | null;
-  /**
-   * Gelecekteki bir tarih planlı yayını; boş değer public erişimin kapalı kalmasını sağlar.
-   */
-  publishedAt?: string | null;
-  summary: string;
-  keyIdeas?:
-    | {
-        title: string;
-        description: string;
-        order: number;
-        id?: string | null;
-      }[]
-    | null;
-  strengths?:
-    | {
-        value: string;
-        id?: string | null;
-      }[]
-    | null;
-  weaknesses?:
-    | {
-        value: string;
-        id?: string | null;
-      }[]
-    | null;
-  whoShouldRead?:
-    | {
-        value: string;
-        id?: string | null;
-      }[]
-    | null;
-  whoShouldNotRead?:
-    | {
-        value: string;
-        id?: string | null;
-      }[]
-    | null;
-  applicationNotes?:
-    | {
-        title: string;
-        description: string;
-        action: string;
-        order: number;
-        id?: string | null;
-      }[]
-    | null;
-  personalEvaluation: string;
-  rating?: number | null;
-  quotes?:
-    | {
-        text: string;
-        page?: number | null;
-        note?: string | null;
-        order: number;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Bu incelemenin Türkçe veya İngilizce karşılığını seçin.
-   */
-  translation?: (string | null) | Book;
-  translationStatus: 'none' | 'pending' | 'in_progress' | 'completed' | 'outdated';
-  relatedBooks?: (string | Book)[] | null;
-  authorId?: (string | null) | User;
-  editorId?: (string | null) | User;
-  featured?: boolean | null;
-  showOnHomepage?: boolean | null;
-  seo: {
-    title: string;
-    description: string;
+    /**
+     * Boş bırakılırsa makalenin kendi adresi kullanılır. Yalnız site içi yol (/makaleler/...) veya https://www.sabandurali.com adresi girilebilir.
+     */
     canonical?: string | null;
-    index: boolean;
-    follow: boolean;
-    openGraphTitle?: string | null;
-    openGraphDescription?: string | null;
-    openGraphImage?: (string | null) | Media;
+    index?: boolean | null;
+    follow?: boolean | null;
   };
   updatedAt: string;
   createdAt: string;
@@ -895,6 +767,159 @@ export interface Page {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "books".
+ */
+export interface Book {
+  id: string;
+  title: string;
+  /**
+   * Başlıktan otomatik oluşur; gerekirse elle düzenlenebilir.
+   */
+  slug: string;
+  language: 'tr' | 'en';
+  originalTitle?: string | null;
+  authors?:
+    | {
+        name: string;
+        slug: string;
+        id?: string | null;
+      }[]
+    | null;
+  translator?: string | null;
+  publisher?: string | null;
+  originalPublisher?: string | null;
+  publicationYear?: number | null;
+  originalPublicationYear?: number | null;
+  edition?: string | null;
+  pageCount?: number | null;
+  isbn10?: string | null;
+  isbn13?: string | null;
+  coverImage?: (string | null) | Media;
+  /**
+   * Boş bırakılırsa medya kaydındaki alternatif metin kullanılır.
+   */
+  coverImageAlt?: string | null;
+  category?:
+    | (
+        | 'business_and_management'
+        | 'psychology_and_behavior'
+        | 'sales_and_negotiation'
+        | 'learning_and_education'
+        | 'artificial_intelligence_and_technology'
+        | 'real_estate_and_investment'
+        | 'personal_development'
+        | 'biography_and_history'
+        | 'economics_and_finance'
+        | 'other'
+      )
+    | null;
+  tags?:
+    | {
+        slug: string;
+        labelTr: string;
+        labelEn: string;
+        aliases?:
+          | {
+              value: string;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  readingStatus: 'planned' | 'reading' | 'completed' | 'paused' | 'abandoned';
+  /**
+   * Yayınlarken 'published' (sitede görünür) veya 'archived' (sitede gizli) seçin. Görünmesi için yayın tarihi gelmiş ve SEO indeksi açık olmalıdır; eksik alanlar yayın sırasında listelenir.
+   */
+  reviewStatus: 'draft' | 'in_review' | 'scheduled' | 'published' | 'archived';
+  startedAt?: string | null;
+  completedAt?: string | null;
+  /**
+   * Gelecekteki bir tarih planlı yayını; boş değer public erişimin kapalı kalmasını sağlar.
+   */
+  publishedAt?: string | null;
+  summary: string;
+  keyIdeas?:
+    | {
+        title: string;
+        description: string;
+        order: number;
+        id?: string | null;
+      }[]
+    | null;
+  strengths?:
+    | {
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
+  weaknesses?:
+    | {
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
+  whoShouldRead?:
+    | {
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
+  whoShouldNotRead?:
+    | {
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
+  applicationNotes?:
+    | {
+        title: string;
+        description: string;
+        action: string;
+        order: number;
+        id?: string | null;
+      }[]
+    | null;
+  personalEvaluation: string;
+  rating?: number | null;
+  quotes?:
+    | {
+        text: string;
+        page?: number | null;
+        note?: string | null;
+        order: number;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Bu incelemenin Türkçe veya İngilizce karşılığını seçin. Her kayıt yalnız bir çeviriyle eşleşebilir.
+   */
+  translation?: (string | null) | Book;
+  translationStatus: 'none' | 'pending' | 'in_progress' | 'completed' | 'outdated';
+  relatedBooks?: (string | Book)[] | null;
+  authorId?: (string | null) | User;
+  editorId?: (string | null) | User;
+  featured?: boolean | null;
+  showOnHomepage?: boolean | null;
+  seo: {
+    title: string;
+    description: string;
+    /**
+     * Boş bırakılırsa incelemenin kendi adresi kullanılır. Yalnız site içi yol (/kitaplar/...) veya https://www.sabandurali.com adresi girilebilir.
+     */
+    canonical?: string | null;
+    index: boolean;
+    follow: boolean;
+    openGraphTitle?: string | null;
+    openGraphDescription?: string | null;
+    openGraphImage?: (string | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "photo-collections".
  */
 export interface PhotoCollection {
@@ -945,7 +970,7 @@ export interface Photo {
    */
   altText: string;
   /**
-   * Aynı fiziksel görseli yeniden yüklemeyin; mevcut Media kaydını seçin.
+   * Aynı fiziksel görseli yeniden yüklemeyin; mevcut Media kaydını seçin. Yalnız görsel dosyalar (PDF değil) seçilebilir.
    */
   image: string | Media;
   /**
@@ -1164,6 +1189,8 @@ export interface MediaSelect<T extends boolean = true> {
   filesize?: T;
   width?: T;
   height?: T;
+  focalX?: T;
+  focalY?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1272,6 +1299,11 @@ export interface ArticlesSelect<T extends boolean = true> {
   featuredImage?: T;
   featuredImageAlt?: T;
   featured?: T;
+  author?:
+    | T
+    | {
+        name?: T;
+      };
   articleType?: T;
   district?: T;
   districtNeighborhood?: T;
@@ -1289,129 +1321,9 @@ export interface ArticlesSelect<T extends boolean = true> {
     | {
         metaTitle?: T;
         metaDescription?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-  _status?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "books_select".
- */
-export interface BooksSelect<T extends boolean = true> {
-  title?: T;
-  slug?: T;
-  language?: T;
-  originalTitle?: T;
-  authors?:
-    | T
-    | {
-        name?: T;
-        slug?: T;
-        id?: T;
-      };
-  translator?: T;
-  publisher?: T;
-  originalPublisher?: T;
-  publicationYear?: T;
-  originalPublicationYear?: T;
-  edition?: T;
-  pageCount?: T;
-  isbn10?: T;
-  isbn13?: T;
-  coverImage?: T;
-  coverImageAlt?: T;
-  category?: T;
-  tags?:
-    | T
-    | {
-        slug?: T;
-        labelTr?: T;
-        labelEn?: T;
-        aliases?:
-          | T
-          | {
-              value?: T;
-              id?: T;
-            };
-        id?: T;
-      };
-  readingStatus?: T;
-  reviewStatus?: T;
-  startedAt?: T;
-  completedAt?: T;
-  publishedAt?: T;
-  summary?: T;
-  keyIdeas?:
-    | T
-    | {
-        title?: T;
-        description?: T;
-        order?: T;
-        id?: T;
-      };
-  strengths?:
-    | T
-    | {
-        value?: T;
-        id?: T;
-      };
-  weaknesses?:
-    | T
-    | {
-        value?: T;
-        id?: T;
-      };
-  whoShouldRead?:
-    | T
-    | {
-        value?: T;
-        id?: T;
-      };
-  whoShouldNotRead?:
-    | T
-    | {
-        value?: T;
-        id?: T;
-      };
-  applicationNotes?:
-    | T
-    | {
-        title?: T;
-        description?: T;
-        action?: T;
-        order?: T;
-        id?: T;
-      };
-  personalEvaluation?: T;
-  rating?: T;
-  quotes?:
-    | T
-    | {
-        text?: T;
-        page?: T;
-        note?: T;
-        order?: T;
-        id?: T;
-      };
-  translation?: T;
-  translationStatus?: T;
-  relatedBooks?: T;
-  authorId?: T;
-  editorId?: T;
-  featured?: T;
-  showOnHomepage?: T;
-  seo?:
-    | T
-    | {
-        title?: T;
-        description?: T;
         canonical?: T;
         index?: T;
         follow?: T;
-        openGraphTitle?: T;
-        openGraphDescription?: T;
-        openGraphImage?: T;
       };
   updatedAt?: T;
   createdAt?: T;
@@ -1600,6 +1512,129 @@ export interface PagesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "books_select".
+ */
+export interface BooksSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  language?: T;
+  originalTitle?: T;
+  authors?:
+    | T
+    | {
+        name?: T;
+        slug?: T;
+        id?: T;
+      };
+  translator?: T;
+  publisher?: T;
+  originalPublisher?: T;
+  publicationYear?: T;
+  originalPublicationYear?: T;
+  edition?: T;
+  pageCount?: T;
+  isbn10?: T;
+  isbn13?: T;
+  coverImage?: T;
+  coverImageAlt?: T;
+  category?: T;
+  tags?:
+    | T
+    | {
+        slug?: T;
+        labelTr?: T;
+        labelEn?: T;
+        aliases?:
+          | T
+          | {
+              value?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  readingStatus?: T;
+  reviewStatus?: T;
+  startedAt?: T;
+  completedAt?: T;
+  publishedAt?: T;
+  summary?: T;
+  keyIdeas?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        order?: T;
+        id?: T;
+      };
+  strengths?:
+    | T
+    | {
+        value?: T;
+        id?: T;
+      };
+  weaknesses?:
+    | T
+    | {
+        value?: T;
+        id?: T;
+      };
+  whoShouldRead?:
+    | T
+    | {
+        value?: T;
+        id?: T;
+      };
+  whoShouldNotRead?:
+    | T
+    | {
+        value?: T;
+        id?: T;
+      };
+  applicationNotes?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        action?: T;
+        order?: T;
+        id?: T;
+      };
+  personalEvaluation?: T;
+  rating?: T;
+  quotes?:
+    | T
+    | {
+        text?: T;
+        page?: T;
+        note?: T;
+        order?: T;
+        id?: T;
+      };
+  translation?: T;
+  translationStatus?: T;
+  relatedBooks?: T;
+  authorId?: T;
+  editorId?: T;
+  featured?: T;
+  showOnHomepage?: T;
+  seo?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        canonical?: T;
+        index?: T;
+        follow?: T;
+        openGraphTitle?: T;
+        openGraphDescription?: T;
+        openGraphImage?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "photo-collections_select".
  */
 export interface PhotoCollectionsSelect<T extends boolean = true> {
@@ -1706,7 +1741,7 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   createdAt?: T;
 }
 /**
- * Türkçe ve İngilizce Header, mobil menü ve Footer bağlantılarını yönetin. Taslak, yayınlama ve sürüm geçmişi sağ üstteki belge kontrollerindedir.
+ * Türkçe Header ve mobil menü ile Türkçe ve İngilizce Footer bağlantılarını yönetin. İngilizce Header menüsü site kodunda sabittir. Taslak, yayınlama ve sürüm geçmişi sağ üstteki belge kontrollerindedir.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "navigation".
@@ -1762,7 +1797,7 @@ export interface Navigation {
       }[]
     | null;
   /**
-   * Desktop and mobile navigation use the same ordered list.
+   * Not used: the English header menu is defined in the site code.
    */
   enHeader?:
     | {
@@ -1770,7 +1805,7 @@ export interface Navigation {
         active?: boolean | null;
         linkType: 'page' | 'internal' | 'external';
         /**
-         * Yalnız yayımlanmış ve yayın tarihi gelmiş İngilizce sayfalar public menüde bağlantıya dönüşür.
+         * Yalnız İngilizce Ana sayfa seçilebilir; İngilizce standart sayfaların henüz bir site adresi yok.
          */
         page?: (string | null) | Page;
         /**
@@ -1791,7 +1826,7 @@ export interface Navigation {
               active?: boolean | null;
               linkType: 'page' | 'internal' | 'external';
               /**
-               * Yalnız yayımlanmış ve yayın tarihi gelmiş İngilizce sayfalar public menüde bağlantıya dönüşür.
+               * Yalnız İngilizce Ana sayfa seçilebilir; İngilizce standart sayfaların henüz bir site adresi yok.
                */
               page?: (string | null) | Page;
               /**
@@ -1847,7 +1882,7 @@ export interface Navigation {
               active?: boolean | null;
               linkType: 'page' | 'internal' | 'external';
               /**
-               * Yalnız yayımlanmış ve yayın tarihi gelmiş İngilizce sayfalar public menüde bağlantıya dönüşür.
+               * Yalnız İngilizce Ana sayfa seçilebilir; İngilizce standart sayfaların henüz bir site adresi yok.
                */
               page?: (string | null) | Page;
               /**

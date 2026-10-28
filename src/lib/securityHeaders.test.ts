@@ -1,5 +1,8 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import test from "node:test";
+import { fileURLToPath } from "node:url";
 import nextConfig from "../../next.config";
 import {
   contentSecurityPolicyDirectives,
@@ -130,4 +133,56 @@ test("next/image patterns reject query strings", () => {
     assert.equal(pattern.protocol, "https");
     assert.equal(pattern.search, "", `${pattern.hostname} must set search: ""`);
   }
+});
+
+test("next/image never proxies another Blob store", () => {
+  const { remotePatterns } = nextConfig.images ?? {};
+  assert.ok(remotePatterns);
+
+  for (const pattern of remotePatterns) {
+    assert.ok(!(pattern instanceof URL));
+    assert.ok(
+      !pattern.hostname.includes("*"),
+      `${pattern.hostname} must name one store, not a wildcard`,
+    );
+    assert.match(
+      pattern.hostname,
+      /^[a-z\d]+\.public\.blob\.vercel-storage\.com$/,
+    );
+  }
+
+  // Without Vercel Blob storage (local media, CI) there is nothing to proxy.
+  if (
+    process.env.PAYLOAD_STORAGE !== "vercel-blob" ||
+    !process.env.BLOB_READ_WRITE_TOKEN
+  ) {
+    assert.deepEqual(remotePatterns, []);
+  }
+});
+
+test("next.config redirects the legacy home slug and has no dead webpack hook", async () => {
+  assert.ok(nextConfig.redirects, "redirects() must be configured");
+  const redirects = await nextConfig.redirects();
+
+  assert.ok(
+    redirects.some(
+      (redirect) =>
+        redirect.source === "/ana-sayfa" &&
+        redirect.destination === "/" &&
+        "permanent" in redirect &&
+        redirect.permanent === true,
+    ),
+  );
+
+  // withPayload adds its own webpack() for `next build --webpack`; the
+  // project itself must not depend on one (Turbopack ignores it).
+  const source = readFileSync(
+    path.resolve(
+      path.dirname(fileURLToPath(import.meta.url)),
+      "../../next.config.ts",
+    ),
+    "utf8",
+  );
+  assert.equal(/\bwebpack\s*:/.test(source), false);
+  assert.equal(/extensionAlias/.test(source), false);
 });

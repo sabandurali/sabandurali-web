@@ -1,4 +1,5 @@
 import type { CollectionBeforeChangeHook, CollectionConfig } from "payload";
+import { imageMediaFilter } from "@/collections/validation";
 import {
   adminOnly,
   adminOrEditor,
@@ -8,7 +9,10 @@ import {
   createLocalizedSlugField,
   createLocalizedSlugHook,
 } from "@/lib/localizedSlug";
+import { createRevalidationHooks } from "@/lib/revalidation";
 import { districtOptions } from "@/content/districts/district-registry";
+
+const revalidation = createRevalidationHooks("photos");
 
 const setPublishedAtOnFirstPublish: CollectionBeforeChangeHook = ({
   data,
@@ -88,8 +92,9 @@ export const Photos: CollectionConfig = {
               label: "Medya dosyası",
               admin: {
                 description:
-                  "Aynı fiziksel görseli yeniden yüklemeyin; mevcut Media kaydını seçin.",
+                  "Aynı fiziksel görseli yeniden yüklemeyin; mevcut Media kaydını seçin. Yalnız görsel dosyalar (PDF değil) seçilebilir.",
               },
+              filterOptions: imageMediaFilter,
               relationTo: "media",
               required: true,
             },
@@ -237,6 +242,7 @@ export const Photos: CollectionConfig = {
                 {
                   name: "openGraphImage",
                   type: "relationship",
+                  filterOptions: imageMediaFilter,
                   relationTo: "media",
                 },
               ],
@@ -247,6 +253,8 @@ export const Photos: CollectionConfig = {
     },
   ],
   hooks: {
+    afterChange: [revalidation.afterChange],
+    afterDelete: [revalidation.afterDelete],
     beforeChange: [setPublishedAtOnFirstPublish],
     beforeValidate: [
       createLocalizedSlugHook({ collection: "photos", sourceField: "title" }),

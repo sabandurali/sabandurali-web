@@ -2,6 +2,8 @@ import {
   ValidationError,
   type CollectionBeforeValidateHook,
   type CollectionConfig,
+  type FilterOptions,
+  type PayloadRequest,
   type Where,
 } from "payload";
 import {
@@ -12,26 +14,70 @@ import {
   REVIEW_STATUSES,
 } from "@/content/books/constants";
 import { createBookReviewSlug, normalizeIsbn } from "@/content/books/helpers";
+import { getBookPublicationIssues } from "@/collections/bookPublication";
 import {
+  getText,
+  imageMediaFilter,
+  isRecord,
+  validateOptionalSiteCanonical,
+} from "@/collections/validation";
+import {
+  adminOnly,
   adminOrEditor,
   publishedBookReviewOrAdminOrEditor,
 } from "@/lib/payloadAccess";
+import { createRevalidationHooks } from "@/lib/revalidation";
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
-}
-
-function getText(value: unknown): string | null {
-  return typeof value === "string" && value.trim().length > 0
-    ? value.trim()
-    : null;
-}
+const revalidation = createRevalidationHooks("books");
 
 function getRelationshipID(value: unknown): string | null {
   if (typeof value === "string") return value;
   if (isRecord(value) && typeof value.id === "string") return value.id;
   return null;
 }
+
+function throwBookValidationError(
+  req: PayloadRequest,
+  errors: Array<{ message: string; path: string }>,
+  id: string | null,
+): never {
+  throw new ValidationError(
+    {
+      collection: "books",
+      errors,
+      id: id ?? undefined,
+      req,
+    },
+    req.t,
+  );
+}
+
+/** Other reviews whose `translation` points at `targetID`. */
+async function findBooksTranslatedAs(
+  req: PayloadRequest,
+  targetID: string,
+  excludeID: string | null,
+): Promise<string[]> {
+  const result = await req.payload.find({
+    collection: "books",
+    depth: 0,
+    limit: 2,
+    overrideAccess: true,
+    pagination: false,
+    req,
+    where: {
+      and: [
+        { translation: { equals: targetID } },
+        ...(excludeID === null ? [] : [{ id: { not_equals: excludeID } }]),
+      ],
+    },
+  });
+
+  return result.docs.map((doc) => String(doc.id));
+}
+
+const excludeCurrentBook: FilterOptions = ({ id }) =>
+  id === undefined ? true : { id: { not_equals: id } };
 
 function normalizeNestedSlugs(value: unknown, sourceField: string): unknown {
   if (!Array.isArray(value)) return value;
@@ -49,7 +95,7 @@ function normalizeNestedSlugs(value: unknown, sourceField: string): unknown {
   });
 }
 
-const normalizeAndValidateBook: CollectionBeforeValidateHook = async ({
+export const normalizeAndValidateBook: CollectionBeforeValidateHook = async ({
   data,
   operation,
   originalDoc,
@@ -205,6 +251,108 @@ const normalizeAndValidateBook: CollectionBeforeValidateHook = async ({
         req.t,
       );
     }
+
+    // Translations are 1:1 pairs. Otherwise the reverse lookup that builds
+    // hreflang links finds several candidates and picks one at random.
+    const targetsOwnTranslation = getRelationshipID(translation.translation);
+
+    if (targetsOwnTranslation !== null && targetsOwnTranslation !== currentID) {
+      throwBookValidationError(
+        req,
+        [
+          {
+            message:
+              "Seçilen kayıt başka bir incelemeye çeviri olarak bağlı. Önce o bağlantıyı kaldırın.",
+            path: "translation",
+          },
+        ],
+        currentID,
+      );
+    }
+
+    if (
+      (await findBooksTranslatedAs(req, translationID, currentID)).length > 0
+    ) {
+      throwBookValidationError(
+        req,
+        [
+          {
+            message:
+              "Seçilen kayıt başka bir incelemenin çevirisi olarak zaten seçili.",
+            path: "translation",
+          },
+        ],
+        currentID,
+      );
+    }
+
+    if (currentID !== null) {
+      const linkedFrom = await findBooksTranslatedAs(
+        req,
+        currentID,
+        translationID,
+      );
+
+      if (linkedFrom.length > 0) {
+        throwBookValidationError(
+          req,
+          [
+            {
+              message:
+                "Bu inceleme başka bir kaydın çevirisi olarak bağlı. Çeviri olarak o kaydı seçin veya önce o bağlantıyı kaldırın.",
+              path: "translation",
+            },
+          ],
+          currentID,
+        );
+      }
+    }
+  }
+
+  return data;
+};
+
+/**
+ * Publishing runs the same rules as the public site (see
+ * `bookPublication.ts`), so a review that looks published in the admin is
+ * also visible on the site, or the editor sees why not.
+ */
+export const validateBookPublication: CollectionBeforeValidateHook = async ({
+  data,
+  originalDoc,
+  req,
+}) => {
+  if (!data) return data;
+
+  const merged: Record<string, unknown> = {
+    ...(isRecord(originalDoc) ? originalDoc : {}),
+    ...data,
+  };
+
+  if (merged._status !== "published") return data;
+
+  const coverID = getRelationshipID(merged.coverImage);
+  const coverMedia =
+    coverID === null
+      ? null
+      : await req.payload
+          .findByID({
+            collection: "media",
+            depth: 0,
+            disableErrors: true,
+            id: coverID,
+            overrideAccess: true,
+            req,
+          })
+          .catch(() => null);
+  const issues = getBookPublicationIssues(merged, coverMedia);
+
+  if (issues.length > 0) {
+    throwBookValidationError(
+      req,
+      issues.map((issue) => ({ ...issue })),
+      getText(merged.id),
+    );
   }
 
   return data;
@@ -231,7 +379,9 @@ export const Books: CollectionConfig = {
   slug: "books",
   access: {
     create: adminOrEditor,
-    delete: adminOrEditor,
+    // Deleting removes every version too; like articles and photos, only an
+    // admin may do it. Editors unpublish instead.
+    delete: adminOnly,
     read: publishedBookReviewOrAdminOrEditor,
     update: adminOrEditor,
   },
@@ -389,6 +539,7 @@ export const Books: CollectionConfig = {
               type: "upload",
               label: "Kapak görseli",
               relationTo: "media",
+              filterOptions: imageMediaFilter,
             },
             {
               name: "coverImageAlt",
@@ -471,7 +622,7 @@ export const Books: CollectionConfig = {
                   label: "İnceleme durumu",
                   admin: {
                     description:
-                      "Public erişim için published seçilmeli; yayın tarihi gelmiş ve SEO index açık olmalıdır.",
+                      "Yayınlarken 'published' (sitede görünür) veya 'archived' (sitede gizli) seçin. Görünmesi için yayın tarihi gelmiş ve SEO indeksi açık olmalıdır; eksik alanlar yayın sırasında listelenir.",
                   },
                   defaultValue: "draft",
                   index: true,
@@ -634,8 +785,12 @@ export const Books: CollectionConfig = {
               label: "Diğer dildeki kayıt",
               admin: {
                 description:
-                  "Bu incelemenin Türkçe veya İngilizce karşılığını seçin.",
+                  "Bu incelemenin Türkçe veya İngilizce karşılığını seçin. Her kayıt yalnız bir çeviriyle eşleşebilir.",
               },
+              filterOptions: excludeCurrentBook,
+              // Translations point at each other; populating only one level
+              // keeps `?depth=` from expanding the pair recursively.
+              maxDepth: 1,
               relationTo: "books",
             },
             {
@@ -654,6 +809,8 @@ export const Books: CollectionConfig = {
               type: "relationship",
               hasMany: true,
               label: "İlgili kitap incelemeleri",
+              filterOptions: excludeCurrentBook,
+              maxDepth: 1,
               relationTo: "books",
             },
             {
@@ -716,6 +873,11 @@ export const Books: CollectionConfig = {
                   name: "canonical",
                   type: "text",
                   label: "Canonical adresi",
+                  admin: {
+                    description:
+                      "Boş bırakılırsa incelemenin kendi adresi kullanılır. Yalnız site içi yol (/kitaplar/...) veya https://www.sabandurali.com adresi girilebilir.",
+                  },
+                  validate: validateOptionalSiteCanonical,
                 },
                 {
                   name: "index",
@@ -747,6 +909,7 @@ export const Books: CollectionConfig = {
                   type: "upload",
                   label: "Sosyal paylaşım görseli",
                   relationTo: "media",
+                  filterOptions: imageMediaFilter,
                 },
               ],
             },
@@ -756,8 +919,18 @@ export const Books: CollectionConfig = {
     },
   ],
   hooks: {
-    beforeValidate: [normalizeAndValidateBook],
+    afterChange: [revalidation.afterChange],
+    afterDelete: [revalidation.afterDelete],
+    beforeValidate: [normalizeAndValidateBook, validateBookPublication],
   },
+  indexes: [
+    {
+      // Enforces in the database what `normalizeAndValidateBook` checks, so
+      // two concurrent saves cannot create the same language and slug twice.
+      fields: ["language", "slug"],
+      unique: true,
+    },
+  ],
   versions: {
     drafts: true,
     maxPerDoc: 25,
