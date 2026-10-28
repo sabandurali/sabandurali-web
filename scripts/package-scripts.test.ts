@@ -2,7 +2,10 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
 
-const { scripts } = JSON.parse(readFileSync("package.json", "utf8")) as {
+const { devDependencies, scripts } = JSON.parse(
+  readFileSync("package.json", "utf8"),
+) as {
+  devDependencies: Record<string, string>;
   scripts: Record<string, string>;
 };
 
@@ -48,6 +51,14 @@ test("ARC-9: test scripts run without a server, browser or prepared database", (
     scripts.test,
     "npm run test:unit && npm run test:districts:content && npm run test:migrations",
   );
+});
+
+test("ARC-9: the browser and migration replay tools are exact devDependencies", () => {
+  // scripts/districts/acceptance.mjs and check-cms.ts load playwright;
+  // scripts/districts/check-postgres.mjs (npm test) loads PGlite.
+  for (const name of ["playwright", "@electric-sql/pglite"]) {
+    assert.match(devDependencies[name] ?? "", /^\d+\.\d+\.\d+$/, name);
+  }
 });
 
 test("SEC-24: archived Production importers have no npm script", () => {
