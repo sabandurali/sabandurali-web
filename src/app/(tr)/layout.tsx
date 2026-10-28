@@ -1,17 +1,8 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import SkipLink from "@/components/ui/SkipLink";
 import { siteUrl } from "@/config/site";
+import { fontVariables } from "../fonts";
 import "../globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -26,8 +17,16 @@ export default function TurkishRootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="tr">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+    // `scheme-dark` and the body classes keep the pre-atlas dark ground for
+    // pages not yet rebuilt with src/components/ui; the atlas layout drops
+    // them so the İstanbul Atlası base ground (globals.css) applies.
+    <html
+      lang="tr"
+      data-scroll-behavior="smooth"
+      className={`${fontVariables} scheme-dark`}
+    >
+      <body className="bg-background text-foreground">
+        <SkipLink>İçeriğe geç</SkipLink>
         {children}
       </body>
     </html>
