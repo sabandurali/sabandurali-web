@@ -54,8 +54,7 @@ Before any production change:
 - Keep or later delete `origin/codex/project-day-20-full-site-prototype`; its decisions are now archived in the repository.
 - Branch hygiene rule: delete a remote branch once its pull request is merged or abandoned, and review the remaining remote branches at every release. A branch that should stay but must never deploy goes into `git.deploymentEnabled` in `vercel.json`; that setting only applies to commits that contain it.
 - `.next` and `node_modules` are recreatable caches/dependencies.
-- Never delete `.env.production.backup` until the user intentionally decides after confirming secure external storage.
-- The local Payload DB has a verified external backup; do not casually delete either copy.
+- Never delete a local secret backup or the local Payload database; that is the owner's decision after confirming secure external storage (details in the owner's private notes).
 - Do not delete old branches as part of feature work unless the user explicitly requests housekeeping.
 
 ## 6. When restarting after a long break

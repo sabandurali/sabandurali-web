@@ -47,7 +47,8 @@ for (const language of ["tr", "en"] as const) {
     assert.ok(email?.label.includes(contactEmail));
     const privacy = JSON.stringify(privacyContent[language]);
     assert.equal(privacy.split(contactEmail).length - 1, 2);
-    assert.equal(privacy.includes("sabandurali@gmail.com"), false);
+    // No personal mailbox may remain next to the corporate address.
+    assert.doesNotMatch(privacy, /@gmail\.com/i);
   });
 
   test(`${language}: missing CMS image falls back for OG and Twitter without changing canonical`, () => {

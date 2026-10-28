@@ -288,25 +288,10 @@ Historical imports set `featured: false`. Hero selection prefers an explicitly f
 
 ## M. Local machine safety and backups
 
-Local Payload database:
-
-- Path: `.data/payload.db`
-- Audit date: 2026-10-04
-- SQLite integrity: `ok`
-- Content tables: empty
-- Local users: 1
-- Local sessions: 1
-- Do not delete casually.
-
-Secure backup:
-
-- Path: `/Users/saban/Documents/Backups/sabandurali-web/payload-local-2026-10-04.db`
-- SHA-256: `9672c50b124627661d6802b516c08e41b7ff225ff61d57612232f457e534f84a`
-- Permissions: `0600`
-
-`.env.production.backup` is local-only, Git-ignored, permissioned `0600`, and contains production secrets. **NEVER COMMIT IT.** Relevant variable names had Vercel Production counterparts as of 2026-10-04. Never print its values into chat, logs, commands, or documentation.
-
-`.vercel` contains regenerable linkage metadata and can be recreated with `vercel link`.
+- The local Payload database is `.data/payload.db` (SQLite, Git-ignored). It is the owner's local working copy; do not delete it casually.
+- Backup locations, checksums and any local file that holds production values are recorded in the owner's private operational notes, never in this public repository. Do not commit such files and never print their values into chat, logs, commands or documentation.
+- `.env*` files other than `.env.example`, `.data/` and `.private-backups/` are Git-ignored and must stay so.
+- `.vercel` contains regenerable linkage metadata and can be recreated with `vercel link`.
 
 ## N. Old branches
 

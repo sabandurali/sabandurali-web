@@ -40,7 +40,7 @@ Kaynaklar:
 ## Git ve yayın durumu
 
 - Remote, GitHub API ve proje kimliği ile doğrulandı: [sabandurali/sabandurali-web](https://github.com/sabandurali/sabandurali-web).
-- Çalışma klasörü: `/Users/saban/Documents/Codex/sabandurali-web`. Eski `Documents/GitHub/sabandurali-web` klasörü mevcut değil.
+- Çalışma, projenin yerel klasöründe yapıldı.
 - Başlangıç branch'i `codex/development`, başlangıç HEAD'i `07dada7b676d6839edf6d587e99d3c3cebac9cac` idi. Önceden bulunan yerel geliştirme rehberi commit'i korundu.
 - GitHub `main` ucu `22fd7be1e6b891942a5a23236d2bb80c4a99474f` olarak doğrulandı. GitHub'da `codex/development` branch'i bulunmadı ve yerel branch'in upstream'i yoktu.
 - Hazırlık commit'i `cdd18aebcb5b6b7a4a71fa3abc6766d11863305a` korunarak ayrı `codex/corporate-contact-email` feature branch'i oluşturuldu. `main`, `origin/main` ve GitHub `main` uçlarının aynı olduğu tekrar doğrulandı.
