@@ -584,7 +584,8 @@ export async function loadSitemapSourcesByKey<T>(
   load: (key: string) => Promise<T>,
   report: SitemapErrorReporter = reportSitemapSourceError,
 ): Promise<Map<string, T>> {
-  const results = await Promise.allSettled(keys.map((key) => load(key)));
+  // `async` turns a synchronous throw into a rejection of that key only.
+  const results = await Promise.allSettled(keys.map(async (key) => load(key)));
   const values = new Map<string, T>();
   const failed: string[] = [];
   let firstError: unknown;

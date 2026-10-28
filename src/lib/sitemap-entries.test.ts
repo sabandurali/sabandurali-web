@@ -676,6 +676,25 @@ test("one failing district does not hide the others", async () => {
   assert.deepEqual(reports, ["district guides (fatih)"]);
 });
 
+test("a load that throws synchronously only drops its own key", async () => {
+  const reports: string[] = [];
+  const guides = await loadSitemapSourcesByKey(
+    "district guides",
+    ["esenler", "fatih"],
+    (slug) => {
+      if (slug === "fatih") throw new Error("invalid configuration");
+      return Promise.resolve(guide({ summary: slug }));
+    },
+    (source, error) =>
+      reports.push(
+        `${source}: ${error instanceof Error ? error.message : String(error)}`,
+      ),
+  );
+
+  assert.deepEqual([...guides.keys()], ["esenler"]);
+  assert.deepEqual(reports, ["district guides (fatih): invalid configuration"]);
+});
+
 test("a sitemap built from failed sources still lists every static page", () => {
   const sitemap = buildSitemap({
     ...emptyContent,
