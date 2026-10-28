@@ -199,6 +199,10 @@ sınıfı (`focus-visible:` dahil) onları ezebilir (FE-12).
   hale. Açık zeminde mürekkep halka (≥ 10.37:1), deniz zemininde beyaz hale (13.06:1) görünür.
   `Section tone="sea"` iki rengi yer değiştirir. Halkayı bir kapsayıcıya taşımak için `focus-ring`
   sınıfı vardır (kart). Halkayı kaldırmayın; `outline-none` yalnızca halka başka bir öğede çiziliyorsa.
+  Taban kural haleyi `--tw-ring-offset-shadow` olarak da verir; bu yüzden `shadow-*` ya da `ring-*`
+  sınıfı olan bir öğe odaklanınca hale kendi gölgesiyle birlikte görünür (koyu zeminde yalnız mürekkep
+  halka kalmaz, test eder). Haleyi bilerek kaldırmak için `focus-visible:[box-shadow:none]` kullanın;
+  `shadow-none` haleyi geri ekler.
 - Hareket: `prefers-reduced-motion: reduce` tüm animasyon ve geçişleri durdurur. Yumuşak kaydırma
   yalnızca `no-preference` iken açıktır; kök layout'lar `data-scroll-behavior="smooth"` taşır, böylece
   Next.js 16 sayfa geçişlerinde yumuşak kaydırmayı kapatır.

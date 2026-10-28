@@ -1,6 +1,10 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
+import { createRequire } from "node:module";
+import path from "node:path";
 import test from "node:test";
+import { fileURLToPath } from "node:url";
+import { compile } from "tailwindcss";
 import { contrastRatio } from "./contrast";
 
 /*
@@ -159,8 +163,10 @@ test("FE-12: every rule is layered or a token block; nothing overrides utilities
   }
 });
 
+const focusRule = /:focus-visible\s*\{([^}]*)\}/.exec(baseBody)?.[1] ?? "";
+
 test("FE-4: the two-tone focus ring is visible on every ground", () => {
-  const focus = /:focus-visible\s*\{([^}]*)\}/.exec(baseBody)?.[1] ?? "";
+  const focus = focusRule;
   assert.match(
     focus,
     /outline:\s*var\(--focus-ring-width\) solid var\(--focus-ring\)/,
@@ -189,6 +195,65 @@ test("FE-4: the two-tone focus ring is visible on every ground", () => {
     contrastRatio(halo, color("sea")) >= 3,
     "white halo on sea is below 3:1",
   );
+});
+
+const tailwindRoot = path.dirname(
+  createRequire(import.meta.url).resolve("tailwindcss/package.json"),
+);
+
+/** globals.css compiled by the project's Tailwind for the given classes. */
+async function buildCss(candidates: string[]): Promise<string> {
+  const compiler = await compile(read("src/app/globals.css"), {
+    base: fileURLToPath(new URL("src/app/", root)),
+    async loadStylesheet(id, base) {
+      const file =
+        id === "tailwindcss"
+          ? path.join(tailwindRoot, "index.css")
+          : path.resolve(base, id);
+      return {
+        path: file,
+        base: path.dirname(file),
+        content: readFileSync(file, "utf8"),
+      };
+    },
+  });
+  return compiler.build(candidates);
+}
+
+test("FE-4: shadow and ring utilities keep the focus halo", async () => {
+  // A shadow utility replaces box-shadow; the halo survives only because
+  // the base rule also feeds Tailwind's shadow stack. Without it a focused
+  // shadowed control (BackToTop) shows the ink ring alone, 1.3:1 on navy.
+  assert.match(
+    focusRule,
+    /--tw-ring-offset-shadow:\s*0 0 0 var\(--focus-ring-offset\) var\(--focus-halo\)/,
+  );
+  const utilities = ["shadow-lg", "shadow-panel", "ring-2"];
+  const output = await buildCss(utilities);
+  for (const utility of utilities) {
+    const rule =
+      new RegExp(`\\.${utility} \\{([^}]*)\\}`).exec(output)?.[1] ?? "";
+    assert.match(
+      rule,
+      /box-shadow:[^;]*var\(--tw-ring-offset-shadow\)/,
+      `${utility} must compose the halo`,
+    );
+    assert.doesNotMatch(rule, /--tw-ring-offset-shadow:/, utility);
+  }
+});
+
+test("FE-4: ui components drop the halo only with box-shadow:none", () => {
+  // `shadow-none` composes the halo back in; a component that draws the
+  // ring elsewhere (Card) must remove it with [box-shadow:none].
+  const directory = fileURLToPath(new URL("src/components/ui/", root));
+  for (const file of readdirSync(directory)) {
+    if (!file.endsWith(".tsx")) continue;
+    assert.doesNotMatch(
+      readFileSync(path.join(directory, file), "utf8"),
+      /\bfocus(?:-visible)?:shadow-none\b/,
+      file,
+    );
+  }
 });
 
 test("FE-6: the documented contrast table matches the tokens and passes AA", () => {

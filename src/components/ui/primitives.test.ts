@@ -106,6 +106,12 @@ test("Card has one title link with an expanded hit area; credits stay clickable"
   );
   assert.match(html, /data-card-link=""[^>]*after:absolute after:inset-0/);
   assert.match(html, /has-\[\[data-card-link\]:focus-visible\]:focus-ring/);
+  // The ring is drawn around the card, so the title link drops its own
+  // outline and halo (shadow-none would compose the halo back in).
+  assert.match(
+    html,
+    /data-card-link=""[^>]*focus-visible:outline-none focus-visible:\[box-shadow:none\]/,
+  );
   assert.match(
     html,
     /<a href="https:\/\/creativecommons\.org[^"]*" rel="license noopener noreferrer" class="relative z-10/,

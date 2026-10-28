@@ -209,9 +209,15 @@
     -webkit-tap-highlight-color: transparent;
   }
 
+  /* The halo is also handed to Tailwind's shadow stack: every shadow-* and
+     ring-* utility composes var(--tw-ring-offset-shadow) into box-shadow,
+     so a focused element with its own shadow keeps the halo. Without it
+     the ink ring alone would vanish on a dark ground. To drop the halo on
+     purpose, use focus-visible:[box-shadow:none] (not shadow-none). */
   :focus-visible {
     outline: var(--focus-ring-width) solid var(--focus-ring);
     outline-offset: var(--focus-ring-offset);
+    --tw-ring-offset-shadow: 0 0 0 var(--focus-ring-offset) var(--focus-halo);
     box-shadow: 0 0 0 var(--focus-ring-offset) var(--focus-halo);
   }
 

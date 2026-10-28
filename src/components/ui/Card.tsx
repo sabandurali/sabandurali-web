@@ -46,7 +46,7 @@ export default function Card({
       href={href}
       prefetch={prefetch}
       data-card-link=""
-      className="text-ink no-underline decoration-2 underline-offset-[5px] after:absolute after:inset-0 after:content-[''] hover:underline focus-visible:shadow-none focus-visible:outline-none"
+      className="text-ink no-underline decoration-2 underline-offset-[5px] after:absolute after:inset-0 after:content-[''] hover:underline focus-visible:outline-none focus-visible:[box-shadow:none]"
     >
       {title}
     </UiLink>,
