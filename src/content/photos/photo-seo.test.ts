@@ -1,0 +1,126 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+import { createPhotoMetadata } from "./photo-seo";
+import type { PublicPhoto } from "./types";
+
+const site = "https://www.sabandurali.com";
+
+function photo(overrides: Partial<PublicPhoto> = {}): PublicPhoto {
+  return {
+    id: "photo-1",
+    language: "tr",
+    title: "Galata",
+    slug: "galata",
+    description: null,
+    image: {
+      src: "/api/media/file/galata.jpg",
+      alt: "Galata Kulesi",
+      width: 6000,
+      height: 4000,
+    },
+    collections: [],
+    tags: [],
+    takenAt: null,
+    locationName: null,
+    district: null,
+    neighborhood: null,
+    districtPhotoCategory: null,
+    dayPeriod: null,
+    photographer: "Şaban Durali",
+    creditLicense: null,
+    exif: {
+      camera: null,
+      lens: null,
+      focalLength: null,
+      aperture: null,
+      shutterSpeed: null,
+      iso: null,
+    },
+    featured: false,
+    publishedAt: "2026-06-01T09:00:00.000Z",
+    createdAt: "2026-06-01T09:00:00.000Z",
+    updatedAt: "2026-06-03T09:00:00.000Z",
+    seo: {
+      title: "Galata | Şaban Durali",
+      description: "Galata",
+      openGraphImage: null,
+    },
+    ...overrides,
+  };
+}
+
+test("the original photograph is shared through the image optimizer", () => {
+  const metadata = createPhotoMetadata(photo(), {
+    id: "photo-1",
+    language: "en",
+    title: "Galata",
+    slug: "galata-tower",
+  });
+  const images = [
+    {
+      url: `${site}/_next/image?url=%2Fapi%2Fmedia%2Ffile%2Fgalata.jpg&w=1200&q=75`,
+      alt: "Galata Kulesi",
+      width: 1200,
+      height: 800,
+    },
+  ];
+
+  assert.deepEqual(metadata.alternates, {
+    canonical: `${site}/fotograflar/galata`,
+    languages: {
+      "tr-TR": `${site}/fotograflar/galata`,
+      en: `${site}/en/photography/galata-tower`,
+      "x-default": `${site}/fotograflar/galata`,
+    },
+  });
+  assert.deepEqual(metadata.robots, { index: true, follow: true });
+  assert.deepEqual(metadata.openGraph, {
+    title: "Galata | Şaban Durali",
+    description: "Galata",
+    url: `${site}/fotograflar/galata`,
+    siteName: "Şaban Durali",
+    locale: "tr_TR",
+    alternateLocale: ["en_US"],
+    images,
+    type: "article",
+    publishedTime: "2026-06-01T09:00:00.000Z",
+    modifiedTime: "2026-06-03T09:00:00.000Z",
+    authors: ["Şaban Durali"],
+  });
+  assert.deepEqual(metadata.twitter, {
+    card: "summary_large_image",
+    title: "Galata | Şaban Durali",
+    description: "Galata",
+    images,
+  });
+});
+
+test("an explicit share image is used as uploaded", () => {
+  const metadata = createPhotoMetadata(
+    photo({
+      seo: {
+        title: "T",
+        description: "D",
+        openGraphImage: {
+          src: "https://store.public.blob.vercel-storage.com/share.jpg",
+          alt: "Paylaşım",
+          width: 1200,
+          height: 630,
+        },
+      },
+    }),
+    null,
+  );
+
+  assert.deepEqual(metadata.twitter?.images, [
+    {
+      url: "https://store.public.blob.vercel-storage.com/share.jpg",
+      alt: "Paylaşım",
+      width: 1200,
+      height: 630,
+    },
+  ]);
+  assert.deepEqual(metadata.alternates?.languages, {
+    "tr-TR": `${site}/fotograflar/galata`,
+  });
+});

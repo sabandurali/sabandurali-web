@@ -6,16 +6,29 @@ import {
   getSafePayloadMediaPath,
 } from "@/content/articles/article-images";
 import {
-  getArticleAlternateUrls,
+  getArticlePath,
   getArticleUrl,
 } from "@/content/articles/article-routes";
 import type {
   PublicArticle,
+  PublicArticleSummary,
   PublicArticleTranslation,
 } from "@/content/articles/public-types";
-import { personEntityId, personalBrandName } from "@/content/entity-seo";
+import {
+  createPersonReference,
+  personalBrandName,
+  serializeJsonLd,
+} from "@/content/entity-seo";
+import {
+  createOptimizedSocialImage,
+  createPageMetadata,
+  createSocialImage,
+  type SocialImage,
+} from "@/lib/metadata";
 
-export function getArticleCanonicalUrl(article: PublicArticle): string {
+type CanonicalArticle = Pick<PublicArticleSummary, "language" | "seo" | "slug">;
+
+export function getArticleCanonicalUrl(article: CanonicalArticle): string {
   if (article.seo.canonical !== undefined) {
     try {
       return getAbsoluteUrl(article.seo.canonical);
@@ -27,62 +40,73 @@ export function getArticleCanonicalUrl(article: PublicArticle): string {
   return getArticleUrl(article.slug, article.language);
 }
 
+/** Static articles name their author; CMS articles are written by the owner. */
+export function getArticleAuthorName(article: PublicArticle): string {
+  return article.content.source === "static" &&
+    article.content.details.author !== null
+    ? article.content.details.author.name
+    : personalBrandName;
+}
+
+function getArticleSocialImage(article: PublicArticle): SocialImage | null {
+  const alt = article.featuredImage?.alt || article.title;
+
+  if (article.featuredImage?.source === "payload") {
+    // The CMS uses the featured image itself as the share image.
+    const src = getSafePayloadMediaPath(article.seo.openGraphImage);
+    const sameAsFeatured = src === article.featuredImage.src;
+
+    return src === null
+      ? null
+      : createOptimizedSocialImage({
+          src,
+          alt,
+          width: sameAsFeatured ? article.featuredImage.width : undefined,
+          height: sameAsFeatured ? article.featuredImage.height : undefined,
+        });
+  }
+
+  const src = getAvailableLocalArticleImage(article.seo.openGraphImage);
+  return src === null ? null : createSocialImage({ src, alt });
+}
+
 export function createArticleMetadata(
   article: PublicArticle,
   translation: PublicArticleTranslation | null,
 ): Metadata {
-  const canonical = getArticleCanonicalUrl(article);
-  const openGraphImage =
-    article.featuredImage?.source === "payload"
-      ? getSafePayloadMediaPath(article.seo.openGraphImage)
-      : getAvailableLocalArticleImage(article.seo.openGraphImage);
-  const author =
-    article.content.source === "static" ? article.content.details.author : null;
+  const image = getArticleSocialImage(article);
 
-  return {
+  return createPageMetadata({
     title: article.seo.title,
     description: article.seo.description,
-    alternates: {
-      canonical,
-      languages: getArticleAlternateUrls(article, translation),
-    },
-    robots: {
-      index: article.seo.index,
-      follow: article.seo.follow,
-    },
-    openGraph: {
-      title: article.seo.openGraphTitle ?? article.seo.title,
-      description: article.seo.openGraphDescription ?? article.seo.description,
-      url: canonical,
-      siteName: "Şaban Durali",
-      locale: article.language === "tr" ? "tr_TR" : "en_US",
-      alternateLocale:
-        translation === null
-          ? undefined
-          : translation.language === "tr"
-            ? "tr_TR"
-            : "en_US",
-      type: "article",
-      publishedTime: article.publishedAt ?? undefined,
+    locale: article.language,
+    path: getArticlePath(article.slug, article.language),
+    translations:
+      translation === null
+        ? undefined
+        : {
+            [translation.language]: getArticlePath(
+              translation.slug,
+              translation.language,
+            ),
+          },
+    canonical: getArticleCanonicalUrl(article),
+    images: image === null ? undefined : [image],
+    index: article.seo.index,
+    follow: article.seo.follow,
+    socialTitle: article.seo.openGraphTitle,
+    socialDescription: article.seo.openGraphDescription,
+    article: {
+      publishedTime: article.publishedAt,
       modifiedTime: article.updatedAt,
-      authors: author === null ? undefined : [author.name],
-      images:
-        openGraphImage === null
-          ? undefined
-          : [
-              {
-                url: openGraphImage,
-                alt: article.featuredImage?.alt || article.title,
-              },
-            ],
+      authors: [getArticleAuthorName(article)],
     },
-  };
+  });
 }
 
 export function createArticleJsonLd(article: PublicArticle) {
   const coverImage = getAvailablePublicArticleImage(article.featuredImage);
-  const author =
-    article.content.source === "static" ? article.content.details.author : null;
+  const authorName = getArticleAuthorName(article);
 
   return {
     "@context": "https://schema.org",
@@ -92,19 +116,12 @@ export function createArticleJsonLd(article: PublicArticle) {
     datePublished: article.publishedAt ?? undefined,
     dateModified: article.updatedAt,
     author:
-      author === null
-        ? undefined
-        : author.name === personalBrandName
-          ? {
-              "@type": "Person",
-              "@id": personEntityId,
-              name: personalBrandName,
-              url: getAbsoluteUrl("/"),
-            }
-          : {
-              "@type": "Person",
-              name: author.name,
-            },
+      authorName === personalBrandName
+        ? createPersonReference()
+        : {
+            "@type": "Person",
+            name: authorName,
+          },
     inLanguage: article.language === "tr" ? "tr-TR" : "en",
     mainEntityOfPage: getArticleCanonicalUrl(article),
     image: coverImage === null ? undefined : getAbsoluteUrl(coverImage),
@@ -112,5 +129,5 @@ export function createArticleJsonLd(article: PublicArticle) {
 }
 
 export function serializeArticleJsonLd(article: PublicArticle): string {
-  return JSON.stringify(createArticleJsonLd(article)).replace(/</g, "\\u003c");
+  return serializeJsonLd(createArticleJsonLd(article));
 }
