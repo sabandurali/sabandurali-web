@@ -102,6 +102,8 @@ const paragraph = (text: string): NonNullable<Article["content"]> => ({
 
 test("configuration: depth cap, anonymous REST limits and a rich text editor the site can render", () => {
   assert.equal(config.maxDepth, 2);
+  // Deliberate refusals are named Forbidden and logged at info level.
+  assert.equal(config.loggingLevels.Forbidden, "info");
 
   for (const slug of [
     "users",
@@ -197,7 +199,7 @@ test("users: first account is admin, new accounts are editors, the last admin is
       data: { email: "owner@example.com" },
       disableEmail: true,
     }),
-    hasStatus(501),
+    hasStatus(403, /henüz yapılandırılmadı/),
   );
 });
 

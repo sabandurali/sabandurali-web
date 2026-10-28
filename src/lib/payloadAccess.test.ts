@@ -9,6 +9,7 @@ import type {
 } from "payload";
 import {
   ANONYMOUS_REST_MAX_LIMIT,
+  PublicRequestRefusal,
   adminOnly,
   adminOrEditor,
   collectWherePaths,
@@ -196,8 +197,10 @@ test("media cannot be listed anonymously over REST, but population and files kee
           req: request(null, "REST"),
         }),
       (error: unknown) =>
-        error instanceof Error &&
-        "status" in error &&
+        error instanceof PublicRequestRefusal &&
+        // Payload picks the log level by name; it must survive minification.
+        error.name === "Forbidden" &&
+        error.isPublic === true &&
         error.status === 403 &&
         /listelenmez/.test(error.message),
     );

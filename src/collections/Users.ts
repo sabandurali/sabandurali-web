@@ -1,10 +1,9 @@
-import {
-  APIError,
-  type CollectionBeforeChangeHook,
-  type CollectionBeforeOperationHook,
-  type CollectionConfig,
+import type {
+  CollectionBeforeChangeHook,
+  CollectionBeforeOperationHook,
+  CollectionConfig,
 } from "payload";
-import { isAdmin } from "@/lib/payloadAccess";
+import { PublicRequestRefusal, isAdmin } from "@/lib/payloadAccess";
 import {
   preventDeletingLastAdmin,
   preventDemotingLastAdmin,
@@ -47,9 +46,8 @@ export const refusePasswordResetWithoutEmail: CollectionBeforeOperationHook = ({
   req,
 }) => {
   if (operation === "forgotPassword" && req.payload.email.name === "console") {
-    throw new APIError(
+    throw new PublicRequestRefusal(
       "Parola sıfırlama e-postası henüz yapılandırılmadı. Parolanızı başka bir yönetici sıfırlayabilir.",
-      501,
     );
   }
 

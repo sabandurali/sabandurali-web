@@ -160,7 +160,8 @@ test("password reset is refused while no email adapter exists", () => {
     (error: unknown) =>
       error instanceof Error &&
       "status" in error &&
-      error.status === 501 &&
+      error.status === 403 &&
+      error.name === "Forbidden" &&
       /henüz yapılandırılmadı/.test(error.message),
   );
   assert.deepEqual(run("forgotPassword", "resend"), {

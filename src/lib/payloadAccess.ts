@@ -110,6 +110,20 @@ export const publishedPageOrAdminOrEditor: Access = ({ req }) =>
 /** Largest page an anonymous REST client may request (`limit=0` included). */
 export const ANONYMOUS_REST_MAX_LIMIT = 50;
 
+/**
+ * A deliberate 403 refusal of a public request (a blocked listing, a
+ * hidden-field query, a disabled feature) with a specific public message.
+ * Payload picks the log level by error name; "Forbidden" is logged at "info"
+ * by default, so bots probing the API do not flood the error log.
+ */
+export class PublicRequestRefusal extends APIError {
+  constructor(message: string) {
+    super(message, 403, null, true);
+    // Set explicitly: minifiers rename classes (see Payload's APIError).
+    this.name = "Forbidden";
+  }
+}
+
 const READ_OPERATIONS: ReadonlySet<string> = new Set([
   "count",
   "read",
@@ -224,7 +238,9 @@ export const denyAnonymousRestReads: CollectionBeforeOperationHook = (
   hookArgs,
 ) => {
   if (isAnonymousTopLevelRestRead(hookArgs)) {
-    throw new APIError("Bu kayıtlar herkese açık API'de listelenmez.", 403);
+    throw new PublicRequestRefusal(
+      "Bu kayıtlar herkese açık API'de listelenmez.",
+    );
   }
 
   return hookArgs.args;
@@ -285,9 +301,8 @@ export function createAnonymousQueryAllowlist(
     const rejected = [...new Set(paths.filter((path) => !allowed.has(path)))];
 
     if (rejected.length > 0) {
-      throw new APIError(
+      throw new PublicRequestRefusal(
         `Bu alanlar herkese açık sorgularda kullanılamaz: ${rejected.join(", ")}.`,
-        403,
       );
     }
 
