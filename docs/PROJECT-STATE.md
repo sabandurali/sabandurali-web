@@ -110,7 +110,7 @@ No district rewrite is required by default. The district layer is in maintenance
 
 ## H. District content contract
 
-The public district page has an exact 14-section presentation:
+The public district page has an exact 14-section presentation. Sections 11 and 12 render only when published research articles or news for the district exist; the other twelve always render, in this order (`npm run e2e:districts:routes` checks the section ids):
 
 1. Bir bakışta
 2. İlçenin hikâyesi

@@ -18,6 +18,24 @@ const output =
 await mkdir(output, { recursive: true });
 const districts = registeredDistricts.map(({ name, slug }) => ({ name, slug }));
 assert.equal(districts.length, 39);
+// Section ids of the district guide in page order (docs/PROJECT-STATE.md §H).
+const guideSections = [
+  "genel-bakis",
+  "tarihce",
+  "tani",
+  "yasam",
+  "mahalleler",
+  "gayrimenkul",
+  "imar",
+  "saha",
+  "kareler",
+  "kimlik",
+  "arastirmalar",
+  "haberler",
+  "kaynaklar",
+  "guncelleme",
+];
+const conditionalSections = new Set(["arastirmalar", "haberler"]);
 const editorial =
   process.env.DISTRICT_EXPECT_EDITORIAL === "1"
     ? JSON.parse(await readFile("data/districts/editorial.json", "utf8"))
@@ -117,15 +135,17 @@ try {
           .itemListElement.length,
         4,
       );
-      // Research and news sections appear only with published content
-      // (content trust package, 2026-10-18); the other twelve always render.
+      // The fixed section contract in order (docs/PROJECT-STATE.md §H).
+      // Research and news appear only with published content (content trust
+      // package, 2026-10-18); the other twelve always render.
       const sectionIds = await page
         .locator("main section[id]")
         .evaluateAll((nodes) => nodes.map((node) => node.id));
-      const conditionalSections = new Set(["arastirmalar", "haberler"]);
-      assert.equal(
-        sectionIds.filter((id) => !conditionalSections.has(id)).length,
-        12,
+      assert.deepEqual(
+        sectionIds,
+        guideSections.filter(
+          (id) => !conditionalSections.has(id) || sectionIds.includes(id),
+        ),
       );
       const widths = [];
       for (const width of [1440, 820, 390]) {
