@@ -8,7 +8,8 @@ import test from "node:test";
 // brand-assets/. public/media holds local CMS uploads and is not tracked.
 const publicRoot = "public";
 const ignoredPublicDirectories = new Set(["media"]);
-const sourceRoots = ["src", "next.config.ts"];
+// Application code, its configuration and the static content data.
+const sourceRoots = ["src", "next.config.ts", "data"];
 // Migration snapshots describe the database, not the application.
 const ignoredSourceDirectories = new Set(["migrations"]);
 // Public files that are only referenced through a computed path. Prefer a
