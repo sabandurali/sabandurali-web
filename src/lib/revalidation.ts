@@ -205,6 +205,8 @@ function articleTargets(
 
 function bookTargets(docs: readonly unknown[]): RevalidationTarget[] {
   return [
+    // Reviews carry `showOnHomepage`; the homes are cheap to refresh.
+    ...homeTargets(),
     ...LANGUAGES.map((language) => pathTarget(bookListPaths[language])),
     ...docs.flatMap((doc) => {
       if (!isRecord(doc)) return [];

@@ -261,6 +261,8 @@ test("book reviews use the document language for the detail path", () => {
   const listed = paths(targets);
 
   for (const expected of [
+    "/",
+    "/en",
     "/kitaplar",
     "/en/books",
     "/en/books/deep-work",
