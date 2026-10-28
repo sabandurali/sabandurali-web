@@ -1,5 +1,9 @@
+// District content acceptance check (`npm run test:districts:content`). It
+// never writes by default; `--report <path>` writes the JSON result, as
+// `npm run report:districts:content` does.
 import assert from "node:assert/strict";
 import { readFileSync, writeFileSync } from "node:fs";
+import { parseArgs } from "node:util";
 import {
   assertBatch1PopulationImportPlan,
   attachEditorial,
@@ -9,6 +13,14 @@ import {
 } from "./editorial";
 import { makeDraft, validateBundle, type ResearchBundle } from "./import-core";
 import { mapDistrictGuide } from "../../src/content/districts/district-guide-projection";
+
+const { values: options } = parseArgs({
+  options: { report: { type: "string" } },
+  strict: true,
+});
+// Reviewed official neighbourhood lists; this input moves to data/districts/
+// (reports/README.md).
+const editorialReviewPath = "reports/istanbul-39/editorial-review.json";
 
 const research = JSON.parse(
   readFileSync("data/districts/research.json", "utf8"),
@@ -36,7 +48,7 @@ const historicalPhotos = JSON.parse(
   }>;
 };
 const evidence = JSON.parse(
-  readFileSync("reports/istanbul-39/editorial-review.json", "utf8"),
+  readFileSync(editorialReviewPath, "utf8"),
 ) as Array<{
   district: string;
   officialNames: string[];
@@ -365,11 +377,8 @@ const result = {
     "Kaynak incelemesine bağlı sınırlı yayın içeriği; tüm PDF iddialarının veya bütün bölümlerin doğrulandığı anlamına gelmez.",
   rows,
 };
-if (process.env.DISTRICT_CONTENT_WRITE_REPORT !== "0")
-  writeFileSync(
-    "reports/istanbul-39/content-acceptance.json",
-    JSON.stringify(result, null, 2) + "\n",
-  );
+if (options.report)
+  writeFileSync(options.report, JSON.stringify(result, null, 2) + "\n");
 console.log(
   result.result,
   "— reviewed editorial sections + 39 official neighborhood lists; unverified fields withheld",

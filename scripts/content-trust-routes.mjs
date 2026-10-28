@@ -1,16 +1,24 @@
+// Local HTTP regression check from the content trust package
+// (reports/content-trust-20261018): the 39 district guides with canonical,
+// Open Graph and Twitter metadata and a reachable share image, plus nine TR/EN
+// routes. It only targets a local server, for example:
+//   npm run build && npm run start -- --hostname 127.0.0.1 --port 3017
+//   npm run e2e:content-trust
+// The JSON result goes to DISTRICT_TEST_OUTPUT (default
+// /tmp/content-trust-routes), never into the repository.
 import assert from "node:assert/strict";
-import { readFileSync, writeFileSync } from "node:fs";
-const base = "http://localhost:3017";
-const registry = readFileSync(
-  "src/content/districts/district-registry.ts",
-  "utf8",
-);
-const districts = [
-  ...registry.matchAll(/\["([^"]+)", "([a-z-]+)", [\d.]+, [\d.]+\]/g),
-].map((m) => m[2]);
+import { mkdirSync, writeFileSync } from "node:fs";
+import path from "node:path";
+import { districts } from "../src/content/districts/district-registry.ts";
+
+const base = process.env.DISTRICT_TEST_URL || "http://localhost:3017";
+if (!/^http:\/\/(localhost|127\.0\.0\.1):\d+$/.test(base))
+  throw new Error("The content trust check only targets local HTTP origins.");
+const output = process.env.DISTRICT_TEST_OUTPUT || "/tmp/content-trust-routes";
+
 assert.equal(districts.length, 39);
 const results = [];
-for (const slug of districts) {
+for (const { slug } of districts) {
   const response = await fetch(`${base}/istanbul/ilceler/${slug}`, {
     headers: { "user-agent": "Twitterbot" },
   });
@@ -40,7 +48,7 @@ for (const slug of districts) {
     imageStatus: imageResponse.status,
   });
 }
-for (const path of [
+for (const route of [
   "/",
   "/en",
   "/hakkimda",
@@ -51,24 +59,25 @@ for (const path of [
   "/en/books",
   "/en/photography",
 ]) {
-  const response = await fetch(base + path);
-  assert.equal(response.status, 200, path);
+  const response = await fetch(base + route);
+  assert.equal(response.status, 200, route);
   const html = await response.text();
-  if (path === "/hakkimda") {
+  if (route === "/hakkimda") {
     assert.match(html, /Evka Turizm/);
     assert.match(html, /devam ediyor/);
     assert.ok(!html.includes("Doğrulanmış Kayıtlar"));
   }
-  if (path === "/" || path === "/en")
+  if (route === "/" || route === "/en")
     assert.ok(
       !html.includes('href="/gayrimenkul-ve-istanbul/hesaplama-araclari"'),
     );
-  results.push({ path, status: response.status });
+  results.push({ path: route, status: response.status });
 }
+mkdirSync(output, { recursive: true });
 writeFileSync(
-  "reports/content-trust-20261018/routes.json",
+  path.join(output, "routes.json"),
   JSON.stringify(results, null, 2),
 );
 console.log(
-  "39/39 district HTTP + metadata + image checks, 9 TR/EN navigation routes PASS",
+  `39/39 district HTTP + metadata + image checks, 9 TR/EN navigation routes PASS (${path.join(output, "routes.json")})`,
 );

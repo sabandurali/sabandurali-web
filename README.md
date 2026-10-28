@@ -55,7 +55,8 @@ including how to generate the secret, is
 | `npm run e2e:headers -- <local-url>` | Security header check against a local production server                                                                      |
 | `npm run e2e:districts:cms -- <db>`  | District guide check against an imported, isolated `/tmp/istanbul-39-*` SQLite database                                      |
 | `npm run e2e:districts:routes`       | Playwright acceptance of the 39 district pages; needs `BROWSER_PACKAGE` and a local server at `DISTRICT_TEST_URL`             |
-| `npm run report:districts:content`   | Re-run the content acceptance check and rewrite `reports/istanbul-39/content-acceptance.json`                                 |
+| `npm run e2e:content-trust`          | Metadata, share image and route regression check against a local server at `DISTRICT_TEST_URL`; JSON to `DISTRICT_TEST_OUTPUT` |
+| `npm run report:districts:content`   | Run the content acceptance check and write its JSON result to the ignored `reports/istanbul-39/content-acceptance.json`        |
 
 Scripts whose names contain `production`, `migrate`, `:apply`, `:dry-run` or
 `:verify`, plus `vercel:build`, touch the production database or prepare
