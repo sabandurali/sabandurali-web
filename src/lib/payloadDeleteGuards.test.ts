@@ -45,6 +45,12 @@ function matches(doc: Doc, where: unknown): boolean {
     const constraint = condition as Record<string, unknown>;
     if ("equals" in constraint) return doc[key] === constraint.equals;
     if ("not_equals" in constraint) return doc[key] !== constraint.not_equals;
+    if ("not_in" in constraint) {
+      return (
+        Array.isArray(constraint.not_in) &&
+        !constraint.not_in.includes(doc[key])
+      );
+    }
     return true;
   });
 }
@@ -478,4 +484,61 @@ test("the last admin cannot be demoted; other role changes go through", async ()
   ]) {
     assert.equal(await runChange(args, onlyAdmin), args.data);
   }
+});
+
+test("one request cannot remove every admin, although a bulk edit or delete checks its documents in parallel", async () => {
+  const users: Doc[] = [
+    { id: "a1", role: "admin" },
+    { id: "a2", role: "admin" },
+    { id: "a3", role: "admin" },
+    { id: "e1", role: "editor" },
+  ];
+  const outcome = (results: PromiseSettledResult<unknown>[]) => ({
+    allowed: results.filter((result) => result.status === "fulfilled").length,
+    refused: results.filter(
+      (result) =>
+        result.status === "rejected" && conflict(/son yönetici/)(result.reason),
+    ).length,
+  });
+  const demote = (id: string, req: PayloadRequest) =>
+    runChange(
+      {
+        data: { role: "editor" },
+        operation: "update",
+        originalDoc: { id, role: "admin" },
+      },
+      req,
+    );
+
+  // Nothing is written until every hook has run, as in Payload's bulk
+  // operations: each check alone would still see two other admins.
+  const bulkDelete = usersRequest(users);
+  assert.deepEqual(
+    outcome(
+      await Promise.allSettled(
+        ["a1", "a2", "a3"].map((id) =>
+          runDelete(preventDeletingLastAdmin, id, bulkDelete),
+        ),
+      ),
+    ),
+    { allowed: 2, refused: 1 },
+  );
+
+  const bulkEdit = usersRequest(users);
+  assert.deepEqual(
+    outcome(
+      await Promise.allSettled(
+        ["a1", "a2", "a3"].map((id) => demote(id, bulkEdit)),
+      ),
+    ),
+    { allowed: 2, refused: 1 },
+  );
+
+  // Editors in the same bulk request are never counted as removed admins.
+  const mixed = usersRequest(users);
+  await assert.doesNotReject(runDelete(preventDeletingLastAdmin, "e1", mixed));
+  await assert.doesNotReject(runDelete(preventDeletingLastAdmin, "a1", mixed));
+
+  // Another request starts with nothing removed.
+  await assert.doesNotReject(demote("a1", usersRequest(users)));
 });

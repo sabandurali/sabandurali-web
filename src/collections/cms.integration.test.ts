@@ -201,6 +201,49 @@ test("users: first account is admin, new accounts are editors, the last admin is
     }),
     hasStatus(403, /henüz yapılandırılmadı/),
   );
+
+  // A bulk edit or bulk delete of every admin (several users selected in the
+  // admin list) runs its documents in parallel; one admin must remain.
+  const countAdmins = async () =>
+    (
+      await payload.count({
+        collection: "users",
+        where: { role: { equals: "admin" } },
+      })
+    ).totalDocs;
+
+  await payload.update({
+    collection: "users",
+    data: { role: "admin" },
+    id: owner.id,
+  });
+  assert.equal(await countAdmins(), 2);
+
+  const bulkEdit = await payload.update({
+    collection: "users",
+    data: { role: "editor" },
+    where: { role: { equals: "admin" } },
+  });
+  assert.equal(bulkEdit.docs.length, 1);
+  assert.equal(bulkEdit.errors.length, 1);
+  assert.match(bulkEdit.errors[0]?.message ?? "", /son yönetici/);
+  assert.equal(await countAdmins(), 1);
+
+  await payload.update({
+    collection: "users",
+    data: { role: "admin" },
+    where: { role: { equals: "editor" } },
+  });
+  assert.equal(await countAdmins(), 2);
+
+  const bulkDelete = await payload.delete({
+    collection: "users",
+    where: { role: { equals: "admin" } },
+  });
+  assert.equal(bulkDelete.docs.length, 1);
+  assert.equal(bulkDelete.errors.length, 1);
+  assert.match(bulkDelete.errors[0]?.message ?? "", /son yönetici/);
+  assert.equal(await countAdmins(), 1);
 });
 
 test("media: uploads lose EXIF and GPS data and are capped at 3200 px", async () => {

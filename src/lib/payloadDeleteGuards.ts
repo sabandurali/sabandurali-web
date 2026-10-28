@@ -414,10 +414,34 @@ export const preventDeletingHomePage: CollectionBeforeDeleteHook = async ({
   }
 };
 
+/**
+ * Admins that a request is deleting or demoting. A bulk delete or bulk edit
+ * (several users selected in the admin list) runs the hooks of all its
+ * documents in parallel, before any of them is written. Checked one by one,
+ * every admin would still see the others and the request could remove them
+ * all. Each check therefore counts the admins its own request removes as
+ * gone. Entries live as long as the request object.
+ */
+const adminRemovalsByRequest = new WeakMap<PayloadRequest, Set<string>>();
+
+/**
+ * True when an admin other than `userID`, and other than every admin this
+ * request already removes, remains. A `true` result reserves `userID` as
+ * removed for the rest of the request.
+ */
 async function hasAnotherAdmin(
   req: PayloadRequest,
   userID: number | string,
 ): Promise<boolean> {
+  const removals = adminRemovalsByRequest.get(req) ?? new Set<string>();
+  adminRemovalsByRequest.set(req, removals);
+
+  const id = String(userID);
+  removals.add(id);
+  // Captured before the query runs, so a parallel check that starts later
+  // excludes this admin as well.
+  const excluded = [...removals];
+
   const otherAdmins = await req.payload.find({
     collection: "users",
     depth: 0,
@@ -426,11 +450,15 @@ async function hasAnotherAdmin(
     pagination: false,
     req,
     where: {
-      and: [{ role: { equals: "admin" } }, { id: { not_equals: userID } }],
+      and: [{ role: { equals: "admin" } }, { id: { not_in: excluded } }],
     },
   });
 
-  return otherAdmins.docs.length > 0;
+  if (otherAdmins.docs.length > 0) return true;
+
+  // The removal is refused, so this admin stays.
+  removals.delete(id);
+  return false;
 }
 
 export const preventDeletingLastAdmin: CollectionBeforeDeleteHook = async ({
