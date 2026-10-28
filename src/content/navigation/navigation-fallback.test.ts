@@ -42,6 +42,24 @@ for (const locale of ["tr", "en"] as const) {
     );
   });
 
+  test(`${locale}: CMS variants of a required link do not add a duplicate`, () => {
+    const cms: PublicFooterGroup[] = [
+      {
+        id: "cms",
+        title: "Kurumsal",
+        links: [
+          link("privacy", `${privacyPaths[locale]}/`),
+          {
+            ...link("about", "/hakkimda"),
+            children: [link("contact", `${contactPaths[locale]}#form`)],
+          },
+        ],
+      },
+    ];
+
+    assert.deepEqual(resolveFooterGroups(cms, staticGroups, required), cms);
+  });
+
   test(`${locale}: a complete CMS footer is used as it is`, () => {
     const cms: PublicFooterGroup[] = [
       {
