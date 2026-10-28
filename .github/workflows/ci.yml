@@ -1,0 +1,85 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  # Superseded pull request runs are cancelled; every main commit is checked.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  check:
+    name: Typecheck, lint, format, test and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      # CI-only local environment: SQLite, local media and static public
+      # sources. No secret, no production service and no network database.
+      NEXT_TELEMETRY_DISABLED: "1"
+      PAYLOAD_DATABASE: sqlite
+      PAYLOAD_STORAGE: local
+      DATABASE_URL: file:./.data/ci.db
+      PAYLOAD_SECRET: ci-only-insecure-payload-secret
+      ARTICLE_PUBLIC_SOURCE: static
+      BOOK_PUBLIC_SOURCE: static
+      PAGE_PUBLIC_SOURCE: static
+      NAVIGATION_PUBLIC_SOURCE: static
+      PHOTO_PUBLIC_SOURCE: static
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # scripts/districts/production-esenler-final.test.ts reads an older
+          # commit with `git show`, so the full history is required.
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify registry signatures
+        run: npm audit signatures
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Test
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+  audit:
+    name: Audit production dependencies
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+
+      # Reads package-lock.json; no install needed. Fails on critical only:
+      # the remaining high and moderate advisories have no non-breaking fix
+      # (see the Payload 3.92.1 upgrade commit).
+      - name: npm audit
+        run: npm audit --omit=dev --audit-level=critical
