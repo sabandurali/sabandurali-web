@@ -20,18 +20,6 @@ import {
 import { mapMediaImage } from "@/content/media";
 import type { Book as PayloadBook } from "@/payload-types";
 
-function getRequiredText(value: unknown): string | null {
-  return getText(value);
-}
-
-function getOptionalText(value: unknown): string | null {
-  return getText(value);
-}
-
-function getOptionalNumber(value: unknown): number | null {
-  return getFiniteNumber(value);
-}
-
 function mapCoverImage(
   value: PayloadBook["coverImage"],
   localizedAlt: unknown,
@@ -77,14 +65,14 @@ function mapAuthors(
   if (!Array.isArray(values)) return [];
 
   return values.flatMap((value, index) => {
-    const name = getRequiredText(value.name);
-    const slug = getRequiredText(value.slug);
+    const name = getText(value.name);
+    const slug = getText(value.slug);
 
     if (name === null || slug === null) return [];
 
     return [
       {
-        id: getRequiredText(value.id) ?? `${bookID}-author-${index + 1}`,
+        id: getText(value.id) ?? `${bookID}-author-${index + 1}`,
         name,
         slug,
       },
@@ -98,7 +86,7 @@ function mapAliases(
   if (!Array.isArray(value)) return [];
 
   return value.flatMap((entry) => {
-    const alias = getRequiredText(entry.value);
+    const alias = getText(entry.value);
     return alias === null ? [] : [alias];
   });
 }
@@ -107,15 +95,15 @@ function mapTags(values: PayloadBook["tags"], bookID: string): BookTag[] {
   if (!Array.isArray(values)) return [];
 
   return values.flatMap((value, index) => {
-    const slug = getRequiredText(value.slug);
-    const labelTr = getRequiredText(value.labelTr);
-    const labelEn = getRequiredText(value.labelEn);
+    const slug = getText(value.slug);
+    const labelTr = getText(value.labelTr);
+    const labelEn = getText(value.labelEn);
 
     if (slug === null || labelTr === null || labelEn === null) return [];
 
     return [
       {
-        id: getRequiredText(value.id) ?? `${bookID}-tag-${index + 1}`,
+        id: getText(value.id) ?? `${bookID}-tag-${index + 1}`,
         slug,
         labelTr,
         labelEn,
@@ -132,15 +120,15 @@ function mapKeyIdeas(
   if (!Array.isArray(values)) return [];
 
   return values.flatMap((value, index) => {
-    const title = getRequiredText(value.title);
-    const description = getRequiredText(value.description);
-    const order = getOptionalNumber(value.order);
+    const title = getText(value.title);
+    const description = getText(value.description);
+    const order = getFiniteNumber(value.order);
 
     if (title === null || description === null || order === null) return [];
 
     return [
       {
-        id: getRequiredText(value.id) ?? `${bookID}-idea-${index + 1}`,
+        id: getText(value.id) ?? `${bookID}-idea-${index + 1}`,
         title,
         description,
         order,
@@ -159,7 +147,7 @@ function mapTextList(
   if (!Array.isArray(values)) return [];
 
   return values.flatMap((entry) => {
-    const value = getRequiredText(entry.value);
+    const value = getText(entry.value);
     return value === null ? [] : [value];
   });
 }
@@ -171,10 +159,10 @@ function mapApplicationNotes(
   if (!Array.isArray(values)) return [];
 
   return values.flatMap((value, index) => {
-    const title = getRequiredText(value.title);
-    const description = getRequiredText(value.description);
-    const action = getRequiredText(value.action);
-    const order = getOptionalNumber(value.order);
+    const title = getText(value.title);
+    const description = getText(value.description);
+    const action = getText(value.action);
+    const order = getFiniteNumber(value.order);
 
     if (
       title === null ||
@@ -187,7 +175,7 @@ function mapApplicationNotes(
 
     return [
       {
-        id: getRequiredText(value.id) ?? `${bookID}-note-${index + 1}`,
+        id: getText(value.id) ?? `${bookID}-note-${index + 1}`,
         title,
         description,
         action,
@@ -201,17 +189,17 @@ function mapQuotes(values: PayloadBook["quotes"], bookID: string): BookQuote[] {
   if (!Array.isArray(values)) return [];
 
   return values.flatMap((value, index) => {
-    const text = getRequiredText(value.text);
-    const order = getOptionalNumber(value.order);
+    const text = getText(value.text);
+    const order = getFiniteNumber(value.order);
 
     if (text === null || order === null) return [];
 
-    const page = getOptionalNumber(value.page);
-    const note = getOptionalText(value.note);
+    const page = getFiniteNumber(value.page);
+    const note = getText(value.note);
 
     return [
       {
-        id: getRequiredText(value.id) ?? `${bookID}-quote-${index + 1}`,
+        id: getText(value.id) ?? `${bookID}-quote-${index + 1}`,
         text,
         ...(page === null ? {} : { page }),
         ...(note === null ? {} : { note }),
@@ -238,13 +226,13 @@ export function mapPayloadBookReview(
   now: Date = new Date(),
   relatedTranslationID?: string | null,
 ): BookReview | null {
-  const id = getRequiredText(value.id);
-  const title = getRequiredText(value.title);
-  const slug = getRequiredText(value.slug);
-  const summary = getRequiredText(value.summary);
-  const personalEvaluation = getRequiredText(value.personalEvaluation);
-  const seoTitle = getRequiredText(value.seo?.title);
-  const seoDescription = getRequiredText(value.seo?.description);
+  const id = getText(value.id);
+  const title = getText(value.title);
+  const slug = getText(value.slug);
+  const summary = getText(value.summary);
+  const personalEvaluation = getText(value.personalEvaluation);
+  const seoTitle = getText(value.seo?.title);
+  const seoDescription = getText(value.seo?.description);
 
   if (id === null) return null;
 
@@ -284,30 +272,30 @@ export function mapPayloadBookReview(
       ? {}
       : { translationSourceBookReviewId: translationID }),
     ...(translationDocument === null ||
-    getRequiredText(translationDocument.updatedAt) === null
+    getText(translationDocument.updatedAt) === null
       ? {}
       : {
           translationSourceUpdatedAt:
-            getRequiredText(translationDocument.updatedAt) ?? undefined,
+            getText(translationDocument.updatedAt) ?? undefined,
         }),
-    originalTitle: getOptionalText(value.originalTitle),
+    originalTitle: getText(value.originalTitle),
     authors: mapAuthors(value.authors, id),
-    translator: getOptionalText(value.translator),
-    publisher: getOptionalText(value.publisher),
-    originalPublisher: getOptionalText(value.originalPublisher),
-    publicationYear: getOptionalNumber(value.publicationYear),
-    originalPublicationYear: getOptionalNumber(value.originalPublicationYear),
-    edition: getOptionalText(value.edition),
-    isbn10: getOptionalText(value.isbn10),
-    isbn13: getOptionalText(value.isbn13),
-    pageCount: getOptionalNumber(value.pageCount),
+    translator: getText(value.translator),
+    publisher: getText(value.publisher),
+    originalPublisher: getText(value.originalPublisher),
+    publicationYear: getFiniteNumber(value.publicationYear),
+    originalPublicationYear: getFiniteNumber(value.originalPublicationYear),
+    edition: getText(value.edition),
+    isbn10: getText(value.isbn10),
+    isbn13: getText(value.isbn13),
+    pageCount: getFiniteNumber(value.pageCount),
     coverImage,
     category: value.category ?? null,
     tags: mapTags(value.tags, id),
     readingStatus: value.readingStatus,
     reviewStatus: value.reviewStatus,
-    startedAt: getOptionalText(value.startedAt),
-    completedAt: getOptionalText(value.completedAt),
+    startedAt: getText(value.startedAt),
+    completedAt: getText(value.completedAt),
     summary,
     keyIdeas: mapKeyIdeas(value.keyIdeas, id),
     strengths: mapTextList(value.strengths),
@@ -316,7 +304,7 @@ export function mapPayloadBookReview(
     whoShouldNotRead: mapTextList(value.whoShouldNotRead),
     applicationNotes: mapApplicationNotes(value.applicationNotes, id),
     personalEvaluation,
-    rating: getOptionalNumber(value.rating),
+    rating: getFiniteNumber(value.rating),
     quotes: mapQuotes(value.quotes, id),
     relatedBookIds: Array.isArray(value.relatedBooks)
       ? value.relatedBooks.flatMap((entry) => {
@@ -331,22 +319,21 @@ export function mapPayloadBookReview(
     seo: {
       title: seoTitle,
       description: seoDescription,
-      ...(getOptionalText(value.seo.canonical) === null
+      ...(getText(value.seo.canonical) === null
         ? {}
-        : { canonical: getOptionalText(value.seo.canonical) ?? undefined }),
+        : { canonical: getText(value.seo.canonical) ?? undefined }),
       index: value.seo.index === true,
       follow: value.seo.follow === true,
-      ...(getOptionalText(value.seo.openGraphTitle) === null
+      ...(getText(value.seo.openGraphTitle) === null
         ? {}
         : {
-            openGraphTitle:
-              getOptionalText(value.seo.openGraphTitle) ?? undefined,
+            openGraphTitle: getText(value.seo.openGraphTitle) ?? undefined,
           }),
-      ...(getOptionalText(value.seo.openGraphDescription) === null
+      ...(getText(value.seo.openGraphDescription) === null
         ? {}
         : {
             openGraphDescription:
-              getOptionalText(value.seo.openGraphDescription) ?? undefined,
+              getText(value.seo.openGraphDescription) ?? undefined,
           }),
       ...(mapMediaPath(value.seo.openGraphImage) === undefined
         ? {}
@@ -354,7 +341,7 @@ export function mapPayloadBookReview(
     },
     createdAt: value.createdAt,
     updatedAt: value.updatedAt,
-    publishedAt: getOptionalText(value.publishedAt),
+    publishedAt: getText(value.publishedAt),
   };
   const validation = validateBookReview(bookReview);
 
