@@ -32,7 +32,11 @@
  * `/en/articles/[slug]`, `/kitaplar`, `/kitaplar/[slug]`, `/en/books` and
  * `/en/books/[slug]`. Photo, district and workspace-section routes and the
  * sitemap render dynamically today; a route that becomes static must add the
- * export as well.
+ * export as well. The header and footer read Payload too: a navigation link
+ * to a scheduled page appears only once the page is due, which no write
+ * announces. Exporting the value from the `(tr)` and `(en)` root layouts
+ * covers every route below them, because a route revalidates at the lowest
+ * `revalidate` of its layouts and page.
  */
 import { revalidatePath } from "next/cache";
 import type {
