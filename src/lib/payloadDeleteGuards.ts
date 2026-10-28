@@ -1,14 +1,13 @@
 import {
   APIError,
+  type CollectionBeforeChangeHook,
   type CollectionBeforeDeleteHook,
   type CollectionSlug,
   type Field,
   type GlobalSlug,
   type PayloadRequest,
-  type Where,
 } from "payload";
 
-type ReferencingCollection = "articles" | "books" | "pages";
 type RecordValue = Record<string, unknown>;
 type RelationshipUsage = {
   entity: string;
@@ -249,6 +248,16 @@ function fieldsReferenceCollection(
   });
 }
 
+/**
+ * Payload's own collections (`payload-locked-documents`, `payload-preferences`,
+ * `payload-migrations`, ...) are bookkeeping, not content. A document lock
+ * that an editor opened, or a stale one left behind by a closed tab, must
+ * never count as a usage that blocks a delete.
+ */
+export function isPayloadInternalCollection(slug: string): boolean {
+  return slug.startsWith("payload-");
+}
+
 async function findCollectionRelationshipUsage(
   req: PayloadRequest,
   targetCollection: string,
@@ -256,12 +265,17 @@ async function findCollectionRelationshipUsage(
 ): Promise<RelationshipUsage | null> {
   for (const collection of req.payload.config.collections) {
     if (
-      collection.slug === targetCollection ||
+      isPayloadInternalCollection(collection.slug) ||
       !fieldsCanReferenceCollection(collection.fields, targetCollection)
     ) {
       continue;
     }
 
+    // A collection may reference itself (a photo collection's parent); the
+    // document that is being deleted is never a usage of itself.
+    const isSelf = (documentID: unknown) =>
+      collection.slug === targetCollection &&
+      isMatchingID(documentID, targetID);
     const collectionSlug = collection.slug as CollectionSlug;
     const currentDocuments = await req.payload.find({
       collection: collectionSlug,
@@ -275,13 +289,15 @@ async function findCollectionRelationshipUsage(
     });
 
     if (
-      currentDocuments.docs.some((document) =>
-        fieldsReferenceCollection(
-          collection.fields,
-          document,
-          targetCollection,
-          targetID,
-        ),
+      currentDocuments.docs.some(
+        (document) =>
+          !isSelf(document.id) &&
+          fieldsReferenceCollection(
+            collection.fields,
+            document,
+            targetCollection,
+            targetID,
+          ),
       )
     ) {
       return { entity: collection.slug, source: "current" };
@@ -300,13 +316,15 @@ async function findCollectionRelationshipUsage(
     });
 
     if (
-      versions.docs.some((document) =>
-        fieldsReferenceCollection(
-          collection.fields,
-          document.version,
-          targetCollection,
-          targetID,
-        ),
+      versions.docs.some(
+        (document) =>
+          !isSelf(document.parent) &&
+          fieldsReferenceCollection(
+            collection.fields,
+            document.version,
+            targetCollection,
+            targetID,
+          ),
       )
     ) {
       return { entity: collection.slug, source: "version" };
@@ -376,24 +394,6 @@ async function findGlobalRelationshipUsage(
   return null;
 }
 
-async function hasMatchingDocument(
-  req: PayloadRequest,
-  collection: ReferencingCollection,
-  where: Where,
-): Promise<boolean> {
-  const result = await req.payload.find({
-    collection,
-    depth: 0,
-    limit: 1,
-    overrideAccess: true,
-    pagination: false,
-    req,
-    where,
-  });
-
-  return result.docs.length > 0;
-}
-
 export const preventDeletingHomePage: CollectionBeforeDeleteHook = async ({
   id,
   req,
@@ -414,6 +414,25 @@ export const preventDeletingHomePage: CollectionBeforeDeleteHook = async ({
   }
 };
 
+async function hasAnotherAdmin(
+  req: PayloadRequest,
+  userID: number | string,
+): Promise<boolean> {
+  const otherAdmins = await req.payload.find({
+    collection: "users",
+    depth: 0,
+    limit: 1,
+    overrideAccess: true,
+    pagination: false,
+    req,
+    where: {
+      and: [{ role: { equals: "admin" } }, { id: { not_equals: userID } }],
+    },
+  });
+
+  return otherAdmins.docs.length > 0;
+}
+
 export const preventDeletingLastAdmin: CollectionBeforeDeleteHook = async ({
   id,
   req,
@@ -428,86 +447,95 @@ export const preventDeletingLastAdmin: CollectionBeforeDeleteHook = async ({
 
   if (user.role !== "admin") return;
 
-  const otherAdmins = await req.payload.find({
-    collection: "users",
-    depth: 0,
-    limit: 1,
-    overrideAccess: true,
-    pagination: false,
-    req,
-    where: {
-      and: [{ role: { equals: "admin" } }, { id: { not_equals: id } }],
-    },
-  });
-
-  if (otherAdmins.docs.length === 0) {
+  if (!(await hasAnotherAdmin(req, id))) {
     throw new APIError("Sistemdeki son yönetici hesabı silinemez.", 409);
   }
 };
 
-export const preventDeletingReferencedCategory: CollectionBeforeDeleteHook =
-  async ({ id, req }) => {
-    const isUsed = await hasMatchingDocument(req, "articles", {
-      categories: {
-        contains: id,
-      },
-    });
+/**
+ * The same rule as {@link preventDeletingLastAdmin} for role changes: the
+ * last admin cannot be demoted to editor, because nobody could then manage
+ * users, delete content or open the admin guide.
+ */
+export const preventDemotingLastAdmin: CollectionBeforeChangeHook = async ({
+  data,
+  operation,
+  originalDoc,
+  req,
+}) => {
+  if (
+    operation !== "update" ||
+    !isRecord(originalDoc) ||
+    originalDoc.role !== "admin" ||
+    data.role === undefined ||
+    data.role === "admin"
+  ) {
+    return data;
+  }
 
-    if (isUsed) {
-      throw new APIError(
-        "Bu kategori en az bir makalede kullanılıyor. Önce makale ilişkilerini kaldırın.",
-        409,
-      );
-    }
-  };
+  const userID = originalDoc.id;
 
-export const preventDeletingReferencedMedia: CollectionBeforeDeleteHook =
-  async ({ id, req }) => {
-    const usage =
-      (await findCollectionRelationshipUsage(req, "media", id)) ??
-      (await findGlobalRelationshipUsage(req, "media", id));
+  if (
+    (typeof userID !== "string" && typeof userID !== "number") ||
+    !(await hasAnotherAdmin(req, userID))
+  ) {
+    throw new APIError(
+      "Sistemdeki son yönetici hesabının rolü değiştirilemez. Önce başka bir yöneticiyi atayın.",
+      409,
+    );
+  }
 
-    if (usage !== null) {
-      const sourceDescription =
-        usage.source === "version"
-          ? "geçmiş bir içerik sürümünde"
-          : "mevcut içerikte";
+  return data;
+};
 
-      throw new APIError(
-        `Bu medya ${sourceDescription} (${usage.entity}) kullanılıyor. Önce ilişkiyi kaldırın ve gerekiyorsa ilgili sürüm geçmişini temizleyin.`,
-        409,
-      );
-    }
-  };
+function throwIfUsed(usage: RelationshipUsage | null, label: string): void {
+  if (usage === null) return;
 
-function preventDeletingReferencedRelationship(
-  targetCollection: "photo-collections" | "tags",
+  const sourceDescription =
+    usage.source === "version"
+      ? "geçmiş bir içerik sürümünde"
+      : "mevcut içerikte";
+
+  throw new APIError(
+    `Bu ${label} ${sourceDescription} (${usage.entity}) kullanılıyor. Önce ilişkiyi kaldırın ve gerekiyorsa ilgili sürüm geçmişini temizleyin.`,
+    409,
+  );
+}
+
+/**
+ * Blocks deleting a document that current content, a stored version or a
+ * global still references. Versions count because restoring one would bring
+ * back a dangling relationship, and PostgreSQL would otherwise silently drop
+ * the reference from the version through its foreign key.
+ */
+function preventDeletingReferencedDocument(
+  targetCollection: "categories" | "media" | "photo-collections" | "tags",
   label: string,
 ): CollectionBeforeDeleteHook {
   return async ({ id, req }) => {
-    const usage =
+    throwIfUsed(
       (await findCollectionRelationshipUsage(req, targetCollection, id)) ??
-      (await findGlobalRelationshipUsage(req, targetCollection, id));
-
-    if (usage === null) return;
-
-    const sourceDescription =
-      usage.source === "version"
-        ? "geçmiş bir içerik sürümünde"
-        : "mevcut içerikte";
-
-    throw new APIError(
-      `Bu ${label} ${sourceDescription} (${usage.entity}) kullanılıyor. Önce ilişkiyi kaldırın ve gerekiyorsa ilgili sürüm geçmişini temizleyin.`,
-      409,
+        (await findGlobalRelationshipUsage(req, targetCollection, id)),
+      label,
     );
   };
 }
 
+export const preventDeletingReferencedCategory =
+  preventDeletingReferencedDocument("categories", "kategori");
+
+export const preventDeletingReferencedMedia = preventDeletingReferencedDocument(
+  "media",
+  "medya",
+);
+
 export const preventDeletingReferencedPhotoCollection =
-  preventDeletingReferencedRelationship(
+  preventDeletingReferencedDocument(
     "photo-collections",
     "fotoğraf koleksiyonu",
   );
 
-export const preventDeletingReferencedTag =
-  preventDeletingReferencedRelationship("tags", "etiket");
+export const preventDeletingReferencedTag = preventDeletingReferencedDocument(
+  "tags",
+  "etiket",
+);
