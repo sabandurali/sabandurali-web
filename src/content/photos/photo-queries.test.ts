@@ -6,6 +6,7 @@ import {
   createDistrictPhotoConditions,
   createPhotoCategoryConditions,
   createPhotoListConditions,
+  createPublicPhotoConditions,
   createRelatedPhotoConditions,
   normalizeRequestedPage,
   PHOTO_LIST_PAGE_SIZE,
@@ -19,7 +20,16 @@ const now = new Date("2026-10-28T12:00:00Z");
 const published = [
   { _status: { equals: "published" } },
   { publishedAt: { less_than_equal: "2026-10-28T12:00:00.000Z" } },
+  // Localized fields: untranslated photos are skipped in the query locale,
+  // so English pages and page counts only include English photos.
+  { title: { exists: true } },
+  { slug: { exists: true } },
+  { altText: { exists: true } },
 ];
+
+test("every photo read requires a translation in the query locale", () => {
+  assert.deepEqual(createPublicPhotoConditions(now), published);
+});
 
 test("list filters run in the database", () => {
   assert.deepEqual(createPhotoListConditions(now, {}), published);

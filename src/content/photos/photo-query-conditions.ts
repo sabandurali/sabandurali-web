@@ -4,10 +4,21 @@ import type { PhotoListFilters, PublicPhoto } from "@/content/photos/types";
 /** Photos per list page. */
 export const PHOTO_LIST_PAGE_SIZE = 24;
 
+/**
+ * Photos that are public in the locale of the query. Title, slug and alt
+ * text are localized and Payload evaluates conditions on localized fields in
+ * the query locale, so a photo that has not been translated yet is skipped by
+ * the database. List pages, page counts, filter options and related photos
+ * then only count photos that can be shown in that language (the mapper
+ * would drop them after pagination otherwise).
+ */
 export function createPublicPhotoConditions(now: Date): Where[] {
   return [
     { _status: { equals: "published" } },
     { publishedAt: { less_than_equal: now.toISOString() } },
+    { title: { exists: true } },
+    { slug: { exists: true } },
+    { altText: { exists: true } },
   ];
 }
 
