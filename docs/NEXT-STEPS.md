@@ -30,7 +30,6 @@ In priority order, choose one bounded outcome rather than opening all tracks at 
 6. Add and verify a production email adapter and password-reset delivery workflow if account recovery is required. Payload auth exists, but no project-specific production email adapter is configured at this baseline.
 7. Expand historical district photography only from item-level rights-safe sources, with current attribution and gallery-only behavior.
 8. Run a focused performance and accessibility review on current production routes.
-9. Update the embedded admin help guide to cover the newer `DistrictGuides` workflow if administrators need that operational guidance.
 
 District visual/editorial polish is a candidate only when a specific issue is observed; “rewrite all districts” is not a default task.
 

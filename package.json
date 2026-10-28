@@ -18,6 +18,7 @@
     "payload": "payload",
     "generate:importmap": "payload generate:importmap",
     "generate:types": "payload generate:types",
+    "generate:admin-guide": "tsx scripts/admin-help/generate-guide.ts",
     "payload:migrate:create": "payload migrate:create",
     "payload:migrate:status": "payload migrate:status",
     "payload:migrate": "payload migrate",

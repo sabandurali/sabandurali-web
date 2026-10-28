@@ -52,6 +52,7 @@ including how to generate the secret, is
 | `npm run check`                      | typecheck, lint, format:check, test and build: must pass before every pull request                                           |
 | `npm run generate:types`             | Regenerate `src/payload-types.ts` after a collection or field change                                                          |
 | `npm run generate:importmap`         | Regenerate the admin import map after adding a custom admin component                                                         |
+| `npm run generate:admin-guide`       | Regenerate `YONETIM-PANELI-KULLANIM-KILAVUZU.md` from `src/components/admin/help/admin-help-guide.ts`                          |
 | `npm run e2e:headers -- <local-url>` | Security header check against a local production server                                                                      |
 | `npm run e2e:districts:cms -- <db>`  | District guide check against an imported, isolated `/tmp/istanbul-39-*` SQLite database                                      |
 | `npm run e2e:districts:routes`       | Playwright acceptance of the 39 district pages; needs `BROWSER_PACKAGE` and a local server at `DISTRICT_TEST_URL`             |
@@ -134,5 +135,6 @@ local `git blame`.
   contract and production rules
 - [docs/NEXT-STEPS.md](docs/NEXT-STEPS.md): open work
 - [YONETIM-PANELI-KULLANIM-KILAVUZU.md](YONETIM-PANELI-KULLANIM-KILAVUZU.md):
-  admin guide (Turkish)
+  admin guide (Turkish), generated from the `/admin/help` source
+  `src/components/admin/help/admin-help-guide.ts`
 - [CLAUDE.md](CLAUDE.md): rules for AI-assisted work in this repository

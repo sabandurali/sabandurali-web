@@ -6,47 +6,11 @@ import type { AdminViewServerProps } from "payload";
 import Markdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { ADMIN_HELP_GUIDE } from "./admin-help-guide";
+import { getGuideParts, slugifyHeading } from "./admin-help-guide-parts";
 import styles from "./AdminHelpView.module.css";
 
 const GUIDE_DESCRIPTION =
   "İçerik ekleme, yayınlama ve güvenli yönetim için adım adım rehber.";
-
-function slugifyHeading(value: string): string {
-  return value
-    .toLocaleLowerCase("tr")
-    .replaceAll("ı", "i")
-    .replaceAll("ş", "s")
-    .replaceAll("ğ", "g")
-    .replaceAll("ç", "c")
-    .replaceAll("ö", "o")
-    .replaceAll("ü", "u")
-    .normalize("NFKD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
-
-function getGuideParts(markdown: string) {
-  const titleMatch = markdown.match(/^#\s+(.+)$/m);
-  const sections = Array.from(markdown.matchAll(/^##\s+(\d{1,2}\.\s+.+)$/gm))
-    .slice(0, 12)
-    .map((match) => ({
-      id: slugifyHeading(match[1]),
-      title: match[1],
-    }));
-
-  if (!titleMatch || sections.length !== 12) {
-    throw new Error(
-      "Yönetim paneli kılavuzunda başlık ve 12 ana bölüm bulunmalıdır.",
-    );
-  }
-
-  return {
-    body: markdown.replace(/^#\s+.+\r?\n+/, ""),
-    sections,
-    title: titleMatch[1],
-  };
-}
 
 const markdownComponents: Components = {
   h2: ({ children }) => {

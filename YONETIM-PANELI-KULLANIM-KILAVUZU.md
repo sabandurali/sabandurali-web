@@ -1,6 +1,8 @@
+<!-- Generated from src/components/admin/help/admin-help-guide.ts by `npm run generate:admin-guide`. Edit that file, not this one. -->
+
 # Yönetim Paneli Kullanım Kılavuzu
 
-Bu kılavuz, sitenin mevcut Payload CMS şemalarına göre içerik üretmek için hazırlanmıştır. Asıl yönetim paneli `/admin` adresindedir. `/yonetim` altındaki sayfalar geliştirme amaçlı prototiptir; kalıcı Payload içeriği girmek için kullanılmaz.
+Bu kılavuz, sitenin mevcut Payload CMS şemalarına göre içerik üretmek için hazırlanmıştır. Yönetim paneli `/admin` adresindedir; kalıcı içerik yalnız burada girilir.
 
 Buradaki public görünürlük kuralları, ilgili içerik türünün canlı sitede Payload kaynağından okunduğu ortamda geçerlidir. Panelde yayınlanan kayıt, canlı site statik içerik kaynağını kullanıyorsa kendiliğinden public sayfaya dönüşmez.
 
@@ -19,7 +21,7 @@ Yalnız yetkili hesapla güvenli biçimde panele girmek ve yanlışlıkla canlı
 
 1. Sitenin alan adının sonuna `/admin` ekleyin.
 2. Kendi e-posta adresiniz ve parolanızla giriş yapın.
-3. Sol menüde içerik için `Articles`, `Categories`, `Media`, `Kitap İncelemeleri`, `Sayfalar` ve `Navigasyon`; fotoğraf için `Fotoğraf Koleksiyonları`, `Etiketler` ve `Fotoğraflar` bölümlerini kullanın.
+3. Sol menüde `İçerik` grubundaki `Makaleler & Araştırmalar` (`Articles`), `Categories`, `Media`, `Kitap İncelemeleri`, `Sayfalar`, `İlçe Rehberleri` ve `Navigasyon` ile `Fotoğrafçılık` grubundaki `Fotoğraf Koleksiyonları`, `Etiketler` ve `Fotoğraflar` bölümlerini kullanın.
 4. Yeni içeriği önce taslak olarak kaydedin.
 5. İçerik ve bağlantı kontrolünden sonra yayın durumunu `published` yapın.
 6. İşiniz bitince ortak veya başkasının erişebildiği cihazda oturumu kapatın.
@@ -42,16 +44,16 @@ Yalnız yetkili hesapla güvenli biçimde panele girmek ve yanlışlıkla canlı
 
 ### Amaç
 
-Türkçe ve İngilizce Header, mobil menü ve Footer bağlantılarını birbirine karıştırmadan yönetmek.
+Türkçe Header, mobil menü ve Türkçe/İngilizce Footer bağlantılarını birbirine karıştırmadan yönetmek.
 
 ### Adımlar
 
 1. Sol menüden `Navigasyon` kaydını açın. Bu, tek bir global belgedir.
 2. İlgili dili seçerek ayrı listeleri düzenleyin:
    - `Türkçe Header menüsü` → `Menü öğeleri`
-   - `English Header menu` → `Menu items`
    - `Türkçe Footer bağlantı grupları` → `Bağlantı grupları`
    - `English Footer link groups` → `Link groups`
+   - `English Header menu` → `Menu items` listesi panelde durur, fakat public sitede kullanılmaz (aşağıdaki Dikkat bölümüne bakın).
 3. Header öğesinde `Bağlantı etiketi`, `Bağlantıyı göster` ve `Bağlantı türü` alanlarını doldurun.
 4. `Bağlantı türü` olarak yalnız uygun seçeneği kullanın:
    - `CMS sayfası`: İlgili dildeki `Sayfalar` kaydını seçin.
@@ -65,8 +67,11 @@ Türkçe ve İngilizce Header, mobil menü ve Footer bağlantılarını birbirin
 ### Dikkat
 
 - TR ve EN, ayrı global belgeler değil; aynı `Navigasyon` belgesi içindeki **ayrı Header ve Footer listeleridir**. Bir dildeki değişiklik diğer listenin metnini otomatik çevirmez.
+- İngilizce Header menüsü kodda yönetilir. Public sitede her zaman koddaki EN menü gösterilir; `English Header menu` listesinde yapılan değişiklik siteye yansımaz. EN menüde değişiklik gerekiyorsa bunu geliştirme talebi olarak iletin.
+- EN Footer, yayındaki `English Footer link groups` listesinden gelir. Bu liste boşsa koddaki EN Footer gösterilir.
 - `CMS sayfası` seçeneğinde TR listesi yalnız TR, EN listesi yalnız EN sayfalarını seçtirir. Seçilen sayfa taslaksa veya yayın tarihi gelmediyse bağlantı public menüde gösterilmez.
-- Mevcut public route’larda Türkçe standart sayfalar için `/{slug}` desteği vardır; genel bir İngilizce `/en/{slug}` route’u yoktur. Bu nedenle EN Header/Footer’da standart bir EN `CMS sayfası` kaydını seçmeyin; mevcut `/en`, `/en/articles`, `/en/books`, `/en/photography`, `/en/contact`, `/en/feedback` ve `/en/privacy-notice` rotalarını `Site içi rota` olarak kullanın.
+- Mevcut public route’larda Türkçe standart sayfalar için `/{slug}` desteği vardır; genel bir İngilizce `/en/{slug}` route’u yoktur. Bu nedenle EN Footer’da standart bir EN `CMS sayfası` kaydını seçmeyin; mevcut `/en`, `/en/articles`, `/en/books`, `/en/photography`, `/en/contact` ve `/en/privacy-notice` rotalarını `Site içi rota` olarak kullanın.
+- Geri bildirim sayfası kaldırılmıştır. Ona verilen TR veya EN bağlantıları public menüde gösterilmez; bu nedenle menüye eklemeyin.
 - `Bağlantıyı göster` kapalıysa öğe silinmeden gizlenir. Footer’da `Grubu göster` kapalıysa bütün grup gizlenir.
 - Bir Header öğesinin kendi geçerli bağlantısı yoksa ama geçerli alt öğeleri varsa üst öğe yalnız alt menü taşıyabilir. Hem bağlantı hem alt öğeler geçersizse public menüden çıkarılır.
 - Header’da `Yeni sekmede aç` yalnız güvenli `https://` haricî bağlantılarda etkili olur.
@@ -280,7 +285,45 @@ Görsel dosyasını bir kez güvenli biçimde yüklemek; fotoğraf kaydını kol
 - Kaynak/telif ve kredi gerekiyorsa yazıldı mı?
 - TR ve değerliyse EN yerelleştirilmiş alanlar tamamlandı mı?
 
-## 8. İki dilde çeviri girişi
+## 8. İlçe rehberleri
+
+### Amaç
+
+İstanbul’un 39 ilçesi için kaynaklı ve bölüm bölüm onaylanmış rehber içeriğini yönetmek; doğrulanmamış araştırma notlarının ve eski verinin public sayfaya çıkmasını önlemek.
+
+### Adımlar
+
+1. `İçerik` grubunda `İlçe Rehberleri` bölümünü açın. Her ilçe için yalnız bir kayıt vardır; yeni kayıt açmak yerine ilgili ilçenin mevcut kaydını düzenleyin.
+2. Locale seçicisinde `Türkçe`yi seçin. İlçe rehberleri yalnız Türkçe `/istanbul/ilceler/[district]` rotasında yayımlanır; ilçe haberleri `/istanbul/ilceler/[district]/haberler` rotasındadır.
+3. Metinleri sekmelerde düzenleyin: `01 — İlçeyi Tanı` (genel bakış, coğrafya, tarihçe, yaşam, ulaşım ve temel veriler), `02 — Mahalleler`, `03 — Gayrimenkul`, `05 — Şehir & İmar` ve `Saha ve araştırma`.
+4. `Kaynaklar ve doğrulama` sekmesinde her kaynak için `Başlık`, `Gerçek yayıncı / kurum`, `Kaynak URL`, kaynak türü, `Son doğrulama tarihi`, gerekiyorsa `Veri / yayın tarihi` ve `Desteklediği bölümler` alanlarını doldurun. Kaynağı gerçekten kontrol ettiyseniz `Doğrulama gerekli` kutusunu kapatın.
+5. Metnini ve kaynağını kontrol ettiğiniz bölümleri `Editoryal incelemesi tamamlanan bölümler` listesine ekleyin.
+6. Taslağı kaydedip kontrol edin, ardından yayınlayın. `Yayın tarihi` ilk yayında boşsa otomatik atanır; gelecekteki bir tarih o güne kadar rehberi gizler.
+7. Canlıda ilçe sayfasını açın; onaylanmayan bölümlerin görünmediğini ve kaynakların `Kaynaklar ve metodoloji` bölümünde listelendiğini kontrol edin.
+
+### Dikkat
+
+- Yayın için `İlçeye genel bakış`, `Tarihçe` ve `Coğrafya` metinleri dolu, bu üç bölüm onaylı ve her biri kontrol edilmiş bir kaynakla desteklenmiş olmalıdır. Eksikse kayıt yayınlanmaz.
+- Diğer her bölüm yalnız onaylanmışsa ve onu destekleyen geçerli bir kaynak varsa public görünür. Türü `Sınıflandırılmadı` olan, `Doğrulama gerekli` işaretli veya son doğrulama tarihi boş ya da gelecekte olan kaynak hiçbir bölümü desteklemez.
+- `Resmî` türü yalnız `.gov.tr`, `.bel.tr` ve sınırlı sayıda İstanbul kurum alan adında (ör. İBB ve ulaşım işletmeleri) geçerlidir. Temel veriler, mahalleler ve imar gelişmeleri için `İddia için birincil kaynak` işaretli resmî kaynak gerekir.
+- Temel veriler, mahalleler, ulaşım, fiyat ve kira verileri ile imar gelişmelerini destekleyen kaynakta `Veri / yayın tarihi` zorunludur.
+- Fiyat ve kira verileri, kaynağın veri tarihi veya son doğrulama tarihi 90 günden eskiyse otomatik olarak gizlenir.
+- Her sayı ve tarih tarihli, doğrulanmış bir kaynağa dayanmalıdır. Kaynağı olmayan bilgiyi tahminle doldurmayın; bölüm boş kalabilir.
+- `İlçe` alanı yalnız merkezî 39 ilçe listesinden seçilir ve kayıt oluşturulduktan sonra değiştirilemez.
+- `Public dışı araştırma notları` ve `Aktarım kaydı` alanları ziyaretçiye ve anonim API’ye hiçbir zaman gösterilmez. Yayımlanacak metni bu alanlara yazmayın.
+- İngilizce alanlar Türkçeden otomatik doldurulmaz ve ilçe rehberinin İngilizce sayfası yoktur.
+- `İlçeden kareler` bölümü `Fotoğraflar`, `Araştırmalar ve analizler` ile `İlçeden haberler` bölümleri `Makaleler & Araştırmalar` kayıtlarındaki ilçe ilişkilerinden gelir. Bu içerikleri kendi koleksiyonlarında ilçeye bağlayın.
+- Rehberler onaylı ve SHA’ya bağlı üretim aktarımlarıyla da güncellenmiştir. Panelden yapılan düzenleme kaydı aktarım yönetiminden çıkarır; sonraki bir aktarım bu kaydın üzerine yazmaz, onu çakışma olarak bildirir.
+- İlçe rehberi kaydını yalnız `Admin` silebilir. Rehberi gizlemek için silmek yerine taslağa alın.
+
+### Kontrol
+
+- Genel bakış, tarihçe ve coğrafya metinleri, onayları ve kaynakları tamam mı?
+- Her kaynak doğru bölümleri destekliyor; son doğrulama ve veri tarihleri dolu mu?
+- Onaylanmamış veya kaynağı eskimiş bir bölümün canlıda gizli kaldığını gördünüz mü?
+- Araştırma notlarına public metin yazılmadığından emin misiniz?
+
+## 9. İki dilde çeviri girişi
 
 ### Amaç
 
@@ -295,7 +338,8 @@ Her içerik türünün gerçek çeviri modelini kullanarak TR ve EN içeriği do
    - **Kategori, fotoğraf koleksiyonu ve etiket:** Aynı kayıt içinde TR/EN yerelleştirilmiş alanları doldurun.
    - **Kitap incelemesi:** EN için ayrı `Kitap İncelemesi` kaydı oluşturun, `Dil = en` seçin ve `Diğer dildeki kayıt` alanıyla TR kaydına bağlayın. Aynı kaydı kendi çevirisi olarak seçemezsiniz; iki kayıt farklı dilde olmalıdır.
    - **Sayfa:** EN için ayrı `Sayfa` kaydı oluşturun ve `Dil = en` seçin. Sayfalar şemasında doğrudan bir çeviri ilişkisi alanı yoktur.
-   - **Navigasyon:** Tek global belgede TR ve EN Header/Footer listelerini ayrı ayrı girin.
+   - **Navigasyon:** Tek global belgede TR Header ile TR ve EN Footer listelerini ayrı ayrı girin. EN Header kodda yönetilir.
+   - **İlçe rehberi:** Yalnız Türkçe yayımlanır; EN alanları canlı sitede kullanılmaz.
 3. Çevrilen içeriğin slug’ını hedef dilde anlaşılır tutun.
 4. EN kaydı veya locale’i de kendi başına taslak kontrolünden geçirin.
 5. Yalnız tamamlanmış çeviriyi yayınlayın.
@@ -317,7 +361,7 @@ Her içerik türünün gerçek çeviri modelini kullanarak TR ve EN içeriği do
 - Kitap çevirileri birbirine bağlı ve farklı dilde mi?
 - Her iki dil kendi public koşullarını ayrı ayrı sağlıyor mu?
 
-## 9. SEO başlık, açıklama ve görsel alt metni
+## 10. SEO başlık, açıklama ve görsel alt metni
 
 ### Amaç
 
@@ -356,7 +400,7 @@ Arama sonucu metinlerini ve erişilebilir görsel açıklamalarını doğru girm
 - Her görselin anlamlı alt metni var mı?
 - Kitapta `index` açık mı; canonical alanı gereksiz yere dolduruldu mu?
 
-## 10. Silme, yayından kaldırma ve geri dönüş
+## 11. Silme, yayından kaldırma ve geri dönüş
 
 ### Amaç
 
@@ -367,7 +411,7 @@ Arama sonucu metinlerini ve erişilebilir görsel açıklamalarını doğru girm
 1. Bir içerik artık görünmemeli ama ileride gerekebilir diyorsanız silmeyin; belge durumunu `draft` yaparak yayından kaldırın.
 2. Kitap incelemesinde ayrıca `İnceleme durumu`nu `draft` veya `archived` yapabilirsiniz. Public görünürlüğü kapatmak için Payload belgesini de taslağa almak en açık yöntemdir.
 3. Navigasyon değişikliğini geri çekmek için global belgenin yayındaki sürümünü koruyun veya yeni düzenlemeyi taslakta bırakın.
-4. Sürüm geçmişi olan kayıtların önceki sürümlerini panelde inceleyin. `Articles`, `Kitap İncelemeleri`, `Sayfalar` ve `Fotoğraflar` belge başına; `Navigasyon` globali de toplam en fazla 25 sürüm tutar.
+4. Sürüm geçmişi olan kayıtların önceki sürümlerini panelde inceleyin. `Articles`, `Kitap İncelemeleri`, `Sayfalar`, `Fotoğraflar` ve `İlçe Rehberleri` belge başına; `Navigasyon` globali de toplam en fazla 25 sürüm tutar.
 5. Silmek zorundaysanız önce bütün ilişkileri kaldırın, kaydı yeniden kontrol edin ve ancak sonra silme işlemini uygulayın.
 
 ### Dikkat
@@ -377,7 +421,7 @@ Arama sonucu metinlerini ve erişilebilir görsel açıklamalarını doğru girm
 - En az bir makalede kullanılan kategori silinemez.
 - Mevcut içerikte veya geçmiş içerik sürümünde kullanılan Media silinemez. Koruma; koleksiyon alanları, sayfa blokları, Navigasyon ve zengin metindeki medya ilişkilerini de tarar.
 - Mevcut içerikte veya geçmiş sürümde kullanılan fotoğraf koleksiyonu ve etiket silinemez.
-- `Articles`, `Categories`, `Fotoğraf Koleksiyonları`, `Etiketler` ve `Fotoğraflar` silme işlemleri yalnız `Admin` yetkisindedir. `Media`, `Kitap İncelemeleri` ve `Sayfalar` kayıtlarını `Admin` veya `Editor` silebilir; koruma kuralları yine uygulanır.
+- `Articles`, `Categories`, `Fotoğraf Koleksiyonları`, `Etiketler`, `Fotoğraflar` ve `İlçe Rehberleri` silme işlemleri yalnız `Admin` yetkisindedir. `Media`, `Kitap İncelemeleri` ve `Sayfalar` kayıtlarını `Admin` veya `Editor` silebilir; koruma kuralları yine uygulanır.
 - Kodda kitap ilişkileri için özel silme koruması yoktur. Bağlı kitabı silmeden önce `Diğer dildeki kayıt` ve `İlgili kitap incelemeleri` ilişkilerini elle kontrol edin.
 - Sürüm geçmişi bir çöp kutusu değildir. Silinen kaydın geri getirilebileceğini varsaymayın.
 
@@ -388,7 +432,7 @@ Arama sonucu metinlerini ve erişilebilir görsel açıklamalarını doğru girm
 - Kitapsa çeviri ve ilgili kitap ilişkileri kontrol edildi mi?
 - Gerekli metin ve görseller güvenli bir yerde mevcut mu?
 
-## 11. Yayın öncesi 3 dakikalık kontrol listesi
+## 12. Yayın öncesi 3 dakikalık kontrol listesi
 
 ### Amaç
 
@@ -419,7 +463,7 @@ Yayın öncesi en sık görülen içerik, dil, SEO ve görünürlük hataların�
 
 ### Dikkat
 
-- `published` tek başına yeterli olmayabilir. Makale/fotoğraf için tarih; kitap için ayrıca `reviewStatus` ve `seo.index`; Navigasyon için geçerli bağlantılar gerekir.
+- `published` tek başına yeterli olmayabilir. Makale/fotoğraf için tarih; kitap için ayrıca `reviewStatus` ve `seo.index`; ilçe rehberi için bölüm onayı ve geçerli kaynak; Navigasyon için geçerli bağlantılar gerekir.
 - Canlı kontrol, yalnız panelde “yayında” yazısını görmek değildir. Public URL’yi oturumdan bağımsız bir pencerede açın.
 - Planlı yayın tarihi gelecekteyse içeriğin henüz görünmemesi normaldir.
 
@@ -429,7 +473,7 @@ Yayın öncesi en sık görülen içerik, dil, SEO ve görünürlük hataların�
 - Canlı URL doğru dil ve slug ile açılıyor mu?
 - Eksik varsa kaydı yeniden taslağa aldınız mı?
 
-## 12. İlk 30 içerik için çalışma düzeni
+## 13. İlk 30 içerik için çalışma düzeni
 
 ### Amaç
 

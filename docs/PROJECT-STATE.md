@@ -94,7 +94,7 @@ The site also contains Turkish workspace, about, biography, feedback-linked navi
 - Payload API route: `/api/[...slug]`
 - Admin help route: `/admin/help`
 - The help navigation link and custom view are configured in `src/payload.config.ts`.
-- Help content is embedded in `src/components/admin/help/admin-help-guide.ts` and rendered as Markdown by `AdminHelpView.tsx`.
+- Help content is embedded in `src/components/admin/help/admin-help-guide.ts` and rendered as Markdown by `AdminHelpView.tsx`. That file is the single source: `YONETIM-PANELI-KULLANIM-KILAVUZU.md` is generated from it with `npm run generate:admin-guide`, and `scripts/admin-help/guide.test.ts` fails when the two differ or when the guide names a route that `src/app` does not have. The guide covers `DistrictGuides` in its section 8.
 - The help view requires an authenticated user with admin access and `user.role === "admin"`; editors are redirected to the unauthorized route.
 - `DistrictGuides` is a registered Payload collection alongside Users, Media, Categories, Articles, Books, Pages, PhotoCollections, Tags, and Photos. Navigation is a Payload global.
 
