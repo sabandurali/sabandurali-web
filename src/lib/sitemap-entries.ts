@@ -91,14 +91,6 @@ function toDate(value: string | null | undefined): Date | undefined {
   return Number.isFinite(date.getTime()) ? date : undefined;
 }
 
-/** `updatedAt`, else `publishedAt`, of a content item. */
-export function getContentLastModified(item: {
-  updatedAt: string | null;
-  publishedAt: string | null;
-}): Date | undefined {
-  return toDate(item.updatedAt) ?? toDate(item.publishedAt);
-}
-
 export function getLatestDate(
   dates: Iterable<Date | undefined>,
 ): Date | undefined {
@@ -109,6 +101,19 @@ export function getLatestDate(
     }
   }
   return latest;
+}
+
+/**
+ * When a content item last changed on the site: the later of `updatedAt` and
+ * `publishedAt`. A scheduled item is saved before it goes live, so its
+ * `updatedAt` predates the day it appears; its URL (and its list page) change
+ * at `publishedAt`.
+ */
+export function getContentLastModified(item: {
+  updatedAt: string | null;
+  publishedAt: string | null;
+}): Date | undefined {
+  return getLatestDate([toDate(item.updatedAt), toDate(item.publishedAt)]);
 }
 
 function createEntry(

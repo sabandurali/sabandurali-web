@@ -10,6 +10,7 @@ import {
   buildBookReviewEntries,
   buildSitemap,
   findBookReviewTranslation,
+  getContentLastModified,
   loadSitemapSource,
   loadSitemapSourcesByKey,
   mergeSitemapEntries,
@@ -385,6 +386,36 @@ test("dates come from content: items, newest list item, guide, CMS home", () => 
     new Date("2026-09-01T09:00:00.000Z"),
   );
   assert.equal(byUrl(sitemap, "/en")?.lastModified, undefined);
+});
+
+test("a scheduled item changes on the site at its publication date", () => {
+  // Saved on 1 September, published on 15 September.
+  const scheduled = article({
+    id: "scheduled",
+    slug: "planli-yazi",
+    language: "tr",
+    updatedAt: "2026-09-01T09:00:00.000Z",
+    publishedAt: "2026-09-15T06:00:00.000Z",
+  });
+  const sitemap = buildSitemap({ ...emptyContent, articles: [scheduled] });
+  const published = new Date("2026-09-15T06:00:00.000Z");
+
+  assert.deepEqual(
+    byUrl(sitemap, "/makaleler/planli-yazi")?.lastModified,
+    published,
+  );
+  assert.deepEqual(byUrl(sitemap, "/makaleler")?.lastModified, published);
+  assert.deepEqual(
+    getContentLastModified({
+      updatedAt: "2026-09-20T09:00:00.000Z",
+      publishedAt: "2026-09-15T06:00:00.000Z",
+    }),
+    new Date("2026-09-20T09:00:00.000Z"),
+  );
+  assert.equal(
+    getContentLastModified({ updatedAt: "not a date", publishedAt: null }),
+    undefined,
+  );
 });
 
 test("noindex, foreign-canonical and duplicate home records stay out", () => {
