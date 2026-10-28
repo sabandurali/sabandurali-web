@@ -117,7 +117,16 @@ try {
           .itemListElement.length,
         4,
       );
-      assert.equal(await page.locator("main section[id]").count(), 14);
+      // Research and news sections appear only with published content
+      // (content trust package, 2026-10-18); the other twelve always render.
+      const sectionIds = await page
+        .locator("main section[id]")
+        .evaluateAll((nodes) => nodes.map((node) => node.id));
+      const conditionalSections = new Set(["arastirmalar", "haberler"]);
+      assert.equal(
+        sectionIds.filter((id) => !conditionalSections.has(id)).length,
+        12,
+      );
       const widths = [];
       for (const width of [1440, 820, 390]) {
         await page.setViewportSize({ width, height: 1000 });
