@@ -1,21 +1,12 @@
 import "server-only";
 import { getPayload, type Where } from "payload";
 import config from "@payload-config";
+import { createPublicBookReviewConditions } from "@/content/books/book-query-conditions";
 import { mapPayloadBookReview } from "@/content/books/payload-book-review-mapper";
 import type { BookReview, BookReviewLanguage } from "@/content/books/types";
 
 const PAYLOAD_BOOK_PAGE_SIZE = 100;
 const PUBLIC_BOOK_SORT = ["-publishedAt", "id"];
-
-/** Every public read filters in the database; the mapper re-checks the rules. */
-export function createPublicBookReviewConditions(now: Date): Where[] {
-  return [
-    { _status: { equals: "published" } },
-    { reviewStatus: { equals: "published" } },
-    { publishedAt: { less_than_equal: now.toISOString() } },
-    { "seo.index": { equals: true } },
-  ];
-}
 
 export class PayloadPublicBookReviewRepository {
   private async findOne(

@@ -6,7 +6,7 @@ import {
   isRecord,
 } from "@/content/guards";
 import { mapMediaImage } from "@/content/media";
-import type { Photo, PhotoCollection, Tag } from "@/payload-types";
+import type { Photo } from "@/payload-types";
 import type {
   PhotoLanguage,
   PublicPhoto,
@@ -32,8 +32,8 @@ function mapImage(
   };
 }
 
-function mapCollection(
-  value: string | PhotoCollection,
+export function mapPhotoCollection(
+  value: unknown,
 ): PublicPhotoCollection | null {
   if (!isRecord(value)) return null;
   const id = getText(value.id);
@@ -56,7 +56,7 @@ function mapCollection(
   };
 }
 
-function mapTag(value: string | Tag): PublicPhotoTag | null {
+export function mapPhotoTag(value: unknown): PublicPhotoTag | null {
   if (!isRecord(value)) return null;
   const id = getText(value.id);
   const title = getText(value.title);
@@ -96,7 +96,7 @@ export function mapPayloadPhoto(
   const collections = (
     Array.isArray(value.collections) ? value.collections : []
   )
-    .map(mapCollection)
+    .map(mapPhotoCollection)
     .filter((item): item is PublicPhotoCollection => item !== null)
     .toSorted(
       (left, right) =>
@@ -108,7 +108,7 @@ export function mapPayloadPhoto(
   if (collections.length === 0) return skip("no public photo collection");
 
   const tags = (value.tags ?? [])
-    .map(mapTag)
+    .map(mapPhotoTag)
     .filter((item): item is PublicPhotoTag => item !== null)
     .toSorted((left, right) => left.title.localeCompare(right.title, locale));
   const fallbackDescription = getText(value.description) ?? "";
