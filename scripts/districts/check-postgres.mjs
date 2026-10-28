@@ -1,8 +1,12 @@
-// Provide an external PGLITE_MODULE path; no repo dependency or live DB needed.
+// Replays every migration in src/migrations into an in-memory PGlite
+// (embedded PostgreSQL) database: no server, no network, no live DB.
+// PGLITE_MODULE may point at another @electric-sql/pglite build to compare.
 import { readFile } from "node:fs/promises";
 import { pathToFileURL } from "node:url";
 import assert from "node:assert/strict";
-const { PGlite } = await import(pathToFileURL(process.env.PGLITE_MODULE).href);
+const { PGlite } = process.env.PGLITE_MODULE
+  ? await import(pathToFileURL(process.env.PGLITE_MODULE).href)
+  : await import("@electric-sql/pglite");
 const db = new PGlite();
 const index = await readFile("src/migrations/index.ts", "utf8");
 const names = [...index.matchAll(/name: ['"]([^'"]+)['"]/g)].map((m) => m[1]);
