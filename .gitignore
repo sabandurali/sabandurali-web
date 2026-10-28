@@ -46,3 +46,18 @@ next-env.d.ts
 !/.data/.gitkeep
 /public/media/*
 !/public/media/.gitkeep
+
+# Private backup sets and local audit evidence (never publish)
+/.private-backups/
+/ml-env/
+/reports/production-release-20261018/
+*.key
+*.p12
+*.pfx
+*.sql
+*.dump
+*.sqlite
+*.sqlite3
+*.db
+*.db-wal
+*.db-shm
