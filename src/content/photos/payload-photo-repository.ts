@@ -55,6 +55,8 @@ export class PayloadPublicPhotoRepository {
 
     return {
       photos,
+      /** Documents on this page before mapping. */
+      found: result.docs.length,
       totalDocs: result.totalDocs,
       totalPages: result.totalPages,
     };
@@ -119,28 +121,27 @@ export class PayloadPublicPhotoRepository {
   ): Promise<PublishedPhotoList> {
     const conditions = createPhotoListConditions(now, filters);
     const requestedPage = normalizeRequestedPage(filters.page);
-    const [first, facets] = await Promise.all([
-      this.findPage(
-        locale,
-        conditions,
-        requestedPage,
-        PHOTO_LIST_PAGE_SIZE,
-        now,
-      ),
+    const findListPage = (page: number) =>
+      this.findPage(locale, conditions, page, PHOTO_LIST_PAGE_SIZE, now);
+    const [requested, facets] = await Promise.all([
+      findListPage(requestedPage),
       this.listFacets(locale, now),
     ]);
+    // A page number past the end shows the last page. Payload returns no
+    // documents there and, when the query joins other tables (localized
+    // fields, collection or tag filters), a total of 0, so the first page
+    // supplies the real total.
+    const first =
+      requestedPage === 1 || requested.found > 0
+        ? requested
+        : await findListPage(1);
     const { page, totalPages } = clampPhotoPage(requestedPage, first.totalDocs);
-    // A page number past the end shows the last page.
     const current =
       page === requestedPage
-        ? first
-        : await this.findPage(
-            locale,
-            conditions,
-            page,
-            PHOTO_LIST_PAGE_SIZE,
-            now,
-          );
+        ? requested
+        : page === 1
+          ? first
+          : await findListPage(page);
 
     return {
       photos: current.photos,
