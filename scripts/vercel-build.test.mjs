@@ -1,13 +1,26 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  mkdtempSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
+import { tmpdir } from "node:os";
+import path from "node:path";
+import { pathToFileURL } from "node:url";
+import {
   classifyMigrationStateError,
   compareMigrationState,
   databaseIdentity,
   describeProductionDatabase,
+  migrationNamesFromFiles,
   MigrationStateError,
   productionDatabaseFingerprint,
   readProductionMigrationState,
+  readRegisteredMigrationNames,
+  registeredMigrationNames,
   runBuild,
 } from "./vercel-build.mjs";
 
@@ -666,6 +679,146 @@ test("the committed migration registry parses into unique migration names", asyn
   for (const name of state.pendingMigrationNames) {
     assert.match(name, /^[0-9]{8}_[0-9]{6}_[a-z0-9_]+$/);
   }
+});
+
+function registryFor(names) {
+  return [
+    ...names.map((name) => `import * as migration_${name} from './${name}';`),
+    "",
+    "export const migrations = [",
+    ...names.map(
+      (name) =>
+        `  {\n    up: migration_${name}.up,\n    down: migration_${name}.down,\n    name: '${name}',\n  },`,
+    ),
+    "];",
+  ].join("\n");
+}
+
+const first = "20260101_000000_one";
+const second = "20260102_000000_two";
+
+test("SEC-10: the migration list is the files payload migrate applies", () => {
+  assert.deepEqual(
+    migrationNamesFromFiles([
+      `${second}.ts`,
+      "index.ts",
+      `${first}.json`,
+      `${first}.ts`,
+      ".DS_Store",
+      "index.js",
+      "README.md",
+    ]),
+    [first, second],
+  );
+  assert.deepEqual(
+    registeredMigrationNames(registryFor([first, second]), [
+      `${second}.ts`,
+      `${second}.json`,
+      `${first}.ts`,
+      "index.ts",
+    ]),
+    [first, second],
+  );
+});
+
+for (const [name, registry, files] of [
+  [
+    "a migration file missing from index.ts",
+    registryFor([first]),
+    [`${first}.ts`, `${second}.ts`, "index.ts"],
+  ],
+  [
+    "an index.ts entry without its file",
+    registryFor([first, second]),
+    [`${first}.ts`, "index.ts"],
+  ],
+  [
+    "an index.ts order that differs from the file order",
+    registryFor([second, first]),
+    [`${first}.ts`, `${second}.ts`, "index.ts"],
+  ],
+  [
+    "a helper module in the migration directory",
+    registryFor([first, "helpers"]),
+    [`${first}.ts`, "helpers.ts", "index.ts"],
+  ],
+  [
+    "one migration as .ts and .js",
+    registryFor([first]),
+    [`${first}.js`, `${first}.ts`, "index.ts"],
+  ],
+  ["an empty migration directory", registryFor([]), ["index.ts"]],
+]) {
+  test(`SEC-10: ${name} fails closed as an invalid registry`, () => {
+    assert.throws(
+      () => registeredMigrationNames(registry, files),
+      (error) =>
+        classifyMigrationStateError(error).category ===
+        "migration_registry_invalid",
+    );
+  });
+}
+
+test("the build reads the migration files, not only index.ts", async () => {
+  const directory = mkdtempSync(
+    path.join(tmpdir(), "vercel-build-migrations-"),
+  );
+  try {
+    const directoryUrl = pathToFileURL(`${directory}/`);
+    writeFileSync(path.join(directory, "index.ts"), registryFor([first]));
+    writeFileSync(path.join(directory, `${first}.ts`), "");
+    assert.deepEqual(await readRegisteredMigrationNames(directoryUrl), [first]);
+
+    writeFileSync(path.join(directory, `${second}.ts`), "");
+    await assert.rejects(
+      readRegisteredMigrationNames(directoryUrl),
+      (error) =>
+        classifyMigrationStateError(error).category ===
+        "migration_registry_invalid",
+    );
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
+  await assert.rejects(
+    readRegisteredMigrationNames(pathToFileURL(`${directory}/`)),
+    (error) =>
+      classifyMigrationStateError(error).category ===
+      "migration_registry_invalid",
+  );
+});
+
+test("the committed src/migrations index lists exactly its migration files", () => {
+  const directory = new URL("../src/migrations/", import.meta.url);
+  const files = readdirSync(directory);
+  const names = registeredMigrationNames(
+    readFileSync(new URL("index.ts", directory), "utf8"),
+    files,
+  );
+  assert.ok(names.length > 0);
+  assert.deepEqual(names, migrationNamesFromFiles(files));
+});
+
+test("a pending migration missing from index.ts stops the build before migrate", async () => {
+  const client = fakeClient({ applied: [first] });
+  await assert.rejects(
+    readProductionMigrationState(
+      { DATABASE_URL: productionUrl },
+      {
+        createClient: () => client,
+        expectedFingerprint: productionFingerprint,
+        readRegisteredNames: async () =>
+          registeredMigrationNames(registryFor([first]), [
+            `${first}.ts`,
+            `${second}.ts`,
+            "index.ts",
+          ]),
+      },
+    ),
+    (error) =>
+      classifyMigrationStateError(error).category ===
+      "migration_registry_invalid",
+  );
+  assert.deepEqual(client.queries, []);
 });
 
 for (const [name, client, category] of [

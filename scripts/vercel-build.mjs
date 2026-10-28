@@ -6,14 +6,16 @@
 //   for a full commit SHA; anything else stops before reading the database.
 // - Pending migrations run only with an approval bound to this commit SHA,
 //   to the exact ordered list of pending migration names and to a PITR
-//   confirmation for the same commit. The state is re-read after migrating.
+//   confirmation for the same commit. The migration list is the one
+//   `payload migrate` applies (the files in src/migrations, which index.ts
+//   must match). The state is re-read after migrating.
 // - Every other context never migrates and refuses to build against the
 //   Production database.
 // - Failure messages name a category (and a standard error code) but never a
 //   connection string, host, user, password or driver message.
 import { createHash } from "node:crypto";
 import { spawnSync } from "node:child_process";
-import { readFile } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import { pathToFileURL } from "node:url";
 import pg from "pg";
 
@@ -49,10 +51,7 @@ const retiredDryRunVariable = "PRODUCTION_DISTRICT_DRY_RUN_APPROVED_SHA";
 const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
 const commitShaPattern = /^[0-9a-f]{40}$/;
 const migrationNamePattern = /^[0-9]{8}_[a-z0-9_]+$/i;
-const migrationRegistryUrl = new URL(
-  "../src/migrations/index.ts",
-  import.meta.url,
-);
+const migrationDirectoryUrl = new URL("../src/migrations/", import.meta.url);
 
 const noPendingMessage = "No pending migrations; skipping migrate.";
 const pendingMessage = "Pending migrations detected; approval required.";
@@ -223,21 +222,67 @@ export function compareMigrationState(registeredNames, appliedNames) {
   return { pendingMigrationNames };
 }
 
-async function readRegisteredMigrationNames() {
+/**
+ * The migrations that `payload migrate` applies, in its order. Payload does
+ * not read src/migrations/index.ts: it runs every `.ts` and `.js` file of the
+ * migration directory except the index, sorted by file name and named after
+ * the part before the first dot (`readMigrationFiles` in
+ * payload/dist/database/migrations).
+ */
+export function migrationNamesFromFiles(fileNames) {
+  return [...fileNames]
+    .sort()
+    .filter(
+      (fileName) =>
+        (fileName.endsWith(".ts") || fileName.endsWith(".js")) &&
+        fileName !== "index.ts" &&
+        fileName !== "index.js",
+    )
+    .map((fileName) => fileName.split(".")[0]);
+}
+
+/**
+ * The approval is bound to the migrations Payload will apply, so they are read
+ * from the migration files. src/migrations/index.ts (what the CI replay reads)
+ * must list exactly the same migrations in the same order: a file missing from
+ * the index would otherwise be applied without being listed or approved.
+ */
+export function registeredMigrationNames(registrySource, migrationFileNames) {
+  const names = migrationNamesFromFiles(migrationFileNames);
+  assertUniqueMigrationNames(names);
+  const listed = [
+    ...registrySource.matchAll(/\bname:\s*["']([^"']*)["']/g),
+  ].map((match) => match[1]);
+  if (
+    !sameNames(listed, names) ||
+    names.some((name) => !migrationNamePattern.test(name))
+  ) {
+    throw new MigrationStateError(
+      "migration_registry_invalid",
+      "src/migrations/index.ts does not list exactly the migration files that payload migrate applies.",
+    );
+  }
+  return names;
+}
+
+/** `directoryUrl` (ending in `/`) is for tests. */
+export async function readRegisteredMigrationNames(
+  directoryUrl = migrationDirectoryUrl,
+) {
   let source;
+  let fileNames;
   try {
-    source = await readFile(migrationRegistryUrl, "utf8");
+    [source, fileNames] = await Promise.all([
+      readFile(new URL("index.ts", directoryUrl), "utf8"),
+      readdir(directoryUrl),
+    ]);
   } catch {
     throw new MigrationStateError(
       "migration_registry_invalid",
       "Migration registry could not be read.",
     );
   }
-  const names = [
-    ...source.matchAll(/\bname:\s*["']([0-9]{8}_[a-z0-9_]+)["']/gi),
-  ].map((match) => match[1]);
-  assertUniqueMigrationNames(names);
-  return names;
+  return registeredMigrationNames(source, fileNames);
 }
 
 /**

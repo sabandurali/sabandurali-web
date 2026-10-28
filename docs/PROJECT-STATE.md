@@ -220,6 +220,7 @@ The applied district importers, their cores and tests are kept for audit in `scr
 
 - A Production build (`VERCEL_ENV=production`) must run on Vercel (`VERCEL=1`), from `main` (`VERCEL_GIT_COMMIT_REF=main`) and for a full 40-character `VERCEL_GIT_COMMIT_SHA`. Any other ref (for example `vercel deploy --prod` from a feature branch, a promoted Preview or a changed Production Branch setting) stops before the database is read. Keep the Vercel Production Branch locked to `main` and limit who can deploy to Production from the CLI.
 - Production requires PostgreSQL, Vercel Blob, `DATABASE_URL`, `PAYLOAD_SECRET` and `BLOB_READ_WRITE_TOKEN`, checks the database fingerprint, and reads the applied migrations in a read-only transaction. An applied migration that the registry does not know, or applied migrations that are not a prefix of the registry, stop the build.
+- The registry is what `payload migrate` applies: Payload runs every `.ts`/`.js` file in `src/migrations/` except `index.ts`, in file-name order, and does not read the index. `src/migrations/index.ts` (which the CI migration replay reads) must list exactly the same migrations in the same order; a migration file missing from the index, an index entry without a file, another order or a helper module in that folder stops the build with `migration_registry_invalid`, and `npm test` fails on it first. `npm run payload:migrate:create` keeps both in step.
 - Previews and local builds never migrate. No Preview branch is designated for migrations any more, and a non-Production build whose `DATABASE_URL` resolves to the Production fingerprint refuses to build. The fingerprint covers host, port and database name, so another hostname for the same database (for example a pooler endpoint) is not recognised: keep the Production `DATABASE_URL` scoped to the Production environment in Vercel.
 - The build-time district dry-run (`PRODUCTION_DISTRICT_DRY_RUN_APPROVED_SHA`) is retired: if that variable is set, the build stops before reading anything. Remove it from the Production environment.
 - The boolean `PRODUCTION_MIGRATION_APPROVED` and `PRODUCTION_PITR_CONFIRMED` no longer approve a migration; the build logs that it ignores them. Remove them from Vercel. (`PRODUCTION_PITR_CONFIRMED` is still read by the archived original importer, never by the build.)
@@ -253,7 +254,8 @@ Build failures name a category and, when there is one, a standard error code (Po
 | `database_not_found` | The database name does not exist (`3D000`) |
 | `connected_database_mismatch` | The server reports another database than the URL |
 | `migration_table_missing` | `payload_migrations` does not exist |
-| `migration_registry_invalid`, `migration_state_inconsistent` | The committed registry is invalid, or the applied migrations do not match it |
+| `migration_registry_invalid` | The migration files and `src/migrations/index.ts` disagree, or the list is empty or has duplicates |
+| `migration_state_inconsistent` | The applied migrations do not match the committed registry |
 | `query_failed`, `unknown_failed` | Any other database or unexpected error |
 
 ### K.4 Rotating the database fingerprint after a restore
