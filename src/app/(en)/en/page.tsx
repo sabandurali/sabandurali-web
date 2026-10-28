@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import HomePage from "@/components/HomePage";
 import { homeUrls, siteSocialImage } from "@/config/site";
-import { homeContent } from "@/content/homeContent";
-import { getPayloadHomeContent } from "@/content/pages/home-page-content";
-import { getEnglishHomePageData } from "@/content/pages/page-data-source";
+import { getHomeContent } from "@/content/pages/page-data-source";
 import { createPublicPageMetadata } from "@/content/pages/page-seo";
 
 const homeAlternates: NonNullable<Metadata["alternates"]> = {
@@ -34,30 +32,19 @@ const staticMetadata: Metadata = {
 };
 
 export async function generateMetadata(): Promise<Metadata> {
-  const data = await getEnglishHomePageData();
+  // A missing or incomplete CMS home page falls back to the static content.
+  const { page } = await getHomeContent("en");
 
-  if (
-    data.source === "static" ||
-    data.page === null ||
-    getPayloadHomeContent(data.page, homeContent.en) === null
-  ) {
-    return staticMetadata;
-  }
+  if (page === null) return staticMetadata;
 
   return {
-    ...createPublicPageMetadata(data.page),
+    ...createPublicPageMetadata(page),
     alternates: homeAlternates,
   };
 }
 
 export default async function EnglishHome() {
-  const data = await getEnglishHomePageData();
+  const { content } = await getHomeContent("en");
 
-  if (data.source === "payload" && data.page !== null) {
-    const content = getPayloadHomeContent(data.page, homeContent.en);
-
-    if (content !== null) return <HomePage content={content} />;
-  }
-
-  return <HomePage content={homeContent.en} />;
+  return <HomePage content={content} />;
 }

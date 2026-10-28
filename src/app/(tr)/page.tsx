@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 import HomePage from "@/components/HomePage";
 import { homeUrls, siteSocialImage } from "@/config/site";
-import { homeContent } from "@/content/homeContent";
-import { getPayloadHomeContent } from "@/content/pages/home-page-content";
-import { getTurkishHomePageData } from "@/content/pages/page-data-source";
+import { getHomeContent } from "@/content/pages/page-data-source";
 import { createPublicPageMetadata } from "@/content/pages/page-seo";
 
 const homeAlternates: NonNullable<Metadata["alternates"]> = {
@@ -35,36 +32,19 @@ const staticMetadata: Metadata = {
 };
 
 export async function generateMetadata(): Promise<Metadata> {
-  const data = await getTurkishHomePageData();
+  // A missing or incomplete CMS home page falls back to the static content.
+  const { page } = await getHomeContent("tr");
 
-  if (data.source === "static") return staticMetadata;
-
-  const metadata =
-    data.page === null
-      ? {
-          title: "Ana sayfa bulunamadı | Şaban Durali",
-          robots: { index: false, follow: false },
-        }
-      : createPublicPageMetadata(data.page);
+  if (page === null) return staticMetadata;
 
   return {
-    ...metadata,
+    ...createPublicPageMetadata(page),
     alternates: homeAlternates,
   };
 }
 
 export default async function Home() {
-  const data = await getTurkishHomePageData();
-
-  if (data.source === "static") {
-    return <HomePage content={homeContent.tr} />;
-  }
-
-  if (data.page === null) notFound();
-
-  const content = getPayloadHomeContent(data.page, homeContent.tr);
-
-  if (content === null) notFound();
+  const { content } = await getHomeContent("tr");
 
   return <HomePage content={content} />;
 }
