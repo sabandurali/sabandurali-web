@@ -9,8 +9,9 @@ import type {
   PublicArticle,
   PublicArticleSummary,
 } from "@/content/articles/public-types";
-import { MAX_ARTICLE_PAGE_SIZE } from "@/content/articles/repository/types";
 import type { ArticleLanguage } from "@/content/articles/types";
+
+const PAYLOAD_ARTICLE_PAGE_SIZE = 100;
 
 function createPublishedConditions(now: Date): Where[] {
   return [
@@ -43,7 +44,7 @@ export class PayloadPublicArticleRepository {
         depth: 1,
         draft: false,
         fallbackLocale: false,
-        limit: MAX_ARTICLE_PAGE_SIZE,
+        limit: PAYLOAD_ARTICLE_PAGE_SIZE,
         locale,
         overrideAccess: false,
         page,
@@ -120,7 +121,7 @@ export class PayloadPublicArticleRepository {
         depth: 1,
         draft: false,
         fallbackLocale: false,
-        limit: MAX_ARTICLE_PAGE_SIZE,
+        limit: PAYLOAD_ARTICLE_PAGE_SIZE,
         locale,
         overrideAccess: false,
         page,

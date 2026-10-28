@@ -1,24 +1,6 @@
-import {
-  createArticleSlug,
-  normalizeTagValue,
-} from "@/content/articles/helpers";
-import type { BookTag } from "@/content/books/types";
+import { createArticleSlug } from "@/content/articles/helpers";
 
 export const createBookReviewSlug = createArticleSlug;
-export const normalizeBookTagValue = normalizeTagValue;
-
-export function findBookTagByName(
-  value: string,
-  tags: ReadonlyArray<BookTag>,
-): BookTag | undefined {
-  const normalizedValue = normalizeBookTagValue(value);
-
-  return tags.find((tag) =>
-    [tag.slug, tag.labelTr, tag.labelEn, ...tag.aliases]
-      .map(normalizeBookTagValue)
-      .includes(normalizedValue),
-  );
-}
 
 export function normalizeIsbn(value: string): string {
   return value.replace(/[\s-]+/g, "").toUpperCase();
