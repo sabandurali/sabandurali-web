@@ -15,6 +15,7 @@
     "payload:migrate:status": "payload migrate:status",
     "payload:migrate": "payload migrate",
     "vercel:build": "node scripts/vercel-build.mjs",
+    "e2e:headers": "node scripts/security-headers-check.mjs",
     "district:import": "tsx scripts/districts/import.ts",
     "district:import:production": "tsx scripts/districts/import-production.ts",
     "district:import:production:dry-run": "tsx scripts/districts/import-production.ts --dry-run",

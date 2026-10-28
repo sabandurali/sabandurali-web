@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { assertProductionPayloadInfrastructure } from "./src/lib/payloadInfrastructure";
+import { securityHeaders } from "./src/lib/securityHeaders";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -10,27 +11,13 @@ const dirname = path.dirname(filename);
 assertProductionPayloadInfrastructure();
 
 const nextConfig: NextConfig = {
+  // withPayload adds "X-Powered-By: Next.js, Payload" unless this is false.
   poweredByHeader: false,
   async headers() {
     return [
       {
         source: "/:path*",
-        headers: [
-          { key: "X-Content-Type-Options", value: "nosniff" },
-          { key: "X-Frame-Options", value: "SAMEORIGIN" },
-          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-          {
-            key: "Permissions-Policy",
-            value: "camera=(), microphone=(), geolocation=()",
-          },
-          {
-            key: "Content-Security-Policy",
-            // Keep Next.js static hydration, Payload editor workers and image
-            // previews working. A strict script policy needs a separate rollout.
-            value:
-              "object-src 'none'; base-uri 'self'; frame-ancestors 'self'; form-action 'self' https://formspree.io",
-          },
-        ],
+        headers: [...securityHeaders],
       },
     ];
   },
@@ -52,27 +39,22 @@ const nextConfig: NextConfig = {
     globalNotFound: true,
   },
   images: {
+    // `search: ""` rejects query strings. Without it every `?x=<random>` is a
+    // new cache entry for the optimizer (and a Payload function call for media).
     localPatterns: [
-      {
-        pathname: "/articles/**",
-      },
-      {
-        pathname: "/books/**",
-      },
-      {
-        pathname: "/brand/**",
-      },
-      {
-        pathname: "/workspaces/**",
-      },
-      {
-        pathname: "/api/media/file/**",
-      },
+      { pathname: "/articles/**", search: "" },
+      { pathname: "/books/**", search: "" },
+      { pathname: "/brand/**", search: "" },
+      { pathname: "/workspaces/**", search: "" },
+      { pathname: "/api/media/file/**", search: "" },
     ],
     remotePatterns: [
       {
         protocol: "https",
         hostname: "**.blob.vercel-storage.com",
+        port: "",
+        pathname: "/**",
+        search: "",
       },
     ],
   },
