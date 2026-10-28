@@ -310,3 +310,16 @@ export function getWorkspaceEntry(
     getWorkspace(key)?.entries.find((entry) => entry.slug === slug) ?? null
   );
 }
+
+/**
+ * Static params for a workspace's `[section]` route: the entries that are
+ * served by that route (`/<workspace>/<entry>`). Entries that link to other
+ * pages, such as the district guide or the photo archive, are excluded.
+ */
+export function getWorkspaceSectionParams(
+  key: string,
+): Array<{ section: string }> {
+  return (getWorkspace(key)?.entries ?? [])
+    .filter((entry) => entry.href === `/${key}/${entry.slug}`)
+    .map((entry) => ({ section: entry.slug }));
+}
