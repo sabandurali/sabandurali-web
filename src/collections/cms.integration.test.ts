@@ -351,6 +351,18 @@ test("anonymous REST: media cannot be listed, other lists are capped, population
 
   assert.equal(result.limit, 50, "limit=0 is capped");
   assert.equal(result.docs.length, 1);
+
+  const distinct = await payload.findDistinct({
+    collection: "articles",
+    field: "slug",
+    overrideAccess: false,
+    req: anonymousRest(),
+  });
+  assert.equal(distinct.limit, 50, "distinct values are capped as well");
+  assert.deepEqual(
+    distinct.values.map((value) => value.slug),
+    ["kentsel-donusum-notu"],
+  );
   const featuredImage = result.docs[0].featuredImage;
   assert.ok(
     typeof featuredImage === "object" && featuredImage !== null,

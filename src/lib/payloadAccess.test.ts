@@ -147,6 +147,37 @@ test("anonymous REST reads are capped and always paginated", () => {
   }
 });
 
+test("anonymous distinct queries are capped even without a limit", () => {
+  // `findDistinct` has no default page size: without a limit it returns
+  // every distinct value.
+  for (const [args, expected] of [
+    [{ field: "slug" }, ANONYMOUS_REST_MAX_LIMIT],
+    [{ field: "slug", limit: undefined }, ANONYMOUS_REST_MAX_LIMIT],
+    [{ field: "slug", limit: 0 }, ANONYMOUS_REST_MAX_LIMIT],
+    [{ field: "slug", limit: 500 }, ANONYMOUS_REST_MAX_LIMIT],
+    [{ field: "slug", limit: 5 }, 5],
+  ] as const) {
+    const result = runHook(limitAnonymousRestQueries, {
+      args: { ...args },
+      operation: "readDistinct",
+      req: request(null, "REST"),
+    }) as Record<string, unknown>;
+
+    assert.equal(result.limit, expected, JSON.stringify(args));
+    assert.equal("pagination" in result, false);
+  }
+
+  // Counting returns no documents, so it gets no limit.
+  assert.deepEqual(
+    runHook(limitAnonymousRestQueries, {
+      args: { where: {} },
+      operation: "count",
+      req: request(null, "REST"),
+    }),
+    { where: {} },
+  );
+});
+
 test("REST limits leave staff, the Local API, nested population and writes alone", () => {
   const args = { limit: 0, pagination: false };
   const untouched: HookCall[] = [

@@ -185,24 +185,28 @@ export function isAnonymousTopLevelRestRead({
 export const limitAnonymousRestQueries: CollectionBeforeOperationHook = (
   hookArgs,
 ) => {
-  const { args } = hookArgs;
+  const { args, operation } = hookArgs;
 
   if (!isAnonymousTopLevelRestRead(hookArgs)) return args;
 
   const nextArgs: Record<string, unknown> = { ...args };
+  const requestedLimit = getOperationArg(args, "limit");
+  const requested =
+    typeof requestedLimit === "number" && Number.isFinite(requestedLimit)
+      ? requestedLimit
+      : undefined;
 
-  if ("limit" in args) {
-    const requested =
-      typeof args.limit === "number" && Number.isFinite(args.limit)
-        ? args.limit
-        : undefined;
-
+  if (requested !== undefined) {
     nextArgs.limit =
-      requested === undefined
-        ? undefined
-        : requested <= 0
-          ? ANONYMOUS_REST_MAX_LIMIT
-          : Math.min(requested, ANONYMOUS_REST_MAX_LIMIT);
+      requested <= 0
+        ? ANONYMOUS_REST_MAX_LIMIT
+        : Math.min(requested, ANONYMOUS_REST_MAX_LIMIT);
+  } else if (operation === "readDistinct") {
+    // `find` falls back to a page of 10 documents, but `findDistinct`
+    // without a limit returns every distinct value of the field.
+    nextArgs.limit = ANONYMOUS_REST_MAX_LIMIT;
+  } else if ("limit" in args) {
+    nextArgs.limit = undefined;
   }
 
   if ("pagination" in args) {
