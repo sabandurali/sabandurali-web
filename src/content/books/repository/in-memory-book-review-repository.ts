@@ -10,10 +10,7 @@ import {
   type BookReviewSortOption,
   type PaginatedBookReviewResult,
 } from "@/content/books/repository/types";
-import type {
-  BookReview,
-  BookReviewLanguage,
-} from "@/content/books/types";
+import type { BookReview, BookReviewLanguage } from "@/content/books/types";
 
 const DEFAULT_BOOK_REVIEW_SORT: BookReviewSortOption = "publishedAt_desc";
 const TITLE_COLLATOR = new Intl.Collator(["tr", "en"], {
@@ -226,16 +223,13 @@ function matchesQuery(
   query: BookReviewListQuery,
 ): boolean {
   return (
-    (query.language === undefined ||
-      bookReview.language === query.language) &&
+    (query.language === undefined || bookReview.language === query.language) &&
     (query.reviewStatus === undefined ||
       bookReview.reviewStatus === query.reviewStatus) &&
     (query.readingStatus === undefined ||
       bookReview.readingStatus === query.readingStatus) &&
-    (query.category === undefined ||
-      bookReview.category === query.category) &&
-    (query.featured === undefined ||
-      bookReview.featured === query.featured) &&
+    (query.category === undefined || bookReview.category === query.category) &&
+    (query.featured === undefined || bookReview.featured === query.featured) &&
     (query.showOnHomepage === undefined ||
       bookReview.showOnHomepage === query.showOnHomepage) &&
     (query.tagIds === undefined ||
@@ -250,11 +244,7 @@ function matchesQuery(
       )) &&
     (!query.publishedOnly ||
       isPubliclyPublishedBookReview(bookReview, query.publishedAsOf)) &&
-    matchesRatingRange(
-      bookReview,
-      query.minimumRating,
-      query.maximumRating,
-    ) &&
+    matchesRatingRange(bookReview, query.minimumRating, query.maximumRating) &&
     matchesDateRange(
       bookReview.publishedAt,
       query.publishedAfter,
@@ -360,10 +350,7 @@ export class InMemoryBookReviewRepository implements BookReviewRepository {
       );
     const total = matchingBookReviews.length;
     const totalPages = total === 0 ? 0 : Math.ceil(total / pageSize);
-    const offset = Math.min(
-      (page - 1) * pageSize,
-      Number.MAX_SAFE_INTEGER,
-    );
+    const offset = Math.min((page - 1) * pageSize, Number.MAX_SAFE_INTEGER);
 
     return {
       items: matchingBookReviews

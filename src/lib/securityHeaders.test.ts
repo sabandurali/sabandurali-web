@@ -77,7 +77,13 @@ test("Permissions-Policy denies powerful features and keeps clipboard writes", (
     }),
   );
 
-  for (const feature of ["camera", "microphone", "geolocation", "payment", "usb"]) {
+  for (const feature of [
+    "camera",
+    "microphone",
+    "geolocation",
+    "payment",
+    "usb",
+  ]) {
     assert.equal(features.get(feature), "()", feature);
   }
   for (const allowList of features.values()) {

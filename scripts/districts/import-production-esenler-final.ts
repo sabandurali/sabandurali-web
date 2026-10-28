@@ -192,7 +192,9 @@ async function main(): Promise<void> {
 
   let bundle: ResearchBundle;
   try {
-    bundle = JSON.parse(await readFile(values.input!, "utf8")) as ResearchBundle;
+    bundle = JSON.parse(
+      await readFile(values.input!, "utf8"),
+    ) as ResearchBundle;
     validateBundle(bundle);
     attachEditorial(
       bundle,

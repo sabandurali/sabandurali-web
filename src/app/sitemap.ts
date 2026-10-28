@@ -34,9 +34,15 @@ import {
   getPhotoUrl,
   photoListUrls,
 } from "@/content/photos/photo-routes";
-import type { PublicPhoto, PublicPhotoTranslation } from "@/content/photos/types";
+import type {
+  PublicPhoto,
+  PublicPhotoTranslation,
+} from "@/content/photos/types";
 import { districts } from "@/content/districts/district-registry";
-import { districtGuidePath, getDistrictPath } from "@/content/districts/district-routes";
+import {
+  districtGuidePath,
+  getDistrictPath,
+} from "@/content/districts/district-routes";
 import { workspacePath, workspaces } from "@/content/workspaces";
 
 export const dynamic = "force-dynamic";
@@ -102,11 +108,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const translationArticle =
       article.translationKey === null
         ? null
-        : articles.find(
+        : (articles.find(
             (candidate) =>
               candidate.language !== article.language &&
               candidate.translationKey === article.translationKey,
-          ) ?? null;
+          ) ?? null);
     const translation: PublicArticleTranslation | null =
       translationArticle === null
         ? null
@@ -132,13 +138,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       const translation =
         bookReview.translationGroupId === null
           ? null
-          : bookReviews.find(
+          : (bookReviews.find(
               (candidate) =>
                 candidate.id !== bookReview.id &&
                 candidate.language !== bookReview.language &&
-                candidate.translationGroupId ===
-                  bookReview.translationGroupId,
-            ) ?? null;
+                candidate.translationGroupId === bookReview.translationGroupId,
+            ) ?? null);
 
       return {
         url: getBookReviewUrl(bookReview.slug, bookReview.language),

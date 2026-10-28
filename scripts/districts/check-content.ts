@@ -72,9 +72,7 @@ const rows = research.districts.map((r, i) => {
     );
   }
   const expectedFacts =
-    batch1PopulationFacts[
-      r.district as keyof typeof batch1PopulationFacts
-    ];
+    batch1PopulationFacts[r.district as keyof typeof batch1PopulationFacts];
   if (review.facts) {
     assert.deepEqual(projected.facts, review.facts, `${r.district}/facts`);
   } else {
@@ -219,8 +217,8 @@ for (const district of nonEsenler) {
       `${district.district}/${field}: ellipsis or truncated copy`,
     );
   }
-  const topics = district.sections.researchTopics!
-    .split("\n")
+  const topics = district.sections
+    .researchTopics!.split("\n")
     .map((topic) => topic.trim())
     .filter(Boolean);
   assert.ok(
@@ -250,8 +248,7 @@ for (const field of completedFields) {
 const shingleDistricts = new Map<string, Set<string>>();
 for (const district of nonEsenler) {
   for (const field of completedFields) {
-    const words = district.sections[field]!
-      .toLocaleLowerCase("tr-TR")
+    const words = district.sections[field]!.toLocaleLowerCase("tr-TR")
       .replace(/[^\p{L}\p{N}]+/gu, " ")
       .trim()
       .split(/\s+/);
@@ -276,7 +273,9 @@ assert.equal(
     : "no overused 12-word copy",
 );
 const completedCopy = nonEsenler
-  .flatMap((district) => completedFields.map((field) => district.sections[field]))
+  .flatMap((district) =>
+    completedFields.map((field) => district.sections[field]),
+  )
   .join("\n");
 assert.ok(
   !/İstanbul['’]un önemli ilçelerinden|yatırımcıların gözdesi|yüksek prim potansiyeli|eşsiz yaşam fırsatı/i.test(
@@ -335,8 +334,9 @@ assert.throws(() =>
 const invalidPopulationSource = structuredClone(editorial);
 invalidPopulationSource.districts
   .find((row) => row.district === "bahcelievler")!
-  .sources.find((source) => source.sections?.includes("facts"))!.needsVerification =
-  true;
+  .sources.find((source) =>
+    source.sections?.includes("facts"),
+  )!.needsVerification = true;
 assert.throws(() =>
   attachEditorial(structuredClone(research), invalidPopulationSource),
 );
@@ -344,7 +344,9 @@ const invalidAdoption = structuredClone(editorial);
 invalidAdoption.districts.find(
   (row) => row.district === "esenler",
 )!.adoption!.contentFingerprint = "0".repeat(64);
-assert.throws(() => attachEditorial(structuredClone(research), invalidAdoption));
+assert.throws(() =>
+  attachEditorial(structuredClone(research), invalidAdoption),
+);
 assertBatch1PopulationImportPlan({ ...batch1PopulationPlan });
 for (const action of Object.keys(batch1PopulationPlan) as Array<
   keyof typeof batch1PopulationPlan

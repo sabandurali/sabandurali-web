@@ -19,7 +19,9 @@ export function districtMetadata(
   const description = metaDescription(district, guide);
   const url = getDistrictUrl(district.slug);
   const photo = verifiedDistrictImages[district.slug];
-  const image = photo ? { url: getAbsoluteUrl(photo.src), alt: photo.alt } : siteSocialImage;
+  const image = photo
+    ? { url: getAbsoluteUrl(photo.src), alt: photo.alt }
+    : siteSocialImage;
   return {
     title,
     description,
@@ -33,7 +35,12 @@ export function districtMetadata(
       siteName: "Şaban Durali",
       images: [image],
     },
-    twitter: { card: "summary_large_image", title, description, images: [image.url] },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [image.url],
+    },
     robots: { index: true, follow: true },
   };
 }

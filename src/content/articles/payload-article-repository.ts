@@ -116,9 +116,22 @@ export class PayloadPublicArticleRepository {
     let totalPages = 1;
     while (page <= totalPages) {
       const result = await payload.find({
-        collection: "articles", depth: 1, draft: false, fallbackLocale: false,
-        limit: MAX_ARTICLE_PAGE_SIZE, locale, overrideAccess: false, page, sort: "-publishedAt",
-        where: { and: [...createPublishedConditions(now), { articleType: { equals: "district-news" } }, { district: { equals: district } }] },
+        collection: "articles",
+        depth: 1,
+        draft: false,
+        fallbackLocale: false,
+        limit: MAX_ARTICLE_PAGE_SIZE,
+        locale,
+        overrideAccess: false,
+        page,
+        sort: "-publishedAt",
+        where: {
+          and: [
+            ...createPublishedConditions(now),
+            { articleType: { equals: "district-news" } },
+            { district: { equals: district } },
+          ],
+        },
       });
       for (const document of result.docs) {
         const article = mapPayloadArticle(document, locale, now);

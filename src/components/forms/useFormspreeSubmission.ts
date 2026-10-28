@@ -29,8 +29,7 @@ export function useFormspreeSubmission({
   formId,
 }: UseFormspreeSubmissionOptions) {
   const [status, setStatus] = useState<SubmissionStatus>("idle");
-  const [errorKind, setErrorKind] =
-    useState<SubmissionErrorKind>(null);
+  const [errorKind, setErrorKind] = useState<SubmissionErrorKind>(null);
   const submissionInFlight = useRef(false);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {

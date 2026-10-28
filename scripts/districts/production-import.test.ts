@@ -99,7 +99,9 @@ class MemoryRepository implements ProductionImportRepository {
         if (this.updateCalls === this.failOnUpdateCall) {
           throw new Error("fixture write failure");
         }
-        const index = this.documents.findIndex((document) => document.id === id);
+        const index = this.documents.findIndex(
+          (document) => document.id === id,
+        );
         if (index < 0) throw new Error("fixture document missing");
         this.documents[index] = {
           ...this.documents[index],

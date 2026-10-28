@@ -98,7 +98,11 @@ function renderArticleBlock(
 ) {
   switch (block.type) {
     case "paragraph":
-      return <p className="text-base leading-8 text-muted sm:text-lg">{block.text}</p>;
+      return (
+        <p className="text-base leading-8 text-muted sm:text-lg">
+          {block.text}
+        </p>
+      );
     case "heading": {
       const Heading = block.level;
       const headingClass =
@@ -224,7 +228,11 @@ function renderArticleBlock(
             <thead className="bg-surface-soft text-ivory">
               <tr>
                 {block.headers.map((header, index) => (
-                  <th key={`${block.id}-header-${index}`} scope="col" className="border-b border-border p-4">
+                  <th
+                    key={`${block.id}-header-${index}`}
+                    scope="col"
+                    className="border-b border-border p-4"
+                  >
                     {header}
                   </th>
                 ))}
@@ -234,7 +242,10 @@ function renderArticleBlock(
               {block.rows.map((row, rowIndex) => (
                 <tr key={`${block.id}-row-${rowIndex}`}>
                   {row.map((cell, cellIndex) => (
-                    <td key={`${block.id}-${rowIndex}-${cellIndex}`} className="border-b border-border p-4 last:border-b-0">
+                    <td
+                      key={`${block.id}-${rowIndex}-${cellIndex}`}
+                      className="border-b border-border p-4 last:border-b-0"
+                    >
                       {cell}
                     </td>
                   ))}
@@ -313,9 +324,7 @@ function renderArticleBlock(
       );
     case "sources":
       return renderReferencedSources(
-        details.sources.filter((source) =>
-          block.sourceIds.includes(source.id),
-        ),
+        details.sources.filter((source) => block.sourceIds.includes(source.id)),
         content,
       );
     default:
@@ -323,9 +332,13 @@ function renderArticleBlock(
   }
 }
 
-export default function ArticleContent({ article, content }: ArticleContentProps) {
+export default function ArticleContent({
+  article,
+  content,
+}: ArticleContentProps) {
   if (article.content.source === "lexical") {
-    if (article.content.data === null || article.content.data === undefined) return null;
+    if (article.content.data === null || article.content.data === undefined)
+      return null;
     return <PayloadRichText data={article.content.data} />;
   }
 

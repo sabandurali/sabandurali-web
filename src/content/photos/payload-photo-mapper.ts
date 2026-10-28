@@ -1,10 +1,5 @@
 import { getSafePayloadMediaPath } from "@/content/articles/article-images";
-import type {
-  Media,
-  Photo,
-  PhotoCollection,
-  Tag,
-} from "@/payload-types";
+import type { Media, Photo, PhotoCollection, Tag } from "@/payload-types";
 import type {
   PhotoLanguage,
   PublicPhoto,
@@ -31,7 +26,8 @@ function mapImage(value: unknown, alt: string): PublicPhotoImage | null {
   if (!isRecord(value)) return null;
   const media = value as unknown as Media;
   const src = getSafePayloadMediaPath(media.url);
-  if (src === null || !getText(media.mimeType)?.startsWith("image/")) return null;
+  if (src === null || !getText(media.mimeType)?.startsWith("image/"))
+    return null;
   return {
     src,
     alt,
@@ -40,14 +36,21 @@ function mapImage(value: unknown, alt: string): PublicPhotoImage | null {
   };
 }
 
-function mapCollection(value: string | PhotoCollection): PublicPhotoCollection | null {
+function mapCollection(
+  value: string | PhotoCollection,
+): PublicPhotoCollection | null {
   if (!isRecord(value)) return null;
   const id = getText(value.id);
   const title = getText(value.title);
   const slug = getText(value.slug);
   if (id === null || title === null || slug === null) return null;
   const parent = value.parent;
-  const parentId = typeof parent === "string" ? parent : isRecord(parent) ? getText(parent.id) : null;
+  const parentId =
+    typeof parent === "string"
+      ? parent
+      : isRecord(parent)
+        ? getText(parent.id)
+        : null;
   return {
     id,
     title,
@@ -62,7 +65,9 @@ function mapTag(value: string | Tag): PublicPhotoTag | null {
   const id = getText(value.id);
   const title = getText(value.title);
   const slug = getText(value.slug);
-  return id === null || title === null || slug === null ? null : { id, title, slug };
+  return id === null || title === null || slug === null
+    ? null
+    : { id, title, slug };
 }
 
 export function mapPayloadPhoto(
@@ -84,13 +89,18 @@ export function mapPayloadPhoto(
     publishedAt === null ||
     !Number.isFinite(Date.parse(publishedAt)) ||
     Date.parse(publishedAt) > now.getTime()
-  ) return null;
+  )
+    return null;
 
   const image = mapImage(value.image, altText);
   const collections = value.collections
     .map(mapCollection)
     .filter((item): item is PublicPhotoCollection => item !== null)
-    .toSorted((left, right) => left.sortOrder - right.sortOrder || left.title.localeCompare(right.title, locale));
+    .toSorted(
+      (left, right) =>
+        left.sortOrder - right.sortOrder ||
+        left.title.localeCompare(right.title, locale),
+    );
   if (image === null || collections.length === 0) return null;
 
   const tags = (value.tags ?? [])

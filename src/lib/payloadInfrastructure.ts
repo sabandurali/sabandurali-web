@@ -10,12 +10,10 @@ const PUBLIC_SOURCE_VARIABLES = [
 
 export type PayloadDatabaseProvider =
   (typeof PAYLOAD_DATABASE_PROVIDERS)[number];
-export type PayloadStorageProvider =
-  (typeof PAYLOAD_STORAGE_PROVIDERS)[number];
+export type PayloadStorageProvider = (typeof PAYLOAD_STORAGE_PROVIDERS)[number];
 
 type RequiredPayloadEnvironmentVariable =
-  | "BLOB_READ_WRITE_TOKEN"
-  | "DATABASE_URL";
+  "BLOB_READ_WRITE_TOKEN" | "DATABASE_URL";
 
 function readProvider<TProvider extends string>(
   variableName: "PAYLOAD_DATABASE" | "PAYLOAD_STORAGE",
@@ -42,19 +40,11 @@ function hasEnvironmentValue(variableName: string): boolean {
 }
 
 export function getPayloadDatabaseProvider(): PayloadDatabaseProvider {
-  return readProvider(
-    "PAYLOAD_DATABASE",
-    PAYLOAD_DATABASE_PROVIDERS,
-    "sqlite",
-  );
+  return readProvider("PAYLOAD_DATABASE", PAYLOAD_DATABASE_PROVIDERS, "sqlite");
 }
 
 export function getPayloadStorageProvider(): PayloadStorageProvider {
-  return readProvider(
-    "PAYLOAD_STORAGE",
-    PAYLOAD_STORAGE_PROVIDERS,
-    "local",
-  );
+  return readProvider("PAYLOAD_STORAGE", PAYLOAD_STORAGE_PROVIDERS, "local");
 }
 
 export function requirePayloadEnvironmentVariable(

@@ -2,10 +2,7 @@ import type {
   BookReviewListQuery,
   PaginatedBookReviewResult,
 } from "@/content/books/repository/types";
-import type {
-  BookReview,
-  BookReviewLanguage,
-} from "@/content/books/types";
+import type { BookReview, BookReviewLanguage } from "@/content/books/types";
 
 export function isPubliclyPublishedBookReview(
   bookReview: BookReview,

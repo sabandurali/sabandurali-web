@@ -217,14 +217,18 @@ export async function runBuild(options = {}) {
         !env.VERCEL_GIT_COMMIT_SHA ||
         dryRunApproval !== env.VERCEL_GIT_COMMIT_SHA
       ) {
-        fail("Production district dry-run approval does not match this commit.");
+        fail(
+          "Production district dry-run approval does not match this commit.",
+        );
       }
       if (migrationState.pendingMigrationNames.length !== 0) {
         fail("Production district dry-run requires zero pending migrations.");
       }
       log("Running the SHA-approved Production district read-only dry-run.");
       runScript("district:import:production:dry-run");
-      fail("Production district dry-run completed; stopping before deployment.");
+      fail(
+        "Production district dry-run completed; stopping before deployment.",
+      );
     } else if (migrationState.pendingMigrationNames.length === 0) {
       log(noPendingMessage);
     } else {

@@ -2,26 +2,47 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import sharp from "sharp";
 import { contactEmail, siteSocialImage } from "../src/config/site";
-import { getEnglishHeaderNavigationItems, getStaticFooterGroups } from "../src/components/layout/navigation";
+import {
+  getEnglishHeaderNavigationItems,
+  getStaticFooterGroups,
+} from "../src/components/layout/navigation";
 import { homeContent } from "../src/content/homeContent";
 import { privacyContent } from "../src/content/privacyContent";
 import { createPublicPageMetadata } from "../src/content/pages/page-seo";
 import type { PublicPage } from "../src/content/pages/public-types";
 
-function page(language: "tr" | "en", socialImage: PublicPage["seo"]["socialImage"]): PublicPage {
+function page(
+  language: "tr" | "en",
+  socialImage: PublicPage["seo"]["socialImage"],
+): PublicPage {
   return {
-    id: "fixture-home", title: "Fixture Home", slug: "home", language,
-    pageType: "home", summary: "", layout: [],
-    publishedAt: "2026-10-01T00:00:00Z", createdAt: "2026-10-01T00:00:00Z", updatedAt: "2026-10-01T00:00:00Z",
-    seo: { title: "Fixture SEO", description: "Fixture description", index: true, follow: true, socialImage },
+    id: "fixture-home",
+    title: "Fixture Home",
+    slug: "home",
+    language,
+    pageType: "home",
+    summary: "",
+    layout: [],
+    publishedAt: "2026-10-01T00:00:00Z",
+    createdAt: "2026-10-01T00:00:00Z",
+    updatedAt: "2026-10-01T00:00:00Z",
+    seo: {
+      title: "Fixture SEO",
+      description: "Fixture description",
+      index: true,
+      follow: true,
+      socialImage,
+    },
   };
 }
 
 for (const language of ["tr", "en"] as const) {
   test(`${language}: corporate footer and both privacy addresses use the central email`, () => {
     assert.equal(contactEmail, "saban@sabandurali.com");
-    const links = getStaticFooterGroups(homeContent[language].footer).flatMap(group => group.links);
-    const email = links.find(link => link.href?.startsWith("mailto:"));
+    const links = getStaticFooterGroups(homeContent[language].footer).flatMap(
+      (group) => group.links,
+    );
+    const email = links.find((link) => link.href?.startsWith("mailto:"));
     assert.equal(email?.href, `mailto:${contactEmail}`);
     assert.ok(email?.label.includes(contactEmail));
     const privacy = JSON.stringify(privacyContent[language]);
@@ -33,12 +54,27 @@ for (const language of ["tr", "en"] as const) {
     const metadata = createPublicPageMetadata(page(language, null));
     assert.deepEqual(metadata.openGraph?.images, [siteSocialImage]);
     assert.deepEqual(metadata.twitter?.images, [siteSocialImage]);
-    assert.equal(metadata.alternates?.canonical, language === "tr" ? "https://www.sabandurali.com/" : "https://www.sabandurali.com/en");
+    assert.equal(
+      metadata.alternates?.canonical,
+      language === "tr"
+        ? "https://www.sabandurali.com/"
+        : "https://www.sabandurali.com/en",
+    );
   });
 
   test(`${language}: custom CMS image and attribution are preserved for both share formats`, () => {
-    const metadata = createPublicPageMetadata(page(language, { src: "/api/media/file/custom.jpg", alt: "Custom sharing image" }));
-    const expected = [{ url: "https://www.sabandurali.com/api/media/file/custom.jpg", alt: "Custom sharing image" }];
+    const metadata = createPublicPageMetadata(
+      page(language, {
+        src: "/api/media/file/custom.jpg",
+        alt: "Custom sharing image",
+      }),
+    );
+    const expected = [
+      {
+        url: "https://www.sabandurali.com/api/media/file/custom.jpg",
+        alt: "Custom sharing image",
+      },
+    ];
     assert.deepEqual(metadata.openGraph?.images, expected);
     assert.deepEqual(metadata.twitter?.images, expected);
   });
@@ -46,11 +82,14 @@ for (const language of ["tr", "en"] as const) {
 
 test("English research navigation never targets the conditional home section", () => {
   const items = getEnglishHeaderNavigationItems();
-  const research = items.find(item => item.id === "research-analysis");
+  const research = items.find((item) => item.id === "research-analysis");
   assert.equal(research?.href, "/en/articles");
-  assert.equal(research?.children?.find(item => item.id === "latest-research")?.href, "/en/articles");
+  assert.equal(
+    research?.children?.find((item) => item.id === "latest-research")?.href,
+    "/en/articles",
+  );
   assert.equal(JSON.stringify(items).includes("#son-arastirmalar"), false);
-  const realEstate = items.find(item => item.id === "real-estate-istanbul");
+  const realEstate = items.find((item) => item.id === "real-estate-istanbul");
   assert.equal(realEstate?.children?.[0].href, "/en#gayrimenkul-intelligence");
 });
 

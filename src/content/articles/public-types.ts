@@ -28,7 +28,8 @@ export type PublicArticleSeo = {
   openGraphImage?: string;
 };
 
-export type DistrictArticleType = "article" | "district-research" | "district-news";
+export type DistrictArticleType =
+  "article" | "district-research" | "district-news";
 
 export type PublicArticleExternalSource = {
   name: string;
@@ -66,10 +67,7 @@ export type PublicArticleContent =
   | {
       source: "static";
       blocks: Article["content"];
-      details: Pick<
-        Article,
-        "author" | "faq" | "legalNotice" | "sources"
-      >;
+      details: Pick<Article, "author" | "faq" | "legalNotice" | "sources">;
     }
   | {
       source: "lexical";

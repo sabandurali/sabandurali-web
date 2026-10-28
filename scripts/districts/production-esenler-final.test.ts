@@ -4,11 +4,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import { projectPublishedDistrictGuide } from "../../src/content/districts/district-guide-projection";
 import { attachEditorial, type EditorialBundle } from "./editorial";
-import {
-  fingerprint,
-  makeDraft,
-  type ResearchBundle,
-} from "./import-core";
+import { fingerprint, makeDraft, type ResearchBundle } from "./import-core";
 import {
   applyEsenlerFinal,
   assertEsenlerFinalPlan,
@@ -69,7 +65,9 @@ function initialDocuments(): ProductionImportDocument[] {
   return current.districts.map((row, index) => {
     const sourceRow =
       row.district === "esenler"
-        ? previous.districts.find((candidate) => candidate.district === "esenler")!
+        ? previous.districts.find(
+            (candidate) => candidate.district === "esenler",
+          )!
         : row;
     const document = makeDraft(sourceRow) as ProductionImportDocument;
     document.id = `district-${index}`;
@@ -103,26 +101,60 @@ function target(documents: ProductionImportDocument[]) {
 }
 
 test("exact approved manual baseline plans one Esenler update and 38 skips", () => {
-  const plan = buildEsenlerFinalPlan(initialDocuments(), bundle(), deploymentSha);
+  const plan = buildEsenlerFinalPlan(
+    initialDocuments(),
+    bundle(),
+    deploymentSha,
+  );
   assert.deepEqual(plan.count, { create: 0, update: 1, skip: 38, conflict: 0 });
   assertEsenlerFinalPlan(plan, "initial");
   assert.deepEqual(
-    plan.entries.filter((entry) => entry.action === "update").map((entry) => entry.district),
+    plan.entries
+      .filter((entry) => entry.action === "update")
+      .map((entry) => entry.district),
     ["esenler"],
   );
 });
 
 for (const [name, mutate] of [
-  ["content fingerprint", (d: ProductionImportDocument) => { d.summary = `${d.summary}x`; }],
-  ["stored provenance fingerprint", (d: ProductionImportDocument) => {
-    (d.importProvenance as Record<string, unknown>).fingerprint = "0".repeat(64);
-  }],
-  ["publishedAt", (d: ProductionImportDocument) => { d.publishedAt = "2026-09-20T11:37:45.328Z"; }],
-  ["document ID", (d: ProductionImportDocument) => { d.id = "changed"; }],
-  ["provenance canonical hash", (d: ProductionImportDocument) => {
-    (d.importProvenance as Record<string, unknown>).version = 4;
-  }],
-  ["unpublished Esenler", (d: ProductionImportDocument) => { d._status = "draft"; }],
+  [
+    "content fingerprint",
+    (d: ProductionImportDocument) => {
+      d.summary = `${d.summary}x`;
+    },
+  ],
+  [
+    "stored provenance fingerprint",
+    (d: ProductionImportDocument) => {
+      (d.importProvenance as Record<string, unknown>).fingerprint = "0".repeat(
+        64,
+      );
+    },
+  ],
+  [
+    "publishedAt",
+    (d: ProductionImportDocument) => {
+      d.publishedAt = "2026-09-20T11:37:45.328Z";
+    },
+  ],
+  [
+    "document ID",
+    (d: ProductionImportDocument) => {
+      d.id = "changed";
+    },
+  ],
+  [
+    "provenance canonical hash",
+    (d: ProductionImportDocument) => {
+      (d.importProvenance as Record<string, unknown>).version = 4;
+    },
+  ],
+  [
+    "unpublished Esenler",
+    (d: ProductionImportDocument) => {
+      d._status = "draft";
+    },
+  ],
 ] as const) {
   test(`${name} drift conflicts`, () => {
     const documents = initialDocuments();
@@ -134,7 +166,9 @@ for (const [name, mutate] of [
 }
 
 test("missing Esenler is create and fails the exact gate", () => {
-  const documents = initialDocuments().filter((document) => document.district !== "esenler");
+  const documents = initialDocuments().filter(
+    (document) => document.district !== "esenler",
+  );
   const plan = buildEsenlerFinalPlan(documents, bundle(), deploymentSha);
   assert.equal(plan.count.create, 1);
   assert.throws(() => assertEsenlerFinalPlan(plan, "initial"));
@@ -142,7 +176,8 @@ test("missing Esenler is create and fails the exact gate", () => {
 
 test("an unpublished non-target conflicts", () => {
   const documents = initialDocuments();
-  documents.find((document) => document.district !== "esenler")!._status = "draft";
+  documents.find((document) => document.district !== "esenler")!._status =
+    "draft";
   const plan = buildEsenlerFinalPlan(documents, bundle(), deploymentSha);
   assert.equal(plan.count.conflict, 1);
 });
@@ -186,19 +221,33 @@ function memoryRepository(documents: ProductionImportDocument[]): {
 test("apply writes only Esenler and produces an exact self-managed final state", async () => {
   const documents = initialDocuments();
   const nonTargetFingerprints = new Map(
-    documents.filter((d) => d.district !== "esenler").map((d) => [d.district, fingerprint(d)]),
+    documents
+      .filter((d) => d.district !== "esenler")
+      .map((d) => [d.district, fingerprint(d)]),
   );
   const { repository, writes } = memoryRepository(documents);
   await applyEsenlerFinal(bundle(), repository, deploymentSha);
-  assert.deepEqual(new Set(writes), new Set([esenlerApprovedManualBaseline.documentId]));
+  assert.deepEqual(
+    new Set(writes),
+    new Set([esenlerApprovedManualBaseline.documentId]),
+  );
   const after = await repository.readDistricts();
   for (const document of after)
     if (document.district !== "esenler")
-      assert.equal(fingerprint(document), nonTargetFingerprints.get(document.district));
+      assert.equal(
+        fingerprint(document),
+        nonTargetFingerprints.get(document.district),
+      );
   const esenler = target(after);
   assert.equal(isEsenlerFinalSelfManaged(esenler), true);
-  assert.equal((esenler.importProvenance as Record<string, unknown>).version, esenlerFinalImportVersion);
-  assert.equal((esenler.importProvenance as Record<string, unknown>).batch, esenlerFinalImportBatch);
+  assert.equal(
+    (esenler.importProvenance as Record<string, unknown>).version,
+    esenlerFinalImportVersion,
+  );
+  assert.equal(
+    (esenler.importProvenance as Record<string, unknown>).batch,
+    esenlerFinalImportBatch,
+  );
   const plan = buildEsenlerFinalPlan(after, bundle(), deploymentSha);
   assert.deepEqual(plan.count, { create: 0, update: 0, skip: 39, conflict: 0 });
   assertEsenlerFinalPlan(plan, "applied");
@@ -240,5 +289,8 @@ test("a non-target write makes the transaction fail closed", async () => {
   await assert.rejects(() =>
     applyEsenlerFinal(bundle(), repository, deploymentSha),
   );
-  assert.deepEqual(new Set(base.writes), new Set([esenlerApprovedManualBaseline.documentId]));
+  assert.deepEqual(
+    new Set(base.writes),
+    new Set([esenlerApprovedManualBaseline.documentId]),
+  );
 });

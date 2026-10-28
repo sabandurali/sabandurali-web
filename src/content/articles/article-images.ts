@@ -1,11 +1,5 @@
 import { existsSync, statSync } from "node:fs";
-import {
-  extname,
-  isAbsolute,
-  relative,
-  resolve,
-  sep,
-} from "node:path";
+import { extname, isAbsolute, relative, resolve, sep } from "node:path";
 import type { PublicArticleImage } from "@/content/articles/public-types";
 
 const SUPPORTED_ARTICLE_IMAGE_EXTENSIONS = new Set([
@@ -68,7 +62,8 @@ export function getSafePayloadMediaPath(value: unknown): string | null {
     value.includes("\\") ||
     value.includes("?") ||
     value.includes("#")
-  ) return null;
+  )
+    return null;
 
   try {
     const decodedPath = decodeURIComponent(value);

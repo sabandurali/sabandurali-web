@@ -4,10 +4,7 @@ import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
 import { bookPageContent } from "@/content/books/book-page-content";
 import { bookListPaths } from "@/content/books/book-routes";
-import type {
-  BookReview,
-  BookReviewLanguage,
-} from "@/content/books/types";
+import type { BookReview, BookReviewLanguage } from "@/content/books/types";
 import { homeContent } from "@/content/homeContent";
 
 type BookReviewListPageProps = {

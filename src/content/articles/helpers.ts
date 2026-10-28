@@ -11,8 +11,9 @@ const TURKISH_CHARACTER_MAP: Readonly<Record<string, string>> = {
 };
 
 function replaceTurkishCharacters(value: string): string {
-  return value.replace(/[çğıİöşü]/g, (character) =>
-    TURKISH_CHARACTER_MAP[character] ?? character,
+  return value.replace(
+    /[çğıİöşü]/g,
+    (character) => TURKISH_CHARACTER_MAP[character] ?? character,
   );
 }
 

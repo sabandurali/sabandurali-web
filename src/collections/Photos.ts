@@ -111,10 +111,39 @@ export const Photos: CollectionConfig = {
               label: "İlçe rehberi ilişkisi",
               admin: { initCollapsed: true },
               fields: [
-                { name: "district", type: "select", options: districtOptions, index: true, label: "İlçe" },
-                { name: "neighborhood", type: "text", localized: true, label: "Mahalle / konum" },
-                { name: "districtPhotoCategory", type: "select", label: "İlçe fotoğraf kategorisi", options: ["mimari", "sokak", "tarih", "yasam", "ulasim", "doga", "gece"] },
-                { name: "dayPeriod", type: "select", label: "Gündüz / gece", options: ["gunduz", "gece"] },
+                {
+                  name: "district",
+                  type: "select",
+                  options: districtOptions,
+                  index: true,
+                  label: "İlçe",
+                },
+                {
+                  name: "neighborhood",
+                  type: "text",
+                  localized: true,
+                  label: "Mahalle / konum",
+                },
+                {
+                  name: "districtPhotoCategory",
+                  type: "select",
+                  label: "İlçe fotoğraf kategorisi",
+                  options: [
+                    "mimari",
+                    "sokak",
+                    "tarih",
+                    "yasam",
+                    "ulasim",
+                    "doga",
+                    "gece",
+                  ],
+                },
+                {
+                  name: "dayPeriod",
+                  type: "select",
+                  label: "Gündüz / gece",
+                  options: ["gunduz", "gece"],
+                },
               ],
             },
             {
@@ -145,10 +174,19 @@ export const Photos: CollectionConfig = {
                   defaultValue: "Şaban Durali",
                   required: true,
                 },
-                { name: "creditLicense", type: "text", label: "Kredi / lisans" },
+                {
+                  name: "creditLicense",
+                  type: "text",
+                  label: "Kredi / lisans",
+                },
               ],
             },
-            { name: "featured", type: "checkbox", defaultValue: false, label: "Öne çıkar" },
+            {
+              name: "featured",
+              type: "checkbox",
+              defaultValue: false,
+              label: "Öne çıkar",
+            },
           ],
         },
         {
@@ -176,14 +214,20 @@ export const Photos: CollectionConfig = {
               type: "date",
               label: "Yayın tarihi",
               admin: {
-                description: "İlk yayında otomatik atanır; gelecek tarih planlı yayın anlamına gelir.",
+                description:
+                  "İlk yayında otomatik atanır; gelecek tarih planlı yayın anlamına gelir.",
               },
             },
             {
               name: "seo",
               type: "group",
               fields: [
-                { name: "metaTitle", type: "text", localized: true, maxLength: 60 },
+                {
+                  name: "metaTitle",
+                  type: "text",
+                  localized: true,
+                  maxLength: 60,
+                },
                 {
                   name: "metaDescription",
                   type: "textarea",

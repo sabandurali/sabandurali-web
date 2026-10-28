@@ -10,10 +10,7 @@ import {
   type ArticleSortOption,
   type PaginatedResult,
 } from "@/content/articles/repository/types";
-import type {
-  Article,
-  ArticleLanguage,
-} from "@/content/articles/types";
+import type { Article, ArticleLanguage } from "@/content/articles/types";
 
 const DEFAULT_ARTICLE_SORT: ArticleSortOption = "publishedAt_desc";
 const TITLE_COLLATOR = new Intl.Collator(["tr", "en"], {
@@ -85,7 +82,11 @@ function compareArticles(
       );
       break;
     case "updatedAt_desc":
-      comparison = compareNullableDates(left.updatedAt, right.updatedAt, "desc");
+      comparison = compareNullableDates(
+        left.updatedAt,
+        right.updatedAt,
+        "desc",
+      );
       break;
     case "title_asc":
       comparison = TITLE_COLLATOR.compare(left.title, right.title);
@@ -227,9 +228,7 @@ export class InMemoryArticleRepository implements ArticleRepository {
     return translation === undefined ? null : cloneArticle(translation);
   }
 
-  async list(
-    query: ArticleListQuery = {},
-  ): Promise<PaginatedResult<Article>> {
+  async list(query: ArticleListQuery = {}): Promise<PaginatedResult<Article>> {
     const effectiveQuery =
       query.publishedOnly && query.publishedAsOf === undefined
         ? { ...query, publishedAsOf: new Date() }
@@ -251,10 +250,7 @@ export class InMemoryArticleRepository implements ArticleRepository {
       );
     const total = matchingArticles.length;
     const totalPages = total === 0 ? 0 : Math.ceil(total / pageSize);
-    const offset = Math.min(
-      (page - 1) * pageSize,
-      Number.MAX_SAFE_INTEGER,
-    );
+    const offset = Math.min((page - 1) * pageSize, Number.MAX_SAFE_INTEGER);
 
     return {
       items: matchingArticles

@@ -40,9 +40,7 @@ export default function PrivacyAcknowledgement({
             {content.linkLabel}
           </Link>
           {content.suffix}
-          <span className="ml-2 text-xs text-accent-soft">
-            {requiredLabel}
-          </span>
+          <span className="ml-2 text-xs text-accent-soft">{requiredLabel}</span>
         </span>
       </label>
     </div>

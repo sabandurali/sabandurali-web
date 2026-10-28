@@ -36,7 +36,9 @@ function getGuideParts(markdown: string) {
     }));
 
   if (!titleMatch || sections.length !== 12) {
-    throw new Error("Yönetim paneli kılavuzunda başlık ve 12 ana bölüm bulunmalıdır.");
+    throw new Error(
+      "Yönetim paneli kılavuzunda başlık ve 12 ana bölüm bulunmalıdır.",
+    );
   }
 
   return {
@@ -83,7 +85,9 @@ export async function AdminHelpView({
 
   if (!user) {
     const loginPath = formatAdminURL({ adminRoute, path: adminRoutes.login });
-    redirect(`${loginPath}?redirect=${encodeURIComponent(`${adminRoute}/help`)}`);
+    redirect(
+      `${loginPath}?redirect=${encodeURIComponent(`${adminRoute}/help`)}`,
+    );
   }
 
   if (!permissions.canAccessAdmin || user.role !== "admin") {

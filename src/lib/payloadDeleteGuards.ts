@@ -59,9 +59,7 @@ function lexicalValueReferencesMedia(
   mediaID: number | string,
 ): boolean {
   if (Array.isArray(value)) {
-    return value.some((entry) =>
-      lexicalValueReferencesMedia(entry, mediaID),
-    );
+    return value.some((entry) => lexicalValueReferencesMedia(entry, mediaID));
   }
 
   if (!isRecord(value)) return false;
@@ -178,12 +176,12 @@ function fieldsReferenceCollection(
         (value) =>
           Array.isArray(value) &&
           value.some((entry) =>
-              fieldsReferenceCollection(
-                field.fields,
-                entry,
-                targetCollection,
-                targetID,
-              ),
+            fieldsReferenceCollection(
+              field.fields,
+              entry,
+              targetCollection,
+              targetID,
+            ),
           ),
       );
     }
@@ -203,12 +201,12 @@ function fieldsReferenceCollection(
 
             return (
               block !== undefined &&
-                fieldsReferenceCollection(
-                  block.fields,
-                  entry,
-                  targetCollection,
-                  targetID,
-                )
+              fieldsReferenceCollection(
+                block.fields,
+                entry,
+                targetCollection,
+                targetID,
+              )
             );
           }),
       );
@@ -303,11 +301,11 @@ async function findCollectionRelationshipUsage(
 
     if (
       versions.docs.some((document) =>
-          fieldsReferenceCollection(
-            collection.fields,
-            document.version,
-            targetCollection,
-            targetID,
+        fieldsReferenceCollection(
+          collection.fields,
+          document.version,
+          targetCollection,
+          targetID,
         ),
       )
     ) {
@@ -324,7 +322,8 @@ async function findGlobalRelationshipUsage(
   targetID: number | string,
 ): Promise<RelationshipUsage | null> {
   for (const global of req.payload.config.globals) {
-    if (!fieldsCanReferenceCollection(global.fields, targetCollection)) continue;
+    if (!fieldsCanReferenceCollection(global.fields, targetCollection))
+      continue;
 
     const globalSlug = global.slug as GlobalSlug;
     const currentDocument = await req.payload.findGlobal({
@@ -362,12 +361,12 @@ async function findGlobalRelationshipUsage(
 
     if (
       versions.docs.some((document) =>
-          fieldsReferenceCollection(
-            global.fields,
-            document.version,
-            targetCollection,
-            targetID,
-          ),
+        fieldsReferenceCollection(
+          global.fields,
+          document.version,
+          targetCollection,
+          targetID,
+        ),
       )
     ) {
       return { entity: global.slug, source: "version" };
@@ -437,18 +436,12 @@ export const preventDeletingLastAdmin: CollectionBeforeDeleteHook = async ({
     pagination: false,
     req,
     where: {
-      and: [
-        { role: { equals: "admin" } },
-        { id: { not_equals: id } },
-      ],
+      and: [{ role: { equals: "admin" } }, { id: { not_equals: id } }],
     },
   });
 
   if (otherAdmins.docs.length === 0) {
-    throw new APIError(
-      "Sistemdeki son yönetici hesabı silinemez.",
-      409,
-    );
+    throw new APIError("Sistemdeki son yönetici hesabı silinemez.", 409);
   }
 };
 
@@ -499,7 +492,9 @@ function preventDeletingReferencedRelationship(
     if (usage === null) return;
 
     const sourceDescription =
-      usage.source === "version" ? "geçmiş bir içerik sürümünde" : "mevcut içerikte";
+      usage.source === "version"
+        ? "geçmiş bir içerik sürümünde"
+        : "mevcut içerikte";
 
     throw new APIError(
       `Bu ${label} ${sourceDescription} (${usage.entity}) kullanılıyor. Önce ilişkiyi kaldırın ve gerekiyorsa ilgili sürüm geçmişini temizleyin.`,
@@ -509,7 +504,10 @@ function preventDeletingReferencedRelationship(
 }
 
 export const preventDeletingReferencedPhotoCollection =
-  preventDeletingReferencedRelationship("photo-collections", "fotoğraf koleksiyonu");
+  preventDeletingReferencedRelationship(
+    "photo-collections",
+    "fotoğraf koleksiyonu",
+  );
 
 export const preventDeletingReferencedTag =
   preventDeletingReferencedRelationship("tags", "etiket");

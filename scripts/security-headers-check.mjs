@@ -56,7 +56,11 @@ for (const { path, status, image = false, optimizer = false } of checks) {
 const cacheBuster = await fetch(
   new URL("/_next/image?url=%2Fbrand%2Fsite-og.jpg%3Fx%3D1&w=640&q=75", base),
 );
-assert.equal(cacheBuster.status, 400, "query strings on local images are refused");
+assert.equal(
+  cacheBuster.status,
+  400,
+  "query strings on local images are refused",
+);
 await cacheBuster.body?.cancel();
 console.log("PASS optimizer refuses query strings on local images");
 

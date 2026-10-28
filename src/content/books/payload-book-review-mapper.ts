@@ -39,9 +39,7 @@ function getOptionalNumber(value: unknown): number | null {
 }
 
 function getPositiveDimension(value: unknown): number | null {
-  return typeof value === "number" &&
-    Number.isFinite(value) &&
-    value > 0
+  return typeof value === "number" && Number.isFinite(value) && value > 0
     ? value
     : null;
 }
@@ -71,10 +69,7 @@ function mapCoverImage(
 
   return {
     src,
-    alt:
-      getRequiredText(localizedAlt) ??
-      getRequiredText(media.alt) ??
-      title,
+    alt: getRequiredText(localizedAlt) ?? getRequiredText(media.alt) ?? title,
     ...(getOptionalText(media.description) === null
       ? {}
       : { caption: getOptionalText(media.description) ?? undefined }),
@@ -82,8 +77,7 @@ function mapCoverImage(
       ? {}
       : {
           source: getOptionalText(media.sourceCopyright) ?? undefined,
-          copyrightOwner:
-            getOptionalText(media.sourceCopyright) ?? undefined,
+          copyrightOwner: getOptionalText(media.sourceCopyright) ?? undefined,
         }),
     width,
     height,
@@ -128,10 +122,7 @@ function mapAliases(
   });
 }
 
-function mapTags(
-  values: PayloadBook["tags"],
-  bookID: string,
-): BookTag[] {
+function mapTags(values: PayloadBook["tags"], bookID: string): BookTag[] {
   if (!Array.isArray(values)) return [];
 
   return values.flatMap((value, index) => {
@@ -225,10 +216,7 @@ function mapApplicationNotes(
   });
 }
 
-function mapQuotes(
-  values: PayloadBook["quotes"],
-  bookID: string,
-): BookQuote[] {
+function mapQuotes(values: PayloadBook["quotes"], bookID: string): BookQuote[] {
   if (!Array.isArray(values)) return [];
 
   return values.flatMap((value, index) => {
@@ -260,10 +248,7 @@ function createTranslationGroupID(
   return `payload-books:${[bookID, translationID].sort().join(":")}`;
 }
 
-function reportInvalidBookReview(
-  bookID: string,
-  reason: string,
-): void {
+function reportInvalidBookReview(bookID: string, reason: string): void {
   if (process.env.NODE_ENV === "development") {
     console.warn(
       `[public-books] Payload book review ${bookID} was skipped: ${reason}`,
@@ -333,9 +318,7 @@ export function mapPayloadBookReview(
     publisher: getOptionalText(value.publisher),
     originalPublisher: getOptionalText(value.originalPublisher),
     publicationYear: getOptionalNumber(value.publicationYear),
-    originalPublicationYear: getOptionalNumber(
-      value.originalPublicationYear,
-    ),
+    originalPublicationYear: getOptionalNumber(value.originalPublicationYear),
     edition: getOptionalText(value.edition),
     isbn10: getOptionalText(value.isbn10),
     isbn13: getOptionalText(value.isbn13),

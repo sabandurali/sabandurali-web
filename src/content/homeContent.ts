@@ -57,12 +57,7 @@ export type AboutContent = {
 };
 
 export type FocusAreaIcon =
-  | "book"
-  | "city"
-  | "network"
-  | "handshake"
-  | "research"
-  | "technology";
+  "book" | "city" | "network" | "handshake" | "research" | "technology";
 
 export type FocusAreasContent = {
   label: string;

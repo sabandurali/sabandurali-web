@@ -138,10 +138,7 @@ export function buildAvcilarPlan(
       action = "create";
       reason = "missing production district";
     } else if (row.district !== avcilarTarget) {
-      if (
-        existing._status === "published" &&
-        publishedAt(existing)
-      ) {
+      if (existing._status === "published" && publishedAt(existing)) {
         action = "skip";
         reason = "protected non-target district; never written by this batch";
       } else {
@@ -277,7 +274,10 @@ export async function applyAvcilar(
     const plan = buildAvcilarPlan(beforeDocuments, bundle, deploymentSha);
     assertAvcilarPlan(plan, "initial");
     const beforeFingerprints = new Map(
-      beforeDocuments.map((document) => [document.district, fingerprint(document)]),
+      beforeDocuments.map((document) => [
+        document.district,
+        fingerprint(document),
+      ]),
     );
     const target = plan.entries.find(
       (entry) => entry.district === avcilarTarget,
@@ -321,11 +321,7 @@ export async function applyAvcilar(
         );
       }
     }
-    const appliedPlan = buildAvcilarPlan(
-      afterDocuments,
-      bundle,
-      deploymentSha,
-    );
+    const appliedPlan = buildAvcilarPlan(afterDocuments, bundle, deploymentSha);
     assertAvcilarPlan(appliedPlan, "applied");
     return plan;
   });

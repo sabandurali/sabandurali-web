@@ -49,11 +49,17 @@ export const getPublishedPhotoPageData = cache(
   async (
     slug: string,
     locale: PhotoLanguage,
-  ): Promise<{ photo: PublicPhoto | null; translation: PublicPhotoTranslation | null }> => {
+  ): Promise<{
+    photo: PublicPhoto | null;
+    translation: PublicPhotoTranslation | null;
+  }> => {
     if (getPublicPhotoSource() === "static") {
       return { photo: null, translation: null };
     }
-    const photo = await payloadPhotoRepository.findPublishedBySlug(slug, locale);
+    const photo = await payloadPhotoRepository.findPublishedBySlug(
+      slug,
+      locale,
+    );
     if (photo === null) return { photo: null, translation: null };
     const translated = await payloadPhotoRepository.findPublishedByID(
       photo.id,
@@ -86,7 +92,10 @@ export async function getAllPublishedPhotos(locale: PhotoLanguage) {
     : [];
 }
 
-export async function getDistrictPhotos(district: string, locale: PhotoLanguage) {
+export async function getDistrictPhotos(
+  district: string,
+  locale: PhotoLanguage,
+) {
   const photos = await getAllPublishedPhotos(locale);
   return photos.filter((photo) => photo.district === district);
 }

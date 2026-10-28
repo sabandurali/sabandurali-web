@@ -13,10 +13,7 @@ import type {
   PublicArticle,
   PublicArticleTranslation,
 } from "@/content/articles/public-types";
-import {
-  personEntityId,
-  personalBrandName,
-} from "@/content/entity-seo";
+import { personEntityId, personalBrandName } from "@/content/entity-seo";
 
 export function getArticleCanonicalUrl(article: PublicArticle): string {
   if (article.seo.canonical !== undefined) {
@@ -40,9 +37,7 @@ export function createArticleMetadata(
       ? getSafePayloadMediaPath(article.seo.openGraphImage)
       : getAvailableLocalArticleImage(article.seo.openGraphImage);
   const author =
-    article.content.source === "static"
-      ? article.content.details.author
-      : null;
+    article.content.source === "static" ? article.content.details.author : null;
 
   return {
     title: article.seo.title,
@@ -57,8 +52,7 @@ export function createArticleMetadata(
     },
     openGraph: {
       title: article.seo.openGraphTitle ?? article.seo.title,
-      description:
-        article.seo.openGraphDescription ?? article.seo.description,
+      description: article.seo.openGraphDescription ?? article.seo.description,
       url: canonical,
       siteName: "Şaban Durali",
       locale: article.language === "tr" ? "tr_TR" : "en_US",
@@ -88,9 +82,7 @@ export function createArticleMetadata(
 export function createArticleJsonLd(article: PublicArticle) {
   const coverImage = getAvailablePublicArticleImage(article.featuredImage);
   const author =
-    article.content.source === "static"
-      ? article.content.details.author
-      : null;
+    article.content.source === "static" ? article.content.details.author : null;
 
   return {
     "@context": "https://schema.org",
@@ -110,8 +102,8 @@ export function createArticleJsonLd(article: PublicArticle) {
               url: getAbsoluteUrl("/"),
             }
           : {
-            "@type": "Person",
-            name: author.name,
+              "@type": "Person",
+              name: author.name,
             },
     inLanguage: article.language === "tr" ? "tr-TR" : "en",
     mainEntityOfPage: getArticleCanonicalUrl(article),

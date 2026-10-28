@@ -166,11 +166,9 @@ try {
           await page.screenshot({
             path: `/tmp/istanbul-39-audit/verified-fixture-${width}-viewport.png`,
           });
-          await page
-            .locator("#kaynaklar")
-            .screenshot({
-              path: `/tmp/istanbul-39-audit/verified-fixture-${width}-sources.png`,
-            });
+          await page.locator("#kaynaklar").screenshot({
+            path: `/tmp/istanbul-39-audit/verified-fixture-${width}-sources.png`,
+          });
         }
       } finally {
         await browser.close();

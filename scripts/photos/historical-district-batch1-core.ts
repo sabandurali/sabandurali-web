@@ -12,7 +12,8 @@ export const historicalCollection = {
   en: {
     title: "Historic Istanbul",
     slug: "historic-istanbul",
-    description: "Verified historical archive photographs of Istanbul districts.",
+    description:
+      "Verified historical archive photographs of Istanbul districts.",
   },
 } as const;
 
@@ -118,8 +119,14 @@ export type HistoricalPlan = {
 export type HistoricalRepository = {
   readSnapshot(): Promise<HistoricalSnapshot>;
   createCollection(data: Record<string, unknown>): Promise<HistoricalDocument>;
-  updateCollectionEnglish(id: number | string, data: Record<string, unknown>): Promise<void>;
-  createMedia(item: HistoricalBatch1Item, filePath: string): Promise<HistoricalDocument>;
+  updateCollectionEnglish(
+    id: number | string,
+    data: Record<string, unknown>,
+  ): Promise<void>;
+  createMedia(
+    item: HistoricalBatch1Item,
+    filePath: string,
+  ): Promise<HistoricalDocument>;
   createPhoto(data: Record<string, unknown>): Promise<HistoricalDocument>;
   deletePhoto(id: number | string): Promise<void>;
   deleteMedia(id: number | string): Promise<void>;
@@ -158,10 +165,16 @@ function relationId(value: unknown): string | number | undefined {
 }
 
 function sameId(a: unknown, b: unknown): boolean {
-  return relationId(a) !== undefined && String(relationId(a)) === String(relationId(b));
+  return (
+    relationId(a) !== undefined &&
+    String(relationId(a)) === String(relationId(b))
+  );
 }
 
-function containsSource(document: HistoricalDocument, item: HistoricalBatch1Item): boolean {
+function containsSource(
+  document: HistoricalDocument,
+  item: HistoricalBatch1Item,
+): boolean {
   return [document.sourceCopyright, document.creditLicense].some(
     (value) => typeof value === "string" && value.includes(item.recordUrl),
   );
@@ -179,13 +192,19 @@ export function historicalDescription(item: HistoricalBatch1Item): string {
   return `${item.depictedPlace}. Yaklaşık tarih: ${item.approximateDate}.`;
 }
 
-export function historicalNeighborhood(item: HistoricalBatch1Item): string | null {
-  const safe: Partial<Record<(typeof historicalBatch1Districts)[number], string>> = {
+export function historicalNeighborhood(
+  item: HistoricalBatch1Item,
+): string | null {
+  const safe: Partial<
+    Record<(typeof historicalBatch1Districts)[number], string>
+  > = {
     bakirkoy: "Yeşilköy",
     besiktas: "Bebek",
     sariyer: "Tarabya",
   };
-  return safe[item.district as (typeof historicalBatch1Districts)[number]] ?? null;
+  return (
+    safe[item.district as (typeof historicalBatch1Districts)[number]] ?? null
+  );
 }
 
 export function validateHistoricalManifest(
@@ -197,7 +216,10 @@ export function validateHistoricalManifest(
     manifest.batch !== batchConfig.name ||
     manifest.items.length !== batchConfig.districts.length
   ) {
-    throw new HistoricalBatch1Error("input_failed", `${batchConfig.label} manifest header is invalid.`);
+    throw new HistoricalBatch1Error(
+      "input_failed",
+      `${batchConfig.label} manifest header is invalid.`,
+    );
   }
   const knownDistricts = new Set(districts.map(({ slug }) => slug));
   const expectedDistricts = new Set<string>(batchConfig.districts);
@@ -207,26 +229,62 @@ export function validateHistoricalManifest(
   const seenTitles = new Set<string>();
   for (const item of manifest.items) {
     if (!item.publicationSafe || !allowedLicenses.has(item.license)) {
-      throw new HistoricalBatch1Error("input_failed", "Manifest contains an unsafe rights entry.");
+      throw new HistoricalBatch1Error(
+        "input_failed",
+        "Manifest contains an unsafe rights entry.",
+      );
     }
-    if (!knownDistricts.has(item.district) || !expectedDistricts.has(item.district)) {
-      throw new HistoricalBatch1Error("input_failed", "Manifest contains an unexpected district.");
+    if (
+      !knownDistricts.has(item.district) ||
+      !expectedDistricts.has(item.district)
+    ) {
+      throw new HistoricalBatch1Error(
+        "input_failed",
+        "Manifest contains an unexpected district.",
+      );
     }
     if (seenDistricts.has(item.district)) {
-      throw new HistoricalBatch1Error("input_failed", "Manifest contains a duplicate district.");
+      throw new HistoricalBatch1Error(
+        "input_failed",
+        "Manifest contains a duplicate district.",
+      );
     }
-    if (!item.recordUrl.startsWith("https://") || !item.downloadUrl.startsWith("https://")) {
-      throw new HistoricalBatch1Error("input_failed", "Manifest URLs must use HTTPS.");
+    if (
+      !item.recordUrl.startsWith("https://") ||
+      !item.downloadUrl.startsWith("https://")
+    ) {
+      throw new HistoricalBatch1Error(
+        "input_failed",
+        "Manifest URLs must use HTTPS.",
+      );
     }
     if (!/^[a-f0-9]{64}$/.test(item.sha256)) {
-      throw new HistoricalBatch1Error("input_failed", "Manifest SHA-256 is invalid.");
+      throw new HistoricalBatch1Error(
+        "input_failed",
+        "Manifest SHA-256 is invalid.",
+      );
     }
-    if (item.mimeType !== "image/jpeg" || item.bytes <= 0 || item.width <= 0 || item.height <= 0) {
-      throw new HistoricalBatch1Error("input_failed", "Manifest image metadata is invalid.");
+    if (
+      item.mimeType !== "image/jpeg" ||
+      item.bytes <= 0 ||
+      item.width <= 0 ||
+      item.height <= 0
+    ) {
+      throw new HistoricalBatch1Error(
+        "input_failed",
+        "Manifest image metadata is invalid.",
+      );
     }
     const normalizedTitle = `${item.district}:${item.title.trim().toLocaleLowerCase("tr-TR")}`;
-    if (seenRecords.has(item.recordUrl) || seenDownloads.has(item.downloadUrl) || seenTitles.has(normalizedTitle)) {
-      throw new HistoricalBatch1Error("input_failed", "Manifest contains a duplicate source or title.");
+    if (
+      seenRecords.has(item.recordUrl) ||
+      seenDownloads.has(item.downloadUrl) ||
+      seenTitles.has(normalizedTitle)
+    ) {
+      throw new HistoricalBatch1Error(
+        "input_failed",
+        "Manifest contains a duplicate source or title.",
+      );
     }
     seenDistricts.add(item.district);
     seenRecords.add(item.recordUrl);
@@ -234,7 +292,10 @@ export function validateHistoricalManifest(
     seenTitles.add(normalizedTitle);
   }
   if ([...expectedDistricts].some((district) => !seenDistricts.has(district))) {
-    throw new HistoricalBatch1Error("input_failed", "Manifest district set is incomplete.");
+    throw new HistoricalBatch1Error(
+      "input_failed",
+      "Manifest district set is incomplete.",
+    );
   }
 }
 
@@ -248,7 +309,10 @@ function collectionMatches(document: HistoricalDocument): boolean {
   );
 }
 
-function mediaMatches(document: HistoricalDocument, item: HistoricalBatch1Item): boolean {
+function mediaMatches(
+  document: HistoricalDocument,
+  item: HistoricalBatch1Item,
+): boolean {
   return (
     text(document.alt) === historicalAlt(item) &&
     text(document.description) === historicalDescription(item) &&
@@ -266,7 +330,9 @@ function photoMatches(
   media: HistoricalDocument,
   collection: HistoricalDocument,
 ): boolean {
-  const collections = Array.isArray(document.collections) ? document.collections : [];
+  const collections = Array.isArray(document.collections)
+    ? document.collections
+    : [];
   return (
     text(document.title) === item.title &&
     text(document.description) === historicalDescription(item) &&
@@ -302,13 +368,26 @@ export function buildHistoricalPlan(
         ? "skip"
         : "conflict";
   const entries: HistoricalPlanEntry[] = manifest.items.map((item) => {
-    const mediaCandidates = snapshot.media.filter((document) => containsSource(document, item));
+    const mediaCandidates = snapshot.media.filter((document) =>
+      containsSource(document, item),
+    );
     if (mediaCandidates.length > 1) {
-      return { item, media: "conflict", photo: "conflict", reason: "duplicate source media" };
+      return {
+        item,
+        media: "conflict",
+        photo: "conflict",
+        reason: "duplicate source media",
+      };
     }
     const existingMedia = mediaCandidates[0];
     if (existingMedia && !mediaMatches(existingMedia, item)) {
-      return { item, media: "conflict", photo: "conflict", existingMedia, reason: "source media metadata differs" };
+      return {
+        item,
+        media: "conflict",
+        photo: "conflict",
+        existingMedia,
+        reason: "source media metadata differs",
+      };
     }
     const photoCandidates = snapshot.photos.filter(
       (document) =>
@@ -316,14 +395,37 @@ export function buildHistoricalPlan(
         (document.district === item.district && document.title === item.title),
     );
     if (photoCandidates.length > 1) {
-      return { item, media: existingMedia ? "skip" : "create", photo: "conflict", existingMedia, reason: "duplicate source photo" };
+      return {
+        item,
+        media: existingMedia ? "skip" : "create",
+        photo: "conflict",
+        existingMedia,
+        reason: "duplicate source photo",
+      };
     }
     const existingPhoto = photoCandidates[0];
     if (existingPhoto) {
-      if (!existingMedia || !collection || !photoMatches(existingPhoto, item, existingMedia, collection)) {
-        return { item, media: existingMedia ? "skip" : "create", photo: "conflict", existingMedia, existingPhoto, reason: "source photo metadata differs" };
+      if (
+        !existingMedia ||
+        !collection ||
+        !photoMatches(existingPhoto, item, existingMedia, collection)
+      ) {
+        return {
+          item,
+          media: existingMedia ? "skip" : "create",
+          photo: "conflict",
+          existingMedia,
+          existingPhoto,
+          reason: "source photo metadata differs",
+        };
       }
-      return { item, media: "skip", photo: "skip", existingMedia, existingPhoto };
+      return {
+        item,
+        media: "skip",
+        photo: "skip",
+        existingMedia,
+        existingPhoto,
+      };
     }
     return {
       item,
@@ -332,7 +434,11 @@ export function buildHistoricalPlan(
       existingMedia,
     };
   });
-  const conflict = (collectionAction === "conflict" ? 1 : 0) + entries.filter((entry) => entry.media === "conflict" || entry.photo === "conflict").length;
+  const conflict =
+    (collectionAction === "conflict" ? 1 : 0) +
+    entries.filter(
+      (entry) => entry.media === "conflict" || entry.photo === "conflict",
+    ).length;
   return {
     collection: collectionAction,
     existingCollection: collection,
@@ -340,7 +446,9 @@ export function buildHistoricalPlan(
       collectionCreate: collectionAction === "create" ? 1 : 0,
       mediaCreate: entries.filter((entry) => entry.media === "create").length,
       photoCreate: entries.filter((entry) => entry.photo === "create").length,
-      skip: entries.filter((entry) => entry.media === "skip" && entry.photo === "skip").length,
+      skip: entries.filter(
+        (entry) => entry.media === "skip" && entry.photo === "skip",
+      ).length,
       conflict,
     },
     entries,
@@ -384,23 +492,33 @@ export function assertHistoricalEnvironment(
     !env.PAYLOAD_SECRET ||
     !env.BLOB_READ_WRITE_TOKEN
   ) {
-    throw new HistoricalBatch1Error("configuration_failed", "Production PostgreSQL and Vercel Blob configuration is required.");
+    throw new HistoricalBatch1Error(
+      "configuration_failed",
+      "Production PostgreSQL and Vercel Blob configuration is required.",
+    );
   }
   const shaBound =
     env.VERCEL === "1" &&
     env.VERCEL_ENV === "production" &&
     env.VERCEL_GIT_COMMIT_REF === "main" &&
     Boolean(env.VERCEL_GIT_COMMIT_SHA) &&
-    env[`${batchConfig.envPrefix}_DRY_RUN_APPROVED_SHA`] === env.VERCEL_GIT_COMMIT_SHA;
+    env[`${batchConfig.envPrefix}_DRY_RUN_APPROVED_SHA`] ===
+      env.VERCEL_GIT_COMMIT_SHA;
   if (!shaBound) {
-    throw new HistoricalBatch1Error("approval_failed", `${batchConfig.label} requires SHA-bound Production approval.`);
+    throw new HistoricalBatch1Error(
+      "approval_failed",
+      `${batchConfig.label} requires SHA-bound Production approval.`,
+    );
   }
   if (
     mode === "apply" &&
     (env[`${batchConfig.envPrefix}_IMPORT_APPROVED`] !== "true" ||
       env[`${batchConfig.envPrefix}_PITR_CONFIRMED`] !== "true")
   ) {
-    throw new HistoricalBatch1Error("approval_failed", `${batchConfig.label} apply requires import and PITR approvals.`);
+    throw new HistoricalBatch1Error(
+      "approval_failed",
+      `${batchConfig.label} apply requires import and PITR approvals.`,
+    );
   }
 }
 
@@ -414,21 +532,60 @@ export function configurationStatus(
     "BLOB_READ_WRITE_TOKEN",
   ] as const;
   return {
-    PAYLOAD_DATABASE: env.PAYLOAD_DATABASE === "postgres" ? "PRESENT_VALID" : env.PAYLOAD_DATABASE ? "PRESENT_INVALID" : "MISSING",
-    PAYLOAD_STORAGE: env.PAYLOAD_STORAGE === "vercel-blob" ? "PRESENT_VALID" : env.PAYLOAD_STORAGE ? "PRESENT_INVALID" : "MISSING",
-    ...Object.fromEntries(required.map((name) => [name, env[name] ? "PRESENT_VALID" : "MISSING"])),
-    VERCEL_ENV: env.VERCEL_ENV === "production" ? "PRESENT_VALID" : env.VERCEL_ENV ? "PRESENT_INVALID" : "MISSING",
-    VERCEL_GIT_COMMIT_REF: env.VERCEL_GIT_COMMIT_REF === "main" ? "PRESENT_VALID" : env.VERCEL_GIT_COMMIT_REF ? "PRESENT_INVALID" : "MISSING",
-    SHA_APPROVAL: env.VERCEL_GIT_COMMIT_SHA && env[`${batchConfig.envPrefix}_DRY_RUN_APPROVED_SHA`] === env.VERCEL_GIT_COMMIT_SHA ? "PRESENT_VALID" : "PRESENT_INVALID",
-    IMPORT_APPROVAL: env[`${batchConfig.envPrefix}_IMPORT_APPROVED`] === "true" ? "PRESENT_VALID" : "MISSING",
-    PITR_CONFIRMATION: env[`${batchConfig.envPrefix}_PITR_CONFIRMED`] === "true" ? "PRESENT_VALID" : "MISSING",
+    PAYLOAD_DATABASE:
+      env.PAYLOAD_DATABASE === "postgres"
+        ? "PRESENT_VALID"
+        : env.PAYLOAD_DATABASE
+          ? "PRESENT_INVALID"
+          : "MISSING",
+    PAYLOAD_STORAGE:
+      env.PAYLOAD_STORAGE === "vercel-blob"
+        ? "PRESENT_VALID"
+        : env.PAYLOAD_STORAGE
+          ? "PRESENT_INVALID"
+          : "MISSING",
+    ...Object.fromEntries(
+      required.map((name) => [name, env[name] ? "PRESENT_VALID" : "MISSING"]),
+    ),
+    VERCEL_ENV:
+      env.VERCEL_ENV === "production"
+        ? "PRESENT_VALID"
+        : env.VERCEL_ENV
+          ? "PRESENT_INVALID"
+          : "MISSING",
+    VERCEL_GIT_COMMIT_REF:
+      env.VERCEL_GIT_COMMIT_REF === "main"
+        ? "PRESENT_VALID"
+        : env.VERCEL_GIT_COMMIT_REF
+          ? "PRESENT_INVALID"
+          : "MISSING",
+    SHA_APPROVAL:
+      env.VERCEL_GIT_COMMIT_SHA &&
+      env[`${batchConfig.envPrefix}_DRY_RUN_APPROVED_SHA`] ===
+        env.VERCEL_GIT_COMMIT_SHA
+        ? "PRESENT_VALID"
+        : "PRESENT_INVALID",
+    IMPORT_APPROVAL:
+      env[`${batchConfig.envPrefix}_IMPORT_APPROVED`] === "true"
+        ? "PRESENT_VALID"
+        : "MISSING",
+    PITR_CONFIRMATION:
+      env[`${batchConfig.envPrefix}_PITR_CONFIRMED`] === "true"
+        ? "PRESENT_VALID"
+        : "MISSING",
   };
 }
 
-export function verifyDownloadedBytes(item: HistoricalBatch1Item, bytes: Uint8Array): void {
+export function verifyDownloadedBytes(
+  item: HistoricalBatch1Item,
+  bytes: Uint8Array,
+): void {
   const digest = createHash("sha256").update(bytes).digest("hex");
   if (bytes.byteLength !== item.bytes || digest !== item.sha256) {
-    throw new HistoricalBatch1Error("remote_changed", "A historical source file changed after audit.");
+    throw new HistoricalBatch1Error(
+      "remote_changed",
+      "A historical source file changed after audit.",
+    );
   }
 }
 
@@ -438,32 +595,56 @@ export async function applyHistoricalPlan(
   filePaths: ReadonlyMap<string, string>,
   batchConfig: HistoricalBatchConfig = historicalBatch1Config,
 ): Promise<HistoricalPlan> {
-  const plan = buildHistoricalPlan(manifest, await repository.readSnapshot(), batchConfig);
+  const plan = buildHistoricalPlan(
+    manifest,
+    await repository.readSnapshot(),
+    batchConfig,
+  );
   if (plan.count.conflict > 0) {
-    throw new HistoricalBatch1Error("conflict", `${batchConfig.label} plan contains a conflict.`);
+    throw new HistoricalBatch1Error(
+      "conflict",
+      `${batchConfig.label} plan contains a conflict.`,
+    );
   }
   const createdPhotos: Array<string | number> = [];
   const createdMedia: Array<string | number> = [];
   let createdCollection: HistoricalDocument | undefined;
   try {
-    const collection = plan.existingCollection ?? (createdCollection = await repository.createCollection(historicalCollection.tr));
+    const collection =
+      plan.existingCollection ??
+      (createdCollection = await repository.createCollection(
+        historicalCollection.tr,
+      ));
     if (createdCollection) {
-      await repository.updateCollectionEnglish(collection.id, historicalCollection.en);
+      await repository.updateCollectionEnglish(
+        collection.id,
+        historicalCollection.en,
+      );
     }
     for (const entry of plan.entries) {
       let media = entry.existingMedia;
       if (!media) {
         const filePath = filePaths.get(entry.item.recordUrl);
-        if (!filePath) throw new HistoricalBatch1Error("input_failed", "Verified local source file is missing.");
+        if (!filePath)
+          throw new HistoricalBatch1Error(
+            "input_failed",
+            "Verified local source file is missing.",
+          );
         media = await repository.createMedia(entry.item, filePath);
         createdMedia.push(media.id);
       }
       if (entry.photo === "create") {
-        const photo = await repository.createPhoto(makeHistoricalPhotoData(entry.item, media.id, collection.id));
+        const photo = await repository.createPhoto(
+          makeHistoricalPhotoData(entry.item, media.id, collection.id),
+        );
         createdPhotos.push(photo.id);
       }
     }
-    const verified = buildHistoricalPlan(manifest, await repository.readSnapshot(), batchConfig);
+    const verified = buildHistoricalPlan(
+      manifest,
+      await repository.readSnapshot(),
+      batchConfig,
+    );
     if (
       verified.count.conflict !== 0 ||
       verified.count.collectionCreate !== 0 ||
@@ -471,18 +652,29 @@ export async function applyHistoricalPlan(
       verified.count.photoCreate !== 0 ||
       verified.count.skip !== manifest.items.length
     ) {
-      throw new HistoricalBatch1Error("verify_failed", "Historical Batch 1 post-apply verification failed.");
+      throw new HistoricalBatch1Error(
+        "verify_failed",
+        "Historical Batch 1 post-apply verification failed.",
+      );
     }
   } catch (error) {
     try {
-      for (const id of createdPhotos.reverse()) await repository.deletePhoto(id);
+      for (const id of createdPhotos.reverse())
+        await repository.deletePhoto(id);
       for (const id of createdMedia.reverse()) await repository.deleteMedia(id);
-      if (createdCollection) await repository.deleteCollection(createdCollection.id);
+      if (createdCollection)
+        await repository.deleteCollection(createdCollection.id);
     } catch {
-      throw new HistoricalBatch1Error("cleanup_failed", "Historical Batch 1 compensating cleanup failed.");
+      throw new HistoricalBatch1Error(
+        "cleanup_failed",
+        "Historical Batch 1 compensating cleanup failed.",
+      );
     }
     if (error instanceof HistoricalBatch1Error) throw error;
-    throw new HistoricalBatch1Error("write_failed", "Historical Batch 1 write failed and created records were cleaned up.");
+    throw new HistoricalBatch1Error(
+      "write_failed",
+      "Historical Batch 1 write failed and created records were cleaned up.",
+    );
   }
   return plan;
 }

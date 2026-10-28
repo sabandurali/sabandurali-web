@@ -9,10 +9,7 @@ import type {
   BookReviewListQuery,
   PaginatedBookReviewResult,
 } from "@/content/books/repository/types";
-import type {
-  BookReview,
-  BookReviewLanguage,
-} from "@/content/books/types";
+import type { BookReview, BookReviewLanguage } from "@/content/books/types";
 
 const PAYLOAD_BOOK_PAGE_SIZE = 100;
 
@@ -49,9 +46,7 @@ function createIDCondition(id: string): Where {
   };
 }
 
-export class PayloadBookReviewRepository
-  implements BookReviewRepository
-{
+export class PayloadBookReviewRepository implements BookReviewRepository {
   private async findOne(
     conditions: Where[],
     now: Date = new Date(),
@@ -76,9 +71,7 @@ export class PayloadBookReviewRepository
       : mapPayloadBookReview(document, now, relatedTranslationID);
   }
 
-  private async listAllPublic(
-    now: Date = new Date(),
-  ): Promise<BookReview[]> {
+  private async listAllPublic(now: Date = new Date()): Promise<BookReview[]> {
     const payload = await getPayload({ config });
     const bookReviews: BookReview[] = [];
     let page = 1;
@@ -169,10 +162,7 @@ export class PayloadBookReviewRepository
       overrideAccess: false,
       pagination: false,
       where: {
-        and: [
-          ...createPublicConditions(now),
-          createIDCondition(bookReviewId),
-        ],
+        and: [...createPublicConditions(now), createIDCondition(bookReviewId)],
       },
     });
     const source = sourceResult.docs[0];
@@ -182,7 +172,7 @@ export class PayloadBookReviewRepository
     const directTranslationID =
       typeof source.translation === "string"
         ? source.translation
-        : source.translation?.id ?? null;
+        : (source.translation?.id ?? null);
 
     if (directTranslationID !== null) {
       return this.findOne(
@@ -237,35 +227,35 @@ export class PayloadBookReviewRepository
     excludeId?: string,
   ): Promise<boolean> {
     const now = new Date();
-    const bookReview = await this.findOne([
-      {
-        slug: {
-          equals: slug,
+    const bookReview = await this.findOne(
+      [
+        {
+          slug: {
+            equals: slug,
+          },
         },
-      },
-      {
-        language: {
-          equals: language,
+        {
+          language: {
+            equals: language,
+          },
         },
-      },
-      ...(excludeId === undefined
-        ? []
-        : [
-            {
-              id: {
-                not_equals: excludeId,
+        ...(excludeId === undefined
+          ? []
+          : [
+              {
+                id: {
+                  not_equals: excludeId,
+                },
               },
-            },
-          ]),
-    ], now);
+            ]),
+      ],
+      now,
+    );
 
     return bookReview !== null;
   }
 
-  async existsByIsbn(
-    isbn: string,
-    excludeId?: string,
-  ): Promise<boolean> {
+  async existsByIsbn(isbn: string, excludeId?: string): Promise<boolean> {
     const normalizedIsbn = normalizeIsbn(isbn);
 
     if (normalizedIsbn === "") return false;

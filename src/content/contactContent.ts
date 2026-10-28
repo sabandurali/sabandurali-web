@@ -53,8 +53,7 @@ export const contactContent = {
       submitting: "Mesajınız gönderiliyor…",
       success:
         "Mesajınız alındı. Uygun olduğumda size e-posta yoluyla dönüş yapacağım.",
-      error:
-        "Mesaj şu anda gönderilemedi. Lütfen daha sonra yeniden deneyin.",
+      error: "Mesaj şu anda gönderilemedi. Lütfen daha sonra yeniden deneyin.",
       configurationError: "İletişim formu geçici olarak kullanılamıyor.",
       submitAnother: "Yeni mesaj gönder",
     },

@@ -1,9 +1,5 @@
 import Image from "next/image";
-import type {
-  HeaderContent,
-  HomeAnchors,
-  Locale,
-} from "@/content/homeContent";
+import type { HeaderContent, HomeAnchors, Locale } from "@/content/homeContent";
 import { getHeaderNavigation } from "@/content/navigation/navigation-data-source";
 import HeaderNavigationLinks from "./HeaderNavigationLinks";
 import LanguageSwitcher from "./LanguageSwitcher";
@@ -37,7 +33,9 @@ export default async function Header({
 
   return (
     <header className="border-b border-[var(--accent-border-soft)] bg-background-deep">
-      <div className={`relative mx-auto flex max-w-[1440px] items-center justify-between gap-4 px-4 py-1.5 sm:px-6 min-[1360px]:px-8 2xl:px-10 ${compact ? "min-h-[50px] min-[1360px]:min-h-[52px]" : "min-h-[62px] py-2 min-[1360px]:min-h-[68px]"}`}>
+      <div
+        className={`relative mx-auto flex max-w-[1440px] items-center justify-between gap-4 px-4 py-1.5 sm:px-6 min-[1360px]:px-8 2xl:px-10 ${compact ? "min-h-[50px] min-[1360px]:min-h-[52px]" : "min-h-[62px] py-2 min-[1360px]:min-h-[68px]"}`}
+      >
         <a
           href={homeHref}
           className="flex shrink-0 items-center gap-3 min-[1360px]:min-w-0 min-[1360px]:shrink min-[1360px]:gap-3.5"
@@ -52,8 +50,12 @@ export default async function Header({
           />
           <span aria-hidden="true" className="min-[1360px]:min-w-0">
             <span className="block whitespace-nowrap font-serif text-sm font-semibold tracking-[0.1em] text-ivory min-[1360px]:text-[1.02rem] min-[1360px]:uppercase min-[1360px]:tracking-[0.16em]">
-              <span className="min-[1360px]:hidden">{content.mobileBrandName}</span>
-              <span className="hidden min-[1360px]:inline">{content.brandName}</span>
+              <span className="min-[1360px]:hidden">
+                {content.mobileBrandName}
+              </span>
+              <span className="hidden min-[1360px]:inline">
+                {content.brandName}
+              </span>
             </span>
             <span className="mt-1 hidden whitespace-nowrap text-[8px] font-medium uppercase tracking-[0.16em] text-accent-soft min-[1360px]:block">
               {content.brandTagline}

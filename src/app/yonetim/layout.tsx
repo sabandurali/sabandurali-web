@@ -80,8 +80,8 @@ export default function AdminPrototypeLayout({
 
           <div className="border-b border-border bg-surface px-4 py-3 sm:px-6 lg:px-10">
             <p className="mx-auto max-w-7xl text-sm leading-6 text-accent-soft">
-              Geliştirme prototipi — bu ekranda yapılan işlemler kalıcı
-              olarak kaydedilmez.
+              Geliştirme prototipi — bu ekranda yapılan işlemler kalıcı olarak
+              kaydedilmez.
             </p>
           </div>
 

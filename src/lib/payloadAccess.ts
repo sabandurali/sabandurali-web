@@ -20,8 +20,7 @@ export function isAdminOrEditor(user: unknown): boolean {
 
 export const adminOnly: Access = ({ req }) => isAdmin(req.user);
 
-export const adminOrEditor: Access = ({ req }) =>
-  isAdminOrEditor(req.user);
+export const adminOrEditor: Access = ({ req }) => isAdminOrEditor(req.user);
 
 export const publishedOrAdminOrEditor: Access = ({ req }) => {
   if (isAdminOrEditor(req.user)) return true;

@@ -60,19 +60,14 @@ function createExternalUrlValidator(
     value === undefined ||
     value === ""
       ? true
-      : normalizeExternalNavigationUrl(
-            value,
-            allowContactProtocols,
-          ) === null
+      : normalizeExternalNavigationUrl(value, allowContactProtocols) === null
         ? allowContactProtocols
           ? "Geçerli bir https://, mailto: veya tel: adresi girin."
           : "Geçerli ve https:// ile başlayan güvenli bir adres girin."
         : true;
 }
 
-function createPageRelationshipField(
-  language: "en" | "tr",
-): RelationshipField {
+function createPageRelationshipField(language: "en" | "tr"): RelationshipField {
   return {
     name: "page",
     type: "relationship",
@@ -148,9 +143,7 @@ function createNavigationLinkFields({
           : "Yalnız https:// ile başlayan güvenli adres kullanın.",
       },
       hooks: {
-        beforeValidate: [
-          createExternalUrlNormalizer(allowContactProtocols),
-        ],
+        beforeValidate: [createExternalUrlNormalizer(allowContactProtocols)],
       },
       validate: createExternalUrlValidator(allowContactProtocols),
     },
@@ -202,8 +195,7 @@ export const Navigation: GlobalConfig = {
                   type: "array",
                   label: "Alt menü öğeleri",
                   admin: {
-                    description:
-                      "Yalnız bir alt menü seviyesi desteklenir.",
+                    description: "Yalnız bir alt menü seviyesi desteklenir.",
                   },
                   fields: createNavigationLinkFields(),
                 },

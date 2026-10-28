@@ -31,7 +31,8 @@ export default async function AdminArticlesPage() {
     },
     {
       label: "Yayında",
-      value: articles.filter((article) => article.status === "published").length,
+      value: articles.filter((article) => article.status === "published")
+        .length,
     },
     {
       label: "Türkçe",
@@ -103,7 +104,8 @@ export default async function AdminArticlesPage() {
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                   <div className="min-w-0">
                     <p className="text-xs font-semibold tracking-[0.16em] text-accent-soft">
-                      {ARTICLE_LANGUAGE_LABELS[article.language]} · {ARTICLE_STATUS_LABELS[article.status]}
+                      {ARTICLE_LANGUAGE_LABELS[article.language]} ·{" "}
+                      {ARTICLE_STATUS_LABELS[article.status]}
                     </p>
                     <h3 className="mt-2 break-words text-2xl leading-tight text-ivory">
                       {article.title}

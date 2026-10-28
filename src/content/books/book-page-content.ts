@@ -1,7 +1,4 @@
-import type {
-  BookReviewLanguage,
-  ReadingStatus,
-} from "@/content/books/types";
+import type { BookReviewLanguage, ReadingStatus } from "@/content/books/types";
 
 export type BookPageContent = {
   dateLocale: string;

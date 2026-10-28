@@ -58,9 +58,7 @@ export class PayloadPublicPageRepository {
       : mapPayloadPage(document, language, now);
   }
 
-  async findHome(
-    language: PublicPageLanguage,
-  ): Promise<PublicPage | null> {
+  async findHome(language: PublicPageLanguage): Promise<PublicPage | null> {
     const home = await this.findOne(
       [{ pageType: { equals: "home" } }],
       language,
@@ -76,9 +74,7 @@ export class PayloadPublicPageRepository {
       language,
     );
 
-    return legacyHome === null
-      ? null
-      : { ...legacyHome, pageType: "home" };
+    return legacyHome === null ? null : { ...legacyHome, pageType: "home" };
   }
 
   async findStandardBySlug(
@@ -86,17 +82,12 @@ export class PayloadPublicPageRepository {
     language: PublicPageLanguage,
   ): Promise<PublicPage | null> {
     return this.findOne(
-      [
-        { pageType: { equals: "standard" } },
-        { slug: { equals: slug } },
-      ],
+      [{ pageType: { equals: "standard" } }, { slug: { equals: slug } }],
       language,
     );
   }
 
-  async listStandards(
-    language: PublicPageLanguage,
-  ): Promise<PublicPage[]> {
+  async listStandards(language: PublicPageLanguage): Promise<PublicPage[]> {
     const payload = await getPayload({ config });
     const now = new Date();
     const pages: PublicPage[] = [];

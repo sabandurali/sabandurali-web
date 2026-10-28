@@ -1,10 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type {
-  HeaderContent,
-  Locale,
-} from "@/content/homeContent";
+import type { HeaderContent, Locale } from "@/content/homeContent";
 import type { PublicNavigationLink } from "@/content/navigation/public-types";
 import HeaderNavigationLinks from "./HeaderNavigationLinks";
 import LanguageSwitcher from "./LanguageSwitcher";
@@ -49,9 +46,7 @@ export default function MobileMenu({
         ref={buttonRef}
         type="button"
         className="flex size-11 shrink-0 items-center justify-center rounded-full border border-border text-ivory transition-colors hover:border-accent hover:bg-surface motion-reduce:transition-none"
-        aria-label={
-          isOpen ? content.menu.closeLabel : content.menu.openLabel
-        }
+        aria-label={isOpen ? content.menu.closeLabel : content.menu.openLabel}
         aria-expanded={isOpen}
         aria-controls="mobile-navigation"
         onClick={() => setIsOpen((open) => !open)}
@@ -59,16 +54,12 @@ export default function MobileMenu({
         <span className="relative block size-5" aria-hidden="true">
           <span
             className={`absolute left-0 h-px w-5 bg-current transition-transform duration-200 motion-reduce:transition-none ${
-              isOpen
-                ? "top-1/2 -translate-y-1/2 rotate-45"
-                : "top-[6px]"
+              isOpen ? "top-1/2 -translate-y-1/2 rotate-45" : "top-[6px]"
             }`}
           />
           <span
             className={`absolute left-0 h-px w-5 bg-current transition-transform duration-200 motion-reduce:transition-none ${
-              isOpen
-                ? "top-1/2 -translate-y-1/2 -rotate-45"
-                : "top-[13px]"
+              isOpen ? "top-1/2 -translate-y-1/2 -rotate-45" : "top-[13px]"
             }`}
           />
         </span>

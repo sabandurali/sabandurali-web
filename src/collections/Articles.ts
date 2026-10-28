@@ -148,14 +148,30 @@ export const Articles: CollectionConfig = {
           name: "newsCategory",
           type: "select",
           label: "Haber kategorisi",
-          options: ["ulasim", "sehircilik", "belediye", "kultur", "yasam", "gayrimenkul", "egitim", "cevre", "onemli-yerel-gelismeler"],
-          admin: { condition: (_, siblingData) => siblingData?.articleType === "district-news" },
+          options: [
+            "ulasim",
+            "sehircilik",
+            "belediye",
+            "kultur",
+            "yasam",
+            "gayrimenkul",
+            "egitim",
+            "cevre",
+            "onemli-yerel-gelismeler",
+          ],
+          admin: {
+            condition: (_, siblingData) =>
+              siblingData?.articleType === "district-news",
+          },
         },
         {
           name: "externalSource",
           type: "group",
           label: "Orijinal kaynak",
-          admin: { condition: (_, siblingData) => siblingData?.articleType === "district-news" },
+          admin: {
+            condition: (_, siblingData) =>
+              siblingData?.articleType === "district-news",
+          },
           fields: [
             { name: "name", type: "text", label: "Kaynak adı" },
             { name: "url", type: "text", label: "Orijinal haber URL'si" },

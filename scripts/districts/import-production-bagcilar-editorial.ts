@@ -194,7 +194,9 @@ async function main(): Promise<void> {
 
   let bundle: ResearchBundle;
   try {
-    bundle = JSON.parse(await readFile(values.input!, "utf8")) as ResearchBundle;
+    bundle = JSON.parse(
+      await readFile(values.input!, "utf8"),
+    ) as ResearchBundle;
     validateBundle(bundle);
     attachEditorial(
       bundle,
@@ -223,12 +225,7 @@ async function main(): Promise<void> {
     const repository = payloadRepository(payload);
     const plan = apply
       ? await applyBagcilar(bundle, repository, deploymentSha)
-      : await readBagcilarPlan(
-          bundle,
-          repository,
-          expectation,
-          deploymentSha,
-        );
+      : await readBagcilarPlan(bundle, repository, expectation, deploymentSha);
     console.log(
       JSON.stringify({
         ...plan.count,
@@ -259,4 +256,3 @@ main().catch((error) => {
   );
   process.exitCode = 1;
 });
-

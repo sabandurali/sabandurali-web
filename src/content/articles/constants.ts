@@ -9,7 +9,10 @@ import type {
   TranslationStatus,
 } from "@/content/articles/types";
 
-export const ARTICLE_LANGUAGES = ["tr", "en"] as const satisfies ReadonlyArray<ArticleLanguage>;
+export const ARTICLE_LANGUAGES = [
+  "tr",
+  "en",
+] as const satisfies ReadonlyArray<ArticleLanguage>;
 
 export const TRANSLATION_STATUSES = [
   "none",
@@ -75,10 +78,7 @@ export const ARTICLE_CATEGORY_LABELS = {
     tr: "Danışmanlık",
     en: "Consulting",
   },
-} as const satisfies Record<
-  ArticleCategory,
-  Record<ArticleLanguage, string>
->;
+} as const satisfies Record<ArticleCategory, Record<ArticleLanguage, string>>;
 
 export const SOURCE_TYPES = [
   "official_institution",

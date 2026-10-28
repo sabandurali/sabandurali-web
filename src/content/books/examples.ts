@@ -1,8 +1,4 @@
-import type {
-  BookAuthor,
-  BookReview,
-  BookTag,
-} from "@/content/books/types";
+import type { BookAuthor, BookReview, BookTag } from "@/content/books/types";
 
 const scottYoung = {
   id: "book-author-scott-h-young",
@@ -99,16 +95,15 @@ export const exampleTurkishBookReview = {
     "Yeni ve zor bir beceriyi planlı biçimde öğrenmek isteyenler",
     "Kendi öğrenme sistemini gözden geçirmek isteyen profesyoneller",
   ],
-  whoShouldNotRead: [
-    "Yalnızca hızlı sonuç vaat eden kısa yollar arayanlar",
-  ],
+  whoShouldNotRead: ["Yalnızca hızlı sonuç vaat eden kısa yollar arayanlar"],
   applicationNotes: [
     {
       id: "application-learning-map-tr",
       title: "Bir haftalık öğrenme haritası hazırlayın",
       description:
         "Hedef becerinin alt bileşenlerini, güvenilir kaynakları ve değerlendirme ölçütlerini tek sayfada toplayın.",
-      action: "Bir beceri seçip öğrenme haritasını 30 dakika içinde taslaklaştırın.",
+      action:
+        "Bir beceri seçip öğrenme haritasını 30 dakika içinde taslaklaştırın.",
       order: 1,
     },
     {
@@ -116,7 +111,8 @@ export const exampleTurkishBookReview = {
       title: "Günlük geri bildirim noktası kurun",
       description:
         "Her çalışma oturumunun sonunda hatayı ve bir sonraki düzeltmeyi kaydedin.",
-      action: "Çalışma günlüğüne hata, neden ve sonraki adım alanlarını ekleyin.",
+      action:
+        "Çalışma günlüğüne hata, neden ve sonraki adım alanlarını ekleyin.",
       order: 2,
     },
   ],
@@ -201,9 +197,7 @@ export const exampleEnglishBookReview = {
     "People planning to learn a difficult new skill",
     "Professionals reviewing their personal learning system",
   ],
-  whoShouldNotRead: [
-    "Readers looking only for effortless shortcuts",
-  ],
+  whoShouldNotRead: ["Readers looking only for effortless shortcuts"],
   applicationNotes: [
     {
       id: "application-learning-map-en",
@@ -218,7 +212,8 @@ export const exampleEnglishBookReview = {
       title: "Add a daily feedback checkpoint",
       description:
         "Record the main mistake and the next correction after every practice session.",
-      action: "Add mistake, cause and next-step fields to the learning journal.",
+      action:
+        "Add mistake, cause and next-step fields to the learning journal.",
       order: 2,
     },
   ],

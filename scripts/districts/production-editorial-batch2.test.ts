@@ -126,7 +126,9 @@ class MemoryRepository implements ProductionImportRepository {
         if (this.updateCalls === this.failOnUpdateCall) {
           throw new Error("fixture Batch 2 write failure");
         }
-        const index = this.documents.findIndex((document) => document.id === id);
+        const index = this.documents.findIndex(
+          (document) => document.id === id,
+        );
         if (index < 0) throw new Error("fixture district missing");
         const persistedData = structuredClone(data);
         if (Array.isArray(persistedData.sources)) {
@@ -280,11 +282,17 @@ test("E: verified fixture plans exactly 38 updates and one Esenler skip", async 
     conflict: 0,
   });
   assert.deepEqual(
-    plan.entries.filter((entry) => entry.action === "skip").map((entry) => entry.district),
+    plan.entries
+      .filter((entry) => entry.action === "skip")
+      .map((entry) => entry.district),
     [batch2ExcludedDistrict],
   );
   assert.deepEqual(
-    new Set(plan.entries.filter((entry) => entry.action === "update").map((entry) => entry.district)),
+    new Set(
+      plan.entries
+        .filter((entry) => entry.action === "update")
+        .map((entry) => entry.district),
+    ),
     new Set(batch2TargetSlugs),
   );
   assert.equal(repository.updateCalls, 0);
@@ -370,11 +378,7 @@ for (const [label, mutate] of [
     const { baseline, bundle, documents } = batch2Fixture();
     mutate(target(documents));
     const repository = new MemoryRepository(documents);
-    const plan = buildBatch2PlanForTest(
-      repository.documents,
-      bundle,
-      baseline,
-    );
+    const plan = buildBatch2PlanForTest(repository.documents, bundle, baseline);
     assert.deepEqual(plan.count, {
       create: 0,
       update: 37,

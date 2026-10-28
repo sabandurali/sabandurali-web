@@ -159,7 +159,9 @@ async function main(): Promise<void> {
   }
 
   const apply = values.apply === true;
-  const expectation: DistrictBatch2EightPlanExpectation = values["expect-applied"]
+  const expectation: DistrictBatch2EightPlanExpectation = values[
+    "expect-applied"
+  ]
     ? "applied"
     : "initial";
   assertDistrictBatch2EightEnvironment(process.env, apply);
@@ -194,7 +196,9 @@ async function main(): Promise<void> {
 
   let bundle: ResearchBundle;
   try {
-    bundle = JSON.parse(await readFile(values.input!, "utf8")) as ResearchBundle;
+    bundle = JSON.parse(
+      await readFile(values.input!, "utf8"),
+    ) as ResearchBundle;
     validateBundle(bundle);
     attachEditorial(
       bundle,

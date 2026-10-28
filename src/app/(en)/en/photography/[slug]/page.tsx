@@ -9,18 +9,35 @@ import { createPhotoMetadata } from "@/content/photos/photo-seo";
 
 export const dynamic = "force-dynamic";
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
   const { slug } = await params;
   const { photo, translation } = await getPublishedPhotoPageData(slug, "en");
   return photo === null
-    ? { title: "Photography not found | Şaban Durali", robots: { index: false, follow: false } }
+    ? {
+        title: "Photography not found | Şaban Durali",
+        robots: { index: false, follow: false },
+      }
     : createPhotoMetadata(photo, translation);
 }
 
-export default async function EnglishPhotographyDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function EnglishPhotographyDetailPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
   const { photo, translation } = await getPublishedPhotoPageData(slug, "en");
   if (photo === null) notFound();
   const related = await getRelatedPublishedPhotos(photo);
-  return <PhotoDetailPage photo={photo} translation={translation} related={related} />;
+  return (
+    <PhotoDetailPage
+      photo={photo}
+      translation={translation}
+      related={related}
+    />
+  );
 }

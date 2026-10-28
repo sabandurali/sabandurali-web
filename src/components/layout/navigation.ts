@@ -1,8 +1,4 @@
-import {
-  contactEmail,
-  contactPaths,
-  privacyPaths,
-} from "@/config/site";
+import { contactEmail, contactPaths, privacyPaths } from "@/config/site";
 import { articleListPaths } from "@/content/articles/article-routes";
 import { bookListPaths } from "@/content/books/book-routes";
 import { photoListPaths } from "@/content/photos/photo-routes";
@@ -28,7 +24,9 @@ export function isTurkishAboutNavigationHref(href: string | null): boolean {
   const url = new URL(href, "https://navigation.invalid");
   const pathname = url.pathname.replace(/\/+$/, "") || "/";
 
-  return pathname === "/hakkimda" || (pathname === "/" && url.hash === "#hakkimda");
+  return (
+    pathname === "/hakkimda" || (pathname === "/" && url.hash === "#hakkimda")
+  );
 }
 
 function internalLink(
@@ -88,19 +86,21 @@ function workspacePrimaryNavigationItems(): PublicNavigationLink[] {
       `workspace-${workspace.key}`,
       workspace.title,
       `/${workspace.key}`,
-      workspace.entries.filter((entry) => entry.slug !== "hesaplama-araclari").map((entry) =>
-        internalLink(
-          `workspace-${workspace.key}-${entry.slug}`,
-          entry.title,
-          entry.href,
-          entry.href === "/istanbul/ilceler"
-            ? [
-                districtSideLink("avrupa", "Avrupa Yakası — 25"),
-                districtSideLink("anadolu", "Anadolu Yakası — 14"),
-              ]
-            : [],
+      workspace.entries
+        .filter((entry) => entry.slug !== "hesaplama-araclari")
+        .map((entry) =>
+          internalLink(
+            `workspace-${workspace.key}-${entry.slug}`,
+            entry.title,
+            entry.href,
+            entry.href === "/istanbul/ilceler"
+              ? [
+                  districtSideLink("avrupa", "Avrupa Yakası — 25"),
+                  districtSideLink("anadolu", "Anadolu Yakası — 14"),
+                ]
+              : [],
+          ),
         ),
-      ),
     ),
   );
 }
@@ -172,11 +172,7 @@ export function getEnglishHeaderNavigationItems(): PublicNavigationLink[] {
       "Research & Analysis",
       articleListPaths.en,
       [
-        internalLink(
-          "latest-research",
-          "Latest Research",
-          articleListPaths.en,
-        ),
+        internalLink("latest-research", "Latest Research", articleListPaths.en),
         internalLink("all-articles", "All Articles", articleListPaths.en),
       ],
     ),
@@ -203,7 +199,11 @@ export function getEnglishHeaderNavigationItems(): PublicNavigationLink[] {
       ),
     ]),
     englishHomeAnchorLink("about", "About", "about", [
-      englishHomeAnchorLink("about-saban-durali", "About Şaban Durali", "about"),
+      englishHomeAnchorLink(
+        "about-saban-durali",
+        "About Şaban Durali",
+        "about",
+      ),
     ]),
     internalLink("contact", "Contact", contactPaths.en),
   ];
@@ -248,7 +248,10 @@ export function getStaticHeaderNavigationItems({
     },
     {
       id: "work",
-      href: locale === "tr" ? "/calisma-alanlari" : `${anchorPrefix}#${anchors.work}`,
+      href:
+        locale === "tr"
+          ? "/calisma-alanlari"
+          : `${anchorPrefix}#${anchors.work}`,
       label: content.navigation.work,
       activePathPrefix: locale === "tr" ? "/calisma-alanlari" : undefined,
       external: false,
@@ -336,14 +339,12 @@ export function isHeaderNavigationItemActive(
     item.id === "home"
       ? pathname === prefix
       : prefix === "/"
-      ? pathname === "/"
-      : prefix !== undefined &&
-        (pathname === prefix || pathname.startsWith(`${prefix}/`));
+        ? pathname === "/"
+        : prefix !== undefined &&
+          (pathname === prefix || pathname.startsWith(`${prefix}/`));
 
   return (
     ownActive ||
-    item.children.some((child) =>
-      isHeaderNavigationItemActive(child, pathname),
-    )
+    item.children.some((child) => isHeaderNavigationItemActive(child, pathname))
   );
 }

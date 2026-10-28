@@ -65,8 +65,7 @@ export type EditorialBundle = {
   schemaVersion: 1;
   districts: EditorialRecord[];
 };
-const tuikAdnks2025Title =
-  "Adrese Dayalı Nüfus Kayıt Sistemi Sonuçları, 2025";
+const tuikAdnks2025Title = "Adrese Dayalı Nüfus Kayıt Sistemi Sonuçları, 2025";
 const tuikAdnks2025DataDate = "2025-12-31T00:00:00.000Z";
 const tuikAdnks2025Url =
   "https://data.tuik.gov.tr/Bulten/Index?p=Adrese-Dayali-Nufus-Kayit-Sistemi-Sonuclari-2025-53899";
@@ -93,8 +92,9 @@ function canonical(value: unknown): unknown {
   if (value && typeof value === "object")
     return Object.fromEntries(
       Object.entries(value)
-        .filter(([key, child]) =>
-          key !== "id" && child !== undefined && child !== null
+        .filter(
+          ([key, child]) =>
+            key !== "id" && child !== undefined && child !== null,
         )
         .sort(([left], [right]) => left.localeCompare(right))
         .map(([key, child]) => [key, canonical(child)]),
@@ -152,9 +152,7 @@ export function attachEditorial(
     if (new Set(reviewed).size !== reviewed.length)
       throw new Error(`Duplicate reviewed section: ${row.district}`);
     const expectedFacts =
-      batch1PopulationFacts[
-        row.district as keyof typeof batch1PopulationFacts
-      ];
+      batch1PopulationFacts[row.district as keyof typeof batch1PopulationFacts];
     if (expectedFacts) {
       if (
         review.facts?.population !== expectedFacts.population ||
@@ -178,7 +176,9 @@ export function attachEditorial(
       throw new Error(`Facts must be reviewed: ${row.district}`);
     for (const section of Object.keys(review.sections) as DistrictSection[])
       if (!reviewed.includes(section))
-        throw new Error(`Editorial section must be reviewed: ${row.district}/${section}`);
+        throw new Error(
+          `Editorial section must be reviewed: ${row.district}/${section}`,
+        );
     if (review.neighborhoods.length && !reviewed.includes("neighborhoods"))
       throw new Error(`Neighborhoods must be reviewed: ${row.district}`);
     for (const section of ["summary", "history", "geography"] as const)

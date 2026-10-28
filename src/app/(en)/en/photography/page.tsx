@@ -13,13 +13,19 @@ function single(value: string | string[] | undefined) {
   return typeof value === "string" && value.trim() !== "" ? value : undefined;
 }
 
-export default async function EnglishPhotographyPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
+export default async function EnglishPhotographyPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
   const query = await searchParams;
   const pageValue = Number(single(query.page));
   const filters = {
     collection: single(query.collection),
     tag: single(query.tag),
-    ...(Number.isInteger(pageValue) && pageValue > 0 ? { page: pageValue } : {}),
+    ...(Number.isInteger(pageValue) && pageValue > 0
+      ? { page: pageValue }
+      : {}),
   };
   const result = await getPublishedPhotos("en", filters);
   return <PhotoListPage locale="en" filters={filters} result={result} />;

@@ -4,7 +4,10 @@ import {
   HEADING_LEVELS,
   SEO_DESCRIPTION_RECOMMENDED_LENGTH,
 } from "@/content/articles/constants";
-import { createArticleSlug, findDuplicateTagGroups } from "@/content/articles/helpers";
+import {
+  createArticleSlug,
+  findDuplicateTagGroups,
+} from "@/content/articles/helpers";
 import type {
   Article,
   ArticleValidationOptions,
@@ -23,8 +26,7 @@ function issue(code: string, path: string, message: string): ValidationIssue {
 function hasInvalidHeadingLevel(article: Article): boolean {
   return article.content.some(
     (block) =>
-      block.type === "heading" &&
-      !HEADING_LEVELS.includes(block.level),
+      block.type === "heading" && !HEADING_LEVELS.includes(block.level),
   );
 }
 
@@ -41,9 +43,7 @@ function validatePublicationRequirements(
   }
 
   if (isBlank(article.summary)) {
-    errors.push(
-      issue("summary.required", "summary", "Kısa özet zorunludur."),
-    );
+    errors.push(issue("summary.required", "summary", "Kısa özet zorunludur."));
   }
 
   if (article.category === null) {
@@ -59,7 +59,9 @@ function validatePublicationRequirements(
   }
 
   if (isBlank(article.seo.title)) {
-    errors.push(issue("seo.title_required", "seo.title", "SEO başlığı zorunludur."));
+    errors.push(
+      issue("seo.title_required", "seo.title", "SEO başlığı zorunludur."),
+    );
   }
 
   if (isBlank(article.seo.description)) {
@@ -82,7 +84,11 @@ function validatePublicationRequirements(
     );
   }
 
-  if (!article.content.some((block) => block.type === "heading" && block.level === "h2")) {
+  if (
+    !article.content.some(
+      (block) => block.type === "heading" && block.level === "h2",
+    )
+  ) {
     errors.push(
       issue(
         "content.h2_required",
@@ -169,7 +175,11 @@ export function validateArticle(
 
   if (!ARTICLE_LANGUAGES.includes(article.language)) {
     errors.push(
-      issue("language.invalid", "language", "Desteklenen bir dil seçilmelidir."),
+      issue(
+        "language.invalid",
+        "language",
+        "Desteklenen bir dil seçilmelidir.",
+      ),
     );
   }
 

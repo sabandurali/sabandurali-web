@@ -245,10 +245,7 @@ export default function BookReviewDetailPage({
 
             {translation !== null && (
               <Link
-                href={getBookReviewPath(
-                  translation.slug,
-                  translation.language,
-                )}
+                href={getBookReviewPath(translation.slug, translation.language)}
                 aria-label={content.translationAriaLabel}
                 className="mt-7 inline-flex min-h-11 items-center rounded-full border border-border px-5 text-sm font-semibold text-accent-strong transition-colors hover:border-accent hover:text-ivory"
               >

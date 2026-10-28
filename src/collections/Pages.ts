@@ -101,8 +101,7 @@ const validatePageIdentity: CollectionBeforeValidateHook = async ({
     RESERVED_TURKISH_SLUGS.has(slug)
   ) {
     errors.push({
-      message:
-        "Bu slug mevcut özel bir Türkçe rota için ayrılmıştır.",
+      message: "Bu slug mevcut özel bir Türkçe rota için ayrılmıştır.",
       path: "slug",
     });
   }
@@ -127,8 +126,7 @@ const validatePageIdentity: CollectionBeforeValidateHook = async ({
 
     if (duplicateSlug.docs.length > 0) {
       errors.push({
-        message:
-          "Bu dilde aynı slug değerine sahip başka bir sayfa var.",
+        message: "Bu dilde aynı slug değerine sahip başka bir sayfa var.",
         path: "slug",
       });
     }

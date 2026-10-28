@@ -79,7 +79,9 @@ export default function BookReviewFormPrototype() {
     setSubmission(null);
   }
 
-  function getErrors(paths: ReadonlyArray<string>): ReadonlyArray<ValidationIssue> {
+  function getErrors(
+    paths: ReadonlyArray<string>,
+  ): ReadonlyArray<ValidationIssue> {
     return (
       submission?.validation.errors.filter((issue) =>
         paths.includes(issue.path),
@@ -176,7 +178,9 @@ export default function BookReviewFormPrototype() {
                 value={form.title}
                 onChange={(event) => handleTitleChange(event.target.value)}
                 aria-invalid={titleErrors.length > 0 || undefined}
-                aria-describedby={titleErrors.length ? "book-title-errors" : undefined}
+                aria-describedby={
+                  titleErrors.length ? "book-title-errors" : undefined
+                }
                 className={fieldClassName}
               />
               <FieldErrors id="book-title-errors" issues={titleErrors} />
@@ -210,10 +214,17 @@ export default function BookReviewFormPrototype() {
                   updateField("slug", event.target.value);
                 }}
                 aria-invalid={slugErrors.length > 0 || undefined}
-                aria-describedby={slugErrors.length ? "book-slug-help book-slug-errors" : "book-slug-help"}
+                aria-describedby={
+                  slugErrors.length
+                    ? "book-slug-help book-slug-errors"
+                    : "book-slug-help"
+                }
                 className={fieldClassName}
               />
-              <p id="book-slug-help" className="mt-2 text-xs leading-5 text-muted">
+              <p
+                id="book-slug-help"
+                className="mt-2 text-xs leading-5 text-muted"
+              >
                 Türkçe karakterler dönüştürülür. Elle düzenlenen değer, başlık
                 değişince korunur.
               </p>
@@ -221,7 +232,10 @@ export default function BookReviewFormPrototype() {
             </div>
 
             <div>
-              <label htmlFor="book-original-title" className="font-medium text-ivory">
+              <label
+                htmlFor="book-original-title"
+                className="font-medium text-ivory"
+              >
                 Özgün başlık
                 <RequiredLabel optional />
               </label>
@@ -230,13 +244,18 @@ export default function BookReviewFormPrototype() {
                 name="originalTitle"
                 type="text"
                 value={form.originalTitle}
-                onChange={(event) => updateField("originalTitle", event.target.value)}
+                onChange={(event) =>
+                  updateField("originalTitle", event.target.value)
+                }
                 className={fieldClassName}
               />
             </div>
 
             <div>
-              <label htmlFor="book-author-name" className="font-medium text-ivory">
+              <label
+                htmlFor="book-author-name"
+                className="font-medium text-ivory"
+              >
                 Kitap yazarı
                 <RequiredLabel />
               </label>
@@ -248,7 +267,9 @@ export default function BookReviewFormPrototype() {
                 value={form.authorName}
                 onChange={(event) => handleAuthorNameChange(event.target.value)}
                 aria-invalid={authorErrors.length > 0 || undefined}
-                aria-describedby={authorErrors.length ? "book-author-errors" : undefined}
+                aria-describedby={
+                  authorErrors.length ? "book-author-errors" : undefined
+                }
                 className={fieldClassName}
               />
               <FieldErrors id="book-author-errors" issues={authorErrors} />
@@ -256,7 +277,10 @@ export default function BookReviewFormPrototype() {
 
             <div>
               <div className="flex flex-wrap items-end justify-between gap-3">
-                <label htmlFor="book-author-slug" className="font-medium text-ivory">
+                <label
+                  htmlFor="book-author-slug"
+                  className="font-medium text-ivory"
+                >
                   Yazar slug
                   <RequiredLabel />
                 </label>
@@ -264,7 +288,10 @@ export default function BookReviewFormPrototype() {
                   type="button"
                   onClick={() => {
                     setAuthorSlugWasEdited(false);
-                    updateField("authorSlug", createBookReviewSlug(form.authorName));
+                    updateField(
+                      "authorSlug",
+                      createBookReviewSlug(form.authorName),
+                    );
                   }}
                   className="min-h-11 text-sm text-accent-soft underline decoration-border underline-offset-4 hover:text-accent-strong"
                 >
@@ -282,13 +309,18 @@ export default function BookReviewFormPrototype() {
                   updateField("authorSlug", event.target.value);
                 }}
                 aria-invalid={authorErrors.length > 0 || undefined}
-                aria-describedby={authorErrors.length ? "book-author-errors" : undefined}
+                aria-describedby={
+                  authorErrors.length ? "book-author-errors" : undefined
+                }
                 className={fieldClassName}
               />
             </div>
 
             <div>
-              <label htmlFor="book-translator" className="font-medium text-ivory">
+              <label
+                htmlFor="book-translator"
+                className="font-medium text-ivory"
+              >
                 Çevirmen
                 <RequiredLabel optional />
               </label>
@@ -297,13 +329,18 @@ export default function BookReviewFormPrototype() {
                 name="translator"
                 type="text"
                 value={form.translator}
-                onChange={(event) => updateField("translator", event.target.value)}
+                onChange={(event) =>
+                  updateField("translator", event.target.value)
+                }
                 className={fieldClassName}
               />
             </div>
 
             <div>
-              <label htmlFor="book-publisher" className="font-medium text-ivory">
+              <label
+                htmlFor="book-publisher"
+                className="font-medium text-ivory"
+              >
                 Yayınevi
                 <RequiredLabel optional />
               </label>
@@ -312,13 +349,18 @@ export default function BookReviewFormPrototype() {
                 name="publisher"
                 type="text"
                 value={form.publisher}
-                onChange={(event) => updateField("publisher", event.target.value)}
+                onChange={(event) =>
+                  updateField("publisher", event.target.value)
+                }
                 className={fieldClassName}
               />
             </div>
 
             <div>
-              <label htmlFor="book-publication-year" className="font-medium text-ivory">
+              <label
+                htmlFor="book-publication-year"
+                className="font-medium text-ivory"
+              >
                 Yayın yılı
                 <RequiredLabel optional />
               </label>
@@ -330,13 +372,18 @@ export default function BookReviewFormPrototype() {
                 min="1"
                 step="1"
                 value={form.publicationYear}
-                onChange={(event) => updateField("publicationYear", event.target.value)}
+                onChange={(event) =>
+                  updateField("publicationYear", event.target.value)
+                }
                 className={fieldClassName}
               />
             </div>
 
             <div>
-              <label htmlFor="book-page-count" className="font-medium text-ivory">
+              <label
+                htmlFor="book-page-count"
+                className="font-medium text-ivory"
+              >
                 Sayfa sayısı
                 <RequiredLabel optional />
               </label>
@@ -348,7 +395,9 @@ export default function BookReviewFormPrototype() {
                 min="1"
                 step="1"
                 value={form.pageCount}
-                onChange={(event) => updateField("pageCount", event.target.value)}
+                onChange={(event) =>
+                  updateField("pageCount", event.target.value)
+                }
                 className={fieldClassName}
               />
             </div>
@@ -367,7 +416,9 @@ export default function BookReviewFormPrototype() {
                 onChange={(event) => updateField("isbn10", event.target.value)}
                 onBlur={() => updateField("isbn10", normalizeIsbn(form.isbn10))}
                 aria-invalid={isbn10Errors.length > 0 || undefined}
-                aria-describedby={isbn10Errors.length ? "book-isbn-10-errors" : undefined}
+                aria-describedby={
+                  isbn10Errors.length ? "book-isbn-10-errors" : undefined
+                }
                 className={fieldClassName}
               />
               <FieldErrors id="book-isbn-10-errors" issues={isbn10Errors} />
@@ -387,7 +438,9 @@ export default function BookReviewFormPrototype() {
                 onChange={(event) => updateField("isbn13", event.target.value)}
                 onBlur={() => updateField("isbn13", normalizeIsbn(form.isbn13))}
                 aria-invalid={isbn13Errors.length > 0 || undefined}
-                aria-describedby={isbn13Errors.length ? "book-isbn-13-errors" : undefined}
+                aria-describedby={
+                  isbn13Errors.length ? "book-isbn-13-errors" : undefined
+                }
                 className={fieldClassName}
               />
               <FieldErrors id="book-isbn-13-errors" issues={isbn13Errors} />
@@ -396,7 +449,9 @@ export default function BookReviewFormPrototype() {
         </fieldset>
 
         <fieldset className={fieldsetClassName}>
-          <legend className="px-2 text-2xl text-ivory">Sınıflandırma ve tarihler</legend>
+          <legend className="px-2 text-2xl text-ivory">
+            Sınıflandırma ve tarihler
+          </legend>
           <div className="mt-5 grid gap-5 sm:grid-cols-2">
             <div>
               <label htmlFor="book-category" className="font-medium text-ivory">
@@ -408,9 +463,16 @@ export default function BookReviewFormPrototype() {
                 name="category"
                 required
                 value={form.category}
-                onChange={(event) => updateField("category", event.target.value as BookReviewFormState["category"])}
+                onChange={(event) =>
+                  updateField(
+                    "category",
+                    event.target.value as BookReviewFormState["category"],
+                  )
+                }
                 aria-invalid={categoryErrors.length > 0 || undefined}
-                aria-describedby={categoryErrors.length ? "book-category-errors" : undefined}
+                aria-describedby={
+                  categoryErrors.length ? "book-category-errors" : undefined
+                }
                 className={fieldClassName}
               >
                 <option value="">Kategori seçin</option>
@@ -424,7 +486,10 @@ export default function BookReviewFormPrototype() {
             </div>
 
             <div>
-              <label htmlFor="book-reading-status" className="font-medium text-ivory">
+              <label
+                htmlFor="book-reading-status"
+                className="font-medium text-ivory"
+              >
                 Okuma durumu
                 <RequiredLabel />
               </label>
@@ -432,9 +497,17 @@ export default function BookReviewFormPrototype() {
                 id="book-reading-status"
                 name="readingStatus"
                 value={form.readingStatus}
-                onChange={(event) => handleReadingStatusChange(event.target.value as BookReviewFormState["readingStatus"])}
+                onChange={(event) =>
+                  handleReadingStatusChange(
+                    event.target.value as BookReviewFormState["readingStatus"],
+                  )
+                }
                 aria-invalid={readingStatusErrors.length > 0 || undefined}
-                aria-describedby={readingStatusErrors.length ? "book-reading-status-errors" : undefined}
+                aria-describedby={
+                  readingStatusErrors.length
+                    ? "book-reading-status-errors"
+                    : undefined
+                }
                 className={fieldClassName}
               >
                 {READING_STATUSES.map((status) => (
@@ -443,11 +516,17 @@ export default function BookReviewFormPrototype() {
                   </option>
                 ))}
               </select>
-              <FieldErrors id="book-reading-status-errors" issues={readingStatusErrors} />
+              <FieldErrors
+                id="book-reading-status-errors"
+                issues={readingStatusErrors}
+              />
             </div>
 
             <div>
-              <label htmlFor="book-review-status" className="font-medium text-ivory">
+              <label
+                htmlFor="book-review-status"
+                className="font-medium text-ivory"
+              >
                 İnceleme durumu
                 <RequiredLabel />
               </label>
@@ -455,9 +534,18 @@ export default function BookReviewFormPrototype() {
                 id="book-review-status"
                 name="reviewStatus"
                 value={form.reviewStatus}
-                onChange={(event) => updateField("reviewStatus", event.target.value as BookReviewFormState["reviewStatus"])}
+                onChange={(event) =>
+                  updateField(
+                    "reviewStatus",
+                    event.target.value as BookReviewFormState["reviewStatus"],
+                  )
+                }
                 aria-invalid={reviewStatusErrors.length > 0 || undefined}
-                aria-describedby={reviewStatusErrors.length ? "book-review-status-errors" : undefined}
+                aria-describedby={
+                  reviewStatusErrors.length
+                    ? "book-review-status-errors"
+                    : undefined
+                }
                 className={fieldClassName}
               >
                 {REVIEW_STATUSES.map((status) => (
@@ -466,11 +554,17 @@ export default function BookReviewFormPrototype() {
                   </option>
                 ))}
               </select>
-              <FieldErrors id="book-review-status-errors" issues={reviewStatusErrors} />
+              <FieldErrors
+                id="book-review-status-errors"
+                issues={reviewStatusErrors}
+              />
             </div>
 
             <div>
-              <label htmlFor="book-started-at" className="font-medium text-ivory">
+              <label
+                htmlFor="book-started-at"
+                className="font-medium text-ivory"
+              >
                 Okumaya başlama tarihi
                 <RequiredLabel optional />
               </label>
@@ -479,16 +573,26 @@ export default function BookReviewFormPrototype() {
                 name="startedAt"
                 type="date"
                 value={form.startedAt}
-                onChange={(event) => updateField("startedAt", event.target.value)}
+                onChange={(event) =>
+                  updateField("startedAt", event.target.value)
+                }
                 aria-invalid={startedAtErrors.length > 0 || undefined}
-                aria-describedby={startedAtErrors.length ? "book-started-at-errors" : undefined}
+                aria-describedby={
+                  startedAtErrors.length ? "book-started-at-errors" : undefined
+                }
                 className={fieldClassName}
               />
-              <FieldErrors id="book-started-at-errors" issues={startedAtErrors} />
+              <FieldErrors
+                id="book-started-at-errors"
+                issues={startedAtErrors}
+              />
             </div>
 
             <div>
-              <label htmlFor="book-completed-at" className="font-medium text-ivory">
+              <label
+                htmlFor="book-completed-at"
+                className="font-medium text-ivory"
+              >
                 Tamamlama tarihi
                 <RequiredLabel optional={form.readingStatus !== "completed"} />
               </label>
@@ -498,16 +602,28 @@ export default function BookReviewFormPrototype() {
                 type="date"
                 disabled={completedAtDisabled}
                 value={form.completedAt}
-                onChange={(event) => updateField("completedAt", event.target.value)}
+                onChange={(event) =>
+                  updateField("completedAt", event.target.value)
+                }
                 aria-invalid={completedAtErrors.length > 0 || undefined}
-                aria-describedby={completedAtErrors.length ? "book-completed-at-help book-completed-at-errors" : "book-completed-at-help"}
+                aria-describedby={
+                  completedAtErrors.length
+                    ? "book-completed-at-help book-completed-at-errors"
+                    : "book-completed-at-help"
+                }
                 className={`${fieldClassName} disabled:cursor-not-allowed disabled:opacity-60`}
               />
-              <p id="book-completed-at-help" className="mt-2 text-xs leading-5 text-muted">
+              <p
+                id="book-completed-at-help"
+                className="mt-2 text-xs leading-5 text-muted"
+              >
                 Tamamlandı durumunda zorunludur; planlandı veya yarım bırakıldı
                 durumunda kullanılmaz.
               </p>
-              <FieldErrors id="book-completed-at-errors" issues={completedAtErrors} />
+              <FieldErrors
+                id="book-completed-at-errors"
+                issues={completedAtErrors}
+              />
             </div>
           </div>
         </fieldset>
@@ -520,7 +636,10 @@ export default function BookReviewFormPrototype() {
           </p>
           <div className="mt-5 grid gap-5 sm:grid-cols-2">
             <div>
-              <label htmlFor="book-cover-src" className="font-medium text-ivory">
+              <label
+                htmlFor="book-cover-src"
+                className="font-medium text-ivory"
+              >
                 Görsel yolu
                 <RequiredLabel />
               </label>
@@ -529,16 +648,23 @@ export default function BookReviewFormPrototype() {
                 name="coverImageSrc"
                 type="text"
                 value={form.coverImageSrc}
-                onChange={(event) => updateField("coverImageSrc", event.target.value)}
+                onChange={(event) =>
+                  updateField("coverImageSrc", event.target.value)
+                }
                 placeholder="/images/books/ornek.webp"
                 aria-invalid={coverErrors.length > 0 || undefined}
-                aria-describedby={coverErrors.length ? "book-cover-errors" : undefined}
+                aria-describedby={
+                  coverErrors.length ? "book-cover-errors" : undefined
+                }
                 className={fieldClassName}
               />
               <FieldErrors id="book-cover-errors" issues={coverErrors} />
             </div>
             <div>
-              <label htmlFor="book-cover-alt" className="font-medium text-ivory">
+              <label
+                htmlFor="book-cover-alt"
+                className="font-medium text-ivory"
+              >
                 Alternatif metin
                 <RequiredLabel />
               </label>
@@ -547,9 +673,13 @@ export default function BookReviewFormPrototype() {
                 name="coverImageAlt"
                 type="text"
                 value={form.coverImageAlt}
-                onChange={(event) => updateField("coverImageAlt", event.target.value)}
+                onChange={(event) =>
+                  updateField("coverImageAlt", event.target.value)
+                }
                 aria-invalid={coverAltErrors.length > 0 || undefined}
-                aria-describedby={coverAltErrors.length ? "book-cover-alt-errors" : undefined}
+                aria-describedby={
+                  coverAltErrors.length ? "book-cover-alt-errors" : undefined
+                }
                 className={fieldClassName}
               />
               <FieldErrors id="book-cover-alt-errors" issues={coverAltErrors} />
@@ -572,19 +702,29 @@ export default function BookReviewFormPrototype() {
                 value={form.summary}
                 onChange={(event) => updateField("summary", event.target.value)}
                 aria-invalid={summaryErrors.length > 0 || undefined}
-                aria-describedby={summaryErrors.length ? "book-summary-errors" : undefined}
+                aria-describedby={
+                  summaryErrors.length ? "book-summary-errors" : undefined
+                }
                 className={`${fieldClassName} resize-y`}
               />
               <FieldErrors id="book-summary-errors" issues={summaryErrors} />
             </div>
 
             {([1, 2, 3] as const).map((number) => {
-              const titleField = `keyIdea${number === 1 ? "One" : number === 2 ? "Two" : "Three"}Title` as keyof BookReviewFormState;
-              const descriptionField = `keyIdea${number === 1 ? "One" : number === 2 ? "Two" : "Three"}Description` as keyof BookReviewFormState;
+              const titleField =
+                `keyIdea${number === 1 ? "One" : number === 2 ? "Two" : "Three"}Title` as keyof BookReviewFormState;
+              const descriptionField =
+                `keyIdea${number === 1 ? "One" : number === 2 ? "Two" : "Three"}Description` as keyof BookReviewFormState;
               return (
-                <div key={number} className="grid gap-4 rounded-sm border border-border bg-background p-4 sm:grid-cols-2">
+                <div
+                  key={number}
+                  className="grid gap-4 rounded-sm border border-border bg-background p-4 sm:grid-cols-2"
+                >
                   <div>
-                    <label htmlFor={`book-key-idea-${number}-title`} className="font-medium text-ivory">
+                    <label
+                      htmlFor={`book-key-idea-${number}-title`}
+                      className="font-medium text-ivory"
+                    >
                       Ana fikir {number} başlığı
                       <RequiredLabel optional />
                     </label>
@@ -593,14 +733,23 @@ export default function BookReviewFormPrototype() {
                       name={titleField}
                       type="text"
                       value={form[titleField] as string}
-                      onChange={(event) => updateField(titleField, event.target.value)}
+                      onChange={(event) =>
+                        updateField(titleField, event.target.value)
+                      }
                       aria-invalid={keyIdeaErrors.length > 0 || undefined}
-                      aria-describedby={keyIdeaErrors.length ? "book-key-ideas-errors" : undefined}
+                      aria-describedby={
+                        keyIdeaErrors.length
+                          ? "book-key-ideas-errors"
+                          : undefined
+                      }
                       className={fieldClassName}
                     />
                   </div>
                   <div>
-                    <label htmlFor={`book-key-idea-${number}-description`} className="font-medium text-ivory">
+                    <label
+                      htmlFor={`book-key-idea-${number}-description`}
+                      className="font-medium text-ivory"
+                    >
                       Ana fikir {number} açıklaması
                       <RequiredLabel optional />
                     </label>
@@ -609,9 +758,15 @@ export default function BookReviewFormPrototype() {
                       name={descriptionField}
                       rows={3}
                       value={form[descriptionField] as string}
-                      onChange={(event) => updateField(descriptionField, event.target.value)}
+                      onChange={(event) =>
+                        updateField(descriptionField, event.target.value)
+                      }
                       aria-invalid={keyIdeaErrors.length > 0 || undefined}
-                      aria-describedby={keyIdeaErrors.length ? "book-key-ideas-errors" : undefined}
+                      aria-describedby={
+                        keyIdeaErrors.length
+                          ? "book-key-ideas-errors"
+                          : undefined
+                      }
                       className={`${fieldClassName} resize-y`}
                     />
                   </div>
@@ -621,14 +776,19 @@ export default function BookReviewFormPrototype() {
             <FieldErrors id="book-key-ideas-errors" issues={keyIdeaErrors} />
 
             <div className="grid gap-5 sm:grid-cols-2">
-              {([
-                ["strengths", "Güçlü yönler"],
-                ["weaknesses", "Zayıf yönler"],
-                ["whoShouldRead", "Kimler okumalı"],
-                ["whoShouldNotRead", "Kimler okumamalı"],
-              ] as const).map(([field, label]) => (
+              {(
+                [
+                  ["strengths", "Güçlü yönler"],
+                  ["weaknesses", "Zayıf yönler"],
+                  ["whoShouldRead", "Kimler okumalı"],
+                  ["whoShouldNotRead", "Kimler okumamalı"],
+                ] as const
+              ).map(([field, label]) => (
                 <div key={field}>
-                  <label htmlFor={`book-${field}`} className="font-medium text-ivory">
+                  <label
+                    htmlFor={`book-${field}`}
+                    className="font-medium text-ivory"
+                  >
                     {label}
                     <RequiredLabel optional />
                   </label>
@@ -641,7 +801,10 @@ export default function BookReviewFormPrototype() {
                     aria-describedby={`book-${field}-help`}
                     className={`${fieldClassName} resize-y`}
                   />
-                  <p id={`book-${field}-help`} className="mt-2 text-xs text-muted">
+                  <p
+                    id={`book-${field}-help`}
+                    className="mt-2 text-xs text-muted"
+                  >
                     Her satır ayrı bir maddeye dönüşür.
                   </p>
                 </div>
@@ -649,7 +812,10 @@ export default function BookReviewFormPrototype() {
             </div>
 
             <div>
-              <label htmlFor="book-personal-evaluation" className="font-medium text-ivory">
+              <label
+                htmlFor="book-personal-evaluation"
+                className="font-medium text-ivory"
+              >
                 Kişisel değerlendirme
                 <RequiredLabel />
               </label>
@@ -658,17 +824,29 @@ export default function BookReviewFormPrototype() {
                 name="personalEvaluation"
                 rows={6}
                 value={form.personalEvaluation}
-                onChange={(event) => updateField("personalEvaluation", event.target.value)}
+                onChange={(event) =>
+                  updateField("personalEvaluation", event.target.value)
+                }
                 aria-invalid={personalEvaluationErrors.length > 0 || undefined}
-                aria-describedby={personalEvaluationErrors.length ? "book-personal-evaluation-errors" : undefined}
+                aria-describedby={
+                  personalEvaluationErrors.length
+                    ? "book-personal-evaluation-errors"
+                    : undefined
+                }
                 className={`${fieldClassName} resize-y`}
               />
-              <FieldErrors id="book-personal-evaluation-errors" issues={personalEvaluationErrors} />
+              <FieldErrors
+                id="book-personal-evaluation-errors"
+                issues={personalEvaluationErrors}
+              />
             </div>
 
             <div className="grid gap-5 rounded-sm border border-border bg-background p-4 sm:grid-cols-3">
               <div>
-                <label htmlFor="book-application-title" className="font-medium text-ivory">
+                <label
+                  htmlFor="book-application-title"
+                  className="font-medium text-ivory"
+                >
                   Uygulama notu başlığı
                   <RequiredLabel optional />
                 </label>
@@ -677,12 +855,17 @@ export default function BookReviewFormPrototype() {
                   name="applicationNoteTitle"
                   type="text"
                   value={form.applicationNoteTitle}
-                  onChange={(event) => updateField("applicationNoteTitle", event.target.value)}
+                  onChange={(event) =>
+                    updateField("applicationNoteTitle", event.target.value)
+                  }
                   className={fieldClassName}
                 />
               </div>
               <div>
-                <label htmlFor="book-application-description" className="font-medium text-ivory">
+                <label
+                  htmlFor="book-application-description"
+                  className="font-medium text-ivory"
+                >
                   Açıklama
                   <RequiredLabel optional />
                 </label>
@@ -691,12 +874,20 @@ export default function BookReviewFormPrototype() {
                   name="applicationNoteDescription"
                   rows={3}
                   value={form.applicationNoteDescription}
-                  onChange={(event) => updateField("applicationNoteDescription", event.target.value)}
+                  onChange={(event) =>
+                    updateField(
+                      "applicationNoteDescription",
+                      event.target.value,
+                    )
+                  }
                   className={`${fieldClassName} resize-y`}
                 />
               </div>
               <div>
-                <label htmlFor="book-application-action" className="font-medium text-ivory">
+                <label
+                  htmlFor="book-application-action"
+                  className="font-medium text-ivory"
+                >
                   Eylem
                   <RequiredLabel optional />
                 </label>
@@ -705,7 +896,9 @@ export default function BookReviewFormPrototype() {
                   name="applicationNoteAction"
                   rows={3}
                   value={form.applicationNoteAction}
-                  onChange={(event) => updateField("applicationNoteAction", event.target.value)}
+                  onChange={(event) =>
+                    updateField("applicationNoteAction", event.target.value)
+                  }
                   className={`${fieldClassName} resize-y`}
                 />
               </div>
@@ -713,7 +906,10 @@ export default function BookReviewFormPrototype() {
 
             <div className="grid gap-5 rounded-sm border border-border bg-background p-4 sm:grid-cols-3">
               <div className="sm:col-span-2">
-                <label htmlFor="book-quote-text" className="font-medium text-ivory">
+                <label
+                  htmlFor="book-quote-text"
+                  className="font-medium text-ivory"
+                >
                   Alıntı
                   <RequiredLabel optional />
                 </label>
@@ -722,12 +918,17 @@ export default function BookReviewFormPrototype() {
                   name="quoteText"
                   rows={4}
                   value={form.quoteText}
-                  onChange={(event) => updateField("quoteText", event.target.value)}
+                  onChange={(event) =>
+                    updateField("quoteText", event.target.value)
+                  }
                   className={`${fieldClassName} resize-y`}
                 />
               </div>
               <div>
-                <label htmlFor="book-quote-page" className="font-medium text-ivory">
+                <label
+                  htmlFor="book-quote-page"
+                  className="font-medium text-ivory"
+                >
                   Sayfa
                   <RequiredLabel optional />
                 </label>
@@ -738,12 +939,17 @@ export default function BookReviewFormPrototype() {
                   min="1"
                   step="1"
                   value={form.quotePage}
-                  onChange={(event) => updateField("quotePage", event.target.value)}
+                  onChange={(event) =>
+                    updateField("quotePage", event.target.value)
+                  }
                   className={fieldClassName}
                 />
               </div>
               <div className="sm:col-span-3">
-                <label htmlFor="book-quote-note" className="font-medium text-ivory">
+                <label
+                  htmlFor="book-quote-note"
+                  className="font-medium text-ivory"
+                >
                   Alıntı notu
                   <RequiredLabel optional />
                 </label>
@@ -752,7 +958,9 @@ export default function BookReviewFormPrototype() {
                   name="quoteNote"
                   type="text"
                   value={form.quoteNote}
-                  onChange={(event) => updateField("quoteNote", event.target.value)}
+                  onChange={(event) =>
+                    updateField("quoteNote", event.target.value)
+                  }
                   className={fieldClassName}
                 />
               </div>
@@ -778,7 +986,11 @@ export default function BookReviewFormPrototype() {
               value={form.rating}
               onChange={(event) => updateField("rating", event.target.value)}
               aria-invalid={ratingErrors.length > 0 || undefined}
-              aria-describedby={ratingErrors.length ? "book-rating-help book-rating-errors" : "book-rating-help"}
+              aria-describedby={
+                ratingErrors.length
+                  ? "book-rating-help book-rating-errors"
+                  : "book-rating-help"
+              }
               className={fieldClassName}
             />
             <p id="book-rating-help" className="mt-2 text-xs text-muted">
@@ -792,7 +1004,10 @@ export default function BookReviewFormPrototype() {
           <legend className="px-2 text-2xl text-ivory">SEO</legend>
           <div className="mt-5 grid gap-5 sm:grid-cols-2">
             <div className="sm:col-span-2">
-              <label htmlFor="book-seo-title" className="font-medium text-ivory">
+              <label
+                htmlFor="book-seo-title"
+                className="font-medium text-ivory"
+              >
                 SEO başlığı
                 <RequiredLabel />
               </label>
@@ -801,15 +1016,22 @@ export default function BookReviewFormPrototype() {
                 name="seoTitle"
                 type="text"
                 value={form.seoTitle}
-                onChange={(event) => updateField("seoTitle", event.target.value)}
+                onChange={(event) =>
+                  updateField("seoTitle", event.target.value)
+                }
                 aria-invalid={seoTitleErrors.length > 0 || undefined}
-                aria-describedby={seoTitleErrors.length ? "book-seo-title-errors" : undefined}
+                aria-describedby={
+                  seoTitleErrors.length ? "book-seo-title-errors" : undefined
+                }
                 className={fieldClassName}
               />
               <FieldErrors id="book-seo-title-errors" issues={seoTitleErrors} />
             </div>
             <div className="sm:col-span-2">
-              <label htmlFor="book-seo-description" className="font-medium text-ivory">
+              <label
+                htmlFor="book-seo-description"
+                className="font-medium text-ivory"
+              >
                 SEO açıklaması
                 <RequiredLabel />
               </label>
@@ -818,15 +1040,27 @@ export default function BookReviewFormPrototype() {
                 name="seoDescription"
                 rows={4}
                 value={form.seoDescription}
-                onChange={(event) => updateField("seoDescription", event.target.value)}
+                onChange={(event) =>
+                  updateField("seoDescription", event.target.value)
+                }
                 aria-invalid={seoDescriptionErrors.length > 0 || undefined}
-                aria-describedby={seoDescriptionErrors.length ? "book-seo-description-errors" : undefined}
+                aria-describedby={
+                  seoDescriptionErrors.length
+                    ? "book-seo-description-errors"
+                    : undefined
+                }
                 className={`${fieldClassName} resize-y`}
               />
-              <FieldErrors id="book-seo-description-errors" issues={seoDescriptionErrors} />
+              <FieldErrors
+                id="book-seo-description-errors"
+                issues={seoDescriptionErrors}
+              />
             </div>
             <div className="sm:col-span-2">
-              <label htmlFor="book-canonical" className="font-medium text-ivory">
+              <label
+                htmlFor="book-canonical"
+                className="font-medium text-ivory"
+              >
                 Canonical URL
                 <RequiredLabel optional />
               </label>
@@ -835,7 +1069,9 @@ export default function BookReviewFormPrototype() {
                 name="canonical"
                 type="url"
                 value={form.canonical}
-                onChange={(event) => updateField("canonical", event.target.value)}
+                onChange={(event) =>
+                  updateField("canonical", event.target.value)
+                }
                 className={fieldClassName}
               />
             </div>
@@ -844,7 +1080,9 @@ export default function BookReviewFormPrototype() {
                 name="seoIndex"
                 type="checkbox"
                 checked={form.seoIndex}
-                onChange={(event) => updateField("seoIndex", event.target.checked)}
+                onChange={(event) =>
+                  updateField("seoIndex", event.target.checked)
+                }
                 className="size-5 accent-[var(--color-accent)]"
               />
               Arama motorları indeksleyebilir
@@ -854,7 +1092,9 @@ export default function BookReviewFormPrototype() {
                 name="seoFollow"
                 type="checkbox"
                 checked={form.seoFollow}
-                onChange={(event) => updateField("seoFollow", event.target.checked)}
+                onChange={(event) =>
+                  updateField("seoFollow", event.target.checked)
+                }
                 className="size-5 accent-[var(--color-accent)]"
               />
               Bağlantılar takip edilebilir

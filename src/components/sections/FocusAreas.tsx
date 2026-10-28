@@ -1,8 +1,5 @@
 import Image from "next/image";
-import type {
-  FocusAreaIcon,
-  FocusAreasContent,
-} from "@/content/homeContent";
+import type { FocusAreaIcon, FocusAreasContent } from "@/content/homeContent";
 import type { ReactNode } from "react";
 
 export function AreaIcon({
@@ -123,7 +120,10 @@ function FocusAreaCard({
 
   if (isHome) {
     return (
-      <a href={card.linkHref ?? "#"} className="group relative flex min-h-[10.75rem] min-w-0 overflow-hidden rounded-lg bg-background p-4 text-left shadow-lg shadow-black/15 transition-transform hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus-ring)] sm:min-h-[12.5rem] sm:p-5 lg:min-h-[14rem]">
+      <a
+        href={card.linkHref ?? "#"}
+        className="group relative flex min-h-[10.75rem] min-w-0 overflow-hidden rounded-lg bg-background p-4 text-left shadow-lg shadow-black/15 transition-transform hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus-ring)] sm:min-h-[12.5rem] sm:p-5 lg:min-h-[14rem]"
+      >
         <Image
           src={homeImages[imageIndex] ?? homeImages[0]}
           alt=""
@@ -132,42 +132,48 @@ function FocusAreaCard({
           sizes="(min-width: 1280px) 16vw, (min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
           className="object-cover"
         />
-        <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(to_top,rgba(4,10,18,0.96)_0%,rgba(4,10,18,0.72)_38%,rgba(4,10,18,0.12)_100%)]" />
-        <span aria-hidden="true" className="absolute -right-10 top-8 size-36 rounded-full border border-accent-soft/20" />
-        <span className="relative flex size-10 items-center justify-center rounded-full bg-accent-soft text-background"><AreaIcon icon={card.icon} className="size-5" /></span>
-        <span className="relative mt-auto block pr-2">
-          <span className="block font-serif text-[1.25rem] font-semibold leading-tight text-white sm:text-[1.35rem]">{card.title}</span>
-          <span className="mt-1.5 block text-[12px] leading-[1.35] text-ivory-soft sm:mt-2 sm:text-sm sm:leading-5">{card.description}</span>
+        <span
+          aria-hidden="true"
+          className="absolute inset-0 bg-[linear-gradient(to_top,rgba(4,10,18,0.96)_0%,rgba(4,10,18,0.72)_38%,rgba(4,10,18,0.12)_100%)]"
+        />
+        <span
+          aria-hidden="true"
+          className="absolute -right-10 top-8 size-36 rounded-full border border-accent-soft/20"
+        />
+        <span className="relative flex size-10 items-center justify-center rounded-full bg-accent-soft text-background">
+          <AreaIcon icon={card.icon} className="size-5" />
         </span>
-        <span aria-hidden="true" className="absolute bottom-4 right-4 flex size-8 items-center justify-center rounded-full border border-ivory/50 text-base text-ivory transition-colors group-hover:bg-accent-soft group-hover:text-background sm:bottom-5 sm:right-5 sm:size-9 sm:text-lg">→</span>
+        <span className="relative mt-auto block pr-2">
+          <span className="block font-serif text-[1.25rem] font-semibold leading-tight text-white sm:text-[1.35rem]">
+            {card.title}
+          </span>
+          <span className="mt-1.5 block text-[12px] leading-[1.35] text-ivory-soft sm:mt-2 sm:text-sm sm:leading-5">
+            {card.description}
+          </span>
+        </span>
+        <span
+          aria-hidden="true"
+          className="absolute bottom-4 right-4 flex size-8 items-center justify-center rounded-full border border-ivory/50 text-base text-ivory transition-colors group-hover:bg-accent-soft group-hover:text-background sm:bottom-5 sm:right-5 sm:size-9 sm:text-lg"
+        >
+          →
+        </span>
       </a>
     );
   }
 
   return (
-    <article
-      className={cardStyle}
-    >
+    <article className={cardStyle}>
       {visual ?? (
-        <div
-          className="flex size-9 items-center justify-center text-accent"
-        >
-          <AreaIcon
-            icon={card.icon}
-            className="size-5"
-          />
+        <div className="flex size-9 items-center justify-center text-accent">
+          <AreaIcon icon={card.icon} className="size-5" />
         </div>
       )}
 
-      <h3
-        className="mt-5 font-serif text-3xl font-semibold leading-[1.08] tracking-tight"
-      >
+      <h3 className="mt-5 font-serif text-3xl font-semibold leading-[1.08] tracking-tight">
         {card.title}
       </h3>
 
-      <p
-        className="mt-4 line-clamp-3 max-w-md text-base leading-7 text-muted-dark"
-      >
+      <p className="mt-4 line-clamp-3 max-w-md text-base leading-7 text-muted-dark">
         {card.description}
       </p>
 
@@ -183,11 +189,7 @@ function FocusAreaCard({
             </span>
           </a>
         ) : (
-          <p
-            className="mt-auto pt-7 text-sm font-medium"
-          >
-            {card.linkLabel}
-          </p>
+          <p className="mt-auto pt-7 text-sm font-medium">{card.linkLabel}</p>
         ))}
     </article>
   );
@@ -199,7 +201,13 @@ export function FocusAreaCards({
   variant = "default",
 }: FocusAreaCardsProps) {
   return (
-    <div className={variant === "home" ? "grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6" : "grid gap-x-10 gap-y-0 md:grid-cols-2 xl:grid-cols-3"}>
+    <div
+      className={
+        variant === "home"
+          ? "grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6"
+          : "grid gap-x-10 gap-y-0 md:grid-cols-2 xl:grid-cols-3"
+      }
+    >
       {cards.map((card, index) => (
         <FocusAreaCard
           key={card.id}

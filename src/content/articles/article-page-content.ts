@@ -1,7 +1,4 @@
-import type {
-  ArticleLanguage,
-  SourceType,
-} from "@/content/articles/types";
+import type { ArticleLanguage, SourceType } from "@/content/articles/types";
 
 export type ArticlePageContent = {
   locale: ArticleLanguage;

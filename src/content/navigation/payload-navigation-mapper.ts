@@ -13,17 +13,13 @@ import type {
   Page as PayloadPage,
 } from "@/payload-types";
 
-type PayloadHeaderItem = NonNullable<
-  PayloadNavigation["headerItems"]
->[number] | NonNullable<
-  PayloadNavigation["enHeader"]
->[number];
+type PayloadHeaderItem =
+  | NonNullable<PayloadNavigation["headerItems"]>[number]
+  | NonNullable<PayloadNavigation["enHeader"]>[number];
 type PayloadChildItem = NonNullable<PayloadHeaderItem["children"]>[number];
-type PayloadFooterGroup = NonNullable<
-  PayloadNavigation["footerGroups"]
->[number] | NonNullable<
-  PayloadNavigation["enFooter"]
->[number];
+type PayloadFooterGroup =
+  | NonNullable<PayloadNavigation["footerGroups"]>[number]
+  | NonNullable<PayloadNavigation["enFooter"]>[number];
 type PayloadFooterLink = NonNullable<PayloadFooterGroup["links"]>[number];
 type PayloadLink = PayloadHeaderItem | PayloadChildItem | PayloadFooterLink;
 
@@ -114,8 +110,7 @@ function mapLink(
   if (label === null) return null;
 
   const id =
-    getText(item.id) ??
-    `${options.parentID ?? "navigation"}-${index + 1}`;
+    getText(item.id) ?? `${options.parentID ?? "navigation"}-${index + 1}`;
   const href = resolveHref(
     item,
     options.allowContactProtocols,
@@ -127,7 +122,7 @@ function mapLink(
 
   const children =
     options.allowChildren && "children" in item
-      ? item.children?.flatMap((child, childIndex) => {
+      ? (item.children?.flatMap((child, childIndex) => {
           const mapped = mapLink(child, childIndex, {
             allowContactProtocols: false,
             allowChildren: false,
@@ -136,13 +131,12 @@ function mapLink(
             parentID: id,
           });
           return mapped === null ? [] : [mapped];
-        }) ?? []
+        }) ?? [])
       : [];
 
   if (href === null && children.length === 0) return null;
 
-  const external =
-    href !== null && isExternalNavigationHref(href);
+  const external = href !== null && isExternalNavigationHref(href);
 
   return {
     id,
@@ -150,9 +144,7 @@ function mapLink(
     href,
     external,
     newTab:
-      external &&
-      href?.startsWith("https://") === true &&
-      item.newTab === true,
+      external && href?.startsWith("https://") === true && item.newTab === true,
     ...(href !== null && !external && !href.includes("#")
       ? { activePathPrefix: href }
       : {}),
@@ -161,9 +153,7 @@ function mapLink(
 }
 
 function mapFooterGroups(
-  groups:
-    | PayloadNavigation["footerGroups"]
-    | PayloadNavigation["enFooter"],
+  groups: PayloadNavigation["footerGroups"] | PayloadNavigation["enFooter"],
   language: "en" | "tr",
   now: Date,
 ): PublicFooterGroup[] {
@@ -173,8 +163,7 @@ function mapFooterGroups(
 
       const title = getText(group.title);
 
-      const groupID =
-        getText(group.id) ?? `footer-group-${groupIndex + 1}`;
+      const groupID = getText(group.id) ?? `footer-group-${groupIndex + 1}`;
       const links =
         group.links?.flatMap((link, linkIndex) => {
           const mapped = mapLink(link, linkIndex, {
@@ -187,9 +176,7 @@ function mapFooterGroups(
           return mapped === null ? [] : [mapped];
         }) ?? [];
 
-      return links.length === 0
-        ? []
-        : [{ id: groupID, title, links }];
+      return links.length === 0 ? [] : [{ id: groupID, title, links }];
     }) ?? []
   );
 }
@@ -201,10 +188,8 @@ export function mapPayloadNavigation(
 ): PublicNavigation | null {
   if (value._status !== "published") return null;
 
-  const headerItems =
-    language === "en" ? value.enHeader : value.headerItems;
-  const footerGroups =
-    language === "en" ? value.enFooter : value.footerGroups;
+  const headerItems = language === "en" ? value.enHeader : value.headerItems;
+  const footerGroups = language === "en" ? value.enFooter : value.footerGroups;
 
   return {
     headerItems:

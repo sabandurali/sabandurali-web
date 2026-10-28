@@ -39,12 +39,13 @@ export async function generateMetadata(): Promise<Metadata> {
 
   if (data.source === "static") return staticMetadata;
 
-  const metadata = data.page === null
-    ? {
-        title: "Ana sayfa bulunamadı | Şaban Durali",
-        robots: { index: false, follow: false },
-      }
-    : createPublicPageMetadata(data.page);
+  const metadata =
+    data.page === null
+      ? {
+          title: "Ana sayfa bulunamadı | Şaban Durali",
+          robots: { index: false, follow: false },
+        }
+      : createPublicPageMetadata(data.page);
 
   return {
     ...metadata,

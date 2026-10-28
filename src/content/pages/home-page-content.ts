@@ -16,9 +16,7 @@ export function getPayloadHomeContent(
     (
       block,
     ): block is
-      | PublicHeroBlock
-      | PublicHomeAboutBlock
-      | PublicHomeFocusAreasBlock =>
+      PublicHeroBlock | PublicHomeAboutBlock | PublicHomeFocusAreasBlock =>
       block.visible &&
       (block.blockType === "hero" ||
         block.blockType === "homeAbout" ||
@@ -28,8 +26,7 @@ export function getPayloadHomeContent(
     (block): block is PublicHeroBlock => block.blockType === "hero",
   );
   const aboutSections = homeSections.filter(
-    (block): block is PublicHomeAboutBlock =>
-      block.blockType === "homeAbout",
+    (block): block is PublicHomeAboutBlock => block.blockType === "homeAbout",
   );
   const focusAreaSections = homeSections.filter(
     (block): block is PublicHomeFocusAreasBlock =>
@@ -61,9 +58,7 @@ export function getPayloadHomeContent(
       secondaryAction: hero.secondaryAction.label,
       secondaryActionHref: hero.secondaryAction.href,
       goals:
-        hero.highlights.length === 0
-          ? fallback.hero.goals
-          : hero.highlights,
+        hero.highlights.length === 0 ? fallback.hero.goals : hero.highlights,
     },
     about: {
       label: about.eyebrow,

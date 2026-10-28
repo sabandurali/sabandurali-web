@@ -20,10 +20,7 @@ import type {
 import { ArticleQueryService } from "@/content/articles/repository/article-query-service";
 import { InMemoryArticleRepository } from "@/content/articles/repository/in-memory-article-repository";
 import { MAX_ARTICLE_PAGE_SIZE } from "@/content/articles/repository/types";
-import type {
-  Article,
-  ArticleLanguage,
-} from "@/content/articles/types";
+import type { Article, ArticleLanguage } from "@/content/articles/types";
 import { assertProductionPayloadInfrastructure } from "@/lib/payloadInfrastructure";
 
 const staticArticleFixtures =
@@ -60,9 +57,7 @@ function getPublicArticleSource(): PublicArticleSource {
   );
 }
 
-function mapStaticCategory(
-  article: Article,
-): PublicArticleCategory[] {
+function mapStaticCategory(article: Article): PublicArticleCategory[] {
   if (article.category === null) {
     return [];
   }
@@ -172,18 +167,15 @@ async function getPayloadPublishedArticlePageData(
     return { article: null, translation: null };
   }
 
-  const translation =
-    await payloadArticleRepository.findPublishedTranslation(
-      article.id,
-      language === "tr" ? "en" : "tr",
-    );
+  const translation = await payloadArticleRepository.findPublishedTranslation(
+    article.id,
+    language === "tr" ? "en" : "tr",
+  );
 
   return {
     article,
     translation:
-      translation === null
-        ? null
-        : toPublicArticleTranslation(translation),
+      translation === null ? null : toPublicArticleTranslation(translation),
   };
 }
 
@@ -247,7 +239,9 @@ export async function getDistrictResearch(
 ): Promise<PublicArticleSummary[]> {
   const articles = await getAllPublishedArticles(language);
   return articles.filter(
-    (article) => article.articleType === "district-research" && article.district === district,
+    (article) =>
+      article.articleType === "district-research" &&
+      article.district === district,
   );
 }
 

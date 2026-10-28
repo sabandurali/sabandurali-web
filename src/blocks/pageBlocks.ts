@@ -28,8 +28,7 @@ function isSafeLink(value: unknown): true | string {
 function isValidAnchor(value: unknown): true | string {
   if (value === null || value === undefined || value === "") return true;
 
-  return typeof value === "string" &&
-    /^[a-z][a-z0-9-]*$/.test(value)
+  return typeof value === "string" && /^[a-z][a-z0-9-]*$/.test(value)
     ? true
     : "Bölüm kimliği küçük harf veya sayı içermeli; harfle başlamalı ve yalnız tire kullanmalıdır.";
 }
@@ -41,8 +40,7 @@ const commonFields: Field[] = [
     label: "Bölümü göster",
     defaultValue: true,
     admin: {
-      description:
-        "Kapalıysa blok silinmeden public sayfada gizlenir.",
+      description: "Kapalıysa blok silinmeden public sayfada gizlenir.",
     },
   },
   {
@@ -50,8 +48,7 @@ const commonFields: Field[] = [
     type: "text",
     label: "Bölüm kimliği (anchor)",
     admin: {
-      description:
-        "İsteğe bağlıdır. Örnek: hakkimda veya calismalar.",
+      description: "İsteğe bağlıdır. Örnek: hakkimda veya calismalar.",
     },
     validate: isValidAnchor,
   },

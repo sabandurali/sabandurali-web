@@ -10,9 +10,7 @@ function hasUnsafeCharacters(value: string): boolean {
   return /[\u0000-\u001F\u007F\\]/.test(value);
 }
 
-export function normalizeInternalNavigationPath(
-  value: unknown,
-): string | null {
+export function normalizeInternalNavigationPath(value: unknown): string | null {
   const path = getText(value);
 
   if (
@@ -41,10 +39,7 @@ function normalizeMailto(value: string): string | null {
   const match = /^mailto:([^?]+)(?:\?([^#]*))?$/i.exec(value);
   const address = match?.[1]?.trim();
 
-  if (
-    address === undefined ||
-    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address)
-  ) {
+  if (address === undefined || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address)) {
     return null;
   }
 
@@ -58,9 +53,7 @@ function normalizeTel(value: string): string | null {
 
   const number = value.slice("tel:".length).trim();
 
-  return /^\+?[0-9(). -]{5,30}$/.test(number)
-    ? `tel:${number}`
-    : null;
+  return /^\+?[0-9(). -]{5,30}$/.test(number) ? `tel:${number}` : null;
 }
 
 export function normalizeExternalNavigationUrl(

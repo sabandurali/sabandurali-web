@@ -8,10 +8,7 @@ import { PayloadBookReviewRepository } from "@/content/books/payload-book-review
 import { BookReviewQueryService } from "@/content/books/repository/book-review-query-service";
 import { InMemoryBookReviewRepository } from "@/content/books/repository/in-memory-book-review-repository";
 import { MAX_BOOK_REVIEW_PAGE_SIZE } from "@/content/books/repository/types";
-import type {
-  BookReview,
-  BookReviewLanguage,
-} from "@/content/books/types";
+import type { BookReview, BookReviewLanguage } from "@/content/books/types";
 import { assertProductionPayloadInfrastructure } from "@/lib/payloadInfrastructure";
 
 const modelFixtures = [

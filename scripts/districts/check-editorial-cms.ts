@@ -86,9 +86,7 @@ try {
     assert.ok(!doc.researchNotes && !doc.importProvenance);
     assert.ok(!doc.marketData);
     const expectedFacts =
-      batch1PopulationFacts[
-        doc.district as keyof typeof batch1PopulationFacts
-      ];
+      batch1PopulationFacts[doc.district as keyof typeof batch1PopulationFacts];
     if (expectedFacts) {
       assert.equal(doc.facts?.population, expectedFacts.population);
       assert.equal(doc.facts?.populationYear, expectedFacts.populationYear);

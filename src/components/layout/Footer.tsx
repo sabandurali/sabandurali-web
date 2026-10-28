@@ -9,7 +9,11 @@ type FooterProps = {
   compact?: boolean;
 };
 
-export default async function Footer({ id, content, compact = false }: FooterProps) {
+export default async function Footer({
+  id,
+  content,
+  compact = false,
+}: FooterProps) {
   const groups = await getFooterNavigation(content);
 
   return (
@@ -17,7 +21,9 @@ export default async function Footer({ id, content, compact = false }: FooterPro
       id={id}
       className="scroll-mt-24 border-t border-[var(--accent-border-soft)] bg-background-deep"
     >
-      <div className={`mx-auto grid max-w-[1440px] px-5 sm:px-8 md:grid-cols-[0.9fr_1.1fr] md:items-center lg:px-10 ${compact ? "gap-6 py-5 md:min-h-[7.5rem]" : "gap-5 py-8 sm:py-10"}`}>
+      <div
+        className={`mx-auto grid max-w-[1440px] px-5 sm:px-8 md:grid-cols-[0.9fr_1.1fr] md:items-center lg:px-10 ${compact ? "gap-6 py-5 md:min-h-[7.5rem]" : "gap-5 py-8 sm:py-10"}`}
+      >
         <div className="flex items-center gap-3">
           <Image
             src="/brand/sd-monogram-light.png"
@@ -27,7 +33,9 @@ export default async function Footer({ id, content, compact = false }: FooterPro
             className={`${compact ? "h-9" : "h-11"} w-auto shrink-0 object-contain`}
           />
           <div>
-            <h3 className={`font-serif font-semibold tracking-[0.14em] text-ivory ${compact ? "text-base" : "text-lg"}`}>
+            <h3
+              className={`font-serif font-semibold tracking-[0.14em] text-ivory ${compact ? "text-base" : "text-lg"}`}
+            >
               {content.brandName}
             </h3>
             <p className="mt-1 text-[9px] tracking-[0.16em] text-accent-soft">
@@ -37,10 +45,14 @@ export default async function Footer({ id, content, compact = false }: FooterPro
         </div>
 
         <div>
-          <p className={`max-w-xl text-muted ${compact ? "text-[10px] leading-5" : "text-sm leading-6"}`}>
+          <p
+            className={`max-w-xl text-muted ${compact ? "text-[10px] leading-5" : "text-sm leading-6"}`}
+          >
             {content.description}
           </p>
-          <p className={`text-muted ${compact ? "mt-2 text-[9px]" : "mt-4 text-xs"}`}>
+          <p
+            className={`text-muted ${compact ? "mt-2 text-[9px]" : "mt-4 text-xs"}`}
+          >
             {content.copyright}
           </p>
           <nav
@@ -51,9 +63,7 @@ export default async function Footer({ id, content, compact = false }: FooterPro
               <div
                 key={group.id}
                 className={
-                  group.title === null
-                    ? "contents"
-                    : "min-w-40 space-y-2"
+                  group.title === null ? "contents" : "min-w-40 space-y-2"
                 }
               >
                 {group.title !== null && (

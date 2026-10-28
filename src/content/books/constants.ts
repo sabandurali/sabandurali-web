@@ -71,10 +71,7 @@ export const BOOK_CATEGORY_LABELS = {
     tr: "Diğer",
     en: "Other",
   },
-} as const satisfies Record<
-  BookCategory,
-  Record<BookReviewLanguage, string>
->;
+} as const satisfies Record<BookCategory, Record<BookReviewLanguage, string>>;
 
 export const READING_STATUSES = [
   "planned",

@@ -119,7 +119,11 @@ function payloadRepository(payload: Payload): HistoricalRepository {
       await payload.delete({ collection: "media", id, overrideAccess: true });
     },
     async deleteCollection(id) {
-      await payload.delete({ collection: "photo-collections", id, overrideAccess: true });
+      await payload.delete({
+        collection: "photo-collections",
+        id,
+        overrideAccess: true,
+      });
     },
   };
 }
@@ -130,7 +134,10 @@ async function downloadAndVerify(
 ): Promise<string> {
   await mkdir(downloadDirectory, { recursive: true });
   const filePath = path.join(downloadDirectory, historicalFilename(item));
-  const cachedPaths = [filePath, path.join(downloadDirectory, `${item.district}.jpg`)];
+  const cachedPaths = [
+    filePath,
+    path.join(downloadDirectory, `${item.district}.jpg`),
+  ];
   for (const cachedPath of cachedPaths) {
     try {
       const cached = await readFile(cachedPath);
@@ -141,7 +148,10 @@ async function downloadAndVerify(
         metadata.width !== item.width ||
         metadata.height !== item.height
       ) {
-        throw new HistoricalBatch1Error("remote_changed", "Cached historical source image metadata differs from the sealed manifest.");
+        throw new HistoricalBatch1Error(
+          "remote_changed",
+          "Cached historical source image metadata differs from the sealed manifest.",
+        );
       }
       return cachedPath;
     } catch (error) {
@@ -153,7 +163,10 @@ async function downloadAndVerify(
     redirect: "follow",
   });
   if (!response.ok) {
-    throw new HistoricalBatch1Error("remote_changed", "A historical source file is no longer available.");
+    throw new HistoricalBatch1Error(
+      "remote_changed",
+      "A historical source file is no longer available.",
+    );
   }
   const bytes = new Uint8Array(await response.arrayBuffer());
   verifyDownloadedBytes(item, bytes);
@@ -163,7 +176,10 @@ async function downloadAndVerify(
     metadata.width !== item.width ||
     metadata.height !== item.height
   ) {
-    throw new HistoricalBatch1Error("remote_changed", "Historical source image metadata changed after audit.");
+    throw new HistoricalBatch1Error(
+      "remote_changed",
+      "Historical source image metadata changed after audit.",
+    );
   }
   await writeFile(filePath, bytes);
   return filePath;
@@ -186,9 +202,14 @@ export async function runHistoricalImporter({
     },
     strict: true,
   });
-  const selectedModes = [values.apply, values["dry-run"], values.verify].filter(Boolean).length;
+  const selectedModes = [values.apply, values["dry-run"], values.verify].filter(
+    Boolean,
+  ).length;
   if (selectedModes > 1) {
-    throw new HistoricalBatch1Error("configuration_failed", `Choose only one ${batchConfig.label} mode.`);
+    throw new HistoricalBatch1Error(
+      "configuration_failed",
+      `Choose only one ${batchConfig.label} mode.`,
+    );
   }
   const mode = values.apply ? "apply" : values.verify ? "verify" : "dry-run";
   assertHistoricalEnvironment(process.env, mode, batchConfig);
@@ -199,7 +220,10 @@ export async function runHistoricalImporter({
     migrationState.pendingMigrationNames.length !== 0 ||
     migrationState.appliedCount !== migrationState.registeredCount
   ) {
-    throw new HistoricalBatch1Error("configuration_failed", "Production schema is not at the registered migration baseline.");
+    throw new HistoricalBatch1Error(
+      "configuration_failed",
+      "Production schema is not at the registered migration baseline.",
+    );
   }
 
   const manifest = JSON.parse(
@@ -210,7 +234,10 @@ export async function runHistoricalImporter({
   const downloaded = new Map<string, string>();
   for (const [index, item] of manifest.items.entries()) {
     if (index > 0) await delay(500);
-    downloaded.set(item.recordUrl, await downloadAndVerify(item, downloadDirectory));
+    downloaded.set(
+      item.recordUrl,
+      await downloadAndVerify(item, downloadDirectory),
+    );
   }
 
   const { default: configPromise } = await import("../../src/payload.config");
@@ -221,10 +248,22 @@ export async function runHistoricalImporter({
     const repository = payloadRepository(payload);
     const plan =
       mode === "apply"
-        ? await applyHistoricalPlan(manifest, repository, downloaded, batchConfig)
-        : buildHistoricalPlan(manifest, await repository.readSnapshot(), batchConfig);
+        ? await applyHistoricalPlan(
+            manifest,
+            repository,
+            downloaded,
+            batchConfig,
+          )
+        : buildHistoricalPlan(
+            manifest,
+            await repository.readSnapshot(),
+            batchConfig,
+          );
     if (plan.count.conflict > 0) {
-      throw new HistoricalBatch1Error("conflict", `${batchConfig.label} plan contains conflicts.`);
+      throw new HistoricalBatch1Error(
+        "conflict",
+        `${batchConfig.label} plan contains conflicts.`,
+      );
     }
     if (
       mode === "verify" &&
@@ -233,7 +272,10 @@ export async function runHistoricalImporter({
         plan.count.photoCreate !== 0 ||
         plan.count.skip !== manifest.items.length)
     ) {
-      throw new HistoricalBatch1Error("verify_failed", `${batchConfig.label} is not fully applied.`);
+      throw new HistoricalBatch1Error(
+        "verify_failed",
+        `${batchConfig.label} is not fully applied.`,
+      );
     }
     console.log(
       JSON.stringify({
@@ -241,7 +283,9 @@ export async function runHistoricalImporter({
         ...plan.count,
         writes:
           mode === "apply"
-            ? plan.count.collectionCreate + plan.count.mediaCreate + plan.count.photoCreate
+            ? plan.count.collectionCreate +
+              plan.count.mediaCreate +
+              plan.count.photoCreate
             : 0,
         districts: plan.entries.map(({ item }) => item.district),
       }),
@@ -260,7 +304,8 @@ export function reportHistoricalImporterError(
   console.error(
     JSON.stringify({
       error: category,
-      ...((category === "configuration_failed" || category === "approval_failed") && {
+      ...((category === "configuration_failed" ||
+        category === "approval_failed") && {
         configuration: configurationStatus(process.env, batchConfig),
       }),
     }),
@@ -268,10 +313,15 @@ export function reportHistoricalImporterError(
   process.exitCode = 1;
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
+if (
+  process.argv[1] &&
+  import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href
+) {
   runHistoricalImporter({
     batchConfig: historicalBatch1Config,
     defaultManifest: "data/districts/historical-photo-batch1.json",
     downloadDirectory: "/tmp/historical-district-photos",
-  }).catch((error) => reportHistoricalImporterError(error, historicalBatch1Config));
+  }).catch((error) =>
+    reportHistoricalImporterError(error, historicalBatch1Config),
+  );
 }

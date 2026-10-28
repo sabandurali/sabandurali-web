@@ -24,18 +24,10 @@ export type BookCategory =
   | "other";
 
 export type ReadingStatus =
-  | "planned"
-  | "reading"
-  | "completed"
-  | "paused"
-  | "abandoned";
+  "planned" | "reading" | "completed" | "paused" | "abandoned";
 
 export type ReviewStatus =
-  | "draft"
-  | "in_review"
-  | "scheduled"
-  | "published"
-  | "archived";
+  "draft" | "in_review" | "scheduled" | "published" | "archived";
 
 export type BookAuthor = {
   id: string;

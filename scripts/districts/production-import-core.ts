@@ -61,9 +61,7 @@ export type ProductionImportErrorCategory =
   | "unknown_failed";
 
 export type ProductionImportConfigurationStatus =
-  | "MISSING"
-  | "PRESENT_INVALID"
-  | "PRESENT_VALID";
+  "MISSING" | "PRESENT_INVALID" | "PRESENT_VALID";
 
 export const productionDryRunConfigurationVariables = [
   "PAYLOAD_DATABASE",
@@ -156,10 +154,7 @@ export function productionDryRunConfigurationStatus(
     PAYLOAD_SECRET: requiredValueStatus(env.PAYLOAD_SECRET),
     VERCEL: exactValueStatus(env.VERCEL, "1"),
     VERCEL_ENV: exactValueStatus(env.VERCEL_ENV, "production"),
-    VERCEL_GIT_COMMIT_REF: exactValueStatus(
-      env.VERCEL_GIT_COMMIT_REF,
-      "main",
-    ),
+    VERCEL_GIT_COMMIT_REF: exactValueStatus(env.VERCEL_GIT_COMMIT_REF, "main"),
     VERCEL_GIT_COMMIT_SHA: requiredValueStatus(env.VERCEL_GIT_COMMIT_SHA),
     PRODUCTION_DISTRICT_DRY_RUN_APPROVED_SHA: exactValueStatus(
       env.PRODUCTION_DISTRICT_DRY_RUN_APPROVED_SHA,

@@ -45,7 +45,11 @@ function validatePublicationRequirements(
 
   if (bookReview.authors.length === 0) {
     errors.push(
-      issue("authors.required", "authors", "En az bir kitap yazarı zorunludur."),
+      issue(
+        "authors.required",
+        "authors",
+        "En az bir kitap yazarı zorunludur.",
+      ),
     );
   }
 
@@ -235,19 +239,31 @@ function collectContentWarnings(bookReview: BookReview): ValidationIssue[] {
 
   if (bookReview.keyIdeas.length === 0) {
     warnings.push(
-      issue("key_ideas.recommended", "keyIdeas", "En az bir temel fikir önerilir."),
+      issue(
+        "key_ideas.recommended",
+        "keyIdeas",
+        "En az bir temel fikir önerilir.",
+      ),
     );
   }
 
   if (bookReview.strengths.length === 0) {
     warnings.push(
-      issue("strengths.recommended", "strengths", "Güçlü yön eklenmesi önerilir."),
+      issue(
+        "strengths.recommended",
+        "strengths",
+        "Güçlü yön eklenmesi önerilir.",
+      ),
     );
   }
 
   if (bookReview.weaknesses.length === 0) {
     warnings.push(
-      issue("weaknesses.recommended", "weaknesses", "Zayıf yön eklenmesi önerilir."),
+      issue(
+        "weaknesses.recommended",
+        "weaknesses",
+        "Zayıf yön eklenmesi önerilir.",
+      ),
     );
   }
 
@@ -298,11 +314,17 @@ export function validateBookReview(
 
   if (!BOOK_REVIEW_LANGUAGES.includes(bookReview.language)) {
     errors.push(
-      issue("language.invalid", "language", "Desteklenen bir dil seçilmelidir."),
+      issue(
+        "language.invalid",
+        "language",
+        "Desteklenen bir dil seçilmelidir.",
+      ),
     );
   }
 
-  if (!BOOK_REVIEW_TRANSLATION_STATUSES.includes(bookReview.translationStatus)) {
+  if (
+    !BOOK_REVIEW_TRANSLATION_STATUSES.includes(bookReview.translationStatus)
+  ) {
     errors.push(
       issue(
         "translation_status.invalid",
@@ -337,7 +359,11 @@ export function validateBookReview(
     !BOOK_CATEGORIES.includes(bookReview.category)
   ) {
     errors.push(
-      issue("category.invalid", "category", "Desteklenen bir kategori seçilmelidir."),
+      issue(
+        "category.invalid",
+        "category",
+        "Desteklenen bir kategori seçilmelidir.",
+      ),
     );
   }
 
@@ -356,7 +382,8 @@ export function validateBookReview(
 
   if (
     bookReview.authors.some(
-      (author) => isBlank(author.id) || isBlank(author.name) || isBlank(author.slug),
+      (author) =>
+        isBlank(author.id) || isBlank(author.name) || isBlank(author.slug),
     )
   ) {
     errors.push(

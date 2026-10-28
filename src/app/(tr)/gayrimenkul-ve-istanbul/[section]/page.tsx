@@ -1,9 +1,27 @@
 import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
-import { WorkspaceEntryPage, createWorkspaceMetadata } from "@/components/workspaces/WorkspacePage";
+import {
+  WorkspaceEntryPage,
+  createWorkspaceMetadata,
+} from "@/components/workspaces/WorkspacePage";
 import { getWorkspace, getWorkspaceEntry } from "@/content/workspaces";
 
 type Props = { params: Promise<{ section: string }> };
 const workspace = getWorkspace("gayrimenkul-ve-istanbul")!;
-export async function generateMetadata({ params }: Props): Promise<Metadata> { const { section } = await params; const entry = getWorkspaceEntry(workspace.key, section); return entry === null ? { title: "Sayfa bulunamadı | Şaban Durali", robots: { index: false, follow: false } } : createWorkspaceMetadata(entry.title, entry.description, entry.href); }
-export default async function RealEstateSectionPage({ params }: Props) { const { section } = await params; const entry = getWorkspaceEntry(workspace.key, section); if (entry === null) notFound(); if (entry.href === "/istanbul/ilceler") permanentRedirect(entry.href); return <WorkspaceEntryPage workspace={workspace} entry={entry} />; }
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { section } = await params;
+  const entry = getWorkspaceEntry(workspace.key, section);
+  return entry === null
+    ? {
+        title: "Sayfa bulunamadı | Şaban Durali",
+        robots: { index: false, follow: false },
+      }
+    : createWorkspaceMetadata(entry.title, entry.description, entry.href);
+}
+export default async function RealEstateSectionPage({ params }: Props) {
+  const { section } = await params;
+  const entry = getWorkspaceEntry(workspace.key, section);
+  if (entry === null) notFound();
+  if (entry.href === "/istanbul/ilceler") permanentRedirect(entry.href);
+  return <WorkspaceEntryPage workspace={workspace} entry={entry} />;
+}

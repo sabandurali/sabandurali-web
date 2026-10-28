@@ -1,11 +1,5 @@
 import { existsSync, statSync } from "node:fs";
-import {
-  extname,
-  isAbsolute,
-  relative,
-  resolve,
-  sep,
-} from "node:path";
+import { extname, isAbsolute, relative, resolve, sep } from "node:path";
 import { getSafePayloadMediaPath } from "@/content/articles/article-images";
 
 const SUPPORTED_BOOK_IMAGE_EXTENSIONS = new Set([

@@ -42,9 +42,7 @@ function hasMeaningfulLexicalNode(value: unknown): boolean {
   );
 }
 
-function isLexicalContent(
-  value: unknown,
-): value is PayloadArticle["content"] {
+function isLexicalContent(value: unknown): value is PayloadArticle["content"] {
   return (
     isRecord(value) &&
     isRecord(value.root) &&
@@ -53,10 +51,7 @@ function isLexicalContent(
   );
 }
 
-function isPublishedAtPublic(
-  value: unknown,
-  now: Date,
-): value is string {
+function isPublishedAtPublic(value: unknown, now: Date): value is string {
   if (typeof value !== "string") {
     return false;
   }
@@ -107,16 +102,13 @@ function mapCategories(
   values: PayloadArticle["categories"],
   locale: ArticleLanguage,
 ): PublicArticleCategory[] {
-  const collator = new Intl.Collator(
-    locale === "tr" ? "tr-TR" : "en",
-    { sensitivity: "base" },
-  );
+  const collator = new Intl.Collator(locale === "tr" ? "tr-TR" : "en", {
+    sensitivity: "base",
+  });
 
   return values
     .map(mapCategory)
-    .filter(
-      (category): category is PublicArticleCategory => category !== null,
-    )
+    .filter((category): category is PublicArticleCategory => category !== null)
     .toSorted(
       (left, right) =>
         left.sortOrder - right.sortOrder ||
@@ -125,15 +117,17 @@ function mapCategories(
 }
 
 function getPositiveDimension(value: unknown): number | undefined {
-  return typeof value === "number" &&
-    Number.isFinite(value) &&
-    value > 0
+  return typeof value === "number" && Number.isFinite(value) && value > 0
     ? value
     : undefined;
 }
 
-function getArticleType(value: unknown): "article" | "district-research" | "district-news" {
-  return value === "district-research" || value === "district-news" ? value : "article";
+function getArticleType(
+  value: unknown,
+): "article" | "district-research" | "district-news" {
+  return value === "district-research" || value === "district-news"
+    ? value
+    : "article";
 }
 
 function mapExternalSource(value: unknown) {
@@ -164,10 +158,7 @@ function mapFeaturedImage(
   return {
     source: "payload",
     src,
-    alt:
-      getRequiredText(localizedAlt) ??
-      getRequiredText(media.alt) ??
-      title,
+    alt: getRequiredText(localizedAlt) ?? getRequiredText(media.alt) ?? title,
     width: getPositiveDimension(media.width),
     height: getPositiveDimension(media.height),
   };
@@ -239,9 +230,10 @@ export function mapPayloadArticle(
     language: locale,
     translationKey: id,
     summary: excerpt,
-    content: articleType === "district-news"
-      ? { source: "lexical", data: null }
-      : { source: "lexical", data: value.content },
+    content:
+      articleType === "district-news"
+        ? { source: "lexical", data: null }
+        : { source: "lexical", data: value.content },
     categories: mapCategories(value.categories, locale),
     featuredImage,
     featured: value.featured === true,
@@ -255,8 +247,7 @@ export function mapPayloadArticle(
     updatedAt: value.updatedAt,
     seo: {
       title: getRequiredText(value.seo?.metaTitle) ?? title,
-      description:
-        getRequiredText(value.seo?.metaDescription) ?? excerpt,
+      description: getRequiredText(value.seo?.metaDescription) ?? excerpt,
       index: true,
       follow: true,
       openGraphImage: featuredImage?.src,

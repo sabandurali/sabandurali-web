@@ -1,8 +1,5 @@
 import { getAbsoluteUrl } from "@/config/site";
-import type {
-  BookReview,
-  BookReviewLanguage,
-} from "@/content/books/types";
+import type { BookReview, BookReviewLanguage } from "@/content/books/types";
 
 export const bookListPaths = {
   tr: "/kitaplar",
@@ -57,17 +54,16 @@ export function getBookReviewAlternateUrls(
   bookReview: BookReview,
   translation: BookReview | null,
 ): Record<string, string> {
-  const currentUrl = getBookReviewUrl(
-    bookReview.slug,
-    bookReview.language,
-  );
+  const currentUrl = getBookReviewUrl(bookReview.slug, bookReview.language);
   const urls: Record<string, string> = {
     [bookReview.language === "tr" ? "tr-TR" : "en"]: currentUrl,
   };
 
   if (translation !== null) {
-    urls[translation.language === "tr" ? "tr-TR" : "en"] =
-      getBookReviewUrl(translation.slug, translation.language);
+    urls[translation.language === "tr" ? "tr-TR" : "en"] = getBookReviewUrl(
+      translation.slug,
+      translation.language,
+    );
   }
 
   urls["x-default"] = urls["tr-TR"] ?? currentUrl;

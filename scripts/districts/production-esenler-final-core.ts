@@ -34,8 +34,7 @@ export const esenlerApprovedManualBaseline = {
   provenance: {
     file: "Esenler İlçe Rehberi Araştırması.pdf",
     pages: 12,
-    sha256:
-      "31c2d5e501f27e7ee6a8bef07dbefd2fd117bab42d601fa598701e1d19e0327c",
+    sha256: "31c2d5e501f27e7ee6a8bef07dbefd2fd117bab42d601fa598701e1d19e0327c",
     version: 3,
     fingerprint:
       "1422128f173e23dac3f34351367e81b0a805e26353bb44f683d90346f65b6454",
@@ -68,8 +67,9 @@ function canonical(value: unknown): unknown {
   if (value && typeof value === "object")
     return Object.fromEntries(
       Object.entries(value)
-        .filter(([key, child]) =>
-          key !== "id" && child !== undefined && child !== null
+        .filter(
+          ([key, child]) =>
+            key !== "id" && child !== undefined && child !== null,
         )
         .sort(([left], [right]) => left.localeCompare(right))
         .map(([key, child]) => [key, canonical(child)]),
@@ -320,7 +320,10 @@ export async function applyEsenlerFinal(
     const plan = buildEsenlerFinalPlan(beforeDocuments, bundle, deploymentSha);
     assertEsenlerFinalPlan(plan, "initial");
     const beforeFingerprints = new Map(
-      beforeDocuments.map((document) => [document.district, fingerprint(document)]),
+      beforeDocuments.map((document) => [
+        document.district,
+        fingerprint(document),
+      ]),
     );
     const target = plan.entries.find(
       (entry) => entry.district === esenlerFinalTarget,
@@ -386,10 +389,16 @@ type ConfigurationStatus = "MISSING" | "PRESENT_INVALID" | "PRESENT_VALID";
 
 export function esenlerFinalConfigurationStatus(
   env: Readonly<Record<string, string | undefined>>,
-): Record<(typeof esenlerFinalConfigurationVariables)[number], ConfigurationStatus> {
+): Record<
+  (typeof esenlerFinalConfigurationVariables)[number],
+  ConfigurationStatus
+> {
   const required = (value: string | undefined): ConfigurationStatus =>
     value?.trim() ? "PRESENT_VALID" : "MISSING";
-  const exact = (value: string | undefined, expected: string): ConfigurationStatus =>
+  const exact = (
+    value: string | undefined,
+    expected: string,
+  ): ConfigurationStatus =>
     !value?.trim()
       ? "MISSING"
       : value === expected

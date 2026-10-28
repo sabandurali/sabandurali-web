@@ -34,8 +34,9 @@ export default async function AdminBooksPage() {
     },
     {
       label: "Tamamlandı",
-      value: bookReviews.filter((review) => review.readingStatus === "completed")
-        .length,
+      value: bookReviews.filter(
+        (review) => review.readingStatus === "completed",
+      ).length,
     },
     {
       label: "Taslak",
@@ -114,7 +115,8 @@ export default async function AdminBooksPage() {
                   <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                     <div className="min-w-0">
                       <p className="text-xs font-semibold tracking-[0.16em] text-accent-soft">
-                        {BOOK_REVIEW_LANGUAGE_LABELS[review.language]} · {BOOK_REVIEW_STATUS_LABELS[review.reviewStatus]}
+                        {BOOK_REVIEW_LANGUAGE_LABELS[review.language]} ·{" "}
+                        {BOOK_REVIEW_STATUS_LABELS[review.reviewStatus]}
                       </p>
                       <h3 className="mt-2 break-words text-2xl leading-tight text-ivory">
                         {review.title}
@@ -164,7 +166,9 @@ export default async function AdminBooksPage() {
                     <div>
                       <dt className="text-xs text-muted">Yazar</dt>
                       <dd className="mt-1 text-sm text-ivory">
-                        {review.authors.map((author) => author.name).join(", ") || "—"}
+                        {review.authors
+                          .map((author) => author.name)
+                          .join(", ") || "—"}
                       </dd>
                     </div>
                     <div>

@@ -39,7 +39,8 @@ export function normalizeSlug(input: string): string {
 }
 
 type LocalizedSlugFieldOptions = {
-  collection: "articles" | "categories" | "photo-collections" | "photos" | "tags";
+  collection:
+    "articles" | "categories" | "photo-collections" | "photos" | "tags";
   sourceField: string;
 };
 
@@ -75,9 +76,7 @@ export function createLocalizedSlugHook({
     const where: Where = {
       and: [
         { slug: { equals: normalizedValue } },
-        ...(currentID === undefined
-          ? []
-          : [{ id: { not_equals: currentID } }]),
+        ...(currentID === undefined ? [] : [{ id: { not_equals: currentID } }]),
       ],
     };
     const duplicate = await req.payload.find({

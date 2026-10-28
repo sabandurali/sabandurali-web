@@ -138,10 +138,7 @@ export function buildBahcelievlerPlan(
       action = "create";
       reason = "missing production district";
     } else if (row.district !== bahcelievlerTarget) {
-      if (
-        existing._status === "published" &&
-        publishedAt(existing)
-      ) {
+      if (existing._status === "published" && publishedAt(existing)) {
         action = "skip";
         reason = "protected non-target district; never written by this batch";
       } else {
@@ -277,7 +274,10 @@ export async function applyBahcelievler(
     const plan = buildBahcelievlerPlan(beforeDocuments, bundle, deploymentSha);
     assertBahcelievlerPlan(plan, "initial");
     const beforeFingerprints = new Map(
-      beforeDocuments.map((document) => [document.district, fingerprint(document)]),
+      beforeDocuments.map((document) => [
+        document.district,
+        fingerprint(document),
+      ]),
     );
     const target = plan.entries.find(
       (entry) => entry.district === bahcelievlerTarget,
@@ -346,7 +346,10 @@ type ConfigurationStatus = "MISSING" | "PRESENT_INVALID" | "PRESENT_VALID";
 
 export function bahcelievlerConfigurationStatus(
   env: Readonly<Record<string, string | undefined>>,
-): Record<(typeof bahcelievlerConfigurationVariables)[number], ConfigurationStatus> {
+): Record<
+  (typeof bahcelievlerConfigurationVariables)[number],
+  ConfigurationStatus
+> {
   const required = (value: string | undefined): ConfigurationStatus =>
     value?.trim() ? "PRESENT_VALID" : "MISSING";
   const exact = (

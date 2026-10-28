@@ -28,16 +28,16 @@ function getText(value: unknown): string | null {
 }
 
 function getPositiveDimension(value: unknown): number | null {
-  return typeof value === "number" &&
-    Number.isFinite(value) &&
-    value > 0
+  return typeof value === "number" && Number.isFinite(value) && value > 0
     ? value
     : null;
 }
 
 function reportSkippedNode(type: string, reason: string): void {
   if (process.env.NODE_ENV === "development") {
-    console.warn(`[public-articles] Lexical ${type} node was skipped: ${reason}`);
+    console.warn(
+      `[public-articles] Lexical ${type} node was skipped: ${reason}`,
+    );
   }
 }
 
@@ -134,8 +134,7 @@ const uploadConverter: JSXConverter<SerializedUploadNode> = ({ node }) => {
     return null;
   }
 
-  const alt =
-    getText(node.fields.alt) ?? getText(node.value.alt) ?? "";
+  const alt = getText(node.fields.alt) ?? getText(node.value.alt) ?? "";
   const width = getPositiveDimension(node.value.width);
   const height = getPositiveDimension(node.value.height);
 

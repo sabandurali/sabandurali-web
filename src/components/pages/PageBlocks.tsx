@@ -14,8 +14,7 @@ function ActionLink({
   primary?: boolean;
 }) {
   const external =
-    action.href.startsWith("http://") ||
-    action.href.startsWith("https://");
+    action.href.startsWith("http://") || action.href.startsWith("https://");
 
   return (
     <a
@@ -89,9 +88,7 @@ function HeroPageBlock({
                   <p className="text-4xl font-semibold tracking-tight text-accent">
                     {highlight.value}
                   </p>
-                  <p className="mt-1 text-sm text-muted">
-                    {highlight.label}
-                  </p>
+                  <p className="mt-1 text-sm text-muted">{highlight.label}</p>
                 </div>
               </div>
             ))}
@@ -206,8 +203,7 @@ function ImageTextPageBlock({
 }) {
   const image = (
     <div>
-      {block.image.width !== undefined &&
-      block.image.height !== undefined ? (
+      {block.image.width !== undefined && block.image.height !== undefined ? (
         <Image
           src={block.image.src}
           alt={block.image.alt}
@@ -282,11 +278,7 @@ function CtaPageBlock({
   );
 }
 
-export default function PageBlocks({
-  blocks,
-}: {
-  blocks: PublicPageBlock[];
-}) {
+export default function PageBlocks({ blocks }: { blocks: PublicPageBlock[] }) {
   return blocks
     .filter((block) => block.visible)
     .map((block) => {

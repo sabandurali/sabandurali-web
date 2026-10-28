@@ -104,7 +104,9 @@ export default function BookReviewValidationResult({
   bookReview,
   result,
 }: BookReviewValidationResultProps) {
-  const authorNames = bookReview.authors.map((author) => author.name).join(", ");
+  const authorNames = bookReview.authors
+    .map((author) => author.name)
+    .join(", ");
 
   return (
     <section
@@ -147,7 +149,10 @@ export default function BookReviewValidationResult({
           aria-labelledby="book-validation-warnings-title"
           className="rounded-sm border border-border bg-surface/70 p-5 sm:p-6"
         >
-          <h3 id="book-validation-warnings-title" className="text-2xl text-ivory">
+          <h3
+            id="book-validation-warnings-title"
+            className="text-2xl text-ivory"
+          >
             Uyarılar ({result.warnings.length})
           </h3>
           <IssueList
@@ -270,7 +275,8 @@ export default function BookReviewValidationResult({
         <section className="mt-6 rounded-sm border border-border bg-background p-5">
           <h4 className="text-xl text-ivory">Kişisel değerlendirme</h4>
           <p className="mt-3 break-words text-sm leading-7 text-muted">
-            {bookReview.personalEvaluation || "Kişisel değerlendirme girilmedi."}
+            {bookReview.personalEvaluation ||
+              "Kişisel değerlendirme girilmedi."}
           </p>
         </section>
 
@@ -299,7 +305,10 @@ export default function BookReviewValidationResult({
           <section className="mt-6 rounded-sm border border-border bg-background p-5">
             <h4 className="text-xl text-ivory">Alıntı</h4>
             {bookReview.quotes.map((quote) => (
-              <blockquote key={quote.id} className="mt-3 border-l-2 border-accent pl-4">
+              <blockquote
+                key={quote.id}
+                className="mt-3 border-l-2 border-accent pl-4"
+              >
                 <p className="break-words text-sm italic leading-7 text-muted">
                   {quote.text || "Alıntı metni girilmedi."}
                 </p>

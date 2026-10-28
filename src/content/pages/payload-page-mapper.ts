@@ -30,9 +30,7 @@ function getOptionalText(value: unknown): string | null {
 }
 
 function getPositiveDimension(value: unknown): number | undefined {
-  return typeof value === "number" &&
-    Number.isFinite(value) &&
-    value > 0
+  return typeof value === "number" && Number.isFinite(value) && value > 0
     ? value
     : undefined;
 }
@@ -69,9 +67,7 @@ function mapLink(value: unknown): PublicPageLink | null {
   return label === null || href === null ? null : { label, href };
 }
 
-function mapOptionalLink(
-  value: unknown,
-): PublicPageLink | null | undefined {
+function mapOptionalLink(value: unknown): PublicPageLink | null | undefined {
   if (!isRecord(value)) return undefined;
 
   const label = getOptionalText(value.label);
@@ -100,10 +96,7 @@ function mapImage(
 
   return {
     src,
-    alt:
-      getRequiredText(altValue) ??
-      getRequiredText(value.alt) ??
-      fallbackAlt,
+    alt: getRequiredText(altValue) ?? getRequiredText(value.alt) ?? fallbackAlt,
     ...(getPositiveDimension(value.width) === undefined
       ? {}
       : { width: getPositiveDimension(value.width) }),
@@ -126,9 +119,7 @@ function getBlockBase(
   index: number,
 ) {
   return {
-    id:
-      getRequiredText(block.id) ??
-      `${block.blockType}-${index + 1}`,
+    id: getRequiredText(block.id) ?? `${block.blockType}-${index + 1}`,
     visible: block.visible !== false,
     anchor: getOptionalText(block.anchor),
   };
@@ -146,9 +137,7 @@ function mapHeroBlock(
   const secondaryAction = mapLink(block.secondaryAction);
   const titleLines = block.titleLines.flatMap((line) => {
     const text = getRequiredText(line.text);
-    return text === null
-      ? []
-      : [{ text, accent: line.accent === true }];
+    return text === null ? [] : [{ text, accent: line.accent === true }];
   });
 
   if (
@@ -268,9 +257,7 @@ function mapHomeAboutBlock(
 ): PublicHomeAboutBlock | null {
   const eyebrow = getRequiredText(block.eyebrow);
   const imageAlt = getRequiredText(block.imageAlt);
-  const titleLines = block.titleLines.map((line) =>
-    getRequiredText(line.text),
-  );
+  const titleLines = block.titleLines.map((line) => getRequiredText(line.text));
   const paragraphs = block.paragraphs.map((paragraph) =>
     getRequiredText(paragraph.text),
   );
@@ -288,9 +275,7 @@ function mapHomeAboutBlock(
     titleLines.length === 0 ||
     paragraphs.length === 0 ||
     link === null ||
-    (block.image !== null &&
-      block.image !== undefined &&
-      image === null)
+    (block.image !== null && block.image !== undefined && image === null)
   ) {
     return null;
   }
@@ -408,22 +393,18 @@ function mapBlock(
   }
 }
 
-function isPublishedAtPublic(
-  value: unknown,
-  now: Date,
-): value is string {
+function isPublishedAtPublic(value: unknown, now: Date): value is string {
   if (typeof value !== "string") return false;
 
   const timestamp = Date.parse(value);
   return Number.isFinite(timestamp) && timestamp <= now.getTime();
 }
 
-function reportInvalidPage(
-  pageID: string,
-  reason: string,
-): void {
+function reportInvalidPage(pageID: string, reason: string): void {
   if (process.env.NODE_ENV === "development") {
-    console.warn(`[public-pages] Payload page ${pageID} was skipped: ${reason}`);
+    console.warn(
+      `[public-pages] Payload page ${pageID} was skipped: ${reason}`,
+    );
   }
 }
 

@@ -1,7 +1,4 @@
-import type {
-  Article,
-  ArticleLanguage,
-} from "@/content/articles/types";
+import type { Article, ArticleLanguage } from "@/content/articles/types";
 import type {
   ArticleListQuery,
   PaginatedResult,

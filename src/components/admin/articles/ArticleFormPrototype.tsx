@@ -81,7 +81,9 @@ export default function ArticleFormPrototype() {
     setSubmission(null);
   }
 
-  function getErrors(paths: ReadonlyArray<string>): ReadonlyArray<ValidationIssue> {
+  function getErrors(
+    paths: ReadonlyArray<string>,
+  ): ReadonlyArray<ValidationIssue> {
     return (
       submission?.validation.errors.filter((issue) =>
         paths.includes(issue.path),
@@ -153,7 +155,9 @@ export default function ArticleFormPrototype() {
                 value={form.title}
                 onChange={(event) => handleTitleChange(event.target.value)}
                 aria-invalid={titleErrors.length > 0 || undefined}
-                aria-describedby={titleErrors.length > 0 ? "article-title-errors" : undefined}
+                aria-describedby={
+                  titleErrors.length > 0 ? "article-title-errors" : undefined
+                }
                 className={fieldClassName}
               />
               <FieldErrors id="article-title-errors" issues={titleErrors} />
@@ -161,7 +165,10 @@ export default function ArticleFormPrototype() {
 
             <div className="sm:col-span-2">
               <div className="flex flex-wrap items-end justify-between gap-3">
-                <label htmlFor="article-slug" className="font-medium text-ivory">
+                <label
+                  htmlFor="article-slug"
+                  className="font-medium text-ivory"
+                >
                   Slug
                   <RequiredLabel />
                 </label>
@@ -181,7 +188,9 @@ export default function ArticleFormPrototype() {
                 value={form.slug}
                 onChange={(event) => handleSlugChange(event.target.value)}
                 aria-invalid={slugErrors.length > 0 || undefined}
-                aria-describedby={slugErrors.length > 0 ? "article-slug-errors" : undefined}
+                aria-describedby={
+                  slugErrors.length > 0 ? "article-slug-errors" : undefined
+                }
                 className={fieldClassName}
               />
               <p className="mt-2 text-xs leading-5 text-muted">
@@ -192,7 +201,10 @@ export default function ArticleFormPrototype() {
             </div>
 
             <div>
-              <label htmlFor="article-language" className="font-medium text-ivory">
+              <label
+                htmlFor="article-language"
+                className="font-medium text-ivory"
+              >
                 Dil
                 <RequiredLabel />
               </label>
@@ -201,9 +213,18 @@ export default function ArticleFormPrototype() {
                 name="language"
                 required
                 value={form.language}
-                onChange={(event) => updateField("language", event.target.value as ArticleFormState["language"])}
+                onChange={(event) =>
+                  updateField(
+                    "language",
+                    event.target.value as ArticleFormState["language"],
+                  )
+                }
                 aria-invalid={languageErrors.length > 0 || undefined}
-                aria-describedby={languageErrors.length > 0 ? "article-language-errors" : undefined}
+                aria-describedby={
+                  languageErrors.length > 0
+                    ? "article-language-errors"
+                    : undefined
+                }
                 className={fieldClassName}
               >
                 {ARTICLE_LANGUAGES.map((language) => (
@@ -212,11 +233,17 @@ export default function ArticleFormPrototype() {
                   </option>
                 ))}
               </select>
-              <FieldErrors id="article-language-errors" issues={languageErrors} />
+              <FieldErrors
+                id="article-language-errors"
+                issues={languageErrors}
+              />
             </div>
 
             <div>
-              <label htmlFor="article-category" className="font-medium text-ivory">
+              <label
+                htmlFor="article-category"
+                className="font-medium text-ivory"
+              >
                 Ana kategori
                 <RequiredLabel />
               </label>
@@ -225,9 +252,18 @@ export default function ArticleFormPrototype() {
                 name="category"
                 required
                 value={form.category}
-                onChange={(event) => updateField("category", event.target.value as ArticleFormState["category"])}
+                onChange={(event) =>
+                  updateField(
+                    "category",
+                    event.target.value as ArticleFormState["category"],
+                  )
+                }
                 aria-invalid={categoryErrors.length > 0 || undefined}
-                aria-describedby={categoryErrors.length > 0 ? "article-category-errors" : undefined}
+                aria-describedby={
+                  categoryErrors.length > 0
+                    ? "article-category-errors"
+                    : undefined
+                }
                 className={fieldClassName}
               >
                 <option value="">Kategori seçin</option>
@@ -237,11 +273,17 @@ export default function ArticleFormPrototype() {
                   </option>
                 ))}
               </select>
-              <FieldErrors id="article-category-errors" issues={categoryErrors} />
+              <FieldErrors
+                id="article-category-errors"
+                issues={categoryErrors}
+              />
             </div>
 
             <div className="sm:col-span-2">
-              <label htmlFor="article-summary" className="font-medium text-ivory">
+              <label
+                htmlFor="article-summary"
+                className="font-medium text-ivory"
+              >
                 Kısa özet
                 <RequiredLabel />
               </label>
@@ -253,14 +295,21 @@ export default function ArticleFormPrototype() {
                 value={form.summary}
                 onChange={(event) => updateField("summary", event.target.value)}
                 aria-invalid={summaryErrors.length > 0 || undefined}
-                aria-describedby={summaryErrors.length > 0 ? "article-summary-errors" : undefined}
+                aria-describedby={
+                  summaryErrors.length > 0
+                    ? "article-summary-errors"
+                    : undefined
+                }
                 className={`${fieldClassName} resize-y`}
               />
               <FieldErrors id="article-summary-errors" issues={summaryErrors} />
             </div>
 
             <div className="sm:col-span-2">
-              <label htmlFor="article-author" className="font-medium text-ivory">
+              <label
+                htmlFor="article-author"
+                className="font-medium text-ivory"
+              >
                 Yazar
                 <RequiredLabel />
               </label>
@@ -270,9 +319,13 @@ export default function ArticleFormPrototype() {
                 type="text"
                 required
                 value={form.authorName}
-                onChange={(event) => updateField("authorName", event.target.value)}
+                onChange={(event) =>
+                  updateField("authorName", event.target.value)
+                }
                 aria-invalid={authorErrors.length > 0 || undefined}
-                aria-describedby={authorErrors.length > 0 ? "article-author-errors" : undefined}
+                aria-describedby={
+                  authorErrors.length > 0 ? "article-author-errors" : undefined
+                }
                 className={fieldClassName}
               />
               <FieldErrors id="article-author-errors" issues={authorErrors} />
@@ -284,7 +337,10 @@ export default function ArticleFormPrototype() {
           <legend className="px-2 text-2xl text-ivory">Kapak görseli</legend>
           <div className="mt-5 grid gap-5 sm:grid-cols-2">
             <div>
-              <label htmlFor="article-cover-src" className="font-medium text-ivory">
+              <label
+                htmlFor="article-cover-src"
+                className="font-medium text-ivory"
+              >
                 Görsel yolu
                 <RequiredLabel />
               </label>
@@ -295,16 +351,28 @@ export default function ArticleFormPrototype() {
                 required
                 placeholder="/articles/ornek-kapak.jpg"
                 value={form.coverImageSrc}
-                onChange={(event) => updateField("coverImageSrc", event.target.value)}
+                onChange={(event) =>
+                  updateField("coverImageSrc", event.target.value)
+                }
                 aria-invalid={coverImageErrors.length > 0 || undefined}
-                aria-describedby={coverImageErrors.length > 0 ? "article-cover-src-errors" : undefined}
+                aria-describedby={
+                  coverImageErrors.length > 0
+                    ? "article-cover-src-errors"
+                    : undefined
+                }
                 className={fieldClassName}
               />
-              <FieldErrors id="article-cover-src-errors" issues={coverImageErrors} />
+              <FieldErrors
+                id="article-cover-src-errors"
+                issues={coverImageErrors}
+              />
             </div>
 
             <div>
-              <label htmlFor="article-cover-alt" className="font-medium text-ivory">
+              <label
+                htmlFor="article-cover-alt"
+                className="font-medium text-ivory"
+              >
                 Alternatif metin
                 <RequiredLabel />
               </label>
@@ -314,12 +382,21 @@ export default function ArticleFormPrototype() {
                 type="text"
                 required
                 value={form.coverImageAlt}
-                onChange={(event) => updateField("coverImageAlt", event.target.value)}
+                onChange={(event) =>
+                  updateField("coverImageAlt", event.target.value)
+                }
                 aria-invalid={coverAltErrors.length > 0 || undefined}
-                aria-describedby={coverAltErrors.length > 0 ? "article-cover-alt-errors" : undefined}
+                aria-describedby={
+                  coverAltErrors.length > 0
+                    ? "article-cover-alt-errors"
+                    : undefined
+                }
                 className={fieldClassName}
               />
-              <FieldErrors id="article-cover-alt-errors" issues={coverAltErrors} />
+              <FieldErrors
+                id="article-cover-alt-errors"
+                issues={coverAltErrors}
+              />
             </div>
           </div>
           <p className="mt-4 text-sm leading-6 text-muted">
@@ -328,10 +405,15 @@ export default function ArticleFormPrototype() {
         </fieldset>
 
         <fieldset className={fieldsetClassName}>
-          <legend className="px-2 text-2xl text-ivory">Başlangıç içeriği</legend>
+          <legend className="px-2 text-2xl text-ivory">
+            Başlangıç içeriği
+          </legend>
           <div className="mt-5 space-y-5">
             <div>
-              <label htmlFor="article-heading" className="font-medium text-ivory">
+              <label
+                htmlFor="article-heading"
+                className="font-medium text-ivory"
+              >
                 H2 başlık
                 <RequiredLabel />
               </label>
@@ -343,14 +425,21 @@ export default function ArticleFormPrototype() {
                 value={form.heading}
                 onChange={(event) => updateField("heading", event.target.value)}
                 aria-invalid={contentErrors.length > 0 || undefined}
-                aria-describedby={contentErrors.length > 0 ? "article-content-errors" : undefined}
+                aria-describedby={
+                  contentErrors.length > 0
+                    ? "article-content-errors"
+                    : undefined
+                }
                 className={fieldClassName}
               />
               <FieldErrors id="article-content-errors" issues={contentErrors} />
             </div>
 
             <div>
-              <label htmlFor="article-paragraph" className="font-medium text-ivory">
+              <label
+                htmlFor="article-paragraph"
+                className="font-medium text-ivory"
+              >
                 Paragraf
                 <RequiredLabel />
               </label>
@@ -360,7 +449,9 @@ export default function ArticleFormPrototype() {
                 required
                 rows={7}
                 value={form.paragraph}
-                onChange={(event) => updateField("paragraph", event.target.value)}
+                onChange={(event) =>
+                  updateField("paragraph", event.target.value)
+                }
                 className={`${fieldClassName} resize-y`}
               />
             </div>
@@ -371,7 +462,10 @@ export default function ArticleFormPrototype() {
           <legend className="px-2 text-2xl text-ivory">SEO</legend>
           <div className="mt-5 space-y-5">
             <div>
-              <label htmlFor="article-seo-title" className="font-medium text-ivory">
+              <label
+                htmlFor="article-seo-title"
+                className="font-medium text-ivory"
+              >
                 SEO başlığı
                 <RequiredLabel />
               </label>
@@ -381,16 +475,28 @@ export default function ArticleFormPrototype() {
                 type="text"
                 required
                 value={form.seoTitle}
-                onChange={(event) => updateField("seoTitle", event.target.value)}
+                onChange={(event) =>
+                  updateField("seoTitle", event.target.value)
+                }
                 aria-invalid={seoTitleErrors.length > 0 || undefined}
-                aria-describedby={seoTitleErrors.length > 0 ? "article-seo-title-errors" : undefined}
+                aria-describedby={
+                  seoTitleErrors.length > 0
+                    ? "article-seo-title-errors"
+                    : undefined
+                }
                 className={fieldClassName}
               />
-              <FieldErrors id="article-seo-title-errors" issues={seoTitleErrors} />
+              <FieldErrors
+                id="article-seo-title-errors"
+                issues={seoTitleErrors}
+              />
             </div>
 
             <div>
-              <label htmlFor="article-seo-description" className="font-medium text-ivory">
+              <label
+                htmlFor="article-seo-description"
+                className="font-medium text-ivory"
+              >
                 Meta açıklaması
                 <RequiredLabel />
               </label>
@@ -400,19 +506,34 @@ export default function ArticleFormPrototype() {
                 required
                 rows={5}
                 value={form.seoDescription}
-                onChange={(event) => updateField("seoDescription", event.target.value)}
+                onChange={(event) =>
+                  updateField("seoDescription", event.target.value)
+                }
                 aria-invalid={seoDescriptionErrors.length > 0 || undefined}
-                aria-describedby={seoDescriptionErrors.length > 0 ? "article-seo-description-errors" : "article-seo-description-count"}
+                aria-describedby={
+                  seoDescriptionErrors.length > 0
+                    ? "article-seo-description-errors"
+                    : "article-seo-description-count"
+                }
                 className={`${fieldClassName} resize-y`}
               />
-              <p id="article-seo-description-count" className="mt-2 text-xs text-muted">
+              <p
+                id="article-seo-description-count"
+                className="mt-2 text-xs text-muted"
+              >
                 {form.seoDescription.trim().length} karakter · önerilen 140–160
               </p>
-              <FieldErrors id="article-seo-description-errors" issues={seoDescriptionErrors} />
+              <FieldErrors
+                id="article-seo-description-errors"
+                issues={seoDescriptionErrors}
+              />
             </div>
 
             <div>
-              <label htmlFor="article-canonical" className="font-medium text-ivory">
+              <label
+                htmlFor="article-canonical"
+                className="font-medium text-ivory"
+              >
                 Canonical URL
                 <RequiredLabel optional />
               </label>
@@ -421,7 +542,9 @@ export default function ArticleFormPrototype() {
                 name="canonical"
                 type="url"
                 value={form.canonical}
-                onChange={(event) => updateField("canonical", event.target.value)}
+                onChange={(event) =>
+                  updateField("canonical", event.target.value)
+                }
                 className={fieldClassName}
               />
             </div>
@@ -432,7 +555,10 @@ export default function ArticleFormPrototype() {
           <legend className="px-2 text-2xl text-ivory">Yayın bilgileri</legend>
           <div className="mt-5 grid gap-5 sm:grid-cols-2">
             <div>
-              <label htmlFor="article-status" className="font-medium text-ivory">
+              <label
+                htmlFor="article-status"
+                className="font-medium text-ivory"
+              >
                 Durum
                 <RequiredLabel />
               </label>
@@ -441,9 +567,16 @@ export default function ArticleFormPrototype() {
                 name="status"
                 required
                 value={form.status}
-                onChange={(event) => updateField("status", event.target.value as ArticleFormState["status"])}
+                onChange={(event) =>
+                  updateField(
+                    "status",
+                    event.target.value as ArticleFormState["status"],
+                  )
+                }
                 aria-invalid={statusErrors.length > 0 || undefined}
-                aria-describedby={statusErrors.length > 0 ? "article-status-errors" : undefined}
+                aria-describedby={
+                  statusErrors.length > 0 ? "article-status-errors" : undefined
+                }
                 className={fieldClassName}
               >
                 {ARTICLE_STATUSES.map((status) => (
@@ -456,7 +589,10 @@ export default function ArticleFormPrototype() {
             </div>
 
             <div>
-              <label htmlFor="article-visibility" className="font-medium text-ivory">
+              <label
+                htmlFor="article-visibility"
+                className="font-medium text-ivory"
+              >
                 Görünürlük
                 <RequiredLabel />
               </label>
@@ -465,7 +601,12 @@ export default function ArticleFormPrototype() {
                 name="visibility"
                 required
                 value={form.visibility}
-                onChange={(event) => updateField("visibility", event.target.value as ArticleFormState["visibility"])}
+                onChange={(event) =>
+                  updateField(
+                    "visibility",
+                    event.target.value as ArticleFormState["visibility"],
+                  )
+                }
                 className={fieldClassName}
               >
                 {ARTICLE_VISIBILITIES.map((visibility) => (

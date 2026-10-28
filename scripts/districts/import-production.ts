@@ -222,7 +222,9 @@ async function main(): Promise<void> {
       ? await applyProductionImport(bundle, repository)
       : await readProductionImportPlan(bundle, repository);
     console.log(
-      JSON.stringify(apply ? { ...plan.count, writes: plan.count.update } : plan.count),
+      JSON.stringify(
+        apply ? { ...plan.count, writes: plan.count.update } : plan.count,
+      ),
     );
   } finally {
     await payload.destroy();

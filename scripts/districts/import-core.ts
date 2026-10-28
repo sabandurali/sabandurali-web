@@ -193,9 +193,7 @@ export function decideImport(
       adoption?.currentFingerprint === fingerprint(existing) &&
       adoption.contentFingerprint === editorialContentFingerprint(existing) &&
       adoption.contentFingerprint ===
-        editorialContentFingerprint(
-          makeDraft(row) as Record<string, unknown>,
-        )
+        editorialContentFingerprint(makeDraft(row) as Record<string, unknown>)
     )
       return { action: "skip", reason: "unchanged source" };
     return { action: "skip", reason: "manual/unmanaged content protected" };

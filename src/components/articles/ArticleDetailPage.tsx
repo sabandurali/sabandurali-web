@@ -5,9 +5,7 @@ import BackToTop from "@/components/layout/BackToTop";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
 import { getAvailablePublicArticleImage } from "@/content/articles/article-images";
-import {
-  getSafeArticleHref,
-} from "@/content/articles/article-links";
+import { getSafeArticleHref } from "@/content/articles/article-links";
 import {
   articlePageContent,
   formatArticleDate,
@@ -105,21 +103,18 @@ export default function ArticleDetailPage({
               )}
               {staticDetails?.author !== null &&
                 staticDetails?.author !== undefined && (
-                <div className="flex gap-2">
-                  <dt className="font-semibold text-ivory">
-                    {content.authorLabel}:
-                  </dt>
-                  <dd>{staticDetails.author.name}</dd>
-                </div>
-              )}
+                  <div className="flex gap-2">
+                    <dt className="font-semibold text-ivory">
+                      {content.authorLabel}:
+                    </dt>
+                    <dd>{staticDetails.author.name}</dd>
+                  </div>
+                )}
             </dl>
 
             {translation !== null && (
               <Link
-                href={getArticlePath(
-                  translation.slug,
-                  translation.language,
-                )}
+                href={getArticlePath(translation.slug, translation.language)}
                 aria-label={content.translationAriaLabel}
                 className="mt-7 inline-flex min-h-11 items-center rounded-full border border-border px-5 text-sm font-semibold text-accent-strong transition-colors hover:border-accent hover:text-ivory"
               >
@@ -170,7 +165,10 @@ export default function ArticleDetailPage({
                 aria-labelledby="article-sources-heading"
                 className="mt-14 border-t border-border pt-10 sm:mt-18"
               >
-                <h2 id="article-sources-heading" className="text-3xl text-ivory">
+                <h2
+                  id="article-sources-heading"
+                  className="text-3xl text-ivory"
+                >
                   {content.sourcesTitle}
                 </h2>
                 <ol className="mt-6 space-y-5">
@@ -195,7 +193,7 @@ export default function ArticleDetailPage({
                         <dl className="mt-3 space-y-1 text-sm leading-6 text-muted">
                           <div>
                             <dt className="inline font-semibold text-ivory">
-                              {content.sourceAuthorLabel}: {" "}
+                              {content.sourceAuthorLabel}:{" "}
                             </dt>
                             <dd className="inline">
                               {source.authorOrInstitution}
@@ -203,7 +201,7 @@ export default function ArticleDetailPage({
                           </div>
                           <div>
                             <dt className="inline font-semibold text-ivory">
-                              {content.sourceTypeLabel}: {" "}
+                              {content.sourceTypeLabel}:{" "}
                             </dt>
                             <dd className="inline">
                               {content.sourceTypeLabels[source.sourceType]}
@@ -212,7 +210,7 @@ export default function ArticleDetailPage({
                           {sourcePublishedAt !== null && (
                             <div>
                               <dt className="inline font-semibold text-ivory">
-                                {content.sourcePublishedLabel}: {" "}
+                                {content.sourcePublishedLabel}:{" "}
                               </dt>
                               <dd className="inline">{sourcePublishedAt}</dd>
                             </div>
@@ -220,7 +218,7 @@ export default function ArticleDetailPage({
                           {sourceAccessedAt !== null && (
                             <div>
                               <dt className="inline font-semibold text-ivory">
-                                {content.sourceAccessedLabel}: {" "}
+                                {content.sourceAccessedLabel}:{" "}
                               </dt>
                               <dd className="inline">{sourceAccessedAt}</dd>
                             </div>

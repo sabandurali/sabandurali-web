@@ -28,10 +28,7 @@ export function getArticlePath(
   return `${articleListPaths[language]}/${slug}`;
 }
 
-export function getArticleUrl(
-  slug: string,
-  language: ArticleLanguage,
-): string {
+export function getArticleUrl(slug: string, language: ArticleLanguage): string {
   return getAbsoluteUrl(getArticlePath(slug, language));
 }
 

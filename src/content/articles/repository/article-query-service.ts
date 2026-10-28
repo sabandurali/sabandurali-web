@@ -7,10 +7,7 @@ import type {
   PaginatedResult,
   PublishedArticleListQuery,
 } from "@/content/articles/repository/types";
-import type {
-  Article,
-  ArticleLanguage,
-} from "@/content/articles/types";
+import type { Article, ArticleLanguage } from "@/content/articles/types";
 
 const MAX_CURATED_ARTICLE_LIMIT = 20;
 

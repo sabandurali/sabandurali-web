@@ -22,8 +22,11 @@ export default function PhotoCard({
         href={getPhotoPath(photo.slug, photo.language)}
         className="block focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
       >
-        <span className={`relative block overflow-hidden bg-background ${compact ? "aspect-[4/5]" : "aspect-[4/3]"}`}>
-          {photo.image.width !== undefined && photo.image.height !== undefined ? (
+        <span
+          className={`relative block overflow-hidden bg-background ${compact ? "aspect-[4/5]" : "aspect-[4/3]"}`}
+        >
+          {photo.image.width !== undefined &&
+          photo.image.height !== undefined ? (
             <Image
               src={photo.image.src}
               alt={photo.image.alt}
@@ -43,12 +46,30 @@ export default function PhotoCard({
           )}
         </span>
         <div className={compact ? "p-3.5" : "p-5"}>
-          <p className={`${compact ? "text-[8px]" : "text-xs"} font-semibold uppercase tracking-[0.16em] text-accent-soft`}>
+          <p
+            className={`${compact ? "text-[8px]" : "text-xs"} font-semibold uppercase tracking-[0.16em] text-accent-soft`}
+          >
             {photo.collections.map((item) => item.title).join(" · ")}
           </p>
-          <Heading className={compact ? "mt-2 line-clamp-2 font-serif text-base text-ivory" : "mt-3 text-2xl text-ivory"}>{photo.title}</Heading>
+          <Heading
+            className={
+              compact
+                ? "mt-2 line-clamp-2 font-serif text-base text-ivory"
+                : "mt-3 text-2xl text-ivory"
+            }
+          >
+            {photo.title}
+          </Heading>
           {photo.locationName !== null && (
-            <p className={compact ? "mt-2 line-clamp-1 text-[9px] text-muted" : "mt-2 text-sm text-muted"}>{photo.locationName}</p>
+            <p
+              className={
+                compact
+                  ? "mt-2 line-clamp-1 text-[9px] text-muted"
+                  : "mt-2 text-sm text-muted"
+              }
+            >
+              {photo.locationName}
+            </p>
           )}
         </div>
       </Link>

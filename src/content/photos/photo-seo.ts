@@ -1,7 +1,13 @@
 import type { Metadata } from "next";
 import { getAbsoluteUrl } from "@/config/site";
-import { getPhotoAlternateUrls, getPhotoUrl } from "@/content/photos/photo-routes";
-import type { PublicPhoto, PublicPhotoTranslation } from "@/content/photos/types";
+import {
+  getPhotoAlternateUrls,
+  getPhotoUrl,
+} from "@/content/photos/photo-routes";
+import type {
+  PublicPhoto,
+  PublicPhotoTranslation,
+} from "@/content/photos/types";
 
 function absoluteImageUrl(src: string): string {
   return src.startsWith("https://") ? src : getAbsoluteUrl(src);

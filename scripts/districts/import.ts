@@ -135,11 +135,7 @@ if (values["offline-empty"]) {
     // Materialize and validate the complete plan before the first possible write.
     if (values.editorial) assertBatch1PopulationImportPlan(count);
     for (const planned of rows) {
-      if (
-        !apply ||
-        planned.action === "skip" ||
-        planned.action === "conflict"
-      )
+      if (!apply || planned.action === "skip" || planned.action === "conflict")
         continue;
       const { row, existing, decision } = planned;
       const data = makeDraft(row);

@@ -11,10 +11,7 @@ import {
   READING_STATUSES,
   REVIEW_STATUSES,
 } from "@/content/books/constants";
-import {
-  createBookReviewSlug,
-  normalizeIsbn,
-} from "@/content/books/helpers";
+import { createBookReviewSlug, normalizeIsbn } from "@/content/books/helpers";
 import {
   adminOrEditor,
   publishedBookReviewOrAdminOrEditor,
@@ -36,10 +33,7 @@ function getRelationshipID(value: unknown): string | null {
   return null;
 }
 
-function normalizeNestedSlugs(
-  value: unknown,
-  sourceField: string,
-): unknown {
+function normalizeNestedSlugs(value: unknown, sourceField: string): unknown {
   if (!Array.isArray(value)) return value;
 
   return value.map((entry) => {
@@ -154,8 +148,7 @@ const normalizeAndValidateBook: CollectionBeforeValidateHook = async ({
           collection: "books",
           errors: [
             {
-              message:
-                "Bu ISBN değerine sahip başka bir kitap incelemesi var.",
+              message: "Bu ISBN değerine sahip başka bir kitap incelemesi var.",
               path: data.isbn13 ? "isbn13" : "isbn10",
             },
           ],
@@ -195,10 +188,7 @@ const normalizeAndValidateBook: CollectionBeforeValidateHook = async ({
       req,
     });
 
-    if (
-      language !== null &&
-      getText(translation.language) === language
-    ) {
+    if (language !== null && getText(translation.language) === language) {
       throw new ValidationError(
         {
           collection: "books",

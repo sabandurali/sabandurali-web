@@ -20,8 +20,10 @@ export async function generateMetadata({
   params,
 }: EnglishBookReviewPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const { bookReview, translation } =
-    await getPublishedBookReviewPageData(slug, "en");
+  const { bookReview, translation } = await getPublishedBookReviewPageData(
+    slug,
+    "en",
+  );
 
   if (bookReview === null) {
     return {
@@ -37,17 +39,16 @@ export default async function EnglishBookReviewPage({
   params,
 }: EnglishBookReviewPageProps) {
   const { slug } = await params;
-  const { bookReview, translation } =
-    await getPublishedBookReviewPageData(slug, "en");
+  const { bookReview, translation } = await getPublishedBookReviewPageData(
+    slug,
+    "en",
+  );
 
   if (bookReview === null) {
     notFound();
   }
 
   return (
-    <BookReviewDetailPage
-      bookReview={bookReview}
-      translation={translation}
-    />
+    <BookReviewDetailPage bookReview={bookReview} translation={translation} />
   );
 }

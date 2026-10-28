@@ -9,9 +9,17 @@ import {
 import { getDistrictPath } from "@/content/districts/district-routes";
 import type { HomeEditorialContent } from "@/content/homeEditorialContent";
 
-export function SectionMark({ children, tone = "dark" }: { children: string; tone?: "dark" | "light" }) {
+export function SectionMark({
+  children,
+  tone = "dark",
+}: {
+  children: string;
+  tone?: "dark" | "light";
+}) {
   return (
-    <p className={`flex items-center gap-2 text-[9px] font-semibold uppercase tracking-[0.2em] after:h-px after:w-8 after:bg-accent/70 after:content-[''] sm:text-[10px] ${tone === "light" ? "text-ink" : "text-accent-soft"}`}>
+    <p
+      className={`flex items-center gap-2 text-[9px] font-semibold uppercase tracking-[0.2em] after:h-px after:w-8 after:bg-accent/70 after:content-[''] sm:text-[10px] ${tone === "light" ? "text-ink" : "text-accent-soft"}`}
+    >
       {children}
     </p>
   );
@@ -71,25 +79,48 @@ export function IstanbulDiscovery({
 
         <div className="min-w-0 md:border-l md:border-ink/20 md:pl-3">
           <div className="grid min-h-48 grid-cols-[1.2fr_0.8fr] items-center border border-ink/20 bg-[#F5EFE4] px-4 py-5 md:h-full md:min-h-0 md:px-4 md:py-5 lg:px-5">
-          <svg
-            aria-hidden="true"
-            viewBox="0 0 320 150"
-            className="h-auto w-full text-accent-deep"
-          >
-            <path d="M8 82C34 63 64 66 86 48c21-17 42-12 61-30 9 24 4 42-13 55-26 19-59 18-82 38-14 12-28 13-44 8Z" fill="currentColor" opacity=".14" />
-            <path d="M178 30c26 10 49 5 72 20 20 13 37 15 62 16-8 24-30 27-50 28-31 2-45 25-76 25-16 0-29-6-41-17 19-20 29-42 33-72Z" fill="currentColor" opacity=".14" />
-            <path d="M151 18c8 26 9 48-2 67-8 14-7 32 8 51" fill="none" stroke="currentColor" strokeWidth="2" />
-            <path d="M23 96c35-4 59-16 82-36m89 45c27-15 55-21 88-20" fill="none" stroke="currentColor" strokeDasharray="4 8" opacity=".6" />
-          </svg>
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 320 150"
+              className="h-auto w-full text-accent-deep"
+            >
+              <path
+                d="M8 82C34 63 64 66 86 48c21-17 42-12 61-30 9 24 4 42-13 55-26 19-59 18-82 38-14 12-28 13-44 8Z"
+                fill="currentColor"
+                opacity=".14"
+              />
+              <path
+                d="M178 30c26 10 49 5 72 20 20 13 37 15 62 16-8 24-30 27-50 28-31 2-45 25-76 25-16 0-29-6-41-17 19-20 29-42 33-72Z"
+                fill="currentColor"
+                opacity=".14"
+              />
+              <path
+                d="M151 18c8 26 9 48-2 67-8 14-7 32 8 51"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              />
+              <path
+                d="M23 96c35-4 59-16 82-36m89 45c27-15 55-21 88-20"
+                fill="none"
+                stroke="currentColor"
+                strokeDasharray="4 8"
+                opacity=".6"
+              />
+            </svg>
             <dl className="grid gap-2 border-l border-ink/20 pl-3 text-[9px]">
-            <div>
-              <dt className="font-serif text-2xl leading-none text-ink lg:text-3xl">{european}</dt>
-              <dd className="mt-1 text-muted-dark">{content.europeanSide}</dd>
-            </div>
-            <div>
-              <dt className="font-serif text-2xl leading-none text-ink lg:text-3xl">{asian}</dt>
-              <dd className="mt-1 text-muted-dark">{content.asianSide}</dd>
-            </div>
+              <div>
+                <dt className="font-serif text-2xl leading-none text-ink lg:text-3xl">
+                  {european}
+                </dt>
+                <dd className="mt-1 text-muted-dark">{content.europeanSide}</dd>
+              </div>
+              <div>
+                <dt className="font-serif text-2xl leading-none text-ink lg:text-3xl">
+                  {asian}
+                </dt>
+                <dd className="mt-1 text-muted-dark">{content.asianSide}</dd>
+              </div>
             </dl>
           </div>
         </div>
@@ -98,26 +129,49 @@ export function IstanbulDiscovery({
           <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-muted-dark">
             {content.featuredLabel}
           </p>
-          <details className="mt-2 text-[10px] leading-5"><summary className="cursor-pointer">Fotoğraf kaynakları / Photo credits</summary>{Object.entries(verifiedDistrictImages).map(([slug, image]) => <p key={slug}><a href={image.recordUrl} className="underline">{image.credit}</a> · <a href={image.licenseUrl} className="underline">Lisans / License</a></p>)}</details>
+          <details className="mt-2 text-[10px] leading-5">
+            <summary className="cursor-pointer">
+              Fotoğraf kaynakları / Photo credits
+            </summary>
+            {Object.entries(verifiedDistrictImages).map(([slug, image]) => (
+              <p key={slug}>
+                <a href={image.recordUrl} className="underline">
+                  {image.credit}
+                </a>{" "}
+                ·{" "}
+                <a href={image.licenseUrl} className="underline">
+                  Lisans / License
+                </a>
+              </p>
+            ))}
+          </details>
           <div className="mt-3 grid grid-cols-3 gap-3">
             {featured.map((district) => {
               const image = verifiedDistrictImages[district.slug];
               const card = (
                 <>
-                {image && <Image src={image.src} alt={image.alt} fill sizes="(min-width: 1024px) 15vw, 30vw" className="object-cover opacity-65" />}
-                <span className="absolute inset-0 bg-[linear-gradient(0deg,rgba(5,12,22,0.94),rgba(5,12,22,0.06)_72%)]" />
-                <span className="absolute inset-x-0 bottom-0 p-3 lg:p-4">
-                  <span className="block text-[8px] font-semibold uppercase tracking-[0.16em] text-accent-soft">
-                    {content.guideLabel}
+                  {image && (
+                    <Image
+                      src={image.src}
+                      alt={image.alt}
+                      fill
+                      sizes="(min-width: 1024px) 15vw, 30vw"
+                      className="object-cover opacity-65"
+                    />
+                  )}
+                  <span className="absolute inset-0 bg-[linear-gradient(0deg,rgba(5,12,22,0.94),rgba(5,12,22,0.06)_72%)]" />
+                  <span className="absolute inset-x-0 bottom-0 p-3 lg:p-4">
+                    <span className="block text-[8px] font-semibold uppercase tracking-[0.16em] text-accent-soft">
+                      {content.guideLabel}
+                    </span>
+                    <span className="mt-1 block font-serif text-base leading-tight text-ivory sm:text-lg lg:text-xl">
+                      {district.name}
+                    </span>
+                    <span className="mt-2 block text-[9px] font-semibold text-ivory group-hover:text-accent-soft">
+                      {content.guideAction.label}
+                      {content.guideAction.href !== null && " →"}
+                    </span>
                   </span>
-                  <span className="mt-1 block font-serif text-base leading-tight text-ivory sm:text-lg lg:text-xl">
-                    {district.name}
-                  </span>
-                  <span className="mt-2 block text-[9px] font-semibold text-ivory group-hover:text-accent-soft">
-                    {content.guideAction.label}
-                    {content.guideAction.href !== null && " →"}
-                  </span>
-                </span>
                 </>
               );
 
@@ -161,7 +215,9 @@ export function RealEstateIntelligence({
             <SectionMark>{content.eyebrow}</SectionMark>
             <h2 className="mt-3 text-[1.85rem] font-semibold leading-[0.98] text-ivory md:text-[1.65rem] lg:text-[2rem]">
               {content.titleLines.map((line) => (
-                <span key={line} className="block">{line}</span>
+                <span key={line} className="block">
+                  {line}
+                </span>
               ))}
             </h2>
           </div>
@@ -187,17 +243,27 @@ export function RealEstateIntelligence({
                     {title}
                   </h3>
                   <span className="mt-2 block text-[9px] text-muted group-hover:text-accent-soft">
-                    {href === null ? content.comingSoonLabel : `${content.viewLabel} →`}
+                    {href === null
+                      ? content.comingSoonLabel
+                      : `${content.viewLabel} →`}
                   </span>
                 </>
               );
 
               return href === null ? (
-                <div key={title} aria-disabled="true" className="group min-h-28 bg-[#202E46] p-4 opacity-70">
+                <div
+                  key={title}
+                  aria-disabled="true"
+                  className="group min-h-28 bg-[#202E46] p-4 opacity-70"
+                >
                   {body}
                 </div>
               ) : (
-                <Link key={title} href={href} className="group min-h-28 bg-[#202E46] p-4 transition-colors hover:bg-surface-soft">
+                <Link
+                  key={title}
+                  href={href}
+                  className="group min-h-28 bg-[#202E46] p-4 transition-colors hover:bg-surface-soft"
+                >
                   {body}
                 </Link>
               );
@@ -224,7 +290,9 @@ export function KnowledgeLibrary({
           <SectionMark>{content.eyebrow}</SectionMark>
           <h2 className="mt-3 text-[1.85rem] font-semibold leading-[0.98] md:text-[1.65rem] lg:text-[2rem]">
             {content.titleLines.map((line) => (
-              <span key={line} className="block">{line}</span>
+              <span key={line} className="block">
+                {line}
+              </span>
             ))}
           </h2>
         </div>

@@ -194,7 +194,9 @@ async function main(): Promise<void> {
 
   let bundle: ResearchBundle;
   try {
-    bundle = JSON.parse(await readFile(values.input!, "utf8")) as ResearchBundle;
+    bundle = JSON.parse(
+      await readFile(values.input!, "utf8"),
+    ) as ResearchBundle;
     validateBundle(bundle);
     attachEditorial(
       bundle,
@@ -223,12 +225,7 @@ async function main(): Promise<void> {
     const repository = payloadRepository(payload);
     const plan = apply
       ? await applyAvcilar(bundle, repository, deploymentSha)
-      : await readAvcilarPlan(
-          bundle,
-          repository,
-          expectation,
-          deploymentSha,
-        );
+      : await readAvcilarPlan(bundle, repository, expectation, deploymentSha);
     console.log(
       JSON.stringify({
         ...plan.count,

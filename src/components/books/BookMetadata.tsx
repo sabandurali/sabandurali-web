@@ -62,8 +62,7 @@ export default function BookMetadata({
     { label: content.categoryLabel, value: category },
     {
       label: content.ratingLabel,
-      value:
-        bookReview.rating === null ? null : `${bookReview.rating} / 10`,
+      value: bookReview.rating === null ? null : `${bookReview.rating} / 10`,
     },
     {
       label: content.readingStatusLabel,

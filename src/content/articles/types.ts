@@ -1,30 +1,16 @@
 export type ArticleLanguage = "tr" | "en";
 
 export type TranslationStatus =
-  | "none"
-  | "pending"
-  | "in_progress"
-  | "completed"
-  | "outdated";
+  "none" | "pending" | "in_progress" | "completed" | "outdated";
 
 export type ArticleStatus =
-  | "draft"
-  | "in_review"
-  | "scheduled"
-  | "published"
-  | "archived";
+  "draft" | "in_review" | "scheduled" | "published" | "archived";
 
 export type ArticleVisibility =
-  | "public"
-  | "private"
-  | "unlisted"
-  | "members_only";
+  "public" | "private" | "unlisted" | "members_only";
 
 export type FreshnessStatus =
-  | "current"
-  | "review_due"
-  | "outdated"
-  | "not_reviewed";
+  "current" | "review_due" | "outdated" | "not_reviewed";
 
 export type ArticleCategory =
   | "real_estate"

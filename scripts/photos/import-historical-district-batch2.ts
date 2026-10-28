@@ -9,4 +9,6 @@ runHistoricalImporter({
   batchConfig: historicalBatch2Config,
   defaultManifest: "data/districts/historical-photo-batch2.json",
   downloadDirectory: "/tmp/historical-district-photos-batch2",
-}).catch((error) => reportHistoricalImporterError(error, historicalBatch2Config));
+}).catch((error) =>
+  reportHistoricalImporterError(error, historicalBatch2Config),
+);

@@ -33,8 +33,7 @@ const author = {
 
 export const exampleTurkishArticle = {
   id: "article-istanbul-real-estate-investment-tr",
-  title:
-    "İstanbul’da Gayrimenkul Yatırımı Yaparken Dikkat Edilmesi Gerekenler",
+  title: "İstanbul’da Gayrimenkul Yatırımı Yaparken Dikkat Edilmesi Gerekenler",
   slug: "istanbulda-gayrimenkul-yatirimi-yaparken-dikkat-edilmesi-gerekenler",
   language: "tr",
   translationGroupId: "translation-istanbul-real-estate-investment",
@@ -110,7 +109,8 @@ export const exampleTurkishArticle = {
     ),
     index: true,
     follow: true,
-    openGraphTitle: "İstanbul’da Gayrimenkul Yatırımı Yaparken Dikkat Edilecekler",
+    openGraphTitle:
+      "İstanbul’da Gayrimenkul Yatırımı Yaparken Dikkat Edilecekler",
     openGraphDescription:
       "İstanbul gayrimenkul piyasasında bilinçli yatırım kararları için temel kontrol noktaları.",
     openGraphImage: "/articles/istanbul-real-estate-investment-og.jpg",

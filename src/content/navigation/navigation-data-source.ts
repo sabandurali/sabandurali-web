@@ -22,8 +22,7 @@ import { assertProductionPayloadInfrastructure } from "@/lib/payloadInfrastructu
 
 type PublicNavigationSource = "payload" | "static";
 
-const payloadNavigationRepository =
-  new PayloadPublicNavigationRepository();
+const payloadNavigationRepository = new PayloadPublicNavigationRepository();
 
 function getPublicNavigationSource(): PublicNavigationSource {
   const source = process.env.NAVIGATION_PUBLIC_SOURCE;
@@ -75,18 +74,13 @@ export async function getHeaderNavigation(
 export async function getFooterNavigation(
   content: FooterContent,
 ): Promise<PublicFooterGroup[]> {
-  if (
-    getPublicNavigationSource() === "static"
-  ) {
+  if (getPublicNavigationSource() === "static") {
     return getStaticFooterGroups(content);
   }
 
   const navigation = await getPayloadNavigation(content.locale);
 
-  if (
-    content.locale === "en" &&
-    (navigation?.footerGroups.length ?? 0) === 0
-  ) {
+  if (content.locale === "en" && (navigation?.footerGroups.length ?? 0) === 0) {
     return getStaticFooterGroups(content);
   }
 
