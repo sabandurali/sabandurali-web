@@ -21,6 +21,21 @@ type FormStatusProps = {
 };
 
 /**
+ * Which region receives focus when the state changes from `previous` to
+ * `next`: only a new result moves focus, never the first render (a page
+ * that loads with an error must not steal focus) and never progress.
+ */
+export function resultFocusTarget(
+  previous: FormStatusState,
+  next: FormStatusState,
+): "status" | "alert" | null {
+  if (previous === next) return null;
+  if (next === "success") return "status";
+  if (next === "error") return "alert";
+  return null;
+}
+
+/**
  * Form result announcements (FE-21). Both live regions are rendered from
  * the first paint and never remount: only their text changes, which is what
  * screen readers reliably announce. Progress and success go to the polite
@@ -38,11 +53,13 @@ export default function FormStatus({
 }: FormStatusProps) {
   const statusRef = useRef<HTMLDivElement>(null);
   const alertRef = useRef<HTMLDivElement>(null);
+  const previousState = useRef(state);
 
   useEffect(() => {
-    if (!focusResult) return;
-    if (state === "success") statusRef.current?.focus();
-    if (state === "error") alertRef.current?.focus();
+    const target = resultFocusTarget(previousState.current, state);
+    previousState.current = state;
+    if (!focusResult || target === null) return;
+    (target === "status" ? statusRef : alertRef).current?.focus();
   }, [state, focusResult]);
 
   const hasMessage =

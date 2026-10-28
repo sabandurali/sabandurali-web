@@ -13,7 +13,7 @@ import EmptyState from "./EmptyState";
 import FactTable from "./FactTable";
 import { Field, Input, describedBy, type FieldControlProps } from "./Field";
 import { Credit, Figure } from "./Figure";
-import FormStatus from "./FormStatus";
+import FormStatus, { resultFocusTarget } from "./FormStatus";
 import GridRef from "./GridRef";
 import { LineChip, StationMarker } from "./LineChip";
 import NavMenu from "./NavMenu";
@@ -529,4 +529,17 @@ test("PlateTitle fits long district names: it passes the visible length to CSS",
     render(h(PlateTitle, { as: "p", children: "Esenler" })),
     /<p class="m-0 type-plate"/,
   );
+});
+
+test("FormStatus moves focus only to a new result, never on first render", () => {
+  assert.equal(
+    resultFocusTarget("error", "error"),
+    null,
+    "initial error state",
+  );
+  assert.equal(resultFocusTarget("idle", "submitting"), null);
+  assert.equal(resultFocusTarget("submitting", "success"), "status");
+  assert.equal(resultFocusTarget("submitting", "error"), "alert");
+  assert.equal(resultFocusTarget("error", "success"), "status");
+  assert.equal(resultFocusTarget("success", "idle"), null);
 });
