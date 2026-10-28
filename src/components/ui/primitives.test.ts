@@ -469,6 +469,8 @@ test("EmptyState states the gap in text", () => {
 
 test("DistrictTileMap: 39 named links per layout, featured and current states", () => {
   const html = render(h(DistrictTileMap, { featuredSlug: "esenler" }));
+  // It draws its own light grounds, so it sets its own ink too.
+  assert.match(html, /^<figure class="@container m-0 text-ink">/);
   const links = [
     ...html.matchAll(/<a [^>]*href="(\/istanbul\/ilceler\/[a-z]+)"/g),
   ].map((match) => match[1]);
@@ -478,7 +480,13 @@ test("DistrictTileMap: 39 named links per layout, featured and current states", 
   assert.match(html, /Şematik, ölçeksiz/);
   assert.match(html, /Öne çıkan rehber: Esenler \(F2\)\./);
   assert.match(html, /grid-cols-subgrid/);
-  assert.match(html, /class="lg:hidden"/);
+  // The full grid needs ~70 px tiles, so it depends on the map's own width
+  // (container query, 72 rem), not on the viewport: 55 px tiles at 64 rem
+  // break names mid-word, and a narrow column must get the compact atlas.
+  assert.match(html, /^<figure class="@container /);
+  assert.match(html, /<div class="hidden [^"]*@6xl:block">/);
+  assert.match(html, /class="@6xl:hidden"/);
+  assert.doesNotMatch(html, /(?:^|[\s"])(?:sm|md|lg|xl):/);
   const avrupaId = /<h3 id="([^"]+-avrupa)"/.exec(html)?.[1];
   assert.ok(avrupaId, "side headings carry unique ids");
   assert.match(html, new RegExp(`<ul aria-labelledby="${avrupaId}"`));

@@ -164,10 +164,14 @@ function rulerBarClassName(index: number, active: boolean) {
 
 /**
  * The atlas: all 39 districts as a schematic, unscaled tile map split by the
- * Bosphorus band. Every tile is a link named by the district. From 64 rem
- * (lg) the full grid is shown with square references on the edges; below
- * it a key map and two side-grouped tile lists, so phones never scroll
- * sideways.
+ * Bosphorus band. Every tile is a link named by the district. When the map
+ * itself is at least 72 rem wide (a container query, so a narrow column
+ * on a wide screen also gets the compact form) the full grid is shown
+ * with square references on the edges; below that, a key map and two
+ * side-grouped tile lists, so phones never scroll sideways. The grid needs
+ * tiles of about 70 px: at 64 rem they are 55 px wide, names such as
+ * "Bağcılar" break mid-word and the north arrow runs into Adalar. Place it
+ * on a light ground (Section tone paper, land or band).
  */
 export default function DistrictTileMap(props: DistrictTileMapProps) {
   const {
@@ -202,10 +206,12 @@ export default function DistrictTileMap(props: DistrictTileMapProps) {
   const asiaCount = sides[1]?.tiles.length ?? 0;
   const columnLetters: readonly TileColumn[] = [...westColumns, ...eastColumns];
 
+  // The map draws its own light grounds, so it sets its own ink as well: its
+  // labels never inherit a light text colour from a dark page around it.
   return (
-    <figure className={cx("m-0", className)}>
-      {/* Full atlas grid (lg and up). */}
-      <div className="hidden border-x border-b border-ink bg-paper lg:block">
+    <figure className={cx("@container m-0 text-ink", className)}>
+      {/* Full atlas grid (map at least 72 rem wide). */}
+      <div className="hidden border-x border-b border-ink bg-paper @6xl:block">
         <div className="grid grid-cols-[28px_repeat(15,minmax(0,1fr))] grid-rows-[30px_repeat(5,auto)] gap-1 pt-2.5 pr-3.5 pb-3.5 pl-2">
           {columnLetters.map((letter, index) => {
             const active = marked?.col === letter;
@@ -325,8 +331,8 @@ export default function DistrictTileMap(props: DistrictTileMapProps) {
         </div>
       </div>
 
-      {/* Compact atlas (below lg): key map and side-grouped tiles. */}
-      <div className="lg:hidden">
+      {/* Compact atlas (narrower map): key map and side-grouped tiles. */}
+      <div className="@6xl:hidden">
         <div className="flex flex-wrap items-end justify-between gap-3 border-x border-b border-ink bg-land p-3">
           <DistrictKeyMap
             featuredSlug={props.currentSlug ?? featuredSlug}
@@ -358,7 +364,7 @@ export default function DistrictTileMap(props: DistrictTileMapProps) {
                 )}
                 <ul
                   aria-labelledby={headingId}
-                  className="m-0 mt-2 grid list-none grid-cols-2 gap-1 p-0 sm:grid-cols-3 md:grid-cols-4"
+                  className="m-0 mt-2 grid list-none grid-cols-2 gap-1 p-0 @lg:grid-cols-3 @2xl:grid-cols-4"
                 >
                   {sideTiles.map((tile) => (
                     <li key={tile.slug} className="min-w-0">

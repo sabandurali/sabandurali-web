@@ -280,9 +280,15 @@ kipinde kalır. Klavye modeli `menu-keys.ts` içindedir ve test edilir:
 - Sütun harfleri A–H, J (Avrupa) ve L, M, N, P, R (Anadolu); I ve O yoktur (İ/ı ve 0 ile karışır), Boğaz
   şeridinin harfi yoktur. Böylece K harfi kare adreslerinde hiç geçmez; kuzey oku "Kuzey" yazar, kaynaklar
   [3] biçimindedir. (Prototipte K hem Boğaz sütunu, hem kuzey oku, hem kaynak kodu önekiydi.)
-- 64 rem (lg) ve üstünde tam ızgara: kenar cetvelleri (dekoratif), bölge etiketleri, Boğaz şeridi, lejant,
-  kuzey oku ve "Şematik, ölçeksiz" etiketi. Altında anahtar harita + yakaya göre gruplanmış, Türkçe alfabe
-  sırasıyla kare bağlantılar; telefon yatay kaydırmaz.
+- Haritanın kendisi en az 72 rem genişse (kapsayıcı sorgusu `@6xl`; geniş ekrandaki dar bir sütun da
+  kompakt biçimi alır) tam ızgara: kenar cetvelleri (dekoratif), bölge etiketleri, Boğaz şeridi, lejant,
+  kuzey oku ve "Şematik, ölçeksiz" etiketi. Daha dar kapsayıcıda anahtar harita + yakaya göre
+  gruplanmış, Türkçe alfabe sırasıyla kare bağlantılar; telefon yatay kaydırmaz. Izgara kareleri yaklaşık
+  70 px ister: 64 rem'de kareler 55 px kalır, "Bağcılar" gibi adlar sözcük ortasından bölünür ve kuzey oku
+  Adalar'ın üstüne biner; bu yüzden ızgara 72 rem'de başlar (tam genişlikte bir `Container` içinde
+  yaklaşık 1255 px ve üstü ekran).
+- Açık zemin bileşenidir (`Section tone` `paper`, `land` ya da `band`): kendi zeminlerini ve `text-ink`
+  metin rengini kendisi kurar, koyu bir sayfadan açık renk yazı devralmaz.
 - Her kare ilçe adını taşıyan gerçek bir bağlantıdır (`prefetch={false}`: 39 bağlantı önceden yüklenmez).
   `featuredSlug` turuncu kare + "öne çıkan rehber" notu; `currentSlug` bağlantı değil, `aria-current="page"`;
   `highlightSlugs` sis renkli kareler (ör. komşular).
