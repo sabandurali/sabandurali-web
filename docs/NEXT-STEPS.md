@@ -1,6 +1,6 @@
 # Şaban Durali Web — Next Steps
 
-Date: 2026-10-04
+Date: 2026-10-04 (housekeeping and owner decisions updated 2026-10-28)
 
 ## 1. Current milestone
 
@@ -68,3 +68,12 @@ Read, in order:
 5. Source files relevant to the chosen task
 
 Then compare the handoff with current repository and live behavior. Treat recorded commit values as historical baselines and re-verify every assumption before coding.
+
+## 7. Open owner decisions
+
+These need the owner; no agent should decide or carry them out alone.
+
+1. **Public research data.** `data/districts/research.json` is the raw, unverified research of the 39 districts (`publicationStatus: draft-only-unverified-research`). The application never publishes it, but it is readable in the public GitHub repository and its history. Choose one: keep it public on purpose and record that in `docs/PROJECT-STATE.md`; make the repository private; or move the file to private storage and keep only the fingerprints the importers check. The last option also needs a plan for the tests and the local import that read the file today, and possibly a history rewrite.
+2. **Git history.** The former personal mailbox, the local backup details and the evidence logs are gone from the current tree but remain in the history. Rewriting history (for example with `git filter-repo`) is a separate, coordinated decision because it changes every commit hash.
+3. **Historical photo batch 2.** `scripts/photos/` stays in place as the reusable engine with a per-batch config. If the second historical photo batch has already been applied to Production, remove its three `historical-photo:batch2:*` npm scripts as was done for the district importers.
+4. **Stale Preview branches.** Delete the two branches named in section 5; deleting a remote branch needs push rights.

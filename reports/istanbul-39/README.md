@@ -1,6 +1,6 @@
 # İstanbul 39 İlçe — yerel çalışma
 
-Ana sözleşme: `CODEX_39_ILCE_MASTER_TALIMAT.md`. Keşif: [discovery.md](discovery.md).
+Ana sözleşme: `docs/agents/CODEX-39-ILCE-MASTER-TALIMAT.md`. Keşif: [discovery.md](discovery.md).
 
 ## Mimari ve veri sınırı
 

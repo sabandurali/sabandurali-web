@@ -27,25 +27,17 @@ The current documentation HEAD is the later docs-only commit containing this han
 
 ## C. Tech stack
 
-`package.json` and `package-lock.json` are the source of truth for versions;
-this list was last synchronised on 2026-10-28 (Payload 3.92.1 upgrade):
+Versions are recorded only in `package.json` (ranges, `engines`), `package-lock.json` (the exact installed versions) and `.nvmrc`. This section names the parts and major versions without copying exact versions:
 
-- Node.js `>=24.22.1 <25` (`engines`, `.nvmrc` = 24); npm 11
-- Next.js `16.4.2` (App Router, Turbopack) with `eslint-config-next` `16.4.2`
-- React and React DOM `19.2.9`
-- Payload CMS `3.92.1`: `payload`, `@payloadcms/next`, `@payloadcms/ui`,
-  `@payloadcms/richtext-lexical`, `@payloadcms/db-postgres`,
-  `@payloadcms/db-sqlite` and `@payloadcms/storage-vercel-blob`, all pinned
-  exactly and upgraded together
-- PostgreSQL in production, hosted on Neon (`pg` `8.20.0`)
-- SQLite for local Payload development
+- Node.js 24 (`engines` and `.nvmrc`) with npm 11
+- Next.js 16 (App Router, Turbopack) with the matching `eslint-config-next`
+- React and React DOM 19
+- Payload CMS 3: `payload`, `@payloadcms/next`, `@payloadcms/ui`, `@payloadcms/richtext-lexical`, `@payloadcms/db-postgres`, `@payloadcms/db-sqlite` and `@payloadcms/storage-vercel-blob`, all pinned exactly and upgraded together
+- PostgreSQL in production, hosted on Neon (`pg`); SQLite for local Payload development
 - Vercel deployment and Vercel Blob media storage
-- TypeScript `^5` (strict), Tailwind CSS `^4`
-- Sharp `0.35.5`
-- Tooling: ESLint `^9`, Prettier `3.9.10`, `tsx` `4.23.15` (node:test
-  runner and scripts), `@electric-sql/pglite` `0.5.9` (migration replay)
-- CI: GitHub Actions (`.github/workflows/ci.yml`) and Dependabot
-- GitHub repository hosting
+- TypeScript 5 (strict), Tailwind CSS 4, Sharp for image processing
+- Tooling: ESLint, Prettier, `tsx` (node:test runner and scripts), `@electric-sql/pglite` (migration replay) and Playwright (local e2e checks with the installed Chrome)
+- CI: GitHub Actions (`.github/workflows/ci.yml`) and Dependabot; GitHub repository hosting
 
 ## D. Production architecture
 

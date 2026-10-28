@@ -10,16 +10,17 @@ is edited through an embedded Payload CMS.
 
 | Area      | Technology                                                                                     |
 | --------- | ---------------------------------------------------------------------------------------------- |
-| Runtime   | Node.js 24 (`>=24.22.1 <25`, see `.nvmrc`), npm 11                                             |
-| Framework | Next.js 16.4.2 (App Router, Turbopack), React 19.2.9, strict TypeScript 5                      |
+| Runtime   | Node.js 24 (`engines` in `package.json`, `.nvmrc`), npm 11                                     |
+| Framework | Next.js 16 (App Router, Turbopack), React 19, strict TypeScript 5                              |
 | Styling   | Tailwind CSS 4                                                                                 |
-| CMS       | Payload 3.92.1 in the same app: admin at `/admin`, REST API at `/api`, Lexical rich text       |
+| CMS       | Payload 3 in the same app: admin at `/admin`, REST API at `/api`, Lexical rich text            |
 | Database  | SQLite locally (`.data/payload.db`), PostgreSQL on Neon in production                          |
-| Media     | `public/media` locally, Vercel Blob in production; images processed with Sharp 0.35.5          |
+| Media     | `public/media` locally, Vercel Blob in production; images processed with Sharp                 |
 | Hosting   | Vercel through the GitHub integration                                                          |
-| Quality   | ESLint 9, Prettier 3.9.10, `node:test` via tsx, PGlite migration replay, GitHub Actions, Dependabot |
+| Quality   | ESLint 9, Prettier 3, `node:test` via tsx, PGlite migration replay, Playwright e2e checks, GitHub Actions, Dependabot |
 
-`package.json` and `package-lock.json` are the source of truth for versions.
+`package.json` and `package-lock.json` are the only source of exact versions;
+this README names major versions only.
 Payload packages are pinned exactly and must be upgraded together.
 
 ## Quick start
@@ -133,7 +134,13 @@ local `git blame`.
 - [docs/LOCAL_DEVELOPMENT.md](docs/LOCAL_DEVELOPMENT.md): local setup (Turkish)
 - [docs/PROJECT-STATE.md](docs/PROJECT-STATE.md): project handoff, district
   contract and production rules
-- [docs/NEXT-STEPS.md](docs/NEXT-STEPS.md): open work
+- [docs/NEXT-STEPS.md](docs/NEXT-STEPS.md): open work and open owner decisions
+- [docs/agents/](docs/agents/README.md): prompts and task briefs written for
+  AI agents
+- [reports/](reports/README.md): summaries of past work packages; their
+  evidence stays in the Git history
+- [scripts/districts/archive/](scripts/districts/archive/README.md): the
+  applied Production district importers, kept for audit
 - [YONETIM-PANELI-KULLANIM-KILAVUZU.md](YONETIM-PANELI-KULLANIM-KILAVUZU.md):
   admin guide (Turkish), generated from the `/admin/help` source
   `src/components/admin/help/admin-help-guide.ts`
