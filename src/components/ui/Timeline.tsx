@@ -151,6 +151,7 @@ export default function Timeline({
                   key={number}
                   number={number}
                   href={hrefForSource ? hrefForSource(number) : undefined}
+                  tone={onSea ? "on-sea" : "ink"}
                   locale={locale}
                   className="-my-3"
                 />

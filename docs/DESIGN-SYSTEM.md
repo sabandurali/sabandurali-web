@@ -238,7 +238,7 @@ yalnızca etkileşim gerektirenlerdir: `SkipLink`, `Disclosure`, `NavMenu`, `For
 | `StationMarker` | Durak ya da kurum (Davutpaşa–YTÜ): durak halkası + ad; asla çip değil. |
 | `Badge` | Kısa durum: `signal` (2026), `neutral`, `soon` ("Yakında"). Anlamı metin taşır. |
 | `Figure` + `Credit` | Görsel + altyazı + kredi (yazar/koleksiyon · tarih · lisans bağlantısı · kaynak bağlantısı). `credit` prop'u zorunludur: kredi gerektirmeyen görsel için açıkça `null`. |
-| `SourceRef` / `SourceRefList` | Kaynak atfı köşeli parantezli numaradır: [3]. Kaynak tablosu satırı `id="kaynak-3"` (`sourceAnchorId`). 44 × 44 px dokunma alanı. |
+| `SourceRef` / `SourceRefList` | Kaynak atfı köşeli parantezli numaradır: [3]. Kaynak tablosu satırı `id="kaynak-3"` (`sourceAnchorId`). 44 × 44 px dokunma alanı. Deniz zemininde `tone="on-sea"` (`Timeline tone="sea"` bunu kendisi verir). |
 | `FactTable` | `dl` tabanlı veri tablosu: etiket, mono değer + birim, veri tarihi, kaynak atıfları; değeri çip olan satırlar (raylı sistem) için `extra`. Dar kapsayıcıda bloklar ("Veri tarihi:" etiketiyle), 42 rem'den itibaren dört sütun ve görsel başlık satırı. Eksik tarih/kaynak ızgarada "—" ve ekran okuyucuya "yok"; dar düzende hiç gösterilmez. |
 | `Breadcrumb` | "Konum" izi; son öğe `aria-current="page"`, ayraçlar gizli. |
 | `SkipLink` | Her sayfanın ilk odaklanılabilir öğesi; odaklanınca görünür, içeriğe klavye odağını taşır. Ana içerik `<main id="main">` olmalı (yoksa ilk `<main>` bulunur). |

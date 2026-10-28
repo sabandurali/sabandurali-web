@@ -21,7 +21,12 @@ import Pagination from "./Pagination";
 import PlateTitle, { plateCharacters } from "./PlateTitle";
 import SectionSign from "./SectionSign";
 import SkipLink from "./SkipLink";
-import { SourceRef, formatSourceCode, sourceAnchorId } from "./SourceRef";
+import {
+  SourceRef,
+  SourceRefList,
+  formatSourceCode,
+  sourceAnchorId,
+} from "./SourceRef";
 import StationDiagram from "./StationDiagram";
 import Timeline from "./Timeline";
 import { isInternalPath } from "./UiLink";
@@ -183,10 +188,22 @@ test("SourceRef is a bracketed citation link with a spoken name", () => {
   const html = render(h(SourceRef, { number: 3 }));
   assert.match(html, /^<a href="#kaynak-3"/);
   assert.match(html, /min-h-tap min-w-tap/);
+  assert.match(html, /\btext-ink\b/);
   assert.match(
     html,
     /<span aria-hidden="true">\[3\]<\/span><span class="sr-only">Kaynak 3<\/span>/,
   );
+  // Ink on sea is 1:1: on a sea ground the reference turns white.
+  const onSea = render(h(SourceRef, { number: 3, tone: "on-sea" }));
+  assert.match(onSea, /\btext-on-sea\b/);
+  assert.doesNotMatch(onSea, /\btext-ink\b/);
+  const list = render(
+    h(SourceRefList, { numbers: [1, 2], tone: "on-sea", locale: "en" }),
+  );
+  assert.match(list, /text-on-sea-muted/);
+  assert.doesNotMatch(list, /\btext-ink(?:-muted)?\b/);
+  assert.equal(count(list, /text-on-sea"/), 2, "both links turn white");
+  assert.match(textOf(list), /Related sources/);
 });
 
 test("FactTable is a description list with dated, sourced values", () => {
@@ -441,6 +458,18 @@ test("Timeline and StationDiagram expose order and notes as text", () => {
   assert.match(timeline, /^<ol aria-label="Tarih çizelgesi"/);
   assert.match(timeline, /<time dateTime="1993-12-27"/);
   assert.match(timeline, /href="#kaynak-1"/);
+  const seaTimeline = render(
+    h(Timeline, {
+      label: "Kariyer",
+      tone: "sea",
+      entries: [{ id: "a", when: "1996", children: "Başlangıç", sources: [2] }],
+    }),
+  );
+  assert.match(
+    seaTimeline,
+    /<a href="#kaynak-2" class="[^"]*\btext-on-sea[ "]/,
+    "source links stay readable on sea",
+  );
 
   const diagram = render(
     h(StationDiagram, {

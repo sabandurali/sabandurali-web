@@ -15,10 +15,14 @@ export function sourceAnchorId(number: number): string {
   return `kaynak-${number}`;
 }
 
+/** Ground the reference sits on: ink on light grounds, white on sea. */
+export type SourceRefTone = "ink" | "on-sea";
+
 type SourceRefProps = {
   number: number;
   /** Defaults to the row of the sources table on the same page. */
   href?: string;
+  tone?: SourceRefTone;
   locale?: UiLocale;
   className?: string;
 };
@@ -27,6 +31,7 @@ type SourceRefProps = {
 export function SourceRef({
   number,
   href = `#${sourceAnchorId(number)}`,
+  tone = "ink",
   locale = "tr",
   className,
 }: SourceRefProps) {
@@ -36,7 +41,8 @@ export function SourceRef({
     <a
       href={href}
       className={cx(
-        "relative z-10 inline-flex min-h-tap min-w-tap items-center justify-center type-data text-ink underline decoration-1 underline-offset-[3px] hover:decoration-2",
+        "relative z-10 inline-flex min-h-tap min-w-tap items-center justify-center type-data underline decoration-1 underline-offset-[3px] hover:decoration-2",
+        tone === "on-sea" ? "text-on-sea" : "text-ink",
         className,
       )}
     >
@@ -51,6 +57,7 @@ type SourceRefListProps = {
   /** Visible lead-in; defaults to "İlgili kaynaklar". */
   label?: string;
   hrefFor?: (number: number) => string;
+  tone?: SourceRefTone;
   locale?: UiLocale;
   className?: string;
 };
@@ -59,6 +66,7 @@ export function SourceRefList({
   numbers,
   label,
   hrefFor,
+  tone = "ink",
   locale = "tr",
   className,
 }: SourceRefListProps) {
@@ -68,7 +76,8 @@ export function SourceRefList({
   return (
     <p
       className={cx(
-        "flex flex-wrap items-center gap-x-1 type-caption text-ink-muted",
+        "flex flex-wrap items-center gap-x-1 type-caption",
+        tone === "on-sea" ? "text-on-sea-muted" : "text-ink-muted",
         className,
       )}
     >
@@ -78,6 +87,7 @@ export function SourceRefList({
           key={number}
           number={number}
           href={hrefFor ? hrefFor(number) : undefined}
+          tone={tone}
           locale={locale}
         />
       ))}
