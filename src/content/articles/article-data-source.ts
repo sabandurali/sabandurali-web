@@ -5,6 +5,7 @@ import {
   exampleEnglishArticle,
   exampleTurkishArticle,
 } from "@/content/articles/examples";
+import { isOfferedTranslationPair } from "@/content/articles/article-translation";
 import { PayloadPublicArticleRepository } from "@/content/articles/payload-article-repository";
 import {
   toPublicArticleSummary,
@@ -74,9 +75,11 @@ async function getPayloadPublishedArticlePageData(
   slug: string,
   language: ArticleLanguage,
 ): Promise<PublishedArticlePageData> {
+  const now = new Date();
   const article = await payloadArticleRepository.findPublishedBySlug(
     slug,
     language,
+    now,
   );
 
   if (article === null) {
@@ -86,12 +89,29 @@ async function getPayloadPublishedArticlePageData(
   const translation = await payloadArticleRepository.findPublishedTranslation(
     article.id,
     language === "tr" ? "en" : "tr",
+    now,
   );
+
+  // The Turkish version is the source of every English page: an English
+  // translation that does not cover it is neither served nor linked.
+  if (language === "en") {
+    return isOfferedTranslationPair(article, translation)
+      ? {
+          article,
+          translation:
+            translation === null
+              ? null
+              : toPublicArticleTranslation(translation),
+        }
+      : { article: null, translation: null };
+  }
 
   return {
     article,
     translation:
-      translation === null ? null : toPublicArticleTranslation(translation),
+      translation !== null && isOfferedTranslationPair(translation, article)
+        ? toPublicArticleTranslation(translation)
+        : null,
   };
 }
 
@@ -115,30 +135,56 @@ function getAllStaticPublishedArticles(
   ).map((article) => toPublicArticleSummary(mapStaticArticle(article)));
 }
 
-export async function getAllPublishedArticles(
-  language: ArticleLanguage,
-): Promise<PublicArticleSummary[]> {
-  return readPublicSource("ARTICLE_PUBLIC_SOURCE") === "payload"
-    ? payloadArticleRepository.listPublished(language)
-    : getAllStaticPublishedArticles(language);
-}
+/** Every public standalone article (district news excluded), newest first. */
+export const getAllPublishedArticles = cache(
+  async (language: ArticleLanguage): Promise<PublicArticleSummary[]> =>
+    readPublicSource("ARTICLE_PUBLIC_SOURCE") === "payload"
+      ? payloadArticleRepository.listPublished(language)
+      : getAllStaticPublishedArticles(language),
+);
 
-export async function getDistrictNews(
-  district: string,
-  language: ArticleLanguage,
-): Promise<PublicArticleSummary[]> {
-  if (readPublicSource("ARTICLE_PUBLIC_SOURCE") !== "payload") return [];
-  return payloadArticleRepository.listDistrictNews(district, language);
-}
+/**
+ * Public articles in one category, filtered in the database. Use this
+ * instead of filtering getAllPublishedArticles() in a page.
+ */
+export const getPublishedArticlesByCategory = cache(
+  async (
+    categorySlug: string,
+    language: ArticleLanguage,
+  ): Promise<PublicArticleSummary[]> =>
+    readPublicSource("ARTICLE_PUBLIC_SOURCE") === "payload"
+      ? payloadArticleRepository.listByCategory(categorySlug, language)
+      : getAllStaticPublishedArticles(language).filter((article) =>
+          article.categories.some((category) => category.slug === categorySlug),
+        ),
+);
 
-export async function getDistrictResearch(
-  district: string,
-  language: ArticleLanguage,
-): Promise<PublicArticleSummary[]> {
-  const articles = await getAllPublishedArticles(language);
-  return articles.filter(
-    (article) =>
-      article.articleType === "district-research" &&
-      article.district === district,
-  );
-}
+/** Source-linked district news; the static source has none. */
+export const getDistrictNews = cache(
+  async (
+    district: string,
+    language: ArticleLanguage,
+  ): Promise<PublicArticleSummary[]> =>
+    readPublicSource("ARTICLE_PUBLIC_SOURCE") === "payload"
+      ? payloadArticleRepository.listDistrictArticles(
+          "district-news",
+          district,
+          language,
+        )
+      : [],
+);
+
+/** District research articles, filtered in the database. */
+export const getDistrictResearch = cache(
+  async (
+    district: string,
+    language: ArticleLanguage,
+  ): Promise<PublicArticleSummary[]> =>
+    readPublicSource("ARTICLE_PUBLIC_SOURCE") === "payload"
+      ? payloadArticleRepository.listDistrictArticles(
+          "district-research",
+          district,
+          language,
+        )
+      : [],
+);
