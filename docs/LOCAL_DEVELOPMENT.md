@@ -1,10 +1,9 @@
 # Yerel geliştirme
 
-## Doğrulanan yerel ortam
+## Gerekli yerel ortam
 
-- Bu yerel kurulum Node.js 24.21.0 ve npm 11.19.0 ile doğrulandı.
-- Git gereklidir.
-- Bu sürümler `package.json` tarafından zorunlu tutulmamaktadır.
+- Node.js 24, en az 24.22.1. Sürüm `package.json` içindeki `engines` alanında ve `.nvmrc` dosyasında tanımlıdır; nvm kullanıyorsanız `nvm use` yeterlidir. Payload 3.92 bu güvenlik sürümünü şart koşar.
+- npm 11 (Node.js 24 ile gelir) ve Git gereklidir.
 
 ## İlk kurulum
 
@@ -16,7 +15,7 @@
    npm ci
    ```
 
-4. İlk kurulumda `.env.example` dosyasını `.env.local` olarak kopyalayın. Mevcut `.env.local` dosyasının üzerine yazmayın.
+4. İlk kurulumda `.env.example` dosyasını `.env.local` olarak kopyalayın. Mevcut `.env.local` dosyasının üzerine yazmayın. Örnek dosya çalışan yerel varsayılanları içerir: SQLite, yerel medya ve `static` içerik kaynakları. Sondaki production onay değişkenleri yalnızca isim olarak listelenir; bunları yerelde asla tanımlamayın.
 5. Yalnızca yerelde kullanılacak bir `PAYLOAD_SECRET` üretin:
 
    ```sh
@@ -49,3 +48,13 @@
 SQLite veritabanı `.data/payload.db`, yüklenen medya `public/media` altında tutulur. Bu yerel dosyalar ve `.env.local` bilinçli olarak Git tarafından takip edilmez; dizinlerdeki `.gitkeep` dosyaları takip edilebilir. Mevcut veritabanını veya medya dosyalarını silmeyin.
 
 Yerel kurulum production Neon/PostgreSQL, Vercel ve Vercel Blob ayarlarından ayrıdır. Production bağlantı bilgilerini yerel ortama kopyalamayın. Bu kurulum production servisine bağlanmaz ve yerel verileri production'a aktarmaz.
+
+## Kontroller
+
+Pull request açmadan önce tüm kontrollerin geçtiğini doğrulayın:
+
+```sh
+npm run check
+```
+
+Bu komut sırasıyla `typecheck`, `lint`, `format:check`, `test` ve `build` çalıştırır. `npm test` birim testlerini, ilçe içerik kabul kontrolünü ve tüm migration'ların bellekteki PGlite veritabanında yeniden oynatılmasını kapsar; canlı bir servise bağlanmaz. Aynı adımlar GitHub Actions'ta (`.github/workflows/ci.yml`) her pull request için çalışır. Biçim hatalarını `npm run format` düzeltir.
