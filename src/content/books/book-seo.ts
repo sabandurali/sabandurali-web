@@ -2,12 +2,22 @@ import type { Metadata } from "next";
 import { getAbsoluteUrl } from "@/config/site";
 import { getAvailableLocalBookImage } from "@/content/books/book-images";
 import {
-  getBookReviewAlternateUrls,
+  getBookReviewPath,
   getBookReviewUrl,
 } from "@/content/books/book-routes";
 import type { BookReview } from "@/content/books/types";
+import {
+  createPersonReference,
+  personalBrandName,
+  serializeJsonLd,
+} from "@/content/entity-seo";
+import { createPageMetadata, createSocialImage } from "@/lib/metadata";
 
-export function getBookReviewCanonicalUrl(bookReview: BookReview): string {
+type CanonicalBookReview = Pick<BookReview, "language" | "seo" | "slug">;
+
+export function getBookReviewCanonicalUrl(
+  bookReview: CanonicalBookReview,
+): string {
   if (bookReview.seo.canonical !== undefined) {
     try {
       return getAbsoluteUrl(bookReview.seo.canonical);
@@ -23,49 +33,44 @@ export function createBookReviewMetadata(
   bookReview: BookReview,
   translation: BookReview | null,
 ): Metadata {
-  const canonical = getBookReviewCanonicalUrl(bookReview);
   const openGraphImage = getAvailableLocalBookImage(
     bookReview.seo.openGraphImage,
   );
 
-  return {
+  return createPageMetadata({
     title: bookReview.seo.title,
     description: bookReview.seo.description,
-    alternates: {
-      canonical,
-      languages: getBookReviewAlternateUrls(bookReview, translation),
-    },
-    robots: {
-      index: bookReview.seo.index,
-      follow: bookReview.seo.follow,
-    },
-    openGraph: {
-      title: bookReview.seo.openGraphTitle ?? bookReview.seo.title,
-      description:
-        bookReview.seo.openGraphDescription ?? bookReview.seo.description,
-      url: canonical,
-      siteName: "Şaban Durali",
-      locale: bookReview.language === "tr" ? "tr_TR" : "en_US",
-      alternateLocale:
-        translation === null
-          ? undefined
-          : translation.language === "tr"
-            ? "tr_TR"
-            : "en_US",
-      type: "article",
-      publishedTime: bookReview.publishedAt ?? undefined,
+    locale: bookReview.language,
+    path: getBookReviewPath(bookReview.slug, bookReview.language),
+    translations:
+      translation === null
+        ? undefined
+        : {
+            [translation.language]: getBookReviewPath(
+              translation.slug,
+              translation.language,
+            ),
+          },
+    canonical: getBookReviewCanonicalUrl(bookReview),
+    images:
+      openGraphImage === null
+        ? undefined
+        : [
+            createSocialImage({
+              src: openGraphImage,
+              alt: bookReview.coverImage?.alt || bookReview.title,
+            }),
+          ],
+    index: bookReview.seo.index,
+    follow: bookReview.seo.follow,
+    socialTitle: bookReview.seo.openGraphTitle,
+    socialDescription: bookReview.seo.openGraphDescription,
+    article: {
+      publishedTime: bookReview.publishedAt,
       modifiedTime: bookReview.updatedAt,
-      images:
-        openGraphImage === null
-          ? undefined
-          : [
-              {
-                url: openGraphImage,
-                alt: bookReview.coverImage?.alt || bookReview.title,
-              },
-            ],
+      authors: [personalBrandName],
     },
-  };
+  });
 }
 
 export function createBookReviewJsonLd(bookReview: BookReview) {
@@ -90,6 +95,8 @@ export function createBookReviewJsonLd(bookReview: BookReview) {
     "@context": "https://schema.org",
     "@type": "Review",
     name: bookReview.title,
+    // Every review on the site is written by its owner.
+    author: createPersonReference(),
     reviewBody: bookReview.personalEvaluation || bookReview.summary,
     datePublished: bookReview.publishedAt ?? undefined,
     dateModified: bookReview.updatedAt,
@@ -109,8 +116,5 @@ export function createBookReviewJsonLd(bookReview: BookReview) {
 }
 
 export function serializeBookReviewJsonLd(bookReview: BookReview): string {
-  return JSON.stringify(createBookReviewJsonLd(bookReview)).replace(
-    /</g,
-    "\\u003c",
-  );
+  return serializeJsonLd(createBookReviewJsonLd(bookReview));
 }

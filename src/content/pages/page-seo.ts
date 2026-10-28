@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
-import { getAbsoluteUrl, siteSocialImage } from "@/config/site";
 import type { PublicPage } from "@/content/pages/public-types";
+import { createPageMetadata, createSocialImage } from "@/lib/metadata";
+
+export const homePagePaths = {
+  tr: "/",
+  en: "/en",
+} as const;
 
 export function getPublicPagePath(page: PublicPage): string {
   const localePrefix = page.language === "en" ? "/en" : "";
@@ -11,43 +16,32 @@ export function getPublicPagePath(page: PublicPage): string {
 }
 
 export function createPublicPageMetadata(page: PublicPage): Metadata {
-  const path = getPublicPagePath(page);
-  const canonical = getAbsoluteUrl(path);
-  const socialImage =
-    page.seo.socialImage === null
-      ? siteSocialImage
-      : {
-          url: getAbsoluteUrl(page.seo.socialImage.src),
-          alt: page.seo.socialImage.alt ?? page.title,
-        };
-  const locale = page.language === "en" ? "en_US" : "tr_TR";
-  const alternateLocale = page.language === "en" ? "tr_TR" : "en_US";
+  const socialImage = page.seo.socialImage;
+  // Both home pages always exist (a CMS home falls back to the static one);
+  // standard CMS pages are published in Turkish only.
+  const otherLanguage = page.language === "en" ? "tr" : "en";
 
-  return {
+  return createPageMetadata({
     title: page.seo.title,
     description: page.seo.description,
-    alternates: {
-      canonical,
-    },
-    robots: {
-      index: page.seo.index,
-      follow: page.seo.follow,
-    },
-    openGraph: {
-      title: page.seo.title,
-      description: page.seo.description,
-      url: canonical,
-      locale,
-      alternateLocale,
-      type: "website",
-      siteName: "Şaban Durali",
-      images: [socialImage],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: page.seo.title,
-      description: page.seo.description,
-      images: [socialImage],
-    },
-  };
+    locale: page.language,
+    path: getPublicPagePath(page),
+    translations:
+      page.pageType === "home"
+        ? { [otherLanguage]: homePagePaths[otherLanguage] }
+        : undefined,
+    images:
+      socialImage === null
+        ? undefined
+        : [
+            createSocialImage({
+              src: socialImage.src,
+              alt: socialImage.alt || page.title,
+              width: socialImage.width,
+              height: socialImage.height,
+            }),
+          ],
+    index: page.seo.index,
+    follow: page.seo.follow,
+  });
 }
