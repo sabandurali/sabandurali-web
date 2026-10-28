@@ -87,6 +87,7 @@ if (values["offline-empty"]) {
   const { default: configPromise } = await import("../../src/payload.config");
   const config = await configPromise;
   config.typescript.autoGenerate = false;
+  config.telemetry = false;
   // A dry-run must never push schema or create a database.
   if (!apply) {
     await realpath(target);

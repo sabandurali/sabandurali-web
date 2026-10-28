@@ -28,7 +28,7 @@ PDF dönüşümü için `pypdf` bulunan Python ortamı gerekir. Bu çalışma Co
 ```sh
 python3 scripts/districts/extract-research.py --pdf-dir /path/to/pdfs --output data/districts/research.json
 npm run district:import -- --offline-empty
-npm run test:districts
+npm run test:unit
 ```
 
 `--offline-empty` mevcut CMS'yi okumaz; boş hedef varsayan sıfır yazmalı bir plandır. Gerçek dry-run değildir.
@@ -49,21 +49,22 @@ Slug bazlı import: olmayan kaydı draft oluşturur; yönetilmeyen veya elle de�
 
 Yeni additive PostgreSQL migration: `20260909_181042_istanbul_district_sources`. Altı yeni tablo, altı yeni enum, mevcut iki status enum'una üçer değer, 22 yeni kolon, altı foreign key ve 12 index. Nullable/default alanlar mevcut kayıtları silmez. `down` veri silmeden hata verir. PostgreSQL schema push kapalı kalır. Production migration **çalıştırılmadı**.
 
-İzole PGlite kontrolü dışarıdaki paketi kullanır; canlı Postgres veya Neon'a bağlanmaz:
+İzole PGlite kontrolü `@electric-sql/pglite` devDependency'sini kullanır ve `npm test` içinde çalışır; canlı Postgres veya Neon'a bağlanmaz (`PGLITE_MODULE` ile başka bir PGlite derlemesi denenebilir). CMS kontrolü argümansız çalıştırıldığında geçici bir SQLite veritabanı oluşturur, 39 taslağı `district:import` ile aktarır ve sonunda siler; hazır bir `/tmp/istanbul-39-*` veritabanı da verilebilir:
 
 ```sh
-PGLITE_MODULE=/absolute/path/to/@electric-sql/pglite/dist/index.js node scripts/districts/check-postgres.mjs
-npm run test:districts:cms -- /tmp/istanbul-39-audit/payload-test.db
+npm run test:migrations
+npm run e2e:districts:cms
+npm run e2e:districts:cms -- /tmp/istanbul-39-audit/payload-test.db
 ```
 
 PGlite SQL uyumluluk testidir; gerçek Neon migration/rollback tatbikatı değildir. SQLite test kopyasının migration geçmişi production'a taşınmaz.
 
 ## Tarayıcı kabulü
 
-Playwright bulunan dış runtime ve yerel Chrome gerekir. Aşağıdaki araç yalnız localhost/127.0.0.1 hedeflerine izin verir:
+Playwright bir devDependency'dir; yerel Chrome gerekir (`BROWSER_CHANNEL`, `BROWSER_PACKAGE` isteğe bağlıdır). Aşağıdaki araç yalnız localhost/127.0.0.1 hedeflerine izin verir:
 
 ```sh
-BROWSER_PACKAGE=/absolute/path/to/playwright/package.json DISTRICT_TEST_URL=http://localhost:3017 DISTRICT_TEST_OUTPUT=/tmp/istanbul-39-acceptance npm run test:districts:routes
+DISTRICT_TEST_URL=http://localhost:3017 DISTRICT_TEST_OUTPUT=/tmp/istanbul-39-acceptance npm run e2e:districts:routes
 ```
 
 39 detay + 39 haber, ana merkez, geçersiz slug 404, alternatif rehber 308, canonical/OG/TR hreflang/breadcrumb/sitemap, 1440/820/390 overflow, boş fotoğraf, arama/filtre ve regresyon girişleri test edilir. Authenticated Admin form etkileşimi bu test değildir; CMS Local API testleri ayrıca çalışır. Yerel sentetik yayın fixture'ları test sonunda geri alınır ve teslim içeriği değildir.
@@ -82,11 +83,11 @@ npm run district:import -- --database /tmp/istanbul-39-audit/editorial-test.db -
 
 `--editorial` verilmezse eski ham araştırma/draft davranışı korunur. Verilirse 39 ilçe ve PDF hash’leri eşleştirilir, bölüm kaynak kapıları denetlenir ve aynı yönetilen draft kayıtları güncellenir. Elle düzenlenmiş veya yayımlanmış kayıtlar yine korunur. Gözden geçirilmiş metin bile import tarafından otomatik yayımlanmaz.
 
-`check-editorial-cms.ts`, yalnız sabit `/tmp/istanbul-39-audit/editorial-test.db` test kopyasında, güncel editoryal import ve idempotency kontrolünden **sonra** çalıştırılır. 39 kaydı bu atılabilir kopyada yayımlar ve anonim okuma sınırını test eder. Bu dosya production yayın aracı değildir. Tekrar testi için yönetilen draft kopyası yeniden hazırlanmalıdır.
+`check-editorial-cms.ts` artık `scripts/districts/archive/` altında tarihî kayıt olarak durur; varsayımları ilk editoryal partiye aittir ve güncel veriyle bilerek başarısız olur. O dönemde yalnız sabit `/tmp/istanbul-39-audit/editorial-test.db` test kopyasında, güncel editoryal import ve idempotency kontrolünden **sonra** çalıştırılıyordu. 39 kaydı bu atılabilir kopyada yayımlar ve anonim okuma sınırını test eder. Bu dosya production yayın aracı değildir. Tekrar testi için yönetilen draft kopyası yeniden hazırlanmalıdır.
 
 ```sh
-npx tsx scripts/districts/check-editorial-cms.ts /tmp/istanbul-39-audit/editorial-test.db
-DISTRICT_TEST_URL=http://localhost:3018 DISTRICT_SOURCE_MODE=payload-reviewed-content DISTRICT_EXPECT_EDITORIAL=1 BROWSER_PACKAGE=/absolute/path/to/playwright/package.json npm run test:districts:routes
+npx tsx scripts/districts/archive/check-editorial-cms.ts /tmp/istanbul-39-audit/editorial-test.db
+DISTRICT_TEST_URL=http://localhost:3018 DISTRICT_SOURCE_MODE=payload-reviewed-content DISTRICT_EXPECT_EDITORIAL=1 npm run e2e:districts:routes
 ```
 
 Gerçek CMS içerik testi geliştirme sunucusunda PAGE/ARTICLE/PHOTO_PUBLIC_SOURCE=payload ile; optimize build testi ayrı static-source sunucuda yapıldı. İkisi de izole SQLite kopyasını kullanır. Production altyapı korumasını aşmak için bir kod değişikliği yapılmadı.

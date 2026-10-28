@@ -1,10 +1,56 @@
+// Local CMS check of the district guide rules (`npm run e2e:districts:cms`).
+// Without an argument it creates a temporary SQLite database, imports the 39
+// district drafts with scripts/districts/import.ts and removes it afterwards.
+// An existing isolated database may be passed instead; it must live in an
+// istanbul-39-* folder under /tmp or the system temporary directory. With
+// DISTRICT_CMS_TEST_URL, a local server using that database is also checked
+// in Chrome and screenshots go to DISTRICT_TEST_OUTPUT.
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
+import { mkdirSync, mkdtempSync, rmSync } from "node:fs";
 import { createRequire } from "node:module";
 import { readFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import path from "node:path";
 import { decideImport, fingerprint, type ResearchBundle } from "./import-core";
-const database = process.argv[2];
-if (!database?.startsWith("/tmp/istanbul-39-"))
-  throw new Error("Test requires an isolated /tmp/istanbul-39-* database.");
+
+const isolatedPrefixes = [
+  "/tmp/istanbul-39-",
+  path.join(tmpdir(), "istanbul-39-"),
+];
+const argument = process.argv[2];
+let temporaryDirectory: string | undefined;
+let database: string;
+if (argument) {
+  if (!isolatedPrefixes.some((prefix) => argument.startsWith(prefix)))
+    throw new Error("Test requires an isolated istanbul-39-* database.");
+  database = argument;
+} else {
+  if (process.env.DISTRICT_CMS_TEST_URL)
+    throw new Error(
+      "DISTRICT_CMS_TEST_URL needs the database path that the local server uses.",
+    );
+  temporaryDirectory = mkdtempSync(path.join(tmpdir(), "istanbul-39-cms-"));
+  database = path.join(temporaryDirectory, "payload-test.db");
+  const imported = spawnSync(
+    process.execPath,
+    [
+      "--import",
+      "tsx",
+      "scripts/districts/import.ts",
+      "--database",
+      database,
+      "--apply",
+    ],
+    { stdio: ["ignore", "ignore", "inherit"] },
+  );
+  if (imported.status !== 0) {
+    rmSync(temporaryDirectory, { recursive: true, force: true });
+    throw new Error("The isolated district import failed.");
+  }
+}
+const screenshots =
+  process.env.DISTRICT_TEST_OUTPUT || "/tmp/istanbul-39-audit";
 Object.assign(process.env, {
   NODE_ENV: "development",
   PAYLOAD_DATABASE: "sqlite",
@@ -15,6 +61,7 @@ Object.assign(process.env, {
 const { default: configPromise } = await import("../../src/payload.config");
 const config = await configPromise;
 config.typescript.autoGenerate = false;
+config.telemetry = false;
 Object.assign(
   config.db,
   (await import("@payloadcms/db-sqlite")).sqliteAdapter({
@@ -126,6 +173,7 @@ try {
       const base = process.env.DISTRICT_CMS_TEST_URL;
       if (!/^http:\/\/(localhost|127\.0\.0\.1):\d+$/.test(base))
         throw new Error("Local test URL required");
+      mkdirSync(screenshots, { recursive: true });
       const { chromium } = createRequire(
         process.env.BROWSER_PACKAGE || import.meta.url,
       )("playwright");
@@ -160,14 +208,14 @@ try {
             ),
           );
           await page.screenshot({
-            path: `/tmp/istanbul-39-audit/verified-fixture-${width}.png`,
+            path: `${screenshots}/verified-fixture-${width}.png`,
             fullPage: true,
           });
           await page.screenshot({
-            path: `/tmp/istanbul-39-audit/verified-fixture-${width}-viewport.png`,
+            path: `${screenshots}/verified-fixture-${width}-viewport.png`,
           });
           await page.locator("#kaynaklar").screenshot({
-            path: `/tmp/istanbul-39-audit/verified-fixture-${width}-sources.png`,
+            path: `${screenshots}/verified-fixture-${width}-sources.png`,
           });
         }
       } finally {
@@ -257,4 +305,6 @@ try {
   );
 } finally {
   await payload.destroy();
+  if (temporaryDirectory)
+    rmSync(temporaryDirectory, { recursive: true, force: true });
 }

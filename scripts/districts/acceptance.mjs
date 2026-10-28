@@ -1,6 +1,12 @@
+// Playwright acceptance of the 39 district guides against a local server
+// (DISTRICT_TEST_URL, default http://localhost:3017) with the local Chrome
+// (BROWSER_CHANNEL, default chrome). Playwright is a devDependency;
+// BROWSER_PACKAGE may point at another playwright/package.json. The JSON
+// result goes to DISTRICT_TEST_OUTPUT (default /tmp/istanbul-39-acceptance).
 import { createRequire } from "node:module";
 import { readFile, mkdir, writeFile } from "node:fs/promises";
 import assert from "node:assert/strict";
+import { districts as registeredDistricts } from "../../src/content/districts/district-registry.ts";
 const { chromium } = createRequire(
   process.env.BROWSER_PACKAGE || import.meta.url,
 )("playwright");
@@ -10,13 +16,7 @@ if (!/^http:\/\/(localhost|127\.0\.0\.1):\d+$/.test(base))
 const output =
   process.env.DISTRICT_TEST_OUTPUT || "/tmp/istanbul-39-acceptance";
 await mkdir(output, { recursive: true });
-const registry = await readFile(
-  "src/content/districts/district-registry.ts",
-  "utf8",
-);
-const districts = [
-  ...registry.matchAll(/\["([^"]+)", "([a-z-]+)", [\d.]+, [\d.]+\]/g),
-].map((m) => ({ name: m[1], slug: m[2] }));
+const districts = registeredDistricts.map(({ name, slug }) => ({ name, slug }));
 assert.equal(districts.length, 39);
 const editorial =
   process.env.DISTRICT_EXPECT_EDITORIAL === "1"

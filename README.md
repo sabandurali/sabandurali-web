@@ -54,8 +54,8 @@ including how to generate the secret, is
 | `npm run generate:importmap`         | Regenerate the admin import map after adding a custom admin component                                                         |
 | `npm run generate:admin-guide`       | Regenerate `YONETIM-PANELI-KULLANIM-KILAVUZU.md` from `src/components/admin/help/admin-help-guide.ts`                          |
 | `npm run e2e:headers -- <local-url>` | Security header check against a local production server                                                                      |
-| `npm run e2e:districts:cms -- <db>`  | District guide check against an imported, isolated `/tmp/istanbul-39-*` SQLite database                                      |
-| `npm run e2e:districts:routes`       | Playwright acceptance of the 39 district pages; needs `BROWSER_PACKAGE` and a local server at `DISTRICT_TEST_URL`             |
+| `npm run e2e:districts:cms`          | District guide CMS rules on a temporary SQLite database it imports and removes itself (or pass an isolated `/tmp/istanbul-39-*` database) |
+| `npm run e2e:districts:routes`       | Playwright acceptance of the 39 district pages with the local Chrome against a local server at `DISTRICT_TEST_URL`            |
 | `npm run e2e:content-trust`          | Metadata, share image and route regression check against a local server at `DISTRICT_TEST_URL`; JSON to `DISTRICT_TEST_OUTPUT` |
 | `npm run report:districts:content`   | Run the content acceptance check and write its JSON result to the ignored `reports/istanbul-39/content-acceptance.json`        |
 
