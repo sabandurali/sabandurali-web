@@ -13,6 +13,8 @@ export type PublicArticleImage = {
   src: string;
   alt: string;
   caption?: string;
+  /** Source / copyright line that must be shown with the image. */
+  credit?: string;
   width?: number;
   height?: number;
 };

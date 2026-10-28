@@ -53,6 +53,8 @@ export type CoverImage = {
   source?: string;
   copyrightOwner?: string;
   license?: string;
+  /** Display credit; see getImageCredit() in src/content/media.ts. */
+  credit?: string;
   width: number;
   height: number;
 };

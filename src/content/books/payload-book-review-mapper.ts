@@ -7,80 +7,61 @@ import type {
   BookKeyIdea,
   BookQuote,
   BookReview,
+  BookReviewLanguage,
   BookTag,
 } from "@/content/books/types";
-import type {
-  Book as PayloadBook,
-  Media as PayloadMedia,
-} from "@/payload-types";
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
-}
+import { reportContentIssue } from "@/content/content-log";
+import {
+  getFiniteNumber,
+  getRelationshipID,
+  getText,
+  isRecord,
+} from "@/content/guards";
+import { mapMediaImage } from "@/content/media";
+import type { Book as PayloadBook } from "@/payload-types";
 
 function getRequiredText(value: unknown): string | null {
-  return typeof value === "string" && value.trim().length > 0
-    ? value.trim()
-    : null;
+  return getText(value);
 }
 
 function getOptionalText(value: unknown): string | null {
-  return getRequiredText(value);
-}
-
-function getRelationshipID(value: unknown): string | null {
-  if (typeof value === "string") return value;
-  if (isRecord(value) && typeof value.id === "string") return value.id;
-  return null;
+  return getText(value);
 }
 
 function getOptionalNumber(value: unknown): number | null {
-  return typeof value === "number" && Number.isFinite(value) ? value : null;
-}
-
-function getPositiveDimension(value: unknown): number | null {
-  return typeof value === "number" && Number.isFinite(value) && value > 0
-    ? value
-    : null;
+  return getFiniteNumber(value);
 }
 
 function mapCoverImage(
   value: PayloadBook["coverImage"],
   localizedAlt: unknown,
   title: string,
+  language: BookReviewLanguage,
 ): BookCoverImage | null {
-  if (!isRecord(value)) return null;
+  const image = mapMediaImage(value, {
+    alt: localizedAlt,
+    fallbackAlt: title,
+    locale: language,
+  });
 
-  const media = value as PayloadMedia;
-  const mimeType = getRequiredText(media.mimeType);
-  const src = getSafePayloadMediaPath(media.url);
-  const width = getPositiveDimension(media.width);
-  const height = getPositiveDimension(media.height);
-
-  if (
-    mimeType === null ||
-    !mimeType.startsWith("image/") ||
-    src === null ||
-    width === null ||
-    height === null
-  ) {
+  // Book covers need intrinsic dimensions for the layout.
+  if (image === null || image.width === null || image.height === null) {
     return null;
   }
 
   return {
-    src,
-    alt: getRequiredText(localizedAlt) ?? getRequiredText(media.alt) ?? title,
-    ...(getOptionalText(media.description) === null
-      ? {}
-      : { caption: getOptionalText(media.description) ?? undefined }),
-    ...(getOptionalText(media.sourceCopyright) === null
+    src: image.src,
+    alt: image.alt,
+    ...(image.caption === null ? {} : { caption: image.caption }),
+    ...(image.credit === null
       ? {}
       : {
-          source: getOptionalText(media.sourceCopyright) ?? undefined,
-          copyrightOwner: getOptionalText(media.sourceCopyright) ?? undefined,
+          source: image.credit,
+          copyrightOwner: image.credit,
+          credit: image.credit,
         }),
-    width,
-    height,
+    width: image.width,
+    height: image.height,
   };
 }
 
@@ -249,11 +230,7 @@ function createTranslationGroupID(
 }
 
 function reportInvalidBookReview(bookID: string, reason: string): void {
-  if (process.env.NODE_ENV === "development") {
-    console.warn(
-      `[public-books] Payload book review ${bookID} was skipped: ${reason}`,
-    );
-  }
+  reportContentIssue({ scope: "books", id: bookID, reason });
 }
 
 export function mapPayloadBookReview(
@@ -291,6 +268,7 @@ export function mapPayloadBookReview(
     value.coverImage,
     value.coverImageAlt,
     title,
+    value.language,
   );
   const translationDocument = isRecord(value.translation)
     ? value.translation

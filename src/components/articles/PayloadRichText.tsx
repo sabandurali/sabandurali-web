@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { ComponentProps } from "react";
+import type { ComponentProps, ReactElement } from "react";
 import {
   RichText,
   type JSXConverter,
@@ -10,35 +10,59 @@ import type {
   SerializedLinkNode,
   SerializedUploadNode,
 } from "@payloadcms/richtext-lexical";
-import { getSafePayloadMediaPath } from "@/content/articles/article-images";
 import { getSafeArticleHref } from "@/content/articles/article-links";
+import { reportContentIssue } from "@/content/content-log";
+import { isRecord } from "@/content/guards";
+import { getRichTextUpload } from "@/content/rich-text/upload-node";
 
+/**
+ * Public renderer for Payload Lexical content. The data is prepared by the
+ * content mappers (src/content/rich-text/prepare-rich-text.ts): internal
+ * links already carry their public path and uploads only their public
+ * fields. Everything this renderer cannot show is skipped explicitly and
+ * reported as a structured content issue in every environment.
+ */
 type PayloadRichTextProps = {
   data: ComponentProps<typeof RichText>["data"];
 };
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
+function reportSkippedNode(type: string, reason: string, detail?: string) {
+  reportContentIssue({
+    scope: "rich-text",
+    reason: `${type} node skipped: ${reason}`,
+    ...(detail === undefined ? {} : { detail }),
+  });
 }
 
-function getText(value: unknown): string | null {
-  return typeof value === "string" && value.trim().length > 0
-    ? value.trim()
-    : null;
+function getLinkTarget(fields: unknown) {
+  const linkFields = isRecord(fields) ? fields : null;
+
+  return {
+    linkType: linkFields?.linkType,
+    url: typeof linkFields?.url === "string" ? linkFields.url : undefined,
+    newTab: linkFields?.newTab === true,
+  };
 }
 
-function getPositiveDimension(value: unknown): number | null {
-  return typeof value === "number" && Number.isFinite(value) && value > 0
-    ? value
-    : null;
-}
-
-function reportSkippedNode(type: string, reason: string): void {
-  if (process.env.NODE_ENV === "development") {
-    console.warn(
-      `[public-articles] Lexical ${type} node was skipped: ${reason}`,
-    );
-  }
+function SafeLink({
+  href,
+  newTab,
+  children,
+}: {
+  href: string;
+  newTab: boolean;
+  children: ComponentProps<"a">["children"];
+}) {
+  return (
+    <a
+      href={href}
+      target={newTab ? "_blank" : undefined}
+      rel={newTab ? "noopener noreferrer" : undefined}
+      className="font-semibold text-accent-strong underline decoration-border underline-offset-4 hover:text-ivory"
+    >
+      {children}
+    </a>
+  );
 }
 
 const linkConverter: JSXConverter<SerializedLinkNode> = ({
@@ -46,30 +70,28 @@ const linkConverter: JSXConverter<SerializedLinkNode> = ({
   nodesToJSX,
 }) => {
   const children = nodesToJSX({ nodes: node.children });
-  const href =
-    node.fields.linkType === "custom"
-      ? getSafeArticleHref(node.fields.url)
-      : null;
+  const { linkType, url, newTab } = getLinkTarget(node.fields);
+
+  if (linkType === "internal") {
+    // Resolvable internal links were turned into paths by the mapper.
+    reportSkippedNode(
+      "link",
+      "internal link target is not public or has no public route",
+    );
+    return <>{children}</>;
+  }
+
+  const href = getSafeArticleHref(url);
 
   if (href === null) {
-    if (node.fields.linkType === "internal") {
-      reportSkippedNode("link", "internal document links are not configured");
-    } else if (node.fields.url) {
-      reportSkippedNode("link", "URL is not safe");
-    }
-
+    if (url) reportSkippedNode("link", "URL is not safe");
     return <>{children}</>;
   }
 
   return (
-    <a
-      href={href}
-      target={node.fields.newTab ? "_blank" : undefined}
-      rel={node.fields.newTab ? "noopener noreferrer" : undefined}
-      className="font-semibold text-accent-strong underline decoration-border underline-offset-4 hover:text-ivory"
-    >
+    <SafeLink href={href} newTab={newTab}>
       {children}
-    </a>
+    </SafeLink>
   );
 };
 
@@ -78,99 +100,99 @@ const autoLinkConverter: JSXConverter<SerializedAutoLinkNode> = ({
   nodesToJSX,
 }) => {
   const children = nodesToJSX({ nodes: node.children });
-  const href = getSafeArticleHref(node.fields.url);
+  const { url, newTab } = getLinkTarget(node.fields);
+  const href = getSafeArticleHref(url);
 
   if (href === null) {
-    if (node.fields.url) {
-      reportSkippedNode("autolink", "URL is not safe");
-    }
-
+    if (url) reportSkippedNode("autolink", "URL is not safe");
     return <>{children}</>;
   }
 
   return (
-    <a
-      href={href}
-      target={node.fields.newTab ? "_blank" : undefined}
-      rel={node.fields.newTab ? "noopener noreferrer" : undefined}
-      className="font-semibold text-accent-strong underline decoration-border underline-offset-4 hover:text-ivory"
-    >
+    <SafeLink href={href} newTab={newTab}>
       {children}
-    </a>
+    </SafeLink>
   );
 };
 
-const uploadConverter: JSXConverter<SerializedUploadNode> = ({ node }) => {
-  if (!isRecord(node.value)) {
-    reportSkippedNode("upload", "relationship is not populated");
+/**
+ * Element for one Lexical upload node, or null when it cannot be shown.
+ * Exported for tests: it never throws, whatever the stored node looks like.
+ */
+export function renderRichTextUpload(node: unknown): ReactElement | null {
+  const result = getRichTextUpload(node);
+
+  if (!result.ok) {
+    reportSkippedNode("upload", result.reason, result.detail);
     return null;
   }
 
-  const src = getSafePayloadMediaPath(node.value.url);
-  const mimeType = getText(node.value.mimeType);
+  const { upload } = result;
 
-  if (src === null || mimeType === null) {
-    reportSkippedNode("upload", "media URL or MIME type is invalid");
-    return null;
-  }
-
-  if (mimeType === "application/pdf") {
-    const label =
-      getText(node.value.filename) ?? getText(node.value.alt) ?? "PDF";
-
+  if (upload.kind === "file") {
     return (
       <a
-        href={src}
+        href={upload.src}
         className="flex min-h-12 items-center justify-between gap-4 rounded-sm border border-border bg-surface px-5 py-3 text-sm font-semibold text-ivory hover:border-accent hover:text-accent-strong"
       >
-        <span>{label}</span>
+        <span>{upload.label}</span>
         <span aria-hidden="true">↓</span>
       </a>
     );
   }
 
-  if (!mimeType.startsWith("image/")) {
-    reportSkippedNode("upload", `unsupported MIME type ${mimeType}`);
-    return null;
-  }
-
-  const alt = getText(node.fields.alt) ?? getText(node.value.alt) ?? "";
-  const width = getPositiveDimension(node.value.width);
-  const height = getPositiveDimension(node.value.height);
-
   return (
     <figure>
-      {width !== null && height !== null ? (
+      {upload.width !== null && upload.height !== null ? (
         <Image
-          src={src}
-          alt={alt}
-          width={width}
-          height={height}
+          src={upload.src}
+          alt={upload.alt}
+          width={upload.width}
+          height={upload.height}
           sizes="(min-width: 1024px) 768px, 100vw"
           className="h-auto w-full rounded-sm border border-border object-cover"
         />
       ) : (
         <span className="relative block aspect-video overflow-hidden rounded-sm border border-border">
           <Image
-            src={src}
-            alt={alt}
+            src={upload.src}
+            alt={upload.alt}
             fill
             sizes="(min-width: 1024px) 768px, 100vw"
             className="object-cover"
           />
         </span>
       )}
+      {(upload.caption !== null || upload.credit !== null) && (
+        <figcaption className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-sm leading-6 text-muted">
+          {upload.caption !== null && <span>{upload.caption}</span>}
+          {upload.credit !== null && (
+            <span data-image-credit="">{upload.credit}</span>
+          )}
+        </figcaption>
+      )}
     </figure>
   );
-};
+}
+
+const uploadConverter: JSXConverter<SerializedUploadNode> = ({ node }) =>
+  renderRichTextUpload(node);
 
 const publicConverters: JSXConvertersFunction = ({ defaultConverters }) => ({
   ...defaultConverters,
   autolink: autoLinkConverter,
   link: linkConverter,
   upload: uploadConverter,
+  // Relationship blocks have no public design; they are skipped explicitly.
+  relationship: () => {
+    reportSkippedNode("relationship", "relationship blocks are not supported");
+    return null;
+  },
   unknown: ({ node }) => {
-    reportSkippedNode(node.type, "node type is not supported");
+    reportSkippedNode(
+      typeof node.type === "string" ? node.type : "unknown",
+      "node type is not supported",
+    );
     return null;
   },
 });
