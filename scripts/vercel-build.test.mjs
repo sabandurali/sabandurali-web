@@ -330,6 +330,30 @@ for (const [name, error, expected, hidden] of [
     "(unknown_failed)",
     "pw@host",
   ],
+  [
+    "server-side connection",
+    Object.assign(new Error("connection failure at host-x"), {
+      code: "08006",
+    }),
+    "(connection_failed, 08006)",
+    "host-x",
+  ],
+  [
+    "server shutdown",
+    Object.assign(new Error("terminating connection on host-y"), {
+      code: "57P01",
+    }),
+    "(connection_failed, 57P01)",
+    "host-y",
+  ],
+  [
+    "system",
+    Object.assign(new Error("operation not permitted /secret/path"), {
+      code: "EPERM",
+    }),
+    "(unknown_failed, EPERM)",
+    "/secret/path",
+  ],
 ]) {
   test(`SEC-20: a ${name} failure names its category without driver details`, async () => {
     const harness = createHarness({

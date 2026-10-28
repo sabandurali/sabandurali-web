@@ -104,7 +104,8 @@ export function classifyMigrationStateError(error) {
     typeof error === "object" && error !== null && "code" in error
       ? String(error.code)
       : "";
-  const isSqlState = /^[0-9A-Z]{5}$/.test(rawCode);
+  // SQLSTATE codes are five characters and always contain a digit.
+  const isSqlState = /^(?=.*\d)[0-9A-Z]{5}$/.test(rawCode);
   const isSystemCode = /^[A-Z][A-Z0-9_]{2,63}$/.test(rawCode);
   const code = isSqlState || isSystemCode ? rawCode : undefined;
   const message = error instanceof Error ? error.message : "";
@@ -113,7 +114,10 @@ export function classifyMigrationStateError(error) {
     return { category: "authentication_failed", code };
   }
   if (rawCode === "3D000") return { category: "database_not_found", code };
-  if (connectionErrorCodes.has(rawCode)) {
+  if (
+    connectionErrorCodes.has(rawCode) ||
+    (isSqlState && /^(?:08|57P0[123]$|53300$)/.test(rawCode))
+  ) {
     return { category: "connection_failed", code };
   }
   if (/CERT|TLS|SSL/.test(rawCode)) return { category: "tls_failed", code };
