@@ -239,6 +239,9 @@ test("the image optimizer of this app accepts optimized social image URLs", () =
   const validate = (src: string) => {
     const optimized = new URL(createOptimizedSocialImage({ src, alt: "" }).url);
     assert.equal(optimized.pathname, images.path);
+    // validateParams only reads req.headers.accept, config.images and
+    // config.basePath, so partial objects stand in for the request and the
+    // resolved Next.js config.
     return ImageOptimizerCache.validateParams(
       { headers: { accept: "*/*" } } as never,
       Object.fromEntries(optimized.searchParams),
