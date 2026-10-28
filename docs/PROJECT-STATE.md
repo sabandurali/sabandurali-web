@@ -27,25 +27,17 @@ The current documentation HEAD is the later docs-only commit containing this han
 
 ## C. Tech stack
 
-`package.json` and `package-lock.json` are the source of truth for versions;
-this list was last synchronised on 2026-10-28 (Payload 3.92.1 upgrade):
+Versions are recorded only in `package.json` (ranges, `engines`), `package-lock.json` (the exact installed versions) and `.nvmrc`. This section names the parts and major versions without copying exact versions:
 
-- Node.js `>=24.22.1 <25` (`engines`, `.nvmrc` = 24); npm 11
-- Next.js `16.4.2` (App Router, Turbopack) with `eslint-config-next` `16.4.2`
-- React and React DOM `19.2.9`
-- Payload CMS `3.92.1`: `payload`, `@payloadcms/next`, `@payloadcms/ui`,
-  `@payloadcms/richtext-lexical`, `@payloadcms/db-postgres`,
-  `@payloadcms/db-sqlite` and `@payloadcms/storage-vercel-blob`, all pinned
-  exactly and upgraded together
-- PostgreSQL in production, hosted on Neon (`pg` `8.20.0`)
-- SQLite for local Payload development
+- Node.js 24 (`engines` and `.nvmrc`) with npm 11
+- Next.js 16 (App Router, Turbopack) with the matching `eslint-config-next`
+- React and React DOM 19
+- Payload CMS 3: `payload`, `@payloadcms/next`, `@payloadcms/ui`, `@payloadcms/richtext-lexical`, `@payloadcms/db-postgres`, `@payloadcms/db-sqlite` and `@payloadcms/storage-vercel-blob`, all pinned exactly and upgraded together
+- PostgreSQL in production, hosted on Neon (`pg`); SQLite for local Payload development
 - Vercel deployment and Vercel Blob media storage
-- TypeScript `^5` (strict), Tailwind CSS `^4`
-- Sharp `0.35.5`
-- Tooling: ESLint `^9`, Prettier `3.9.10`, `tsx` `4.23.15` (node:test
-  runner and scripts), `@electric-sql/pglite` `0.5.9` (migration replay)
-- CI: GitHub Actions (`.github/workflows/ci.yml`) and Dependabot
-- GitHub repository hosting
+- TypeScript 5 (strict), Tailwind CSS 4, Sharp for image processing
+- Tooling: ESLint, Prettier, `tsx` (node:test runner and scripts), `@electric-sql/pglite` (migration replay) and Playwright (local e2e checks with the installed Chrome)
+- CI: GitHub Actions (`.github/workflows/ci.yml`) and Dependabot; GitHub repository hosting
 
 ## D. Production architecture
 
@@ -94,7 +86,7 @@ The site also contains Turkish workspace, about, biography, feedback-linked navi
 - Payload API route: `/api/[...slug]`
 - Admin help route: `/admin/help`
 - The help navigation link and custom view are configured in `src/payload.config.ts`.
-- Help content is embedded in `src/components/admin/help/admin-help-guide.ts` and rendered as Markdown by `AdminHelpView.tsx`.
+- Help content is embedded in `src/components/admin/help/admin-help-guide.ts` and rendered as Markdown by `AdminHelpView.tsx`. That file is the single source: `YONETIM-PANELI-KULLANIM-KILAVUZU.md` is generated from it with `npm run generate:admin-guide`, and `scripts/admin-help/guide.test.ts` fails when the two differ or when the guide names a route that `src/app` does not have. The guide covers `DistrictGuides` in its section 8.
 - The help view requires an authenticated user with admin access and `user.role === "admin"`; editors are redirected to the unauthorized route.
 - `DistrictGuides` is a registered Payload collection alongside Users, Media, Categories, Articles, Books, Pages, PhotoCollections, Tags, and Photos. Navigation is a Payload global.
 
@@ -118,7 +110,7 @@ No district rewrite is required by default. The district layer is in maintenance
 
 ## H. District content contract
 
-The public district page has an exact 14-section presentation:
+The public district page has an exact 14-section presentation. Sections 11 and 12 render only when published research articles or news for the district exist; the other twelve always render, in this order (`npm run e2e:districts:routes` checks the section ids):
 
 1. Bir bakışta
 2. İlçenin hikâyesi
@@ -220,6 +212,60 @@ The safety model matters more than internal hashes: exact approved baseline, dep
 
 Production imports must preserve document identity, creation/publication metadata where required, publication state, non-target content, and private-field boundaries.
 
+The applied district importers, their cores and tests are kept for audit in `scripts/districts/archive/` (see its README). They have no npm scripts any more; running one is a production operation under the rules above.
+
+### K.1 Production build gate
+
+`npm run vercel:build` (`scripts/vercel-build.mjs`) is the Vercel build command. It fails closed:
+
+- A Production build (`VERCEL_ENV=production`) must run on Vercel (`VERCEL=1`), from `main` (`VERCEL_GIT_COMMIT_REF=main`) and for a full 40-character `VERCEL_GIT_COMMIT_SHA`. Any other ref (for example `vercel deploy --prod` from a feature branch, a promoted Preview or a changed Production Branch setting) stops before the database is read. Keep the Vercel Production Branch locked to `main` and limit who can deploy to Production from the CLI. The gate reads Vercel's system variables (`VERCEL`, `VERCEL_ENV`, `VERCEL_GIT_COMMIT_REF`, `VERCEL_GIT_COMMIT_SHA`), so keep "Automatically expose System Environment Variables" enabled in the project settings; without them every Production build stops.
+- Production requires PostgreSQL, Vercel Blob, `DATABASE_URL`, `PAYLOAD_SECRET` and `BLOB_READ_WRITE_TOKEN`, checks the database fingerprint, and reads the applied migrations in a read-only transaction. An applied migration that the registry does not know, or applied migrations that are not a prefix of the registry, stop the build.
+- The registry is what `payload migrate` applies: Payload runs every `.ts`/`.js` file in `src/migrations/` except `index.ts`, in file-name order, and does not read the index. `src/migrations/index.ts` (which the CI migration replay reads) must list exactly the same migrations in the same order; a migration file missing from the index, an index entry without a file, another order or a helper module in that folder stops the build with `migration_registry_invalid`, and `npm test` fails on it first. `npm run payload:migrate:create` keeps both in step.
+- Previews and local builds never migrate. No Preview branch is designated for migrations any more, and a non-Production build whose `DATABASE_URL` resolves to the Production database refuses to build. The check compares host, port and database name; it also recognises the Production host in another letter case, with a trailing dot, and the Neon pooled or direct twin of the endpoint (`ep-…-pooler.…` and `ep-….…`). Any other alias of the same database (a custom DNS name or an IP address) is not recognised, so keep the Production `DATABASE_URL` scoped to the Production environment in Vercel. The Production check itself stays exact.
+- The build-time district dry-run (`PRODUCTION_DISTRICT_DRY_RUN_APPROVED_SHA`) is retired: if that variable is set, the build stops before reading anything. Remove it from the Production environment.
+- The boolean `PRODUCTION_MIGRATION_APPROVED` and `PRODUCTION_PITR_CONFIRMED` no longer approve a migration; the build logs that it ignores them. Remove them from Vercel. (`PRODUCTION_PITR_CONFIRMED` is still read by the archived original importer, never by the build.)
+
+### K.2 Approving a Production migration
+
+A migration is approved for one commit and one exact set of migrations:
+
+1. Merge the reviewed pull request (CI replays every migration in PGlite). The Production build of the merge commit stops with `Pending migrations detected; approval required.` and lists the pending migration names. Nothing is migrated.
+2. Verify point-in-time recovery for the Production Neon branch: the restore window covers the current time and a restore target can be chosen. Note the time you checked.
+3. Set three variables in the Vercel Production environment (Vercel scopes variables to an environment, not to one deployment; the values approve only this commit):
+   - `PRODUCTION_MIGRATION_APPROVED_SHA` — the full commit SHA of the deployment (`VERCEL_GIT_COMMIT_SHA`, 40 lowercase hex characters, no whitespace).
+   - `PRODUCTION_MIGRATION_APPROVED_NAMES` — the pending migration names exactly as the failed build listed them after `Pending:`, in order, separated by commas, without the sentence's final period.
+   - `PRODUCTION_MIGRATION_PITR_CONFIRMED_SHA` — the same commit SHA, set only after step 2. It is separate from every import PITR variable.
+4. Redeploy that same deployment (a redeploy keeps the commit SHA). The gate checks the three values against the commit and the pending list, runs `payload:migrate`, reads the state again and builds only when nothing is pending.
+5. Remove the three variables right after the deployment. They cannot approve another commit or another migration set, but they must not linger.
+6. Check the live site and record the deployment, commit and migration names in the release notes.
+
+A missing value, a SHA of another commit, a different or reordered name list, a migration that does not reach the registry head and an unreadable state all stop the build with an explicit reason.
+
+### K.3 Failure reasons
+
+Build failures name a category and, when there is one, a standard error code (PostgreSQL SQLSTATE or a Node.js/TLS code). Connection strings, hosts, users, passwords and driver messages are never printed. `Migration state could not be verified (<category>[, <code>]); stopping.`:
+
+| Category | Meaning |
+| --- | --- |
+| `database_url_invalid`, `database_identity_incomplete` | `DATABASE_URL` is not a complete PostgreSQL URL |
+| `database_identity_mismatch` | `DATABASE_URL` is not the Production database fingerprint (see K.4) |
+| `connection_failed`, `tls_failed` | Network, DNS, timeout or TLS failure |
+| `authentication_failed` | Wrong database credentials (`28P01`, `28000`) |
+| `database_not_found` | The database name does not exist (`3D000`) |
+| `connected_database_mismatch` | The server reports another database than the URL |
+| `migration_table_missing` | `payload_migrations` does not exist |
+| `migration_registry_invalid` | The migration files and `src/migrations/index.ts` disagree, or the list is empty or has duplicates |
+| `migration_state_inconsistent` | The applied migrations do not match the committed registry |
+| `query_failed`, `unknown_failed` | Any other database or unexpected error |
+
+### K.4 Rotating the database fingerprint after a restore
+
+The Production database identity (sha256 of `host:port/database`) is a reviewed constant, `productionDatabaseFingerprint` in `scripts/vercel-build.mjs`. A point-in-time restore onto a new endpoint, or a new database name, changes it, and every Production build then stops with `database_identity_mismatch`. To rotate it:
+
+1. Confirm the new endpoint is the intended Production database.
+2. Compute its fingerprint without printing the URL: `read -rs DATABASE_URL; export DATABASE_URL; node scripts/database-fingerprint.mjs; unset DATABASE_URL` (paste the value from Vercel; the script prints only the fingerprint).
+3. Change `productionDatabaseFingerprint` in a reviewed pull request, merge it, and let the Production build verify the migration state against the restored database.
+
 ## L. Historical photos
 
 Publication-safe rights are restricted to item-level evidence such as:
@@ -236,27 +282,18 @@ Historical imports set `featured: false`. Hero selection prefers an explicitly f
 
 ## M. Local machine safety and backups
 
-Local Payload database:
-
-- Path: `.data/payload.db`
-- Audit date: 2026-10-04
-- SQLite integrity: `ok`
-- Content tables: empty
-- Local users: 1
-- Local sessions: 1
-- Do not delete casually.
-
-Secure backup:
-
-- Path: `/Users/saban/Documents/Backups/sabandurali-web/payload-local-2026-10-04.db`
-- SHA-256: `9672c50b124627661d6802b516c08e41b7ff225ff61d57612232f457e534f84a`
-- Permissions: `0600`
-
-`.env.production.backup` is local-only, Git-ignored, permissioned `0600`, and contains production secrets. **NEVER COMMIT IT.** Relevant variable names had Vercel Production counterparts as of 2026-10-04. Never print its values into chat, logs, commands, or documentation.
-
-`.vercel` contains regenerable linkage metadata and can be recreated with `vercel link`.
+- The local Payload database is `.data/payload.db` (SQLite, Git-ignored). It is the owner's local working copy; do not delete it casually.
+- Backup locations, checksums and any local file that holds production values are recorded in the owner's private operational notes, never in this public repository. Do not commit such files and never print their values into chat, logs, commands or documentation.
+- `.env*` files other than `.env.example`, `.data/` and `.private-backups/` are Git-ignored and must stay so.
+- `.vercel` contains regenerable linkage metadata and can be recreated with `vercel link`.
 
 ## N. Old branches
+
+### `origin/codex/project-day-17-production-infra` and `origin/codex/project-day-19-photography`
+
+- Both are merged and stale (August 2026). Their own copy of `scripts/vercel-build.mjs` still runs `payload:migrate` for its Preview build without a database identity or approval check.
+- The gate on `main` no longer designates any Preview branch, but a push or a Redeploy of these branches builds their old script, and the `vercel.json` of `main` does not apply to their commits.
+- Delete both remote branches (owner action; it needs push rights). Until then, do not push to them or redeploy their Previews.
 
 ### `origin/codex/project-day-20-full-site-prototype`
 

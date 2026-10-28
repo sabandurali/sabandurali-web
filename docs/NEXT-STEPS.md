@@ -1,6 +1,6 @@
 # Şaban Durali Web — Next Steps
 
-Date: 2026-10-04
+Date: 2026-10-04 (housekeeping and owner decisions updated 2026-10-28)
 
 ## 1. Current milestone
 
@@ -30,7 +30,6 @@ In priority order, choose one bounded outcome rather than opening all tracks at 
 6. Add and verify a production email adapter and password-reset delivery workflow if account recovery is required. Payload auth exists, but no project-specific production email adapter is configured at this baseline.
 7. Expand historical district photography only from item-level rights-safe sources, with current attribution and gallery-only behavior.
 8. Run a focused performance and accessibility review on current production routes.
-9. Update the embedded admin help guide to cover the newer `DistrictGuides` workflow if administrators need that operational guidance.
 
 District visual/editorial polish is a candidate only when a specific issue is observed; “rewrite all districts” is not a default task.
 
@@ -50,11 +49,12 @@ Before any production change:
 
 ## 5. Repository housekeeping
 
+- Delete `origin/codex/project-day-17-production-infra` and `origin/codex/project-day-19-photography` first: their own old build script still migrates its Preview database without checks (`docs/PROJECT-STATE.md` §N).
 - Review and optionally delete `origin/codex/project-day-22-admin-help` after handoff; do not merge it.
 - Keep or later delete `origin/codex/project-day-20-full-site-prototype`; its decisions are now archived in the repository.
+- Branch hygiene rule: delete a remote branch once its pull request is merged or abandoned, and review the remaining remote branches at every release. A branch that should stay but must never deploy goes into `git.deploymentEnabled` in `vercel.json`; that setting only applies to commits that contain it.
 - `.next` and `node_modules` are recreatable caches/dependencies.
-- Never delete `.env.production.backup` until the user intentionally decides after confirming secure external storage.
-- The local Payload DB has a verified external backup; do not casually delete either copy.
+- Never delete a local secret backup or the local Payload database; that is the owner's decision after confirming secure external storage (details in the owner's private notes).
 - Do not delete old branches as part of feature work unless the user explicitly requests housekeeping.
 
 ## 6. When restarting after a long break
@@ -68,3 +68,12 @@ Read, in order:
 5. Source files relevant to the chosen task
 
 Then compare the handoff with current repository and live behavior. Treat recorded commit values as historical baselines and re-verify every assumption before coding.
+
+## 7. Open owner decisions
+
+These need the owner; no agent should decide or carry them out alone.
+
+1. **Public research data.** `data/districts/research.json` is the raw, unverified research of the 39 districts (`publicationStatus: draft-only-unverified-research`). The application never publishes it, but it is readable in the public GitHub repository and its history. Choose one: keep it public on purpose and record that in `docs/PROJECT-STATE.md`; make the repository private; or move the file to private storage and keep only the fingerprints the importers check. The last option also needs a plan for the tests and the local import that read the file today, and possibly a history rewrite.
+2. **Git history.** The former personal mailbox, the local backup details and the evidence logs are gone from the current tree but remain in the history. Rewriting history (for example with `git filter-repo`) is a separate, coordinated decision because it changes every commit hash.
+3. **Historical photo batch 2.** `scripts/photos/` stays in place as the reusable engine with a per-batch config. If the second historical photo batch has already been applied to Production, remove its three `historical-photo:batch2:*` npm scripts as was done for the district importers.
+4. **Stale Preview branches.** Delete the two branches named in section 5; deleting a remote branch needs push rights.

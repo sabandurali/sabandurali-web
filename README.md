@@ -10,16 +10,17 @@ is edited through an embedded Payload CMS.
 
 | Area      | Technology                                                                                     |
 | --------- | ---------------------------------------------------------------------------------------------- |
-| Runtime   | Node.js 24 (`>=24.22.1 <25`, see `.nvmrc`), npm 11                                             |
-| Framework | Next.js 16.4.2 (App Router, Turbopack), React 19.2.9, strict TypeScript 5                      |
+| Runtime   | Node.js 24 (`engines` in `package.json`, `.nvmrc`), npm 11                                     |
+| Framework | Next.js 16 (App Router, Turbopack), React 19, strict TypeScript 5                              |
 | Styling   | Tailwind CSS 4                                                                                 |
-| CMS       | Payload 3.92.1 in the same app: admin at `/admin`, REST API at `/api`, Lexical rich text       |
+| CMS       | Payload 3 in the same app: admin at `/admin`, REST API at `/api`, Lexical rich text            |
 | Database  | SQLite locally (`.data/payload.db`), PostgreSQL on Neon in production                          |
-| Media     | `public/media` locally, Vercel Blob in production; images processed with Sharp 0.35.5          |
+| Media     | `public/media` locally, Vercel Blob in production; images processed with Sharp                 |
 | Hosting   | Vercel through the GitHub integration                                                          |
-| Quality   | ESLint 9, Prettier 3.9.10, `node:test` via tsx, PGlite migration replay, GitHub Actions, Dependabot |
+| Quality   | ESLint 9, Prettier 3, `node:test` via tsx, PGlite migration replay, Playwright e2e checks, GitHub Actions, Dependabot |
 
-`package.json` and `package-lock.json` are the source of truth for versions.
+`package.json` and `package-lock.json` are the only source of exact versions;
+this README names major versions only.
 Payload packages are pinned exactly and must be upgraded together.
 
 ## Quick start
@@ -52,10 +53,12 @@ including how to generate the secret, is
 | `npm run check`                      | typecheck, lint, format:check, test and build: must pass before every pull request                                           |
 | `npm run generate:types`             | Regenerate `src/payload-types.ts` after a collection or field change                                                          |
 | `npm run generate:importmap`         | Regenerate the admin import map after adding a custom admin component                                                         |
+| `npm run generate:admin-guide`       | Regenerate `YONETIM-PANELI-KULLANIM-KILAVUZU.md` from `src/components/admin/help/admin-help-guide.ts`                          |
 | `npm run e2e:headers -- <local-url>` | Security header check against a local production server                                                                      |
-| `npm run e2e:districts:cms -- <db>`  | District guide check against an imported, isolated `/tmp/istanbul-39-*` SQLite database                                      |
-| `npm run e2e:districts:routes`       | Playwright acceptance of the 39 district pages; needs `BROWSER_PACKAGE` and a local server at `DISTRICT_TEST_URL`             |
-| `npm run report:districts:content`   | Re-run the content acceptance check and rewrite `reports/istanbul-39/content-acceptance.json`                                 |
+| `npm run e2e:districts:cms`          | District guide CMS rules on a temporary SQLite database it imports and removes itself (or pass an isolated `/tmp/istanbul-39-*` database) |
+| `npm run e2e:districts:routes`       | Playwright acceptance of the 39 district pages with the local Chrome against a local server at `DISTRICT_TEST_URL`            |
+| `npm run e2e:content-trust`          | Metadata, share image and route regression check against a local server at `DISTRICT_TEST_URL`; JSON to `DISTRICT_TEST_OUTPUT` |
+| `npm run report:districts:content`   | Run the content acceptance check and write its JSON result to the ignored `reports/istanbul-39/content-acceptance.json`        |
 
 Scripts whose names contain `production`, `migrate`, `:apply`, `:dry-run` or
 `:verify`, plus `vercel:build`, touch the production database or prepare
@@ -92,11 +95,13 @@ and the definition of done.
 - Vercel deploys `main` to production and every other pushed branch to a
   Preview, except the branches disabled in `vercel.json`.
 - The build command is `npm run vercel:build` (`scripts/vercel-build.mjs`).
-  On `main` it requires PostgreSQL, Vercel Blob and the server secrets, checks
-  the database fingerprint and stops when migrations are pending unless the
-  production migration and point-in-time recovery approvals are set. The two
-  Preview branches named in the script migrate their configured database;
-  every other context builds without migrating.
+  A Production build runs only from `main`. It requires PostgreSQL, Vercel
+  Blob and the server secrets, checks the database fingerprint and stops when
+  migrations are pending unless an approval bound to the commit SHA, the exact
+  pending migration names and a point-in-time recovery confirmation for the
+  same commit is set ([docs/PROJECT-STATE.md](docs/PROJECT-STATE.md) §K).
+  Previews and local builds never migrate and refuse to build against the
+  Production database.
 - PostgreSQL schema push is disabled in production. Every collection, field or
   index change needs a generated, reviewed migration in `src/migrations/`
   (`npm run payload:migrate:create`). `npm test` replays all migrations, but
@@ -129,7 +134,14 @@ local `git blame`.
 - [docs/LOCAL_DEVELOPMENT.md](docs/LOCAL_DEVELOPMENT.md): local setup (Turkish)
 - [docs/PROJECT-STATE.md](docs/PROJECT-STATE.md): project handoff, district
   contract and production rules
-- [docs/NEXT-STEPS.md](docs/NEXT-STEPS.md): open work
+- [docs/NEXT-STEPS.md](docs/NEXT-STEPS.md): open work and open owner decisions
+- [docs/agents/](docs/agents/README.md): prompts and task briefs written for
+  AI agents
+- [reports/](reports/README.md): summaries of past work packages; their
+  evidence stays in the Git history
+- [scripts/districts/archive/](scripts/districts/archive/README.md): the
+  applied Production district importers, kept for audit
 - [YONETIM-PANELI-KULLANIM-KILAVUZU.md](YONETIM-PANELI-KULLANIM-KILAVUZU.md):
-  admin guide (Turkish)
+  admin guide (Turkish), generated from the `/admin/help` source
+  `src/components/admin/help/admin-help-guide.ts`
 - [CLAUDE.md](CLAUDE.md): rules for AI-assisted work in this repository
