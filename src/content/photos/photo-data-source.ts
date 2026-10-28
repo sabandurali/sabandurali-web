@@ -7,23 +7,9 @@ import type {
   PublicPhoto,
   PublicPhotoTranslation,
 } from "@/content/photos/types";
-import { assertProductionPayloadInfrastructure } from "@/lib/payloadInfrastructure";
-
-type PublicPhotoSource = "payload" | "static";
+import { readPublicSource } from "@/content/public-source";
 
 const payloadPhotoRepository = new PayloadPublicPhotoRepository();
-
-function getPublicPhotoSource(): PublicPhotoSource {
-  const source = process.env.PHOTO_PUBLIC_SOURCE;
-  if (source === undefined || source === "static") return "static";
-  if (source === "payload") {
-    assertProductionPayloadInfrastructure();
-    return "payload";
-  }
-  throw new Error(
-    `Invalid PHOTO_PUBLIC_SOURCE value "${source}". Expected "static" or "payload".`,
-  );
-}
 
 function emptyList() {
   return {
@@ -40,7 +26,7 @@ export async function getPublishedPhotos(
   locale: PhotoLanguage,
   filters: PhotoListFilters = {},
 ) {
-  return getPublicPhotoSource() === "payload"
+  return readPublicSource("PHOTO_PUBLIC_SOURCE") === "payload"
     ? payloadPhotoRepository.listPublished(locale, filters)
     : emptyList();
 }
@@ -53,7 +39,7 @@ export const getPublishedPhotoPageData = cache(
     photo: PublicPhoto | null;
     translation: PublicPhotoTranslation | null;
   }> => {
-    if (getPublicPhotoSource() === "static") {
+    if (readPublicSource("PHOTO_PUBLIC_SOURCE") === "static") {
       return { photo: null, translation: null };
     }
     const photo = await payloadPhotoRepository.findPublishedBySlug(
@@ -81,13 +67,13 @@ export const getPublishedPhotoPageData = cache(
 );
 
 export async function getRelatedPublishedPhotos(photo: PublicPhoto) {
-  return getPublicPhotoSource() === "payload"
+  return readPublicSource("PHOTO_PUBLIC_SOURCE") === "payload"
     ? payloadPhotoRepository.related(photo)
     : [];
 }
 
 export async function getAllPublishedPhotos(locale: PhotoLanguage) {
-  return getPublicPhotoSource() === "payload"
+  return readPublicSource("PHOTO_PUBLIC_SOURCE") === "payload"
     ? payloadPhotoRepository.listAllPublished(locale)
     : [];
 }

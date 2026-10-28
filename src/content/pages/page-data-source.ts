@@ -2,27 +2,17 @@ import "server-only";
 import { cache } from "react";
 import { PayloadPublicPageRepository } from "@/content/pages/payload-page-repository";
 import type { PublicPage } from "@/content/pages/public-types";
-import { assertProductionPayloadInfrastructure } from "@/lib/payloadInfrastructure";
+import {
+  readPublicSource,
+  type PublicContentSource,
+} from "@/content/public-source";
 
-export type PublicPageSource = "payload" | "static";
+export type PublicPageSource = PublicContentSource;
 
 const payloadPageRepository = new PayloadPublicPageRepository();
 
 export function getPublicPageSource(): PublicPageSource {
-  const source = process.env.PAGE_PUBLIC_SOURCE;
-
-  if (source === undefined || source === "static") {
-    return "static";
-  }
-
-  if (source === "payload") {
-    assertProductionPayloadInfrastructure();
-    return "payload";
-  }
-
-  throw new Error(
-    `Invalid PAGE_PUBLIC_SOURCE value "${source}". Expected "static" or "payload".`,
-  );
+  return readPublicSource("PAGE_PUBLIC_SOURCE");
 }
 
 export type TurkishHomePageData =

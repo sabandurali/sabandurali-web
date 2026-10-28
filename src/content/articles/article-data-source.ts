@@ -22,7 +22,7 @@ import {
   mapStaticArticle,
 } from "@/content/articles/static-articles";
 import type { Article, ArticleLanguage } from "@/content/articles/types";
-import { assertProductionPayloadInfrastructure } from "@/lib/payloadInfrastructure";
+import { readPublicSource } from "@/content/public-source";
 
 // Repository fixtures exercise the article templates locally. Production
 // builds never serve them, whatever the public source is.
@@ -37,25 +37,6 @@ export type PublishedArticlePageData = {
   article: PublicArticle | null;
   translation: PublicArticleTranslation | null;
 };
-
-type PublicArticleSource = "payload" | "static";
-
-function getPublicArticleSource(): PublicArticleSource {
-  const source = process.env.ARTICLE_PUBLIC_SOURCE;
-
-  if (source === undefined || source === "static") {
-    return "static";
-  }
-
-  if (source === "payload") {
-    assertProductionPayloadInfrastructure();
-    return "payload";
-  }
-
-  throw new Error(
-    `Invalid ARTICLE_PUBLIC_SOURCE value "${source}". Expected "static" or "payload".`,
-  );
-}
 
 async function getStaticPublishedArticlePageData(
   slug: string,
@@ -119,7 +100,7 @@ export const getPublishedArticlePageData = cache(
     slug: string,
     language: ArticleLanguage,
   ): Promise<PublishedArticlePageData> =>
-    getPublicArticleSource() === "payload"
+    readPublicSource("ARTICLE_PUBLIC_SOURCE") === "payload"
       ? getPayloadPublishedArticlePageData(slug, language)
       : getStaticPublishedArticlePageData(slug, language),
 );
@@ -137,7 +118,7 @@ function getAllStaticPublishedArticles(
 export async function getAllPublishedArticles(
   language: ArticleLanguage,
 ): Promise<PublicArticleSummary[]> {
-  return getPublicArticleSource() === "payload"
+  return readPublicSource("ARTICLE_PUBLIC_SOURCE") === "payload"
     ? payloadArticleRepository.listPublished(language)
     : getAllStaticPublishedArticles(language);
 }
@@ -146,7 +127,7 @@ export async function getDistrictNews(
   district: string,
   language: ArticleLanguage,
 ): Promise<PublicArticleSummary[]> {
-  if (getPublicArticleSource() !== "payload") return [];
+  if (readPublicSource("ARTICLE_PUBLIC_SOURCE") !== "payload") return [];
   return payloadArticleRepository.listDistrictNews(district, language);
 }
 

@@ -18,28 +18,9 @@ import type {
   HomeAnchors,
   Locale,
 } from "@/content/homeContent";
-import { assertProductionPayloadInfrastructure } from "@/lib/payloadInfrastructure";
-
-type PublicNavigationSource = "payload" | "static";
+import { readPublicSource } from "@/content/public-source";
 
 const payloadNavigationRepository = new PayloadPublicNavigationRepository();
-
-function getPublicNavigationSource(): PublicNavigationSource {
-  const source = process.env.NAVIGATION_PUBLIC_SOURCE;
-
-  if (source === undefined || source === "static") {
-    return "static";
-  }
-
-  if (source === "payload") {
-    assertProductionPayloadInfrastructure();
-    return "payload";
-  }
-
-  throw new Error(
-    `Invalid NAVIGATION_PUBLIC_SOURCE value "${source}". Expected "static" or "payload".`,
-  );
-}
 
 const getPayloadNavigation = cache(
   async (locale: Locale): Promise<PublicNavigation | null> =>
@@ -56,7 +37,7 @@ export async function getHeaderNavigation(
     return getEnglishHeaderNavigationItems();
   }
 
-  if (getPublicNavigationSource() === "static") {
+  if (readPublicSource("NAVIGATION_PUBLIC_SOURCE") === "static") {
     return getStaticHeaderNavigationItems({
       locale,
       anchors,
@@ -74,7 +55,7 @@ export async function getHeaderNavigation(
 export async function getFooterNavigation(
   content: FooterContent,
 ): Promise<PublicFooterGroup[]> {
-  if (getPublicNavigationSource() === "static") {
+  if (readPublicSource("NAVIGATION_PUBLIC_SOURCE") === "static") {
     return getStaticFooterGroups(content);
   }
 

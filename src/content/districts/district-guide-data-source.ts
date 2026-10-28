@@ -2,7 +2,7 @@ import "server-only";
 import { cache } from "react";
 import { getPayload } from "payload";
 import config from "@payload-config";
-import { assertProductionPayloadInfrastructure } from "@/lib/payloadInfrastructure";
+import { readPublicSource } from "@/content/public-source";
 import {
   projectPublishedDistrictGuide,
   type DistrictGuide,
@@ -11,8 +11,8 @@ export type { DistrictGuide } from "./district-guide-projection";
 
 export const getDistrictGuide = cache(
   async (district: string): Promise<DistrictGuide | null> => {
-    if (process.env.PAGE_PUBLIC_SOURCE !== "payload") return null;
-    assertProductionPayloadInfrastructure();
+    // District guides follow the page source (docs/PROJECT-STATE.md).
+    if (readPublicSource("PAGE_PUBLIC_SOURCE") !== "payload") return null;
     const payload = await getPayload({ config });
     const result = await payload.find({
       collection: "district-guides",
