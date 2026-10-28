@@ -1,4 +1,4 @@
-/** Production PostgreSQL district importer. Never defaults to write mode. */
+/** Single-district Production importer. Defaults to no mode and no writes. */
 import { readFile } from "node:fs/promises";
 import { parseArgs } from "node:util";
 import {
@@ -10,18 +10,21 @@ import {
 import {
   describeProductionDatabase,
   readProductionMigrationState,
-} from "../vercel-build.mjs";
-import { attachEditorial, type EditorialBundle } from "./editorial";
-import { validateBundle, type ResearchBundle } from "./import-core";
+} from "../../vercel-build.mjs";
+import { attachEditorial, type EditorialBundle } from "../editorial";
+import { validateBundle, type ResearchBundle } from "../import-core";
 import {
-  applyProductionImport,
-  assertProductionImportEnvironment,
-  productionDryRunConfigurationStatus,
+  applyBakirkoy,
+  bakirkoyConfigurationStatus,
+  assertBakirkoyEnvironment,
+  readBakirkoyPlan,
+  type BakirkoyPlanExpectation,
+} from "./production-bakirkoy-editorial-core";
+import {
   productionImportError,
-  readProductionImportPlan,
   safeProductionImportErrorReport,
-  type ProductionImportErrorCategory,
   type ProductionImportDocument,
+  type ProductionImportErrorCategory,
   type ProductionImportRepository,
   type ProductionImportTransaction,
 } from "./production-import-core";
@@ -40,9 +43,8 @@ function databaseErrorCategory(error: unknown): ProductionImportErrorCategory {
       "ENOTFOUND",
       "ETIMEDOUT",
     ]).has(code)
-  ) {
+  )
     return "connection_failed";
-  }
   return "query_failed";
 }
 
@@ -55,7 +57,7 @@ function payloadTransaction(
       const result = await instance.find({
         collection: "district-guides",
         depth: 0,
-        draft: true,
+        draft: false,
         fallbackLocale: false,
         limit: 100,
         locale: "tr",
@@ -68,7 +70,7 @@ function payloadTransaction(
       return (await instance.update({
         collection: "district-guides",
         data,
-        draft: true,
+        draft: false,
         id,
         locale: "tr",
         overrideAccess: true,
@@ -96,12 +98,11 @@ function payloadRepository(payload: Payload): ProductionImportRepository {
         accessMode: "read write",
         isolationLevel: "serializable",
       });
-      if (!transactionID) {
+      if (!transactionID)
         throw productionImportError(
           "transaction_failed",
-          "PostgreSQL transaction could not be started.",
+          "Bakirkoy transaction could not be started.",
         );
-      }
       req.transactionID = transactionID;
       try {
         const result = await operation(payloadTransaction(payload, req));
@@ -114,7 +115,7 @@ function payloadRepository(payload: Payload): ProductionImportRepository {
         } catch {
           throw productionImportError(
             "rollback_failed",
-            "Production district import rollback failed closed.",
+            "Bakirkoy transaction rollback failed closed.",
           );
         } finally {
           delete req.transactionID;
@@ -132,6 +133,7 @@ async function main(): Promise<void> {
       options: {
         apply: { type: "boolean" },
         "dry-run": { type: "boolean" },
+        "expect-applied": { type: "boolean" },
         editorial: {
           type: "string",
           default: "data/districts/editorial.json",
@@ -143,22 +145,26 @@ async function main(): Promise<void> {
   } catch {
     throw productionImportError(
       "configuration_failed",
-      "Production importer arguments are invalid.",
+      "Bakirkoy import arguments are invalid.",
     );
   }
-
-  if (values.apply === values["dry-run"]) {
+  if (
+    values.apply === values["dry-run"] ||
+    (values.apply && values["expect-applied"])
+  ) {
     throw productionImportError(
       "configuration_failed",
-      "Choose exactly one of --dry-run or --apply.",
+      "Choose exactly one mode; applied verification is read-only.",
     );
   }
 
   const apply = values.apply === true;
-  assertProductionImportEnvironment(process.env, apply);
+  const expectation: BakirkoyPlanExpectation = values["expect-applied"]
+    ? "applied"
+    : "initial";
+  assertBakirkoyEnvironment(process.env, apply);
+  const deploymentSha = process.env.VERCEL_GIT_COMMIT_SHA!;
 
-  // Shared fingerprint validation plus a live current_database() check happen
-  // in a READ ONLY transaction before Payload can initialize a write path.
   try {
     describeProductionDatabase(process.env.DATABASE_URL!);
   } catch {
@@ -167,7 +173,6 @@ async function main(): Promise<void> {
       "Production database fingerprint does not match.",
     );
   }
-
   let migrationState;
   try {
     migrationState = await readProductionMigrationState(process.env);
@@ -200,31 +205,39 @@ async function main(): Promise<void> {
   } catch {
     throw productionImportError(
       "input_failed",
-      "District import input validation failed.",
+      "Bakirkoy editorial input validation failed.",
     );
   }
 
   let payload: Payload;
   try {
-    const { default: configPromise } = await import("../../src/payload.config");
+    const { default: configPromise } =
+      await import("../../../src/payload.config");
     const config = await configPromise;
     config.typescript.autoGenerate = false;
     payload = await getPayload({ config });
   } catch {
     throw productionImportError(
       "initialization_failed",
-      "Payload production initialization failed.",
+      "Payload Production initialization failed.",
     );
   }
   try {
     const repository = payloadRepository(payload);
     const plan = apply
-      ? await applyProductionImport(bundle, repository)
-      : await readProductionImportPlan(bundle, repository);
+      ? await applyBakirkoy(bundle, repository, deploymentSha)
+      : await readBakirkoyPlan(bundle, repository, expectation, deploymentSha);
     console.log(
-      JSON.stringify(
-        apply ? { ...plan.count, writes: plan.count.update } : plan.count,
-      ),
+      JSON.stringify({
+        ...plan.count,
+        writes: apply ? plan.count.update : 0,
+        updates: plan.entries
+          .filter((entry) => entry.action === "update")
+          .map((entry) => entry.district),
+        skips: plan.entries
+          .filter((entry) => entry.action === "skip")
+          .map((entry) => entry.district),
+      }),
     );
   } finally {
     await payload.destroy();
@@ -232,15 +245,13 @@ async function main(): Promise<void> {
 }
 
 main().catch((error) => {
-  // Driver errors can contain connection details. Production failures stay
-  // intentionally opaque so credentials never reach terminal logs.
   const report = safeProductionImportErrorReport(error);
   console.error(
     JSON.stringify({
       ...report,
       ...(report.error === "configuration_failed" ||
       report.error === "approval_failed"
-        ? { configuration: productionDryRunConfigurationStatus(process.env) }
+        ? { configuration: bakirkoyConfigurationStatus(process.env) }
         : {}),
     }),
   );

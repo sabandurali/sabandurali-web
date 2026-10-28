@@ -10,16 +10,16 @@ import {
 import {
   describeProductionDatabase,
   readProductionMigrationState,
-} from "../vercel-build.mjs";
-import { attachEditorial, type EditorialBundle } from "./editorial";
-import { validateBundle, type ResearchBundle } from "./import-core";
+} from "../../vercel-build.mjs";
+import { attachEditorial, type EditorialBundle } from "../editorial";
+import { validateBundle, type ResearchBundle } from "../import-core";
 import {
-  applyBakirkoy,
-  bakirkoyConfigurationStatus,
-  assertBakirkoyEnvironment,
-  readBakirkoyPlan,
-  type BakirkoyPlanExpectation,
-} from "./production-bakirkoy-editorial-core";
+  applyDistrictBatch4Nine,
+  districtBatch4NineConfigurationStatus,
+  assertDistrictBatch4NineEnvironment,
+  readDistrictBatch4NinePlan,
+  type DistrictBatch4NinePlanExpectation,
+} from "./production-district-batch4-nine-core";
 import {
   productionImportError,
   safeProductionImportErrorReport,
@@ -101,7 +101,7 @@ function payloadRepository(payload: Payload): ProductionImportRepository {
       if (!transactionID)
         throw productionImportError(
           "transaction_failed",
-          "Bakirkoy transaction could not be started.",
+          "DistrictBatch4Nine transaction could not be started.",
         );
       req.transactionID = transactionID;
       try {
@@ -115,7 +115,7 @@ function payloadRepository(payload: Payload): ProductionImportRepository {
         } catch {
           throw productionImportError(
             "rollback_failed",
-            "Bakirkoy transaction rollback failed closed.",
+            "DistrictBatch4Nine transaction rollback failed closed.",
           );
         } finally {
           delete req.transactionID;
@@ -145,7 +145,7 @@ async function main(): Promise<void> {
   } catch {
     throw productionImportError(
       "configuration_failed",
-      "Bakirkoy import arguments are invalid.",
+      "DistrictBatch4Nine import arguments are invalid.",
     );
   }
   if (
@@ -159,10 +159,12 @@ async function main(): Promise<void> {
   }
 
   const apply = values.apply === true;
-  const expectation: BakirkoyPlanExpectation = values["expect-applied"]
+  const expectation: DistrictBatch4NinePlanExpectation = values[
+    "expect-applied"
+  ]
     ? "applied"
     : "initial";
-  assertBakirkoyEnvironment(process.env, apply);
+  assertDistrictBatch4NineEnvironment(process.env, apply);
   const deploymentSha = process.env.VERCEL_GIT_COMMIT_SHA!;
 
   try {
@@ -205,13 +207,14 @@ async function main(): Promise<void> {
   } catch {
     throw productionImportError(
       "input_failed",
-      "Bakirkoy editorial input validation failed.",
+      "DistrictBatch4Nine editorial input validation failed.",
     );
   }
 
   let payload: Payload;
   try {
-    const { default: configPromise } = await import("../../src/payload.config");
+    const { default: configPromise } =
+      await import("../../../src/payload.config");
     const config = await configPromise;
     config.typescript.autoGenerate = false;
     payload = await getPayload({ config });
@@ -224,8 +227,13 @@ async function main(): Promise<void> {
   try {
     const repository = payloadRepository(payload);
     const plan = apply
-      ? await applyBakirkoy(bundle, repository, deploymentSha)
-      : await readBakirkoyPlan(bundle, repository, expectation, deploymentSha);
+      ? await applyDistrictBatch4Nine(bundle, repository, deploymentSha)
+      : await readDistrictBatch4NinePlan(
+          bundle,
+          repository,
+          expectation,
+          deploymentSha,
+        );
     console.log(
       JSON.stringify({
         ...plan.count,
@@ -250,7 +258,7 @@ main().catch((error) => {
       ...report,
       ...(report.error === "configuration_failed" ||
       report.error === "approval_failed"
-        ? { configuration: bakirkoyConfigurationStatus(process.env) }
+        ? { configuration: districtBatch4NineConfigurationStatus(process.env) }
         : {}),
     }),
   );

@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
-import { projectPublishedDistrictGuide } from "../../src/content/districts/district-guide-projection";
-import { districts } from "../../src/content/districts/district-registry";
-import { attachEditorial, type EditorialBundle } from "./editorial";
+import { projectPublishedDistrictGuide } from "../../../src/content/districts/district-guide-projection";
+import { districts } from "../../../src/content/districts/district-registry";
+import { attachEditorial, type EditorialBundle } from "../editorial";
 import {
   fingerprint,
   importVersion,
@@ -11,7 +11,7 @@ import {
   researchFingerprint,
   type ResearchBundle,
   type ResearchRecord,
-} from "./import-core";
+} from "../import-core";
 import {
   applyBatch2ForTest,
   assertBatch2Environment,

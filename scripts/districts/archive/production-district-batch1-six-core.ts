@@ -1,5 +1,5 @@
-import { districts } from "../../src/content/districts/district-registry";
-import { projectPublishedDistrictGuide } from "../../src/content/districts/district-guide-projection";
+import { districts } from "../../../src/content/districts/district-registry";
+import { projectPublishedDistrictGuide } from "../../../src/content/districts/district-guide-projection";
 import {
   batch2EditorialSourceCommit,
   batch2ImportVersion,
@@ -10,89 +10,74 @@ import {
   researchFingerprint,
   type ResearchBundle,
   type ResearchRecord,
-} from "./import-core";
+} from "../import-core";
 import {
   productionImportError,
   type ProductionImportDocument,
   type ProductionImportRepository,
 } from "./production-import-core";
 
-export const districtBatch4NineTargets = [
-  "kartal",
-  "maltepe",
-  "pendik",
-  "sancaktepe",
-  "sultanbeyli",
-  "sile",
-  "tuzla",
-  "umraniye",
-  "uskudar",
+export const districtBatch1SixTargets = [
+  "basaksehir",
+  "bayrampasa",
+  "besiktas",
+  "beylikduzu",
+  "beyoglu",
+  "buyukcekmece",
 ] as const;
-export const districtBatch4NineImportVersion = 8;
-export const districtBatch4NineImportBatch =
-  "districtBatch4Nine-editorial-quality-2026";
-// Read-only audited Production state immediately before this nine-district
+export const districtBatch1SixImportVersion = 5;
+export const districtBatch1SixImportBatch =
+  "districtBatch1Six-editorial-quality-2026";
+// Read-only audited Production state immediately before this single-district
 // update. Both hashes must match; the importer never learns a baseline at run time.
-const districtBatch4NineProductionBaseline: Record<
+const districtBatch1SixProductionBaseline: Record<
   string,
   { content: string; source: string }
 > = {
-  kartal: {
-    content: "1a4ccacd51ddcdf996bfcdc540edda748197cbea3ab3523f83da0145158737d2",
-    source: "0402c10ca56f2983d5e462bdbef4e53766f983089814a8f0cb175cf93aaea508",
+  basaksehir: {
+    content: "a85ede778356258f8b7e38902e2f61e0f5b0227e3f6a1e9ab3ddadb68803ba06",
+    source: "90d499696002f1ab30cfada4e807f6739b7b0c5a8da6238e67cd11bfaef12f66",
   },
-  maltepe: {
-    content: "5071978b605ef664c9f490c179fc03a6579a921f0d70dadb6db5ac11d2473543",
-    source: "bd7d6ff460cc86522f575f2dd0c1053987415250077618c181c005417982c7fe",
+  bayrampasa: {
+    content: "5cd924be9ca559a3e06f454c3ea12d01e8b50206c3e5c842a3b4f73d104a3ffb",
+    source: "51673168ca9bd32b694fff9a0a2c459c2a61ea1bfb940a04d662fb5b53d8c7a8",
   },
-  pendik: {
-    content: "736290dc7c2987d8c5f2206139602838fa453923be6dace80cd925231505cb77",
-    source: "3fbeac577bd20851fdb09db5623db743ee34cb9f8c1ff6c1fdedd2fb8583f677",
+  besiktas: {
+    content: "821ea2498ee1bc8c38cdf49df68352597161e22da1d719e00fde2e025371de24",
+    source: "8af7ce72ba89c3bb29876cfc05b7fa641cb9136e761efbd187055901dba56c33",
   },
-  sancaktepe: {
-    content: "0527beb7cc4c15aa722ec032eb5f0cb58fe30443e2d38c02d2dd5d06b20dc25d",
-    source: "e19fabf7b336a1351c1553d8b7f3b3d6a6bf89b7b666d7158c1c8262439ef69b",
+  beylikduzu: {
+    content: "509210684ca9799a4a2c045db981921e8d5e2a9846910a3bec3d169ab67c350d",
+    source: "44e6d123b7b5dc70ddbab8b5356b4cb4c6bda7420bcd248529baf991b9bbb0d8",
   },
-  sultanbeyli: {
-    content: "afa5d84da80b72205bf4ab7539a23dde2af53ac5a7f21121bc90596989832a24",
-    source: "8720af437001fc3c1e2015183ed8c010e7039a98daa68d0f1a1aad44b306f571",
+  beyoglu: {
+    content: "6324d362d20b0e35f7c8378d34b216e275f5d1a992d0c6f73824fc34ea844771",
+    source: "ba6e6b4ada5febc4c57f64e8d68c020804bfcfd0428a44fc13a10654c48f9c92",
   },
-  sile: {
-    content: "65ab193de986115c440dc5e0c2fc1d22c38f1d6b8e333fae021c299ec7c62fcc",
-    source: "6bc229aa66c4b9a827273b902f469847c5dbdfc9873383dcee856faa5fc78f9a",
-  },
-  tuzla: {
-    content: "0786ad594dd1a6871ac2abc9d0bc12c18306717eb9fa442c054d9d09a46962c7",
-    source: "d6289496e532ab52b35a8eb5f368c6718c8ba945fff5b0d6156e70ee9ff67080",
-  },
-  umraniye: {
-    content: "a233a1b161058a80b4b83658031990a3a23d7185f15e6d1a40c94e73762284c5",
-    source: "4d571588fe6a009bbce2246d28eeb0cd818f63ca75bee0f2ff8120d1e6c9fba9",
-  },
-  uskudar: {
-    content: "bf6de93b642512f9ef1824943b2bd66e11d61e6ebb4fa575b2d7e10a650dcfc7",
-    source: "002afa98438d8b3dcbceffad5e11347e5db84b999006e7b6d482cf0c162051a7",
+  buyukcekmece: {
+    content: "c31b4897cbe227ec4c0d4cddbf51d2a399a3350a54715c8e51e75b63dcd9156a",
+    source: "fc95c6f6c521fd4c4a2a96ea0dba8c1ab8b17bbd123ac524ba3bb35675985911",
   },
 } as const;
 
-export type DistrictBatch4NinePlanCount = {
+export type DistrictBatch1SixPlanCount = {
   create: number;
   update: number;
   skip: number;
   conflict: number;
 };
-export type DistrictBatch4NinePlanEntry = {
-  action: keyof DistrictBatch4NinePlanCount;
+export type DistrictBatch1SixPlanEntry = {
+  action: keyof DistrictBatch1SixPlanCount;
   district: string;
   reason: string;
   row: ResearchRecord;
   existing?: ProductionImportDocument;
 };
-export type DistrictBatch4NinePlan = {
-  count: DistrictBatch4NinePlanCount;
-  entries: DistrictBatch4NinePlanEntry[];
+export type DistrictBatch1SixPlan = {
+  count: DistrictBatch1SixPlanCount;
+  entries: DistrictBatch1SixPlanEntry[];
 };
-export type DistrictBatch4NinePlanExpectation = "initial" | "applied";
+export type DistrictBatch1SixPlanExpectation = "initial" | "applied";
 
 function publishedAt(document: ProductionImportDocument): string | null {
   return typeof document.publishedAt === "string" &&
@@ -130,7 +115,7 @@ function assertCompleteInput(bundle: ResearchBundle): void {
   ) {
     throw productionImportError(
       "input_failed",
-      "DistrictBatch4Nine import requires the exact validated 39-district bundle.",
+      "DistrictBatch1Six import requires the exact validated 39-district bundle.",
     );
   }
 }
@@ -141,8 +126,8 @@ function desiredProvenance(
   contentFingerprint: string,
 ): Record<string, unknown> {
   return {
-    version: districtBatch4NineImportVersion,
-    batch: districtBatch4NineImportBatch,
+    version: districtBatch1SixImportVersion,
+    batch: districtBatch1SixImportBatch,
     sourceCommit: deploymentSha,
     sourceFingerprint: researchFingerprint(row),
     ...row.document,
@@ -150,11 +135,11 @@ function desiredProvenance(
   };
 }
 
-export function buildDistrictBatch4NinePlan(
+export function buildDistrictBatch1SixPlan(
   existingDocuments: ProductionImportDocument[],
   bundle: ResearchBundle,
   deploymentSha: string,
-): DistrictBatch4NinePlan {
+): DistrictBatch1SixPlan {
   assertCompleteInput(bundle);
   const registry = new Set(districts.map((district) => district.slug));
   const byDistrict = new Map<string, ProductionImportDocument>();
@@ -166,28 +151,28 @@ export function buildDistrictBatch4NinePlan(
     ) {
       throw productionImportError(
         "planning_failed",
-        "DistrictBatch4Nine import found an unknown or duplicate district record.",
+        "DistrictBatch1Six import found an unknown or duplicate district record.",
       );
     }
     byDistrict.set(document.district, document);
   }
 
-  const count: DistrictBatch4NinePlanCount = {
+  const count: DistrictBatch1SixPlanCount = {
     create: 0,
     update: 0,
     skip: 0,
     conflict: 0,
   };
-  const entries = bundle.districts.map((row): DistrictBatch4NinePlanEntry => {
+  const entries = bundle.districts.map((row): DistrictBatch1SixPlanEntry => {
     const existing = byDistrict.get(row.district);
-    let action: keyof DistrictBatch4NinePlanCount;
+    let action: keyof DistrictBatch1SixPlanCount;
     let reason: string;
     if (!existing) {
       action = "create";
       reason = "missing production district";
     } else if (
-      !districtBatch4NineTargets.includes(
-        row.district as (typeof districtBatch4NineTargets)[number],
+      !districtBatch1SixTargets.includes(
+        row.district as (typeof districtBatch1SixTargets)[number],
       )
     ) {
       if (existing._status === "published" && publishedAt(existing)) {
@@ -204,33 +189,33 @@ export function buildDistrictBatch4NinePlan(
     ) {
       action = "conflict";
       reason =
-        "DistrictBatch4Nine is unpublished, unmanaged, or manually edited";
+        "DistrictBatch1Six is unpublished, unmanaged, or manually edited";
     } else {
       const managed = provenance(existing)!;
       const sourceFingerprint = researchFingerprint(row);
       if (
-        managed.version === districtBatch4NineImportVersion &&
-        managed.batch === districtBatch4NineImportBatch &&
+        managed.version === districtBatch1SixImportVersion &&
+        managed.batch === districtBatch1SixImportBatch &&
         managed.sourceCommit === deploymentSha &&
         managed.sourceFingerprint === sourceFingerprint
       ) {
         action = "skip";
-        reason = "DistrictBatch4Nine quality update already applied";
+        reason = "DistrictBatch1Six quality update already applied";
       } else if (
         managed.version === batch2ImportVersion &&
         managed.batch === "editorial-production-batch-2" &&
         managed.sourceCommit === batch2EditorialSourceCommit &&
         managed.sourceFingerprint ===
-          districtBatch4NineProductionBaseline[row.district]?.source &&
+          districtBatch1SixProductionBaseline[row.district]?.source &&
         fingerprint(existing) ===
-          districtBatch4NineProductionBaseline[row.district]?.content
+          districtBatch1SixProductionBaseline[row.district]?.content
       ) {
         action = "update";
-        reason = "exact managed DistrictBatch4Nine Batch 2 baseline";
+        reason = "exact managed DistrictBatch1Six Batch 2 baseline";
       } else {
         action = "conflict";
         reason =
-          "DistrictBatch4Nine does not match the approved managed baseline";
+          "DistrictBatch1Six does not match the approved managed baseline";
       }
     }
     count[action]++;
@@ -239,20 +224,20 @@ export function buildDistrictBatch4NinePlan(
   return { count, entries };
 }
 
-export function assertDistrictBatch4NinePlan(
-  plan: DistrictBatch4NinePlan,
-  expectation: DistrictBatch4NinePlanExpectation,
+export function assertDistrictBatch1SixPlan(
+  plan: DistrictBatch1SixPlan,
+  expectation: DistrictBatch1SixPlanExpectation,
 ): void {
   const updates = plan.entries.filter((entry) => entry.action === "update");
   const exactInitial =
-    plan.count.update === 9 &&
-    plan.count.skip === 30 &&
+    plan.count.update === 6 &&
+    plan.count.skip === 33 &&
     plan.count.create === 0 &&
     plan.count.conflict === 0 &&
-    updates.length === 9 &&
+    updates.length === 6 &&
     updates.every((entry) =>
-      districtBatch4NineTargets.includes(
-        entry.district as (typeof districtBatch4NineTargets)[number],
+      districtBatch1SixTargets.includes(
+        entry.district as (typeof districtBatch1SixTargets)[number],
       ),
     );
   const exactApplied =
@@ -266,7 +251,7 @@ export function assertDistrictBatch4NinePlan(
   ) {
     throw productionImportError(
       "planning_failed",
-      `DistrictBatch4Nine import does not match the exact ${expectation} gate.`,
+      `DistrictBatch1Six import does not match the exact ${expectation} gate.`,
       plan.count,
     );
   }
@@ -287,8 +272,8 @@ function assertAppliedDocument(
     document.publishedAt !== before.publishedAt ||
     document.createdAt !== before.createdAt ||
     !isSelfManaged(document) ||
-    managed?.version !== districtBatch4NineImportVersion ||
-    managed?.batch !== districtBatch4NineImportBatch ||
+    managed?.version !== districtBatch1SixImportVersion ||
+    managed?.batch !== districtBatch1SixImportBatch ||
     managed?.sourceCommit !== deploymentSha ||
     managed?.sourceFingerprint !== researchFingerprint(row) ||
     !projection ||
@@ -301,41 +286,41 @@ function assertAppliedDocument(
   ) {
     throw productionImportError(
       "transaction_failed",
-      "DistrictBatch4Nine post-write verification failed.",
+      "DistrictBatch1Six post-write verification failed.",
     );
   }
 }
 
-export async function readDistrictBatch4NinePlan(
+export async function readDistrictBatch1SixPlan(
   bundle: ResearchBundle,
   repository: ProductionImportRepository,
-  expectation: DistrictBatch4NinePlanExpectation,
+  expectation: DistrictBatch1SixPlanExpectation,
   deploymentSha: string,
-): Promise<DistrictBatch4NinePlan> {
+): Promise<DistrictBatch1SixPlan> {
   let documents: ProductionImportDocument[];
   try {
     documents = await repository.readDistricts();
   } catch {
     throw productionImportError("query_failed", "District read failed.");
   }
-  const plan = buildDistrictBatch4NinePlan(documents, bundle, deploymentSha);
-  assertDistrictBatch4NinePlan(plan, expectation);
+  const plan = buildDistrictBatch1SixPlan(documents, bundle, deploymentSha);
+  assertDistrictBatch1SixPlan(plan, expectation);
   return plan;
 }
 
-export async function applyDistrictBatch4Nine(
+export async function applyDistrictBatch1Six(
   bundle: ResearchBundle,
   repository: ProductionImportRepository,
   deploymentSha: string,
-): Promise<DistrictBatch4NinePlan> {
+): Promise<DistrictBatch1SixPlan> {
   return repository.transaction(async (transaction) => {
     const beforeDocuments = await transaction.findDistricts();
-    const plan = buildDistrictBatch4NinePlan(
+    const plan = buildDistrictBatch1SixPlan(
       beforeDocuments,
       bundle,
       deploymentSha,
     );
-    assertDistrictBatch4NinePlan(plan, "initial");
+    assertDistrictBatch1SixPlan(plan, "initial");
     const beforeFingerprints = new Map(
       beforeDocuments.map((document) => [
         document.district,
@@ -348,7 +333,7 @@ export async function applyDistrictBatch4Nine(
       if (!target.existing)
         throw productionImportError(
           "transaction_failed",
-          "District Batch 2 target disappeared.",
+          "District Batch 1 target disappeared.",
         );
       const persisted = await transaction.updateDistrict(
         target.existing.id,
@@ -375,8 +360,8 @@ export async function applyDistrictBatch4Nine(
     }
     for (const document of afterDocuments) {
       if (
-        !districtBatch4NineTargets.includes(
-          document.district as (typeof districtBatch4NineTargets)[number],
+        !districtBatch1SixTargets.includes(
+          document.district as (typeof districtBatch1SixTargets)[number],
         ) &&
         fingerprint(document) !== beforeFingerprints.get(document.district)
       ) {
@@ -386,17 +371,17 @@ export async function applyDistrictBatch4Nine(
         );
       }
     }
-    const appliedPlan = buildDistrictBatch4NinePlan(
+    const appliedPlan = buildDistrictBatch1SixPlan(
       afterDocuments,
       bundle,
       deploymentSha,
     );
-    assertDistrictBatch4NinePlan(appliedPlan, "applied");
+    assertDistrictBatch1SixPlan(appliedPlan, "applied");
     return plan;
   });
 }
 
-export const districtBatch4NineConfigurationVariables = [
+export const districtBatch1SixConfigurationVariables = [
   "PAYLOAD_DATABASE",
   "DATABASE_URL",
   "PAYLOAD_SECRET",
@@ -404,15 +389,15 @@ export const districtBatch4NineConfigurationVariables = [
   "VERCEL_ENV",
   "VERCEL_GIT_COMMIT_REF",
   "VERCEL_GIT_COMMIT_SHA",
-  "PRODUCTION_DISTRICT_BATCH4_NINE_EDITORIAL_DRY_RUN_APPROVED_SHA",
+  "PRODUCTION_DISTRICT_BATCH1_SIX_EDITORIAL_DRY_RUN_APPROVED_SHA",
 ] as const;
 
 type ConfigurationStatus = "MISSING" | "PRESENT_INVALID" | "PRESENT_VALID";
 
-export function districtBatch4NineConfigurationStatus(
+export function districtBatch1SixConfigurationStatus(
   env: Readonly<Record<string, string | undefined>>,
 ): Record<
-  (typeof districtBatch4NineConfigurationVariables)[number],
+  (typeof districtBatch1SixConfigurationVariables)[number],
   ConfigurationStatus
 > {
   const required = (value: string | undefined): ConfigurationStatus =>
@@ -434,36 +419,36 @@ export function districtBatch4NineConfigurationStatus(
     VERCEL_ENV: exact(env.VERCEL_ENV, "production"),
     VERCEL_GIT_COMMIT_REF: exact(env.VERCEL_GIT_COMMIT_REF, "main"),
     VERCEL_GIT_COMMIT_SHA: required(env.VERCEL_GIT_COMMIT_SHA),
-    PRODUCTION_DISTRICT_BATCH4_NINE_EDITORIAL_DRY_RUN_APPROVED_SHA: exact(
-      env.PRODUCTION_DISTRICT_BATCH4_NINE_EDITORIAL_DRY_RUN_APPROVED_SHA,
+    PRODUCTION_DISTRICT_BATCH1_SIX_EDITORIAL_DRY_RUN_APPROVED_SHA: exact(
+      env.PRODUCTION_DISTRICT_BATCH1_SIX_EDITORIAL_DRY_RUN_APPROVED_SHA,
       env.VERCEL_GIT_COMMIT_SHA || "__missing_commit_sha__",
     ),
   };
 }
 
-export function assertDistrictBatch4NineEnvironment(
+export function assertDistrictBatch1SixEnvironment(
   env: Readonly<Record<string, string | undefined>>,
   apply: boolean,
 ): void {
-  const status = districtBatch4NineConfigurationStatus(env);
+  const status = districtBatch1SixConfigurationStatus(env);
   if (
-    districtBatch4NineConfigurationVariables.some(
+    districtBatch1SixConfigurationVariables.some(
       (name) => status[name] !== "PRESENT_VALID",
     )
   ) {
     throw productionImportError(
       "approval_failed",
-      "DistrictBatch4Nine import requires an exact SHA-bound Production environment.",
+      "DistrictBatch1Six import requires an exact SHA-bound Production environment.",
     );
   }
   if (
     apply &&
-    (env.PRODUCTION_DISTRICT_BATCH4_NINE_EDITORIAL_IMPORT_APPROVED !== "true" ||
-      env.PRODUCTION_DISTRICT_BATCH4_NINE_EDITORIAL_PITR_CONFIRMED !== "true")
+    (env.PRODUCTION_DISTRICT_BATCH1_SIX_EDITORIAL_IMPORT_APPROVED !== "true" ||
+      env.PRODUCTION_DISTRICT_BATCH1_SIX_EDITORIAL_PITR_CONFIRMED !== "true")
   ) {
     throw productionImportError(
       "approval_failed",
-      "DistrictBatch4Nine apply requires explicit import and PITR confirmation.",
+      "DistrictBatch1Six apply requires explicit import and PITR confirmation.",
     );
   }
 }

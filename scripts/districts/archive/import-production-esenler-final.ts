@@ -1,4 +1,4 @@
-/** Single-district Production importer. Defaults to no mode and no writes. */
+/** Esenler-only Production importer. Defaults to no mode and no writes. */
 import { readFile } from "node:fs/promises";
 import { parseArgs } from "node:util";
 import {
@@ -10,16 +10,16 @@ import {
 import {
   describeProductionDatabase,
   readProductionMigrationState,
-} from "../vercel-build.mjs";
-import { attachEditorial, type EditorialBundle } from "./editorial";
-import { validateBundle, type ResearchBundle } from "./import-core";
+} from "../../vercel-build.mjs";
+import { attachEditorial, type EditorialBundle } from "../editorial";
+import { validateBundle, type ResearchBundle } from "../import-core";
 import {
-  applyDistrictBatch4Nine,
-  districtBatch4NineConfigurationStatus,
-  assertDistrictBatch4NineEnvironment,
-  readDistrictBatch4NinePlan,
-  type DistrictBatch4NinePlanExpectation,
-} from "./production-district-batch4-nine-core";
+  applyEsenlerFinal,
+  assertEsenlerFinalEnvironment,
+  esenlerFinalConfigurationStatus,
+  readEsenlerFinalPlan,
+  type EsenlerFinalPlanExpectation,
+} from "./production-esenler-final-core";
 import {
   productionImportError,
   safeProductionImportErrorReport,
@@ -101,7 +101,7 @@ function payloadRepository(payload: Payload): ProductionImportRepository {
       if (!transactionID)
         throw productionImportError(
           "transaction_failed",
-          "DistrictBatch4Nine transaction could not be started.",
+          "Esenler final transaction could not be started.",
         );
       req.transactionID = transactionID;
       try {
@@ -115,7 +115,7 @@ function payloadRepository(payload: Payload): ProductionImportRepository {
         } catch {
           throw productionImportError(
             "rollback_failed",
-            "DistrictBatch4Nine transaction rollback failed closed.",
+            "Esenler final transaction rollback failed closed.",
           );
         } finally {
           delete req.transactionID;
@@ -145,26 +145,23 @@ async function main(): Promise<void> {
   } catch {
     throw productionImportError(
       "configuration_failed",
-      "DistrictBatch4Nine import arguments are invalid.",
+      "Esenler final import arguments are invalid.",
     );
   }
   if (
     values.apply === values["dry-run"] ||
     (values.apply && values["expect-applied"])
-  ) {
+  )
     throw productionImportError(
       "configuration_failed",
       "Choose exactly one mode; applied verification is read-only.",
     );
-  }
 
   const apply = values.apply === true;
-  const expectation: DistrictBatch4NinePlanExpectation = values[
-    "expect-applied"
-  ]
+  const expectation: EsenlerFinalPlanExpectation = values["expect-applied"]
     ? "applied"
     : "initial";
-  assertDistrictBatch4NineEnvironment(process.env, apply);
+  assertEsenlerFinalEnvironment(process.env, apply);
   const deploymentSha = process.env.VERCEL_GIT_COMMIT_SHA!;
 
   try {
@@ -187,12 +184,11 @@ async function main(): Promise<void> {
   if (
     migrationState.pendingMigrationNames.length !== 0 ||
     migrationState.appliedCount !== migrationState.registeredCount
-  ) {
+  )
     throw productionImportError(
       "schema_mismatch",
       "Production migration state is not current.",
     );
-  }
 
   let bundle: ResearchBundle;
   try {
@@ -207,13 +203,14 @@ async function main(): Promise<void> {
   } catch {
     throw productionImportError(
       "input_failed",
-      "DistrictBatch4Nine editorial input validation failed.",
+      "Esenler final editorial input validation failed.",
     );
   }
 
   let payload: Payload;
   try {
-    const { default: configPromise } = await import("../../src/payload.config");
+    const { default: configPromise } =
+      await import("../../../src/payload.config");
     const config = await configPromise;
     config.typescript.autoGenerate = false;
     payload = await getPayload({ config });
@@ -226,8 +223,8 @@ async function main(): Promise<void> {
   try {
     const repository = payloadRepository(payload);
     const plan = apply
-      ? await applyDistrictBatch4Nine(bundle, repository, deploymentSha)
-      : await readDistrictBatch4NinePlan(
+      ? await applyEsenlerFinal(bundle, repository, deploymentSha)
+      : await readEsenlerFinalPlan(
           bundle,
           repository,
           expectation,
@@ -239,9 +236,6 @@ async function main(): Promise<void> {
         writes: apply ? plan.count.update : 0,
         updates: plan.entries
           .filter((entry) => entry.action === "update")
-          .map((entry) => entry.district),
-        skips: plan.entries
-          .filter((entry) => entry.action === "skip")
           .map((entry) => entry.district),
       }),
     );
@@ -257,7 +251,7 @@ main().catch((error) => {
       ...report,
       ...(report.error === "configuration_failed" ||
       report.error === "approval_failed"
-        ? { configuration: districtBatch4NineConfigurationStatus(process.env) }
+        ? { configuration: esenlerFinalConfigurationStatus(process.env) }
         : {}),
     }),
   );

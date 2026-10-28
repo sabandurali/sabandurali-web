@@ -1,56 +1,86 @@
-import { districts } from "../../src/content/districts/district-registry";
-import { projectPublishedDistrictGuide } from "../../src/content/districts/district-guide-projection";
-import {
-  batch2EditorialSourceCommit,
-  batch2ImportVersion,
-  makePublishedEditorialUpdate,
-} from "./production-editorial-batch2-core";
+import { createHash } from "node:crypto";
+import { districts } from "../../../src/content/districts/district-registry";
+import { projectPublishedDistrictGuide } from "../../../src/content/districts/district-guide-projection";
+import { makePublishedEditorialUpdate } from "./production-editorial-batch2-core";
 import {
   fingerprint,
   researchFingerprint,
   type ResearchBundle,
   type ResearchRecord,
-} from "./import-core";
+} from "../import-core";
 import {
   productionImportError,
   type ProductionImportDocument,
   type ProductionImportRepository,
 } from "./production-import-core";
 
-export const bakirkoyTarget = "bakirkoy" as const;
-export const bakirkoyImportVersion = 5;
-export const bakirkoyImportBatch = "bakirkoy-editorial-quality-2026";
-// Read-only audited Production state immediately before this single-district
-// update. Both hashes must match; the importer never learns a baseline at run time.
-const bakirkoyProductionBaseline = {
-  content: "e2c202d4d358660eb162c77478605deca3e68060cbde1c0c41b8bacd8c4f1104",
-  source: "567b8b5bf91a87fafd22f6f3af8478e58ca4069d70f264d5f50c1f37ae5debe1",
+export const esenlerFinalTarget = "esenler" as const;
+export const esenlerFinalImportVersion = 6;
+export const esenlerFinalImportBatch = "esenler-final-editorial-quality-2026";
+
+// User-approved, read-only audited Production snapshot. The importer cannot
+// learn or replace this manual baseline at runtime (no TOFU/adoption path).
+export const esenlerApprovedManualBaseline = {
+  district: esenlerFinalTarget,
+  documentId: "4c3d4d0b-3303-4bdf-b46c-0b2ac4b2acb8",
+  createdAt: "2026-09-13T18:38:00.001Z",
+  publishedAt: "2026-09-20T11:37:45.327Z",
+  contentFingerprint:
+    "fd45106eea0200e4439ecc927ffa5c22bf77d6d5f83324793c687a64630f8c45",
+  storedProvenanceFingerprint:
+    "1422128f173e23dac3f34351367e81b0a805e26353bb44f683d90346f65b6454",
+  provenanceCanonicalHash:
+    "a9e4685d89cdb604536cc0ed36389fc3854d16815b353a7a81914d768ab2c6ed",
+  provenance: {
+    file: "Esenler İlçe Rehberi Araştırması.pdf",
+    pages: 12,
+    sha256: "31c2d5e501f27e7ee6a8bef07dbefd2fd117bab42d601fa598701e1d19e0327c",
+    version: 3,
+    fingerprint:
+      "1422128f173e23dac3f34351367e81b0a805e26353bb44f683d90346f65b6454",
+    sourceFingerprint:
+      "c057ffa6f8442c787a6e8aca68aa48ded992c5b479e70c9c397d8e6b2a8c6e5e",
+  },
 } as const;
 
-export type BakirkoyPlanCount = {
+export type EsenlerFinalPlanCount = {
   create: number;
   update: number;
   skip: number;
   conflict: number;
 };
-export type BakirkoyPlanEntry = {
-  action: keyof BakirkoyPlanCount;
+export type EsenlerFinalPlanEntry = {
+  action: keyof EsenlerFinalPlanCount;
   district: string;
   reason: string;
   row: ResearchRecord;
   existing?: ProductionImportDocument;
 };
-export type BakirkoyPlan = {
-  count: BakirkoyPlanCount;
-  entries: BakirkoyPlanEntry[];
+export type EsenlerFinalPlan = {
+  count: EsenlerFinalPlanCount;
+  entries: EsenlerFinalPlanEntry[];
 };
-export type BakirkoyPlanExpectation = "initial" | "applied";
+export type EsenlerFinalPlanExpectation = "initial" | "applied";
 
-function publishedAt(document: ProductionImportDocument): string | null {
-  return typeof document.publishedAt === "string" &&
-    Number.isFinite(Date.parse(document.publishedAt))
-    ? document.publishedAt
-    : null;
+function canonical(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(canonical);
+  if (value && typeof value === "object")
+    return Object.fromEntries(
+      Object.entries(value)
+        .filter(
+          ([key, child]) =>
+            key !== "id" && child !== undefined && child !== null,
+        )
+        .sort(([left], [right]) => left.localeCompare(right))
+        .map(([key, child]) => [key, canonical(child)]),
+    );
+  return value;
+}
+
+export function canonicalHash(value: unknown): string {
+  return createHash("sha256")
+    .update(JSON.stringify(canonical(value)))
+    .digest("hex");
 }
 
 function provenance(
@@ -63,11 +93,32 @@ function provenance(
     : null;
 }
 
-function isSelfManaged(document: ProductionImportDocument): boolean {
+export function isEsenlerFinalSelfManaged(
+  document: ProductionImportDocument,
+): boolean {
   const managed = provenance(document);
   return (
     typeof managed?.fingerprint === "string" &&
     managed.fingerprint === fingerprint(document)
+  );
+}
+
+export function isExactApprovedEsenlerManualBaseline(
+  document: ProductionImportDocument,
+): boolean {
+  const managed = provenance(document);
+  return (
+    document.district === esenlerApprovedManualBaseline.district &&
+    document.id === esenlerApprovedManualBaseline.documentId &&
+    document._status === "published" &&
+    document.createdAt === esenlerApprovedManualBaseline.createdAt &&
+    document.publishedAt === esenlerApprovedManualBaseline.publishedAt &&
+    fingerprint(document) ===
+      esenlerApprovedManualBaseline.contentFingerprint &&
+    managed?.fingerprint ===
+      esenlerApprovedManualBaseline.storedProvenanceFingerprint &&
+    canonicalHash(managed) ===
+      esenlerApprovedManualBaseline.provenanceCanonicalHash
   );
 }
 
@@ -82,7 +133,7 @@ function assertCompleteInput(bundle: ResearchBundle): void {
   ) {
     throw productionImportError(
       "input_failed",
-      "Bakirkoy import requires the exact validated 39-district bundle.",
+      "Esenler final import requires the exact validated 39-district bundle.",
     );
   }
 }
@@ -93,8 +144,8 @@ function desiredProvenance(
   contentFingerprint: string,
 ): Record<string, unknown> {
   return {
-    version: bakirkoyImportVersion,
-    batch: bakirkoyImportBatch,
+    version: esenlerFinalImportVersion,
+    batch: esenlerFinalImportBatch,
     sourceCommit: deploymentSha,
     sourceFingerprint: researchFingerprint(row),
     ...row.document,
@@ -102,11 +153,11 @@ function desiredProvenance(
   };
 }
 
-export function buildBakirkoyPlan(
+export function buildEsenlerFinalPlan(
   existingDocuments: ProductionImportDocument[],
   bundle: ResearchBundle,
   deploymentSha: string,
-): BakirkoyPlan {
+): EsenlerFinalPlan {
   assertCompleteInput(bundle);
   const registry = new Set(districts.map((district) => district.slug));
   const byDistrict = new Map<string, ProductionImportDocument>();
@@ -118,63 +169,51 @@ export function buildBakirkoyPlan(
     ) {
       throw productionImportError(
         "planning_failed",
-        "Bakirkoy import found an unknown or duplicate district record.",
+        "Esenler final import found an unknown or duplicate district record.",
       );
     }
     byDistrict.set(document.district, document);
   }
 
-  const count: BakirkoyPlanCount = {
+  const count: EsenlerFinalPlanCount = {
     create: 0,
     update: 0,
     skip: 0,
     conflict: 0,
   };
-  const entries = bundle.districts.map((row): BakirkoyPlanEntry => {
+  const entries = bundle.districts.map((row): EsenlerFinalPlanEntry => {
     const existing = byDistrict.get(row.district);
-    let action: keyof BakirkoyPlanCount;
+    let action: keyof EsenlerFinalPlanCount;
     let reason: string;
     if (!existing) {
       action = "create";
       reason = "missing production district";
-    } else if (row.district !== bakirkoyTarget) {
-      if (existing._status === "published" && publishedAt(existing)) {
+    } else if (row.district !== esenlerFinalTarget) {
+      if (existing._status === "published" && existing.publishedAt) {
         action = "skip";
-        reason = "protected non-target district; never written by this batch";
+        reason = "protected non-target district; never written";
       } else {
         action = "conflict";
         reason = "protected non-target district is not published";
       }
-    } else if (
-      existing._status !== "published" ||
-      !publishedAt(existing) ||
-      !isSelfManaged(existing)
-    ) {
-      action = "conflict";
-      reason = "Bakirkoy is unpublished, unmanaged, or manually edited";
     } else {
-      const managed = provenance(existing)!;
-      const sourceFingerprint = researchFingerprint(row);
-      if (
-        managed.version === bakirkoyImportVersion &&
-        managed.batch === bakirkoyImportBatch &&
+      const managed = provenance(existing);
+      const alreadyApplied =
+        existing._status === "published" &&
+        isEsenlerFinalSelfManaged(existing) &&
+        managed?.version === esenlerFinalImportVersion &&
+        managed.batch === esenlerFinalImportBatch &&
         managed.sourceCommit === deploymentSha &&
-        managed.sourceFingerprint === sourceFingerprint
-      ) {
+        managed.sourceFingerprint === researchFingerprint(row);
+      if (alreadyApplied) {
         action = "skip";
-        reason = "Bakirkoy quality update already applied";
-      } else if (
-        managed.version === batch2ImportVersion &&
-        managed.batch === "editorial-production-batch-2" &&
-        managed.sourceCommit === batch2EditorialSourceCommit &&
-        managed.sourceFingerprint === bakirkoyProductionBaseline.source &&
-        fingerprint(existing) === bakirkoyProductionBaseline.content
-      ) {
+        reason = "Esenler final quality update already applied";
+      } else if (isExactApprovedEsenlerManualBaseline(existing)) {
         action = "update";
-        reason = "exact managed Bakirkoy Batch 2 baseline";
+        reason = "exact user-approved Esenler manual baseline";
       } else {
         action = "conflict";
-        reason = "Bakirkoy does not match the approved managed baseline";
+        reason = "Esenler does not match the approved manual baseline";
       }
     }
     count[action]++;
@@ -183,9 +222,9 @@ export function buildBakirkoyPlan(
   return { count, entries };
 }
 
-export function assertBakirkoyPlan(
-  plan: BakirkoyPlan,
-  expectation: BakirkoyPlanExpectation,
+export function assertEsenlerFinalPlan(
+  plan: EsenlerFinalPlan,
+  expectation: EsenlerFinalPlanExpectation,
 ): void {
   const updates = plan.entries.filter((entry) => entry.action === "update");
   const exactInitial =
@@ -194,7 +233,7 @@ export function assertBakirkoyPlan(
     plan.count.create === 0 &&
     plan.count.conflict === 0 &&
     updates.length === 1 &&
-    updates[0].district === bakirkoyTarget;
+    updates[0].district === esenlerFinalTarget;
   const exactApplied =
     plan.count.update === 0 &&
     plan.count.skip === 39 &&
@@ -206,7 +245,7 @@ export function assertBakirkoyPlan(
   ) {
     throw productionImportError(
       "planning_failed",
-      `Bakirkoy import does not match the exact ${expectation} gate.`,
+      `Esenler final import does not match the exact ${expectation} gate.`,
       plan.count,
     );
   }
@@ -220,59 +259,66 @@ function assertAppliedDocument(
 ): void {
   const managed = provenance(document);
   const projection = projectPublishedDistrictGuide(document);
+  const population = String(projection?.facts?.population ?? "").replaceAll(
+    ".",
+    "",
+  );
   if (
     document.id !== before.id ||
-    document.district !== bakirkoyTarget ||
-    document._status !== "published" ||
-    document.publishedAt !== before.publishedAt ||
     document.createdAt !== before.createdAt ||
-    !isSelfManaged(document) ||
-    managed?.version !== bakirkoyImportVersion ||
-    managed?.batch !== bakirkoyImportBatch ||
+    document.publishedAt !== before.publishedAt ||
+    document.district !== esenlerFinalTarget ||
+    document._status !== "published" ||
+    !isEsenlerFinalSelfManaged(document) ||
+    managed?.version !== esenlerFinalImportVersion ||
+    managed?.batch !== esenlerFinalImportBatch ||
     managed?.sourceCommit !== deploymentSha ||
     managed?.sourceFingerprint !== researchFingerprint(row) ||
     !projection ||
-    projection.neighborhoods.length !== 15 ||
-    projection.planningDevelopments.length !== 1 ||
-    projection.planningDevelopments[0]?.title !==
-      "M3 Bakırköy Sahil Uzatmasının Hizmete Açılması" ||
-    projection.sources.length === 0 ||
+    population !== "419878" ||
+    projection.facts?.populationYear !== 2025 ||
+    projection.facts?.areaKm2 !== 18.43 ||
+    projection.facts?.neighborhoodCount !== 19 ||
+    projection.neighborhoods.length !== 19 ||
+    projection.planningDevelopments.length !== 0 ||
+    !Array.isArray(document.sources) ||
+    document.sources.length !== 12 ||
     JSON.stringify(projection).includes("importProvenance") ||
     JSON.stringify(projection).includes("researchNotes")
   ) {
     throw productionImportError(
       "transaction_failed",
-      "Bakirkoy post-write verification failed.",
+      "Esenler final post-write verification failed.",
     );
   }
 }
 
-export async function readBakirkoyPlan(
+export async function readEsenlerFinalPlan(
   bundle: ResearchBundle,
   repository: ProductionImportRepository,
-  expectation: BakirkoyPlanExpectation,
+  expectation: EsenlerFinalPlanExpectation,
   deploymentSha: string,
-): Promise<BakirkoyPlan> {
+): Promise<EsenlerFinalPlan> {
   let documents: ProductionImportDocument[];
   try {
     documents = await repository.readDistricts();
   } catch {
     throw productionImportError("query_failed", "District read failed.");
   }
-  const plan = buildBakirkoyPlan(documents, bundle, deploymentSha);
-  assertBakirkoyPlan(plan, expectation);
+  const plan = buildEsenlerFinalPlan(documents, bundle, deploymentSha);
+  assertEsenlerFinalPlan(plan, expectation);
   return plan;
 }
 
-export async function applyBakirkoy(
+export async function applyEsenlerFinal(
   bundle: ResearchBundle,
   repository: ProductionImportRepository,
   deploymentSha: string,
-): Promise<BakirkoyPlan> {
+): Promise<EsenlerFinalPlan> {
   return repository.transaction(async (transaction) => {
     const beforeDocuments = await transaction.findDistricts();
-    const plan = buildBakirkoyPlan(beforeDocuments, bundle, deploymentSha);
-    assertBakirkoyPlan(plan, "initial");
+    const plan = buildEsenlerFinalPlan(beforeDocuments, bundle, deploymentSha);
+    assertEsenlerFinalPlan(plan, "initial");
     const beforeFingerprints = new Map(
       beforeDocuments.map((document) => [
         document.district,
@@ -280,14 +326,14 @@ export async function applyBakirkoy(
       ]),
     );
     const target = plan.entries.find(
-      (entry) => entry.district === bakirkoyTarget,
+      (entry) => entry.district === esenlerFinalTarget,
     )!;
-    if (!target.existing || target.action !== "update") {
+    if (!target.existing || target.action !== "update")
       throw productionImportError(
         "transaction_failed",
-        "Bakirkoy update target disappeared.",
+        "Esenler final update target disappeared.",
       );
-    }
+
     const persisted = await transaction.updateDistrict(
       target.existing.id,
       makePublishedEditorialUpdate(target.row, target.existing, false),
@@ -304,34 +350,32 @@ export async function applyBakirkoy(
     assertAppliedDocument(saved, target.existing, target.row, deploymentSha);
 
     const afterDocuments = await transaction.findDistricts();
-    if (afterDocuments.length !== 39) {
+    if (afterDocuments.length !== 39)
       throw productionImportError(
         "transaction_failed",
         "District record count changed.",
       );
-    }
-    for (const document of afterDocuments) {
+    for (const document of afterDocuments)
       if (
-        document.district !== bakirkoyTarget &&
+        document.district !== esenlerFinalTarget &&
         fingerprint(document) !== beforeFingerprints.get(document.district)
-      ) {
+      )
         throw productionImportError(
           "transaction_failed",
           "A non-target district changed.",
         );
-      }
-    }
-    const appliedPlan = buildBakirkoyPlan(
+
+    const appliedPlan = buildEsenlerFinalPlan(
       afterDocuments,
       bundle,
       deploymentSha,
     );
-    assertBakirkoyPlan(appliedPlan, "applied");
+    assertEsenlerFinalPlan(appliedPlan, "applied");
     return plan;
   });
 }
 
-export const bakirkoyConfigurationVariables = [
+export const esenlerFinalConfigurationVariables = [
   "PAYLOAD_DATABASE",
   "DATABASE_URL",
   "PAYLOAD_SECRET",
@@ -339,15 +383,14 @@ export const bakirkoyConfigurationVariables = [
   "VERCEL_ENV",
   "VERCEL_GIT_COMMIT_REF",
   "VERCEL_GIT_COMMIT_SHA",
-  "PRODUCTION_BAKIRKOY_EDITORIAL_DRY_RUN_APPROVED_SHA",
+  "PRODUCTION_ESENLER_FINAL_DRY_RUN_APPROVED_SHA",
 ] as const;
-
 type ConfigurationStatus = "MISSING" | "PRESENT_INVALID" | "PRESENT_VALID";
 
-export function bakirkoyConfigurationStatus(
+export function esenlerFinalConfigurationStatus(
   env: Readonly<Record<string, string | undefined>>,
 ): Record<
-  (typeof bakirkoyConfigurationVariables)[number],
+  (typeof esenlerFinalConfigurationVariables)[number],
   ConfigurationStatus
 > {
   const required = (value: string | undefined): ConfigurationStatus =>
@@ -369,36 +412,34 @@ export function bakirkoyConfigurationStatus(
     VERCEL_ENV: exact(env.VERCEL_ENV, "production"),
     VERCEL_GIT_COMMIT_REF: exact(env.VERCEL_GIT_COMMIT_REF, "main"),
     VERCEL_GIT_COMMIT_SHA: required(env.VERCEL_GIT_COMMIT_SHA),
-    PRODUCTION_BAKIRKOY_EDITORIAL_DRY_RUN_APPROVED_SHA: exact(
-      env.PRODUCTION_BAKIRKOY_EDITORIAL_DRY_RUN_APPROVED_SHA,
+    PRODUCTION_ESENLER_FINAL_DRY_RUN_APPROVED_SHA: exact(
+      env.PRODUCTION_ESENLER_FINAL_DRY_RUN_APPROVED_SHA,
       env.VERCEL_GIT_COMMIT_SHA || "__missing_commit_sha__",
     ),
   };
 }
 
-export function assertBakirkoyEnvironment(
+export function assertEsenlerFinalEnvironment(
   env: Readonly<Record<string, string | undefined>>,
   apply: boolean,
 ): void {
-  const status = bakirkoyConfigurationStatus(env);
+  const status = esenlerFinalConfigurationStatus(env);
   if (
-    bakirkoyConfigurationVariables.some(
+    esenlerFinalConfigurationVariables.some(
       (name) => status[name] !== "PRESENT_VALID",
     )
-  ) {
+  )
     throw productionImportError(
       "approval_failed",
-      "Bakirkoy import requires an exact SHA-bound Production environment.",
+      "Esenler final import requires an exact SHA-bound Production environment.",
     );
-  }
   if (
     apply &&
-    (env.PRODUCTION_BAKIRKOY_EDITORIAL_IMPORT_APPROVED !== "true" ||
-      env.PRODUCTION_BAKIRKOY_EDITORIAL_PITR_CONFIRMED !== "true")
-  ) {
+    (env.PRODUCTION_ESENLER_FINAL_IMPORT_APPROVED !== "true" ||
+      env.PRODUCTION_ESENLER_FINAL_PITR_CONFIRMED !== "true")
+  )
     throw productionImportError(
       "approval_failed",
-      "Bakirkoy apply requires explicit import and PITR confirmation.",
+      "Esenler final apply requires explicit import and PITR confirmation.",
     );
-  }
 }

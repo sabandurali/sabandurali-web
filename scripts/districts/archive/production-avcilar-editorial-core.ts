@@ -1,5 +1,5 @@
-import { districts } from "../../src/content/districts/district-registry";
-import { projectPublishedDistrictGuide } from "../../src/content/districts/district-guide-projection";
+import { districts } from "../../../src/content/districts/district-registry";
+import { projectPublishedDistrictGuide } from "../../../src/content/districts/district-guide-projection";
 import {
   batch2EditorialSourceCommit,
   batch2ImportVersion,
@@ -10,41 +10,41 @@ import {
   researchFingerprint,
   type ResearchBundle,
   type ResearchRecord,
-} from "./import-core";
+} from "../import-core";
 import {
   productionImportError,
   type ProductionImportDocument,
   type ProductionImportRepository,
 } from "./production-import-core";
 
-export const bahcelievlerTarget = "bahcelievler" as const;
-export const bahcelievlerImportVersion = 5;
-export const bahcelievlerImportBatch = "bahcelievler-editorial-quality-2026";
+export const avcilarTarget = "avcilar" as const;
+export const avcilarImportVersion = 5;
+export const avcilarImportBatch = "avcilar-editorial-quality-2026";
 // Read-only audited Production state immediately before this single-district
 // update. Both hashes must match; the importer never learns a baseline at run time.
-const bahcelievlerProductionBaseline = {
-  content: "63e62e765a2d35e76f394b6a74f632cfe65e968e1e34b891e25bbeffbd90894b",
-  source: "6dd0a4547bc3a18ed496c0301495be10091c9f8c5c08c9a3577cf8511b13a6bf",
+const avcilarProductionBaseline = {
+  content: "8f38385473d475d59651351ebc174715671fc7e8f24f8f0b5e1dc01d30709b15",
+  source: "9a03d8565ad77e7f30b8dc7e2e43d197008f5d5b8473964c35a1bc4139aac85c",
 } as const;
 
-export type BahcelievlerPlanCount = {
+export type AvcilarPlanCount = {
   create: number;
   update: number;
   skip: number;
   conflict: number;
 };
-export type BahcelievlerPlanEntry = {
-  action: keyof BahcelievlerPlanCount;
+export type AvcilarPlanEntry = {
+  action: keyof AvcilarPlanCount;
   district: string;
   reason: string;
   row: ResearchRecord;
   existing?: ProductionImportDocument;
 };
-export type BahcelievlerPlan = {
-  count: BahcelievlerPlanCount;
-  entries: BahcelievlerPlanEntry[];
+export type AvcilarPlan = {
+  count: AvcilarPlanCount;
+  entries: AvcilarPlanEntry[];
 };
-export type BahcelievlerPlanExpectation = "initial" | "applied";
+export type AvcilarPlanExpectation = "initial" | "applied";
 
 function publishedAt(document: ProductionImportDocument): string | null {
   return typeof document.publishedAt === "string" &&
@@ -82,7 +82,7 @@ function assertCompleteInput(bundle: ResearchBundle): void {
   ) {
     throw productionImportError(
       "input_failed",
-      "Bahcelievler import requires the exact validated 39-district bundle.",
+      "Avcilar import requires the exact validated 39-district bundle.",
     );
   }
 }
@@ -93,8 +93,8 @@ function desiredProvenance(
   contentFingerprint: string,
 ): Record<string, unknown> {
   return {
-    version: bahcelievlerImportVersion,
-    batch: bahcelievlerImportBatch,
+    version: avcilarImportVersion,
+    batch: avcilarImportBatch,
     sourceCommit: deploymentSha,
     sourceFingerprint: researchFingerprint(row),
     ...row.document,
@@ -102,11 +102,11 @@ function desiredProvenance(
   };
 }
 
-export function buildBahcelievlerPlan(
+export function buildAvcilarPlan(
   existingDocuments: ProductionImportDocument[],
   bundle: ResearchBundle,
   deploymentSha: string,
-): BahcelievlerPlan {
+): AvcilarPlan {
   assertCompleteInput(bundle);
   const registry = new Set(districts.map((district) => district.slug));
   const byDistrict = new Map<string, ProductionImportDocument>();
@@ -118,26 +118,26 @@ export function buildBahcelievlerPlan(
     ) {
       throw productionImportError(
         "planning_failed",
-        "Bahcelievler import found an unknown or duplicate district record.",
+        "Avcilar import found an unknown or duplicate district record.",
       );
     }
     byDistrict.set(document.district, document);
   }
 
-  const count: BahcelievlerPlanCount = {
+  const count: AvcilarPlanCount = {
     create: 0,
     update: 0,
     skip: 0,
     conflict: 0,
   };
-  const entries = bundle.districts.map((row): BahcelievlerPlanEntry => {
+  const entries = bundle.districts.map((row): AvcilarPlanEntry => {
     const existing = byDistrict.get(row.district);
-    let action: keyof BahcelievlerPlanCount;
+    let action: keyof AvcilarPlanCount;
     let reason: string;
     if (!existing) {
       action = "create";
       reason = "missing production district";
-    } else if (row.district !== bahcelievlerTarget) {
+    } else if (row.district !== avcilarTarget) {
       if (existing._status === "published" && publishedAt(existing)) {
         action = "skip";
         reason = "protected non-target district; never written by this batch";
@@ -151,30 +151,30 @@ export function buildBahcelievlerPlan(
       !isSelfManaged(existing)
     ) {
       action = "conflict";
-      reason = "Bahcelievler is unpublished, unmanaged, or manually edited";
+      reason = "Avcilar is unpublished, unmanaged, or manually edited";
     } else {
       const managed = provenance(existing)!;
       const sourceFingerprint = researchFingerprint(row);
       if (
-        managed.version === bahcelievlerImportVersion &&
-        managed.batch === bahcelievlerImportBatch &&
+        managed.version === avcilarImportVersion &&
+        managed.batch === avcilarImportBatch &&
         managed.sourceCommit === deploymentSha &&
         managed.sourceFingerprint === sourceFingerprint
       ) {
         action = "skip";
-        reason = "Bahcelievler quality update already applied";
+        reason = "Avcilar quality update already applied";
       } else if (
         managed.version === batch2ImportVersion &&
         managed.batch === "editorial-production-batch-2" &&
         managed.sourceCommit === batch2EditorialSourceCommit &&
-        managed.sourceFingerprint === bahcelievlerProductionBaseline.source &&
-        fingerprint(existing) === bahcelievlerProductionBaseline.content
+        managed.sourceFingerprint === avcilarProductionBaseline.source &&
+        fingerprint(existing) === avcilarProductionBaseline.content
       ) {
         action = "update";
-        reason = "exact managed Bahcelievler Batch 2 baseline";
+        reason = "exact managed Avcilar Batch 2 baseline";
       } else {
         action = "conflict";
-        reason = "Bahcelievler does not match the approved managed baseline";
+        reason = "Avcilar does not match the approved managed baseline";
       }
     }
     count[action]++;
@@ -183,9 +183,9 @@ export function buildBahcelievlerPlan(
   return { count, entries };
 }
 
-export function assertBahcelievlerPlan(
-  plan: BahcelievlerPlan,
-  expectation: BahcelievlerPlanExpectation,
+export function assertAvcilarPlan(
+  plan: AvcilarPlan,
+  expectation: AvcilarPlanExpectation,
 ): void {
   const updates = plan.entries.filter((entry) => entry.action === "update");
   const exactInitial =
@@ -194,7 +194,7 @@ export function assertBahcelievlerPlan(
     plan.count.create === 0 &&
     plan.count.conflict === 0 &&
     updates.length === 1 &&
-    updates[0].district === bahcelievlerTarget;
+    updates[0].district === avcilarTarget;
   const exactApplied =
     plan.count.update === 0 &&
     plan.count.skip === 39 &&
@@ -206,7 +206,7 @@ export function assertBahcelievlerPlan(
   ) {
     throw productionImportError(
       "planning_failed",
-      `Bahcelievler import does not match the exact ${expectation} gate.`,
+      `Avcilar import does not match the exact ${expectation} gate.`,
       plan.count,
     );
   }
@@ -222,57 +222,57 @@ function assertAppliedDocument(
   const projection = projectPublishedDistrictGuide(document);
   if (
     document.id !== before.id ||
-    document.district !== bahcelievlerTarget ||
+    document.district !== avcilarTarget ||
     document._status !== "published" ||
     document.publishedAt !== before.publishedAt ||
     document.createdAt !== before.createdAt ||
     !isSelfManaged(document) ||
-    managed?.version !== bahcelievlerImportVersion ||
-    managed?.batch !== bahcelievlerImportBatch ||
+    managed?.version !== avcilarImportVersion ||
+    managed?.batch !== avcilarImportBatch ||
     managed?.sourceCommit !== deploymentSha ||
     managed?.sourceFingerprint !== researchFingerprint(row) ||
     !projection ||
-    projection.neighborhoods.length !== 11 ||
+    projection.neighborhoods.length !== 10 ||
     projection.planningDevelopments.length !== 1 ||
     projection.planningDevelopments[0]?.title !==
-      "Atilla Gökçe Parkı Revizyonu" ||
+      "Avcılar Sahil Parkı Yenilemesi" ||
     projection.sources.length === 0 ||
     JSON.stringify(projection).includes("importProvenance") ||
     JSON.stringify(projection).includes("researchNotes")
   ) {
     throw productionImportError(
       "transaction_failed",
-      "Bahcelievler post-write verification failed.",
+      "Avcilar post-write verification failed.",
     );
   }
 }
 
-export async function readBahcelievlerPlan(
+export async function readAvcilarPlan(
   bundle: ResearchBundle,
   repository: ProductionImportRepository,
-  expectation: BahcelievlerPlanExpectation,
+  expectation: AvcilarPlanExpectation,
   deploymentSha: string,
-): Promise<BahcelievlerPlan> {
+): Promise<AvcilarPlan> {
   let documents: ProductionImportDocument[];
   try {
     documents = await repository.readDistricts();
   } catch {
     throw productionImportError("query_failed", "District read failed.");
   }
-  const plan = buildBahcelievlerPlan(documents, bundle, deploymentSha);
-  assertBahcelievlerPlan(plan, expectation);
+  const plan = buildAvcilarPlan(documents, bundle, deploymentSha);
+  assertAvcilarPlan(plan, expectation);
   return plan;
 }
 
-export async function applyBahcelievler(
+export async function applyAvcilar(
   bundle: ResearchBundle,
   repository: ProductionImportRepository,
   deploymentSha: string,
-): Promise<BahcelievlerPlan> {
+): Promise<AvcilarPlan> {
   return repository.transaction(async (transaction) => {
     const beforeDocuments = await transaction.findDistricts();
-    const plan = buildBahcelievlerPlan(beforeDocuments, bundle, deploymentSha);
-    assertBahcelievlerPlan(plan, "initial");
+    const plan = buildAvcilarPlan(beforeDocuments, bundle, deploymentSha);
+    assertAvcilarPlan(plan, "initial");
     const beforeFingerprints = new Map(
       beforeDocuments.map((document) => [
         document.district,
@@ -280,12 +280,12 @@ export async function applyBahcelievler(
       ]),
     );
     const target = plan.entries.find(
-      (entry) => entry.district === bahcelievlerTarget,
+      (entry) => entry.district === avcilarTarget,
     )!;
     if (!target.existing || target.action !== "update") {
       throw productionImportError(
         "transaction_failed",
-        "Bahcelievler update target disappeared.",
+        "Avcilar update target disappeared.",
       );
     }
     const persisted = await transaction.updateDistrict(
@@ -312,7 +312,7 @@ export async function applyBahcelievler(
     }
     for (const document of afterDocuments) {
       if (
-        document.district !== bahcelievlerTarget &&
+        document.district !== avcilarTarget &&
         fingerprint(document) !== beforeFingerprints.get(document.district)
       ) {
         throw productionImportError(
@@ -321,17 +321,13 @@ export async function applyBahcelievler(
         );
       }
     }
-    const appliedPlan = buildBahcelievlerPlan(
-      afterDocuments,
-      bundle,
-      deploymentSha,
-    );
-    assertBahcelievlerPlan(appliedPlan, "applied");
+    const appliedPlan = buildAvcilarPlan(afterDocuments, bundle, deploymentSha);
+    assertAvcilarPlan(appliedPlan, "applied");
     return plan;
   });
 }
 
-export const bahcelievlerConfigurationVariables = [
+export const avcilarConfigurationVariables = [
   "PAYLOAD_DATABASE",
   "DATABASE_URL",
   "PAYLOAD_SECRET",
@@ -339,17 +335,14 @@ export const bahcelievlerConfigurationVariables = [
   "VERCEL_ENV",
   "VERCEL_GIT_COMMIT_REF",
   "VERCEL_GIT_COMMIT_SHA",
-  "PRODUCTION_BAHCELIEVLER_EDITORIAL_DRY_RUN_APPROVED_SHA",
+  "PRODUCTION_AVCILAR_EDITORIAL_DRY_RUN_APPROVED_SHA",
 ] as const;
 
 type ConfigurationStatus = "MISSING" | "PRESENT_INVALID" | "PRESENT_VALID";
 
-export function bahcelievlerConfigurationStatus(
+export function avcilarConfigurationStatus(
   env: Readonly<Record<string, string | undefined>>,
-): Record<
-  (typeof bahcelievlerConfigurationVariables)[number],
-  ConfigurationStatus
-> {
+): Record<(typeof avcilarConfigurationVariables)[number], ConfigurationStatus> {
   const required = (value: string | undefined): ConfigurationStatus =>
     value?.trim() ? "PRESENT_VALID" : "MISSING";
   const exact = (
@@ -369,36 +362,36 @@ export function bahcelievlerConfigurationStatus(
     VERCEL_ENV: exact(env.VERCEL_ENV, "production"),
     VERCEL_GIT_COMMIT_REF: exact(env.VERCEL_GIT_COMMIT_REF, "main"),
     VERCEL_GIT_COMMIT_SHA: required(env.VERCEL_GIT_COMMIT_SHA),
-    PRODUCTION_BAHCELIEVLER_EDITORIAL_DRY_RUN_APPROVED_SHA: exact(
-      env.PRODUCTION_BAHCELIEVLER_EDITORIAL_DRY_RUN_APPROVED_SHA,
+    PRODUCTION_AVCILAR_EDITORIAL_DRY_RUN_APPROVED_SHA: exact(
+      env.PRODUCTION_AVCILAR_EDITORIAL_DRY_RUN_APPROVED_SHA,
       env.VERCEL_GIT_COMMIT_SHA || "__missing_commit_sha__",
     ),
   };
 }
 
-export function assertBahcelievlerEnvironment(
+export function assertAvcilarEnvironment(
   env: Readonly<Record<string, string | undefined>>,
   apply: boolean,
 ): void {
-  const status = bahcelievlerConfigurationStatus(env);
+  const status = avcilarConfigurationStatus(env);
   if (
-    bahcelievlerConfigurationVariables.some(
+    avcilarConfigurationVariables.some(
       (name) => status[name] !== "PRESENT_VALID",
     )
   ) {
     throw productionImportError(
       "approval_failed",
-      "Bahcelievler import requires an exact SHA-bound Production environment.",
+      "Avcilar import requires an exact SHA-bound Production environment.",
     );
   }
   if (
     apply &&
-    (env.PRODUCTION_BAHCELIEVLER_EDITORIAL_IMPORT_APPROVED !== "true" ||
-      env.PRODUCTION_BAHCELIEVLER_EDITORIAL_PITR_CONFIRMED !== "true")
+    (env.PRODUCTION_AVCILAR_EDITORIAL_IMPORT_APPROVED !== "true" ||
+      env.PRODUCTION_AVCILAR_EDITORIAL_PITR_CONFIRMED !== "true")
   ) {
     throw productionImportError(
       "approval_failed",
-      "Bahcelievler apply requires explicit import and PITR confirmation.",
+      "Avcilar apply requires explicit import and PITR confirmation.",
     );
   }
 }

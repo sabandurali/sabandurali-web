@@ -1,13 +1,13 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
-import { describeProductionDatabase } from "../vercel-build.mjs";
+import { describeProductionDatabase } from "../../vercel-build.mjs";
 import {
   attachEditorial,
   batch1PopulationFacts,
   editorialContentFingerprint,
   type EditorialBundle,
-} from "./editorial";
+} from "../editorial";
 import {
   decideImport,
   fingerprint,
@@ -16,7 +16,7 @@ import {
   researchFingerprint,
   type ResearchBundle,
   type ResearchRecord,
-} from "./import-core";
+} from "../import-core";
 import {
   applyProductionImport,
   assertProductionImportEnvironment,

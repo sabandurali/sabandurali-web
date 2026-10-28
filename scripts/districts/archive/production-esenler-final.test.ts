@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
-import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import test from "node:test";
-import { projectPublishedDistrictGuide } from "../../src/content/districts/district-guide-projection";
-import { attachEditorial, type EditorialBundle } from "./editorial";
-import { fingerprint, makeDraft, type ResearchBundle } from "./import-core";
+import { projectPublishedDistrictGuide } from "../../../src/content/districts/district-guide-projection";
+import { attachEditorial, type EditorialBundle } from "../editorial";
+import { fingerprint, makeDraft, type ResearchBundle } from "../import-core";
 import {
   applyEsenlerFinal,
   assertEsenlerFinalPlan,
@@ -54,14 +54,49 @@ function bundle(editorialText?: string): ResearchBundle {
   return attachEditorial(research, editorial);
 }
 
+type EditorialRow = EditorialBundle["districts"][number];
+
+/**
+ * The approved manual baseline is the Esenler row of data/districts/editorial.json
+ * at `baselineCommit`, committed as a fixture so the test does not need the
+ * Git history (shallow clones and source archives). The other 38 rows did
+ * not change after that commit.
+ */
+function baselineEditorialText(): string {
+  const fixture = JSON.parse(
+    readFileSync(
+      "scripts/districts/archive/fixtures/esenler-final-baseline-editorial.json",
+      "utf8",
+    ),
+  ) as {
+    commit: string;
+    path: string;
+    district: string;
+    rowSha256: string;
+    row: EditorialRow;
+  };
+  assert.equal(fixture.commit, baselineCommit);
+  assert.equal(fixture.path, "data/districts/editorial.json");
+  assert.equal(fixture.district, "esenler");
+  assert.equal(fixture.row.district, "esenler");
+  assert.equal(
+    createHash("sha256").update(JSON.stringify(fixture.row)).digest("hex"),
+    fixture.rowSha256,
+  );
+  const current = JSON.parse(
+    readFileSync("data/districts/editorial.json", "utf8"),
+  ) as EditorialBundle;
+  return JSON.stringify({
+    ...current,
+    districts: current.districts.map((row) =>
+      row.district === "esenler" ? fixture.row : row,
+    ),
+  });
+}
+
 function initialDocuments(): ProductionImportDocument[] {
   const current = bundle();
-  const baselineEditorial = execFileSync(
-    "git",
-    ["show", `${baselineCommit}:data/districts/editorial.json`],
-    { encoding: "utf8" },
-  );
-  const previous = bundle(baselineEditorial);
+  const previous = bundle(baselineEditorialText());
   return current.districts.map((row, index) => {
     const sourceRow =
       row.district === "esenler"

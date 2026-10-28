@@ -10,16 +10,16 @@ import {
 import {
   describeProductionDatabase,
   readProductionMigrationState,
-} from "../vercel-build.mjs";
-import { attachEditorial, type EditorialBundle } from "./editorial";
-import { validateBundle, type ResearchBundle } from "./import-core";
+} from "../../vercel-build.mjs";
+import { attachEditorial, type EditorialBundle } from "../editorial";
+import { validateBundle, type ResearchBundle } from "../import-core";
 import {
-  applyDistrictBatch3Ten,
-  districtBatch3TenConfigurationStatus,
-  assertDistrictBatch3TenEnvironment,
-  readDistrictBatch3TenPlan,
-  type DistrictBatch3TenPlanExpectation,
-} from "./production-district-batch3-ten-core";
+  applyArnavutkoy,
+  arnavutkoyConfigurationStatus,
+  assertArnavutkoyEnvironment,
+  readArnavutkoyPlan,
+  type ArnavutkoyPlanExpectation,
+} from "./production-arnavutkoy-editorial-core";
 import {
   productionImportError,
   safeProductionImportErrorReport,
@@ -101,7 +101,7 @@ function payloadRepository(payload: Payload): ProductionImportRepository {
       if (!transactionID)
         throw productionImportError(
           "transaction_failed",
-          "DistrictBatch3Ten transaction could not be started.",
+          "Arnavutkoy transaction could not be started.",
         );
       req.transactionID = transactionID;
       try {
@@ -115,7 +115,7 @@ function payloadRepository(payload: Payload): ProductionImportRepository {
         } catch {
           throw productionImportError(
             "rollback_failed",
-            "DistrictBatch3Ten transaction rollback failed closed.",
+            "Arnavutkoy transaction rollback failed closed.",
           );
         } finally {
           delete req.transactionID;
@@ -145,7 +145,7 @@ async function main(): Promise<void> {
   } catch {
     throw productionImportError(
       "configuration_failed",
-      "DistrictBatch3Ten import arguments are invalid.",
+      "Arnavutkoy import arguments are invalid.",
     );
   }
   if (
@@ -159,10 +159,10 @@ async function main(): Promise<void> {
   }
 
   const apply = values.apply === true;
-  const expectation: DistrictBatch3TenPlanExpectation = values["expect-applied"]
+  const expectation: ArnavutkoyPlanExpectation = values["expect-applied"]
     ? "applied"
     : "initial";
-  assertDistrictBatch3TenEnvironment(process.env, apply);
+  assertArnavutkoyEnvironment(process.env, apply);
   const deploymentSha = process.env.VERCEL_GIT_COMMIT_SHA!;
 
   try {
@@ -205,13 +205,14 @@ async function main(): Promise<void> {
   } catch {
     throw productionImportError(
       "input_failed",
-      "DistrictBatch3Ten editorial input validation failed.",
+      "Arnavutkoy editorial input validation failed.",
     );
   }
 
   let payload: Payload;
   try {
-    const { default: configPromise } = await import("../../src/payload.config");
+    const { default: configPromise } =
+      await import("../../../src/payload.config");
     const config = await configPromise;
     config.typescript.autoGenerate = false;
     payload = await getPayload({ config });
@@ -224,8 +225,8 @@ async function main(): Promise<void> {
   try {
     const repository = payloadRepository(payload);
     const plan = apply
-      ? await applyDistrictBatch3Ten(bundle, repository, deploymentSha)
-      : await readDistrictBatch3TenPlan(
+      ? await applyArnavutkoy(bundle, repository, deploymentSha)
+      : await readArnavutkoyPlan(
           bundle,
           repository,
           expectation,
@@ -255,7 +256,7 @@ main().catch((error) => {
       ...report,
       ...(report.error === "configuration_failed" ||
       report.error === "approval_failed"
-        ? { configuration: districtBatch3TenConfigurationStatus(process.env) }
+        ? { configuration: arnavutkoyConfigurationStatus(process.env) }
         : {}),
     }),
   );

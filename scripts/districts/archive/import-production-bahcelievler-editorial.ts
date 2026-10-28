@@ -10,16 +10,16 @@ import {
 import {
   describeProductionDatabase,
   readProductionMigrationState,
-} from "../vercel-build.mjs";
-import { attachEditorial, type EditorialBundle } from "./editorial";
-import { validateBundle, type ResearchBundle } from "./import-core";
+} from "../../vercel-build.mjs";
+import { attachEditorial, type EditorialBundle } from "../editorial";
+import { validateBundle, type ResearchBundle } from "../import-core";
 import {
-  applyArnavutkoy,
-  arnavutkoyConfigurationStatus,
-  assertArnavutkoyEnvironment,
-  readArnavutkoyPlan,
-  type ArnavutkoyPlanExpectation,
-} from "./production-arnavutkoy-editorial-core";
+  applyBahcelievler,
+  bahcelievlerConfigurationStatus,
+  assertBahcelievlerEnvironment,
+  readBahcelievlerPlan,
+  type BahcelievlerPlanExpectation,
+} from "./production-bahcelievler-editorial-core";
 import {
   productionImportError,
   safeProductionImportErrorReport,
@@ -101,7 +101,7 @@ function payloadRepository(payload: Payload): ProductionImportRepository {
       if (!transactionID)
         throw productionImportError(
           "transaction_failed",
-          "Arnavutkoy transaction could not be started.",
+          "Bahcelievler transaction could not be started.",
         );
       req.transactionID = transactionID;
       try {
@@ -115,7 +115,7 @@ function payloadRepository(payload: Payload): ProductionImportRepository {
         } catch {
           throw productionImportError(
             "rollback_failed",
-            "Arnavutkoy transaction rollback failed closed.",
+            "Bahcelievler transaction rollback failed closed.",
           );
         } finally {
           delete req.transactionID;
@@ -145,7 +145,7 @@ async function main(): Promise<void> {
   } catch {
     throw productionImportError(
       "configuration_failed",
-      "Arnavutkoy import arguments are invalid.",
+      "Bahcelievler import arguments are invalid.",
     );
   }
   if (
@@ -159,10 +159,10 @@ async function main(): Promise<void> {
   }
 
   const apply = values.apply === true;
-  const expectation: ArnavutkoyPlanExpectation = values["expect-applied"]
+  const expectation: BahcelievlerPlanExpectation = values["expect-applied"]
     ? "applied"
     : "initial";
-  assertArnavutkoyEnvironment(process.env, apply);
+  assertBahcelievlerEnvironment(process.env, apply);
   const deploymentSha = process.env.VERCEL_GIT_COMMIT_SHA!;
 
   try {
@@ -205,13 +205,14 @@ async function main(): Promise<void> {
   } catch {
     throw productionImportError(
       "input_failed",
-      "Arnavutkoy editorial input validation failed.",
+      "Bahcelievler editorial input validation failed.",
     );
   }
 
   let payload: Payload;
   try {
-    const { default: configPromise } = await import("../../src/payload.config");
+    const { default: configPromise } =
+      await import("../../../src/payload.config");
     const config = await configPromise;
     config.typescript.autoGenerate = false;
     payload = await getPayload({ config });
@@ -224,8 +225,8 @@ async function main(): Promise<void> {
   try {
     const repository = payloadRepository(payload);
     const plan = apply
-      ? await applyArnavutkoy(bundle, repository, deploymentSha)
-      : await readArnavutkoyPlan(
+      ? await applyBahcelievler(bundle, repository, deploymentSha)
+      : await readBahcelievlerPlan(
           bundle,
           repository,
           expectation,
@@ -255,7 +256,7 @@ main().catch((error) => {
       ...report,
       ...(report.error === "configuration_failed" ||
       report.error === "approval_failed"
-        ? { configuration: arnavutkoyConfigurationStatus(process.env) }
+        ? { configuration: bahcelievlerConfigurationStatus(process.env) }
         : {}),
     }),
   );

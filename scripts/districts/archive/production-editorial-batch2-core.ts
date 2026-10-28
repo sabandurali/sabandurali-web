@@ -1,6 +1,6 @@
-import { districts } from "../../src/content/districts/district-registry";
-import { projectPublishedDistrictGuide } from "../../src/content/districts/district-guide-projection";
-import verifiedBaselineSnapshot from "../../data/districts/production-editorial-batch2-baseline.json";
+import { districts } from "../../../src/content/districts/district-registry";
+import { projectPublishedDistrictGuide } from "../../../src/content/districts/district-guide-projection";
+import verifiedBaselineSnapshot from "../../../data/districts/production-editorial-batch2-baseline.json";
 import {
   ownedFields,
   fingerprint,
@@ -9,7 +9,7 @@ import {
   researchFingerprint,
   type ResearchBundle,
   type ResearchRecord,
-} from "./import-core";
+} from "../import-core";
 import {
   productionImportError,
   type ProductionImportDocument,

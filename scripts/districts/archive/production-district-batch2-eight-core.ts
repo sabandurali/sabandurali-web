@@ -1,5 +1,5 @@
-import { districts } from "../../src/content/districts/district-registry";
-import { projectPublishedDistrictGuide } from "../../src/content/districts/district-guide-projection";
+import { districts } from "../../../src/content/districts/district-registry";
+import { projectPublishedDistrictGuide } from "../../../src/content/districts/district-guide-projection";
 import {
   batch2EditorialSourceCommit,
   batch2ImportVersion,
@@ -10,41 +10,84 @@ import {
   researchFingerprint,
   type ResearchBundle,
   type ResearchRecord,
-} from "./import-core";
+} from "../import-core";
 import {
   productionImportError,
   type ProductionImportDocument,
   type ProductionImportRepository,
 } from "./production-import-core";
 
-export const bagcilarTarget = "bagcilar" as const;
-export const bagcilarImportVersion = 5;
-export const bagcilarImportBatch = "bagcilar-editorial-quality-2026";
-// Read-only audited Production state immediately before this single-district
+export const districtBatch2EightTargets = [
+  "catalca",
+  "esenyurt",
+  "eyupsultan",
+  "fatih",
+  "gaziosmanpasa",
+  "gungoren",
+  "kagithane",
+  "kucukcekmece",
+] as const;
+export const districtBatch2EightImportVersion = 6;
+export const districtBatch2EightImportBatch =
+  "districtBatch2Eight-editorial-quality-2026";
+// Read-only audited Production state immediately before this eight-district
 // update. Both hashes must match; the importer never learns a baseline at run time.
-const bagcilarProductionBaseline = {
-  content: "e2ef1cae4c8b130d3a802da3131b0c73af486f0099c16188b05beb10e80bdb9d",
-  source: "7b166d289c1abdcc35e2f7f1bf393f73164989301dc727adae12797f62e7d13c",
+const districtBatch2EightProductionBaseline: Record<
+  string,
+  { content: string; source: string }
+> = {
+  catalca: {
+    content: "c1c59342ad0515802b2e5158a6e268da5cc49878aa08cebe7c8889ee13e3fe2b",
+    source: "c2aceff28755d9954239120c5f151c074da376df9ea7485da2507a30bc10ecf6",
+  },
+  esenyurt: {
+    content: "82b98596abd68d9195c0231f3143259c5cc8f6a8773b30ac839f725cd36c1ad5",
+    source: "81c94d725e34b0377989dc2fe3876f72c759e77bfe392daae8ca7fd1a9c82910",
+  },
+  eyupsultan: {
+    content: "df8a3214544a54fec044f573ce76998f9efc7e38235b2f266734ffaf28fc5c51",
+    source: "10e498666337c6801e831fb6734fd1c77832d663411749d7ac3e2dcfcaba2972",
+  },
+  fatih: {
+    content: "1536c86cfcac8bcece53b2ef39ced8c46493908e783713fff4a3c3925fa05838",
+    source: "d25fd9f657158d73ed23a98a313a668a823951b8254be2a3b22c2f2f2819f9f3",
+  },
+  gaziosmanpasa: {
+    content: "e2776ec4ce0428febc3d9bb957305b2f86fb51857bc0065f5f3f5210382250fc",
+    source: "92cb413c8c79a1dff1e49351490844890ee45b4605cc933aced037b139addb17",
+  },
+  gungoren: {
+    content: "d39fe8616d4eeddd3d468d28cdaa3807aedbd27b2adecf54c81e1bc36d867ce5",
+    source: "421dcb392ce711fa57561a07b3c009375af9e7480c5cc85cbe9095894fa259aa",
+  },
+  kagithane: {
+    content: "0df98d67010e2df69743959671e0aaefde27134804489e0c223abbf99c951948",
+    source: "ed376725d7f69df59aa31da40711bdecf812e15cb2cbbfa5cc5a1593985cd594",
+  },
+  kucukcekmece: {
+    content: "9854020eb83dba8f2ed54d8cb593c2e0b1737eaefd684c7856b6375f4fd3da50",
+    source: "89c2a4664775077e5389a1b5a3277d61ce260f201354a099a27eec53ec504c7e",
+  },
 } as const;
 
-export type BagcilarPlanCount = {
+export type DistrictBatch2EightPlanCount = {
   create: number;
   update: number;
   skip: number;
   conflict: number;
 };
-export type BagcilarPlanEntry = {
-  action: keyof BagcilarPlanCount;
+export type DistrictBatch2EightPlanEntry = {
+  action: keyof DistrictBatch2EightPlanCount;
   district: string;
   reason: string;
   row: ResearchRecord;
   existing?: ProductionImportDocument;
 };
-export type BagcilarPlan = {
-  count: BagcilarPlanCount;
-  entries: BagcilarPlanEntry[];
+export type DistrictBatch2EightPlan = {
+  count: DistrictBatch2EightPlanCount;
+  entries: DistrictBatch2EightPlanEntry[];
 };
-export type BagcilarPlanExpectation = "initial" | "applied";
+export type DistrictBatch2EightPlanExpectation = "initial" | "applied";
 
 function publishedAt(document: ProductionImportDocument): string | null {
   return typeof document.publishedAt === "string" &&
@@ -82,7 +125,7 @@ function assertCompleteInput(bundle: ResearchBundle): void {
   ) {
     throw productionImportError(
       "input_failed",
-      "Bagcilar import requires the exact validated 39-district bundle.",
+      "DistrictBatch2Eight import requires the exact validated 39-district bundle.",
     );
   }
 }
@@ -93,8 +136,8 @@ function desiredProvenance(
   contentFingerprint: string,
 ): Record<string, unknown> {
   return {
-    version: bagcilarImportVersion,
-    batch: bagcilarImportBatch,
+    version: districtBatch2EightImportVersion,
+    batch: districtBatch2EightImportBatch,
     sourceCommit: deploymentSha,
     sourceFingerprint: researchFingerprint(row),
     ...row.document,
@@ -102,11 +145,11 @@ function desiredProvenance(
   };
 }
 
-export function buildBagcilarPlan(
+export function buildDistrictBatch2EightPlan(
   existingDocuments: ProductionImportDocument[],
   bundle: ResearchBundle,
   deploymentSha: string,
-): BagcilarPlan {
+): DistrictBatch2EightPlan {
   assertCompleteInput(bundle);
   const registry = new Set(districts.map((district) => district.slug));
   const byDistrict = new Map<string, ProductionImportDocument>();
@@ -118,26 +161,30 @@ export function buildBagcilarPlan(
     ) {
       throw productionImportError(
         "planning_failed",
-        "Bagcilar import found an unknown or duplicate district record.",
+        "DistrictBatch2Eight import found an unknown or duplicate district record.",
       );
     }
     byDistrict.set(document.district, document);
   }
 
-  const count: BagcilarPlanCount = {
+  const count: DistrictBatch2EightPlanCount = {
     create: 0,
     update: 0,
     skip: 0,
     conflict: 0,
   };
-  const entries = bundle.districts.map((row): BagcilarPlanEntry => {
+  const entries = bundle.districts.map((row): DistrictBatch2EightPlanEntry => {
     const existing = byDistrict.get(row.district);
-    let action: keyof BagcilarPlanCount;
+    let action: keyof DistrictBatch2EightPlanCount;
     let reason: string;
     if (!existing) {
       action = "create";
       reason = "missing production district";
-    } else if (row.district !== bagcilarTarget) {
+    } else if (
+      !districtBatch2EightTargets.includes(
+        row.district as (typeof districtBatch2EightTargets)[number],
+      )
+    ) {
       if (existing._status === "published" && publishedAt(existing)) {
         action = "skip";
         reason = "protected non-target district; never written by this batch";
@@ -151,30 +198,34 @@ export function buildBagcilarPlan(
       !isSelfManaged(existing)
     ) {
       action = "conflict";
-      reason = "Bagcilar is unpublished, unmanaged, or manually edited";
+      reason =
+        "DistrictBatch2Eight is unpublished, unmanaged, or manually edited";
     } else {
       const managed = provenance(existing)!;
       const sourceFingerprint = researchFingerprint(row);
       if (
-        managed.version === bagcilarImportVersion &&
-        managed.batch === bagcilarImportBatch &&
+        managed.version === districtBatch2EightImportVersion &&
+        managed.batch === districtBatch2EightImportBatch &&
         managed.sourceCommit === deploymentSha &&
         managed.sourceFingerprint === sourceFingerprint
       ) {
         action = "skip";
-        reason = "Bagcilar quality update already applied";
+        reason = "DistrictBatch2Eight quality update already applied";
       } else if (
         managed.version === batch2ImportVersion &&
         managed.batch === "editorial-production-batch-2" &&
         managed.sourceCommit === batch2EditorialSourceCommit &&
-        managed.sourceFingerprint === bagcilarProductionBaseline.source &&
-        fingerprint(existing) === bagcilarProductionBaseline.content
+        managed.sourceFingerprint ===
+          districtBatch2EightProductionBaseline[row.district]?.source &&
+        fingerprint(existing) ===
+          districtBatch2EightProductionBaseline[row.district]?.content
       ) {
         action = "update";
-        reason = "exact managed Bagcilar Batch 2 baseline";
+        reason = "exact managed DistrictBatch2Eight Batch 2 baseline";
       } else {
         action = "conflict";
-        reason = "Bagcilar does not match the approved managed baseline";
+        reason =
+          "DistrictBatch2Eight does not match the approved managed baseline";
       }
     }
     count[action]++;
@@ -183,18 +234,22 @@ export function buildBagcilarPlan(
   return { count, entries };
 }
 
-export function assertBagcilarPlan(
-  plan: BagcilarPlan,
-  expectation: BagcilarPlanExpectation,
+export function assertDistrictBatch2EightPlan(
+  plan: DistrictBatch2EightPlan,
+  expectation: DistrictBatch2EightPlanExpectation,
 ): void {
   const updates = plan.entries.filter((entry) => entry.action === "update");
   const exactInitial =
-    plan.count.update === 1 &&
-    plan.count.skip === 38 &&
+    plan.count.update === 8 &&
+    plan.count.skip === 31 &&
     plan.count.create === 0 &&
     plan.count.conflict === 0 &&
-    updates.length === 1 &&
-    updates[0].district === bagcilarTarget;
+    updates.length === 8 &&
+    updates.every((entry) =>
+      districtBatch2EightTargets.includes(
+        entry.district as (typeof districtBatch2EightTargets)[number],
+      ),
+    );
   const exactApplied =
     plan.count.update === 0 &&
     plan.count.skip === 39 &&
@@ -206,7 +261,7 @@ export function assertBagcilarPlan(
   ) {
     throw productionImportError(
       "planning_failed",
-      `Bagcilar import does not match the exact ${expectation} gate.`,
+      `DistrictBatch2Eight import does not match the exact ${expectation} gate.`,
       plan.count,
     );
   }
@@ -222,86 +277,89 @@ function assertAppliedDocument(
   const projection = projectPublishedDistrictGuide(document);
   if (
     document.id !== before.id ||
-    document.district !== bagcilarTarget ||
+    document.district !== row.district ||
     document._status !== "published" ||
     document.publishedAt !== before.publishedAt ||
     document.createdAt !== before.createdAt ||
     !isSelfManaged(document) ||
-    managed?.version !== bagcilarImportVersion ||
-    managed?.batch !== bagcilarImportBatch ||
+    managed?.version !== districtBatch2EightImportVersion ||
+    managed?.batch !== districtBatch2EightImportBatch ||
     managed?.sourceCommit !== deploymentSha ||
     managed?.sourceFingerprint !== researchFingerprint(row) ||
     !projection ||
-    projection.neighborhoods.length !== 22 ||
-    projection.planningDevelopments.length !== 1 ||
-    projection.planningDevelopments[0]?.title !==
-      "M3 Yıldıztepe İstasyonu'nun Hizmete Açılması" ||
+    projection.neighborhoods.length !== row.editorial!.neighborhoods.length ||
+    projection.planningDevelopments.length !==
+      (row.editorial!.planningDevelopments?.length ?? 0) ||
     projection.sources.length === 0 ||
     JSON.stringify(projection).includes("importProvenance") ||
     JSON.stringify(projection).includes("researchNotes")
   ) {
     throw productionImportError(
       "transaction_failed",
-      "Bagcilar post-write verification failed.",
+      "DistrictBatch2Eight post-write verification failed.",
     );
   }
 }
 
-export async function readBagcilarPlan(
+export async function readDistrictBatch2EightPlan(
   bundle: ResearchBundle,
   repository: ProductionImportRepository,
-  expectation: BagcilarPlanExpectation,
+  expectation: DistrictBatch2EightPlanExpectation,
   deploymentSha: string,
-): Promise<BagcilarPlan> {
+): Promise<DistrictBatch2EightPlan> {
   let documents: ProductionImportDocument[];
   try {
     documents = await repository.readDistricts();
   } catch {
     throw productionImportError("query_failed", "District read failed.");
   }
-  const plan = buildBagcilarPlan(documents, bundle, deploymentSha);
-  assertBagcilarPlan(plan, expectation);
+  const plan = buildDistrictBatch2EightPlan(documents, bundle, deploymentSha);
+  assertDistrictBatch2EightPlan(plan, expectation);
   return plan;
 }
 
-export async function applyBagcilar(
+export async function applyDistrictBatch2Eight(
   bundle: ResearchBundle,
   repository: ProductionImportRepository,
   deploymentSha: string,
-): Promise<BagcilarPlan> {
+): Promise<DistrictBatch2EightPlan> {
   return repository.transaction(async (transaction) => {
     const beforeDocuments = await transaction.findDistricts();
-    const plan = buildBagcilarPlan(beforeDocuments, bundle, deploymentSha);
-    assertBagcilarPlan(plan, "initial");
+    const plan = buildDistrictBatch2EightPlan(
+      beforeDocuments,
+      bundle,
+      deploymentSha,
+    );
+    assertDistrictBatch2EightPlan(plan, "initial");
     const beforeFingerprints = new Map(
       beforeDocuments.map((document) => [
         document.district,
         fingerprint(document),
       ]),
     );
-    const target = plan.entries.find(
-      (entry) => entry.district === bagcilarTarget,
-    )!;
-    if (!target.existing || target.action !== "update") {
-      throw productionImportError(
-        "transaction_failed",
-        "Bagcilar update target disappeared.",
+    for (const target of plan.entries.filter(
+      (entry) => entry.action === "update",
+    )) {
+      if (!target.existing)
+        throw productionImportError(
+          "transaction_failed",
+          "District Batch 2 target disappeared.",
+        );
+      const persisted = await transaction.updateDistrict(
+        target.existing.id,
+        makePublishedEditorialUpdate(target.row, target.existing, false),
       );
+      const saved = await transaction.updateDistrict(target.existing.id, {
+        _status: "published",
+        publishedAt: target.existing.publishedAt,
+        importProvenance: desiredProvenance(
+          target.row,
+          deploymentSha,
+          fingerprint(persisted),
+        ),
+      });
+      assertAppliedDocument(saved, target.existing, target.row, deploymentSha);
     }
-    const persisted = await transaction.updateDistrict(
-      target.existing.id,
-      makePublishedEditorialUpdate(target.row, target.existing, false),
-    );
-    const saved = await transaction.updateDistrict(target.existing.id, {
-      _status: "published",
-      publishedAt: target.existing.publishedAt,
-      importProvenance: desiredProvenance(
-        target.row,
-        deploymentSha,
-        fingerprint(persisted),
-      ),
-    });
-    assertAppliedDocument(saved, target.existing, target.row, deploymentSha);
 
     const afterDocuments = await transaction.findDistricts();
     if (afterDocuments.length !== 39) {
@@ -312,7 +370,9 @@ export async function applyBagcilar(
     }
     for (const document of afterDocuments) {
       if (
-        document.district !== bagcilarTarget &&
+        !districtBatch2EightTargets.includes(
+          document.district as (typeof districtBatch2EightTargets)[number],
+        ) &&
         fingerprint(document) !== beforeFingerprints.get(document.district)
       ) {
         throw productionImportError(
@@ -321,17 +381,17 @@ export async function applyBagcilar(
         );
       }
     }
-    const appliedPlan = buildBagcilarPlan(
+    const appliedPlan = buildDistrictBatch2EightPlan(
       afterDocuments,
       bundle,
       deploymentSha,
     );
-    assertBagcilarPlan(appliedPlan, "applied");
+    assertDistrictBatch2EightPlan(appliedPlan, "applied");
     return plan;
   });
 }
 
-export const bagcilarConfigurationVariables = [
+export const districtBatch2EightConfigurationVariables = [
   "PAYLOAD_DATABASE",
   "DATABASE_URL",
   "PAYLOAD_SECRET",
@@ -339,15 +399,15 @@ export const bagcilarConfigurationVariables = [
   "VERCEL_ENV",
   "VERCEL_GIT_COMMIT_REF",
   "VERCEL_GIT_COMMIT_SHA",
-  "PRODUCTION_BAGCILAR_EDITORIAL_DRY_RUN_APPROVED_SHA",
+  "PRODUCTION_DISTRICT_BATCH2_EIGHT_EDITORIAL_DRY_RUN_APPROVED_SHA",
 ] as const;
 
 type ConfigurationStatus = "MISSING" | "PRESENT_INVALID" | "PRESENT_VALID";
 
-export function bagcilarConfigurationStatus(
+export function districtBatch2EightConfigurationStatus(
   env: Readonly<Record<string, string | undefined>>,
 ): Record<
-  (typeof bagcilarConfigurationVariables)[number],
+  (typeof districtBatch2EightConfigurationVariables)[number],
   ConfigurationStatus
 > {
   const required = (value: string | undefined): ConfigurationStatus =>
@@ -369,36 +429,37 @@ export function bagcilarConfigurationStatus(
     VERCEL_ENV: exact(env.VERCEL_ENV, "production"),
     VERCEL_GIT_COMMIT_REF: exact(env.VERCEL_GIT_COMMIT_REF, "main"),
     VERCEL_GIT_COMMIT_SHA: required(env.VERCEL_GIT_COMMIT_SHA),
-    PRODUCTION_BAGCILAR_EDITORIAL_DRY_RUN_APPROVED_SHA: exact(
-      env.PRODUCTION_BAGCILAR_EDITORIAL_DRY_RUN_APPROVED_SHA,
+    PRODUCTION_DISTRICT_BATCH2_EIGHT_EDITORIAL_DRY_RUN_APPROVED_SHA: exact(
+      env.PRODUCTION_DISTRICT_BATCH2_EIGHT_EDITORIAL_DRY_RUN_APPROVED_SHA,
       env.VERCEL_GIT_COMMIT_SHA || "__missing_commit_sha__",
     ),
   };
 }
 
-export function assertBagcilarEnvironment(
+export function assertDistrictBatch2EightEnvironment(
   env: Readonly<Record<string, string | undefined>>,
   apply: boolean,
 ): void {
-  const status = bagcilarConfigurationStatus(env);
+  const status = districtBatch2EightConfigurationStatus(env);
   if (
-    bagcilarConfigurationVariables.some(
+    districtBatch2EightConfigurationVariables.some(
       (name) => status[name] !== "PRESENT_VALID",
     )
   ) {
     throw productionImportError(
       "approval_failed",
-      "Bagcilar import requires an exact SHA-bound Production environment.",
+      "DistrictBatch2Eight import requires an exact SHA-bound Production environment.",
     );
   }
   if (
     apply &&
-    (env.PRODUCTION_BAGCILAR_EDITORIAL_IMPORT_APPROVED !== "true" ||
-      env.PRODUCTION_BAGCILAR_EDITORIAL_PITR_CONFIRMED !== "true")
+    (env.PRODUCTION_DISTRICT_BATCH2_EIGHT_EDITORIAL_IMPORT_APPROVED !==
+      "true" ||
+      env.PRODUCTION_DISTRICT_BATCH2_EIGHT_EDITORIAL_PITR_CONFIRMED !== "true")
   ) {
     throw productionImportError(
       "approval_failed",
-      "Bagcilar apply requires explicit import and PITR confirmation.",
+      "DistrictBatch2Eight apply requires explicit import and PITR confirmation.",
     );
   }
 }

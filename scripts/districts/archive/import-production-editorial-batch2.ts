@@ -1,4 +1,4 @@
-/** Esenler-only Production importer. Defaults to no mode and no writes. */
+/** Production PostgreSQL Editorial Batch 2 importer. Defaults to no mode and no writes. */
 import { readFile } from "node:fs/promises";
 import { parseArgs } from "node:util";
 import {
@@ -10,16 +10,16 @@ import {
 import {
   describeProductionDatabase,
   readProductionMigrationState,
-} from "../vercel-build.mjs";
-import { attachEditorial, type EditorialBundle } from "./editorial";
-import { validateBundle, type ResearchBundle } from "./import-core";
+} from "../../vercel-build.mjs";
+import { attachEditorial, type EditorialBundle } from "../editorial";
+import { validateBundle, type ResearchBundle } from "../import-core";
 import {
-  applyEsenlerFinal,
-  assertEsenlerFinalEnvironment,
-  esenlerFinalConfigurationStatus,
-  readEsenlerFinalPlan,
-  type EsenlerFinalPlanExpectation,
-} from "./production-esenler-final-core";
+  applyBatch2,
+  assertBatch2Environment,
+  batch2ConfigurationStatus,
+  readBatch2Plan,
+  type Batch2PlanExpectation,
+} from "./production-editorial-batch2-core";
 import {
   productionImportError,
   safeProductionImportErrorReport,
@@ -43,8 +43,9 @@ function databaseErrorCategory(error: unknown): ProductionImportErrorCategory {
       "ENOTFOUND",
       "ETIMEDOUT",
     ]).has(code)
-  )
+  ) {
     return "connection_failed";
+  }
   return "query_failed";
 }
 
@@ -98,11 +99,12 @@ function payloadRepository(payload: Payload): ProductionImportRepository {
         accessMode: "read write",
         isolationLevel: "serializable",
       });
-      if (!transactionID)
+      if (!transactionID) {
         throw productionImportError(
           "transaction_failed",
-          "Esenler final transaction could not be started.",
+          "Production Editorial Batch 2 transaction could not be started.",
         );
+      }
       req.transactionID = transactionID;
       try {
         const result = await operation(payloadTransaction(payload, req));
@@ -115,7 +117,7 @@ function payloadRepository(payload: Payload): ProductionImportRepository {
         } catch {
           throw productionImportError(
             "rollback_failed",
-            "Esenler final transaction rollback failed closed.",
+            "Production Editorial Batch 2 rollback failed closed.",
           );
         } finally {
           delete req.transactionID;
@@ -145,24 +147,24 @@ async function main(): Promise<void> {
   } catch {
     throw productionImportError(
       "configuration_failed",
-      "Esenler final import arguments are invalid.",
+      "Production Editorial Batch 2 arguments are invalid.",
     );
   }
   if (
     values.apply === values["dry-run"] ||
     (values.apply && values["expect-applied"])
-  )
+  ) {
     throw productionImportError(
       "configuration_failed",
-      "Choose exactly one mode; applied verification is read-only.",
+      "Choose exactly one Batch 2 mode; applied verification is read-only.",
     );
+  }
 
   const apply = values.apply === true;
-  const expectation: EsenlerFinalPlanExpectation = values["expect-applied"]
+  const expectation: Batch2PlanExpectation = values["expect-applied"]
     ? "applied"
     : "initial";
-  assertEsenlerFinalEnvironment(process.env, apply);
-  const deploymentSha = process.env.VERCEL_GIT_COMMIT_SHA!;
+  assertBatch2Environment(process.env, apply);
 
   try {
     describeProductionDatabase(process.env.DATABASE_URL!);
@@ -184,11 +186,12 @@ async function main(): Promise<void> {
   if (
     migrationState.pendingMigrationNames.length !== 0 ||
     migrationState.appliedCount !== migrationState.registeredCount
-  )
+  ) {
     throw productionImportError(
       "schema_mismatch",
       "Production migration state is not current.",
     );
+  }
 
   let bundle: ResearchBundle;
   try {
@@ -203,13 +206,14 @@ async function main(): Promise<void> {
   } catch {
     throw productionImportError(
       "input_failed",
-      "Esenler final editorial input validation failed.",
+      "Production Editorial Batch 2 input validation failed.",
     );
   }
 
   let payload: Payload;
   try {
-    const { default: configPromise } = await import("../../src/payload.config");
+    const { default: configPromise } =
+      await import("../../../src/payload.config");
     const config = await configPromise;
     config.typescript.autoGenerate = false;
     payload = await getPayload({ config });
@@ -222,19 +226,17 @@ async function main(): Promise<void> {
   try {
     const repository = payloadRepository(payload);
     const plan = apply
-      ? await applyEsenlerFinal(bundle, repository, deploymentSha)
-      : await readEsenlerFinalPlan(
-          bundle,
-          repository,
-          expectation,
-          deploymentSha,
-        );
+      ? await applyBatch2(bundle, repository)
+      : await readBatch2Plan(bundle, repository, expectation);
     console.log(
       JSON.stringify({
         ...plan.count,
         writes: apply ? plan.count.update : 0,
         updates: plan.entries
           .filter((entry) => entry.action === "update")
+          .map((entry) => entry.district),
+        skips: plan.entries
+          .filter((entry) => entry.action === "skip")
           .map((entry) => entry.district),
       }),
     );
@@ -250,7 +252,7 @@ main().catch((error) => {
       ...report,
       ...(report.error === "configuration_failed" ||
       report.error === "approval_failed"
-        ? { configuration: esenlerFinalConfigurationStatus(process.env) }
+        ? { configuration: batch2ConfigurationStatus(process.env) }
         : {}),
     }),
   );

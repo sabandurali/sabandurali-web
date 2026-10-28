@@ -5,8 +5,8 @@ import {
   attachEditorial,
   batch1PopulationFacts,
   type EditorialBundle,
-} from "./editorial";
-import { decideImport, type ResearchBundle } from "./import-core";
+} from "../editorial";
+import { decideImport, type ResearchBundle } from "../import-core";
 const database = process.argv[2];
 if (database !== "/tmp/istanbul-39-audit/editorial-test.db")
   throw new Error("Disposable editorial fixture database required.");
@@ -17,7 +17,7 @@ Object.assign(process.env, {
   DATABASE_URL: `file:${database}`,
   PAYLOAD_SECRET: "district-editorial-local-test",
 });
-const { default: configPromise } = await import("../../src/payload.config");
+const { default: configPromise } = await import("../../../src/payload.config");
 const config = await configPromise;
 config.typescript.autoGenerate = false;
 const { getPayload } = await import("payload");

@@ -1,86 +1,56 @@
-import { createHash } from "node:crypto";
-import { districts } from "../../src/content/districts/district-registry";
-import { projectPublishedDistrictGuide } from "../../src/content/districts/district-guide-projection";
-import { makePublishedEditorialUpdate } from "./production-editorial-batch2-core";
+import { districts } from "../../../src/content/districts/district-registry";
+import { projectPublishedDistrictGuide } from "../../../src/content/districts/district-guide-projection";
+import {
+  batch2EditorialSourceCommit,
+  batch2ImportVersion,
+  makePublishedEditorialUpdate,
+} from "./production-editorial-batch2-core";
 import {
   fingerprint,
   researchFingerprint,
   type ResearchBundle,
   type ResearchRecord,
-} from "./import-core";
+} from "../import-core";
 import {
   productionImportError,
   type ProductionImportDocument,
   type ProductionImportRepository,
 } from "./production-import-core";
 
-export const esenlerFinalTarget = "esenler" as const;
-export const esenlerFinalImportVersion = 6;
-export const esenlerFinalImportBatch = "esenler-final-editorial-quality-2026";
-
-// User-approved, read-only audited Production snapshot. The importer cannot
-// learn or replace this manual baseline at runtime (no TOFU/adoption path).
-export const esenlerApprovedManualBaseline = {
-  district: esenlerFinalTarget,
-  documentId: "4c3d4d0b-3303-4bdf-b46c-0b2ac4b2acb8",
-  createdAt: "2026-09-13T18:38:00.001Z",
-  publishedAt: "2026-09-20T11:37:45.327Z",
-  contentFingerprint:
-    "fd45106eea0200e4439ecc927ffa5c22bf77d6d5f83324793c687a64630f8c45",
-  storedProvenanceFingerprint:
-    "1422128f173e23dac3f34351367e81b0a805e26353bb44f683d90346f65b6454",
-  provenanceCanonicalHash:
-    "a9e4685d89cdb604536cc0ed36389fc3854d16815b353a7a81914d768ab2c6ed",
-  provenance: {
-    file: "Esenler İlçe Rehberi Araştırması.pdf",
-    pages: 12,
-    sha256: "31c2d5e501f27e7ee6a8bef07dbefd2fd117bab42d601fa598701e1d19e0327c",
-    version: 3,
-    fingerprint:
-      "1422128f173e23dac3f34351367e81b0a805e26353bb44f683d90346f65b6454",
-    sourceFingerprint:
-      "c057ffa6f8442c787a6e8aca68aa48ded992c5b479e70c9c397d8e6b2a8c6e5e",
-  },
+export const arnavutkoyTarget = "arnavutkoy" as const;
+export const arnavutkoyImportVersion = 5;
+export const arnavutkoyImportBatch = "arnavutkoy-editorial-quality-2026";
+// Read-only audited Production state immediately before this single-district
+// update. Both hashes must match; the importer never learns a baseline at run time.
+const arnavutkoyProductionBaseline = {
+  content: "333fb18cd5985c17b692894405c5caa1a6fb2d3d8e6d508a7793793ed5653a76",
+  source: "5f098478277a3cd5140cd6c2793512e7a140da49815f8bbd9ecd8fe0689555ca",
 } as const;
 
-export type EsenlerFinalPlanCount = {
+export type ArnavutkoyPlanCount = {
   create: number;
   update: number;
   skip: number;
   conflict: number;
 };
-export type EsenlerFinalPlanEntry = {
-  action: keyof EsenlerFinalPlanCount;
+export type ArnavutkoyPlanEntry = {
+  action: keyof ArnavutkoyPlanCount;
   district: string;
   reason: string;
   row: ResearchRecord;
   existing?: ProductionImportDocument;
 };
-export type EsenlerFinalPlan = {
-  count: EsenlerFinalPlanCount;
-  entries: EsenlerFinalPlanEntry[];
+export type ArnavutkoyPlan = {
+  count: ArnavutkoyPlanCount;
+  entries: ArnavutkoyPlanEntry[];
 };
-export type EsenlerFinalPlanExpectation = "initial" | "applied";
+export type ArnavutkoyPlanExpectation = "initial" | "applied";
 
-function canonical(value: unknown): unknown {
-  if (Array.isArray(value)) return value.map(canonical);
-  if (value && typeof value === "object")
-    return Object.fromEntries(
-      Object.entries(value)
-        .filter(
-          ([key, child]) =>
-            key !== "id" && child !== undefined && child !== null,
-        )
-        .sort(([left], [right]) => left.localeCompare(right))
-        .map(([key, child]) => [key, canonical(child)]),
-    );
-  return value;
-}
-
-export function canonicalHash(value: unknown): string {
-  return createHash("sha256")
-    .update(JSON.stringify(canonical(value)))
-    .digest("hex");
+function publishedAt(document: ProductionImportDocument): string | null {
+  return typeof document.publishedAt === "string" &&
+    Number.isFinite(Date.parse(document.publishedAt))
+    ? document.publishedAt
+    : null;
 }
 
 function provenance(
@@ -93,32 +63,11 @@ function provenance(
     : null;
 }
 
-export function isEsenlerFinalSelfManaged(
-  document: ProductionImportDocument,
-): boolean {
+function isSelfManaged(document: ProductionImportDocument): boolean {
   const managed = provenance(document);
   return (
     typeof managed?.fingerprint === "string" &&
     managed.fingerprint === fingerprint(document)
-  );
-}
-
-export function isExactApprovedEsenlerManualBaseline(
-  document: ProductionImportDocument,
-): boolean {
-  const managed = provenance(document);
-  return (
-    document.district === esenlerApprovedManualBaseline.district &&
-    document.id === esenlerApprovedManualBaseline.documentId &&
-    document._status === "published" &&
-    document.createdAt === esenlerApprovedManualBaseline.createdAt &&
-    document.publishedAt === esenlerApprovedManualBaseline.publishedAt &&
-    fingerprint(document) ===
-      esenlerApprovedManualBaseline.contentFingerprint &&
-    managed?.fingerprint ===
-      esenlerApprovedManualBaseline.storedProvenanceFingerprint &&
-    canonicalHash(managed) ===
-      esenlerApprovedManualBaseline.provenanceCanonicalHash
   );
 }
 
@@ -133,7 +82,7 @@ function assertCompleteInput(bundle: ResearchBundle): void {
   ) {
     throw productionImportError(
       "input_failed",
-      "Esenler final import requires the exact validated 39-district bundle.",
+      "Arnavutkoy import requires the exact validated 39-district bundle.",
     );
   }
 }
@@ -144,8 +93,8 @@ function desiredProvenance(
   contentFingerprint: string,
 ): Record<string, unknown> {
   return {
-    version: esenlerFinalImportVersion,
-    batch: esenlerFinalImportBatch,
+    version: arnavutkoyImportVersion,
+    batch: arnavutkoyImportBatch,
     sourceCommit: deploymentSha,
     sourceFingerprint: researchFingerprint(row),
     ...row.document,
@@ -153,11 +102,11 @@ function desiredProvenance(
   };
 }
 
-export function buildEsenlerFinalPlan(
+export function buildArnavutkoyPlan(
   existingDocuments: ProductionImportDocument[],
   bundle: ResearchBundle,
   deploymentSha: string,
-): EsenlerFinalPlan {
+): ArnavutkoyPlan {
   assertCompleteInput(bundle);
   const registry = new Set(districts.map((district) => district.slug));
   const byDistrict = new Map<string, ProductionImportDocument>();
@@ -169,51 +118,63 @@ export function buildEsenlerFinalPlan(
     ) {
       throw productionImportError(
         "planning_failed",
-        "Esenler final import found an unknown or duplicate district record.",
+        "Arnavutkoy import found an unknown or duplicate district record.",
       );
     }
     byDistrict.set(document.district, document);
   }
 
-  const count: EsenlerFinalPlanCount = {
+  const count: ArnavutkoyPlanCount = {
     create: 0,
     update: 0,
     skip: 0,
     conflict: 0,
   };
-  const entries = bundle.districts.map((row): EsenlerFinalPlanEntry => {
+  const entries = bundle.districts.map((row): ArnavutkoyPlanEntry => {
     const existing = byDistrict.get(row.district);
-    let action: keyof EsenlerFinalPlanCount;
+    let action: keyof ArnavutkoyPlanCount;
     let reason: string;
     if (!existing) {
       action = "create";
       reason = "missing production district";
-    } else if (row.district !== esenlerFinalTarget) {
-      if (existing._status === "published" && existing.publishedAt) {
+    } else if (row.district !== arnavutkoyTarget) {
+      if (existing._status === "published" && publishedAt(existing)) {
         action = "skip";
-        reason = "protected non-target district; never written";
+        reason = "protected non-target district; never written by this batch";
       } else {
         action = "conflict";
         reason = "protected non-target district is not published";
       }
+    } else if (
+      existing._status !== "published" ||
+      !publishedAt(existing) ||
+      !isSelfManaged(existing)
+    ) {
+      action = "conflict";
+      reason = "Arnavutkoy is unpublished, unmanaged, or manually edited";
     } else {
-      const managed = provenance(existing);
-      const alreadyApplied =
-        existing._status === "published" &&
-        isEsenlerFinalSelfManaged(existing) &&
-        managed?.version === esenlerFinalImportVersion &&
-        managed.batch === esenlerFinalImportBatch &&
+      const managed = provenance(existing)!;
+      const sourceFingerprint = researchFingerprint(row);
+      if (
+        managed.version === arnavutkoyImportVersion &&
+        managed.batch === arnavutkoyImportBatch &&
         managed.sourceCommit === deploymentSha &&
-        managed.sourceFingerprint === researchFingerprint(row);
-      if (alreadyApplied) {
+        managed.sourceFingerprint === sourceFingerprint
+      ) {
         action = "skip";
-        reason = "Esenler final quality update already applied";
-      } else if (isExactApprovedEsenlerManualBaseline(existing)) {
+        reason = "Arnavutkoy quality update already applied";
+      } else if (
+        managed.version === batch2ImportVersion &&
+        managed.batch === "editorial-production-batch-2" &&
+        managed.sourceCommit === batch2EditorialSourceCommit &&
+        managed.sourceFingerprint === arnavutkoyProductionBaseline.source &&
+        fingerprint(existing) === arnavutkoyProductionBaseline.content
+      ) {
         action = "update";
-        reason = "exact user-approved Esenler manual baseline";
+        reason = "exact managed Arnavutkoy Batch 2 baseline";
       } else {
         action = "conflict";
-        reason = "Esenler does not match the approved manual baseline";
+        reason = "Arnavutkoy does not match the approved managed baseline";
       }
     }
     count[action]++;
@@ -222,9 +183,9 @@ export function buildEsenlerFinalPlan(
   return { count, entries };
 }
 
-export function assertEsenlerFinalPlan(
-  plan: EsenlerFinalPlan,
-  expectation: EsenlerFinalPlanExpectation,
+export function assertArnavutkoyPlan(
+  plan: ArnavutkoyPlan,
+  expectation: ArnavutkoyPlanExpectation,
 ): void {
   const updates = plan.entries.filter((entry) => entry.action === "update");
   const exactInitial =
@@ -233,7 +194,7 @@ export function assertEsenlerFinalPlan(
     plan.count.create === 0 &&
     plan.count.conflict === 0 &&
     updates.length === 1 &&
-    updates[0].district === esenlerFinalTarget;
+    updates[0].district === arnavutkoyTarget;
   const exactApplied =
     plan.count.update === 0 &&
     plan.count.skip === 39 &&
@@ -245,7 +206,7 @@ export function assertEsenlerFinalPlan(
   ) {
     throw productionImportError(
       "planning_failed",
-      `Esenler final import does not match the exact ${expectation} gate.`,
+      `Arnavutkoy import does not match the exact ${expectation} gate.`,
       plan.count,
     );
   }
@@ -259,66 +220,58 @@ function assertAppliedDocument(
 ): void {
   const managed = provenance(document);
   const projection = projectPublishedDistrictGuide(document);
-  const population = String(projection?.facts?.population ?? "").replaceAll(
-    ".",
-    "",
-  );
   if (
     document.id !== before.id ||
-    document.createdAt !== before.createdAt ||
-    document.publishedAt !== before.publishedAt ||
-    document.district !== esenlerFinalTarget ||
+    document.district !== arnavutkoyTarget ||
     document._status !== "published" ||
-    !isEsenlerFinalSelfManaged(document) ||
-    managed?.version !== esenlerFinalImportVersion ||
-    managed?.batch !== esenlerFinalImportBatch ||
+    document.publishedAt !== before.publishedAt ||
+    document.createdAt !== before.createdAt ||
+    !isSelfManaged(document) ||
+    managed?.version !== arnavutkoyImportVersion ||
+    managed?.batch !== arnavutkoyImportBatch ||
     managed?.sourceCommit !== deploymentSha ||
     managed?.sourceFingerprint !== researchFingerprint(row) ||
     !projection ||
-    population !== "419878" ||
-    projection.facts?.populationYear !== 2025 ||
-    projection.facts?.areaKm2 !== 18.43 ||
-    projection.facts?.neighborhoodCount !== 19 ||
-    projection.neighborhoods.length !== 19 ||
-    projection.planningDevelopments.length !== 0 ||
-    !Array.isArray(document.sources) ||
-    document.sources.length !== 12 ||
+    projection.neighborhoods.length !== 38 ||
+    projection.planningDevelopments.length !== 1 ||
+    !projection.transportation?.includes("19 Haziran 2026") ||
+    projection.sources.length === 0 ||
     JSON.stringify(projection).includes("importProvenance") ||
     JSON.stringify(projection).includes("researchNotes")
   ) {
     throw productionImportError(
       "transaction_failed",
-      "Esenler final post-write verification failed.",
+      "Arnavutkoy post-write verification failed.",
     );
   }
 }
 
-export async function readEsenlerFinalPlan(
+export async function readArnavutkoyPlan(
   bundle: ResearchBundle,
   repository: ProductionImportRepository,
-  expectation: EsenlerFinalPlanExpectation,
+  expectation: ArnavutkoyPlanExpectation,
   deploymentSha: string,
-): Promise<EsenlerFinalPlan> {
+): Promise<ArnavutkoyPlan> {
   let documents: ProductionImportDocument[];
   try {
     documents = await repository.readDistricts();
   } catch {
     throw productionImportError("query_failed", "District read failed.");
   }
-  const plan = buildEsenlerFinalPlan(documents, bundle, deploymentSha);
-  assertEsenlerFinalPlan(plan, expectation);
+  const plan = buildArnavutkoyPlan(documents, bundle, deploymentSha);
+  assertArnavutkoyPlan(plan, expectation);
   return plan;
 }
 
-export async function applyEsenlerFinal(
+export async function applyArnavutkoy(
   bundle: ResearchBundle,
   repository: ProductionImportRepository,
   deploymentSha: string,
-): Promise<EsenlerFinalPlan> {
+): Promise<ArnavutkoyPlan> {
   return repository.transaction(async (transaction) => {
     const beforeDocuments = await transaction.findDistricts();
-    const plan = buildEsenlerFinalPlan(beforeDocuments, bundle, deploymentSha);
-    assertEsenlerFinalPlan(plan, "initial");
+    const plan = buildArnavutkoyPlan(beforeDocuments, bundle, deploymentSha);
+    assertArnavutkoyPlan(plan, "initial");
     const beforeFingerprints = new Map(
       beforeDocuments.map((document) => [
         document.district,
@@ -326,14 +279,14 @@ export async function applyEsenlerFinal(
       ]),
     );
     const target = plan.entries.find(
-      (entry) => entry.district === esenlerFinalTarget,
+      (entry) => entry.district === arnavutkoyTarget,
     )!;
-    if (!target.existing || target.action !== "update")
+    if (!target.existing || target.action !== "update") {
       throw productionImportError(
         "transaction_failed",
-        "Esenler final update target disappeared.",
+        "Arnavutkoy update target disappeared.",
       );
-
+    }
     const persisted = await transaction.updateDistrict(
       target.existing.id,
       makePublishedEditorialUpdate(target.row, target.existing, false),
@@ -350,32 +303,34 @@ export async function applyEsenlerFinal(
     assertAppliedDocument(saved, target.existing, target.row, deploymentSha);
 
     const afterDocuments = await transaction.findDistricts();
-    if (afterDocuments.length !== 39)
+    if (afterDocuments.length !== 39) {
       throw productionImportError(
         "transaction_failed",
         "District record count changed.",
       );
-    for (const document of afterDocuments)
+    }
+    for (const document of afterDocuments) {
       if (
-        document.district !== esenlerFinalTarget &&
+        document.district !== arnavutkoyTarget &&
         fingerprint(document) !== beforeFingerprints.get(document.district)
-      )
+      ) {
         throw productionImportError(
           "transaction_failed",
           "A non-target district changed.",
         );
-
-    const appliedPlan = buildEsenlerFinalPlan(
+      }
+    }
+    const appliedPlan = buildArnavutkoyPlan(
       afterDocuments,
       bundle,
       deploymentSha,
     );
-    assertEsenlerFinalPlan(appliedPlan, "applied");
+    assertArnavutkoyPlan(appliedPlan, "applied");
     return plan;
   });
 }
 
-export const esenlerFinalConfigurationVariables = [
+export const arnavutkoyConfigurationVariables = [
   "PAYLOAD_DATABASE",
   "DATABASE_URL",
   "PAYLOAD_SECRET",
@@ -383,14 +338,15 @@ export const esenlerFinalConfigurationVariables = [
   "VERCEL_ENV",
   "VERCEL_GIT_COMMIT_REF",
   "VERCEL_GIT_COMMIT_SHA",
-  "PRODUCTION_ESENLER_FINAL_DRY_RUN_APPROVED_SHA",
+  "PRODUCTION_ARNAVUTKOY_EDITORIAL_DRY_RUN_APPROVED_SHA",
 ] as const;
+
 type ConfigurationStatus = "MISSING" | "PRESENT_INVALID" | "PRESENT_VALID";
 
-export function esenlerFinalConfigurationStatus(
+export function arnavutkoyConfigurationStatus(
   env: Readonly<Record<string, string | undefined>>,
 ): Record<
-  (typeof esenlerFinalConfigurationVariables)[number],
+  (typeof arnavutkoyConfigurationVariables)[number],
   ConfigurationStatus
 > {
   const required = (value: string | undefined): ConfigurationStatus =>
@@ -412,34 +368,36 @@ export function esenlerFinalConfigurationStatus(
     VERCEL_ENV: exact(env.VERCEL_ENV, "production"),
     VERCEL_GIT_COMMIT_REF: exact(env.VERCEL_GIT_COMMIT_REF, "main"),
     VERCEL_GIT_COMMIT_SHA: required(env.VERCEL_GIT_COMMIT_SHA),
-    PRODUCTION_ESENLER_FINAL_DRY_RUN_APPROVED_SHA: exact(
-      env.PRODUCTION_ESENLER_FINAL_DRY_RUN_APPROVED_SHA,
+    PRODUCTION_ARNAVUTKOY_EDITORIAL_DRY_RUN_APPROVED_SHA: exact(
+      env.PRODUCTION_ARNAVUTKOY_EDITORIAL_DRY_RUN_APPROVED_SHA,
       env.VERCEL_GIT_COMMIT_SHA || "__missing_commit_sha__",
     ),
   };
 }
 
-export function assertEsenlerFinalEnvironment(
+export function assertArnavutkoyEnvironment(
   env: Readonly<Record<string, string | undefined>>,
   apply: boolean,
 ): void {
-  const status = esenlerFinalConfigurationStatus(env);
+  const status = arnavutkoyConfigurationStatus(env);
   if (
-    esenlerFinalConfigurationVariables.some(
+    arnavutkoyConfigurationVariables.some(
       (name) => status[name] !== "PRESENT_VALID",
     )
-  )
+  ) {
     throw productionImportError(
       "approval_failed",
-      "Esenler final import requires an exact SHA-bound Production environment.",
+      "Arnavutkoy import requires an exact SHA-bound Production environment.",
     );
+  }
   if (
     apply &&
-    (env.PRODUCTION_ESENLER_FINAL_IMPORT_APPROVED !== "true" ||
-      env.PRODUCTION_ESENLER_FINAL_PITR_CONFIRMED !== "true")
-  )
+    (env.PRODUCTION_ARNAVUTKOY_EDITORIAL_IMPORT_APPROVED !== "true" ||
+      env.PRODUCTION_ARNAVUTKOY_EDITORIAL_PITR_CONFIRMED !== "true")
+  ) {
     throw productionImportError(
       "approval_failed",
-      "Esenler final apply requires explicit import and PITR confirmation.",
+      "Arnavutkoy apply requires explicit import and PITR confirmation.",
     );
+  }
 }

@@ -1,5 +1,5 @@
-import { districts } from "../../src/content/districts/district-registry";
-import { projectPublishedDistrictGuide } from "../../src/content/districts/district-guide-projection";
+import { districts } from "../../../src/content/districts/district-registry";
+import { projectPublishedDistrictGuide } from "../../../src/content/districts/district-guide-projection";
 import {
   batch2EditorialSourceCommit,
   batch2ImportVersion,
@@ -10,41 +10,41 @@ import {
   researchFingerprint,
   type ResearchBundle,
   type ResearchRecord,
-} from "./import-core";
+} from "../import-core";
 import {
   productionImportError,
   type ProductionImportDocument,
   type ProductionImportRepository,
 } from "./production-import-core";
 
-export const arnavutkoyTarget = "arnavutkoy" as const;
-export const arnavutkoyImportVersion = 5;
-export const arnavutkoyImportBatch = "arnavutkoy-editorial-quality-2026";
+export const bagcilarTarget = "bagcilar" as const;
+export const bagcilarImportVersion = 5;
+export const bagcilarImportBatch = "bagcilar-editorial-quality-2026";
 // Read-only audited Production state immediately before this single-district
 // update. Both hashes must match; the importer never learns a baseline at run time.
-const arnavutkoyProductionBaseline = {
-  content: "333fb18cd5985c17b692894405c5caa1a6fb2d3d8e6d508a7793793ed5653a76",
-  source: "5f098478277a3cd5140cd6c2793512e7a140da49815f8bbd9ecd8fe0689555ca",
+const bagcilarProductionBaseline = {
+  content: "e2ef1cae4c8b130d3a802da3131b0c73af486f0099c16188b05beb10e80bdb9d",
+  source: "7b166d289c1abdcc35e2f7f1bf393f73164989301dc727adae12797f62e7d13c",
 } as const;
 
-export type ArnavutkoyPlanCount = {
+export type BagcilarPlanCount = {
   create: number;
   update: number;
   skip: number;
   conflict: number;
 };
-export type ArnavutkoyPlanEntry = {
-  action: keyof ArnavutkoyPlanCount;
+export type BagcilarPlanEntry = {
+  action: keyof BagcilarPlanCount;
   district: string;
   reason: string;
   row: ResearchRecord;
   existing?: ProductionImportDocument;
 };
-export type ArnavutkoyPlan = {
-  count: ArnavutkoyPlanCount;
-  entries: ArnavutkoyPlanEntry[];
+export type BagcilarPlan = {
+  count: BagcilarPlanCount;
+  entries: BagcilarPlanEntry[];
 };
-export type ArnavutkoyPlanExpectation = "initial" | "applied";
+export type BagcilarPlanExpectation = "initial" | "applied";
 
 function publishedAt(document: ProductionImportDocument): string | null {
   return typeof document.publishedAt === "string" &&
@@ -82,7 +82,7 @@ function assertCompleteInput(bundle: ResearchBundle): void {
   ) {
     throw productionImportError(
       "input_failed",
-      "Arnavutkoy import requires the exact validated 39-district bundle.",
+      "Bagcilar import requires the exact validated 39-district bundle.",
     );
   }
 }
@@ -93,8 +93,8 @@ function desiredProvenance(
   contentFingerprint: string,
 ): Record<string, unknown> {
   return {
-    version: arnavutkoyImportVersion,
-    batch: arnavutkoyImportBatch,
+    version: bagcilarImportVersion,
+    batch: bagcilarImportBatch,
     sourceCommit: deploymentSha,
     sourceFingerprint: researchFingerprint(row),
     ...row.document,
@@ -102,11 +102,11 @@ function desiredProvenance(
   };
 }
 
-export function buildArnavutkoyPlan(
+export function buildBagcilarPlan(
   existingDocuments: ProductionImportDocument[],
   bundle: ResearchBundle,
   deploymentSha: string,
-): ArnavutkoyPlan {
+): BagcilarPlan {
   assertCompleteInput(bundle);
   const registry = new Set(districts.map((district) => district.slug));
   const byDistrict = new Map<string, ProductionImportDocument>();
@@ -118,26 +118,26 @@ export function buildArnavutkoyPlan(
     ) {
       throw productionImportError(
         "planning_failed",
-        "Arnavutkoy import found an unknown or duplicate district record.",
+        "Bagcilar import found an unknown or duplicate district record.",
       );
     }
     byDistrict.set(document.district, document);
   }
 
-  const count: ArnavutkoyPlanCount = {
+  const count: BagcilarPlanCount = {
     create: 0,
     update: 0,
     skip: 0,
     conflict: 0,
   };
-  const entries = bundle.districts.map((row): ArnavutkoyPlanEntry => {
+  const entries = bundle.districts.map((row): BagcilarPlanEntry => {
     const existing = byDistrict.get(row.district);
-    let action: keyof ArnavutkoyPlanCount;
+    let action: keyof BagcilarPlanCount;
     let reason: string;
     if (!existing) {
       action = "create";
       reason = "missing production district";
-    } else if (row.district !== arnavutkoyTarget) {
+    } else if (row.district !== bagcilarTarget) {
       if (existing._status === "published" && publishedAt(existing)) {
         action = "skip";
         reason = "protected non-target district; never written by this batch";
@@ -151,30 +151,30 @@ export function buildArnavutkoyPlan(
       !isSelfManaged(existing)
     ) {
       action = "conflict";
-      reason = "Arnavutkoy is unpublished, unmanaged, or manually edited";
+      reason = "Bagcilar is unpublished, unmanaged, or manually edited";
     } else {
       const managed = provenance(existing)!;
       const sourceFingerprint = researchFingerprint(row);
       if (
-        managed.version === arnavutkoyImportVersion &&
-        managed.batch === arnavutkoyImportBatch &&
+        managed.version === bagcilarImportVersion &&
+        managed.batch === bagcilarImportBatch &&
         managed.sourceCommit === deploymentSha &&
         managed.sourceFingerprint === sourceFingerprint
       ) {
         action = "skip";
-        reason = "Arnavutkoy quality update already applied";
+        reason = "Bagcilar quality update already applied";
       } else if (
         managed.version === batch2ImportVersion &&
         managed.batch === "editorial-production-batch-2" &&
         managed.sourceCommit === batch2EditorialSourceCommit &&
-        managed.sourceFingerprint === arnavutkoyProductionBaseline.source &&
-        fingerprint(existing) === arnavutkoyProductionBaseline.content
+        managed.sourceFingerprint === bagcilarProductionBaseline.source &&
+        fingerprint(existing) === bagcilarProductionBaseline.content
       ) {
         action = "update";
-        reason = "exact managed Arnavutkoy Batch 2 baseline";
+        reason = "exact managed Bagcilar Batch 2 baseline";
       } else {
         action = "conflict";
-        reason = "Arnavutkoy does not match the approved managed baseline";
+        reason = "Bagcilar does not match the approved managed baseline";
       }
     }
     count[action]++;
@@ -183,9 +183,9 @@ export function buildArnavutkoyPlan(
   return { count, entries };
 }
 
-export function assertArnavutkoyPlan(
-  plan: ArnavutkoyPlan,
-  expectation: ArnavutkoyPlanExpectation,
+export function assertBagcilarPlan(
+  plan: BagcilarPlan,
+  expectation: BagcilarPlanExpectation,
 ): void {
   const updates = plan.entries.filter((entry) => entry.action === "update");
   const exactInitial =
@@ -194,7 +194,7 @@ export function assertArnavutkoyPlan(
     plan.count.create === 0 &&
     plan.count.conflict === 0 &&
     updates.length === 1 &&
-    updates[0].district === arnavutkoyTarget;
+    updates[0].district === bagcilarTarget;
   const exactApplied =
     plan.count.update === 0 &&
     plan.count.skip === 39 &&
@@ -206,7 +206,7 @@ export function assertArnavutkoyPlan(
   ) {
     throw productionImportError(
       "planning_failed",
-      `Arnavutkoy import does not match the exact ${expectation} gate.`,
+      `Bagcilar import does not match the exact ${expectation} gate.`,
       plan.count,
     );
   }
@@ -222,56 +222,57 @@ function assertAppliedDocument(
   const projection = projectPublishedDistrictGuide(document);
   if (
     document.id !== before.id ||
-    document.district !== arnavutkoyTarget ||
+    document.district !== bagcilarTarget ||
     document._status !== "published" ||
     document.publishedAt !== before.publishedAt ||
     document.createdAt !== before.createdAt ||
     !isSelfManaged(document) ||
-    managed?.version !== arnavutkoyImportVersion ||
-    managed?.batch !== arnavutkoyImportBatch ||
+    managed?.version !== bagcilarImportVersion ||
+    managed?.batch !== bagcilarImportBatch ||
     managed?.sourceCommit !== deploymentSha ||
     managed?.sourceFingerprint !== researchFingerprint(row) ||
     !projection ||
-    projection.neighborhoods.length !== 38 ||
+    projection.neighborhoods.length !== 22 ||
     projection.planningDevelopments.length !== 1 ||
-    !projection.transportation?.includes("19 Haziran 2026") ||
+    projection.planningDevelopments[0]?.title !==
+      "M3 Yıldıztepe İstasyonu'nun Hizmete Açılması" ||
     projection.sources.length === 0 ||
     JSON.stringify(projection).includes("importProvenance") ||
     JSON.stringify(projection).includes("researchNotes")
   ) {
     throw productionImportError(
       "transaction_failed",
-      "Arnavutkoy post-write verification failed.",
+      "Bagcilar post-write verification failed.",
     );
   }
 }
 
-export async function readArnavutkoyPlan(
+export async function readBagcilarPlan(
   bundle: ResearchBundle,
   repository: ProductionImportRepository,
-  expectation: ArnavutkoyPlanExpectation,
+  expectation: BagcilarPlanExpectation,
   deploymentSha: string,
-): Promise<ArnavutkoyPlan> {
+): Promise<BagcilarPlan> {
   let documents: ProductionImportDocument[];
   try {
     documents = await repository.readDistricts();
   } catch {
     throw productionImportError("query_failed", "District read failed.");
   }
-  const plan = buildArnavutkoyPlan(documents, bundle, deploymentSha);
-  assertArnavutkoyPlan(plan, expectation);
+  const plan = buildBagcilarPlan(documents, bundle, deploymentSha);
+  assertBagcilarPlan(plan, expectation);
   return plan;
 }
 
-export async function applyArnavutkoy(
+export async function applyBagcilar(
   bundle: ResearchBundle,
   repository: ProductionImportRepository,
   deploymentSha: string,
-): Promise<ArnavutkoyPlan> {
+): Promise<BagcilarPlan> {
   return repository.transaction(async (transaction) => {
     const beforeDocuments = await transaction.findDistricts();
-    const plan = buildArnavutkoyPlan(beforeDocuments, bundle, deploymentSha);
-    assertArnavutkoyPlan(plan, "initial");
+    const plan = buildBagcilarPlan(beforeDocuments, bundle, deploymentSha);
+    assertBagcilarPlan(plan, "initial");
     const beforeFingerprints = new Map(
       beforeDocuments.map((document) => [
         document.district,
@@ -279,12 +280,12 @@ export async function applyArnavutkoy(
       ]),
     );
     const target = plan.entries.find(
-      (entry) => entry.district === arnavutkoyTarget,
+      (entry) => entry.district === bagcilarTarget,
     )!;
     if (!target.existing || target.action !== "update") {
       throw productionImportError(
         "transaction_failed",
-        "Arnavutkoy update target disappeared.",
+        "Bagcilar update target disappeared.",
       );
     }
     const persisted = await transaction.updateDistrict(
@@ -311,7 +312,7 @@ export async function applyArnavutkoy(
     }
     for (const document of afterDocuments) {
       if (
-        document.district !== arnavutkoyTarget &&
+        document.district !== bagcilarTarget &&
         fingerprint(document) !== beforeFingerprints.get(document.district)
       ) {
         throw productionImportError(
@@ -320,17 +321,17 @@ export async function applyArnavutkoy(
         );
       }
     }
-    const appliedPlan = buildArnavutkoyPlan(
+    const appliedPlan = buildBagcilarPlan(
       afterDocuments,
       bundle,
       deploymentSha,
     );
-    assertArnavutkoyPlan(appliedPlan, "applied");
+    assertBagcilarPlan(appliedPlan, "applied");
     return plan;
   });
 }
 
-export const arnavutkoyConfigurationVariables = [
+export const bagcilarConfigurationVariables = [
   "PAYLOAD_DATABASE",
   "DATABASE_URL",
   "PAYLOAD_SECRET",
@@ -338,15 +339,15 @@ export const arnavutkoyConfigurationVariables = [
   "VERCEL_ENV",
   "VERCEL_GIT_COMMIT_REF",
   "VERCEL_GIT_COMMIT_SHA",
-  "PRODUCTION_ARNAVUTKOY_EDITORIAL_DRY_RUN_APPROVED_SHA",
+  "PRODUCTION_BAGCILAR_EDITORIAL_DRY_RUN_APPROVED_SHA",
 ] as const;
 
 type ConfigurationStatus = "MISSING" | "PRESENT_INVALID" | "PRESENT_VALID";
 
-export function arnavutkoyConfigurationStatus(
+export function bagcilarConfigurationStatus(
   env: Readonly<Record<string, string | undefined>>,
 ): Record<
-  (typeof arnavutkoyConfigurationVariables)[number],
+  (typeof bagcilarConfigurationVariables)[number],
   ConfigurationStatus
 > {
   const required = (value: string | undefined): ConfigurationStatus =>
@@ -368,36 +369,36 @@ export function arnavutkoyConfigurationStatus(
     VERCEL_ENV: exact(env.VERCEL_ENV, "production"),
     VERCEL_GIT_COMMIT_REF: exact(env.VERCEL_GIT_COMMIT_REF, "main"),
     VERCEL_GIT_COMMIT_SHA: required(env.VERCEL_GIT_COMMIT_SHA),
-    PRODUCTION_ARNAVUTKOY_EDITORIAL_DRY_RUN_APPROVED_SHA: exact(
-      env.PRODUCTION_ARNAVUTKOY_EDITORIAL_DRY_RUN_APPROVED_SHA,
+    PRODUCTION_BAGCILAR_EDITORIAL_DRY_RUN_APPROVED_SHA: exact(
+      env.PRODUCTION_BAGCILAR_EDITORIAL_DRY_RUN_APPROVED_SHA,
       env.VERCEL_GIT_COMMIT_SHA || "__missing_commit_sha__",
     ),
   };
 }
 
-export function assertArnavutkoyEnvironment(
+export function assertBagcilarEnvironment(
   env: Readonly<Record<string, string | undefined>>,
   apply: boolean,
 ): void {
-  const status = arnavutkoyConfigurationStatus(env);
+  const status = bagcilarConfigurationStatus(env);
   if (
-    arnavutkoyConfigurationVariables.some(
+    bagcilarConfigurationVariables.some(
       (name) => status[name] !== "PRESENT_VALID",
     )
   ) {
     throw productionImportError(
       "approval_failed",
-      "Arnavutkoy import requires an exact SHA-bound Production environment.",
+      "Bagcilar import requires an exact SHA-bound Production environment.",
     );
   }
   if (
     apply &&
-    (env.PRODUCTION_ARNAVUTKOY_EDITORIAL_IMPORT_APPROVED !== "true" ||
-      env.PRODUCTION_ARNAVUTKOY_EDITORIAL_PITR_CONFIRMED !== "true")
+    (env.PRODUCTION_BAGCILAR_EDITORIAL_IMPORT_APPROVED !== "true" ||
+      env.PRODUCTION_BAGCILAR_EDITORIAL_PITR_CONFIRMED !== "true")
   ) {
     throw productionImportError(
       "approval_failed",
-      "Arnavutkoy apply requires explicit import and PITR confirmation.",
+      "Bagcilar apply requires explicit import and PITR confirmation.",
     );
   }
 }

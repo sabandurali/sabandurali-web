@@ -1,7 +1,7 @@
 import {
   assertBatch1PopulationImportPlan,
   type Batch1PopulationImportPlan,
-} from "./editorial";
+} from "../editorial";
 import {
   decideImport,
   fingerprint,
@@ -10,7 +10,7 @@ import {
   researchFingerprint,
   type ResearchBundle,
   type ResearchRecord,
-} from "./import-core";
+} from "../import-core";
 
 export type ProductionImportDocument = Record<string, unknown> & {
   id: number | string;

@@ -1,4 +1,4 @@
-/** Production PostgreSQL Editorial Batch 2 importer. Defaults to no mode and no writes. */
+/** Single-district Production importer. Defaults to no mode and no writes. */
 import { readFile } from "node:fs/promises";
 import { parseArgs } from "node:util";
 import {
@@ -10,16 +10,16 @@ import {
 import {
   describeProductionDatabase,
   readProductionMigrationState,
-} from "../vercel-build.mjs";
-import { attachEditorial, type EditorialBundle } from "./editorial";
-import { validateBundle, type ResearchBundle } from "./import-core";
+} from "../../vercel-build.mjs";
+import { attachEditorial, type EditorialBundle } from "../editorial";
+import { validateBundle, type ResearchBundle } from "../import-core";
 import {
-  applyBatch2,
-  assertBatch2Environment,
-  batch2ConfigurationStatus,
-  readBatch2Plan,
-  type Batch2PlanExpectation,
-} from "./production-editorial-batch2-core";
+  applyBagcilar,
+  bagcilarConfigurationStatus,
+  assertBagcilarEnvironment,
+  readBagcilarPlan,
+  type BagcilarPlanExpectation,
+} from "./production-bagcilar-editorial-core";
 import {
   productionImportError,
   safeProductionImportErrorReport,
@@ -43,9 +43,8 @@ function databaseErrorCategory(error: unknown): ProductionImportErrorCategory {
       "ENOTFOUND",
       "ETIMEDOUT",
     ]).has(code)
-  ) {
+  )
     return "connection_failed";
-  }
   return "query_failed";
 }
 
@@ -99,12 +98,11 @@ function payloadRepository(payload: Payload): ProductionImportRepository {
         accessMode: "read write",
         isolationLevel: "serializable",
       });
-      if (!transactionID) {
+      if (!transactionID)
         throw productionImportError(
           "transaction_failed",
-          "Production Editorial Batch 2 transaction could not be started.",
+          "Bagcilar transaction could not be started.",
         );
-      }
       req.transactionID = transactionID;
       try {
         const result = await operation(payloadTransaction(payload, req));
@@ -117,7 +115,7 @@ function payloadRepository(payload: Payload): ProductionImportRepository {
         } catch {
           throw productionImportError(
             "rollback_failed",
-            "Production Editorial Batch 2 rollback failed closed.",
+            "Bagcilar transaction rollback failed closed.",
           );
         } finally {
           delete req.transactionID;
@@ -147,7 +145,7 @@ async function main(): Promise<void> {
   } catch {
     throw productionImportError(
       "configuration_failed",
-      "Production Editorial Batch 2 arguments are invalid.",
+      "Bagcilar import arguments are invalid.",
     );
   }
   if (
@@ -156,15 +154,16 @@ async function main(): Promise<void> {
   ) {
     throw productionImportError(
       "configuration_failed",
-      "Choose exactly one Batch 2 mode; applied verification is read-only.",
+      "Choose exactly one mode; applied verification is read-only.",
     );
   }
 
   const apply = values.apply === true;
-  const expectation: Batch2PlanExpectation = values["expect-applied"]
+  const expectation: BagcilarPlanExpectation = values["expect-applied"]
     ? "applied"
     : "initial";
-  assertBatch2Environment(process.env, apply);
+  assertBagcilarEnvironment(process.env, apply);
+  const deploymentSha = process.env.VERCEL_GIT_COMMIT_SHA!;
 
   try {
     describeProductionDatabase(process.env.DATABASE_URL!);
@@ -206,13 +205,14 @@ async function main(): Promise<void> {
   } catch {
     throw productionImportError(
       "input_failed",
-      "Production Editorial Batch 2 input validation failed.",
+      "Bagcilar editorial input validation failed.",
     );
   }
 
   let payload: Payload;
   try {
-    const { default: configPromise } = await import("../../src/payload.config");
+    const { default: configPromise } =
+      await import("../../../src/payload.config");
     const config = await configPromise;
     config.typescript.autoGenerate = false;
     payload = await getPayload({ config });
@@ -225,8 +225,8 @@ async function main(): Promise<void> {
   try {
     const repository = payloadRepository(payload);
     const plan = apply
-      ? await applyBatch2(bundle, repository)
-      : await readBatch2Plan(bundle, repository, expectation);
+      ? await applyBagcilar(bundle, repository, deploymentSha)
+      : await readBagcilarPlan(bundle, repository, expectation, deploymentSha);
     console.log(
       JSON.stringify({
         ...plan.count,
@@ -251,7 +251,7 @@ main().catch((error) => {
       ...report,
       ...(report.error === "configuration_failed" ||
       report.error === "approval_failed"
-        ? { configuration: batch2ConfigurationStatus(process.env) }
+        ? { configuration: bagcilarConfigurationStatus(process.env) }
         : {}),
     }),
   );

@@ -10,16 +10,16 @@ import {
 import {
   describeProductionDatabase,
   readProductionMigrationState,
-} from "../vercel-build.mjs";
-import { attachEditorial, type EditorialBundle } from "./editorial";
-import { validateBundle, type ResearchBundle } from "./import-core";
+} from "../../vercel-build.mjs";
+import { attachEditorial, type EditorialBundle } from "../editorial";
+import { validateBundle, type ResearchBundle } from "../import-core";
 import {
-  applyBagcilar,
-  bagcilarConfigurationStatus,
-  assertBagcilarEnvironment,
-  readBagcilarPlan,
-  type BagcilarPlanExpectation,
-} from "./production-bagcilar-editorial-core";
+  applyDistrictBatch2Eight,
+  districtBatch2EightConfigurationStatus,
+  assertDistrictBatch2EightEnvironment,
+  readDistrictBatch2EightPlan,
+  type DistrictBatch2EightPlanExpectation,
+} from "./production-district-batch2-eight-core";
 import {
   productionImportError,
   safeProductionImportErrorReport,
@@ -101,7 +101,7 @@ function payloadRepository(payload: Payload): ProductionImportRepository {
       if (!transactionID)
         throw productionImportError(
           "transaction_failed",
-          "Bagcilar transaction could not be started.",
+          "DistrictBatch2Eight transaction could not be started.",
         );
       req.transactionID = transactionID;
       try {
@@ -115,7 +115,7 @@ function payloadRepository(payload: Payload): ProductionImportRepository {
         } catch {
           throw productionImportError(
             "rollback_failed",
-            "Bagcilar transaction rollback failed closed.",
+            "DistrictBatch2Eight transaction rollback failed closed.",
           );
         } finally {
           delete req.transactionID;
@@ -145,7 +145,7 @@ async function main(): Promise<void> {
   } catch {
     throw productionImportError(
       "configuration_failed",
-      "Bagcilar import arguments are invalid.",
+      "DistrictBatch2Eight import arguments are invalid.",
     );
   }
   if (
@@ -159,10 +159,12 @@ async function main(): Promise<void> {
   }
 
   const apply = values.apply === true;
-  const expectation: BagcilarPlanExpectation = values["expect-applied"]
+  const expectation: DistrictBatch2EightPlanExpectation = values[
+    "expect-applied"
+  ]
     ? "applied"
     : "initial";
-  assertBagcilarEnvironment(process.env, apply);
+  assertDistrictBatch2EightEnvironment(process.env, apply);
   const deploymentSha = process.env.VERCEL_GIT_COMMIT_SHA!;
 
   try {
@@ -205,13 +207,14 @@ async function main(): Promise<void> {
   } catch {
     throw productionImportError(
       "input_failed",
-      "Bagcilar editorial input validation failed.",
+      "DistrictBatch2Eight editorial input validation failed.",
     );
   }
 
   let payload: Payload;
   try {
-    const { default: configPromise } = await import("../../src/payload.config");
+    const { default: configPromise } =
+      await import("../../../src/payload.config");
     const config = await configPromise;
     config.typescript.autoGenerate = false;
     payload = await getPayload({ config });
@@ -224,8 +227,13 @@ async function main(): Promise<void> {
   try {
     const repository = payloadRepository(payload);
     const plan = apply
-      ? await applyBagcilar(bundle, repository, deploymentSha)
-      : await readBagcilarPlan(bundle, repository, expectation, deploymentSha);
+      ? await applyDistrictBatch2Eight(bundle, repository, deploymentSha)
+      : await readDistrictBatch2EightPlan(
+          bundle,
+          repository,
+          expectation,
+          deploymentSha,
+        );
     console.log(
       JSON.stringify({
         ...plan.count,
@@ -250,7 +258,7 @@ main().catch((error) => {
       ...report,
       ...(report.error === "configuration_failed" ||
       report.error === "approval_failed"
-        ? { configuration: bagcilarConfigurationStatus(process.env) }
+        ? { configuration: districtBatch2EightConfigurationStatus(process.env) }
         : {}),
     }),
   );

@@ -1,4 +1,4 @@
-/** Single-district Production importer. Defaults to no mode and no writes. */
+/** Production PostgreSQL district importer. Never defaults to write mode. */
 import { readFile } from "node:fs/promises";
 import { parseArgs } from "node:util";
 import {
@@ -10,21 +10,18 @@ import {
 import {
   describeProductionDatabase,
   readProductionMigrationState,
-} from "../vercel-build.mjs";
-import { attachEditorial, type EditorialBundle } from "./editorial";
-import { validateBundle, type ResearchBundle } from "./import-core";
+} from "../../vercel-build.mjs";
+import { attachEditorial, type EditorialBundle } from "../editorial";
+import { validateBundle, type ResearchBundle } from "../import-core";
 import {
-  applyDistrictBatch2Eight,
-  districtBatch2EightConfigurationStatus,
-  assertDistrictBatch2EightEnvironment,
-  readDistrictBatch2EightPlan,
-  type DistrictBatch2EightPlanExpectation,
-} from "./production-district-batch2-eight-core";
-import {
+  applyProductionImport,
+  assertProductionImportEnvironment,
+  productionDryRunConfigurationStatus,
   productionImportError,
+  readProductionImportPlan,
   safeProductionImportErrorReport,
-  type ProductionImportDocument,
   type ProductionImportErrorCategory,
+  type ProductionImportDocument,
   type ProductionImportRepository,
   type ProductionImportTransaction,
 } from "./production-import-core";
@@ -43,8 +40,9 @@ function databaseErrorCategory(error: unknown): ProductionImportErrorCategory {
       "ENOTFOUND",
       "ETIMEDOUT",
     ]).has(code)
-  )
+  ) {
     return "connection_failed";
+  }
   return "query_failed";
 }
 
@@ -57,7 +55,7 @@ function payloadTransaction(
       const result = await instance.find({
         collection: "district-guides",
         depth: 0,
-        draft: false,
+        draft: true,
         fallbackLocale: false,
         limit: 100,
         locale: "tr",
@@ -70,7 +68,7 @@ function payloadTransaction(
       return (await instance.update({
         collection: "district-guides",
         data,
-        draft: false,
+        draft: true,
         id,
         locale: "tr",
         overrideAccess: true,
@@ -98,11 +96,12 @@ function payloadRepository(payload: Payload): ProductionImportRepository {
         accessMode: "read write",
         isolationLevel: "serializable",
       });
-      if (!transactionID)
+      if (!transactionID) {
         throw productionImportError(
           "transaction_failed",
-          "DistrictBatch2Eight transaction could not be started.",
+          "PostgreSQL transaction could not be started.",
         );
+      }
       req.transactionID = transactionID;
       try {
         const result = await operation(payloadTransaction(payload, req));
@@ -115,7 +114,7 @@ function payloadRepository(payload: Payload): ProductionImportRepository {
         } catch {
           throw productionImportError(
             "rollback_failed",
-            "DistrictBatch2Eight transaction rollback failed closed.",
+            "Production district import rollback failed closed.",
           );
         } finally {
           delete req.transactionID;
@@ -133,7 +132,6 @@ async function main(): Promise<void> {
       options: {
         apply: { type: "boolean" },
         "dry-run": { type: "boolean" },
-        "expect-applied": { type: "boolean" },
         editorial: {
           type: "string",
           default: "data/districts/editorial.json",
@@ -145,28 +143,22 @@ async function main(): Promise<void> {
   } catch {
     throw productionImportError(
       "configuration_failed",
-      "DistrictBatch2Eight import arguments are invalid.",
+      "Production importer arguments are invalid.",
     );
   }
-  if (
-    values.apply === values["dry-run"] ||
-    (values.apply && values["expect-applied"])
-  ) {
+
+  if (values.apply === values["dry-run"]) {
     throw productionImportError(
       "configuration_failed",
-      "Choose exactly one mode; applied verification is read-only.",
+      "Choose exactly one of --dry-run or --apply.",
     );
   }
 
   const apply = values.apply === true;
-  const expectation: DistrictBatch2EightPlanExpectation = values[
-    "expect-applied"
-  ]
-    ? "applied"
-    : "initial";
-  assertDistrictBatch2EightEnvironment(process.env, apply);
-  const deploymentSha = process.env.VERCEL_GIT_COMMIT_SHA!;
+  assertProductionImportEnvironment(process.env, apply);
 
+  // Shared fingerprint validation plus a live current_database() check happen
+  // in a READ ONLY transaction before Payload can initialize a write path.
   try {
     describeProductionDatabase(process.env.DATABASE_URL!);
   } catch {
@@ -175,6 +167,7 @@ async function main(): Promise<void> {
       "Production database fingerprint does not match.",
     );
   }
+
   let migrationState;
   try {
     migrationState = await readProductionMigrationState(process.env);
@@ -207,43 +200,32 @@ async function main(): Promise<void> {
   } catch {
     throw productionImportError(
       "input_failed",
-      "DistrictBatch2Eight editorial input validation failed.",
+      "District import input validation failed.",
     );
   }
 
   let payload: Payload;
   try {
-    const { default: configPromise } = await import("../../src/payload.config");
+    const { default: configPromise } =
+      await import("../../../src/payload.config");
     const config = await configPromise;
     config.typescript.autoGenerate = false;
     payload = await getPayload({ config });
   } catch {
     throw productionImportError(
       "initialization_failed",
-      "Payload Production initialization failed.",
+      "Payload production initialization failed.",
     );
   }
   try {
     const repository = payloadRepository(payload);
     const plan = apply
-      ? await applyDistrictBatch2Eight(bundle, repository, deploymentSha)
-      : await readDistrictBatch2EightPlan(
-          bundle,
-          repository,
-          expectation,
-          deploymentSha,
-        );
+      ? await applyProductionImport(bundle, repository)
+      : await readProductionImportPlan(bundle, repository);
     console.log(
-      JSON.stringify({
-        ...plan.count,
-        writes: apply ? plan.count.update : 0,
-        updates: plan.entries
-          .filter((entry) => entry.action === "update")
-          .map((entry) => entry.district),
-        skips: plan.entries
-          .filter((entry) => entry.action === "skip")
-          .map((entry) => entry.district),
-      }),
+      JSON.stringify(
+        apply ? { ...plan.count, writes: plan.count.update } : plan.count,
+      ),
     );
   } finally {
     await payload.destroy();
@@ -251,13 +233,15 @@ async function main(): Promise<void> {
 }
 
 main().catch((error) => {
+  // Driver errors can contain connection details. Production failures stay
+  // intentionally opaque so credentials never reach terminal logs.
   const report = safeProductionImportErrorReport(error);
   console.error(
     JSON.stringify({
       ...report,
       ...(report.error === "configuration_failed" ||
       report.error === "approval_failed"
-        ? { configuration: districtBatch2EightConfigurationStatus(process.env) }
+        ? { configuration: productionDryRunConfigurationStatus(process.env) }
         : {}),
     }),
   );

@@ -10,16 +10,16 @@ import {
 import {
   describeProductionDatabase,
   readProductionMigrationState,
-} from "../vercel-build.mjs";
-import { attachEditorial, type EditorialBundle } from "./editorial";
-import { validateBundle, type ResearchBundle } from "./import-core";
+} from "../../vercel-build.mjs";
+import { attachEditorial, type EditorialBundle } from "../editorial";
+import { validateBundle, type ResearchBundle } from "../import-core";
 import {
-  applyAvcilar,
-  avcilarConfigurationStatus,
-  assertAvcilarEnvironment,
-  readAvcilarPlan,
-  type AvcilarPlanExpectation,
-} from "./production-avcilar-editorial-core";
+  applyDistrictBatch1Six,
+  districtBatch1SixConfigurationStatus,
+  assertDistrictBatch1SixEnvironment,
+  readDistrictBatch1SixPlan,
+  type DistrictBatch1SixPlanExpectation,
+} from "./production-district-batch1-six-core";
 import {
   productionImportError,
   safeProductionImportErrorReport,
@@ -101,7 +101,7 @@ function payloadRepository(payload: Payload): ProductionImportRepository {
       if (!transactionID)
         throw productionImportError(
           "transaction_failed",
-          "Avcilar transaction could not be started.",
+          "DistrictBatch1Six transaction could not be started.",
         );
       req.transactionID = transactionID;
       try {
@@ -115,7 +115,7 @@ function payloadRepository(payload: Payload): ProductionImportRepository {
         } catch {
           throw productionImportError(
             "rollback_failed",
-            "Avcilar transaction rollback failed closed.",
+            "DistrictBatch1Six transaction rollback failed closed.",
           );
         } finally {
           delete req.transactionID;
@@ -145,7 +145,7 @@ async function main(): Promise<void> {
   } catch {
     throw productionImportError(
       "configuration_failed",
-      "Avcilar import arguments are invalid.",
+      "DistrictBatch1Six import arguments are invalid.",
     );
   }
   if (
@@ -159,10 +159,10 @@ async function main(): Promise<void> {
   }
 
   const apply = values.apply === true;
-  const expectation: AvcilarPlanExpectation = values["expect-applied"]
+  const expectation: DistrictBatch1SixPlanExpectation = values["expect-applied"]
     ? "applied"
     : "initial";
-  assertAvcilarEnvironment(process.env, apply);
+  assertDistrictBatch1SixEnvironment(process.env, apply);
   const deploymentSha = process.env.VERCEL_GIT_COMMIT_SHA!;
 
   try {
@@ -205,13 +205,14 @@ async function main(): Promise<void> {
   } catch {
     throw productionImportError(
       "input_failed",
-      "Avcilar editorial input validation failed.",
+      "DistrictBatch1Six editorial input validation failed.",
     );
   }
 
   let payload: Payload;
   try {
-    const { default: configPromise } = await import("../../src/payload.config");
+    const { default: configPromise } =
+      await import("../../../src/payload.config");
     const config = await configPromise;
     config.typescript.autoGenerate = false;
     payload = await getPayload({ config });
@@ -224,8 +225,13 @@ async function main(): Promise<void> {
   try {
     const repository = payloadRepository(payload);
     const plan = apply
-      ? await applyAvcilar(bundle, repository, deploymentSha)
-      : await readAvcilarPlan(bundle, repository, expectation, deploymentSha);
+      ? await applyDistrictBatch1Six(bundle, repository, deploymentSha)
+      : await readDistrictBatch1SixPlan(
+          bundle,
+          repository,
+          expectation,
+          deploymentSha,
+        );
     console.log(
       JSON.stringify({
         ...plan.count,
@@ -250,7 +256,7 @@ main().catch((error) => {
       ...report,
       ...(report.error === "configuration_failed" ||
       report.error === "approval_failed"
-        ? { configuration: avcilarConfigurationStatus(process.env) }
+        ? { configuration: districtBatch1SixConfigurationStatus(process.env) }
         : {}),
     }),
   );
