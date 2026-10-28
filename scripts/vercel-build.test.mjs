@@ -13,6 +13,7 @@ import { pathToFileURL } from "node:url";
 import {
   classifyMigrationStateError,
   compareMigrationState,
+  databaseFingerprintVariants,
   databaseIdentity,
   describeProductionDatabase,
   migrationNamesFromFiles,
@@ -495,8 +496,71 @@ for (const [name, env] of [
   });
 }
 
+const neonDirectUrl =
+  "postgresql://owner:pw@ep-quiet-sky-123456.eu-central-1.aws.neon.invalid/neondb";
+const neonPooledUrl =
+  "postgresql://owner:pw@ep-quiet-sky-123456-pooler.eu-central-1.aws.neon.invalid/neondb";
+
+for (const [name, productionDatabaseUrl, previewDatabaseUrl] of [
+  [
+    "the host in upper case",
+    productionUrl,
+    "postgres://preview:other@DB.Example.INVALID/neondb",
+  ],
+  [
+    "the host with a trailing dot",
+    productionUrl,
+    "postgres://preview:other@db.example.invalid.:5432/neondb",
+  ],
+  ["the Neon pooled endpoint", neonDirectUrl, neonPooledUrl],
+  ["the Neon direct endpoint", neonPooledUrl, neonDirectUrl],
+]) {
+  test(`ARC-V1: a Preview that reaches the Production database through ${name} refuses to build`, async () => {
+    const harness = createHarness({
+      env: {
+        VERCEL: "1",
+        VERCEL_ENV: "preview",
+        DATABASE_URL: previewDatabaseUrl,
+      },
+      fingerprint: databaseIdentity(productionDatabaseUrl).fingerprint,
+    });
+    await assert.rejects(
+      runBuild(harness.options),
+      /points at the Production database; refusing to build/,
+    );
+    assert.deepEqual(harness.calls, []);
+  });
+}
+
+test("the refusal variants never widen the Production identity check", () => {
+  assert.notEqual(
+    databaseIdentity(neonPooledUrl).fingerprint,
+    databaseIdentity(neonDirectUrl).fingerprint,
+  );
+  assert.ok(
+    databaseFingerprintVariants(neonPooledUrl).includes(
+      databaseIdentity(neonDirectUrl).fingerprint,
+    ),
+  );
+  assert.throws(
+    () =>
+      describeProductionDatabase(
+        neonPooledUrl,
+        databaseIdentity(neonDirectUrl).fingerprint,
+      ),
+    /identity does not match/,
+  );
+  // Another endpoint of the same region is another database.
+  assert.ok(
+    !databaseFingerprintVariants(
+      "postgresql://owner:pw@ep-other-654321-pooler.eu-central-1.aws.neon.invalid/neondb",
+    ).includes(databaseIdentity(neonDirectUrl).fingerprint),
+  );
+});
+
 for (const databaseUrl of [
   "postgresql://user:pw@preview.example.invalid:5432/neondb",
+  "postgresql://user:pw@db.example.invalid:5432/previewdb",
   "file:./.data/ci.db",
   "not a url",
   undefined,

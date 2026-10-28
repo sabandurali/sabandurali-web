@@ -285,12 +285,13 @@ export async function readRegisteredMigrationNames(
   return registeredMigrationNames(source, fileNames);
 }
 
-/**
- * Identity of a PostgreSQL connection string: the database name and the
- * sha256 fingerprint of `host:port/database`. User and password never enter
- * the fingerprint, and nothing here is logged.
- */
-export function databaseIdentity(connectionString) {
+function fingerprintOf(hostname, port, databaseName) {
+  return createHash("sha256")
+    .update(`${hostname}:${port}/${databaseName}`)
+    .digest("hex");
+}
+
+function parseDatabaseUrl(connectionString) {
   let url;
   try {
     url = new URL(connectionString);
@@ -321,11 +322,43 @@ export function databaseIdentity(connectionString) {
       "Production database identity is incomplete.",
     );
   }
-  const identity = `${url.hostname}:${url.port || "5432"}/${databaseName}`;
+  return { hostname: url.hostname, port: url.port || "5432", databaseName };
+}
+
+/**
+ * Identity of a PostgreSQL connection string: the database name and the
+ * sha256 fingerprint of `host:port/database`. User and password never enter
+ * the fingerprint, and nothing here is logged.
+ */
+export function databaseIdentity(connectionString) {
+  const { hostname, port, databaseName } = parseDatabaseUrl(connectionString);
   return {
     databaseName,
-    fingerprint: createHash("sha256").update(identity).digest("hex"),
+    fingerprint: fingerprintOf(hostname, port, databaseName),
   };
+}
+
+const neonPoolerSuffix = "-pooler";
+
+/**
+ * Fingerprints under which a connection string can reach the same database:
+ * the host as written, in lower case without a trailing dot, and the Neon
+ * pooled or direct twin of that endpoint (`ep-x-pooler.…` and `ep-x.…` are one
+ * database). Only the refusal outside Production uses them, so every extra
+ * variant makes that check stricter; the Production check stays exact.
+ */
+export function databaseFingerprintVariants(connectionString) {
+  const { hostname, port, databaseName } = parseDatabaseUrl(connectionString);
+  const normalized = hostname.toLowerCase().replace(/\.$/, "");
+  const hosts = new Set([hostname, normalized]);
+  const [label, ...domain] = normalized.split(".");
+  if (domain.length > 0) {
+    const twin = label.endsWith(neonPoolerSuffix)
+      ? label.slice(0, -neonPoolerSuffix.length)
+      : `${label}${neonPoolerSuffix}`;
+    if (twin) hosts.add([twin, ...domain].join("."));
+  }
+  return [...hosts].map((host) => fingerprintOf(host, port, databaseName));
 }
 
 export function describeProductionDatabase(
@@ -537,14 +570,14 @@ async function runProductionMigrationGate(
 
 function refuseProductionDatabase(env, expectedFingerprint) {
   if (!env.DATABASE_URL) return;
-  let identity;
+  let fingerprints;
   try {
-    identity = databaseIdentity(env.DATABASE_URL);
+    fingerprints = databaseFingerprintVariants(env.DATABASE_URL);
   } catch {
     // Not a complete PostgreSQL URL, so it cannot be the Production database.
     return;
   }
-  if (identity.fingerprint === expectedFingerprint) {
+  if (fingerprints.includes(expectedFingerprint)) {
     fail(
       "DATABASE_URL of this non-Production build points at the Production database; refusing to build. Preview and local builds need their own database.",
     );
