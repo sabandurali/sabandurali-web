@@ -181,7 +181,6 @@ export interface Media {
   alt: string;
   description?: string | null;
   sourceCopyright?: string | null;
-  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -1181,7 +1180,6 @@ export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   description?: T;
   sourceCopyright?: T;
-  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
