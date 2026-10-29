@@ -7,6 +7,7 @@ import DistrictKeyMap from "@/components/ui/DistrictKeyMap";
 import EmptyState from "@/components/ui/EmptyState";
 import { Field, Input, Select } from "@/components/ui/Field";
 import GridRef from "@/components/ui/GridRef";
+import { useHydrated } from "@/components/ui/useHydrated";
 import { getDistrictPath } from "@/content/districts/district-routes";
 import {
   directoryLetters,
@@ -18,8 +19,10 @@ import {
 
 /**
  * Searchable list of the 39 district guides: name search, side select and
- * letter buttons filter the cards on the client; without JavaScript every
- * card is listed. Each card is one link named by the district.
+ * letter buttons filter the cards on the client. The filters only work
+ * through React state, so they stay disabled until hydration; without
+ * JavaScript they stay disabled, a note says why and every card is listed.
+ * Each card is one link named by the district.
  */
 export default function DistrictDirectory({
   entries,
@@ -31,6 +34,7 @@ export default function DistrictDirectory({
     side: "all",
     letter: "",
   });
+  const hydrated = useHydrated();
   const letters = directoryLetters(entries);
   const visible = filterDirectoryEntries(entries, filter);
 
@@ -46,6 +50,7 @@ export default function DistrictDirectory({
               {...control}
               type="search"
               autoComplete="off"
+              disabled={!hydrated}
               value={filter.query}
               onChange={(event) =>
                 setFilter((current) => ({
@@ -61,6 +66,7 @@ export default function DistrictDirectory({
           {(control) => (
             <Select
               {...control}
+              disabled={!hydrated}
               value={filter.side}
               onChange={(event) => {
                 const side = event.target.value;
@@ -89,6 +95,7 @@ export default function DistrictDirectory({
               key={value || "all"}
               type="button"
               aria-pressed={pressed}
+              disabled={!hydrated}
               onClick={() =>
                 setFilter((current) => ({ ...current, letter: value }))
               }
@@ -97,6 +104,7 @@ export default function DistrictDirectory({
                 pressed
                   ? "bg-sea text-on-sea"
                   : "border border-tile-edge bg-land text-ink hover:border-ink hover:underline",
+                "disabled:cursor-not-allowed disabled:no-underline",
               )}
             >
               {value || "Tümü"}
@@ -104,6 +112,13 @@ export default function DistrictDirectory({
           );
         })}
       </div>
+
+      <noscript>
+        <p className="m-0 type-small text-ink-muted">
+          Arama ve filtreler JavaScript gerektirir; {entries.length} ilçenin
+          tümü aşağıda listelenmiştir.
+        </p>
+      </noscript>
 
       <p role="status" className="m-0 type-small text-ink-muted">
         {visible.length} ilçe gösteriliyor
