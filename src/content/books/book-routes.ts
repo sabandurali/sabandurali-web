@@ -1,47 +1,13 @@
-import { getAbsoluteUrl } from "@/config/site";
-import type { BookReview, BookReviewLanguage } from "@/content/books/types";
-
-type RoutableBookReview = Pick<BookReview, "language" | "slug">;
+import type { BookReviewLanguage } from "@/content/books/types";
+import { createPublicationRoutes } from "@/content/publication-routes";
 
 export const bookListPaths = {
   tr: "/kitaplar",
   en: "/en/books",
 } as const satisfies Record<BookReviewLanguage, string>;
 
-export function getBookReviewPath(
-  slug: string,
-  language: BookReviewLanguage,
-): string {
-  return `${bookListPaths[language]}/${slug}`;
-}
+const bookReviewRoutes = createPublicationRoutes(bookListPaths);
 
-export function getBookReviewUrl(
-  slug: string,
-  language: BookReviewLanguage,
-): string {
-  return getAbsoluteUrl(getBookReviewPath(slug, language));
-}
-
-export function getBookReviewLanguagePaths(
-  bookReview: RoutableBookReview,
-  translation: RoutableBookReview | null,
-): Record<BookReviewLanguage, string> {
-  const paths: Record<BookReviewLanguage, string> = {
-    tr: bookListPaths.tr,
-    en: bookListPaths.en,
-  };
-
-  paths[bookReview.language] = getBookReviewPath(
-    bookReview.slug,
-    bookReview.language,
-  );
-
-  if (translation !== null) {
-    paths[translation.language] = getBookReviewPath(
-      translation.slug,
-      translation.language,
-    );
-  }
-
-  return paths;
-}
+export const getBookReviewPath = bookReviewRoutes.getPath;
+export const getBookReviewUrl = bookReviewRoutes.getUrl;
+export const getBookReviewLanguagePaths = bookReviewRoutes.getLanguagePaths;

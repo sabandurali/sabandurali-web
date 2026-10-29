@@ -1,18 +1,15 @@
-import type {
-  PublicPhoto,
-  PublicPhotoTranslation,
-  PhotoLanguage,
-  PhotoListFilters,
-} from "@/content/photos/types";
+import type { PhotoLanguage, PhotoListFilters } from "@/content/photos/types";
+import { createPublicationRoutes } from "@/content/publication-routes";
 
 export const photoListPaths = {
   tr: "/fotograflar",
   en: "/en/photography",
 } as const satisfies Record<PhotoLanguage, string>;
 
-export function getPhotoPath(slug: string, language: PhotoLanguage): string {
-  return `${photoListPaths[language]}/${slug}`;
-}
+const photoRoutes = createPublicationRoutes(photoListPaths);
+
+export const getPhotoPath = photoRoutes.getPath;
+export const getPhotoLanguagePaths = photoRoutes.getLanguagePaths;
 
 /**
  * Path of one photograph list page with its filters, in a fixed parameter
@@ -29,22 +26,4 @@ export function getPhotoListPath(
   if (page > 1) params.set("page", String(page));
   const query = params.toString();
   return `${photoListPaths[language]}${query ? `?${query}` : ""}`;
-}
-
-export function getPhotoLanguagePaths(
-  photo: PublicPhoto,
-  translation: PublicPhotoTranslation | null,
-): Record<PhotoLanguage, string> {
-  const paths: Record<PhotoLanguage, string> = {
-    tr: photoListPaths.tr,
-    en: photoListPaths.en,
-  };
-  paths[photo.language] = getPhotoPath(photo.slug, photo.language);
-  if (translation !== null) {
-    paths[translation.language] = getPhotoPath(
-      translation.slug,
-      translation.language,
-    );
-  }
-  return paths;
 }
