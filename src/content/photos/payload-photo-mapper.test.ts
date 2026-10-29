@@ -38,7 +38,7 @@ function photo(overrides: Record<string, unknown> = {}): Photo {
       },
     ],
     district: "beyoglu",
-    photographer: "  ",
+    photographer: "Şaban Durali",
     creditLicense: "Tüm hakları saklıdır",
     publishedAt: "2026-10-01T09:00:00Z",
     createdAt: "2026-10-01T09:00:00Z",
@@ -52,7 +52,7 @@ function silence(t: TestContext) {
   return t.mock.method(console, "warn", () => {});
 }
 
-test("a published photo maps with collections, tags and defaults", (t) => {
+test("a published photo maps with collections, tags and its credit", (t) => {
   silence(t);
   const mapped = mapPayloadPhoto(photo(), "tr", now);
 
@@ -131,4 +131,48 @@ test("photos that cannot be shown publicly are skipped and logged", (t) => {
 
   assert.equal(warn.mock.callCount(), 6);
   assert.match(String(warn.mock.calls[0]?.arguments[0]), /"scope":"photos"/);
+});
+
+test("CORRECTNESS-2: no photographer name is invented", (t) => {
+  const warn = silence(t);
+
+  for (const photographer of [undefined, null, "", "  "]) {
+    assert.equal(mapPayloadPhoto(photo({ photographer }), "tr", now), null);
+  }
+  assert.equal(warn.mock.callCount(), 4);
+  assert.match(
+    String(warn.mock.calls[0]?.arguments[0]),
+    /photographer is missing/,
+  );
+});
+
+test("CORRECTNESS-2: a historical photo needs its real creator and licence", (t) => {
+  const warn = silence(t);
+  const historical = (overrides: Record<string, unknown>) =>
+    mapPayloadPhoto(
+      photo({ districtPhotoCategory: "tarih", ...overrides }),
+      "tr",
+      now,
+    );
+
+  // The collection default credits the owner: an archive photo is not his.
+  assert.equal(
+    historical({ photographer: "Şaban Durali", creditLicense: "CC BY 4.0" }),
+    null,
+  );
+  for (const creditLicense of [undefined, null, "", "  "]) {
+    assert.equal(
+      historical({ photographer: "Arşiv Fotoğrafçısı", creditLicense }),
+      null,
+    );
+  }
+  assert.equal(warn.mock.callCount(), 5);
+
+  const credited = historical({
+    photographer: "Arşiv Fotoğrafçısı",
+    creditLicense: "CC BY 4.0",
+  });
+  assert.ok(credited);
+  assert.equal(credited.photographer, "Arşiv Fotoğrafçısı");
+  assert.equal(credited.creditLicense, "CC BY 4.0");
 });
