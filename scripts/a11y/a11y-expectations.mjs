@@ -75,12 +75,63 @@ export const detailRoutes = Object.freeze([
 ]);
 
 /**
- * Whether the header of a route must offer a keyboard menu at a width: the
- * narrow header always has its "Menü"/"Menu" disclosure, except on the
- * global not-found page, which renders without the site header.
+ * Routes that exist only with the CI fixtures (`npm run ci:seed-fixtures`,
+ * scripts/ci/fixture-content.ts): a standard CMS page with every block and
+ * a district news list with an item. Checked in fixture mode only.
+ */
+export const fixtureRoutes = Object.freeze([
+  { path: "/ci-test-sayfasi", status: 200, type: "CMS block page" },
+  {
+    path: "/istanbul/ilceler/esenler/haberler",
+    status: 200,
+    type: "district news (filled)",
+  },
+]);
+
+/**
+ * The routes of one run. The static build checks every public route type;
+ * the fixture run (`A11Y_FIXTURES=1`) checks the templates that only CMS
+ * content reaches: the detail pages (discovered from their lists) and the
+ * fixture routes above, and it fails when a detail type is not reached.
+ */
+export function routePlan(fixtures) {
+  return fixtures
+    ? { routes: fixtureRoutes, requireDetails: true }
+    : { routes: publicRoutes, requireDetails: false };
+}
+
+/**
+ * Detail types that were not reached. A run that must render every detail
+ * template (fixture mode or `A11Y_REQUIRE_DETAILS=1`) fails on each of them;
+ * otherwise they are only reported.
+ */
+export function skippedDetailsProblems(skipped, required) {
+  return required
+    ? skipped.map(
+        ({ type, list }) => `${type}: no published item linked from ${list}`,
+      )
+    : [];
+}
+
+/**
+ * Width from which the header shows its desktop bar instead of the "Menü"
+ * disclosure: Tailwind's `xl` breakpoint (80rem), which HeaderNavigation
+ * uses (`xl:hidden` / `xl:block`, docs/DESIGN-SYSTEM.md §5). A test reads
+ * both sources, so the two cannot drift apart.
+ */
+export const headerMenuBreakpoint = 1280;
+
+/** Widths of the header menu check: narrow, between lg and xl, and wide. */
+export const menuCheckWidths = Object.freeze([390, 1100, 1440]);
+
+/**
+ * Whether the header of a route must offer a keyboard menu at a width: below
+ * the desktop breakpoint the header always has its "Menü"/"Menu"
+ * disclosure, except on the global not-found page, which renders without
+ * the site header.
  */
 export function menuRequired(route, width) {
-  return width < 1024 && route.type !== "global not found";
+  return width < headerMenuBreakpoint && route.type !== "global not found";
 }
 
 /** The check never reaches a deployed origin. */

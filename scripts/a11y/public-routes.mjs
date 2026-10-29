@@ -6,13 +6,15 @@
 //   - every Tab stop of the first screens shows a focus indicator, at 1440
 //     and 390 px, with no focus trap,
 //   - the header menu opens with Enter, Tab reaches its items and Escape
-//     closes it and returns focus, at 1440 and 390 px,
+//     closes it and returns focus, at 390, 1100 and 1440 px,
 //   - under prefers-reduced-motion: reduce nothing animates or transitions
 //     and the page does not scroll smoothly.
 // It only targets a local server, for example:
 //   npm run build && npm run start -- --hostname 127.0.0.1 --port 3101
 //   A11Y_TEST_URL=http://127.0.0.1:3101 npm run e2e:a11y
 // BROWSER_CHANNEL picks the browser (default "chrome", CI uses "chromium").
+// A11Y_FIXTURES=1 checks the detail templates and the CMS block page against
+// a server on the CI fixture database instead (see docs/LOCAL_DEVELOPMENT.md).
 // The JSON report and screenshots go to A11Y_TEST_OUTPUT (default
 // /tmp/public-a11y), never into the repository.
 import assert from "node:assert/strict";
@@ -25,13 +27,15 @@ import {
   detailRoutes,
   focusIndicatorProblem,
   localOriginProblem,
+  menuCheckWidths,
   menuProblem,
   menuRequired,
   overflowProblem,
   pickDetailPath,
-  publicRoutes,
   reducedMotionProblems,
+  routePlan,
   skipLinkProblem,
+  skippedDetailsProblems,
   viewportWidths,
 } from "./a11y-expectations.mjs";
 
@@ -39,6 +43,11 @@ const base = process.env.A11Y_TEST_URL || "http://127.0.0.1:3101";
 const originProblem = localOriginProblem(base);
 if (originProblem) throw new Error(originProblem);
 const output = process.env.A11Y_TEST_OUTPUT || "/tmp/public-a11y";
+// A11Y_FIXTURES=1: the server reads the CI fixture database
+// (npm run ci:seed-fixtures) and every detail template must be reached.
+const plan = routePlan(process.env.A11Y_FIXTURES === "1");
+const requireDetails =
+  plan.requireDetails || process.env.A11Y_REQUIRE_DETAILS === "1";
 await mkdir(output, { recursive: true });
 const maxTabStops = 30;
 
@@ -58,6 +67,10 @@ const pageErrors = [];
 function describeFocus() {
   const element = document.activeElement;
   if (!element || element === document.body) return null;
+  // Next's development tools (the fixture run serves `next dev`, see
+  // .github/workflows/ci.yml) sit after the page in the Tab order; a
+  // production build never renders them. Reaching them ends the page.
+  if (element.tagName === "NEXTJS-PORTAL") return null;
   const rect = element.getBoundingClientRect();
   const style = getComputedStyle(element);
   const pick = (s) => ({
@@ -268,8 +281,7 @@ async function checkRoute(route) {
     () => checkSkipLink(page, path, status),
     () => checkTabStops(page, path, status, 1440),
     () => checkTabStops(page, path, status, 390),
-    () => checkMenu(page, route, 1440),
-    () => checkMenu(page, route, 390),
+    ...menuCheckWidths.map((width) => () => checkMenu(page, route, width)),
     () => checkWidths(page, path, status, name),
     () => checkReducedMotion(page, path, status),
   ];
@@ -288,7 +300,7 @@ async function checkRoute(route) {
 
 const skippedDetails = [];
 try {
-  for (const route of publicRoutes) await checkRoute(route);
+  for (const route of plan.routes) await checkRoute(route);
   const finder = await context.newPage();
   for (const { list, prefix, type } of detailRoutes) {
     await open(finder, list, 200);
@@ -297,7 +309,8 @@ try {
       .evaluateAll((links) => links.map((link) => link.getAttribute("href")));
     const path = pickDetailPath(hrefs, prefix);
     // A static build may publish no item; the list's empty state was
-    // checked above, and the report records the skipped detail type.
+    // checked above, and the report records the skipped detail type. The
+    // fixture run (or A11Y_REQUIRE_DETAILS=1) fails on it below.
     if (path) await checkRoute({ path, status: 200, type });
     else skippedDetails.push({ type, list, reason: "no published item" });
   }
@@ -307,13 +320,17 @@ try {
 }
 
 const failed = rows.filter((row) => row.problems.length > 0);
+const detailProblems = skippedDetailsProblems(skippedDetails, requireDetails);
+for (const problem of detailProblems) console.log(`FAIL ${problem}`);
 const report = {
   origin: base,
   widths: viewportWidths,
   axeTags,
   checkedRoutes: rows.length,
   failedRoutes: failed.length,
+  requireDetails,
   skippedDetails,
+  detailProblems,
   serverErrors,
   pageErrors,
   rows,
@@ -326,4 +343,10 @@ console.log(
     2,
   ),
 );
-assert.equal(failed.length + serverErrors.length + pageErrors.length, 0);
+assert.equal(
+  failed.length +
+    detailProblems.length +
+    serverErrors.length +
+    pageErrors.length,
+  0,
+);

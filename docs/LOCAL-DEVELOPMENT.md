@@ -2,7 +2,7 @@
 
 ## Gerekli yerel ortam
 
-- Node.js 24, en az 24.22.1 (Payload 3.92 bu güvenlik sürümünü şart koşar). Sürüm `package.json` içindeki `engines` alanında ve `.nvmrc` dosyasında tanımlıdır. nvm kullanıyorsanız `nvm install` çalıştırın: `.nvmrc` dosyasını okur, en güncel Node 24 sürümünü gerekirse kurar ve etkinleştirir. Yalnız `nvm use`, makinede kurulu eski bir 24.x sürümünü seçebilir.
+- Node.js 24, en az 24.22.1 (Payload 3.92 bu güvenlik sürümünü şart koşar). Alt sınır `package.json` içindeki `engines` alanındadır; `.nvmrc` aynı sürümü tam olarak (`24.22.1`) yazar ve CI bu sürümle çalışır. nvm kullanıyorsanız `nvm install` çalıştırın: `.nvmrc` dosyasını okur, bu sürümü gerekirse kurar ve etkinleştirir. Daha yeni bir 24.x de desteklenir. `scripts/package-scripts.test.ts` iki değerin ayrışmasını yakalar. `node --version` 24.22.1'in altındaysa önce Node'u güncelleyin; `npm` bunu henüz kendiliğinden durdurmaz (bkz. `docs/NEXT-STEPS.md`, sahip kararları).
 - npm 11 (Node.js 24 ile gelir) ve Git gereklidir.
 
 ## İlk kurulum
@@ -58,3 +58,20 @@ npm run check
 ```
 
 Bu komut sırasıyla `typecheck`, `lint`, `format:check`, `test` ve `build` çalıştırır. `npm test` birim testlerini, ilçe içerik kabul kontrolünü ve tüm migration'ların bellekteki PGlite veritabanında yeniden oynatılmasını kapsar; canlı bir servise bağlanmaz. Aynı adımlar GitHub Actions'ta (`.github/workflows/ci.yml`) her pull request için çalışır. Biçim hatalarını `npm run format` düzeltir.
+
+### Detay şablonlarını CI fixture'larıyla denetleme
+
+Statik build hiçbir makale, kitap, fotoğraf veya CMS sayfası yayımlamaz. Detay şablonlarını CI'daki gibi denetlemek için açıkça "CI test kaydı" diye işaretli kurgusal kayıtlar ayrı bir SQLite dosyasına yazılır. Betik yalnız `.data/` veya sistemin geçici dizinindeki boş bir SQLite dosyasına yazar, Vercel'de çalışmaz ve üretilmiş test görselini `public/media` altına (Git dışı) koyar:
+
+```sh
+export PAYLOAD_DATABASE=sqlite PAYLOAD_STORAGE=local \
+  DATABASE_URL=file:./.data/ci-fixtures.db PAYLOAD_SECRET=yerel-test \
+  ARTICLE_PUBLIC_SOURCE=payload BOOK_PUBLIC_SOURCE=payload \
+  PAGE_PUBLIC_SOURCE=payload PHOTO_PUBLIC_SOURCE=payload
+npm run ci:seed-fixtures
+npm run dev -- --hostname 127.0.0.1 --port 3102
+# ikinci terminalde:
+A11Y_FIXTURES=1 A11Y_TEST_URL=http://127.0.0.1:3102 npm run e2e:a11y
+```
+
+`A11Y_FIXTURES=1`, her detay türüne listesinden ulaşılmasını şart koşar; ulaşılamayan tür kontrolü başarısız kılar. Statik build'de aynı şartı `A11Y_REQUIRE_DETAILS=1` açar. Yeniden çalıştırmak için önce `.data/ci-fixtures.db` dosyasını silin; betik dolu bir veritabanına yazmayı reddeder.

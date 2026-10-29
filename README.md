@@ -26,7 +26,7 @@ Payload packages are pinned exactly and must be upgraded together.
 ## Quick start
 
 ```sh
-nvm install                   # reads .nvmrc and installs/uses the latest Node 24
+nvm install                   # reads .nvmrc and installs/uses Node 24.22.1
 npm ci
 cp .env.example .env.local    # first setup only; never overwrite an existing .env.local
 # then set a local-only PAYLOAD_SECRET in .env.local

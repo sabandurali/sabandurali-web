@@ -23,6 +23,8 @@
     "payload:migrate": "payload migrate",
     "vercel:build": "node scripts/vercel-build.mjs",
     "ci:sqlite-schema": "tsx scripts/ci/sqlite-schema.ts",
+    "ci:seed-fixtures": "tsx scripts/ci/seed-fixtures.ts",
+    "ci:audit": "node scripts/ci/audit-gate.mjs",
     "e2e:headers": "node scripts/security-headers-check.mjs",
     "district:import": "tsx scripts/districts/import.ts",
     "e2e:districts:cms": "tsx scripts/districts/check-cms.ts",
