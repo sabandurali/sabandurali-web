@@ -70,6 +70,22 @@ test("CMS articles name the site owner as BlogPosting author", () => {
   assert.deepEqual(jsonLd.author, owner);
 });
 
+test("CMS articles name a guest author and keep the owner entity otherwise", () => {
+  assert.deepEqual(
+    createArticleJsonLd(payloadArticle({ author: "Konuk Yazar" })).author,
+    { "@type": "Person", name: "Konuk Yazar" },
+  );
+  const metadata = createArticleMetadata(
+    payloadArticle({ author: "Konuk Yazar" }),
+    null,
+  );
+  assert.deepEqual(
+    (metadata.openGraph as { authors?: unknown } | undefined)?.authors,
+    ["Konuk Yazar"],
+  );
+  assert.deepEqual(createArticleJsonLd(payloadArticle()).author, owner);
+});
+
 test("static articles keep their author and default to the owner", () => {
   assert.deepEqual(
     createArticleJsonLd(staticArticle("Şaban Durali")).author,
