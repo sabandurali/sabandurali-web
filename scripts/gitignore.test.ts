@@ -28,6 +28,9 @@ const mustBeIgnored = [
   ".data/payload.db",
   ".data/ci.db",
   ".private-backups/2026-10-21/payload.dump",
+  // Private backup and security notes live here, never in docs/.
+  ".private-backups/docs/SECURITY-REVIEW-2026-10-21.md",
+  ".private-backups/docs/BACKUP-RESTORE-2026-10-21.md",
   "ml-env/bin/python",
   "public/media/upload.jpg",
   "reports/production-release-20261018/README.md",
@@ -60,6 +63,22 @@ const mustBeTracked = [
 test("secrets, local data and private evidence are ignored by Git", () => {
   const exposed = mustBeIgnored.filter((file) => !isIgnored(file));
   assert.deepEqual(exposed, [], `not ignored: ${exposed.join(", ")}`);
+});
+
+test("no backup, restore or security-review note is tracked", () => {
+  // These notes name backup locations, encrypted copies and open security
+  // findings, and the repository is public. They belong in .private-backups/
+  // (docs/NEXT-STEPS.md §7); a `git add -A` that picks one up fails here.
+  const result = spawnSync("git", ["ls-files", "-z"], { encoding: "utf8" });
+  assert.equal(result.status, 0, result.stderr);
+  const leaked = result.stdout
+    .split("\0")
+    .filter((file) =>
+      /(^|\/)[^/]*(BACKUP|RESTORE|SECURITY-REVIEW)[^/]*\.(md|txt|pdf)$/i.test(
+        file,
+      ),
+    );
+  assert.deepEqual(leaked, []);
 });
 
 test("templates, placeholders and reviewed summaries stay trackable", () => {
