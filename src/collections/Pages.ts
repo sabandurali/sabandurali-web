@@ -18,6 +18,7 @@ import {
   isAdminOrEditor,
   publishedPageOrAdminOrEditor,
 } from "@/lib/payloadAccess";
+import { SLUG_RULE_MESSAGE } from "@/content/shared/slug";
 import { normalizeSlug } from "@/lib/localizedSlug";
 import { preventDeletingHomePage } from "@/lib/payloadDeleteGuards";
 import { createRevalidationHooks } from "@/lib/revalidation";
@@ -490,7 +491,7 @@ export const Pages: CollectionConfig = {
                 value === normalizeSlug(value) &&
                 value.length > 0
                   ? true
-                  : "Slug küçük harf, sayı ve tek tirelerden oluşmalıdır.",
+                  : SLUG_RULE_MESSAGE,
             },
             {
               name: "language",

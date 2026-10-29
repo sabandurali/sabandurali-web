@@ -5,6 +5,8 @@ import {
   createLocalizedSlugHook,
   normalizeSlug,
 } from "./localizedSlug";
+import { createBookReviewSlug } from "@/content/books/helpers";
+import { SLUG_RULE_MESSAGE, createSlug, isSlug } from "@/content/shared/slug";
 
 test("slugs transliterate Turkish letters and drop punctuation", () => {
   assert.equal(
@@ -138,4 +140,32 @@ test("the slug field validates and populates from the source field", () => {
     } as never),
     "kiz-kulesi",
   );
+});
+
+test("every content type uses one slug rule that only yields a-z, 0-9 and single hyphens", () => {
+  // Articles, pages, photos, collections, categories and tags
+  // (normalizeSlug) and book reviews (createBookReviewSlug) share one rule.
+  assert.equal(normalizeSlug, createSlug);
+  assert.equal(createBookReviewSlug, createSlug);
+
+  const cases: Array<[string, string]> = [
+    ["Straße & Ötesi", "strasse-otesi"],
+    ["a_b c", "a-b-c"],
+    ["Kentsel/Dönüşüm", "kentsel-donusum"],
+    ["Москва", ""],
+    ["Kraków Łódź", "krakow-lodz"],
+    ["İSTANBUL’UN ILIK SULARI", "istanbulun-ilik-sulari"],
+    ["Ağaçlı ʼ Çiftlik", "agacli-ciftlik"],
+    ["1.5 milyon", "1-5-milyon"],
+  ];
+  for (const [input, expected] of cases) {
+    assert.equal(createSlug(input), expected, input);
+    // Idempotent, and inside the contract revalidation relies on.
+    assert.equal(createSlug(expected), expected, input);
+    if (expected !== "") assert.ok(isSlug(expected), input);
+  }
+  for (const value of ["москва", "straße", "a--b", "-a", "A", "ab-"]) {
+    assert.equal(isSlug(value), false, value);
+  }
+  assert.ok(SLUG_RULE_MESSAGE.includes("a-z"));
 });

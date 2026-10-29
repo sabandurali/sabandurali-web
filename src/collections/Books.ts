@@ -15,6 +15,7 @@ import {
   REVIEW_STATUSES,
 } from "@/content/books/constants";
 import { createBookReviewSlug, normalizeIsbn } from "@/content/books/helpers";
+import { SLUG_RULE_MESSAGE } from "@/content/shared/slug";
 import { getBookPublicationIssues } from "@/collections/bookPublication";
 import {
   imageMediaFilter,
@@ -443,7 +444,7 @@ export const Books: CollectionConfig = {
                 value === createBookReviewSlug(value) &&
                 value.length > 0
                   ? true
-                  : "Slug küçük harf, sayı ve tek tirelerden oluşmalıdır.",
+                  : SLUG_RULE_MESSAGE,
             },
             {
               name: "language",
