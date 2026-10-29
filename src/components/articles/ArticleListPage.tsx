@@ -14,6 +14,11 @@ type ArticleListPageProps = {
   locale: ArticleLanguage;
 };
 
+/**
+ * Article list: intro with the article count, then every published
+ * article as a card grid on the band ground, newest first. The list is
+ * prerendered whole (no query string), so it stays one cached page.
+ */
 export default function ArticleListPage({
   articles,
   locale,
@@ -31,10 +36,10 @@ export default function ArticleListPage({
         ]}
         eyebrow={content.listEyebrow}
         title={content.listTitle}
-        lead={<p className="m-0">{content.listDescription}</p>}
+        lead={content.listDescription}
       >
         {articles.length > 0 ? (
-          <p className="mt-6 mb-0 type-data-md text-ink-muted">
+          <p className="m-0 type-data-md text-ink-muted">
             {copy.articleCount(articles.length)}
           </p>
         ) : null}
@@ -46,19 +51,20 @@ export default function ArticleListPage({
         divider
         labelledBy="article-list-heading"
       >
-        <h2 id="article-list-heading" className="sr-only">
+        <h2 id="article-list-heading" className="m-0 mb-6 type-h2">
           {copy.allArticles}
         </h2>
         {articles.length === 0 ? (
           <EmptyState size="lg">{content.emptyList}</EmptyState>
         ) : (
-          <ul className="m-0 grid list-none gap-5 p-0 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="m-0 grid list-none gap-5 p-0 md:grid-cols-2 xl:grid-cols-3">
             {articles.map((article) => (
               <li key={article.id} className="grid">
                 <ArticleCard
                   article={article}
                   content={content}
                   headingLevel="h3"
+                  compact
                 />
               </li>
             ))}

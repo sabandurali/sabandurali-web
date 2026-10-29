@@ -1,5 +1,17 @@
-import Image from "next/image";
-import PayloadRichText from "@/components/articles/PayloadRichText";
+import DownloadLink from "@/components/articles/DownloadLink";
+import PayloadRichText, {
+  richTextClassName,
+} from "@/components/articles/PayloadRichText";
+import {
+  altLanguageAttribute,
+  creditFromImage,
+  PublicationImage,
+} from "@/components/pages/publication-media";
+import { ButtonLink } from "@/components/ui/Button";
+import { cx } from "@/components/ui/cx";
+import { Figure } from "@/components/ui/Figure";
+import { AlertIcon, InfoIcon } from "@/components/ui/icons";
+import TextLink from "@/components/ui/TextLink";
 import { getAvailableLocalArticleImage } from "@/content/articles/article-images";
 import {
   isExternalArticleHref,
@@ -10,6 +22,7 @@ import type {
   ArticleContentBlock,
   ArticleFaq,
   ArticleSource,
+  CoverImage,
 } from "@/content/articles/types";
 import type { PublicArticle } from "@/content/articles/public-types";
 
@@ -23,38 +36,43 @@ type StaticArticleDetails = Extract<
   { source: "static" }
 >["details"];
 
+/** Anchor of a static article's source entry ("#source-<id>"). */
+export function articleSourceAnchorId(sourceId: string): string {
+  return `source-${sourceId}`;
+}
+
+/** Anchor of a static article's FAQ entry ("#faq-<id>"). */
+export function articleFaqAnchorId(faqId: string): string {
+  return `faq-${faqId}`;
+}
+
 function assertNeverBlock(block: never): never {
   throw new Error(`Unsupported article block: ${JSON.stringify(block)}`);
 }
 
-function getExternalLinkProps(href: string) {
-  return isExternalArticleHref(href)
-    ? { target: "_blank" as const, rel: "noopener noreferrer" }
-    : {};
-}
+const panelClassName = "rounded-card border border-ink bg-land p-5 sm:p-6";
 
-function renderReferencedFaq(
-  faqs: ReadonlyArray<ArticleFaq>,
-  content: ArticlePageContent,
-) {
-  if (faqs.length === 0) {
-    return null;
-  }
+function ReferencedFaq({
+  faqs,
+  content,
+}: {
+  faqs: ReadonlyArray<ArticleFaq>;
+  content: ArticlePageContent;
+}) {
+  if (faqs.length === 0) return null;
 
   return (
-    <aside className="rounded-sm border border-border bg-surface p-5 sm:p-6">
-      <p className="text-xs font-semibold tracking-[0.16em] text-accent-soft uppercase">
-        {content.inlineFaqLabel}
-      </p>
-      <ul className="mt-3 space-y-2 text-sm text-ivory">
+    <aside className={panelClassName}>
+      <p className="m-0 type-label text-ink-muted">{content.inlineFaqLabel}</p>
+      <ul className="mt-3 mb-0 flex list-none flex-col gap-1 p-0">
         {faqs.map((faq) => (
           <li key={faq.id}>
-            <a
-              href={`#faq-${faq.id}`}
-              className="underline decoration-border underline-offset-4 hover:text-accent-strong"
+            <TextLink
+              href={`#${articleFaqAnchorId(faq.id)}`}
+              locale={content.locale}
             >
               {faq.question}
-            </a>
+            </TextLink>
           </li>
         ))}
       </ul>
@@ -62,61 +80,92 @@ function renderReferencedFaq(
   );
 }
 
-function renderReferencedSources(
-  sources: ReadonlyArray<ArticleSource>,
-  content: ArticlePageContent,
-) {
-  if (sources.length === 0) {
-    return null;
-  }
+function ReferencedSources({
+  sources,
+  allSources,
+  content,
+}: {
+  sources: ReadonlyArray<ArticleSource>;
+  allSources: ReadonlyArray<ArticleSource>;
+  content: ArticlePageContent;
+}) {
+  if (sources.length === 0) return null;
 
   return (
-    <aside className="rounded-sm border border-border bg-surface p-5 sm:p-6">
-      <p className="text-xs font-semibold tracking-[0.16em] text-accent-soft uppercase">
+    <aside className={panelClassName}>
+      <p className="m-0 type-label text-ink-muted">
         {content.inlineSourcesLabel}
       </p>
-      <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-ivory">
+      <ul className="mt-3 mb-0 flex list-none flex-col gap-1 p-0">
         {sources.map((source) => (
-          <li key={source.id}>
-            <a
-              href={`#source-${source.id}`}
-              className="underline decoration-border underline-offset-4 hover:text-accent-strong"
+          <li key={source.id} className="flex gap-2">
+            <span aria-hidden="true" className="type-data text-ink-muted">
+              [{allSources.indexOf(source) + 1}]
+            </span>
+            <TextLink
+              href={`#${articleSourceAnchorId(source.id)}`}
+              locale={content.locale}
             >
               {source.title}
-            </a>
+            </TextLink>
           </li>
         ))}
-      </ol>
+      </ul>
     </aside>
   );
 }
 
-function renderArticleBlock(
-  block: ArticleContentBlock,
-  details: StaticArticleDetails,
-  content: ArticlePageContent,
-) {
+function ArticleImage({
+  image,
+  src,
+  sizes,
+  locale,
+}: {
+  image: CoverImage;
+  src: string;
+  sizes: string;
+  locale: PublicArticle["language"];
+}) {
+  return (
+    <Figure
+      caption={image.caption}
+      credit={creditFromImage(image)}
+      locale={locale}
+    >
+      <PublicationImage
+        src={src}
+        alt={image.alt}
+        {...altLanguageAttribute(image.altLanguage, locale)}
+        width={image.width}
+        height={image.height}
+        sizes={sizes}
+        className="rounded-card"
+      />
+    </Figure>
+  );
+}
+
+function ArticleBlock({
+  block,
+  details,
+  content,
+}: {
+  block: ArticleContentBlock;
+  details: StaticArticleDetails;
+  content: ArticlePageContent;
+}) {
+  const locale = content.locale;
+
   switch (block.type) {
     case "paragraph":
-      return (
-        <p className="text-base leading-8 text-muted sm:text-lg">
-          {block.text}
-        </p>
-      );
+      return <p>{block.text}</p>;
     case "heading": {
       const Heading = block.level;
-      const headingClass =
-        block.level === "h2"
-          ? "pt-5 text-3xl leading-tight text-ivory sm:text-4xl"
-          : block.level === "h3"
-            ? "pt-3 text-2xl leading-tight text-ivory sm:text-3xl"
-            : "pt-2 text-xl leading-tight text-ivory sm:text-2xl";
-
-      return <Heading className={headingClass}>{block.text}</Heading>;
+      return <Heading>{block.text}</Heading>;
     }
     case "bullet_list":
       return (
-        <ul className="list-disc space-y-2 pl-6 text-base leading-8 text-muted sm:text-lg">
+        <ul>
           {block.items.map((item, index) => (
             <li key={`${block.id}-${index}`}>{item}</li>
           ))}
@@ -124,7 +173,7 @@ function renderArticleBlock(
       );
     case "numbered_list":
       return (
-        <ol className="list-decimal space-y-2 pl-6 text-base leading-8 text-muted sm:text-lg">
+        <ol>
           {block.items.map((item, index) => (
             <li key={`${block.id}-${index}`}>{item}</li>
           ))}
@@ -132,65 +181,45 @@ function renderArticleBlock(
       );
     case "quote":
       return (
-        <blockquote className="border-l-2 border-accent pl-5 text-lg leading-8 text-ivory italic sm:pl-7 sm:text-xl">
-          <p>{block.text}</p>
-          {block.attribution && (
-            <footer className="mt-3 text-sm not-italic text-muted">
+        <figure>
+          <blockquote className="m-0">
+            <p className="m-0">{block.text}</p>
+          </blockquote>
+          {block.attribution ? (
+            <figcaption className="mt-3 pl-6 type-small text-ink-muted">
               — {block.attribution}
-            </footer>
-          )}
-        </blockquote>
+            </figcaption>
+          ) : null}
+        </figure>
       );
     case "image": {
       const src = getAvailableLocalArticleImage(block.image.src);
 
       return src === null ? null : (
-        <figure>
-          <Image
-            src={src}
-            alt={block.image.alt}
-            width={block.image.width}
-            height={block.image.height}
-            sizes="(min-width: 1024px) 768px, 100vw"
-            className="h-auto w-full rounded-sm border border-border object-cover"
-          />
-          {block.image.caption && (
-            <figcaption className="mt-3 text-sm text-muted">
-              {block.image.caption}
-            </figcaption>
-          )}
-        </figure>
+        <ArticleImage
+          image={block.image}
+          src={src}
+          sizes="(min-width: 768px) 720px, 100vw"
+          locale={locale}
+        />
       );
     }
     case "gallery": {
-      const images = block.images
-        .map((image) => ({
-          image,
-          src: getAvailableLocalArticleImage(image.src),
-        }))
-        .filter(
-          (item): item is { image: typeof item.image; src: string } =>
-            item.src !== null,
-        );
+      const images = block.images.flatMap((image) => {
+        const src = getAvailableLocalArticleImage(image.src);
+        return src === null ? [] : [{ image, src }];
+      });
 
       return images.length === 0 ? null : (
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-6 sm:grid-cols-2">
           {images.map(({ image, src }) => (
-            <figure key={src}>
-              <Image
-                src={src}
-                alt={image.alt}
-                width={image.width}
-                height={image.height}
-                sizes="(min-width: 640px) 380px, 100vw"
-                className="h-auto w-full rounded-sm border border-border object-cover"
-              />
-              {image.caption && (
-                <figcaption className="mt-2 text-sm text-muted">
-                  {image.caption}
-                </figcaption>
-              )}
-            </figure>
+            <ArticleImage
+              key={src}
+              image={image}
+              src={src}
+              sizes="(min-width: 640px) 360px, 100vw"
+              locale={locale}
+            />
           ))}
         </div>
       );
@@ -199,40 +228,45 @@ function renderArticleBlock(
       const href = getSafeArticleHref(block.src);
 
       return (
-        <div className="rounded-sm border border-border bg-surface p-5 sm:p-6">
-          <p className="font-serif text-xl text-ivory">{block.title}</p>
-          {block.caption && (
-            <p className="mt-2 text-sm leading-6 text-muted">{block.caption}</p>
-          )}
-          {href !== null && (
-            <a
+        <div className={panelClassName}>
+          <p className="m-0 type-h4">{block.title}</p>
+          {block.caption ? (
+            <p className="mt-2 mb-0 type-small text-ink-muted">
+              {block.caption}
+            </p>
+          ) : null}
+          {href !== null ? (
+            <TextLink
               href={href}
-              {...getExternalLinkProps(href)}
-              className="mt-4 inline-flex min-h-11 items-center text-sm font-semibold text-accent-strong underline decoration-border underline-offset-4 hover:text-ivory"
+              variant="standalone"
+              newTab={isExternalArticleHref(href)}
+              locale={locale}
+              className="mt-2"
             >
-              {content.videoLinkLabel} ↗
-            </a>
-          )}
+              {content.videoLinkLabel}
+            </TextLink>
+          ) : null}
         </div>
       );
     }
     case "table":
       return (
-        <div className="overflow-x-auto rounded-sm border border-border">
-          <table className="w-full min-w-xl border-collapse text-left text-sm text-muted">
-            {block.caption && (
-              <caption className="bg-surface p-4 text-left font-serif text-lg text-ivory">
+        <div
+          role="region"
+          aria-label={block.caption ?? undefined}
+          tabIndex={0}
+          className="max-w-full overflow-x-auto rounded-card border border-ink bg-land"
+        >
+          <table className="table! w-full min-w-[32rem] border-collapse type-small">
+            {block.caption ? (
+              <caption className="border-b border-hairline px-4 py-3 text-left type-h4">
                 {block.caption}
               </caption>
-            )}
-            <thead className="bg-surface-soft text-ivory">
+            ) : null}
+            <thead>
               <tr>
                 {block.headers.map((header, index) => (
-                  <th
-                    key={`${block.id}-header-${index}`}
-                    scope="col"
-                    className="border-b border-border p-4"
-                  >
+                  <th key={`${block.id}-header-${index}`} scope="col">
                     {header}
                   </th>
                 ))}
@@ -242,12 +276,7 @@ function renderArticleBlock(
               {block.rows.map((row, rowIndex) => (
                 <tr key={`${block.id}-row-${rowIndex}`}>
                   {row.map((cell, cellIndex) => (
-                    <td
-                      key={`${block.id}-${rowIndex}-${cellIndex}`}
-                      className="border-b border-border p-4 last:border-b-0"
-                    >
-                      {cell}
-                    </td>
+                    <td key={`${block.id}-${rowIndex}-${cellIndex}`}>{cell}</td>
                   ))}
                 </tr>
               ))}
@@ -256,82 +285,110 @@ function renderArticleBlock(
         </div>
       );
     case "info_box":
-    case "warning_box":
+    case "warning_box": {
+      const warning = block.type === "warning_box";
+      const Icon = warning ? AlertIcon : InfoIcon;
+
       return (
         <aside
-          className={`rounded-sm border p-5 sm:p-6 ${
-            block.type === "warning_box"
-              ? "border-accent bg-[var(--accent-hero-glow)]"
-              : "border-border bg-surface"
-          }`}
-        >
-          {block.title && (
-            <p className="font-serif text-xl text-ivory">{block.title}</p>
+          className={cx(
+            "flex gap-3 rounded-card border bg-land p-5 sm:p-6",
+            warning ? "border-2 border-ink" : "border-ink",
           )}
-          <p className={`${block.title ? "mt-2" : ""} leading-7 text-muted`}>
-            {block.text}
-          </p>
+        >
+          <Icon size={22} className="mt-0.5 shrink-0" />
+          <div className="min-w-0">
+            {block.title ? <p className="m-0 type-h4">{block.title}</p> : null}
+            <p className={cx("mb-0", block.title ? "mt-2" : "mt-0")}>
+              {block.text}
+            </p>
+          </div>
         </aside>
       );
-    case "statistic":
+    }
+    case "statistic": {
+      const sourceIndex =
+        block.sourceId === undefined
+          ? -1
+          : details.sources.findIndex((source) => source.id === block.sourceId);
+
       return (
-        <div className="rounded-sm border border-border bg-surface p-6 text-center">
-          <p className="font-serif text-4xl text-accent-strong sm:text-5xl">
-            {block.value}
+        <div className="border-t-2 border-ink pt-4">
+          <p className="m-0 type-data-lg font-bold">{block.value}</p>
+          <p className="mt-1 mb-0 type-small text-ink-muted">
+            {block.label}
+            {sourceIndex >= 0 ? (
+              <>
+                {" "}
+                <a
+                  href={`#${articleSourceAnchorId(block.sourceId ?? "")}`}
+                  className="type-data text-ink"
+                >
+                  [{sourceIndex + 1}]
+                </a>
+              </>
+            ) : null}
           </p>
-          <p className="mt-2 text-sm text-muted">{block.label}</p>
         </div>
       );
+    }
     case "download": {
       const href = getSafeArticleHref(block.href);
 
       return href === null ? null : (
-        <a
+        <DownloadLink
           href={href}
-          {...getExternalLinkProps(href)}
-          className="flex min-h-12 items-center justify-between gap-4 rounded-sm border border-border bg-surface px-5 py-3 text-sm font-semibold text-ivory hover:border-accent hover:text-accent-strong"
-        >
-          <span>{block.label || content.downloadLabel}</span>
-          <span aria-hidden="true">↓</span>
-        </a>
+          label={block.label || content.downloadLabel}
+          fileType={block.fileType}
+          fileSize={block.fileSize}
+          newTab={isExternalArticleHref(href)}
+          locale={locale}
+        />
       );
     }
     case "button": {
       const href = getSafeArticleHref(block.href);
 
       return href === null ? null : (
-        <a
+        <ButtonLink
           href={href}
-          {...getExternalLinkProps(href)}
-          className={`inline-flex min-h-11 items-center rounded-sm border px-5 py-3 text-sm font-semibold transition-colors ${
-            block.variant === "secondary"
-              ? "border-border text-ivory hover:border-accent"
-              : "border-accent bg-accent text-background hover:bg-accent-strong"
-          }`}
+          variant={block.variant === "secondary" ? "secondary" : "primary"}
         >
           {block.label}
-        </a>
+        </ButtonLink>
       );
     }
     case "divider":
-      return <hr className="border-0 border-t border-border" />;
+      return <hr />;
     case "faq":
-      return renderReferencedFaq(
-        details.faq
-          .filter((faq) => block.faqIds.includes(faq.id) && faq.visible)
-          .toSorted((left, right) => left.order - right.order),
-        content,
+      return (
+        <ReferencedFaq
+          faqs={details.faq
+            .filter((faq) => block.faqIds.includes(faq.id) && faq.visible)
+            .toSorted((left, right) => left.order - right.order)}
+          content={content}
+        />
       );
     case "sources":
-      return renderReferencedSources(
-        details.sources.filter((source) => block.sourceIds.includes(source.id)),
-        content,
+      return (
+        <ReferencedSources
+          sources={details.sources.filter((source) =>
+            block.sourceIds.includes(source.id),
+          )}
+          allSources={details.sources}
+          content={content}
+        />
       );
     default:
       return assertNeverBlock(block);
   }
 }
 
+/**
+ * Body of an article in the reading column. CMS articles render their
+ * Lexical rich text; repository fixtures render their typed blocks with the
+ * same reading styles (richTextClassName), so both look alike.
+ */
 export default function ArticleContent({
   article,
   content,
@@ -339,17 +396,22 @@ export default function ArticleContent({
   if (article.content.source === "lexical") {
     if (article.content.data === null || article.content.data === undefined)
       return null;
-    return <PayloadRichText data={article.content.data} />;
+    return (
+      <PayloadRichText data={article.content.data} locale={article.language} />
+    );
   }
 
-  const staticContent = article.content;
+  const { blocks, details } = article.content;
 
   return (
-    <div className="space-y-7 sm:space-y-9">
-      {staticContent.blocks.map((block) => (
-        <div key={block.id}>
-          {renderArticleBlock(block, staticContent.details, content)}
-        </div>
+    <div className={richTextClassName}>
+      {blocks.map((block) => (
+        <ArticleBlock
+          key={block.id}
+          block={block}
+          details={details}
+          content={content}
+        />
       ))}
     </div>
   );
