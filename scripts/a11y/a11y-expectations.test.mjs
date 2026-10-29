@@ -5,16 +5,21 @@ import {
   axeProblems,
   axeTags,
   detailRoutes,
+  fixtureRoutes,
   focusIndicatorProblem,
+  headerMenuBreakpoint,
   localOriginProblem,
   maxDurationMs,
+  menuCheckWidths,
   menuProblem,
   menuRequired,
   overflowProblem,
   pickDetailPath,
   publicRoutes,
   reducedMotionProblems,
+  routePlan,
   skipLinkProblem,
+  skippedDetailsProblems,
   viewportWidths,
 } from "./a11y-expectations.mjs";
 
@@ -302,6 +307,10 @@ test("the header menu opens, is reachable and closes from the keyboard", () => {
   assert.equal(menuProblem({ found: false }, false), null);
   assert.equal(menuRequired({ type: "EN home" }, 390), true);
   assert.equal(menuRequired({ type: "EN home" }, 1440), false);
+  // FRONTEND-6: the "Menü" disclosure is the only navigation up to 1279 px.
+  assert.equal(menuRequired({ type: "home" }, 1100), true);
+  assert.equal(menuRequired({ type: "home" }, 1279), true);
+  assert.equal(menuRequired({ type: "home" }, 1280), false);
   assert.equal(menuRequired({ type: "global not found" }, 390), false);
   assert.match(
     menuProblem({ ...good, opened: { expanded: true, panelVisible: false } }),
@@ -368,4 +377,46 @@ test("CI runs the public accessibility check against the local build", () => {
   assert.match(pkg.devDependencies["@axe-core/playwright"], /^\d+\.\d+\.\d+$/);
   assert.match(workflow, /run: npm run e2e:a11y/);
   assert.match(workflow, /A11Y_TEST_URL: http:\/\/127\.0\.0\.1:3101/);
+});
+
+test("FRONTEND-6: the menu threshold is the header's own breakpoint", () => {
+  const header = readFileSync(
+    "src/components/layout/HeaderNavigation.tsx",
+    "utf8",
+  );
+  // The disclosure hides and the desktop bar appears at Tailwind's `xl`.
+  assert.match(header, /className="xl:hidden"/);
+  assert.match(header, /className="hidden[^"]*\bxl:block"/);
+  // `xl` keeps Tailwind's default of 80rem = 1280 px (no theme override).
+  const css = readFileSync("src/app/globals.css", "utf8");
+  assert.doesNotMatch(css, /--breakpoint-xl\s*:/);
+  assert.equal(headerMenuBreakpoint, 80 * 16);
+  // The check runs below and above the breakpoint, and between lg and xl.
+  assert.ok(menuCheckWidths.some((width) => width < 768));
+  assert.ok(menuCheckWidths.some((width) => width >= 1024 && width < 1280));
+  assert.ok(menuCheckWidths.some((width) => width >= 1280));
+});
+
+test("TESTS-INFRA-1: a fixture run must reach every detail template", () => {
+  const skipped = [
+    { type: "book detail", list: "/kitaplar", reason: "no published item" },
+  ];
+  assert.deepEqual(skippedDetailsProblems(skipped, false), []);
+  assert.deepEqual(skippedDetailsProblems(skipped, true), [
+    "book detail: no published item linked from /kitaplar",
+  ]);
+  assert.deepEqual(skippedDetailsProblems([], true), []);
+  // The static run keeps every public route; the fixture run adds the CMS
+  // block page and the filled district news list, and requires details.
+  assert.deepEqual(routePlan(false), {
+    routes: publicRoutes,
+    requireDetails: false,
+  });
+  assert.deepEqual(routePlan(true), {
+    routes: fixtureRoutes,
+    requireDetails: true,
+  });
+  const types = fixtureRoutes.map(({ type }) => type);
+  assert.ok(types.includes("CMS block page"));
+  assert.ok(types.includes("district news (filled)"));
 });

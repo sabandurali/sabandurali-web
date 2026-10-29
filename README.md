@@ -26,7 +26,7 @@ Payload packages are pinned exactly and must be upgraded together.
 ## Quick start
 
 ```sh
-nvm install                   # reads .nvmrc and installs/uses the latest Node 24
+nvm install                   # reads .nvmrc and installs/uses Node 24.22.1
 npm ci
 cp .env.example .env.local    # first setup only; never overwrite an existing .env.local
 # then set a local-only PAYLOAD_SECRET in .env.local
@@ -145,8 +145,6 @@ local `git blame`.
   AI agents
 - [reports/](reports/README.md): summaries of past work packages; their
   evidence stays in the Git history
-- [scripts/districts/archive/](scripts/districts/archive/README.md): the
-  applied Production district importers, kept for audit
 - [YONETIM-PANELI-KULLANIM-KILAVUZU.md](YONETIM-PANELI-KULLANIM-KILAVUZU.md):
   admin guide (Turkish), generated from the `/admin/help` source
   `src/components/admin/help/admin-help-guide.ts`

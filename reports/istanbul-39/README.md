@@ -83,9 +83,10 @@ npm run district:import -- --database /tmp/istanbul-39-audit/editorial-test.db -
 
 `--editorial` verilmezse eski ham araştırma/draft davranışı korunur. Verilirse 39 ilçe ve PDF hash’leri eşleştirilir, bölüm kaynak kapıları denetlenir ve aynı yönetilen draft kayıtları güncellenir. Elle düzenlenmiş veya yayımlanmış kayıtlar yine korunur. Gözden geçirilmiş metin bile import tarafından otomatik yayımlanmaz.
 
-`check-editorial-cms.ts` artık `scripts/districts/archive/` altında tarihî kayıt olarak durur; varsayımları ilk editoryal partiye aittir ve güncel veriyle bilerek başarısız olur. O dönemde yalnız sabit `/tmp/istanbul-39-audit/editorial-test.db` test kopyasında, güncel editoryal import ve idempotency kontrolünden **sonra** çalıştırılıyordu. 39 kaydı bu atılabilir kopyada yayımlar ve anonim okuma sınırını test eder. Bu dosya production yayın aracı değildir. Tekrar testi için yönetilen draft kopyası yeniden hazırlanmalıdır.
+`check-editorial-cms.ts` ağaçtan kaldırıldı ve yalnız Git geçmişinde (`4b94d32:scripts/districts/archive/check-editorial-cms.ts`) tarihî kayıt olarak durur; varsayımları ilk editoryal partiye aittir ve güncel veriyle bilerek başarısız olur. O dönemde yalnız sabit `/tmp/istanbul-39-audit/editorial-test.db` test kopyasında, güncel editoryal import ve idempotency kontrolünden **sonra** çalıştırılıyordu. 39 kaydı bu atılabilir kopyada yayımlar ve anonim okuma sınırını test eder. Bu dosya production yayın aracı değildir. Tekrar testi için yönetilen draft kopyası yeniden hazırlanmalıdır.
 
 ```sh
+# Tarihî komut; dosya yalnız 4b94d32 commit'inde var.
 npx tsx scripts/districts/archive/check-editorial-cms.ts /tmp/istanbul-39-audit/editorial-test.db
 DISTRICT_TEST_URL=http://localhost:3018 DISTRICT_SOURCE_MODE=payload-reviewed-content DISTRICT_EXPECT_EDITORIAL=1 npm run e2e:districts:routes
 ```

@@ -1,10 +1,21 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
+import { fixturePaths } from "./ci/fixture-content";
 
 // The CI workflow must exercise the built application, not only compile it:
 // the e2e scripts run against the production build served on 127.0.0.1.
 const workflow = readFileSync(".github/workflows/ci.yml", "utf8");
+
+/** The text of one job, from its key to the next top-level job key. */
+function job(name: string): string {
+  const start = workflow.indexOf(`\n  ${name}:\n`);
+  assert.ok(start >= 0, `job ${name} is missing`);
+  const rest = workflow.slice(start + 1);
+  const next = rest.slice(1).search(/\n {2}[a-z][\w-]*:\n/);
+  return next < 0 ? rest : rest.slice(0, next + 1);
+}
+const checkJob = job("check");
 
 /** Position of the first line that runs the given command, or -1. */
 function runIndex(command: string): number {
@@ -55,8 +66,30 @@ test("CI runs the public accessibility check after the district routes", () => {
   const a11y = runIndex("npm run e2e:a11y");
   assert.ok(a11y >= 0, "e2e:a11y is missing from ci.yml");
   assert.ok(routes < a11y, "Chromium is installed before the a11y check");
-  for (const [, url] of workflow.matchAll(/A11Y_TEST_URL:\s*(\S+)/g))
+  for (const [, url] of checkJob.matchAll(/A11Y_TEST_URL:\s*(\S+)/g))
     assert.equal(url, "http://127.0.0.1:3101");
+});
+
+test("TESTS-INFRA-1: CI renders every detail template from seeded fixtures", () => {
+  const fixtures = job("fixtures");
+  // A hermetic SQLite file, Payload public sources and local media only.
+  assert.match(fixtures, /DATABASE_URL: file:\.\/\.data\/ci-fixtures\.db/);
+  assert.match(fixtures, /PAYLOAD_DATABASE: sqlite/);
+  assert.match(fixtures, /PAYLOAD_STORAGE: local/);
+  for (const source of ["ARTICLE", "BOOK", "PAGE", "PHOTO"])
+    assert.match(fixtures, new RegExp(`${source}_PUBLIC_SOURCE: payload`));
+  assert.doesNotMatch(fixtures, /\$\{\{\s*secrets\./);
+  // Seeded before the server starts; the a11y check requires every detail.
+  const seed = fixtures.indexOf("run: npm run ci:seed-fixtures");
+  const server = fixtures.indexOf("--hostname 127.0.0.1 --port 3102");
+  const a11y = fixtures.indexOf("run: npm run e2e:a11y");
+  assert.ok(seed >= 0 && seed < server && server < a11y);
+  assert.match(fixtures.slice(a11y), /A11Y_FIXTURES: "1"/);
+  for (const [, url] of fixtures.matchAll(/A11Y_TEST_URL:\s*(\S+)/g))
+    assert.equal(url, "http://127.0.0.1:3102");
+  // Every fixture route is compiled before the check.
+  for (const fixturePath of fixturePaths)
+    assert.ok(fixtures.includes(fixturePath), fixturePath);
 });
 
 test("CI keeps the e2e evidence as a short-lived, SHA-pinned artifact", () => {

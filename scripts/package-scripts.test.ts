@@ -74,6 +74,40 @@ test("SEC-24: archived Production importers have no npm script", () => {
   }
 });
 
+test("TESTS-INFRA-4: .nvmrc is the exact engines minimum and meets Payload's floor", () => {
+  const { engines } = JSON.parse(readFileSync("package.json", "utf8")) as {
+    engines: { node: string };
+  };
+  const minimum = /^>=(\d+\.\d+\.\d+) <(\d+)$/.exec(engines.node);
+  assert.ok(minimum, `unexpected engines.node: ${engines.node}`);
+  const [, floor, nextMajor] = minimum;
+  assert.equal(readFileSync(".nvmrc", "utf8").trim(), floor);
+  assert.equal(Number(floor.split(".")[0]) + 1, Number(nextMajor));
+  // Payload declares "^22.x || >=24.22.1"; the project floor may not be
+  // lower than its Node 24 branch.
+  const payloadEngines = (
+    JSON.parse(readFileSync("node_modules/payload/package.json", "utf8")) as {
+      engines: { node: string };
+    }
+  ).engines.node;
+  const payloadFloor = />=(\d+)\.(\d+)\.(\d+)/.exec(payloadEngines);
+  assert.ok(payloadFloor, payloadEngines);
+  const asNumber = (parts: string[]) =>
+    parts.reduce((total, part) => total * 1000 + Number(part), 0);
+  assert.ok(
+    asNumber(floor.split(".")) >= asNumber(payloadFloor.slice(1)),
+    `${floor} is below Payload's ${payloadEngines}`,
+  );
+});
+
+test("ARCHITECTURE-4: the applied importers live only in the Git history", () => {
+  // Kept for audit at 4b94d32 (docs/PROJECT-STATE.md §K), not compiled,
+  // linted or tested with every change.
+  assert.equal(existsSync("scripts/districts/archive"), false);
+  const state = readFileSync("docs/PROJECT-STATE.md", "utf8");
+  assert.match(state, /git show 4b94d32:scripts\/districts\/archive\//);
+});
+
 test("migrations are replayed once: by the schema-migration unit test", () => {
   assert.equal(scripts["test:migrations"], undefined);
   for (const [name, command] of Object.entries(scripts))

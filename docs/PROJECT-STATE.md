@@ -1,6 +1,6 @@
 # Şaban Durali Web — Project State
 
-Last verified handoff: 2026-10-04
+Last verified handoff: 2026-10-29
 
 ## A. Project identity
 
@@ -23,7 +23,7 @@ The final application baseline for the Istanbul district quality milestone is:
 
 This commit is the final application baseline after the 39-district quality tour. It is a historical code/content baseline, not a promise that it will remain the repository's latest commit.
 
-The current documentation HEAD is the later docs-only commit containing this handoff. Always distinguish **application baseline** from **current documentation HEAD**, and check `git log` before starting work.
+This document is updated together with the code after that dated application baseline, so later sections (for example §K.5) describe newer commits. No section names the current HEAD: `git log` shows the current state. Always distinguish the **application baseline** above from the current HEAD, and check `git log` before starting work.
 
 ## C. Tech stack
 
@@ -206,7 +206,24 @@ The safety model matters more than internal hashes: exact approved baseline, dep
 
 Production imports must preserve document identity, creation/publication metadata where required, publication state, non-target content, and private-field boundaries.
 
-The applied district importers, their cores and tests are kept for audit in `scripts/districts/archive/` (see its README). They have no npm scripts any more; running one is a production operation under the rules above.
+The applied district importers were removed from the tree after the 39-district milestone; they are kept for audit in the Git history. Commit `4b94d32` is the last one that contains them, under `scripts/districts/archive/`; read one with `git show 4b94d32:scripts/districts/archive/<file>`. Do not restore or copy them for new work: every importer repeated the same gate around a hard-coded batch, so a fix in one copy never reached the others. A new Production import needs one parameterised engine with a small per-batch configuration (the pattern of `scripts/photos/`), a dry-run, exact counts, SHA-bound approval, verified PITR and read-only verification. Running a historical importer would be a Production operation under every rule above.
+
+| Importer (in `4b94d32`) | Targets | Provenance |
+| --- | --- | --- |
+| `import-production.ts` | 8 population updates, 31 skips | import version 3 |
+| `import-production-editorial-batch2.ts` | 38 districts except Esenler | version 4, baseline `data/districts/production-editorial-batch2-baseline.json` |
+| `import-production-arnavutkoy-editorial.ts` | Arnavutköy | version 5, `arnavutkoy-editorial-quality-2026` |
+| `import-production-avcilar-editorial.ts` | Avcılar | version 5, `avcilar-editorial-quality-2026` |
+| `import-production-bagcilar-editorial.ts` | Bağcılar | version 5, `bagcilar-editorial-quality-2026` |
+| `import-production-bahcelievler-editorial.ts` | Bahçelievler | version 5, `bahcelievler-editorial-quality-2026` |
+| `import-production-bakirkoy-editorial.ts` | Bakırköy | version 5, `bakirkoy-editorial-quality-2026` |
+| `import-production-district-batch1-six.ts` | 6 districts | version 5 |
+| `import-production-district-batch2-eight.ts` | 8 districts | version 6 |
+| `import-production-district-batch3-ten.ts` | 10 districts | version 7 |
+| `import-production-district-batch4-nine.ts` | 9 districts | version 8 |
+| `import-production-esenler-final.ts` | Esenler | version 6, `esenler-final-editorial-quality-2026` |
+
+The same commit holds `check-editorial-cms.ts`, the local check of the first editorial import, whose assertions describe that first batch only and fail against the current data by design.
 
 ### K.1 Production build gate
 

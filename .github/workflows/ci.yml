@@ -40,10 +40,9 @@ jobs:
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
+          # .nvmrc holds the exact minimum of `engines` (Payload's floor), so
+          # CI proves the lowest supported Node; a test keeps them equal.
           node-version-file: .nvmrc
-          # .nvmrc names the major only: resolve the newest Node 24 release
-          # instead of an older one cached on the runner.
-          check-latest: true
           cache: npm
 
       - name: Install dependencies
@@ -138,6 +137,92 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
 
+  # The static build above publishes no article, book, photo or CMS page, so
+  # its a11y run can only reach the list empty states. This job renders the
+  # detail templates, the CMS block page and a filled district news list
+  # from clearly fictional records (scripts/ci/fixture-content.ts) seeded
+  # into a CI-only SQLite file through the Payload Local API.
+  #
+  # It serves `next dev`: a production build or `next start` with a Payload
+  # public source fails closed without PostgreSQL and Vercel Blob
+  # (src/lib/payloadInfrastructure.ts), and this job must stay hermetic.
+  # The a11y script ignores only Next's development tools element.
+  fixtures:
+    name: Detail templates on CI fixtures (Playwright + axe)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      # CI-only local environment: no secret, no production service and no
+      # network database. The fixtures exist only in this SQLite file.
+      NEXT_TELEMETRY_DISABLED: "1"
+      PAYLOAD_DATABASE: sqlite
+      PAYLOAD_STORAGE: local
+      DATABASE_URL: file:./.data/ci-fixtures.db
+      PAYLOAD_SECRET: ci-only-insecure-payload-secret
+      ARTICLE_PUBLIC_SOURCE: payload
+      BOOK_PUBLIC_SOURCE: payload
+      PAGE_PUBLIC_SOURCE: payload
+      NAVIGATION_PUBLIC_SOURCE: static
+      PHOTO_PUBLIC_SOURCE: payload
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Seed the CI fixtures
+        run: npm run ci:seed-fixtures
+
+      - name: Start the fixture server
+        run: |
+          npm run dev -- --hostname 127.0.0.1 --port 3102 > "$RUNNER_TEMP/next-dev.log" 2>&1 &
+          for _ in $(seq 1 120); do
+            if curl --silent --output /dev/null http://127.0.0.1:3102/robots.txt; then break; fi
+            sleep 1
+          done
+          # Compile the lists and fixture routes once, so the a11y check
+          # never waits for the development compiler.
+          for path in /makaleler /kitaplar /fotograflar /en/articles /en/books /en/photography \
+            /makaleler/ci-test-makalesi /en/articles/ci-test-article \
+            /kitaplar/ci-test-kitap-incelemesi /en/books/ci-test-book-review \
+            /fotograflar/ci-test-fotografi /en/photography/ci-test-photo \
+            /ci-test-sayfasi /istanbul/ilceler/esenler/haberler; do
+            curl --silent --show-error --fail --max-time 300 --output /dev/null "http://127.0.0.1:3102$path" || { cat "$RUNNER_TEMP/next-dev.log"; exit 1; }
+          done
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: E2E accessibility and layout of the detail templates
+        run: npm run e2e:a11y
+        env:
+          A11Y_FIXTURES: "1"
+          A11Y_TEST_URL: http://127.0.0.1:3102
+          A11Y_TEST_OUTPUT: ${{ runner.temp }}/fixture-a11y
+          BROWSER_CHANNEL: chromium
+
+      - name: Server log
+        if: failure()
+        run: cat "$RUNNER_TEMP/next-dev.log" || true
+
+      - name: Upload fixture e2e evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: fixture-e2e-evidence
+          path: |
+            ${{ runner.temp }}/fixture-a11y
+            ${{ runner.temp }}/next-dev.log
+          if-no-files-found: ignore
+          retention-days: 7
+
   audit:
     name: Audit production dependencies
     runs-on: ubuntu-latest
@@ -150,10 +235,10 @@ jobs:
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc
-          check-latest: true
 
-      # Reads package-lock.json; no install needed. Fails on critical only:
-      # the remaining high and moderate advisories have no non-breaking fix
-      # (see the Payload 3.92.1 upgrade commit).
+      # Reads package-lock.json; no install needed. Fails on every high or
+      # critical advisory outside the reviewed GHSA allowlist of
+      # scripts/ci/audit-gate.mjs (each entry says why it cannot reach the
+      # site); moderate and low advisories are left to Dependabot.
       - name: npm audit
-        run: npm audit --omit=dev --audit-level=critical
+        run: npm run ci:audit
