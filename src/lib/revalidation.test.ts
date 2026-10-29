@@ -77,13 +77,14 @@ function afterChange(
 function afterDelete(
   hook: CollectionAfterDeleteHook,
   doc: Record<string, unknown>,
+  locale?: string,
 ): unknown {
   return hook({
     collection: {},
     context: {},
     doc,
     id: "doc-1",
-    req: fakeRequest(),
+    req: fakeRequest(locale),
   } as unknown as Parameters<CollectionAfterDeleteHook>[0]);
 }
 
@@ -372,7 +373,7 @@ test("categories reach every article surface but no article detail by their own 
   assertTargetsAreRoutes(targets);
 });
 
-test("district guides reach the directory, the guide and its news page", () => {
+test("district guides reach both home pages, the directory, the guide and its news page", () => {
   const targets = getCollectionRevalidationTargets(
     "district-guides",
     [{ _status: "published", district: "kadikoy" }],
@@ -382,6 +383,8 @@ test("district guides reach the directory, the guide and its news page", () => {
   assert.deepEqual(
     paths(targets).filter((entry) => !entry.includes("#")),
     [
+      "/",
+      "/en",
       "/istanbul/ilceler",
       "/istanbul/ilceler/kadikoy",
       "/istanbul/ilceler/kadikoy/haberler",
@@ -645,11 +648,77 @@ test("photo, collection and tag writes invalidate the cached photo filter option
     ["photo-facets", { expire: 0 }],
     ["photo-facets", { expire: 0 }],
   ]);
+});
 
-  // Outside a Next.js request the call is a silent no-op.
-  revalidateTags(["photo-facets"], {
-    revalidate: () => {
-      throw new Error("Invariant: static generation store missing");
+test("outside a Next.js request tag and path revalidation stop silently", () => {
+  const logged: string[] = [];
+  const logger = { warn: (message: string) => logged.push(message) };
+  const outside = new Error("Invariant: static generation store missing");
+
+  const attemptedTags: string[] = [];
+  revalidateTags(["photo-facets", "second-tag"], {
+    logger,
+    revalidate: (tag) => {
+      attemptedTags.push(tag);
+      throw outside;
     },
   });
+  assert.deepEqual(attemptedTags, ["photo-facets"], "stops after the first");
+
+  const attemptedPaths: string[] = [];
+  revalidateTargets([{ path: "/a" }, { path: "/b" }], {
+    logger,
+    revalidate: (target) => {
+      attemptedPaths.push(target);
+      throw outside;
+    },
+  });
+  assert.deepEqual(attemptedPaths, ["/a"], "stops after the first");
+  assert.deepEqual(logged, [], "nothing is logged outside a request");
+});
+
+test("a slug change through the hook also refreshes the previous URL", () => {
+  for (const collection of ["articles", "photos"] as const) {
+    const { calls, revalidate } = recorder();
+    afterChange(
+      createRevalidationHooks(collection, { revalidate }).afterChange,
+      {
+        doc: { _status: "published", slug: "yeni-baslik" },
+        operation: "update",
+        previousDoc: { _status: "published", slug: "eski-baslik" },
+      },
+    );
+    const prefix = collection === "articles" ? "/makaleler" : "/fotograflar";
+    const called = calls.map((call) => call.path);
+    assert.ok(called.includes(`${prefix}/yeni-baslik`), collection);
+    assert.ok(called.includes(`${prefix}/eski-baslik`), collection);
+  }
+});
+
+test("hooks revalidate the URL of the locale the editor saved in", () => {
+  const changed = recorder();
+  afterChange(
+    createRevalidationHooks("articles", { revalidate: changed.revalidate })
+      .afterChange,
+    {
+      doc: { _status: "published", slug: "urban-renewal" },
+      locale: "en",
+      operation: "update",
+      previousDoc: { _status: "published", slug: "urban-renewal" },
+    },
+  );
+  const changedPaths = changed.calls.map((call) => call.path);
+  assert.ok(changedPaths.includes("/en/articles/urban-renewal"));
+  assert.ok(!changedPaths.includes("/makaleler/urban-renewal"));
+
+  const deleted = recorder();
+  afterDelete(
+    createRevalidationHooks("photos", { revalidate: deleted.revalidate })
+      .afterDelete,
+    { slug: "galata-at-night" },
+    "en",
+  );
+  const deletedPaths = deleted.calls.map((call) => call.path);
+  assert.ok(deletedPaths.includes("/en/photography/galata-at-night"));
+  assert.ok(!deletedPaths.includes("/fotograflar/galata-at-night"));
 });
