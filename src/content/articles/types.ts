@@ -274,13 +274,3 @@ export type ValidationIssue = {
   path: string;
   message: string;
 };
-
-export type ArticleValidationResult = {
-  valid: boolean;
-  errors: ReadonlyArray<ValidationIssue>;
-  warnings: ReadonlyArray<ValidationIssue>;
-};
-
-export type ArticleValidationOptions = {
-  forPublication?: boolean;
-};

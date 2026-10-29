@@ -6,12 +6,6 @@ export const bookListPaths = {
   en: "/en/books",
 } as const satisfies Record<BookReviewLanguage, string>;
 
-export const bookListUrls = {
-  "tr-TR": getAbsoluteUrl(bookListPaths.tr),
-  en: getAbsoluteUrl(bookListPaths.en),
-  "x-default": getAbsoluteUrl(bookListPaths.tr),
-} as const;
-
 export function getBookReviewPath(
   slug: string,
   language: BookReviewLanguage,
@@ -48,25 +42,4 @@ export function getBookReviewLanguagePaths(
   }
 
   return paths;
-}
-
-export function getBookReviewAlternateUrls(
-  bookReview: BookReview,
-  translation: BookReview | null,
-): Record<string, string> {
-  const currentUrl = getBookReviewUrl(bookReview.slug, bookReview.language);
-  const urls: Record<string, string> = {
-    [bookReview.language === "tr" ? "tr-TR" : "en"]: currentUrl,
-  };
-
-  if (translation !== null) {
-    urls[translation.language === "tr" ? "tr-TR" : "en"] = getBookReviewUrl(
-      translation.slug,
-      translation.language,
-    );
-  }
-
-  urls["x-default"] = urls["tr-TR"] ?? currentUrl;
-
-  return urls;
 }

@@ -15,12 +15,6 @@ export const articleListPaths = {
   en: "/en/articles",
 } as const satisfies Record<ArticleLanguage, string>;
 
-export const articleListUrls = {
-  "tr-TR": getAbsoluteUrl(articleListPaths.tr),
-  en: getAbsoluteUrl(articleListPaths.en),
-  "x-default": getAbsoluteUrl(articleListPaths.tr),
-} as const;
-
 export function getArticlePath(
   slug: string,
   language: ArticleLanguage,
@@ -51,25 +45,4 @@ export function getArticleLanguagePaths(
   }
 
   return paths;
-}
-
-export function getArticleAlternateUrls(
-  article: RoutableArticle,
-  translation: PublicArticleTranslation | null,
-): Record<string, string> {
-  const currentUrl = getArticleUrl(article.slug, article.language);
-  const urls: Record<string, string> = {
-    [article.language === "tr" ? "tr-TR" : "en"]: currentUrl,
-  };
-
-  if (translation !== null) {
-    urls[translation.language === "tr" ? "tr-TR" : "en"] = getArticleUrl(
-      translation.slug,
-      translation.language,
-    );
-  }
-
-  urls["x-default"] = urls["tr-TR"] ?? currentUrl;
-
-  return urls;
 }
