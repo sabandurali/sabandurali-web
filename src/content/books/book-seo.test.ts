@@ -187,6 +187,44 @@ test("a scheduled review never reports a modification before publication", () =>
     createBookReviewJsonLd(scheduled).dateModified,
     "2026-10-10T09:00:00.000Z",
   );
-  assert.ok(openGraph !== undefined && "modifiedTime" in openGraph);
+  assert.ok(openGraph && "modifiedTime" in openGraph);
   assert.equal(openGraph.modifiedTime, "2026-10-10T09:00:00.000Z");
+});
+
+test("SEO-PERF-2: the cover is the share image and the Book image", () => {
+  const withCover = review({
+    coverImage: {
+      src: "/api/media/file/ultralearning-kapak.jpg",
+      alt: "Ultralearning kapağı",
+      width: 1600,
+      height: 2400,
+    },
+  });
+  const image = {
+    url: `${site}/_next/image?url=%2Fapi%2Fmedia%2Ffile%2Fultralearning-kapak.jpg&w=1200&q=75`,
+    alt: "Ultralearning kapağı",
+    width: 1200,
+    height: 1800,
+  };
+  const metadata = createBookReviewMetadata(withCover, null);
+
+  assert.deepEqual(metadata.twitter?.images, [image]);
+  assert.ok(metadata.openGraph && "images" in metadata.openGraph);
+  assert.deepEqual(metadata.openGraph.images, [image]);
+  assert.equal(
+    createBookReviewJsonLd(withCover).itemReviewed.image,
+    `${site}/api/media/file/ultralearning-kapak.jpg`,
+  );
+});
+
+test("SEO-PERF-2: a missing or unservable cover keeps the site image", () => {
+  // The fixture cover is not a file in public/, so the page shows none.
+  assert.deepEqual(createBookReviewMetadata(review(), null).twitter?.images, [
+    siteSocialImage,
+  ]);
+  assert.equal(createBookReviewJsonLd(review()).itemReviewed.image, undefined);
+  assert.equal(
+    createBookReviewJsonLd(review({ coverImage: null })).itemReviewed.image,
+    undefined,
+  );
 });
