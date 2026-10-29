@@ -23,12 +23,15 @@ const DESTRUCTIVE_STATEMENTS: readonly RegExp[] = [
   /\bDELETE\s+FROM\b/i,
   /\bRENAME\b/i,
   /\bALTER\s+COLUMN\s+\S+\s+(?:SET\s+DATA\s+)?TYPE\b/i,
-  /(?:^|;)\s*UPDATE\s+["\w]/im,
+  // At the start of a statement, or the first one of a sql`` template.
+  /(?:^|`)\s*UPDATE\s+["\w]/i,
+  // The same operations through the Drizzle or Payload query builders.
+  /\b(?:db|tx|payload)\s*\.\s*(?:delete|update|updateMany|deleteMany)\s*\(/,
 ];
 
 /**
- * A destructive line is accepted only with an explicit, reasoned marker on
- * the same line, for example
+ * A destructive statement is accepted only with an explicit, reasoned marker
+ * in a comment on the line that ends it (or inside it), for example
  * `DROP INDEX "x"; -- destructive-reviewed: replaced by "y" in this UP`.
  */
 const REVIEWED_MARKER = /--\s*destructive-reviewed:\s*\S/;
@@ -63,15 +66,56 @@ function upSource(source: string): string {
   return source.split("export async function down")[0] ?? "";
 }
 
-/** The UP lines that hold a destructive statement without a reviewed marker. */
+type Statement = { code: string; comments: string[] };
+
+/**
+ * Splits UP into statements at `;`, across lines, so a statement written
+ * over several lines (`DROP` and `TABLE` on separate lines) is checked as a
+ * whole. A `--` comment belongs to the last statement its line ends, or to
+ * the statement still open on that line.
+ */
+function upStatements(source: string): Statement[] {
+  const statements: Statement[] = [];
+  let open: Statement = { code: "", comments: [] };
+
+  for (const line of upSource(source).split("\n")) {
+    const commentStart = line.indexOf("--");
+    const code = commentStart === -1 ? line : line.slice(0, commentStart);
+    const comment = commentStart === -1 ? "" : line.slice(commentStart);
+    const pieces = code.split(";");
+    let lastClosed: Statement | undefined;
+
+    pieces.forEach((piece, index) => {
+      open.code += `${piece}\n`;
+      if (index < pieces.length - 1) {
+        statements.push(open);
+        lastClosed = open;
+        open = { code: "", comments: [] };
+      }
+    });
+    if (comment !== "") (lastClosed ?? open).comments.push(comment);
+  }
+  statements.push(open);
+
+  return statements
+    .map(({ code, comments }) => ({
+      code: code.replace(/\s+/g, " ").trim(),
+      comments,
+    }))
+    .filter(({ code }) => code !== "");
+}
+
+/** The UP statements that are destructive and carry no reviewed marker. */
 function unreviewedDestructiveLines(source: string): string[] {
-  return upSource(source)
-    .split("\n")
-    .filter((line) => !REVIEWED_MARKER.test(line))
-    .filter((line) =>
-      DESTRUCTIVE_STATEMENTS.some((pattern) => pattern.test(line)),
+  return upStatements(source)
+    .filter(
+      ({ comments }) =>
+        !comments.some((comment) => REVIEWED_MARKER.test(comment)),
     )
-    .map((line) => line.trim());
+    .filter(({ code }) =>
+      DESTRUCTIVE_STATEMENTS.some((pattern) => pattern.test(code)),
+    )
+    .map(({ code }) => code);
 }
 
 function isAdditiveUp(source: string): boolean {
@@ -143,8 +187,27 @@ test("drops, renames, type changes and data rewrites are refused", () => {
     'ALTER TABLE "a" ALTER COLUMN "b" TYPE numeric;',
     'UPDATE "a" SET "b" = NULL;',
     'ALTER TABLE "a" ADD COLUMN "b" varchar; UPDATE "a" SET "b" = \'x\';',
+    // Split over several lines.
+    'DROP\n  TABLE "a";',
+    'ALTER TABLE "a"\n  DROP COLUMN "b";',
+    'ALTER TABLE "a" ADD COLUMN "c" varchar;\nUPDATE\n  "a" SET "c" = \'x\';',
+    'ALTER TABLE "a"\n  ALTER COLUMN "b"\n  TYPE numeric;',
   ]) {
     assert.equal(isAdditiveUp(migration(statement)), false, statement);
+  }
+});
+
+test("query-builder deletes and updates in UP are refused", () => {
+  for (const up of [
+    'await db.delete(users).where(eq(users.role, "x"))',
+    "await db\n  .update(users)\n  .set({ role: 'editor' })",
+    'await payload.delete({ collection: "users", where: {} })',
+    'await payload.update({ collection: "users", where: {}, data: {} })',
+  ]) {
+    const source =
+      `export async function up({ db, payload }) {\n${up}\n}\n` +
+      "export async function down() {}";
+    assert.equal(isAdditiveUp(source), false, up);
   }
 });
 
@@ -164,7 +227,22 @@ test("a destructive line passes only with a reasoned review marker", () => {
       marker,
     );
   }
-  // The marker covers its own line only.
+  // A multi-line statement takes the marker on the line that ends it.
+  assert.equal(
+    isAdditiveUp(
+      migration('DROP\n  INDEX "old_idx"; -- destructive-reviewed: replaced'),
+    ),
+    true,
+  );
+  // The marker covers its own statement only.
+  assert.equal(
+    isAdditiveUp(
+      migration(
+        'DROP INDEX "a_idx"; -- destructive-reviewed: obsolete\nDROP\n  TABLE "b";',
+      ),
+    ),
+    false,
+  );
   assert.equal(
     isAdditiveUp(
       migration(

@@ -1,15 +1,9 @@
 import type { FormStatusState } from "@/components/ui/FormStatus";
+import type { SubmissionMessages } from "@/content/contactContent";
 import type { ContactFieldErrors } from "./contact-validation";
 
-/** Texts of the submit button and of the result announcements. */
-export type SubmissionMessages = {
-  submit: string;
-  submitting: string;
-  success: string;
-  error: string;
-  configurationError: string;
-  submitAnother: string;
-};
+/** Texts of the submit button and of the result announcements (content layer). */
+export type { SubmissionMessages };
 
 export type SubmissionStatus = "idle" | "loading" | "success" | "error";
 export type SubmissionErrorKind = "general" | "configuration" | null;
@@ -103,6 +97,11 @@ type SubmitContactFormOptions = {
   fetch: (url: string, init: RequestInit) => Promise<{ ok: boolean }>;
   /** Shared across submits: true while a request is on its way. */
   inFlight: { current: boolean };
+  /**
+   * Called as soon as the form is valid, before anything is sent, so stale
+   * field messages are gone before the result is shown (FRONTEND-3).
+   */
+  onValid?: () => void;
   /** Called when the request starts, to show the "sending" state. */
   onLoading: () => void;
 };
@@ -127,12 +126,14 @@ export async function submitContactForm({
   formId,
   fetch,
   inFlight,
+  onValid,
   onLoading,
 }: SubmitContactFormOptions): Promise<SubmissionOutcome> {
   if (inFlight.current) return { kind: "ignored" };
 
   const errors = validate();
   if (Object.keys(errors).length > 0) return { kind: "invalid", errors };
+  onValid?.();
 
   const formData = readFormData();
 

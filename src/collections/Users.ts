@@ -3,6 +3,7 @@ import {
   type CollectionBeforeChangeHook,
   type CollectionBeforeOperationHook,
   type CollectionConfig,
+  type Where,
 } from "payload";
 import { PublicRequestRefusal, isAdmin } from "@/lib/payloadAccess";
 import {
@@ -95,10 +96,30 @@ const PASSWORD_OPERATIONS: ReadonlySet<string> = new Set([
   "update",
 ]);
 
+/**
+ * A bulk operation's `where`: field conditions (records) and `and` / `or`
+ * lists of nested conditions.
+ */
+function isWhere(value: unknown): value is Where {
+  return (
+    isRecord(value) &&
+    Object.values(value).every(
+      (condition) =>
+        isRecord(condition) ||
+        (Array.isArray(condition) && condition.every(isWhere)),
+    )
+  );
+}
+
 type BeforeOperationRequest =
   Parameters<CollectionBeforeOperationHook>[0]["req"];
 
-/** The addresses a new password must not repeat: the submitted and the stored one. */
+/**
+ * The addresses a new password must not repeat: the submitted one and the
+ * stored one of every account the operation changes. A bulk update (`where`,
+ * no `id`) reads the matching accounts with the caller's own access, so the
+ * check cannot reveal an account the caller could not update anyway.
+ */
 async function getAccountEmails(
   args: Record<string, unknown>,
   data: Record<string, unknown>,
@@ -118,6 +139,23 @@ async function getAccountEmails(
     });
     if (existing !== null && typeof existing.email === "string") {
       emails.push(existing.email);
+    }
+  } else if (isWhere(args.where)) {
+    // Same access as the operation: a Local API call that overrides access
+    // (a script, no user) reads every match; a REST or admin call reads only
+    // what the caller may see. A caller without read access gets no rows here
+    // (not an error), and the update itself then refuses it.
+    const matching = await req.payload.find({
+      collection: "users",
+      depth: 0,
+      disableErrors: true,
+      overrideAccess: args.overrideAccess === true,
+      pagination: false,
+      req,
+      where: args.where,
+    });
+    for (const account of matching.docs) {
+      if (typeof account.email === "string") emails.push(account.email);
     }
   }
 

@@ -1,3 +1,4 @@
+import { homeCrumb } from "@/content/home-crumb";
 import type { SiteLocale } from "@/content/locales";
 
 /** Locale of the built-in texts of the UI primitives: the site's locales. */
@@ -6,7 +7,7 @@ export type UiLocale = SiteLocale;
 export type UiStrings = {
   skipToContent: string;
   breadcrumb: string;
-  /** First breadcrumb item: the home page of the locale. */
+  /** First breadcrumb item: the home page of the locale (`homeCrumb`). */
   home: string;
   homePath: string;
   pagination: string;
@@ -51,8 +52,8 @@ export type UiStrings = {
 const tr: UiStrings = {
   skipToContent: "İçeriğe geç",
   breadcrumb: "Konum",
-  home: "Ana sayfa",
-  homePath: "/",
+  home: homeCrumb.tr.name,
+  homePath: homeCrumb.tr.path,
   pagination: "Sayfalar",
   previousPage: "Önceki sayfa",
   nextPage: "Sonraki sayfa",
@@ -105,8 +106,8 @@ const tr: UiStrings = {
 const en: UiStrings = {
   skipToContent: "Skip to content",
   breadcrumb: "Breadcrumb",
-  home: "Home",
-  homePath: "/en",
+  home: homeCrumb.en.name,
+  homePath: homeCrumb.en.path,
   pagination: "Pages",
   previousPage: "Previous page",
   nextPage: "Next page",

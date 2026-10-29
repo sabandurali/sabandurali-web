@@ -20,7 +20,7 @@ import {
   imageMediaFilter,
   validateOptionalSiteCanonical,
 } from "@/collections/validation";
-import { getText, isRecord } from "@/content/guards";
+import { getRelationshipID, getText, isRecord } from "@/content/guards";
 import {
   adminOnly,
   adminOrEditor,
@@ -31,12 +31,6 @@ import {
 import { createRevalidationHooks } from "@/lib/revalidation";
 
 const revalidation = createRevalidationHooks("books");
-
-function getRelationshipID(value: unknown): string | null {
-  if (typeof value === "string") return value;
-  if (isRecord(value) && typeof value.id === "string") return value.id;
-  return null;
-}
 
 function throwBookValidationError(
   req: PayloadRequest,

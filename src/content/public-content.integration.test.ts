@@ -504,6 +504,9 @@ test("photo lists paginate, count and filter translated photos in the database",
 
   const english = await photos.listPublished("en");
   assert.deepEqual(slugs(english.photos), ["frame-100", "frame-101"]);
+  // The list pages' "anything published" check (SEO-PERF-4) against the DB.
+  assert.equal(await photos.hasPublished("en"), true);
+  assert.equal(await photos.hasPublished("tr"), true);
   assert.equal(english.totalItems, 2);
   assert.equal(english.totalPages, 1);
   assert.deepEqual(slugs(english.collections), ["istanbul-en"]);

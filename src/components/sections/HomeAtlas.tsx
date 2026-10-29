@@ -28,6 +28,11 @@ export type HomeFeaturedGuide = {
 type HomeAtlasProps = {
   locale: SiteLocale;
   featured: HomeFeaturedGuide | null;
+  /**
+   * Shown instead of "no guide published yet" when the guide summaries
+   * could not be read (ARCHITECTURE-1): a failed query is not an empty one.
+   */
+  featuredUnavailable?: string | null;
 };
 
 const sideLabel = {
@@ -114,9 +119,14 @@ function FeaturedGuideCard({
 /**
  * The 39-district atlas: heading, the full tile map with the featured
  * guide, then the featured guide's card (or an explicit empty state when
- * no guide is published).
+ * no guide is published, or a "temporarily unavailable" one when the
+ * summaries could not be read).
  */
-export default function HomeAtlas({ locale, featured }: HomeAtlasProps) {
+export default function HomeAtlas({
+  locale,
+  featured,
+  featuredUnavailable = null,
+}: HomeAtlasProps) {
   const copy = homeCopy[locale].atlas;
   const headingId = "istanbul-atlasi-baslik";
 
@@ -152,7 +162,9 @@ export default function HomeAtlas({ locale, featured }: HomeAtlasProps) {
 
       <div className="mt-10 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] lg:items-start lg:gap-10">
         <h3 className="m-0 type-h3">{copy.featuredHeading}</h3>
-        {featured === null ? (
+        {featured === null && featuredUnavailable !== null ? (
+          <EmptyState>{featuredUnavailable}</EmptyState>
+        ) : featured === null ? (
           <EmptyState note={copy.featuredEmptyNote}>
             {copy.featuredEmpty}
           </EmptyState>

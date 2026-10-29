@@ -127,3 +127,12 @@ test("the route matcher rejects unknown and mistyped routes", () => {
   assert.equal(routeExists(routes, "/admin/anything"), false);
   assert.equal(routeExists(routes, "/makaleler/ornek"), false);
 });
+
+test("the guide states the password rule enforced by the Users collection", async () => {
+  const { MIN_PASSWORD_LENGTH } = await import("../../src/collections/Users");
+  assert.match(
+    ADMIN_HELP_GUIDE,
+    new RegExp(`en az ${MIN_PASSWORD_LENGTH} karakter olmalıdır`),
+  );
+  assert.match(ADMIN_HELP_GUIDE, /e-posta adresiyle .*aynı olamaz/);
+});

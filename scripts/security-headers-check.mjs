@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { isReadyAdminLogin } from "./security-headers-expectations.mjs";
 import {
+  adminRouteSecurityHeaders,
   publicRouteSecurityHeaders,
   securityHeaders,
 } from "../src/lib/securityHeaders.ts";
@@ -19,13 +20,16 @@ assert.ok(
 );
 
 const optimizedImage = "/_next/image?url=%2Fbrand%2Fsite-og.jpg&w=640&q=75";
-// `publicRoute`: the report-only CSP is expected (never on the admin, the
-// API or the image optimizer).
+// `publicRoute`: the public report-only CSP is expected; `admin`: the admin
+// report-only CSP is expected instead. The API and the image optimizer get
+// neither.
 const checks = [
   { path: "/", status: 200, publicRoute: true },
   { path: "/en", status: 200, publicRoute: true },
   { path: "/iletisim", status: 200, publicRoute: true },
   { path: "/admin/login", status: 200, admin: true },
+  // The admin root streams its redirect, so it answers 200 as well.
+  { path: "/admin", status: 200, adminRoot: true },
   { path: "/public-missing-security-test", status: 404, publicRoute: true },
   { path: "/brand/site-og.jpg", status: 200, image: true, publicRoute: true },
   { path: optimizedImage, status: 200, image: true, optimizer: true },
@@ -38,6 +42,7 @@ for (const {
   optimizer = false,
   publicRoute = false,
   admin = false,
+  adminRoot = false,
 } of checks) {
   const response = await fetch(new URL(path, base), { redirect: "manual" });
   assert.equal(response.status, status, path);
@@ -48,10 +53,19 @@ for (const {
     assert.equal(response.headers.get(key), value, `${key} on ${path}`);
   }
 
-  for (const { key, value } of publicRouteSecurityHeaders) {
+  // Both lists hold the same header name with different values.
+  const reportOnly = publicRoute
+    ? publicRouteSecurityHeaders
+    : admin || adminRoot
+      ? adminRouteSecurityHeaders
+      : [];
+  for (const { key } of [
+    ...publicRouteSecurityHeaders,
+    ...adminRouteSecurityHeaders,
+  ]) {
     assert.equal(
       response.headers.get(key),
-      publicRoute ? value : null,
+      reportOnly.find((header) => header.key === key)?.value ?? null,
       `${key} on ${path}`,
     );
   }
@@ -94,7 +108,10 @@ console.log("PASS optimizer refuses query strings on local images");
 const users = await fetch(new URL("/api/users", base));
 assert.equal(users.status, 403, "Anonymous users must not list accounts.");
 assert.equal(users.headers.get("x-content-type-options"), "nosniff");
-for (const { key } of publicRouteSecurityHeaders) {
+for (const { key } of [
+  ...publicRouteSecurityHeaders,
+  ...adminRouteSecurityHeaders,
+]) {
   assert.equal(users.headers.get(key), null, `${key} on /api/users`);
 }
 await users.body?.cancel();

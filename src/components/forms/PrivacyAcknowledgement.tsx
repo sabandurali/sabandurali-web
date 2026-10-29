@@ -3,13 +3,10 @@ import TextLink from "@/components/ui/TextLink";
 import { cx } from "@/components/ui/cx";
 import { getUiStrings } from "@/components/ui/strings";
 import { privacyPaths } from "@/config/site";
+import type { PrivacyAcknowledgementContent } from "@/content/contactContent";
 import type { Locale } from "@/content/homeContent";
 
-export type PrivacyAcknowledgementContent = {
-  prefix: string;
-  linkLabel: string;
-  suffix: string;
-};
+export type { PrivacyAcknowledgementContent };
 
 type PrivacyAcknowledgementProps = {
   id: string;

@@ -33,6 +33,7 @@ Yalnız yetkili hesapla güvenli biçimde panele girmek ve yanlışlıkla canlı
 - Yeni kullanıcının varsayılan rolü `Editor`dır. Yalnız sistemdeki ilk hesap otomatik olarak `Admin` olur. `Admin` rolünü yalnız başka bir `Admin` verebilir.
 - Son `Admin` hesabı silinemez ve `Editor` rolüne düşürülemez; toplu düzenleme veya toplu silme de bütün `Admin` hesaplarını kaldıramaz. Bu koruma, yönetim erişiminin tamamen kaybedilmesini önler.
 - Parola sıfırlama e-postası henüz yapılandırılmamıştır; `Parolamı unuttum` isteği reddedilir. Parolasını unutan kullanıcının parolasını başka bir `Admin` panelden yeniler. Bu nedenle her zaman en az iki `Admin` hesabı bulundurun.
+- Yeni belirlenen her parola (ilk kayıt, yeni kullanıcı, profil düzenleme, sıfırlama) en az 12 karakter olmalıdır ve hesabın e-posta adresiyle ya da adresin `@` öncesindeki kısmıyla aynı olamaz. Kural karşılanmazsa panel parolayı kaydetmez ve hatayı parola alanının altında gösterir. Daha önce belirlenmiş parolalar değiştirilene kadar çalışmaya devam eder.
 - Art arda 5 başarısız girişten sonra hesap 10 dakika kilitlenir.
 - Aynı hesabı birden fazla kişinin kullanması yerine herkes için ayrı kullanıcı tercih edin.
 - İletişim veya geri bildirim formunu gerçekten göndermek dış hizmete gerçek POST isteği üretir. Formspree testi ancak açık yetki verildikten sonra yapılmalıdır; normal içerik kontrolünün parçası değildir.

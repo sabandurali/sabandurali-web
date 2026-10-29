@@ -1,6 +1,7 @@
 import "server-only";
 import { getPayload, type Where } from "payload";
 import config from "@payload-config";
+import { hasPublicDocument } from "@/content/photos/has-public-document";
 import { mapPayloadPhoto } from "@/content/photos/payload-photo-mapper";
 import {
   collectPhotoFacets,
@@ -242,20 +243,17 @@ export class PayloadPublicPhotoRepository {
 
   /**
    * Whether a language has a public photo: the newest public document,
-   * one one-row query unless the mapper rejects it.
+   * one one-row query unless the mapper rejects it; then the rest is read
+   * in larger pages (`hasPublicDocument`).
    */
   async hasPublished(
     locale: PhotoLanguage,
     now: Date = new Date(),
   ): Promise<boolean> {
-    const photos = await this.collectUpTo(
-      locale,
-      createPublicPhotoConditions(now),
-      1,
-      1,
-      now,
+    const conditions = createPublicPhotoConditions(now);
+    return hasPublicDocument((page, pageSize) =>
+      this.findPage(locale, conditions, page, pageSize, now),
     );
-    return photos.length > 0;
   }
 
   async listByDistrict(

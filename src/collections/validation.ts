@@ -1,6 +1,6 @@
 import type { Where } from "payload";
 import { siteUrl } from "@/config/site";
-import { getText, isRecord } from "@/content/guards";
+import { getText } from "@/content/guards";
 import { getSafeHref } from "@/content/links";
 
 /**
@@ -90,24 +90,8 @@ export function validateOptionalSiteCanonical(value: unknown): true | string {
 }
 
 /**
- * A Lexical value has visible content when a text node has non-blank text or
- * an upload node is present. Mirrors what the public article mapper requires.
+ * The publish rule for rich text is the public rule itself
+ * (`@/content/rich-text/public-rich-text`), so the admin never accepts a
+ * body the public mapper would drop.
  */
-export function hasMeaningfulRichText(value: unknown): boolean {
-  const hasMeaningfulNode = (node: unknown): boolean => {
-    if (!isRecord(node)) return false;
-    if (node.type === "text") return getText(node.text) !== null;
-    if (node.type === "upload") return true;
-
-    return (
-      Array.isArray(node.children) && node.children.some(hasMeaningfulNode)
-    );
-  };
-
-  return (
-    isRecord(value) &&
-    isRecord(value.root) &&
-    Array.isArray(value.root.children) &&
-    value.root.children.some(hasMeaningfulNode)
-  );
-}
+export { hasMeaningfulRichText } from "@/content/rich-text/public-rich-text";

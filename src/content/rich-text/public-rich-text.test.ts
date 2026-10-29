@@ -59,9 +59,6 @@ test("ARCHITECTURE-5: public content types never import Payload document types",
   }
 });
 
-test("ARCHITECTURE-3: the CMS publish rule and the public rule agree", () => {
-  // collections/validation.ts still carries its own copy (owned by the CMS
-  // stream); until it imports this module, any drift fails here.
-  for (const [name, value] of cases)
-    assert.equal(cmsPublishRule(value), hasMeaningfulRichText(value), name);
+test("ARCHITECTURE-3: the CMS publish rule is the public rule", () => {
+  assert.equal(cmsPublishRule, hasMeaningfulRichText);
 });

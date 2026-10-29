@@ -256,6 +256,37 @@ test("users: every way of setting a password needs 12 characters that are not th
   );
   assert.equal(await countUsers(), 1);
 
+  // A bulk update (`where`, no `id`) compares with the stored email of every
+  // matching account. Through the Local API (access overridden, no user) the
+  // lookup must not fail on the read access, and through the caller's own
+  // access it reads only the accounts that caller may see.
+  const byEmail = { email: { equals: "first@example.com" } };
+  await assert.rejects(
+    payload.update({
+      collection: "users",
+      data: { password: "first@example.com" },
+      where: byEmail,
+    }),
+    refusedPassword(/e-posta adresiyle aynı/),
+  );
+  await assert.rejects(
+    payload.update({
+      collection: "users",
+      data: { password: "first@example.com" },
+      overrideAccess: false,
+      req: { user: { ...firstUser, collection: "users" } },
+      where: byEmail,
+    }),
+    refusedPassword(/e-posta adresiyle aynı/),
+  );
+  const bulk = await payload.update({
+    collection: "users",
+    data: { password: "Correct-Horse-Bulk" },
+    where: byEmail,
+  });
+  assert.equal(bulk.errors.length, 0);
+  assert.equal(bulk.docs.length, 1);
+
   // Reset with a valid token: the short password is refused, the token stays.
   const token = "integration-reset-token";
   await payload.db.updateOne({

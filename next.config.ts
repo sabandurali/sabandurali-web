@@ -9,7 +9,9 @@ import {
   getVercelBlobStoreHostname,
 } from "./src/lib/payloadInfrastructure";
 import {
+  ADMIN_ROUTES_SOURCE,
   PUBLIC_ROUTES_SOURCE,
+  adminRouteSecurityHeaders,
   publicRouteSecurityHeaders,
   securityHeaders,
 } from "./src/lib/securityHeaders";
@@ -43,6 +45,11 @@ const nextConfig: NextConfig = {
         // Report-only: blocks nothing on the public site (docs/SECURITY.md).
         source: PUBLIC_ROUTES_SOURCE,
         headers: [...publicRouteSecurityHeaders],
+      },
+      {
+        // Report-only as well: the admin policy adds Monaco's CDN.
+        source: ADMIN_ROUTES_SOURCE,
+        headers: [...adminRouteSecurityHeaders],
       },
     ];
   },

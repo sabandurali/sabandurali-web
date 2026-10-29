@@ -288,6 +288,60 @@ test("passwords need 12 characters and must not repeat the email", async () => {
   });
 });
 
+test("a bulk password update checks the stored email of every matching account", async () => {
+  const lookups: unknown[] = [];
+  const req = {
+    payload: {
+      find: async (options: Record<string, unknown>) => {
+        lookups.push(options);
+        return {
+          docs: [
+            { email: "first.person@example.com" },
+            { email: "second.person@example.com" },
+          ],
+        };
+      },
+    },
+  };
+  const run = async (password: string) =>
+    enforcePasswordPolicy({
+      args: { data: { password }, where: { role: { equals: "editor" } } },
+      collection: {},
+      context: {},
+      operation: "update",
+      req,
+    } as unknown as Parameters<CollectionBeforeOperationHook>[0]);
+
+  await assert.rejects(
+    run("second.person"),
+    (error: unknown) =>
+      error instanceof ValidationError &&
+      error.data.errors.some(
+        (entry) =>
+          entry.path === "password" &&
+          /e-posta adresiyle aynı/.test(entry.message),
+      ),
+  );
+  assert.deepEqual(await run("Correct-Horse-Battery-1"), {
+    data: { password: "Correct-Horse-Battery-1" },
+    where: { role: { equals: "editor" } },
+  });
+  assert.equal(lookups.length, 2);
+  // The lookup keeps the caller's access and reads the same accounts.
+  assert.deepEqual(
+    { ...(lookups[0] as Record<string, unknown>), req: undefined },
+    {
+      collection: "users",
+      depth: 0,
+      disableErrors: true,
+      overrideAccess: false,
+      pagination: false,
+      req: undefined,
+      where: { role: { equals: "editor" } },
+    },
+  );
+});
+
 test("only admins delete content that keeps a version history", () => {
   for (const collection of [Articles, Books, Pages, Photos, DistrictGuides]) {
     assert.equal(
@@ -1090,5 +1144,26 @@ test("CORRECTNESS-5: publishing a district guide checks normalized sources", asy
     publish([{ ...source, sections: "summary history geography" }]),
     (error: unknown) =>
       error instanceof Error && /kontrol edilmiş kaynak/.test(error.message),
+  );
+});
+
+test("ARCHITECTURE-3: book collections use the shared content guards, not local copies", () => {
+  const read = (file: string) =>
+    readFileSync(
+      path.join(path.dirname(fileURLToPath(import.meta.url)), file),
+      "utf8",
+    );
+  const books = read("Books.ts");
+  assert.doesNotMatch(books, /function getRelationshipID\b/);
+  assert.match(books, /\bgetRelationshipID\b[\s\S]*?from "@\/content\/guards"/);
+
+  const publication = read("bookPublication.ts");
+  assert.doesNotMatch(
+    publication,
+    /function (?:getNumber|getPositiveNumber)\b/,
+  );
+  assert.match(
+    publication,
+    /\bgetFiniteNumber\b[\s\S]*?from "@\/content\/guards"/,
   );
 });

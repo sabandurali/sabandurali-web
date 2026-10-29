@@ -3,13 +3,7 @@ import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
-import type { SubmissionMessages as FormSubmissionMessages } from "@/components/forms/contact-submission";
-import type { PrivacyAcknowledgementContent as FormPrivacyContent } from "@/components/forms/PrivacyAcknowledgement";
 import { getUiStrings } from "@/components/ui/strings";
-import type {
-  PrivacyAcknowledgementContent,
-  SubmissionMessages,
-} from "./contactContent";
 import { homeCrumb } from "./home-crumb";
 import { siteLocales } from "./locales";
 
@@ -46,13 +40,25 @@ test("ARCHITECTURE-7: the home crumb matches the UI breadcrumb", () => {
   }
 });
 
-// Until the form components import these types from contactContent.ts,
-// typecheck fails here if the two shapes drift apart.
-type Same<A, B> = [A] extends [B] ? ([B] extends [A] ? true : false) : false;
-const sameMessages: Same<SubmissionMessages, FormSubmissionMessages> = true;
-const samePrivacy: Same<PrivacyAcknowledgementContent, FormPrivacyContent> =
-  true;
+test("ARCHITECTURE-7: the UI takes the home crumb and the form texts' types from the content layer", async () => {
+  const componentsDir = path.resolve(contentDir, "../components");
+  const read = (file: string) =>
+    readFile(path.join(componentsDir, file), "utf8");
 
-test("ARCHITECTURE-7: form content types keep one shape", () => {
-  assert.equal(sameMessages && samePrivacy, true);
+  const strings = await read("ui/strings.ts");
+  assert.match(strings, /from "@\/content\/home-crumb"/);
+  assert.doesNotMatch(strings, /home: "/);
+
+  for (const [file, type] of [
+    ["forms/contact-submission.ts", "SubmissionMessages"],
+    ["forms/PrivacyAcknowledgement.tsx", "PrivacyAcknowledgementContent"],
+  ] as const) {
+    const source = await read(file);
+    assert.match(
+      source,
+      new RegExp(`import type \\{ ${type} \\} from "@/content/contactContent"`),
+      file,
+    );
+    assert.doesNotMatch(source, new RegExp(`export type ${type} =`), file);
+  }
 });
