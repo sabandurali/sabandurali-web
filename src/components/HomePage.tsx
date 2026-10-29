@@ -4,6 +4,7 @@ import {
   BookReviewCardList,
   PhotoCardList,
 } from "@/components/pages/PublicationCardLists";
+import BackToTop from "@/components/layout/BackToTop";
 import Header from "@/components/layout/Header";
 import About from "@/components/sections/About";
 import ContactCallToAction from "@/components/sections/ContactCallToAction";
@@ -194,6 +195,7 @@ export default async function HomePage({
         />
       </main>
       <Footer id={content.anchors.contact} content={content.footer} />
+      <BackToTop label={content.backToTopLabel} />
     </div>
   );
 }
