@@ -1,6 +1,7 @@
-import Image from "next/image";
-import type { FocusAreaIcon, FocusAreasContent } from "@/content/homeContent";
 import type { ReactNode } from "react";
+import { cx } from "@/components/ui/cx";
+import UiLink from "@/components/ui/UiLink";
+import type { FocusAreaIcon } from "@/content/homeContent";
 
 export function AreaIcon({
   icon,
@@ -11,6 +12,7 @@ export function AreaIcon({
 }) {
   const commonProps = {
     "aria-hidden": true,
+    focusable: "false" as const,
     className,
     fill: "none",
     stroke: "currentColor",
@@ -74,11 +76,6 @@ export function AreaIcon({
   );
 }
 
-type FocusAreasProps = {
-  id: string;
-  content: FocusAreasContent;
-};
-
 export type FocusAreaCardItem = {
   id: string;
   icon: FocusAreaIcon;
@@ -90,163 +87,82 @@ export type FocusAreaCardItem = {
 
 type FocusAreaCardsProps = {
   cards: ReadonlyArray<FocusAreaCardItem>;
+  /** Optional media at the top of a card (an image in CMS page blocks). */
   renderVisual?: (index: number, featured: boolean) => ReactNode;
-  variant?: "default" | "home";
+  headingLevel?: 3 | 4;
+  className?: string;
 };
 
-const cardStyle =
-  "relative flex min-h-72 min-w-0 flex-col border-t border-[var(--accent-border-soft)] py-8 pr-3 transition-colors hover:border-accent motion-reduce:transition-none";
-
-const homeImages = [
-  "/workspaces/gayrimenkul-istanbul.jpg",
-  "/workspaces/satis-muzakere.jpg",
-  "/workspaces/arastirma-analiz.jpg",
-  "/workspaces/yapay-zeka-teknoloji.jpg",
-  "/workspaces/kitaplar-ogrenme.jpg",
-  "/workspaces/fotograf.jpg",
-];
-
-function FocusAreaCard({
-  card,
-  visual,
-  variant = "default",
-}: {
-  card: FocusAreaCardItem;
-  visual?: ReactNode;
-  variant?: "default" | "home";
-}) {
-  const isHome = variant === "home";
-  const imageIndex = Number(card.id.match(/-(\d+)$/)?.[1] ?? 0);
-
-  if (isHome) {
-    return (
-      <a
-        href={card.linkHref ?? "#"}
-        className="group relative flex min-h-[10.75rem] min-w-0 overflow-hidden rounded-lg bg-background p-4 text-left shadow-lg shadow-black/15 transition-transform hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus-ring)] sm:min-h-[12.5rem] sm:p-5 lg:min-h-[14rem]"
-      >
-        <Image
-          src={homeImages[imageIndex] ?? homeImages[0]}
-          alt=""
-          aria-hidden="true"
-          fill
-          sizes="(min-width: 1280px) 16vw, (min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
-          className="object-cover"
-        />
-        <span
-          aria-hidden="true"
-          className="absolute inset-0 bg-[linear-gradient(to_top,rgba(4,10,18,0.96)_0%,rgba(4,10,18,0.72)_38%,rgba(4,10,18,0.12)_100%)]"
-        />
-        <span
-          aria-hidden="true"
-          className="absolute -right-10 top-8 size-36 rounded-full border border-accent-soft/20"
-        />
-        <span className="relative flex size-10 items-center justify-center rounded-full bg-accent-soft text-background">
-          <AreaIcon icon={card.icon} className="size-5" />
-        </span>
-        <span className="relative mt-auto block pr-2">
-          <span className="block font-serif text-[1.25rem] font-semibold leading-tight text-white sm:text-[1.35rem]">
-            {card.title}
-          </span>
-          <span className="mt-1.5 block text-[12px] leading-[1.35] text-ivory-soft sm:mt-2 sm:text-sm sm:leading-5">
-            {card.description}
-          </span>
-        </span>
-        <span
-          aria-hidden="true"
-          className="absolute bottom-4 right-4 flex size-8 items-center justify-center rounded-full border border-ivory/50 text-base text-ivory transition-colors group-hover:bg-accent-soft group-hover:text-background sm:bottom-5 sm:right-5 sm:size-9 sm:text-lg"
-        >
-          →
-        </span>
-      </a>
-    );
-  }
-
-  return (
-    <article className={cardStyle}>
-      {visual ?? (
-        <div className="flex size-9 items-center justify-center text-accent">
-          <AreaIcon icon={card.icon} className="size-5" />
-        </div>
-      )}
-
-      <h3 className="mt-5 font-serif text-3xl font-semibold leading-[1.08] tracking-tight">
-        {card.title}
-      </h3>
-
-      <p className="mt-4 line-clamp-3 max-w-md text-base leading-7 text-muted-dark">
-        {card.description}
-      </p>
-
-      {card.linkLabel !== null &&
-        (card.linkHref !== null ? (
-          <a
-            href={card.linkHref}
-            className="mt-auto inline-flex min-h-11 items-center self-start pt-7 text-sm font-medium text-accent-deep underline decoration-[var(--accent-border-soft)] underline-offset-4 after:absolute after:inset-0 after:content-[''] focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-[-3px] focus-visible:outline-[var(--focus-ring)]"
-          >
-            <span>
-              {card.linkLabel}
-              <span aria-hidden="true">&nbsp;→</span>
-            </span>
-          </a>
-        ) : (
-          <p className="mt-auto pt-7 text-sm font-medium">{card.linkLabel}</p>
-        ))}
-    </article>
-  );
-}
-
+/**
+ * Focus-area (workspace) cards for a light ground. A card with a link is
+ * one link: the title link's hit area covers the card, the focus ring is
+ * drawn around the card and the link label is only a visual cue. A card
+ * without a link is plain text.
+ */
 export function FocusAreaCards({
   cards,
   renderVisual,
-  variant = "default",
+  headingLevel = 3,
+  className,
 }: FocusAreaCardsProps) {
+  const Heading = headingLevel === 4 ? "h4" : "h3";
+
   return (
-    <div
-      className={
-        variant === "home"
-          ? "grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6"
-          : "grid gap-x-10 gap-y-0 md:grid-cols-2 xl:grid-cols-3"
-      }
+    <ul
+      className={cx(
+        "m-0 grid list-none gap-4 p-0 sm:grid-cols-2 xl:grid-cols-3",
+        className,
+      )}
     >
-      {cards.map((card, index) => (
-        <FocusAreaCard
-          key={card.id}
-          card={card}
-          visual={renderVisual?.(index, false)}
-          variant={variant}
-        />
-      ))}
-    </div>
-  );
-}
+      {cards.map((card, index) => {
+        const visual = renderVisual?.(index, false);
+        const href = card.linkHref;
 
-export default function FocusAreas({ id, content }: FocusAreasProps) {
-  const cards = content.cards.map((area, index) => ({
-    id: `${area.title}-${index}`,
-    icon: area.icon,
-    title: area.title,
-    description: area.description,
-    linkLabel: area.linkLabel,
-    linkHref: area.linkHref ?? null,
-  }));
-
-  return (
-    <section id={id} className="scroll-mt-24 bg-ivory-soft text-ink">
-      <div className="mx-auto max-w-[1440px] px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:pb-14 lg:pt-4">
-        <div className="mx-auto mb-5 max-w-3xl text-center lg:mb-7">
-          <h2 className="relative inline-block pb-2 text-[1.7rem] font-semibold tracking-tight after:absolute after:bottom-0 after:left-1/2 after:h-px after:w-10 after:-translate-x-1/2 after:bg-accent sm:pb-3 sm:text-4xl">
-            {content.title}
-          </h2>
-
-          {content.description && (
-            <p className="mx-auto mt-4 max-w-2xl text-sm leading-6 text-muted-dark sm:mt-6 sm:text-base sm:leading-7">
-              {content.description}
-            </p>
-          )}
-        </div>
-
-        <FocusAreaCards cards={cards} variant="home" />
-      </div>
-    </section>
+        return (
+          <li key={card.id} className="flex min-w-0">
+            <article
+              className={cx(
+                "relative flex w-full min-w-0 flex-col gap-3 rounded-card border border-ink bg-land p-5 text-ink",
+                href !== null &&
+                  "hover:bg-white has-[[data-card-link]:focus-visible]:focus-ring",
+              )}
+            >
+              {visual ?? (
+                <span
+                  aria-hidden="true"
+                  className="flex size-11 items-center justify-center rounded-tile border border-tile-edge text-ink"
+                >
+                  <AreaIcon icon={card.icon} className="size-6" />
+                </span>
+              )}
+              <Heading className="m-0 type-h3 break-words">
+                {href !== null ? (
+                  <UiLink
+                    href={href}
+                    data-card-link=""
+                    className="text-ink no-underline decoration-2 underline-offset-[5px] after:absolute after:inset-0 after:content-[''] hover:underline focus-visible:outline-none focus-visible:[box-shadow:none]"
+                  >
+                    {card.title}
+                  </UiLink>
+                ) : (
+                  card.title
+                )}
+              </Heading>
+              <p className="m-0 type-small text-ink-muted">
+                {card.description}
+              </p>
+              {card.linkLabel !== null && href !== null ? (
+                <span
+                  aria-hidden="true"
+                  className="mt-auto pt-1 text-small font-bold underline decoration-signal decoration-2 underline-offset-[5px]"
+                >
+                  {card.linkLabel}
+                </span>
+              ) : null}
+            </article>
+          </li>
+        );
+      })}
+    </ul>
   );
 }
