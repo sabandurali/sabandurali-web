@@ -58,3 +58,26 @@ test("CI runs the public accessibility check after the district routes", () => {
   for (const [, url] of workflow.matchAll(/A11Y_TEST_URL:\s*(\S+)/g))
     assert.equal(url, "http://127.0.0.1:3101");
 });
+
+test("CI keeps the e2e evidence as a short-lived, SHA-pinned artifact", () => {
+  const start = workflow.indexOf("- name: Upload e2e evidence");
+  assert.ok(start >= 0, "the upload step is missing");
+  const step = workflow.slice(start).split(/\n\s*- name: /)[0];
+  // Uploaded on failure too: that is when the evidence is needed.
+  assert.match(step, /if: always\(\)/);
+  assert.match(step, /uses: actions\/upload-artifact@[0-9a-f]{40} # v\d+/);
+  for (const directory of [
+    "content-trust-routes",
+    "istanbul-39-acceptance",
+    "public-a11y",
+  ])
+    assert.ok(
+      step.includes(`\${{ runner.temp }}/${directory}`),
+      `${directory} is not uploaded`,
+    );
+  const retention = /retention-days:\s*(\d+)/.exec(step)?.[1];
+  assert.ok(retention && Number(retention) <= 14, "retention is short");
+  // Every action, including this one, is pinned to a full commit SHA.
+  for (const [, ref] of workflow.matchAll(/uses:\s*\S+@(\S+)/g))
+    assert.match(ref, /^[0-9a-f]{40}$/);
+});
