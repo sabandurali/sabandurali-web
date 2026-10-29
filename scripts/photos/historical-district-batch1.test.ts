@@ -10,6 +10,7 @@ import {
   applyHistoricalPlan,
   assertHistoricalEnvironment,
   buildHistoricalPlan,
+  configurationStatus,
   historicalAlt,
   historicalBatch1Districts,
   historicalCollection,
@@ -362,18 +363,62 @@ test("O: apply approvals are separate and SHA-bound", () => {
   assert.doesNotThrow(() => assertHistoricalEnvironment(base, "dry-run"));
   assert.throws(
     () => assertHistoricalEnvironment(base, "apply"),
-    /import and PITR approvals/,
+    /import and PITR approvals bound to the deployed SHA/,
   );
-  assert.doesNotThrow(() =>
-    assertHistoricalEnvironment(
-      {
-        ...base,
-        PRODUCTION_HISTORICAL_PHOTO_BATCH1_IMPORT_APPROVED: "true",
-        PRODUCTION_HISTORICAL_PHOTO_BATCH1_PITR_CONFIRMED: "true",
-      },
-      "apply",
-    ),
+  const approved = {
+    ...base,
+    PRODUCTION_HISTORICAL_PHOTO_BATCH1_IMPORT_APPROVED_SHA: sha,
+    PRODUCTION_HISTORICAL_PHOTO_BATCH1_PITR_CONFIRMED_SHA: sha,
+  };
+  assert.doesNotThrow(() => assertHistoricalEnvironment(approved, "apply"));
+  assert.deepEqual(
+    {
+      import: configurationStatus(approved).IMPORT_APPROVAL,
+      pitr: configurationStatus(approved).PITR_CONFIRMATION,
+      retired: configurationStatus(approved).RETIRED_BOOLEAN_APPROVALS,
+    },
+    { import: "PRESENT_VALID", pitr: "PRESENT_VALID", retired: "ABSENT" },
   );
+
+  // A PITR confirmation or import approval left over from another commit
+  // approves nothing: re-approving the dry-run alone is not enough.
+  const otherSha = "c".repeat(40);
+  for (const stale of [
+    { PRODUCTION_HISTORICAL_PHOTO_BATCH1_PITR_CONFIRMED_SHA: otherSha },
+    { PRODUCTION_HISTORICAL_PHOTO_BATCH1_IMPORT_APPROVED_SHA: otherSha },
+    { PRODUCTION_HISTORICAL_PHOTO_BATCH1_PITR_CONFIRMED_SHA: "" },
+  ]) {
+    assert.throws(
+      () => assertHistoricalEnvironment({ ...approved, ...stale }, "apply"),
+      /bound to the deployed SHA/,
+    );
+  }
+  assert.equal(
+    configurationStatus({
+      ...approved,
+      PRODUCTION_HISTORICAL_PHOTO_BATCH1_PITR_CONFIRMED_SHA: otherSha,
+    }).PITR_CONFIRMATION,
+    "PRESENT_INVALID",
+  );
+
+  // The retired boolean approvals block every mode, even next to valid SHAs.
+  for (const retired of [
+    { PRODUCTION_HISTORICAL_PHOTO_BATCH1_IMPORT_APPROVED: "true" },
+    { PRODUCTION_HISTORICAL_PHOTO_BATCH1_PITR_CONFIRMED: "true" },
+    { PRODUCTION_HISTORICAL_PHOTO_BATCH1_PITR_CONFIRMED: "false" },
+  ]) {
+    for (const mode of ["dry-run", "apply", "verify"] as const) {
+      assert.throws(
+        () => assertHistoricalEnvironment({ ...approved, ...retired }, mode),
+        /retired boolean approvals/,
+      );
+    }
+    assert.equal(
+      configurationStatus({ ...approved, ...retired })
+        .RETIRED_BOOLEAN_APPROVALS,
+      "PRESENT_INVALID",
+    );
+  }
   assert.throws(
     () =>
       assertHistoricalEnvironment(

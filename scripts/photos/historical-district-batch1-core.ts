@@ -511,6 +511,13 @@ export function assertHistoricalEnvironment(
       "Production PostgreSQL and Vercel Blob configuration is required.",
     );
   }
+  const retired = retiredHistoricalApprovalVariables(env, batchConfig);
+  if (retired.length > 0) {
+    throw new HistoricalBatch1Error(
+      "approval_failed",
+      `${batchConfig.label} refuses retired boolean approvals; remove ${retired.join(", ")}.`,
+    );
+  }
   const shaBound =
     env.VERCEL === "1" &&
     env.VERCEL_ENV === "production" &&
@@ -524,16 +531,48 @@ export function assertHistoricalEnvironment(
       `${batchConfig.label} requires SHA-bound Production approval.`,
     );
   }
+  // Apply needs its own import approval and a PITR confirmation, each bound to
+  // the deployed commit like the migration gate (PROJECT-STATE §K rules 4-5):
+  // approving a later commit means verifying PITR again.
   if (
     mode === "apply" &&
-    (env[`${batchConfig.envPrefix}_IMPORT_APPROVED`] !== "true" ||
-      env[`${batchConfig.envPrefix}_PITR_CONFIRMED`] !== "true")
+    (env[`${batchConfig.envPrefix}_IMPORT_APPROVED_SHA`] !==
+      env.VERCEL_GIT_COMMIT_SHA ||
+      env[`${batchConfig.envPrefix}_PITR_CONFIRMED_SHA`] !==
+        env.VERCEL_GIT_COMMIT_SHA)
   ) {
     throw new HistoricalBatch1Error(
       "approval_failed",
-      `${batchConfig.label} apply requires import and PITR approvals.`,
+      `${batchConfig.label} apply requires import and PITR approvals bound to the deployed SHA.`,
     );
   }
+}
+
+/**
+ * The boolean `<prefix>_IMPORT_APPROVED` and `<prefix>_PITR_CONFIRMED` are
+ * retired, like the build's boolean `PRODUCTION_PITR_CONFIRMED` (§K.1): a
+ * forgotten `true` would approve every later commit. The importer refuses to
+ * run in any mode while one of them is still set.
+ */
+export function retiredHistoricalApprovalVariables(
+  env: Readonly<Record<string, string | undefined>>,
+  batchConfig: HistoricalBatchConfig = historicalBatch1Config,
+): string[] {
+  return [
+    `${batchConfig.envPrefix}_IMPORT_APPROVED`,
+    `${batchConfig.envPrefix}_PITR_CONFIRMED`,
+  ].filter((name) => env[name] !== undefined);
+}
+
+function shaApprovalStatus(
+  env: Readonly<Record<string, string | undefined>>,
+  name: string,
+): "PRESENT_VALID" | "PRESENT_INVALID" | "MISSING" {
+  const value = env[name];
+  if (!value) return "MISSING";
+  return env.VERCEL_GIT_COMMIT_SHA && value === env.VERCEL_GIT_COMMIT_SHA
+    ? "PRESENT_VALID"
+    : "PRESENT_INVALID";
 }
 
 export function configurationStatus(
@@ -579,14 +618,18 @@ export function configurationStatus(
         env.VERCEL_GIT_COMMIT_SHA
         ? "PRESENT_VALID"
         : "PRESENT_INVALID",
-    IMPORT_APPROVAL:
-      env[`${batchConfig.envPrefix}_IMPORT_APPROVED`] === "true"
-        ? "PRESENT_VALID"
-        : "MISSING",
-    PITR_CONFIRMATION:
-      env[`${batchConfig.envPrefix}_PITR_CONFIRMED`] === "true"
-        ? "PRESENT_VALID"
-        : "MISSING",
+    IMPORT_APPROVAL: shaApprovalStatus(
+      env,
+      `${batchConfig.envPrefix}_IMPORT_APPROVED_SHA`,
+    ),
+    PITR_CONFIRMATION: shaApprovalStatus(
+      env,
+      `${batchConfig.envPrefix}_PITR_CONFIRMED_SHA`,
+    ),
+    RETIRED_BOOLEAN_APPROVALS:
+      retiredHistoricalApprovalVariables(env, batchConfig).length > 0
+        ? "PRESENT_INVALID"
+        : "ABSENT",
   };
 }
 

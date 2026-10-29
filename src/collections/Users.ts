@@ -60,6 +60,10 @@ export const Users: CollectionConfig = {
     admin: ({ req }) => Boolean(req.user),
     create: ({ req }) => isAdmin(req.user),
     delete: ({ req }) => isAdmin(req.user),
+    // Payload's default lets any signed-in user unlock any account, so an
+    // editor could reset an admin's failed-login counter between guesses and
+    // probe which emails have accounts. Only admins unlock.
+    unlock: ({ req }) => isAdmin(req.user),
     read: ({ req }) => {
       if (isAdmin(req.user)) return true;
       if (req.user) return { id: { equals: req.user.id } };
