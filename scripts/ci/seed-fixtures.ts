@@ -50,11 +50,20 @@ export function seedEnvironmentProblem(
     return "Refusing: PAYLOAD_DATABASE must be sqlite.";
   if (environment.PAYLOAD_STORAGE !== "local")
     return "Refusing: PAYLOAD_STORAGE must be local.";
-  if (
-    resolveCiSqliteFile(environment.DATABASE_URL, cwd, temporaryDirectory) ===
-    null
-  )
+  const file = resolveCiSqliteFile(
+    environment.DATABASE_URL,
+    cwd,
+    temporaryDirectory,
+  );
+  if (file === null)
     return "Refusing: DATABASE_URL must be a file: URL under .data/ or the temporary directory.";
+  // .data/ also holds the local development database (.data/payload.db):
+  // the schema push and the fixtures go only into a dedicated ci-*.db file.
+  if (
+    file.startsWith(`${path.join(cwd, ".data")}${path.sep}`) &&
+    !/^ci-[\w.-]*\.db$/.test(path.basename(file))
+  )
+    return "Refusing: under .data/ the fixtures go only into a ci-*.db file, never the local development database.";
   return null;
 }
 
@@ -110,13 +119,13 @@ export async function seedFixtures(
   const category = await payload.create({
     collection: "categories",
     locale: "tr",
-    data: { name: "CI test kategorisi", slug: "ci-test-kategorisi" } as never,
+    data: { name: "CI test kategorisi", slug: "ci-test-kategorisi" },
   });
   await payload.update({
     collection: "categories",
     id: category.id,
     locale: "en",
-    data: { name: "CI test category", slug: "ci-test-category" } as never,
+    data: { name: "CI test category", slug: "ci-test-category" },
   });
 
   const article = await payload.create({
@@ -134,7 +143,7 @@ export async function seedFixtures(
       articleType: "article",
       publishedAt: minutesAgo(120),
       _status: "published",
-    } as never,
+    },
   });
   await payload.update({
     collection: "articles",
@@ -148,7 +157,7 @@ export async function seedFixtures(
       content: articleBody("en", mediaId),
       featuredImageAlt: "CI test image: a flat coloured rectangle",
       _status: "published",
-    } as never,
+    },
   });
 
   await payload.create({
@@ -169,7 +178,7 @@ export async function seedFixtures(
       },
       publishedAt: minutesAgo(90),
       _status: "published",
-    } as never,
+    },
   });
 
   const englishBook = await payload.create({
@@ -183,7 +192,7 @@ export async function seedFixtures(
       completedAt: minutesAgo(60 * 24 * 2),
       publishedAt: minutesAgo(80),
       _status: "published",
-    } as never,
+    },
   });
   await payload.create({
     collection: "books",
@@ -197,7 +206,7 @@ export async function seedFixtures(
       completedAt: minutesAgo(60 * 24 * 2),
       publishedAt: minutesAgo(70),
       _status: "published",
-    } as never,
+    },
   });
 
   const photoCollection = await payload.create({
@@ -206,8 +215,7 @@ export async function seedFixtures(
     data: {
       title: "CI test koleksiyonu",
       slug: "ci-test-koleksiyonu",
-      _status: "published",
-    } as never,
+    },
   });
   await payload.update({
     collection: "photo-collections",
@@ -216,8 +224,7 @@ export async function seedFixtures(
     data: {
       title: "CI test collection",
       slug: "ci-test-collection",
-      _status: "published",
-    } as never,
+    },
   });
   const photo = await payload.create({
     collection: "photos",
@@ -234,7 +241,7 @@ export async function seedFixtures(
       creditLicense: "Telif yok (üretilmiş görsel)",
       publishedAt: minutesAgo(60),
       _status: "published",
-    } as never,
+    },
   });
   await payload.update({
     collection: "photos",
@@ -247,7 +254,7 @@ export async function seedFixtures(
         "A generated flat colour image for the check of the photo template.",
       altText: "CI test image: a flat coloured rectangle",
       _status: "published",
-    } as never,
+    },
   });
 
   await payload.create({
@@ -263,7 +270,7 @@ export async function seedFixtures(
       publishedAt: minutesAgo(50),
       seo: { index: false, follow: false },
       _status: "published",
-    } as never,
+    },
   });
 
   const counts: Record<string, number> = {};

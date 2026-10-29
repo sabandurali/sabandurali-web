@@ -54,7 +54,10 @@ export const fixtureImage = Object.freeze({
   sourceCopyright: `${FIXTURE_MARK} · tek renkli üretilmiş görsel, telif yok`,
 });
 
-type LexicalNode = Record<string, unknown>;
+import type { Book, Page } from "../../src/payload-types";
+
+/** A Lexical node as the generated rich-text types accept it. */
+type LexicalNode = { [k: string]: unknown; type: string; version: number };
 
 export function lexicalText(value: string, format = 0): LexicalNode {
   return {
@@ -72,8 +75,8 @@ function element(type: string, children: LexicalNode[], extra = {}) {
   return {
     type,
     children,
-    direction: "ltr",
-    format: "",
+    direction: "ltr" as const,
+    format: "" as const,
     indent: 0,
     version: 1,
     ...extra,
@@ -157,7 +160,7 @@ export function pageBlockBody(text: string) {
 }
 
 /** Layout of the page fixture: every block a standard page renders. */
-export function pageLayout(mediaId: string) {
+export function pageLayout(mediaId: string): NonNullable<Page["layout"]> {
   return [
     {
       blockType: "hero",
@@ -231,6 +234,8 @@ export function pageLayout(mediaId: string) {
 
 /** Book review fields shared by the TR and EN fixtures. */
 export function bookReviewFields(language: "tr" | "en") {
+  // `satisfies` keeps the literal types and checks every field name against
+  // the generated Book type, so a renamed field fails the typecheck.
   const tr = language === "tr";
   return {
     title: tr
@@ -283,7 +288,7 @@ export function bookReviewFields(language: "tr" | "en") {
       index: true,
       follow: true,
     },
-  };
+  } satisfies Partial<Book>;
 }
 
 /**

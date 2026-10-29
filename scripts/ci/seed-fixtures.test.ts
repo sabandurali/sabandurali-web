@@ -37,6 +37,14 @@ const local = {
 
 test("the fixtures are written only to a local SQLite file, never on Vercel", () => {
   assert.equal(seedEnvironmentProblem(local, cwd, temporary), null);
+  assert.equal(
+    seedEnvironmentProblem(
+      { ...local, DATABASE_URL: `file:${path.join(temporary, "any.db")}` },
+      cwd,
+      temporary,
+    ),
+    null,
+  );
   for (const [name, environment] of Object.entries({
     vercel: { ...local, VERCEL: "1" },
     vercelEnv: { ...local, VERCEL_ENV: "preview" },
@@ -47,6 +55,8 @@ test("the fixtures are written only to a local SQLite file, never on Vercel", ()
       DATABASE_URL: "postgres://user@ep-example.neon.tech/db",
     },
     outside: { ...local, DATABASE_URL: "file:./payload.db" },
+    localDevelopment: { ...local, DATABASE_URL: "file:./.data/payload.db" },
+    nestedLocal: { ...local, DATABASE_URL: "file:./.data/sub/payload.db" },
     missing: { ...local, DATABASE_URL: undefined },
   }))
     assert.match(
