@@ -15,7 +15,10 @@ import test from "node:test";
  * foreign key are not statements and do not match.
  */
 const DESTRUCTIVE_STATEMENTS: readonly RegExp[] = [
-  /\bDROP\s+(?:TABLE|COLUMN|TYPE|CONSTRAINT|INDEX|SCHEMA|VIEW|MATERIALIZED\s+VIEW|SEQUENCE|FUNCTION|TRIGGER)\b/i,
+  // Every DROP except relaxing a column (`DROP NOT NULL`, `DROP DEFAULT`):
+  // Postgres also drops a column without the COLUMN keyword
+  // (`ALTER TABLE "a" DROP "b"`), and extensions, policies or domains.
+  /\bDROP\b(?!\s+(?:NOT\s+NULL|DEFAULT)\b)/i,
   /\bTRUNCATE\b/i,
   /\bDELETE\s+FROM\b/i,
   /\bRENAME\b/i,
@@ -125,6 +128,12 @@ test("drops, renames, type changes and data rewrites are refused", () => {
     'DROP INDEX IF EXISTS "a_b_idx";',
     'DROP SCHEMA "old" CASCADE;',
     'DROP VIEW "a_view";',
+    'ALTER TABLE "a" DROP "b";',
+    'ALTER TABLE "a" DROP IF EXISTS "b" CASCADE;',
+    'DROP EXTENSION "pgcrypto";',
+    'DROP POLICY "p" ON "a";',
+    'DROP DOMAIN "d";',
+    'ALTER TABLE "a" ALTER COLUMN "b" DROP IDENTITY;',
     'TRUNCATE "a";',
     'DELETE FROM "a";',
     'ALTER TABLE "a" RENAME COLUMN "b" TO "c";',
