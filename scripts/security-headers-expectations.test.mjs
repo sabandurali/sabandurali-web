@@ -14,6 +14,18 @@ test("a ready admin login redirects to the first user or shows the form", () => 
     isReadyAdminLogin('<input id="field-email" name="email" type="email">'),
     true,
   );
+  // With a user the login view renders without the email input in the
+  // server HTML; its server-rendered brand wrapper is the stable sign.
+  assert.equal(
+    isReadyAdminLogin(
+      '<div class="template-minimal login"><div class="login__brand"><svg></svg></div></div>',
+    ),
+    true,
+  );
+  assert.equal(
+    isReadyAdminLogin('<div class="login__brand-extra"></div>'),
+    false,
+  );
   // Payload's error page: 200, a digest, no redirect and no form.
   assert.equal(
     isReadyAdminLogin(
