@@ -33,6 +33,9 @@ test("the hero is the page's only h1 and uses the display type", () => {
   assert.match(html, /href="\/gayrimenkul-ve-istanbul"/);
   assert.match(html, /aria-label="Platform özeti"/);
   assert.match(html, /<dd[^>]*>39<\/dd>/);
+  // FRONTEND-4: the panel label is Turkish on the Turkish page (WCAG 3.1.2).
+  assert.match(html, /<p [^>]*>Platform özeti<\/p>/);
+  assert.doesNotMatch(html, /Intelligence/);
   assert.doesNotMatch(html, /text-signal\b/, "no orange text on paper");
 });
 

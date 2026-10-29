@@ -156,7 +156,7 @@ export const homeContent = {
       primaryActionHref: "/gayrimenkul-ve-istanbul",
       secondaryAction: "Hakkımda",
       secondaryActionHref: "/hakkimda",
-      goalsLabel: "İstanbul Intelligence",
+      goalsLabel: "Platform özeti",
       goals: [
         { value: "39", label: "ilçe" },
         { value: "25", label: "Avrupa Yakası" },
@@ -251,6 +251,8 @@ export const homeContent = {
       brandTagline: "ARAŞTIRMA VE BİLGİ PLATFORMU",
       description:
         "Gayrimenkul, satış, araştırma, teknoloji, öğrenme ve fotoğraf odaklı bağımsız bilgi ve yayın platformu.",
+      // Sample year: the footer writes the current Istanbul year
+      // (withCurrentYear in src/components/layout/copyright.ts).
       copyright: "© 2026 Şaban Durali. Tüm hakları saklıdır.",
       links: {
         contact: "İletişim",
@@ -392,6 +394,7 @@ export const homeContent = {
       brandTagline: "RESEARCH AND KNOWLEDGE PLATFORM",
       description:
         "An independent knowledge and publishing platform focused on real estate, sales, research, technology, learning and photography.",
+      // Sample year, replaced at render time like the Turkish line.
       copyright: "© 2026 Şaban Durali. All rights reserved.",
       links: {
         contact: "Contact",
