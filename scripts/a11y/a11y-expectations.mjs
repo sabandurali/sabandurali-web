@@ -25,7 +25,7 @@ export const publicRoutes = Object.freeze([
   { path: "/makaleler", status: 200, type: "article list" },
   { path: "/kitaplar", status: 200, type: "book list" },
   { path: "/fotograflar", status: 200, type: "photo list" },
-  { path: "/iletisim", status: 200, type: "contact" },
+  { path: "/iletisim", status: 200, type: "contact", contactForm: "tr" },
   { path: "/hakkimda", status: 200, type: "about" },
   { path: "/hakkimda/biyografi", status: 200, type: "biography" },
   {
@@ -55,7 +55,12 @@ export const publicRoutes = Object.freeze([
   { path: "/en/articles", status: 200, type: "EN article list" },
   { path: "/en/books", status: 200, type: "EN book list" },
   { path: "/en/photography", status: 200, type: "EN photo list" },
-  { path: "/en/contact", status: 200, type: "EN contact" },
+  {
+    path: "/en/contact",
+    status: 200,
+    type: "EN contact",
+    contactForm: "en",
+  },
   { path: "/en/privacy-notice", status: 200, type: "EN privacy notice" },
   { path: "/en/missing-page", status: 404, type: "EN not found" },
 ]);
@@ -357,5 +362,85 @@ export function reducedMotionProblems({ scrollBehavior, elements }) {
         `motion under reduced motion: ${element.label} (animation ${element.animationDuration}, transition ${element.transitionDuration})`,
       );
   }
+  return problems;
+}
+
+/**
+ * The contact form fields in their visual order (ContactForm.tsx): an empty
+ * submit must mark every one of them and focus the first.
+ */
+export const contactFormFields = Object.freeze([
+  "name",
+  "email",
+  "subject",
+  "message",
+  "privacyAcknowledgement",
+]);
+
+/** Spoken prefix of every field message (`strings.error`, FieldError). */
+const errorPrefix = Object.freeze({ tr: "Hata:", en: "Error:" });
+
+/**
+ * Client-side error handling of the contact form (TESTS-INFRA-4, FRONTEND-3,
+ * WCAG 3.3.1 and 2.4.3). Each snapshot is `{ focused, fields }`: the `name`
+ * of the focused control and, per field, `invalid` (aria-invalid="true")
+ * and `messages`, the visible texts its aria-describedby points at.
+ *   - `submitted`: after submitting the empty form, every field is invalid
+ *     with a visible "Hata:"/"Error:" message and focus is on the first,
+ *   - `nameFixed`: after a valid name is entered, its message is gone, the
+ *     others stay and focus stays in the field (typing never moves focus),
+ *   - `messageShort`: after a too-short message is entered, its message is
+ *     updated instead of left stale,
+ *   - `externalRequests`: an invalid form never sends anything.
+ */
+export function contactFormProblems(
+  { submitted, nameFixed, messageShort, externalRequests },
+  locale,
+) {
+  const problems = [];
+  const prefix = errorPrefix[locale];
+  const shown = (snapshot, field) => {
+    const state = snapshot.fields[field];
+    return Boolean(
+      state?.invalid &&
+      state.messages.some(
+        (text) => text.startsWith(prefix) && text.length > prefix.length + 1,
+      ),
+    );
+  };
+  if (submitted.focused !== contactFormFields[0])
+    problems.push(
+      `empty submit: focus is on ${submitted.focused ?? "nothing"}, not the first invalid field`,
+    );
+  for (const field of contactFormFields)
+    if (!shown(submitted, field))
+      problems.push(
+        `empty submit: ${field} has no aria-invalid with a visible "${prefix}" message tied by aria-describedby`,
+      );
+  const fixedName = nameFixed.fields.name;
+  if (
+    !fixedName ||
+    fixedName.invalid ||
+    fixedName.messages.some((text) => text.startsWith(prefix))
+  )
+    problems.push("valid name: its message stays after the field was fixed");
+  if (nameFixed.focused !== "name")
+    problems.push(
+      `valid name: typing moved focus to ${nameFixed.focused ?? "nothing"}`,
+    );
+  for (const field of contactFormFields.slice(1))
+    if (!shown(nameFixed, field))
+      problems.push(`valid name: the ${field} message disappeared`);
+  if (!shown(messageShort, "message"))
+    problems.push("short message: the message field is no longer marked");
+  else if (
+    messageShort.fields.message.messages.join(" ") ===
+    submitted.fields.message?.messages.join(" ")
+  )
+    problems.push("short message: the message text was not updated");
+  if (externalRequests.length > 0)
+    problems.push(
+      `an invalid form sent requests: ${externalRequests.join(", ")}`,
+    );
   return problems;
 }

@@ -8,7 +8,11 @@
 //   - the header menu opens with Enter, Tab reaches its items and Escape
 //     closes it and returns focus, at 390, 1100 and 1440 px,
 //   - under prefers-reduced-motion: reduce nothing animates or transitions
-//     and the page does not scroll smoothly.
+//     and the page does not scroll smoothly,
+//   - on the contact pages, an empty submit marks every field (aria-invalid,
+//     a visible message tied by aria-describedby), focuses the first one and
+//     passes axe in that state; fixing or changing a field updates its
+//     message, and nothing is sent (the CI build has no Formspree id).
 // It only targets a local server, for example:
 //   npm run build && npm run start -- --hostname 127.0.0.1 --port 3101
 //   A11Y_TEST_URL=http://127.0.0.1:3101 npm run e2e:a11y
@@ -26,6 +30,8 @@ import { chromium } from "playwright";
 import {
   axeProblems,
   axeTags,
+  contactFormFields,
+  contactFormProblems,
   contentProblems,
   detailRoutes,
   focusIndicatorProblem,
@@ -287,6 +293,139 @@ async function checkReducedMotion(page, path, status) {
   }
 }
 
+/**
+ * Snapshot of the contact form's error state, evaluated in the page: the
+ * focused control's name and, per field, aria-invalid and the visible texts
+ * its aria-describedby points at (see `contactFormProblems`).
+ */
+function contactFormSnapshot(fields) {
+  const form = document.querySelector("main form");
+  const active = document.activeElement;
+  const snapshot = {
+    // A control's name, else the focused tag (for example the submit
+    // button), so a failure says where focus stayed.
+    focused:
+      active?.getAttribute("name") ??
+      (active && active !== document.body
+        ? active.tagName.toLowerCase()
+        : null),
+    fields: {},
+  };
+  for (const name of fields) {
+    const control = form?.querySelector(`[name="${name}"]`);
+    if (!control) continue;
+    const messages = (control.getAttribute("aria-describedby") ?? "")
+      .split(/\s+/)
+      .filter(Boolean)
+      .map((id) => document.getElementById(id))
+      .filter(
+        (element) =>
+          element &&
+          element.getClientRects().length > 0 &&
+          getComputedStyle(element).visibility !== "hidden",
+      )
+      .map((element) =>
+        (element.textContent ?? "").trim().replace(/\s+/g, " "),
+      );
+    snapshot.fields[name] = {
+      invalid: control.getAttribute("aria-invalid") === "true",
+      messages,
+    };
+  }
+  return snapshot;
+}
+
+/** Visible text of the message field's aria-describedby targets. */
+function messageFieldText() {
+  const control = document.querySelector('main form [name="message"]');
+  return (control?.getAttribute("aria-describedby") ?? "")
+    .split(/\s+/)
+    .map((id) => document.getElementById(id)?.textContent ?? "")
+    .join(" ")
+    .trim()
+    .replace(/\s+/g, " ");
+}
+
+/**
+ * The contact form's client-side error handling (TESTS-INFRA-4). The form
+ * is never valid here, so nothing can be sent; any request that leaves the
+ * local server after the submit is still recorded as a problem.
+ */
+async function checkContactForm(page, route, name) {
+  if (!route.contactForm) return [];
+  const width = 390;
+  await page.setViewportSize({ width, height: 1000 });
+  await open(page, route.path, route.status);
+  const externalRequests = [];
+  const record = (request) => {
+    if (!request.url().startsWith(base)) externalRequests.push(request.url());
+  };
+  const settle = (predicate, argument) =>
+    page
+      .waitForFunction(predicate, argument, { timeout: 5000 })
+      .catch(() => {});
+  page.on("request", record);
+  try {
+    const form = page.locator("main form").first();
+    await form.locator('button[type="submit"]').click();
+    await settle(() =>
+      document.querySelector('main form [aria-invalid="true"]'),
+    );
+    const submitted = await page.evaluate(
+      contactFormSnapshot,
+      contactFormFields,
+    );
+    const problems = [];
+    const axe = await new AxeBuilder({ page }).withTags([...axeTags]).analyze();
+    for (const line of axeProblems(axe.violations))
+      problems.push(`${width}px, form errors: ${line}`);
+    await page.screenshot({
+      path: `${output}/${name}-form-errors-${width}.png`,
+      fullPage: true,
+    });
+
+    await form.locator('[name="name"]').fill("Test Ziyaretçi");
+    await settle(
+      () =>
+        document
+          .querySelector('main form [name="name"]')
+          ?.getAttribute("aria-invalid") !== "true",
+    );
+    const nameFixed = await page.evaluate(
+      contactFormSnapshot,
+      contactFormFields,
+    );
+
+    const before = await page.evaluate(messageFieldText);
+    await form.locator('[name="message"]').fill("kısa");
+    // The same reading as `messageFieldText`, inlined: a page function
+    // cannot call another one, and the CSP forbids building it from text.
+    await settle((previous) => {
+      const control = document.querySelector('main form [name="message"]');
+      const text = (control?.getAttribute("aria-describedby") ?? "")
+        .split(/\s+/)
+        .map((id) => document.getElementById(id)?.textContent ?? "")
+        .join(" ")
+        .trim()
+        .replace(/\s+/g, " ");
+      return text !== previous;
+    }, before);
+    const messageShort = await page.evaluate(
+      contactFormSnapshot,
+      contactFormFields,
+    );
+    problems.push(
+      ...contactFormProblems(
+        { submitted, nameFixed, messageShort, externalRequests },
+        route.contactForm,
+      ),
+    );
+    return problems;
+  } finally {
+    page.off("request", record);
+  }
+}
+
 /** The route renders its fixture content (see `fixtureRoutes`). */
 async function checkContent(page, route) {
   if (!route.requiredContent && !route.forbiddenContent) return [];
@@ -323,6 +462,7 @@ async function checkRoute(route) {
     ...menuCheckWidths.map((width) => () => checkMenu(page, route, width)),
     () => checkWidths(page, path, status, name),
     () => checkReducedMotion(page, path, status),
+    () => checkContactForm(page, route, name),
   ];
   for (const step of steps) {
     try {
