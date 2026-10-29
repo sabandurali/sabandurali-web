@@ -49,3 +49,12 @@ test("CI e2e checks target only the local server and stay hermetic", () => {
   assert.match(workflow, /PAYLOAD_DATABASE: sqlite/);
   assert.match(workflow, /DATABASE_URL: file:\.\/\.data\/ci\.db/);
 });
+
+test("CI runs the public accessibility check after the district routes", () => {
+  const routes = runIndex("npm run e2e:districts:routes");
+  const a11y = runIndex("npm run e2e:a11y");
+  assert.ok(a11y >= 0, "e2e:a11y is missing from ci.yml");
+  assert.ok(routes < a11y, "Chromium is installed before the a11y check");
+  for (const [, url] of workflow.matchAll(/A11Y_TEST_URL:\s*(\S+)/g))
+    assert.equal(url, "http://127.0.0.1:3101");
+});

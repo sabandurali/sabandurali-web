@@ -30,10 +30,11 @@ identifiers and commit messages in English.
 | `npm run e2e:headers -- <url>` | Security header check against a local production server |
 | `npm run e2e:districts:cms` | District guide CMS rules on a temporary SQLite database |
 | `npm run e2e:districts:routes` / `e2e:content-trust` | Playwright (routes) and fetch (content trust) checks against a local server at `DISTRICT_TEST_URL` (output in `DISTRICT_TEST_OUTPUT`) |
+| `npm run e2e:a11y` | Definition of Done on every public route type: axe WCAG 2.2 AA, no horizontal scroll at 390/820/1440 px, skip link, focus indicator, header menu by keyboard, reduced motion; local server at `A11Y_TEST_URL` (output in `A11Y_TEST_OUTPUT`) |
 
-CI runs `e2e:content-trust`, `e2e:headers` and `e2e:districts:routes` after the build against `next start` on
+CI runs `e2e:content-trust`, `e2e:headers`, `e2e:districts:routes` and `e2e:a11y` after the build against `next start` on
 `127.0.0.1:3101`. Locally: `npm run build && npm run start -- --hostname 127.0.0.1 --port 3101`, then the same
-scripts with `DISTRICT_TEST_URL=http://127.0.0.1:3101`, in any order (the legacy workspace redirects come from
+scripts with `DISTRICT_TEST_URL=http://127.0.0.1:3101` (`e2e:a11y` defaults to that origin), in any order (the legacy workspace redirects come from
 `next.config.ts`, so they are never an ISR cache entry).
 
 The CI environment for local builds and tests (no `.env.local` needed) is the one in

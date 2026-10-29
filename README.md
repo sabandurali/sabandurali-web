@@ -58,6 +58,7 @@ including how to generate the secret, is
 | `npm run e2e:districts:cms`          | District guide CMS rules on a temporary SQLite database it imports and removes itself (or pass an isolated `/tmp/istanbul-39-*` database) |
 | `npm run e2e:districts:routes`       | Playwright acceptance of the 39 district pages against a local server at `DISTRICT_TEST_URL` (`BROWSER_CHANNEL`, default the local Chrome; CI uses `chromium`) |
 | `npm run e2e:content-trust`          | Legacy redirects, metadata, share image and route regression check against a local server at `DISTRICT_TEST_URL`; JSON to `DISTRICT_TEST_OUTPUT` |
+| `npm run e2e:a11y` | axe WCAG 2.2 AA, 390/820/1440 px overflow, skip link, focus, header menu and reduced-motion check of every public route type against a local server at `A11Y_TEST_URL` (default `http://127.0.0.1:3101`); report and screenshots to `A11Y_TEST_OUTPUT` |
 | `npm run report:districts:content`   | Run the content acceptance check and write its JSON result to the ignored `reports/istanbul-39/content-acceptance.json`        |
 
 Scripts whose names contain `production`, `migrate`, `:apply`, `:dry-run` or

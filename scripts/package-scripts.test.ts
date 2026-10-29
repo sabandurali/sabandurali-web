@@ -15,6 +15,7 @@ const environmentTools = [
   "scripts/content-trust-routes.mjs",
   "scripts/districts/acceptance.mjs",
   "scripts/districts/check-cms.ts",
+  "scripts/a11y/public-routes.mjs",
 ];
 
 function referencedFiles(command: string): string[] {
@@ -55,8 +56,13 @@ test("ARC-9: test scripts run without a server, browser or prepared database", (
 
 test("ARC-9: the browser and migration replay tools are exact devDependencies", () => {
   // scripts/districts/acceptance.mjs and check-cms.ts load playwright;
-  // src/collections/schema-migration.test.ts (npm test) loads PGlite.
-  for (const name of ["playwright", "@electric-sql/pglite"]) {
+  // src/collections/schema-migration.test.ts (npm test) loads PGlite;
+  // scripts/a11y/public-routes.mjs loads the axe-core Playwright binding.
+  for (const name of [
+    "playwright",
+    "@electric-sql/pglite",
+    "@axe-core/playwright",
+  ]) {
     assert.match(devDependencies[name] ?? "", /^\d+\.\d+\.\d+$/, name);
   }
 });
