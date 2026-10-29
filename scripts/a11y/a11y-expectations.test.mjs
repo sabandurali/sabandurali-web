@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import test from "node:test";
 import {
   axeProblems,
@@ -48,36 +48,99 @@ test("covers every public route type in TR and EN, including not-found", () => {
   assert.equal(detailRoutes.length, 6);
 });
 
+/** URL pattern of every page.tsx in the TR and EN public route groups. */
+function publicPagePatterns() {
+  const patterns = [];
+  const walk = (directory, url) => {
+    for (const entry of readdirSync(directory, { withFileTypes: true })) {
+      if (entry.isDirectory()) {
+        // A route group "(name)" adds no URL segment.
+        const segment = entry.name.startsWith("(") ? "" : `/${entry.name}`;
+        walk(`${directory}/${entry.name}`, `${url}${segment}`);
+      } else if (entry.name === "page.tsx") patterns.push(url || "/");
+    }
+  };
+  walk("src/app/(tr)", "");
+  walk("src/app/(en)/en", "/en");
+  return patterns.sort();
+}
+
+/** Whether a concrete path is an instance of a route pattern. */
+function matchesPattern(pattern, path) {
+  const want = pattern.split("/").filter(Boolean);
+  const have = path.split("/").filter(Boolean);
+  for (let i = 0; i < want.length; i += 1) {
+    if (/^\[\.\.\..+\]$/.test(want[i])) return have.length > i;
+    if (have[i] === undefined) return false;
+    if (!/^\[.+\]$/.test(want[i]) && want[i] !== have[i]) return false;
+  }
+  return want.length === have.length;
+}
+
+// Workspace hubs rendered by the same template as /arastirma-ve-analiz
+// (checked below), so its hub and section stand for them.
+const workspaceTemplate = "arastirma-ve-analiz";
+const sameWorkspaceTemplate = [
+  "fotograf",
+  "gayrimenkul-ve-istanbul",
+  "kitaplar-ve-ogrenme",
+  "satis-ve-muzakere",
+  "yapay-zeka-ve-teknoloji",
+];
+// Route types the static CI build cannot render, because they only exist for
+// CMS content: they stay listed here until a fixture build covers them.
+const notInStaticBuild = ["/[slug]"];
+
 test("every public page route of the app is covered by a route type", () => {
-  // A new top-level public page must be added to publicRoutes.
-  const covered = new Set(
-    [
-      ...publicRoutes.map(({ path }) => path),
-      ...detailRoutes.map((d) => d.list),
-    ].map(
-      (path) =>
-        path
-          .split("/")
-          .slice(0, path.startsWith("/en") ? 3 : 2)
-          .join("/") || "/",
-    ),
-  );
-  for (const route of [
-    "/",
-    "/makaleler",
-    "/kitaplar",
-    "/fotograflar",
-    "/hakkimda",
-    "/iletisim",
-    "/istanbul",
-    "/en",
-    "/en/articles",
-    "/en/books",
-    "/en/photography",
-    "/en/contact",
-    "/en/privacy-notice",
-  ])
-    assert.ok(covered.has(route), route);
+  // A new public page.tsx fails here until publicRoutes, detailRoutes or
+  // one of the lists above names it.
+  const uncovered = publicPagePatterns().filter((pattern) => {
+    if (notInStaticBuild.includes(pattern)) return false;
+    const [, first, ...rest] = pattern.split("/");
+    const effective = sameWorkspaceTemplate.includes(first)
+      ? ["", workspaceTemplate, ...rest].join("/")
+      : pattern;
+    const catchAll = /\[\.\.\./.test(effective);
+    return !(
+      publicRoutes.some(
+        ({ path, status }) =>
+          (catchAll ? status === 404 : status === 200) &&
+          matchesPattern(effective, path),
+      ) ||
+      detailRoutes.some(({ prefix }) =>
+        matchesPattern(effective, `${prefix}item`),
+      )
+    );
+  });
+  assert.deepEqual(uncovered, []);
+});
+
+test("the workspace hubs named as one template really share it", () => {
+  const normalized = (hub, file) =>
+    readFileSync(`src/app/(tr)/${hub}/${file}`, "utf8")
+      .replaceAll(hub, "HUB")
+      .replace(/export default function \w+/, "export default function Page")
+      // Prettier wraps differently for names of different length.
+      .replace(/\s+/g, " ")
+      .replace(/return \( (<.*?\/>) \);/g, "return $1;")
+      .replace(/([({]) /g, "$1")
+      .replace(/,? ([)}])/g, "$1");
+  for (const hub of sameWorkspaceTemplate)
+    for (const file of ["page.tsx", "[section]/page.tsx"])
+      assert.equal(
+        normalized(hub, file),
+        normalized(workspaceTemplate, file),
+        `${hub}/${file} differs from the ${workspaceTemplate} template`,
+      );
+});
+
+test("the route pattern matcher", () => {
+  assert.ok(matchesPattern("/", "/"));
+  assert.ok(matchesPattern("/makaleler/[slug]", "/makaleler/a"));
+  assert.ok(!matchesPattern("/makaleler/[slug]", "/makaleler"));
+  assert.ok(!matchesPattern("/makaleler", "/makaleler/a"));
+  assert.ok(matchesPattern("/en/[...missing]", "/en/a/b"));
+  assert.ok(!matchesPattern("/en/[...missing]", "/en"));
 });
 
 test("refuses non-local origins", () => {
