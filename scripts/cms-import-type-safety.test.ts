@@ -39,19 +39,61 @@ const UNCHECKED = [
  * with a guard (`parseResearchBundle`, `isEditorialBundle`), never cast.
  */
 const TYPE_ASSERTION = /\bas\s+(?!const\b)[\w{([]/;
-const IMPORT_RENAME = /^\s*(?:import\b|export\s*\{|\w+\s+as\s+\w+,?\s*$)/;
+
+/**
+ * The lines of `source` that may hold a type assertion: comments and the
+ * specifier lists of `import { ... }` / `export { ... }` statements (where
+ * `a as b` is a rename) are left out. A rename-looking line elsewhere, such
+ * as a call argument `  value as Bundle,`, is still checked.
+ */
+function assertionCandidateLines(source: string) {
+  const lines: { line: string; number: number }[] = [];
+  let inSpecifierList = false;
+  source.split("\n").forEach((line, index) => {
+    if (inSpecifierList) {
+      if (/\}/.test(line)) inSpecifierList = false;
+      return;
+    }
+    if (/^\s*(?:import|export)\b[^;]*\{/.test(line)) {
+      inSpecifierList = !/\}/.test(line);
+      return;
+    }
+    if (/^\s*(?:\/\/|\*|\/\*)/.test(line)) return;
+    lines.push({ line, number: index + 1 });
+  });
+  return lines;
+}
 
 test("district import scripts make no type assertions at all", () => {
   for (const file of DISTRICT_IMPORT_SCRIPTS) {
-    const lines = readFileSync(file, "utf8").split("\n");
-    lines.forEach((line, index) => {
-      if (/^\s*(?:\/\/|\*|\/\*)/.test(line) || IMPORT_RENAME.test(line)) return;
+    for (const { line, number } of assertionCandidateLines(
+      readFileSync(file, "utf8"),
+    )) {
       assert.ok(
         !TYPE_ASSERTION.test(line),
-        `${file}:${index + 1} uses a type assertion: ${line.trim()}`,
+        `${file}:${number} uses a type assertion: ${line.trim()}`,
       );
-    });
+    }
   }
+});
+
+test("only import and export specifier lists are exempt from the assertion check", () => {
+  const source = [
+    "import {",
+    "  attachEditorial as attach,",
+    '} from "./editorial";',
+    'import { a as b } from "./x";',
+    "export { c as d };",
+    "// a comment written as Text",
+    "attachEditorial(",
+    "  bundle,",
+    "  editorial as EditorialBundle,",
+    ");",
+  ].join("\n");
+  const flagged = assertionCandidateLines(source)
+    .filter(({ line }) => TYPE_ASSERTION.test(line))
+    .map(({ number }) => number);
+  assert.deepEqual(flagged, [9]);
 });
 
 test("the type assertion check catches casts of parsed JSON", () => {
