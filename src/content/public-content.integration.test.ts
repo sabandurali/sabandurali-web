@@ -886,6 +886,15 @@ test("book reviews: public rules, both translation directions, limits and narrow
   assert.ok(listReads.length > 0);
   for (const call of listReads) {
     assert.deepEqual(call.arguments[0]?.select, BOOK_LIST_SELECT);
+    // The database answer itself holds none of the detail fields, so a
+    // field dropped from BOOK_LIST_SELECT fails here, not only in review.
+    const result = await call.result;
+    assert.ok(result !== undefined && result.docs.length > 0);
+    for (const document of result.docs) {
+      for (const field of BOOK_REVIEW_DETAIL_FIELDS) {
+        assert.equal(field in document, false, field);
+      }
+    }
   }
   find.mock.restore();
   assert.deepEqual(slugs(turkish), ["derin-calisma", "eski-inceleme"]);
