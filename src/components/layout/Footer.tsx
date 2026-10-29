@@ -5,6 +5,7 @@ import { ArrowUpRightIcon } from "@/components/ui/icons";
 import { getUiStrings } from "@/components/ui/strings";
 import UiLink from "@/components/ui/UiLink";
 import VisuallyHidden from "@/components/ui/VisuallyHidden";
+import { withCurrentYear } from "./copyright";
 import { getFooterLinkGroups } from "./footer-links";
 import Wordmark from "./Wordmark";
 
@@ -91,7 +92,7 @@ export default async function Footer({ id, content }: FooterProps) {
       <div className="border-t border-sea-line">
         <Container className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 py-5">
           <p className="m-0 type-caption text-on-sea-muted">
-            {content.copyright}
+            {withCurrentYear(content.copyright, new Date())}
           </p>
         </Container>
       </div>

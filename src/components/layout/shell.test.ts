@@ -4,6 +4,7 @@ import test from "node:test";
 import { fileURLToPath } from "node:url";
 import { createElement as h } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { istanbulYear, withCurrentYear } from "./copyright";
 import { getErrorDigest } from "./ErrorScreen";
 import { getFooterLinkGroups } from "./footer-links";
 import { getLanguageOptions } from "./header-content";
@@ -244,4 +245,20 @@ test("shell sources: atlas layouts, retry, English 404 catch-all, global 404", (
       file,
     );
   }
+});
+
+test("COMPLETENESS-2: the footer copyright year follows the Istanbul calendar", () => {
+  // 31 Dec 2026 22:30 UTC is already 1 Jan 2027 in Istanbul (UTC+3).
+  const newYear = new Date("2026-12-31T22:30:00Z");
+  assert.equal(istanbulYear(newYear), 2027);
+  assert.equal(istanbulYear(new Date("2026-12-31T20:30:00Z")), 2026);
+  for (const locale of ["tr", "en"] as const) {
+    const line = withCurrentYear(homeContent[locale].footer.copyright, newYear);
+    assert.match(line, /^© 2027 Şaban Durali\. /);
+  }
+  assert.equal(withCurrentYear("Şaban Durali", newYear), "Şaban Durali");
+  assert.match(
+    read("src/components/layout/Footer.tsx"),
+    /withCurrentYear\(content\.copyright, new Date\(\)\)/,
+  );
 });
