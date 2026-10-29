@@ -232,6 +232,11 @@ const plugins =
 //   SMTP_PASS, EMAIL_FROM_ADDRESS, EMAIL_FROM_NAME.
 export default buildConfig({
   admin: {
+    // Payload's default "gravatar" avatar loads
+    // https://www.gravatar.com/avatar/<hash of the user's email> on every
+    // admin page: a third-party request that shares a stable identifier of
+    // each account holder and needs another image origin in the admin CSP.
+    avatar: "default",
     components: {
       afterNavLinks: ["/components/admin/help/AdminHelpNavLink"],
       views: {

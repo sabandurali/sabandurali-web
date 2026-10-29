@@ -120,6 +120,8 @@ test("configuration: depth cap, anonymous REST limits and a rich text editor the
   assert.match(String(config.upload.responseOnLimit), /4 MiB/);
   // Deliberate refusals are named Forbidden and logged at info level.
   assert.equal(config.loggingLevels.Forbidden, "info");
+  // No Gravatar request (email hash to a third party) from the admin.
+  assert.equal(config.admin.avatar, "default");
 
   for (const slug of [
     "users",
