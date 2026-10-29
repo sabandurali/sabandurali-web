@@ -1,21 +1,18 @@
 import type { Metadata } from "next";
 import DistrictDirectory from "@/components/districts/DistrictDirectory";
 import { districtWorkspaceCrumb } from "@/components/districts/district-breadcrumb";
-import BackToTop from "@/components/layout/BackToTop";
-import Footer from "@/components/layout/Footer";
-import Header from "@/components/layout/Header";
 import { homeBreadcrumbItem } from "@/components/ui/Breadcrumb";
 import DistrictTileMap from "@/components/ui/DistrictTileMap";
 import PageIntro from "@/components/ui/PageIntro";
 import Section from "@/components/ui/Section";
 import { getDistrictTiles } from "@/components/ui/district-tile-grid";
+import PageShell from "@/components/workspaces/PageShell";
 import { getDistrictGuideSummaries } from "@/content/districts/district-guide-data-source";
 import {
   districts,
   getDistrictsBySide,
 } from "@/content/districts/district-registry";
 import { districtGuidePath } from "@/content/districts/district-routes";
-import { homeContent } from "@/content/homeContent";
 import { createPageMetadata } from "@/lib/metadata";
 
 // Prerendered and refreshed at most hourly; CMS writes to a district guide
@@ -43,7 +40,6 @@ export default async function DistrictIndexPage() {
     ref: tiles.find((tile) => tile.slug === slug)?.ref ?? "",
     summary: summaries.get(slug) ?? null,
   }));
-  const home = homeContent.tr;
   const stats = [
     { label: "Toplam", value: districts.length },
     { label: "Avrupa Yakası", value: getDistrictsBySide("avrupa").length },
@@ -52,14 +48,7 @@ export default async function DistrictIndexPage() {
   ];
 
   return (
-    <div id="top" lang="tr">
-      <Header
-        locale="tr"
-        anchors={home.anchors}
-        content={home.header}
-        anchorPrefix="/"
-        languageHrefs={{ tr: districtGuidePath, en: "/en" }}
-      />
+    <PageShell locale="tr" languageHrefs={{ tr: districtGuidePath, en: "/en" }}>
       <main id="main" className="bg-paper text-ink scheme-light">
         <PageIntro
           layout="page"
@@ -111,8 +100,6 @@ export default async function DistrictIndexPage() {
           <DistrictDirectory entries={entries} />
         </Section>
       </main>
-      <Footer id={home.anchors.contact} content={home.footer} />
-      <BackToTop label={home.backToTopLabel} />
-    </div>
+    </PageShell>
   );
 }

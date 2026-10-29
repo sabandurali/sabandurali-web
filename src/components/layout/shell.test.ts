@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 import { createElement as h } from "react";
@@ -251,10 +251,14 @@ test("FRONTEND-6: every long page shell, the home page included, has BackToTop",
   const shells = [
     "src/components/HomePage.tsx",
     "src/components/workspaces/PageShell.tsx",
+  ];
+  for (const file of [
     "src/components/districts/DistrictEditorialGuidePage.tsx",
     "src/components/districts/DistrictNewsListPage.tsx",
     "src/app/(tr)/istanbul/ilceler/page.tsx",
-  ];
+  ]) {
+    assert.match(read(file), /<PageShell\b/, `${file}: PageShell`);
+  }
   for (const file of shells) {
     const source = read(file);
     assert.match(source, /<div id="top"/, `${file}: #top target`);
@@ -280,4 +284,27 @@ test("COMPLETENESS-2: the footer copyright year follows the Istanbul calendar", 
     read("src/components/layout/Footer.tsx"),
     /withCurrentYear\(content\.copyright, new Date\(\)\)/,
   );
+});
+
+test("ARCHITECTURE-3: the site shell is wired only in PageShell, the home page and the 404", () => {
+  // A page that renders Header, Footer or BackToTop itself drifts from the
+  // shell the moment one of them gets a new prop or landmark fix.
+  const files = (directory: string): string[] =>
+    readdirSync(`${root}${directory}`, { withFileTypes: true }).flatMap(
+      (entry) => {
+        const file = `${directory}/${entry.name}`;
+        if (entry.isDirectory()) return files(file);
+        return /\.tsx$/.test(entry.name) ? [file] : [];
+      },
+    );
+  const direct = [...files("src/components"), ...files("src/app")].filter(
+    (file) =>
+      !file.includes("/admin/") &&
+      /<(?:Header|Footer|BackToTop)\b/.test(read(file)),
+  );
+  assert.deepEqual(direct.sort(), [
+    "src/components/HomePage.tsx",
+    "src/components/layout/NotFoundScreen.tsx",
+    "src/components/workspaces/PageShell.tsx",
+  ]);
 });

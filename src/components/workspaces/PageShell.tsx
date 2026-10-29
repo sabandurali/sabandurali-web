@@ -13,9 +13,11 @@ type PageShellProps = {
 };
 
 /**
- * Header, footer and back-to-top link around the contact, privacy, about and
- * workspace pages. They all pass through here, so the site shell is wired
- * in one place for this group of pages. The page renders its own
+ * Header, footer and back-to-top link around every page except the home
+ * page (its header links to its own sections and reads the CMS content) and
+ * the 404 screen: contact, privacy, about, workspace, publication and
+ * district pages. They all pass through here, so the site shell is wired in
+ * one place (shell.test.ts keeps it so). The page renders its own
  * `<main id="main">` (the root layout's SkipLink targets it).
  */
 export default function PageShell({
