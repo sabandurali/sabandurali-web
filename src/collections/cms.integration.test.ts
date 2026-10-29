@@ -32,6 +32,7 @@ const { default: configPromise, MAX_UPLOAD_BYTES } =
 const { sqliteAdapter } = await import("@payloadcms/db-sqlite");
 const { getPayload } = await import("payload");
 const { limitAnonymousRestQueries } = await import("../lib/payloadAccess");
+const { LOGIN_LOCK_TIME_MS, MAX_LOGIN_ATTEMPTS } = await import("./Users");
 
 const config: SanitizedConfig = await configPromise;
 config.typescript.autoGenerate = false;
@@ -253,6 +254,83 @@ test("users: first account is admin, new accounts are editors, the last admin is
   assert.equal(bulkDelete.errors.length, 1);
   assert.match(bulkDelete.errors[0]?.message ?? "", /son yönetici/);
   assert.equal(await countAdmins(), 1);
+});
+
+test("users: only admins unlock a locked account, and editors learn nothing about other emails", async () => {
+  const lockedAdmin = await payload.create({
+    collection: "users",
+    data: {
+      email: "locked-admin@example.com",
+      password: "Correct-Horse-3",
+      role: "admin",
+    },
+  });
+  const unlockingAdmin = await payload.create({
+    collection: "users",
+    data: {
+      email: "unlocking-admin@example.com",
+      password: "Correct-Horse-4",
+      role: "admin",
+    },
+  });
+  const unlockingEditor = await payload.create({
+    collection: "users",
+    data: {
+      email: "unlocking-editor@example.com",
+      password: "Correct-Horse-5",
+      role: "editor",
+    },
+  });
+
+  const lock = () =>
+    payload.update({
+      collection: "users",
+      data: {
+        lockUntil: new Date(Date.now() + LOGIN_LOCK_TIME_MS).toISOString(),
+        loginAttempts: MAX_LOGIN_ATTEMPTS,
+      },
+      id: lockedAdmin.id,
+    });
+  const lockState = async () => {
+    const user = await payload.findByID({
+      collection: "users",
+      id: lockedAdmin.id,
+      showHiddenFields: true,
+    });
+    return {
+      lockUntil: user.lockUntil ?? null,
+      loginAttempts: user.loginAttempts,
+    };
+  };
+  const unlockAs = (
+    user: typeof unlockingAdmin,
+    email: string,
+  ): Promise<boolean> =>
+    payload.unlock({
+      collection: "users",
+      data: { email },
+      overrideAccess: false,
+      req: { user: { ...user, collection: "users" } },
+    });
+
+  await lock();
+  // Existing and unknown addresses get the same refusal: no account oracle.
+  for (const email of ["locked-admin@example.com", "nobody@example.com"]) {
+    await assert.rejects(unlockAs(unlockingEditor, email), hasStatus(403));
+  }
+  const stillLocked = await lockState();
+  assert.equal(stillLocked.loginAttempts, MAX_LOGIN_ATTEMPTS);
+  assert.ok(stillLocked.lockUntil, "the editor must not clear the lock");
+
+  assert.equal(
+    await unlockAs(unlockingAdmin, "locked-admin@example.com"),
+    true,
+  );
+  assert.deepEqual(await lockState(), { lockUntil: null, loginAttempts: 0 });
+
+  for (const user of [lockedAdmin, unlockingAdmin, unlockingEditor]) {
+    await payload.delete({ collection: "users", id: user.id });
+  }
 });
 
 test("media: uploads lose EXIF and GPS data and are capped at 3200 px", async () => {

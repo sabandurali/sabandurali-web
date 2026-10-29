@@ -147,6 +147,12 @@ test("session cookies and login lockout are explicit", () => {
   );
   assert.equal(Users.auth.maxLoginAttempts, MAX_LOGIN_ATTEMPTS);
   assert.equal(Users.auth.lockTime, LOGIN_LOCK_TIME_MS);
+
+  // Payload's default unlock access admits every signed-in user, which would
+  // let an editor reset an admin's lockout between password guesses.
+  assert.equal(runAccess(Users.access?.unlock, admin), true);
+  assert.equal(runAccess(Users.access?.unlock, editor), false);
+  assert.equal(runAccess(Users.access?.unlock, null), false);
 });
 
 test("password reset is refused while no email adapter exists", () => {
