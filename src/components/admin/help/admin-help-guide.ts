@@ -103,7 +103,7 @@ export const ADMIN_HELP_GUIDE = [
   "   - `Ana sayfa: Hakkımda`",
   "   - `Ana sayfa: Çalışma alanları`",
   "4. `Hero` içinde en az bir `Başlık satırları` öğesi, `Açıklama`, `Birincil bağlantı` ve `İkincil bağlantı` girin. İsterseniz `Üst başlık` ve en fazla dört `Yan panel bilgileri` öğesi ekleyin.",
-  "5. `Ana sayfa: Hakkımda` içinde `Üst başlık`, en az bir başlık satırı, en az bir paragraf ve `Görsel alternatif metni` girin. `Bağlantı` ve `Portre görseli` isteğe bağlıdır. Portre boşsa mevcut statik portre kullanılır.",
+  "5. `Ana sayfa: Hakkımda` içinde `Üst başlık`, en az bir başlık satırı, en az bir paragraf ve `Görsel alternatif metni` girin. `Bağlantı` ve `Portre görseli` isteğe bağlıdır. Portre boşsa mevcut statik portre kullanılır. Türkçe kayıttaki bu blok `/hakkimda` sayfasını da besler: ilk paragraf sayfanın giriş metni, sonraki paragraflar `Biyografi` bölümüdür; portre, alternatif metni ve kaynak satırı orada da gösterilir. Ana sayfada yalnız ilk iki paragraf görünür. `/hakkimda` sayfasındaki `Platformun amacı` bölümü `Hero` açıklamasını kullanır.",
   "6. `Ana sayfa: Çalışma alanları` içinde `Üst başlık`, `Başlık` ve kartları doldurun. Her kartta `Simge`, `Başlık`, `Açıklama` ve `Bağlantı metni` zorunludur; `Bağlantı adresi` isteğe bağlıdır.",
   "7. Kartları mevcut çalışma alanlarıyla dengeli tutun ve kart başlığını sitenin menüsündeki ve çalışma alanı sayfasındaki yazımla girin (büyük harfle değil):",
   "   - Gayrimenkul & İstanbul",
