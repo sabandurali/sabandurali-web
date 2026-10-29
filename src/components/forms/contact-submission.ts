@@ -70,3 +70,88 @@ export function getSubmissionMessage(
         : messages.error;
   }
 }
+
+/** The parts of a <form> element the submission flow uses. */
+export type SubmittableForm = {
+  checkValidity: () => boolean;
+  reportValidity: () => void;
+  reset: () => void;
+};
+
+/** What the form shows after a submit attempt; `ignored` changes nothing. */
+export type SubmissionOutcome =
+  | { kind: "ignored" }
+  | {
+      kind: "result";
+      status: SubmissionStatus;
+      errorKind: SubmissionErrorKind;
+    };
+
+type SubmitContactFormOptions = {
+  form: SubmittableForm;
+  /** Reads the fields; called only for a valid form. */
+  readFormData: () => FormData;
+  formId: string | undefined;
+  fetch: (url: string, init: RequestInit) => Promise<{ ok: boolean }>;
+  /** Shared across submits: true while a request is on its way. */
+  inFlight: { current: boolean };
+  /** Called when the request starts, to show the "sending" state. */
+  onLoading: () => void;
+};
+
+const resultOf = (
+  status: SubmissionStatus,
+  errorKind: SubmissionErrorKind = null,
+): SubmissionOutcome => ({ kind: "result", status, errorKind });
+
+/**
+ * One submit of the contact form, independent of React. A second submit
+ * while a request is in flight is ignored (the button stays focusable with
+ * aria-disabled), an invalid form only reports its errors, a filled
+ * honeypot looks like a success without sending anything (SEC-14), a
+ * missing endpoint is a configuration error, and only a 2xx response is a
+ * success. The form is reset only after a success.
+ */
+export async function submitContactForm({
+  form,
+  readFormData,
+  formId,
+  fetch,
+  inFlight,
+  onLoading,
+}: SubmitContactFormOptions): Promise<SubmissionOutcome> {
+  if (inFlight.current) return { kind: "ignored" };
+
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return { kind: "ignored" };
+  }
+
+  const formData = readFormData();
+
+  if (isHoneypotFilled(formData)) {
+    form.reset();
+    return resultOf("success");
+  }
+
+  const endpoint = getFormspreeEndpoint(formId);
+  if (endpoint === null) return resultOf("error", "configuration");
+
+  inFlight.current = true;
+  onLoading();
+
+  try {
+    const response = await fetch(endpoint, {
+      method: "POST",
+      body: formData,
+      headers: { Accept: "application/json" },
+    });
+    if (!response.ok) return resultOf("error", "general");
+    form.reset();
+    return resultOf("success");
+  } catch {
+    return resultOf("error", "general");
+  } finally {
+    inFlight.current = false;
+  }
+}

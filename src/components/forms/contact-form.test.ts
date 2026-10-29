@@ -10,8 +10,108 @@ import {
   honeypotFieldName,
   isHoneypotFilled,
   isSafeFormId,
+  submitContactForm,
   toFormStatusState,
 } from "./contact-submission";
+
+/** A fake form and fetch that record what the submit flow did. */
+function harness({
+  valid = true,
+  data = { name: "Ayşe" } as Record<string, string>,
+  respond = async (): Promise<{ ok: boolean }> => ({ ok: true }),
+  formId = "abc123" as string | undefined,
+} = {}) {
+  const calls = { reset: 0, report: 0, loading: 0, fetch: [] as string[] };
+  const inFlight = { current: false };
+  const options = {
+    form: {
+      checkValidity: () => valid,
+      reportValidity: () => {
+        calls.report += 1;
+      },
+      reset: () => {
+        calls.reset += 1;
+      },
+    },
+    readFormData: () => formDataWith(data),
+    formId,
+    fetch: async (url: string) => {
+      calls.fetch.push(url);
+      assert.equal(inFlight.current, true, "in flight while sending");
+      return respond();
+    },
+    inFlight,
+    onLoading: () => {
+      calls.loading += 1;
+    },
+  };
+  return { calls, inFlight, submit: () => submitContactForm(options) };
+}
+
+const result = (status: string, errorKind: string | null = null) => ({
+  kind: "result",
+  status,
+  errorKind,
+});
+
+test("TESTS-INFRA-6: a 2xx response is a success and resets the form", async () => {
+  const { calls, inFlight, submit } = harness();
+  assert.deepEqual(await submit(), result("success"));
+  assert.deepEqual(calls.fetch, ["https://formspree.io/f/abc123"]);
+  assert.equal(calls.loading, 1);
+  assert.equal(calls.reset, 1);
+  assert.equal(inFlight.current, false);
+});
+
+test("TESTS-INFRA-6: a non-2xx response or a network error is a general error", async () => {
+  const rejected = harness({ respond: async () => ({ ok: false }) });
+  assert.deepEqual(await rejected.submit(), result("error", "general"));
+  assert.equal(rejected.calls.reset, 0, "the message is kept for a retry");
+  assert.equal(rejected.inFlight.current, false);
+
+  const offline = harness({
+    respond: async () => {
+      throw new TypeError("network");
+    },
+  });
+  assert.deepEqual(await offline.submit(), result("error", "general"));
+  assert.equal(offline.calls.reset, 0);
+  assert.equal(offline.inFlight.current, false);
+});
+
+test("TESTS-INFRA-6: a second submit while sending is ignored", async () => {
+  let release: (value: { ok: boolean }) => void = () => {};
+  const { calls, submit } = harness({
+    respond: () => new Promise((resolve) => (release = resolve)),
+  });
+  const first = submit();
+  assert.deepEqual(await submit(), { kind: "ignored" });
+  release({ ok: true });
+  assert.deepEqual(await first, result("success"));
+  assert.equal(calls.fetch.length, 1);
+  assert.equal(calls.loading, 1);
+});
+
+test("TESTS-INFRA-6: invalid, honeypot and unconfigured submits never send", async () => {
+  const invalid = harness({ valid: false });
+  assert.deepEqual(await invalid.submit(), { kind: "ignored" });
+  assert.equal(invalid.calls.report, 1);
+
+  const bot = harness({ data: { name: "x", _gotcha: "spam" } });
+  assert.deepEqual(await bot.submit(), result("success"));
+  assert.equal(bot.calls.reset, 1);
+
+  const unconfigured = harness({ formId: "" });
+  assert.deepEqual(
+    await unconfigured.submit(),
+    result("error", "configuration"),
+  );
+
+  for (const { calls } of [invalid, bot, unconfigured]) {
+    assert.deepEqual(calls.fetch, []);
+    assert.equal(calls.loading, 0);
+  }
+});
 
 function formDataWith(entries: Record<string, string>): FormData {
   const data = new FormData();
