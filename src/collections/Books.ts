@@ -802,6 +802,10 @@ export const Books: CollectionConfig = {
           fields: [
             {
               name: "translation",
+              // The anonymous REST API would otherwise name the ID of an
+              // unpublished translation. The public pages pair reviews
+              // through the Local API, which keeps the field.
+              access: { read: editorialFieldRead },
               type: "relationship",
               label: "Diğer dildeki kayıt",
               admin: {

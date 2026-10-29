@@ -985,6 +985,8 @@ test("books: anonymous REST readers never see or filter on editorial fields", as
       relatedBooks: [hidden.id],
       reviewStatus: "published",
       showOnHomepage: true,
+      // A draft translation: its ID must not reach the anonymous API.
+      translation: hidden.id,
       slug: "editoryal-alanlar",
       title: "Editoryal alanlar",
       translationStatus: "draft",
@@ -997,6 +999,7 @@ test("books: anonymous REST readers never see or filter on editorial fields", as
     "relatedBooks",
     "reviewStatus",
     "showOnHomepage",
+    "translation",
     "translationStatus",
   ];
 
@@ -1020,6 +1023,7 @@ test("books: anonymous REST readers never see or filter on editorial fields", as
     { authorId: { equals: author.id } },
     { showOnHomepage: { equals: true } },
     { relatedBooks: { in: [hidden.id] } },
+    { translation: { equals: hidden.id } },
   ];
   for (const where of editorialFilters) {
     await assert.rejects(
@@ -1045,6 +1049,7 @@ test("books: anonymous REST readers never see or filter on editorial fields", as
   });
   assert.equal(local.reviewStatus, "published");
   assert.equal(local.translationStatus, "draft");
+  assert.equal(local.translation, hidden.id);
 
   // Editors keep every field in the REST API (and so in the admin).
   const asEditor = await payload.findByID({

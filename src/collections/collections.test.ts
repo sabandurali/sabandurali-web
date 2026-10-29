@@ -397,6 +397,14 @@ test("editorial book fields are hidden from the public API", () => {
     translationSourceUpdatedAt: null,
   };
 
+  // The translation link stays public in the Local API but not in the
+  // anonymous REST API, where it could name an unpublished review.
+  const translation = findField(Books, "translation");
+  assert.equal(
+    "access" in translation ? translation.access?.read : undefined,
+    editorialFieldRead,
+  );
+
   for (const modelField of PRIVATE_BOOK_REVIEW_FIELDS) {
     const name = modelField in fieldNames ? fieldNames[modelField] : modelField;
     if (name === null) continue;
