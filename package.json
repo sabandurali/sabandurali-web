@@ -22,6 +22,7 @@
     "payload:migrate:status": "payload migrate:status",
     "payload:migrate": "payload migrate",
     "vercel:build": "node scripts/vercel-build.mjs",
+    "ci:sqlite-schema": "tsx scripts/ci/sqlite-schema.ts",
     "e2e:headers": "node scripts/security-headers-check.mjs",
     "district:import": "tsx scripts/districts/import.ts",
     "e2e:districts:cms": "tsx scripts/districts/check-cms.ts",
