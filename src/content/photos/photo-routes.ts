@@ -1,4 +1,3 @@
-import { getAbsoluteUrl } from "@/config/site";
 import type {
   PublicPhoto,
   PublicPhotoTranslation,
@@ -12,10 +11,6 @@ export const photoListPaths = {
 
 export function getPhotoPath(slug: string, language: PhotoLanguage): string {
   return `${photoListPaths[language]}/${slug}`;
-}
-
-export function getPhotoUrl(slug: string, language: PhotoLanguage): string {
-  return getAbsoluteUrl(getPhotoPath(slug, language));
 }
 
 export function getPhotoLanguagePaths(

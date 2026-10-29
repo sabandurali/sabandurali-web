@@ -5,7 +5,7 @@ import { contactEmail, siteSocialImage } from "../src/config/site";
 import {
   getEnglishHeaderNavigationItems,
   getStaticFooterGroups,
-} from "../src/components/layout/navigation";
+} from "../src/content/navigation/static-navigation";
 import { homeContent } from "../src/content/homeContent";
 import { privacyContent } from "../src/content/privacyContent";
 import { createPublicPageMetadata } from "../src/content/pages/page-seo";
