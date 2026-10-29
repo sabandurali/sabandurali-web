@@ -277,9 +277,17 @@ assert.throws(() =>
   attachEditorial(structuredClone(research), invalidAdoption),
 );
 assertBatch1PopulationImportPlan({ ...batch1PopulationPlan });
-for (const action of Object.keys(batch1PopulationPlan) as Array<
-  keyof typeof batch1PopulationPlan
->) {
+const populationPlanActions = [
+  "update",
+  "skip",
+  "create",
+  "conflict",
+] as const satisfies ReadonlyArray<keyof typeof batch1PopulationPlan>;
+assert.deepEqual(
+  [...populationPlanActions].sort(),
+  Object.keys(batch1PopulationPlan).sort(),
+);
+for (const action of populationPlanActions) {
   assert.throws(() =>
     assertBatch1PopulationImportPlan({
       ...batch1PopulationPlan,
