@@ -106,6 +106,19 @@ test("ARCHITECTURE-4: the applied importers live only in the Git history", () =>
   assert.equal(existsSync("scripts/districts/archive"), false);
   const state = readFileSync("docs/PROJECT-STATE.md", "utf8");
   assert.match(state, /git show 4b94d32:scripts\/districts\/archive\//);
+
+  // Nothing else points at the removed folder as if it were still there;
+  // a historical reference names the commit that holds it.
+  for (const file of [
+    ".env.example",
+    "scripts/photos/historical-district-photo-engine.test.ts",
+  ]) {
+    assert.doesNotMatch(
+      readFileSync(file, "utf8"),
+      /scripts\/districts\/archive\//,
+      file,
+    );
+  }
 });
 
 test("migrations are replayed once: by the schema-migration unit test", () => {

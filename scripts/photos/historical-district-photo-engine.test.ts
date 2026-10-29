@@ -3,8 +3,8 @@ import { readFileSync, readdirSync } from "node:fs";
 import test from "node:test";
 
 // The shared photo import engine and runner are batch-independent: a new
-// batch adds only a config and a thin entry point (scripts/districts/archive/
-// README.md points new importers at this pattern).
+// batch adds only a config and a thin entry point (docs/PROJECT-STATE.md §K
+// points new importers at this pattern).
 const directory = "scripts/photos";
 const read = (file: string) => readFileSync(`${directory}/${file}`, "utf8");
 

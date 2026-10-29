@@ -14,7 +14,7 @@
 //   A11Y_TEST_URL=http://127.0.0.1:3101 npm run e2e:a11y
 // BROWSER_CHANNEL picks the browser (default "chrome", CI uses "chromium").
 // A11Y_FIXTURES=1 checks the detail templates and the CMS block page against
-// a server on the CI fixture database instead (see docs/LOCAL_DEVELOPMENT.md).
+// a server on the CI fixture database instead (see docs/LOCAL-DEVELOPMENT.md).
 // The JSON report and screenshots go to A11Y_TEST_OUTPUT (default
 // /tmp/public-a11y), never into the repository.
 import assert from "node:assert/strict";
