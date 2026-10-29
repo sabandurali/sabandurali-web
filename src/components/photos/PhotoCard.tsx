@@ -1,78 +1,48 @@
-import Image from "next/image";
-import Link from "next/link";
+import { PublicationImage } from "@/components/pages/publication-media";
+import Card from "@/components/ui/Card";
+import { getPhotoCredit } from "@/components/photos/photo-details";
+import { Credit } from "@/components/ui/Figure";
 import { getPhotoPath } from "@/content/photos/photo-routes";
 import type { PublicPhoto } from "@/content/photos/types";
 
 type PhotoCardProps = {
   photo: PublicPhoto;
   headingLevel?: "h2" | "h3";
-  compact?: boolean;
 };
 
+/**
+ * One photograph in a list: the image with its credit, collections, title
+ * link and location. The title is the only link and the card's name.
+ */
 export default function PhotoCard({
   photo,
   headingLevel = "h2",
-  compact = false,
 }: PhotoCardProps) {
-  const Heading = headingLevel;
+  const collections = photo.collections.map((item) => item.title).join(" · ");
 
   return (
-    <article className="group overflow-hidden border border-[var(--accent-border-soft)] bg-surface transition-colors hover:border-[var(--accent-border-hover)] motion-reduce:transition-none">
-      <Link
-        href={getPhotoPath(photo.slug, photo.language)}
-        className="block focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
-      >
-        <span
-          className={`relative block overflow-hidden bg-background ${compact ? "aspect-[4/5]" : "aspect-[4/3]"}`}
-        >
-          {photo.image.width !== undefined &&
-          photo.image.height !== undefined ? (
-            <Image
-              src={photo.image.src}
-              alt={photo.image.alt}
-              width={photo.image.width}
-              height={photo.image.height}
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02] motion-reduce:transition-none"
-            />
-          ) : (
-            <Image
-              src={photo.image.src}
-              alt={photo.image.alt}
-              fill
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              className="object-cover transition-transform duration-300 group-hover:scale-[1.02] motion-reduce:transition-none"
-            />
-          )}
-        </span>
-        <div className={compact ? "p-3.5" : "p-5"}>
-          <p
-            className={`${compact ? "text-[8px]" : "text-xs"} font-semibold uppercase tracking-[0.16em] text-accent-soft`}
-          >
-            {photo.collections.map((item) => item.title).join(" · ")}
-          </p>
-          <Heading
-            className={
-              compact
-                ? "mt-2 line-clamp-2 font-serif text-base text-ivory"
-                : "mt-3 text-2xl text-ivory"
-            }
-          >
-            {photo.title}
-          </Heading>
-          {photo.locationName !== null && (
-            <p
-              className={
-                compact
-                  ? "mt-2 line-clamp-1 text-[9px] text-muted"
-                  : "mt-2 text-sm text-muted"
-              }
-            >
-              {photo.locationName}
-            </p>
-          )}
-        </div>
-      </Link>
-    </article>
+    <Card
+      title={photo.title}
+      href={getPhotoPath(photo.slug, photo.language)}
+      headingLevel={headingLevel === "h2" ? 2 : 3}
+      media={
+        <PublicationImage
+          src={photo.image.src}
+          alt={photo.image.alt}
+          layout="fill"
+          sizes="(min-width: 1280px) 420px, (min-width: 768px) 50vw, 100vw"
+        />
+      }
+      credit={<Credit credit={getPhotoCredit(photo)} locale={photo.language} />}
+      eyebrow={
+        collections === "" ? undefined : (
+          <span className="font-semibold text-ink">{collections}</span>
+        )
+      }
+    >
+      {photo.locationName !== null ? (
+        <p className="m-0 type-small text-ink-muted">{photo.locationName}</p>
+      ) : null}
+    </Card>
   );
 }

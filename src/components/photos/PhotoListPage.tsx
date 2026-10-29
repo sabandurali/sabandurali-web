@@ -1,9 +1,14 @@
-import Link from "next/link";
+import PageIntro from "@/components/pages/PageIntro";
+import PublicationShell from "@/components/pages/PublicationShell";
+import { publicationCopy } from "@/components/pages/publication-copy";
 import PhotoCard from "@/components/photos/PhotoCard";
-import BackToTop from "@/components/layout/BackToTop";
-import Footer from "@/components/layout/Footer";
-import Header from "@/components/layout/Header";
-import { homeContent } from "@/content/homeContent";
+import { getPhotoListHref } from "@/components/photos/photo-list-params";
+import { Button } from "@/components/ui/Button";
+import EmptyState from "@/components/ui/EmptyState";
+import { Field } from "@/components/ui/Field";
+import Pagination from "@/components/ui/Pagination";
+import Section from "@/components/ui/Section";
+import TextLink from "@/components/ui/TextLink";
 import { photoListPaths } from "@/content/photos/photo-routes";
 import type {
   PhotoLanguage,
@@ -11,19 +16,14 @@ import type {
   PublishedPhotoList,
 } from "@/content/photos/types";
 
-function pageHref(
-  locale: PhotoLanguage,
-  filters: PhotoListFilters,
-  page: number,
-) {
-  const params = new URLSearchParams();
-  if (filters.collection) params.set("collection", filters.collection);
-  if (filters.tag) params.set("tag", filters.tag);
-  if (page > 1) params.set("page", String(page));
-  const query = params.toString();
-  return `${photoListPaths[locale]}${query ? `?${query}` : ""}`;
-}
+const selectClassName =
+  "block min-h-12 w-full rounded-control border border-tile-edge bg-land px-3.5 py-2.5 text-base text-ink hover:border-ink focus-visible:border-ink";
 
+/**
+ * Photograph list: intro, a filter form (collection and tag, sent as a
+ * plain GET form so it works without JavaScript), the card grid and page
+ * links that keep the filters.
+ */
 export default function PhotoListPage({
   locale,
   filters,
@@ -33,148 +33,124 @@ export default function PhotoListPage({
   filters: PhotoListFilters;
   result: PublishedPhotoList;
 }) {
-  const home = homeContent[locale];
-  const homePath = locale === "tr" ? "/" : "/en";
-  const copy =
-    locale === "tr"
-      ? {
-          eyebrow: "FOTOĞRAFÇILIK",
-          title: "Fotoğraf Hikâyeleri",
-          description:
-            "Şehir, insan ve hayvan hikâyelerinden seçilmiş fotoğraflar.",
-          collection: "Koleksiyon",
-          tag: "Etiket",
-          all: "Tümü",
-          filter: "Filtrele",
-          empty: "Bu filtrelerle eşleşen yayımlanmış fotoğraf bulunmuyor.",
-          previous: "Önceki",
-          next: "Sonraki",
-        }
-      : {
-          eyebrow: "PHOTOGRAPHY",
-          title: "Photo Stories",
-          description:
-            "Selected photographs from city, human and animal stories.",
-          collection: "Collection",
-          tag: "Tag",
-          all: "All",
-          filter: "Filter",
-          empty: "No published photographs match these filters.",
-          previous: "Previous",
-          next: "Next",
-        };
+  const copy = publicationCopy[locale];
+  const text = copy.photos;
+  const filtered = Boolean(filters.collection || filters.tag);
+  const hasFilters = result.collections.length > 0 || result.tags.length > 0;
 
   return (
-    <div id="top" lang={locale}>
-      <Header
+    <PublicationShell locale={locale} languageHrefs={photoListPaths}>
+      <PageIntro
         locale={locale}
-        anchors={home.anchors}
-        content={home.header}
-        homeHref={homePath}
-        anchorPrefix={homePath}
-        languageHrefs={photoListPaths}
-      />
-      <main className="px-4 py-10 sm:px-6 sm:py-14 lg:py-18">
-        <div className="mx-auto max-w-7xl">
-          <header className="border-b border-border pb-8 sm:pb-10">
-            <p className="text-xs font-semibold tracking-[0.22em] text-accent-soft">
-              {copy.eyebrow}
-            </p>
-            <h1 className="mt-4 text-4xl leading-[1.05] text-ivory sm:text-5xl">
-              {copy.title}
-            </h1>
-            <p className="mt-5 max-w-3xl text-lg leading-8 text-muted">
-              {copy.description}
-            </p>
-          </header>
+        breadcrumb={[
+          { label: copy.home, href: copy.homePath },
+          { label: copy.allPhotos },
+        ]}
+        eyebrow={text.eyebrow}
+        title={text.title}
+        lead={text.description}
+      >
+        {result.totalItems > 0 ? (
+          <p className="m-0 type-data-md text-ink-muted">
+            {copy.photoCount(result.totalItems)}
+            {result.totalPages > 1 ? (
+              <> · {text.pageOf(result.page, result.totalPages)}</>
+            ) : null}
+          </p>
+        ) : null}
+      </PageIntro>
+
+      <Section
+        tone="band"
+        spacing="compact"
+        divider
+        labelledBy="photo-list-heading"
+      >
+        <h2 id="photo-list-heading" className="m-0 mb-6 type-h2">
+          {copy.allPhotos}
+        </h2>
+
+        {hasFilters ? (
           <form
-            className="mt-7 grid gap-4 rounded-sm border border-border bg-surface p-5 sm:grid-cols-[1fr_1fr_auto] sm:p-6"
             action={photoListPaths[locale]}
+            method="get"
+            aria-labelledby="photo-filter-heading"
+            className="mb-8 grid gap-4 rounded-card border border-ink bg-land p-5 sm:p-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] md:items-end"
           >
-            <label className="grid gap-2 text-sm font-semibold text-ivory">
-              {copy.collection}
-              <select
-                name="collection"
-                defaultValue={filters.collection ?? ""}
-                className="min-h-11 rounded-md border border-border bg-background px-3 text-base font-normal text-ivory"
-              >
-                <option value="">{copy.all}</option>
-                {result.collections.map((item) => (
-                  <option key={item.id} value={item.slug}>
-                    {item.title}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="grid gap-2 text-sm font-semibold text-ivory">
-              {copy.tag}
-              <select
-                name="tag"
-                defaultValue={filters.tag ?? ""}
-                className="min-h-11 rounded-md border border-border bg-background px-3 text-base font-normal text-ivory"
-              >
-                <option value="">{copy.all}</option>
-                {result.tags.map((item) => (
-                  <option key={item.id} value={item.slug}>
-                    {item.title}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <button
-              type="submit"
-              className="min-h-11 self-end rounded-md bg-accent px-5 text-sm font-semibold text-white hover:bg-accent-strong"
-            >
-              {copy.filter}
-            </button>
-          </form>
-          {result.photos.length === 0 ? (
-            <p className="mt-8 rounded-xl border border-border bg-surface p-6 text-muted">
-              {copy.empty}
-            </p>
-          ) : (
-            <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {result.photos.map((photo) => (
-                <PhotoCard key={photo.id} photo={photo} />
-              ))}
+            <h3 id="photo-filter-heading" className="m-0 type-h4 md:col-span-3">
+              {text.filtersTitle}
+            </h3>
+            <Field label={text.collection} locale={locale}>
+              {(control) => (
+                <select
+                  {...control}
+                  name="collection"
+                  defaultValue={filters.collection ?? ""}
+                  className={selectClassName}
+                >
+                  <option value="">{text.all}</option>
+                  {result.collections.map((item) => (
+                    <option key={item.id} value={item.slug}>
+                      {item.title}
+                    </option>
+                  ))}
+                </select>
+              )}
+            </Field>
+            <Field label={text.tag} locale={locale}>
+              {(control) => (
+                <select
+                  {...control}
+                  name="tag"
+                  defaultValue={filters.tag ?? ""}
+                  className={selectClassName}
+                >
+                  <option value="">{text.all}</option>
+                  {result.tags.map((item) => (
+                    <option key={item.id} value={item.slug}>
+                      {item.title}
+                    </option>
+                  ))}
+                </select>
+              )}
+            </Field>
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+              <Button type="submit">{text.filter}</Button>
+              {filtered ? (
+                <TextLink
+                  href={photoListPaths[locale]}
+                  variant="standalone"
+                  locale={locale}
+                >
+                  {text.clearFilters}
+                </TextLink>
+              ) : null}
             </div>
-          )}
-          {result.totalPages > 1 && (
-            <nav
-              aria-label={
-                locale === "tr" ? "Fotoğraf sayfaları" : "Photography pages"
-              }
-              className="mt-10 flex items-center justify-between gap-4"
-            >
-              {result.page > 1 ? (
-                <Link
-                  href={pageHref(locale, filters, result.page - 1)}
-                  className="min-h-11 rounded-md border border-border px-4 py-3 text-sm text-ivory"
-                >
-                  ← {copy.previous}
-                </Link>
-              ) : (
-                <span />
-              )}
-              <span className="text-sm text-muted">
-                {result.page} / {result.totalPages}
-              </span>
-              {result.page < result.totalPages ? (
-                <Link
-                  href={pageHref(locale, filters, result.page + 1)}
-                  className="min-h-11 rounded-md border border-border px-4 py-3 text-sm text-ivory"
-                >
-                  {copy.next} →
-                </Link>
-              ) : (
-                <span />
-              )}
-            </nav>
-          )}
-        </div>
-      </main>
-      <Footer id={home.anchors.contact} content={home.footer} />
-      <BackToTop label={home.backToTopLabel} />
-    </div>
+          </form>
+        ) : null}
+
+        {result.photos.length === 0 ? (
+          <EmptyState size="lg">
+            {filtered ? text.emptyFiltered : text.empty}
+          </EmptyState>
+        ) : (
+          <ul className="m-0 grid list-none gap-5 p-0 md:grid-cols-2 xl:grid-cols-3">
+            {result.photos.map((photo) => (
+              <li key={photo.id} className="grid">
+                <PhotoCard photo={photo} headingLevel="h3" />
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <Pagination
+          current={result.page}
+          total={result.totalPages}
+          getHref={(page) => getPhotoListHref(locale, filters, page)}
+          locale={locale}
+          className="mt-10"
+        />
+      </Section>
+    </PublicationShell>
   );
 }
