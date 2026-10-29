@@ -5,7 +5,7 @@ import {
   getStaticFooterGroups,
   getStaticHeaderNavigationItems,
   withTurkishHeaderShortcuts,
-} from "@/components/layout/navigation";
+} from "@/content/navigation/static-navigation";
 import { contactPaths, privacyPaths } from "@/config/site";
 import { reportContentIssue } from "@/content/content-log";
 import { resolveFooterGroups } from "@/content/navigation/navigation-fallback";

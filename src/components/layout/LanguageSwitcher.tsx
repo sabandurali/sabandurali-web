@@ -1,69 +1,58 @@
 "use client";
 
 import Link from "next/link";
-import type { Locale } from "@/content/homeContent";
+import { cx } from "@/components/ui/cx";
+import { getLanguageOptions, type HeaderLocale } from "./header-content";
 
 type LanguageSwitcherProps = {
-  locale: Locale;
+  locale: HeaderLocale;
+  /** Accessible name of the group ("Dil seçimi"). */
   label: string;
-  variant: "desktop" | "mobile";
+  /** Path of this page in each language; the home pages otherwise. */
+  hrefs?: Partial<Record<HeaderLocale, string>>;
+  /** Called after a language link is followed (closes the mobile drawer). */
   onNavigate?: () => void;
-  hrefs?: Record<Locale, string>;
+  className?: string;
 };
 
-const languages = [
-  { locale: "tr", label: "TR", href: "/" },
-  { locale: "en", label: "EN", href: "/en" },
-] as const;
-
+/**
+ * TR · EN. Each link is "TR Türkçe" / "EN English" for assistive
+ * technology (the visible code stays part of the name, WCAG 2.5.3) with a
+ * matching `lang` (WCAG 3.1.2); the current language is marked with
+ * aria-current, bold text and the signal bar, never colour alone.
+ */
 export default function LanguageSwitcher({
   locale,
   label,
-  variant,
-  onNavigate,
   hrefs,
+  onNavigate,
+  className,
 }: LanguageSwitcherProps) {
-  const isMobile = variant === "mobile";
-
   return (
-    <div
-      role="group"
+    <ul
       aria-label={label}
-      className={
-        isMobile
-          ? "flex min-h-11 items-center px-2 text-sm font-medium"
-          : "hidden shrink-0 items-center rounded-full border border-accent-soft/70 px-3 py-2 text-xs font-medium text-ivory transition-colors hover:border-accent-soft hover:bg-surface motion-reduce:transition-none sm:px-4 min-[1360px]:flex"
-      }
+      className={cx("m-0 flex list-none items-stretch p-0", className)}
     >
-      {languages.map((language, index) => {
-        const isActive = locale === language.locale;
-
-        return (
-          <span key={language.locale} className="contents">
-            {index > 0 && (
-              <span aria-hidden="true" className="text-muted">
-                ·
-              </span>
+      {getLanguageOptions(locale, hrefs).map((option) => (
+        <li key={option.locale} className="flex">
+          <Link
+            href={option.href}
+            hrefLang={option.hrefLang}
+            lang={option.locale}
+            aria-current={option.current ? "page" : undefined}
+            onClick={onNavigate}
+            className={cx(
+              "relative flex min-h-tap min-w-tap items-center justify-center px-2 type-small text-ink no-underline hover:underline hover:decoration-2 hover:underline-offset-[0.3em]",
+              option.current
+                ? "font-bold after:absolute after:inset-x-2 after:bottom-0 after:h-1 after:bg-signal"
+                : "font-medium",
             )}
-            <Link
-              href={hrefs?.[language.locale] ?? language.href}
-              aria-current={isActive ? "page" : undefined}
-              className={`${
-                isMobile
-                  ? "flex size-11 items-center justify-center rounded-sm transition-colors hover:bg-surface motion-reduce:transition-none"
-                  : "transition-colors hover:text-accent-soft motion-reduce:transition-none"
-              } ${
-                isActive
-                  ? "font-semibold text-accent-strong"
-                  : "text-muted hover:text-ivory"
-              }`}
-              onClick={onNavigate}
-            >
-              {language.label}
-            </Link>
-          </span>
-        );
-      })}
-    </div>
+          >
+            {option.code}
+            <span className="sr-only"> {option.name}</span>
+          </Link>
+        </li>
+      ))}
+    </ul>
   );
 }

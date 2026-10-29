@@ -16,7 +16,13 @@ import type {
   Locale,
 } from "@/content/homeContent";
 
-export type HeaderNavigationVariant = "desktop" | "mobile";
+/*
+ * Static navigation data (ARC-7): the header and footer links used when
+ * NAVIGATION_PUBLIC_SOURCE is "static" or the Navigation global is not
+ * published, plus the fixed Turkish header shortcuts and the English header,
+ * which are always defined in code. Presentation (current page, desktop or
+ * mobile layout) lives in src/components/layout.
+ */
 
 export function isTurkishAboutNavigationHref(href: string | null): boolean {
   if (href === null || !href.startsWith("/")) return false;
@@ -327,24 +333,4 @@ export function getStaticFooterGroups(
       ],
     },
   ];
-}
-
-export function isHeaderNavigationItemActive(
-  item: PublicNavigationLink,
-  pathname: string,
-): boolean {
-  const prefix = item.activePathPrefix;
-
-  const ownActive =
-    item.id === "home"
-      ? pathname === prefix
-      : prefix === "/"
-        ? pathname === "/"
-        : prefix !== undefined &&
-          (pathname === prefix || pathname.startsWith(`${prefix}/`));
-
-  return (
-    ownActive ||
-    item.children.some((child) => isHeaderNavigationItemActive(child, pathname))
-  );
 }
