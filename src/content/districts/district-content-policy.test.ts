@@ -275,6 +275,7 @@ test("TESTS-INFRA-3: only allowlisted hosts count as official sources", () => {
   const rejected = [
     "https://example.com/x",
     "https://gov.tr.example.com/x",
+    "https://esenler.gov.tr.example.com/x",
     "https://evil-ibb.istanbul.attacker.net/x",
     "https://notmetro.istanbul/x",
     "https://metro.istanbul.example.org/x",

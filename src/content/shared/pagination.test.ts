@@ -143,6 +143,15 @@ test("ARCHITECTURE-9: past the end of a one-page or empty list shows page 1", as
   );
   assert.deepEqual(empty.reads, [2, 1]);
 
+  // Page 1 of an empty list already holds the real total: one read.
+  const emptyFirst = payloadLikeList(0, 10);
+  assert.equal(
+    (await readClampedPage(emptyFirst.read, ({ docs }) => docs.length, 1, 10))
+      .totalPages,
+    1,
+  );
+  assert.deepEqual(emptyFirst.reads, [1]);
+
   const invalid = payloadLikeList(25, 10);
   assert.equal(
     (
