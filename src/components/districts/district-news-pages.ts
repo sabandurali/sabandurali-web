@@ -1,3 +1,5 @@
+import { getDistrictNewsPath } from "@/content/districts/district-routes";
+
 /** Items per page of a district's news list. */
 export const districtNewsPageSize = 12;
 
@@ -22,4 +24,10 @@ export function paginateDistrictNews<T>(
     currentPage,
     totalPages,
   };
+}
+
+/** URL of one page of a district's news list; page 1 has no query. */
+export function getDistrictNewsPagePath(slug: string, page: number): string {
+  const path = getDistrictNewsPath(slug);
+  return page > 1 ? `${path}?sayfa=${page}` : path;
 }

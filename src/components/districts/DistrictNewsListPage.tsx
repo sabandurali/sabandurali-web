@@ -11,11 +11,13 @@ import type { PublicArticleSummary } from "@/content/articles/public-types";
 import type { District } from "@/content/districts/district-registry";
 import {
   districtGuidePath,
-  getDistrictNewsPath,
   getDistrictPath,
 } from "@/content/districts/district-routes";
 import { homeContent } from "@/content/homeContent";
-import { paginateDistrictNews } from "./district-news-pages";
+import {
+  getDistrictNewsPagePath,
+  paginateDistrictNews,
+} from "./district-news-pages";
 
 export default function DistrictNewsListPage({
   district,
@@ -29,7 +31,7 @@ export default function DistrictNewsListPage({
   const home = homeContent.tr;
   const { items, currentPage, totalPages } = paginateDistrictNews(news, page);
   const href = (target: number) =>
-    `${getDistrictNewsPath(district.slug)}${target === 1 ? "" : `?sayfa=${target}`}`;
+    getDistrictNewsPagePath(district.slug, target);
 
   return (
     <div id="top" lang="tr">

@@ -1,6 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { paginateDistrictNews, parseNewsPage } from "./district-news-pages";
+import {
+  getDistrictNewsPagePath,
+  paginateDistrictNews,
+  parseNewsPage,
+} from "./district-news-pages";
 
 test("the sayfa query is a positive integer or page 1", () => {
   assert.equal(parseNewsPage(undefined), 1);
@@ -25,4 +29,15 @@ test("pages are clamped to the existing range", () => {
     currentPage: 1,
     totalPages: 1,
   });
+});
+
+test("page 1 of the news list has no query, later pages carry sayfa", () => {
+  assert.equal(
+    getDistrictNewsPagePath("esenler", 1),
+    "/istanbul/ilceler/esenler/haberler",
+  );
+  assert.equal(
+    getDistrictNewsPagePath("esenler", 3),
+    "/istanbul/ilceler/esenler/haberler?sayfa=3",
+  );
 });
