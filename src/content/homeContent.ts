@@ -177,7 +177,7 @@ export const homeContent = {
       cards: [
         {
           icon: "city",
-          title: "GAYRİMENKUL VE İSTANBUL",
+          title: "Gayrimenkul & İstanbul",
           description:
             "İstanbul piyasası, değerleme, yatırım, mahalleler ve saha deneyimine dayalı rehberler.",
           linkLabel: "Çalışma alanını aç",
@@ -185,7 +185,7 @@ export const homeContent = {
         },
         {
           icon: "handshake",
-          title: "SATIŞ VE MÜZAKERE",
+          title: "Satış & Müzakere",
           description:
             "Satış, müzakere, iletişim ve müşteri ilişkileri üzerine uygulanabilir yöntemler.",
           linkLabel: "Çalışma alanını aç",
@@ -193,7 +193,7 @@ export const homeContent = {
         },
         {
           icon: "research",
-          title: "ARAŞTIRMA VE ANALİZ",
+          title: "Araştırma & Analiz",
           description:
             "Ekonomi, şehir ve toplumsal konuları güvenilir kaynaklarla karşılaştıran sade ve anlaşılır analizler.",
           linkLabel: "Çalışma alanını aç",
@@ -201,7 +201,7 @@ export const homeContent = {
         },
         {
           icon: "technology",
-          title: "YAPAY ZEKÂ VE TEKNOLOJİ",
+          title: "Yapay Zekâ & Teknoloji",
           description:
             "Yapay zekâ araçları, dijital üretim ve teknolojinin mesleki ve günlük kullanımına yönelik uygulamalı notlar.",
           linkLabel: "Çalışma alanını aç",
@@ -209,7 +209,7 @@ export const homeContent = {
         },
         {
           icon: "book",
-          title: "KİTAPLAR VE ÖĞRENME",
+          title: "Kitaplar & Öğrenme",
           description:
             "Kitap incelemeleri, öğrenme yöntemleri ve hayata uygulanabilecek temel fikirler.",
           linkLabel: "Çalışma alanını aç",
@@ -217,7 +217,7 @@ export const homeContent = {
         },
         {
           icon: "network",
-          title: "FOTOĞRAF",
+          title: "Fotoğraf",
           description:
             "İstanbul, mimari, sokak ve gündelik hayata dair fotoğraf arşivleri.",
           linkLabel: "Çalışma alanını aç",
@@ -320,7 +320,7 @@ export const homeContent = {
       cards: [
         {
           icon: "city",
-          title: "REAL ESTATE AND ISTANBUL",
+          title: "Real Estate & Istanbul",
           description:
             "Guides grounded in Istanbul’s property market, valuation, investment, neighbourhoods and field experience.",
           linkLabel: "Explore real estate guides",
@@ -328,7 +328,7 @@ export const homeContent = {
         },
         {
           icon: "handshake",
-          title: "SALES AND NEGOTIATION",
+          title: "Sales & Negotiation",
           description:
             "Applicable methods for building trust, managing clients, persuasion and ethical negotiation.",
           linkLabel: "Explore sales and negotiation",
@@ -336,7 +336,7 @@ export const homeContent = {
         },
         {
           icon: "research",
-          title: "RESEARCH AND ANALYSIS",
+          title: "Research & Analysis",
           description:
             "Clear analysis of economic, urban and social topics based on reliable and comparative sources.",
           linkLabel: "Read the analyses",
@@ -344,7 +344,7 @@ export const homeContent = {
         },
         {
           icon: "technology",
-          title: "ARTIFICIAL INTELLIGENCE AND TECHNOLOGY",
+          title: "AI & Technology",
           description:
             "Practical notes on AI tools, digital production and the professional and everyday use of technology.",
           linkLabel: "Explore technology notes",
@@ -352,7 +352,7 @@ export const homeContent = {
         },
         {
           icon: "book",
-          title: "BOOKS AND LEARNING",
+          title: "Books & Learning",
           description:
             "Book reviews, learning methods and ideas that can be applied in everyday life.",
           linkLabel: "Browse book reviews",
@@ -360,7 +360,7 @@ export const homeContent = {
         },
         {
           icon: "network",
-          title: "PHOTOGRAPHY",
+          title: "Photography",
           description:
             "Photography archives of Istanbul, architecture, streets and everyday life.",
           linkLabel: "Explore photography",

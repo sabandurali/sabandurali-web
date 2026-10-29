@@ -32,6 +32,7 @@ const {
   getCsrfAllowedOrigins,
   MAX_UPLOAD_BYTES,
   PRODUCTION_SITE_ORIGIN,
+  RICH_TEXT_REMOVED_FEATURES,
 } = await import("../payload.config");
 const { siteUrl } = await import("../config/site");
 const { sqliteAdapter } = await import("@payloadcms/db-sqlite");
@@ -153,7 +154,11 @@ test("configuration: depth cap, anonymous REST limits and a rich text editor the
   ).editorConfig;
   const features = editorConfig.resolvedFeatureMap;
 
-  assert.equal(features.has("relationship"), false);
+  // The resolved editor (not only configureRichTextFeatures) offers no
+  // feature the public renderer has no design for (FRONTEND-1).
+  for (const key of RICH_TEXT_REMOVED_FEATURES) {
+    assert.equal(features.has(key), false, key);
+  }
   assert.deepEqual(
     features.get("heading")?.sanitizedServerFeatureProps?.enabledHeadingSizes,
     ["h2", "h3", "h4"],

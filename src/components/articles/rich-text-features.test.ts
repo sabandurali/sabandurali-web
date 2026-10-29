@@ -61,3 +61,24 @@ test("the features the renderer designs stay enabled", () => {
     assert.ok(keys.includes(key), `${key} is missing`);
   }
 });
+
+test("the admin import map loads no client code of a removed feature", async () => {
+  // A stale entry is harmless but dead; `npm run generate:importmap` after a
+  // feature change keeps the admin bundle to what the editor offers.
+  const { readFile } = await import("node:fs/promises");
+  const importMap = await readFile(
+    new URL("../../app/(payload)/admin/importMap.js", import.meta.url),
+    "utf8",
+  );
+  for (const client of [
+    "ChecklistFeatureClient",
+    "UnderlineFeatureClient",
+    "StrikethroughFeatureClient",
+    "AlignFeatureClient",
+    "IndentFeatureClient",
+    "RelationshipFeatureClient",
+  ]) {
+    assert.equal(importMap.includes(client), false, client);
+  }
+  assert.ok(importMap.includes("BoldFeatureClient"));
+});
