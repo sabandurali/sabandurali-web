@@ -13,25 +13,26 @@ import {
   submitContactForm,
   toFormStatusState,
 } from "./contact-submission";
+import type { ContactFieldErrors } from "./contact-validation";
 
 /** A fake form and fetch that record what the submit flow did. */
 function harness({
-  valid = true,
+  errors = {} as ContactFieldErrors,
   data = { name: "Ayşe" } as Record<string, string>,
   respond = async (): Promise<{ ok: boolean }> => ({ ok: true }),
   formId = "abc123" as string | undefined,
 } = {}) {
-  const calls = { reset: 0, report: 0, loading: 0, fetch: [] as string[] };
+  const calls = { reset: 0, validate: 0, loading: 0, fetch: [] as string[] };
   const inFlight = { current: false };
   const options = {
     form: {
-      checkValidity: () => valid,
-      reportValidity: () => {
-        calls.report += 1;
-      },
       reset: () => {
         calls.reset += 1;
       },
+    },
+    validate: () => {
+      calls.validate += 1;
+      return errors;
     },
     readFormData: () => formDataWith(data),
     formId,
@@ -96,9 +97,14 @@ test("TESTS-INFRA-6: a second submit while sending is ignored", async () => {
 });
 
 test("TESTS-INFRA-6: invalid, honeypot and unconfigured submits never send", async () => {
-  const invalid = harness({ valid: false });
-  assert.deepEqual(await invalid.submit(), { kind: "ignored" });
-  assert.equal(invalid.calls.report, 1);
+  const invalidErrors = { email: "E-posta adresinizi yazın." };
+  const invalid = harness({ errors: invalidErrors });
+  assert.deepEqual(await invalid.submit(), {
+    kind: "invalid",
+    errors: invalidErrors,
+  });
+  assert.equal(invalid.calls.validate, 1);
+  assert.equal(invalid.calls.reset, 0, "the typed values are kept");
 
   const bot = harness({ data: { name: "x", _gotcha: "spam" } });
   assert.deepEqual(await bot.submit(), result("success"));
@@ -240,6 +246,15 @@ test("SEC-14: the honeypot is hidden from people, keyboards and assistive techno
   assert.match(input, /autoComplete="off"|autocomplete="off"/);
   assert.doesNotMatch(input, /required/);
   assert.doesNotMatch(html, /name="website"/);
+});
+
+test("FRONTEND-3: the server markup keeps native validation for no-JS visitors", () => {
+  // noValidate is set by a ref once the script runs; without JavaScript
+  // the browser still checks the fields before posting to Formspree.
+  const html = renderToStaticMarkup(
+    h(ContactForm, { content: contactContent.tr, formId: "test" }),
+  );
+  assert.doesNotMatch(html.match(/<form[^>]*>/)?.[0] ?? "", /novalidate/i);
 });
 
 test("without JavaScript the form posts to Formspree, never to the page itself", () => {

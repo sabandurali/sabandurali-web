@@ -89,18 +89,46 @@ export function Field({
         required: required || undefined,
       })}
       {hasError ? (
-        <p
-          id={errorId}
-          className="m-0 flex items-start gap-2 type-small font-semibold text-danger"
-        >
-          <AlertIcon size={18} className="mt-0.5 shrink-0" />
-          <span>
-            <VisuallyHidden>{strings.error} </VisuallyHidden>
-            {error}
-          </span>
-        </p>
+        <FieldError id={errorId} locale={locale}>
+          {error}
+        </FieldError>
       ) : null}
     </div>
+  );
+}
+
+/**
+ * A validation message: danger colour, alert icon and a spoken "Hata:"
+ * prefix. Tie it to its control with `aria-describedby` and set
+ * `aria-invalid` on the control; `Field` does both. Use it directly only
+ * for a control that cannot sit in a `Field` (the privacy checkbox).
+ */
+export function FieldError({
+  id,
+  locale = "tr",
+  className,
+  children,
+}: {
+  id: string | undefined;
+  locale?: UiLocale;
+  className?: string;
+  children: ReactNode;
+}) {
+  const strings = getUiStrings(locale);
+  return (
+    <p
+      id={id}
+      className={cx(
+        "m-0 flex items-start gap-2 type-small font-semibold text-danger",
+        className,
+      )}
+    >
+      <AlertIcon size={18} className="mt-0.5 shrink-0" />
+      <span>
+        <VisuallyHidden>{strings.error} </VisuallyHidden>
+        {children}
+      </span>
+    </p>
   );
 }
 

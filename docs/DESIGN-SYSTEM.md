@@ -259,7 +259,7 @@ yalnızca etkileşim gerektirenlerdir: `SkipLink`, `Disclosure`, `NavMenu`, `For
 | `Card` | Tek başlık bağlantısı; tıklama alanı tüm kartı kaplar, üzerine gelince yalnızca başlığın altı çizilir, odak halkası kartın çevresine çizilir. Kart içindeki başka bağlantılar (kredi, kaynak) tıklanabilir kalır. `cta` yalnızca görsel ipucudur. Başka bir kart (ör. çalışma alanı kartları) aynı kabuğu `cardFrameClassName`, `cardFocusClassName`, `CardTitleLink` ve `CardCue` ile kurar; hover zemini yalnızca palet token'ıdır (`hover:bg-paper`), `bg-white` kullanılmaz. |
 | `EmptyState` | Veri yoksa taramalı panel ve düz cümle ("… henüz eklenmedi."). |
 | `Pagination` | Önceki/sonraki ve sayfa numaraları; geçerli sayfa `aria-current`; tek sayfada hiçbir şey çizmez. |
-| `Field` + `Input` / `Textarea` / `Select` | Üç kontrol aynı kenar, hover, odak ve hata (`aria-invalid`) stillerini paylaşır; sayfada elle stillenmiş `<select>` yazılmaz. Görünen `label`, `hint` ve `error` kontrolün `aria-describedby` listesine bağlanır, hata `aria-invalid` ve "Hata:" önekiyle gelir, zorunlu alanlar "(zorunlu)" yazar. |
+| `Field` + `Input` / `Textarea` / `Select` | Üç kontrol aynı kenar, hover, odak ve hata (`aria-invalid`) stillerini paylaşır; sayfada elle stillenmiş `<select>` yazılmaz. Görünen `label`, `hint` ve `error` kontrolün `aria-describedby` listesine bağlanır, hata `aria-invalid` ve "Hata:" önekiyle gelir, zorunlu alanlar "(zorunlu)" yazar. `Field` içine giremeyen bir kontrol (KVKK onay kutusu) aynı mesajı `FieldError` ile gösterir. Formlar tarayıcı baloncuklarına bırakılmaz: betik çalışınca form `noValidate` olur, gönderimde her geçersiz alan sayfa dilinde kalıcı bir `error` alır, odak ilk hatalı alana taşınır, birden fazla hatada `FormStatus` alanları listeler (`contact-validation.ts`). Betik yoksa tarayıcının doğrulaması devrede kalır. |
 | `FormStatus` | İki kalıcı canlı bölge: ilerleme/başarı `role="status"`, hata `role="alert"`; yalnızca metin değişir, yeni bir sonuçta odak mesaja taşınır (ilk çizimde ve mesajsız sonuçta taşınmaz) (FE-21). `aria-busy` kapsayıcısının dışında durur. |
 | `Legend` | Harita ve şema sembollerinin anahtarı; her sembol metinle adlandırılır. Sembol dolguları da yalnız Atlas token'larıdır (`bg-white` yok, test eder). |
 | `DistrictTileMap` | 39 ilçelik atlas. Bir sonraki bölüme bakın. |
@@ -334,8 +334,9 @@ kipinde kalır. Klavye modeli `menu-keys.ts` içindedir ve test edilir:
 - Dokunma alanı en az 44 × 44 px (yoğun listelerde en az 36 px yükseklik, 24 px'in üzerinde).
 - Dekoratif SVG `aria-hidden="true"` ve `focusable="false"`; anlamlı görselde `alt` ya da `title`.
 - Kart başına tek bağlantı; erişilebilir ad başlıktır.
-- Form: görünen etiket, ipucu ve hata `aria-describedby` ile; durum duyurusu `FormStatus` ile; gönderim
-  sırasında buton odakta kalır.
+- Form: görünen etiket, ipucu ve hata `aria-describedby` ile; hata mesajı sayfa dilinde ve kalıcıdır (tarayıcı
+  baloncuğu değil), odak ilk hatalı alana gider; durum duyurusu `FormStatus` ile; gönderim sırasında buton
+  odakta kalır.
 - 390, 820 ve 1440 px'te yatay kaydırma yok; geniş tablolar kendi kutusunda kayar ve odak halkası
   kırpılmaz.
 

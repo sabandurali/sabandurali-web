@@ -1,4 +1,5 @@
 import type { FormStatusState } from "@/components/ui/FormStatus";
+import type { ContactFieldErrors } from "./contact-validation";
 
 /** Texts of the submit button and of the result announcements. */
 export type SubmissionMessages = {
@@ -73,14 +74,16 @@ export function getSubmissionMessage(
 
 /** The parts of a <form> element the submission flow uses. */
 export type SubmittableForm = {
-  checkValidity: () => boolean;
-  reportValidity: () => void;
   reset: () => void;
 };
 
-/** What the form shows after a submit attempt; `ignored` changes nothing. */
+/**
+ * What the form shows after a submit attempt: `ignored` changes nothing,
+ * `invalid` shows the messages beside their fields (nothing is sent).
+ */
 export type SubmissionOutcome =
   | { kind: "ignored" }
+  | { kind: "invalid"; errors: ContactFieldErrors }
   | {
       kind: "result";
       status: SubmissionStatus;
@@ -89,6 +92,11 @@ export type SubmissionOutcome =
 
 type SubmitContactFormOptions = {
   form: SubmittableForm;
+  /**
+   * Messages of the invalid fields in the page's language
+   * (`getContactFieldErrors`); empty when every field is valid.
+   */
+  validate: () => ContactFieldErrors;
   /** Reads the fields; called only for a valid form. */
   readFormData: () => FormData;
   formId: string | undefined;
@@ -107,13 +115,14 @@ const resultOf = (
 /**
  * One submit of the contact form, independent of React. A second submit
  * while a request is in flight is ignored (the button stays focusable with
- * aria-disabled), an invalid form only reports its errors, a filled
+ * aria-disabled), an invalid form only returns its messages, a filled
  * honeypot looks like a success without sending anything (SEC-14), a
  * missing endpoint is a configuration error, and only a 2xx response is a
  * success. The form is reset only after a success.
  */
 export async function submitContactForm({
   form,
+  validate,
   readFormData,
   formId,
   fetch,
@@ -122,10 +131,8 @@ export async function submitContactForm({
 }: SubmitContactFormOptions): Promise<SubmissionOutcome> {
   if (inFlight.current) return { kind: "ignored" };
 
-  if (!form.checkValidity()) {
-    form.reportValidity();
-    return { kind: "ignored" };
-  }
+  const errors = validate();
+  if (Object.keys(errors).length > 0) return { kind: "invalid", errors };
 
   const formData = readFormData();
 
