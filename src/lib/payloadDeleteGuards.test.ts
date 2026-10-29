@@ -262,6 +262,51 @@ test("media used by current content, a version, rich text or a global cannot be 
         ],
       }),
     },
+    {
+      // A global with drafts: the current document no longer uses the
+      // image, an older version still does.
+      pattern: /geçmiş bir içerik sürümünde \(navigation\)/,
+      req: fakeRequest({
+        globals: [
+          {
+            doc: {},
+            fields: [
+              { name: "socialImage", type: "upload", relationTo: "media" },
+            ],
+            slug: "navigation",
+            versions: [{ version: { socialImage: "media-1" } }],
+          },
+        ],
+      }),
+    },
+    {
+      // A collection that can reach media only through rich text uploads.
+      pattern: /mevcut içerikte \(notes\)/,
+      req: fakeRequest({
+        collections: [
+          {
+            docs: [
+              {
+                body: {
+                  root: {
+                    children: [
+                      {
+                        relationTo: "media",
+                        type: "upload",
+                        value: "media-1",
+                      },
+                    ],
+                  },
+                },
+                id: "n1",
+              },
+            ],
+            fields: [{ name: "body", type: "richText" }],
+            slug: "notes",
+          },
+        ],
+      }),
+    },
   ];
 
   for (const { pattern, req } of cases) {

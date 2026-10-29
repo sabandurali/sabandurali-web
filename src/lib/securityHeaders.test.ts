@@ -5,13 +5,17 @@ import test from "node:test";
 import { fileURLToPath } from "node:url";
 import { createElement as h } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { getPathMatch } from "next/dist/shared/lib/router/utils/path-match";
 import nextConfig from "../../next.config";
 import ContactForm from "@/components/forms/ContactForm";
 import { getFormspreeEndpoint } from "@/components/forms/contact-submission";
 import { contactContent } from "@/content/contactContent";
 import {
   FORMSPREE_ORIGIN,
+  PUBLIC_ROUTES_SOURCE,
   contentSecurityPolicyDirectives,
+  contentSecurityPolicyReportOnlyDirectives,
+  publicRouteSecurityHeaders,
   securityHeaders,
   serializeContentSecurityPolicy,
 } from "./securityHeaders";
@@ -250,4 +254,78 @@ test("next.config redirects the legacy home slug and has no dead webpack hook", 
   );
   assert.equal(/\bwebpack\s*:/.test(source), false);
   assert.equal(/extensionAlias/.test(source), false);
+});
+
+test("the report-only CSP is a full policy that keeps every enforced directive", () => {
+  const [header] = publicRouteSecurityHeaders;
+  assert.ok(header);
+  assert.equal(header.key, "Content-Security-Policy-Report-Only");
+  assert.equal(publicRouteSecurityHeaders.length, 1);
+  const directives = parseDirectives(header.value);
+
+  for (const [name, sources] of Object.entries(
+    contentSecurityPolicyDirectives,
+  )) {
+    assert.deepEqual(directives.get(name), sources, name);
+  }
+  assert.deepEqual(directives.get("default-src"), ["'self'"]);
+  for (const name of ["script-src", "style-src", "img-src", "connect-src"]) {
+    assert.ok(directives.has(name), name);
+  }
+  // The contact form posts to Formspree with fetch().
+  assert.ok(directives.get("connect-src")?.includes(FORMSPREE_ORIGIN));
+
+  for (const [name, sources] of directives) {
+    for (const source of sources) {
+      assert.notEqual(source, "*", `${name} must not allow every origin`);
+      assert.ok(!source.startsWith("http:"), `${name}: ${source}`);
+      // Production needs no eval (Next.js CSP guide).
+      assert.notEqual(source, "'unsafe-eval'", name);
+    }
+  }
+  assert.equal(
+    directives.size,
+    Object.keys(contentSecurityPolicyReportOnlyDirectives).length,
+  );
+});
+
+test("next.config sends the report-only CSP on public routes only", async () => {
+  assert.ok(nextConfig.headers);
+  const routes = await nextConfig.headers();
+  const reportOnly = routes.filter(({ headers }) =>
+    headers.some(({ key }) => key === "Content-Security-Policy-Report-Only"),
+  );
+  assert.deepEqual(
+    reportOnly.map(({ source, headers }) => ({ source, headers })),
+    [
+      {
+        source: PUBLIC_ROUTES_SOURCE,
+        headers: [...publicRouteSecurityHeaders],
+      },
+    ],
+  );
+
+  // Compiled the way Next.js compiles a headers() source.
+  const matches = getPathMatch(PUBLIC_ROUTES_SOURCE, { strict: true });
+  for (const pathname of [
+    "/",
+    "/en",
+    "/iletisim",
+    "/istanbul/ilceler/kadikoy",
+    "/en/articles/urban-renewal",
+    "/administration-notes",
+    "/apiary",
+  ]) {
+    assert.notEqual(matches(pathname), false, pathname);
+  }
+  for (const pathname of [
+    "/admin",
+    "/admin/login",
+    "/admin/collections/books",
+    "/api/users",
+    "/api/media/file/x.jpg",
+    "/_next/image",
+  ]) {
+    assert.equal(matches(pathname), false, pathname);
+  }
 });

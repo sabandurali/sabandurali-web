@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { existsSync, readdirSync, statSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
@@ -21,7 +21,13 @@ import {
   validateNewsSourceName,
   validateNewsSourceUrl,
 } from "./Articles";
-import { Books, normalizeAndValidateBook } from "./Books";
+import {
+  Books,
+  hideReviewStatusFromPublicApi,
+  normalizeAndValidateBook,
+  validateBookPublication,
+} from "./Books";
+import { PRIVATE_BOOK_REVIEW_FIELDS } from "../content/books/public-types";
 import { Categories } from "./Categories";
 import {
   DistrictGuides,
@@ -49,7 +55,10 @@ import {
   refusePasswordResetWithoutEmail,
 } from "./Users";
 import { Navigation, getNavigationPageFilter } from "../globals/Navigation";
-import { denyAnonymousRestReads } from "../lib/payloadAccess";
+import {
+  denyAnonymousRestReads,
+  editorialFieldRead,
+} from "../lib/payloadAccess";
 import {
   preventDeletingLastAdmin,
   preventDemotingLastAdmin,
@@ -153,6 +162,36 @@ test("session cookies and login lockout are explicit", () => {
   assert.equal(runAccess(Users.access?.unlock, admin), true);
   assert.equal(runAccess(Users.access?.unlock, editor), false);
   assert.equal(runAccess(Users.access?.unlock, null), false);
+});
+
+test("the security runbook matches the lockout and names every sign-in endpoint", () => {
+  const runbook = readFileSync(
+    path.resolve(appDirectory, "../../docs/SECURITY.md"),
+    "utf8",
+  );
+
+  assert.match(
+    runbook,
+    new RegExp(`\\(${MAX_LOGIN_ATTEMPTS}\\) failed logins`),
+  );
+  assert.match(
+    runbook,
+    new RegExp(`\\(${LOGIN_LOCK_TIME_MS / 60_000} minutes\\)`),
+  );
+  // Payload's unauthenticated auth endpoints the firewall rule must cover.
+  for (const endpoint of [
+    "login",
+    "first-register",
+    "forgot-password",
+    "reset-password",
+    "unlock",
+  ]) {
+    assert.match(
+      runbook,
+      new RegExp(`"value":"/api/users/${endpoint}"`),
+      `the CLI rule covers /api/users/${endpoint}`,
+    );
+  }
 });
 
 test("password reset is refused while no email adapter exists", () => {
@@ -345,6 +384,75 @@ test("book translations and related books cannot expand recursively", () => {
   assert.deepEqual(Books.indexes, [
     { fields: ["language", "slug"], unique: true },
   ]);
+});
+
+test("editorial book fields are hidden from the public API", () => {
+  // Model fields that are not Payload fields one to one: `relatedBookIds` is
+  // `relatedBooks`, `translationSourceUpdatedAt` is derived from the
+  // populated translation and `reviewStatus` is dropped in `afterRead`
+  // because the collection's read access filters on it.
+  const fieldNames: Record<string, string | null> = {
+    relatedBookIds: "relatedBooks",
+    reviewStatus: null,
+    translationSourceUpdatedAt: null,
+  };
+
+  for (const modelField of PRIVATE_BOOK_REVIEW_FIELDS) {
+    const name = modelField in fieldNames ? fieldNames[modelField] : modelField;
+    if (name === null) continue;
+    const field = findField(Books, name);
+    assert.equal(
+      "access" in field ? field.access?.read : undefined,
+      editorialFieldRead,
+      name,
+    );
+  }
+
+  const run = (payloadAPI: string, user: unknown, overrideAccess = false) =>
+    hideReviewStatusFromPublicApi({
+      collection: {},
+      context: {},
+      doc: { id: "b1", reviewStatus: "published", title: "Kitap" },
+      overrideAccess,
+      req: { payloadAPI, user },
+    } as unknown as Parameters<typeof hideReviewStatusFromPublicApi>[0]);
+
+  assert.ok(Books.hooks?.afterRead?.includes(hideReviewStatusFromPublicApi));
+  assert.deepEqual(run("REST", null), { id: "b1", title: "Kitap" });
+  assert.deepEqual(run("GraphQL", null), { id: "b1", title: "Kitap" });
+  for (const kept of [
+    run("REST", editor),
+    run("REST", admin),
+    run("local", null),
+    run("REST", null, true),
+  ]) {
+    assert.equal(
+      (kept as { reviewStatus?: unknown }).reviewStatus,
+      "published",
+    );
+  }
+});
+
+test("a database failure while publishing a book is not reported as a missing cover", async () => {
+  const failure = new Error("connection terminated unexpectedly");
+
+  await assert.rejects(
+    validateBookPublication({
+      collection: {},
+      context: {},
+      data: { _status: "published", coverImage: "media-1" },
+      operation: "update",
+      originalDoc: { id: "book-1", title: "Kitap" },
+      req: {
+        payload: {
+          findByID: async () => {
+            throw failure;
+          },
+        },
+      },
+    } as unknown as Parameters<CollectionBeforeValidateHook>[0]),
+    (error: unknown) => error === failure,
+  );
 });
 
 type FakeBook = { id: string; language: string; translation?: string | null };

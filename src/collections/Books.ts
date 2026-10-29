@@ -1,5 +1,6 @@
 import {
   ValidationError,
+  type CollectionAfterReadHook,
   type CollectionBeforeValidateHook,
   type CollectionConfig,
   type FilterOptions,
@@ -23,6 +24,8 @@ import { getText, isRecord } from "@/content/guards";
 import {
   adminOnly,
   adminOrEditor,
+  editorialFieldRead,
+  isPublicApiReader,
   publishedBookReviewOrAdminOrEditor,
 } from "@/lib/payloadAccess";
 import { createRevalidationHooks } from "@/lib/revalidation";
@@ -334,16 +337,14 @@ export const validateBookPublication: CollectionBeforeValidateHook = async ({
   const coverMedia =
     coverID === null
       ? null
-      : await req.payload
-          .findByID({
-            collection: "media",
-            depth: 0,
-            disableErrors: true,
-            id: coverID,
-            overrideAccess: true,
-            req,
-          })
-          .catch(() => null);
+      : await req.payload.findByID({
+          collection: "media",
+          depth: 0,
+          disableErrors: true,
+          id: coverID,
+          overrideAccess: true,
+          req,
+        });
   const issues = getBookPublicationIssues(merged, coverMedia);
 
   if (issues.length > 0) {
@@ -355,6 +356,27 @@ export const validateBookPublication: CollectionBeforeValidateHook = async ({
   }
 
   return data;
+};
+
+/**
+ * `reviewStatus` is an editorial field (`PRIVATE_BOOK_REVIEW_FIELDS`), but the
+ * collection's own read access filters on it, and Payload validates that
+ * filter against field access. It is dropped from the public API response
+ * here instead; every row an anonymous client can read has the value
+ * `published`, so the column itself reveals nothing to a `where` query.
+ */
+export const hideReviewStatusFromPublicApi: CollectionAfterReadHook = ({
+  doc,
+  overrideAccess,
+  req,
+}) => {
+  if (overrideAccess === true || !isPublicApiReader(req) || !isRecord(doc)) {
+    return doc;
+  }
+
+  return Object.fromEntries(
+    Object.entries(doc).filter(([key]) => key !== "reviewStatus"),
+  );
 };
 
 const textListField = (
@@ -794,6 +816,7 @@ export const Books: CollectionConfig = {
             },
             {
               name: "translationStatus",
+              access: { read: editorialFieldRead },
               type: "select",
               label: "Çeviri durumu",
               defaultValue: "none",
@@ -805,6 +828,7 @@ export const Books: CollectionConfig = {
             },
             {
               name: "relatedBooks",
+              access: { read: editorialFieldRead },
               type: "relationship",
               hasMany: true,
               label: "İlgili kitap incelemeleri",
@@ -817,12 +841,14 @@ export const Books: CollectionConfig = {
               fields: [
                 {
                   name: "authorId",
+                  access: { read: editorialFieldRead },
                   type: "relationship",
                   label: "İçerik yazarı",
                   relationTo: "users",
                 },
                 {
                   name: "editorId",
+                  access: { read: editorialFieldRead },
                   type: "relationship",
                   label: "Editör",
                   relationTo: "users",
@@ -845,6 +871,7 @@ export const Books: CollectionConfig = {
                 },
                 {
                   name: "showOnHomepage",
+                  access: { read: editorialFieldRead },
                   type: "checkbox",
                   label: "Ana sayfada göster",
                   defaultValue: false,
@@ -920,6 +947,7 @@ export const Books: CollectionConfig = {
   hooks: {
     afterChange: [revalidation.afterChange],
     afterDelete: [revalidation.afterDelete],
+    afterRead: [hideReviewStatusFromPublicApi],
     beforeValidate: [normalizeAndValidateBook, validateBookPublication],
   },
   indexes: [

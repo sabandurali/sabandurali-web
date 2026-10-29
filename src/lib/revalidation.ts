@@ -299,6 +299,8 @@ function photoTargets(
 
 function districtGuideTargets(docs: readonly unknown[]): RevalidationTarget[] {
   return [
+    // Both home pages render the featured district card and its summary.
+    ...homeTargets(),
     ...districtPageTargets(getDistricts(docs), { news: true }),
     pathTarget(SITEMAP_PATH),
   ];

@@ -3,6 +3,7 @@ import {
   type Access,
   type CollectionBeforeOperationHook,
   type CollectionConfig,
+  type FieldAccess,
   type PayloadRequest,
   type Where,
 } from "payload";
@@ -34,6 +35,30 @@ export function isAdminOrEditor(user: unknown): boolean {
 export const adminOnly: Access = ({ req }) => isAdmin(req.user);
 
 export const adminOrEditor: Access = ({ req }) => isAdminOrEditor(req.user);
+
+/**
+ * True when a read must not see editorial fields: an anonymous (or
+ * non-editor) reader that reached Payload through the REST or GraphQL API
+ * and not through the server's own Local API.
+ *
+ * The public pages read through the Local API with `overrideAccess: false`;
+ * their mappers need some workflow values to apply the visibility rules and
+ * then drop them (see `src/content/books/public-types.ts`). Anything an API
+ * client sends arrives as `REST`, including relationship population inside
+ * that request, which reuses the same `req`.
+ */
+export function isPublicApiReader(req: PayloadRequest): boolean {
+  return req.payloadAPI !== "local" && !isAdminOrEditor(req.user);
+}
+
+/**
+ * Field-level `access.read` for editorial fields that public pages never
+ * show (CLAUDE.md, rule 5). Payload removes the field from the response and
+ * refuses `where`/`sort` on it, so an anonymous REST query cannot use it as
+ * a filter either.
+ */
+export const editorialFieldRead: FieldAccess = ({ req }) =>
+  !isPublicApiReader(req);
 
 /**
  * Public rows of a collection with drafts: published and no longer scheduled.
