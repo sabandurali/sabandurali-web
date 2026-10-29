@@ -64,9 +64,14 @@ vercel firewall rules add "Admin auth rate limit" \
   --rate-limit-action rate_limit
 ```
 
-Ten requests a minute leave room for a person who mistypes, and stop scripted
-guessing long before the per-account lock matters. The admin UI signs in with
-`POST /api/users/login`, so the rule covers it.
+Ten requests a minute leave room for a person who mistypes and slow down
+scripted guessing and password spraying from one address. The admin UI signs
+in with `POST /api/users/login`, so the rule covers it.
+
+What the rule does **not** fix: locking one known account needs only 5 wrong
+passwords every 10 minutes, which stays below any per-IP limit that still lets
+a person sign in. The targeted lockout therefore remains possible; the
+mitigation for it is the second admin below, who can unlock the account.
 
 Verification after publishing (read-only, from one IP):
 
