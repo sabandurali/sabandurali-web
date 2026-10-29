@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { isLegacyTurkishHome } from "@/content/pages/legacy-home";
 import type { PublicPage } from "@/content/pages/public-types";
 import { createPageMetadata, createSocialImage } from "@/lib/metadata";
 
@@ -10,7 +11,8 @@ export const homePagePaths = {
 export function getPublicPagePath(page: PublicPage): string {
   const localePrefix = page.language === "en" ? "/en" : "";
 
-  return page.pageType === "home"
+  // `/ana-sayfa` always redirects to `/`, served as home or not.
+  return page.pageType === "home" || isLegacyTurkishHome(page)
     ? localePrefix || "/"
     : `${localePrefix}/${page.slug}`;
 }

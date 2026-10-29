@@ -840,3 +840,25 @@ test("a sitemap built from failed sources still lists every static page", () => 
   assert.ok(byUrl(sitemap, "/istanbul/ilceler"));
   assert.ok(byUrl(sitemap, "/fotograf"));
 });
+
+test("CORRECTNESS-2: a legacy ana-sayfa page next to a real home record stays out", () => {
+  // An editor published a real "Ana sayfa" record; the legacy record is
+  // still published as a standard page. `/ana-sayfa` redirects to `/`.
+  const sitemap = buildSitemap({
+    ...fullContent,
+    homePages: {
+      tr: {
+        page: page({ id: "real-home", slug: "home", pageType: "home" }),
+      },
+      en: { page: null },
+    },
+  });
+
+  assert.equal(byUrl(sitemap, "/ana-sayfa"), undefined);
+  assert.ok(byUrl(sitemap, "/"));
+  assert.ok(byUrl(sitemap, "/projeler"));
+  assert.deepEqual(
+    buildStandardPageEntries([page({ id: "legacy-home", slug: "ana-sayfa" })]),
+    [],
+  );
+});

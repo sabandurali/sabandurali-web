@@ -46,6 +46,7 @@ import {
   homePagePaths,
   isHomePageIndexable,
 } from "@/content/pages/page-seo";
+import { isLegacyTurkishHome } from "@/content/pages/legacy-home";
 import type { PublicPage } from "@/content/pages/public-types";
 import { getPhotoPath, photoListPaths } from "@/content/photos/photo-routes";
 import type { PublicPhoto } from "@/content/photos/types";
@@ -312,7 +313,6 @@ export function buildHomeEntries(
 
 export function buildStandardPageEntries(
   pages: readonly PublicPage[],
-  excludedPageIds: ReadonlySet<string> = new Set(),
 ): SitemapEntry[] {
   return pages
     .filter(
@@ -322,8 +322,10 @@ export function buildStandardPageEntries(
         // is a 404, so an English record must never reach the sitemap.
         page.language === "tr" &&
         page.seo.index &&
-        // The legacy "ana-sayfa" record is served as the home page.
-        !excludedPageIds.has(page.id),
+        // The legacy "ana-sayfa" record is either the served home or, once
+        // a real home record exists, a page whose address redirects to `/`:
+        // never a sitemap entry of its own.
+        !isLegacyTurkishHome(page),
     )
     .map((page) =>
       createEntry(getPublicPagePath(page), {
@@ -536,13 +538,6 @@ export function mergeSitemapEntries(
 }
 
 export function buildSitemap(content: SitemapContent): MetadataRoute.Sitemap {
-  const homePageIds = new Set(
-    siteLocales.flatMap((locale) => {
-      const id = content.homePages[locale]?.page?.id;
-      return id === undefined ? [] : [id];
-    }),
-  );
-
   return mergeSitemapEntries([
     ...buildHomeEntries(content.homePages),
     ...buildStaticPageEntries(),
@@ -550,7 +545,7 @@ export function buildSitemap(content: SitemapContent): MetadataRoute.Sitemap {
     ...buildArticleEntries(content.articles),
     ...buildBookReviewEntries(content.bookReviews),
     ...buildPhotoEntries(content.photos),
-    ...buildStandardPageEntries(content.standardPages, homePageIds),
+    ...buildStandardPageEntries(content.standardPages),
     ...buildDistrictEntries(content.districtGuides),
     ...buildDistrictNewsEntries(content.districtNews),
     ...buildWorkspaceEntries(content.articles, content.photos),
