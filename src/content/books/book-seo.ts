@@ -11,6 +11,7 @@ import {
   personalBrandName,
   serializeJsonLd,
 } from "@/content/entity-seo";
+import { getContentLastModifiedIso } from "@/lib/content-dates";
 import { createPageMetadata, createSocialImage } from "@/lib/metadata";
 
 type CanonicalBookReview = Pick<PublicBookReview, "language" | "seo" | "slug">;
@@ -86,7 +87,7 @@ export function createBookReviewMetadata(
     socialDescription: bookReview.seo.openGraphDescription,
     article: {
       publishedTime: bookReview.publishedAt,
-      modifiedTime: bookReview.updatedAt,
+      modifiedTime: getContentLastModifiedIso(bookReview),
       authors: [personalBrandName],
     },
   });
@@ -118,7 +119,7 @@ export function createBookReviewJsonLd(bookReview: PublicBookReview) {
     author: createPersonReference(),
     reviewBody: bookReview.personalEvaluation || bookReview.summary,
     datePublished: bookReview.publishedAt ?? undefined,
-    dateModified: bookReview.updatedAt,
+    dateModified: getContentLastModifiedIso(bookReview),
     inLanguage: bookReview.language === "tr" ? "tr-TR" : "en",
     url: getBookReviewCanonicalUrl(bookReview),
     itemReviewed: book,

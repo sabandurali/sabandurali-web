@@ -4,6 +4,7 @@ import type {
   PublicPhoto,
   PublicPhotoTranslation,
 } from "@/content/photos/types";
+import { getContentLastModifiedIso } from "@/lib/content-dates";
 import {
   createOptimizedSocialImage,
   createPageMetadata,
@@ -38,7 +39,7 @@ export function createPhotoMetadata(
     images: [image],
     article: {
       publishedTime: photo.publishedAt,
-      modifiedTime: photo.updatedAt,
+      modifiedTime: getContentLastModifiedIso(photo),
       authors: [photo.photographer],
     },
   });

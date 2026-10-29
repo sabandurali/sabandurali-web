@@ -124,3 +124,16 @@ test("an explicit share image is used as uploaded", () => {
     "tr-TR": `${site}/fotograflar/galata`,
   });
 });
+
+test("a scheduled photo never reports a modification before publication", () => {
+  const openGraph = createPhotoMetadata(
+    photo({
+      publishedAt: "2026-10-10T09:00:00.000Z",
+      updatedAt: "2026-10-01T09:00:00.000Z",
+    }),
+    null,
+  ).openGraph;
+
+  assert.ok(openGraph !== undefined && "modifiedTime" in openGraph);
+  assert.equal(openGraph.modifiedTime, "2026-10-10T09:00:00.000Z");
+});

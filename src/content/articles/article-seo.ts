@@ -19,6 +19,7 @@ import {
   personalBrandName,
   serializeJsonLd,
 } from "@/content/entity-seo";
+import { getContentLastModifiedIso } from "@/lib/content-dates";
 import {
   createOptimizedSocialImage,
   createPageMetadata,
@@ -125,7 +126,7 @@ export function createArticleMetadata(
     socialDescription: article.seo.openGraphDescription,
     article: {
       publishedTime: article.publishedAt,
-      modifiedTime: article.updatedAt,
+      modifiedTime: getContentLastModifiedIso(article),
       authors: [getArticleAuthorName(article)],
     },
   });
@@ -141,7 +142,7 @@ export function createArticleJsonLd(article: PublicArticle) {
     headline: article.title,
     description: article.summary,
     datePublished: article.publishedAt ?? undefined,
-    dateModified: article.updatedAt,
+    dateModified: getContentLastModifiedIso(article),
     author:
       authorName === personalBrandName
         ? createPersonReference()

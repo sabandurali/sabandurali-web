@@ -175,3 +175,18 @@ test("hreflang pairs only indexable, self-canonical reviews", () => {
   assert.equal(noindex.alternates?.languages, undefined);
   assert.equal(isBookReviewHreflangEligible(english), true);
 });
+
+test("a scheduled review never reports a modification before publication", () => {
+  const scheduled = review({
+    publishedAt: "2026-10-10T09:00:00.000Z",
+    updatedAt: "2026-10-01T09:00:00.000Z",
+  });
+  const openGraph = createBookReviewMetadata(scheduled, null).openGraph;
+
+  assert.equal(
+    createBookReviewJsonLd(scheduled).dateModified,
+    "2026-10-10T09:00:00.000Z",
+  );
+  assert.ok(openGraph !== undefined && "modifiedTime" in openGraph);
+  assert.equal(openGraph.modifiedTime, "2026-10-10T09:00:00.000Z");
+});
