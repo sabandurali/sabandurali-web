@@ -1,7 +1,8 @@
-import type {
-  CollectionBeforeChangeHook,
-  CollectionBeforeOperationHook,
-  CollectionConfig,
+import {
+  ValidationError,
+  type CollectionBeforeChangeHook,
+  type CollectionBeforeOperationHook,
+  type CollectionConfig,
 } from "payload";
 import { PublicRequestRefusal, isAdmin } from "@/lib/payloadAccess";
 import {
@@ -49,6 +50,118 @@ export const refusePasswordResetWithoutEmail: CollectionBeforeOperationHook = ({
     throw new PublicRequestRefusal(
       "Parola sıfırlama e-postası henüz yapılandırılmadı. Parolanızı başka bir yönetici sıfırlayabilir.",
     );
+  }
+
+  return args;
+};
+
+/**
+ * Payload accepts any password of three characters or more. Accounts on this
+ * site can publish and delete content, so every way a password is set (first
+ * registration, a new user, a profile edit, a reset) needs at least this many
+ * characters and must not simply repeat the account's email address.
+ */
+export const MIN_PASSWORD_LENGTH = 12;
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+/** The Turkish reason a password is refused, or null when it is acceptable. */
+export function getPasswordProblem(
+  password: string,
+  emails: readonly string[] = [],
+): string | null {
+  if (Array.from(password).length < MIN_PASSWORD_LENGTH) {
+    return `Parola en az ${MIN_PASSWORD_LENGTH} karakter olmalı.`;
+  }
+
+  const candidate = password.trim().toLowerCase();
+  for (const email of emails) {
+    const address = email.trim().toLowerCase();
+    if (address === "") continue;
+    const localPart = address.split("@")[0] ?? "";
+    if (candidate === address || candidate === localPart) {
+      return "Parola e-posta adresiyle aynı olamaz.";
+    }
+  }
+
+  return null;
+}
+
+const PASSWORD_OPERATIONS: ReadonlySet<string> = new Set([
+  "create",
+  "resetPassword",
+  "update",
+]);
+
+type BeforeOperationRequest =
+  Parameters<CollectionBeforeOperationHook>[0]["req"];
+
+/** The addresses a new password must not repeat: the submitted and the stored one. */
+async function getAccountEmails(
+  args: Record<string, unknown>,
+  data: Record<string, unknown>,
+  req: BeforeOperationRequest,
+): Promise<string[]> {
+  const emails: string[] = [];
+
+  if (typeof data.email === "string") emails.push(data.email);
+  if (typeof args.id === "string" || typeof args.id === "number") {
+    const existing = await req.payload.findByID({
+      collection: "users",
+      depth: 0,
+      disableErrors: true,
+      id: args.id,
+      overrideAccess: true,
+      req,
+    });
+    if (existing !== null && typeof existing.email === "string") {
+      emails.push(existing.email);
+    }
+  }
+
+  return emails;
+}
+
+/**
+ * Enforces the password rule wherever a password is set: create (including
+ * the first registration, which runs `create`), update and reset. A refusal
+ * is a field error on `password`, so the admin shows it under the field.
+ */
+export const enforcePasswordPolicy: CollectionBeforeOperationHook = async ({
+  args,
+  operation,
+  req,
+}) => {
+  // Each operation has its own argument type; read them as plain records.
+  const operationArgs: unknown = args;
+  if (!PASSWORD_OPERATIONS.has(operation) || !isRecord(operationArgs)) {
+    return args;
+  }
+
+  const data = operationArgs.data;
+  if (!isRecord(data) || !("password" in data)) return args;
+
+  const { password } = data;
+  // No password, or the admin form's empty "unchanged" value on update:
+  // nothing is being set. Payload itself requires one on create and reset.
+  if (password === undefined || password === null) return args;
+  if (password === "" && operation === "update") return args;
+
+  const problem =
+    typeof password === "string"
+      ? getPasswordProblem(
+          password,
+          await getAccountEmails(operationArgs, data, req),
+        )
+      : "Parola metin olmalı.";
+
+  if (problem !== null) {
+    throw new ValidationError({
+      collection: "users",
+      errors: [{ message: problem, path: "password" }],
+    });
   }
 
   return args;
@@ -113,6 +226,6 @@ export const Users: CollectionConfig = {
   hooks: {
     beforeChange: [assignFirstUserAdminRole, preventDemotingLastAdmin],
     beforeDelete: [preventDeletingLastAdmin],
-    beforeOperation: [refusePasswordResetWithoutEmail],
+    beforeOperation: [refusePasswordResetWithoutEmail, enforcePasswordPolicy],
   },
 };

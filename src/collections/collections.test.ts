@@ -50,8 +50,11 @@ import { Tags } from "./Tags";
 import {
   LOGIN_LOCK_TIME_MS,
   MAX_LOGIN_ATTEMPTS,
+  MIN_PASSWORD_LENGTH,
   Users,
   assignFirstUserAdminRole,
+  enforcePasswordPolicy,
+  getPasswordProblem,
   refusePasswordResetWithoutEmail,
 } from "./Users";
 import { Navigation, getNavigationPageFilter } from "../globals/Navigation";
@@ -218,6 +221,70 @@ test("password reset is refused while no email adapter exists", () => {
   });
   assert.deepEqual(run("login", "console"), {
     data: { email: "owner@example.com" },
+  });
+});
+
+test("passwords need 12 characters and must not repeat the email", async () => {
+  assert.equal(MIN_PASSWORD_LENGTH, 12);
+  assert.ok(Users.hooks?.beforeOperation?.includes(enforcePasswordPolicy));
+
+  assert.match(getPasswordProblem("abc") ?? "", /en az 12 karakter/);
+  assert.match(getPasswordProblem("Elevenchars") ?? "", /en az 12 karakter/);
+  // Counted in characters, not UTF-16 units or bytes.
+  assert.match(getPasswordProblem("ğüşıöçĞÜŞİÖ") ?? "", /en az 12/);
+  assert.equal(getPasswordProblem("ğüşıöçĞÜŞİÖÇ"), null);
+  assert.equal(getPasswordProblem("Correct-Horse-1"), null);
+  for (const password of [
+    "Long.Name@Example.com",
+    " long.name@example.com ",
+    "LONG.NAME.HERE",
+    // ASCII case folding: a Turkish locale would turn "I" into dotless "ı".
+    "LIMITED.ADMIN",
+  ]) {
+    assert.match(
+      getPasswordProblem(password, [
+        "long.name@example.com",
+        "long.name.here@example.com",
+        "limited.admin@example.com",
+      ]) ?? "",
+      /e-posta adresiyle aynı/,
+      password,
+    );
+  }
+
+  const run = async (operation: string, data: Record<string, unknown>) =>
+    enforcePasswordPolicy({
+      args: { data },
+      collection: {},
+      context: {},
+      operation,
+      req: {},
+    } as unknown as Parameters<CollectionBeforeOperationHook>[0]);
+  const isPasswordError = (error: unknown) =>
+    error instanceof ValidationError &&
+    error.data.errors.some((entry) => entry.path === "password");
+
+  for (const operation of ["create", "update", "resetPassword"]) {
+    await assert.rejects(
+      run(operation, { email: "a@example.com", password: "abc" }),
+      isPasswordError,
+      operation,
+    );
+    await assert.rejects(
+      run(operation, { password: 42 }),
+      isPasswordError,
+      operation,
+    );
+  }
+  // No password, the admin form's empty "unchanged" value, other operations.
+  assert.deepEqual(await run("update", { role: "editor" }), {
+    data: { role: "editor" },
+  });
+  assert.deepEqual(await run("update", { password: "" }), {
+    data: { password: "" },
+  });
+  assert.deepEqual(await run("login", { password: "abc" }), {
+    data: { password: "abc" },
   });
 });
 

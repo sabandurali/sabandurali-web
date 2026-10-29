@@ -16,6 +16,11 @@ coding agent (CLAUDE.md, rule 2).
   (`refusePasswordResetWithoutEmail`): a locked-out or forgotten password is
   recovered only by another admin.
 - The last admin cannot be deleted or demoted (`src/lib/payloadDeleteGuards.ts`).
+- Every password that is set (first registration, a new user, a profile edit,
+  a reset) needs at least `MIN_PASSWORD_LENGTH` (12) characters and must not
+  be the account's email address or its local part (`enforcePasswordPolicy`;
+  Payload's own minimum is 3). Existing passwords keep working until they are
+  changed; the owner may ask every account holder to set a new one.
 
 ### The gap
 
