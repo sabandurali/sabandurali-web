@@ -15,6 +15,7 @@ import type { DistrictGuide } from "@/content/districts/district-guide-projectio
 import type { District } from "@/content/districts/district-registry";
 import { getDistrictNewsPath } from "@/content/districts/district-routes";
 import type { PublicPhoto } from "@/content/photos/types";
+import { getContentLastModifiedIso } from "@/lib/content-dates";
 import { formatDate } from "@/lib/format-date";
 import {
   buildDistrictFacts,
@@ -702,12 +703,15 @@ export function DistrictUpdateSection({
   total,
   guide,
 }: GuideSectionProps) {
+  // The same date as the JSON-LD `dateModified` and the sitemap `lastmod`:
+  // a guide saved before its scheduled publication shows that publication.
+  const lastModified = guide ? getContentLastModifiedIso(guide) : undefined;
   return (
     <GuideSection section={item} total={total}>
       <p className="m-0 max-w-measure type-body">
-        {guide?.updatedAt ? (
+        {lastModified ? (
           <>
-            İçerik güncellemesi: <TimeText value={guide.updatedAt} />. Verilerin
+            İçerik güncellemesi: <TimeText value={lastModified} />. Verilerin
             kontrol tarihleri kaynak listesinde ayrı gösterilir.
           </>
         ) : (
