@@ -72,3 +72,42 @@ export function clampPage(
     totalPages,
   };
 }
+
+/** The page a list shows, after a request past the end was clamped. */
+export type ClampedPage<R> = {
+  /** The read of `page`. */
+  result: R;
+  page: number;
+  totalPages: number;
+  totalItems: number;
+};
+
+/**
+ * Reads the requested page of a list; a page past the end reads the last
+ * page instead. Past the end Payload returns no documents and, when the
+ * query joins other tables (localized fields, relationship filters), a
+ * total of 0 as well, so page 1 supplies the real total before the last
+ * page is read. `found` is the number of database rows a read returned.
+ */
+export async function readClampedPage<R extends { totalDocs: number }>(
+  read: (page: number) => Promise<R>,
+  found: (result: R) => number,
+  requestedPage: number | undefined,
+  pageSize: number,
+): Promise<ClampedPage<R>> {
+  const requested = normalizeRequestedPage(requestedPage);
+  const requestedResult = await read(requested);
+  const first =
+    requested === 1 || found(requestedResult) > 0
+      ? requestedResult
+      : await read(1);
+  const { page, totalPages } = clampPage(requested, first.totalDocs, pageSize);
+  const result =
+    page === requested
+      ? requestedResult
+      : page === 1
+        ? first
+        : await read(page);
+
+  return { result, page, totalPages, totalItems: first.totalDocs };
+}
