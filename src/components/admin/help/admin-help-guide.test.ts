@@ -62,3 +62,45 @@ test("a guide without a title or with misnumbered sections is rejected", () => {
     title: "Başlık",
   });
 });
+
+test("Phase B: the guide states the CMS rules the code enforces", () => {
+  for (const statement of [
+    // Upload limit and image processing (payload.config.ts, Media.ts).
+    "4 MiB",
+    "3200",
+    "EXIF",
+    // Media files are public by URL.
+    "adresini bilen herkes",
+    // Users: default role, last admin, no password reset email.
+    "varsayılan rolü `Editor`",
+    "Son `Admin` hesabı silinemez ve `Editor` rolüne düşürülemez",
+    "Parola sıfırlama e-postası henüz yapılandırılmamıştır",
+    // The footer always keeps the privacy notice and contact links.
+    "`KVKK Aydınlatma Metni` ve `İletişim`",
+    // Legacy home slug redirect.
+    "/ana-sayfa adresi (yalnız bir yönlendirme, sayfa değil) kalıcı olarak `/` adresine yönlenir",
+    // English standard pages cannot be published.
+    "EN standart `Sayfa` kaydı yayınlanamaz",
+    // District news need an https source.
+    "`https://` ile başlayan `Orijinal haber URL'si`",
+    // Supported internal link targets (INTERNAL_LINK_COLLECTIONS).
+    "`Articles`, `Sayfalar`, `Kitap İncelemeleri`, `Fotoğraflar` ve `İlçe Rehberleri` kayıtlarına",
+    // Social image recommendation.
+    "1200 × 630",
+    // Empty district guides stay out of search.
+    "`noindex, follow`",
+  ]) {
+    assert.ok(ADMIN_HELP_GUIDE.includes(statement), statement);
+  }
+});
+
+test("Phase B: superseded statements do not come back", () => {
+  for (const stale of [
+    "10 MiB",
+    "`Media`, `Kitap İncelemeleri` ve `Sayfalar` kayıtlarını `Admin` veya `Editor` silebilir",
+    "`Admin` veya `Editor` tarafından silinebilir",
+    "Canonical alanı yalnız kitap incelemesinde",
+  ]) {
+    assert.ok(!ADMIN_HELP_GUIDE.includes(stale), stale);
+  }
+});

@@ -27,10 +27,14 @@ import {
   DistrictGuides,
   PUBLIC_DISTRICT_GUIDE_QUERY_PATHS,
 } from "./DistrictGuides";
+import { PUBLIC_DISTRICT_GUIDE_DOCUMENT_KEYS } from "../content/districts/district-guide-projection";
 import { MEDIA_MAX_IMAGE_EDGE, Media } from "./Media";
 import {
   LEGACY_TURKISH_HOME_SLUG,
   Pages,
+  getHomeBreakingChanges,
+  getUnrenderableHomeBlocks,
+  protectPublishedHomePage,
   RESERVED_TURKISH_SLUGS,
   validatePageIdentity,
 } from "./Pages";
@@ -279,6 +283,53 @@ test("District Guides refuse anonymous queries on hidden fields", () => {
   ]);
 });
 
+test("District Guides return the allowlisted public document to anonymous readers", async () => {
+  const [project] = DistrictGuides.hooks?.afterRead ?? [];
+  assert.ok(project);
+
+  const stored = {
+    id: "guide-1",
+    district: "esenler",
+    _status: "published",
+    publishedAt: "2026-09-13T10:00:00Z",
+    createdAt: "2026-09-01T00:00:00Z",
+    updatedAt: "2026-09-13T11:00:00Z",
+    summary: "İncelenmemiş özet",
+    neighborhoods: [{ id: "n1", name: "Örnek", image: "media-secret-id" }],
+    researchNotes: "PRIVATE-RESEARCH-NOTES",
+    importProvenance: { pdfSha256: "PRIVATE-PROVENANCE" },
+    internalComment: "PRIVATE-FUTURE-FIELD",
+  };
+  const run = (user: unknown, overrideAccess = false) =>
+    project({
+      doc: stored,
+      overrideAccess,
+      req: { user },
+    } as unknown as Parameters<NonNullable<typeof project>>[0]);
+
+  const anonymous: unknown = await run(null);
+  const keys = Object.keys(anonymous as Record<string, unknown>);
+  assert.deepEqual(
+    keys.filter(
+      (key) =>
+        !(PUBLIC_DISTRICT_GUIDE_DOCUMENT_KEYS as readonly string[]).includes(
+          key,
+        ),
+    ),
+    [],
+  );
+  assert.equal(JSON.stringify(anonymous).includes("PRIVATE"), false);
+  assert.equal(JSON.stringify(anonymous).includes("media-secret-id"), false);
+  assert.equal(
+    (anonymous as Record<string, unknown>).summary,
+    null,
+    "an unreviewed section stays hidden",
+  );
+
+  assert.equal(await run(editor), stored, "editors read the stored document");
+  assert.equal(await run(null, true), stored, "trusted server reads");
+});
+
 test("book translations and related books cannot expand recursively", () => {
   for (const name of ["translation", "relatedBooks"]) {
     const field = findField(Books, name);
@@ -414,10 +465,149 @@ async function validatePage(
 }
 
 const homeLayout = [
-  { blockType: "hero" },
-  { blockType: "homeAbout" },
-  { blockType: "homeFocusAreas" },
+  {
+    blockType: "hero",
+    titleLines: [{ text: "Şaban Durali" }],
+    description: "İstanbul üzerine araştırmalar",
+    primaryAction: { label: "Makaleler", href: "/makaleler" },
+    secondaryAction: { label: "İletişim", href: "/iletisim" },
+  },
+  {
+    blockType: "homeAbout",
+    eyebrow: "Hakkımda",
+    titleLines: [{ text: "Kısa biyografi" }],
+    paragraphs: [{ text: "Paragraf" }],
+    imageAlt: "Portre",
+    image: "media-id",
+  },
+  {
+    blockType: "homeFocusAreas",
+    eyebrow: "Alanlar",
+    title: "Çalışma alanları",
+    cards: [
+      {
+        icon: "city",
+        title: "İstanbul",
+        description: "İlçe rehberleri",
+        linkLabel: "Rehberler",
+        linkHref: "/istanbul/ilceler",
+      },
+    ],
+  },
 ];
+
+test("a published home refuses blocks the public mapper would skip", async () => {
+  assert.deepEqual(getUnrenderableHomeBlocks(homeLayout, "tr"), []);
+
+  const [hero, about, focus] = homeLayout;
+  const broken = [
+    { ...hero, primaryAction: { label: "Makaleler", href: "javascript:x" } },
+    { ...about, link: { label: "Devamı" } },
+    { ...focus, cards: [{ title: "Eksik" }] },
+    { blockType: "hero", visible: false },
+    { blockType: "hero" },
+  ];
+  assert.deepEqual(getUnrenderableHomeBlocks(broken, "tr"), [
+    "hero#1",
+    "homeAbout#2",
+    "homeFocusAreas#3",
+    "hero#5",
+  ]);
+
+  await assert.rejects(
+    validatePage({
+      _status: "published",
+      language: "tr",
+      layout: [hero, { ...about, paragraphs: [] }, focus],
+      pageType: "home",
+      slug: "ana-sayfa",
+      title: "Ana sayfa",
+    }),
+    (error: unknown) =>
+      validationErrors(error).some((entry) =>
+        /homeAbout#2/.test(entry.message),
+      ),
+  );
+  await assert.doesNotReject(
+    validatePage({
+      _status: "draft",
+      language: "tr",
+      layout: [{ blockType: "hero" }],
+      pageType: "home",
+      slug: "ana-sayfa",
+      title: "Ana sayfa",
+    }),
+    "drafts may be incomplete",
+  );
+});
+
+test("the published home cannot be unpublished, scheduled or moved", () => {
+  const now = new Date("2026-10-29T12:00:00Z");
+  const home = { language: "tr" };
+  const changes = (
+    data: unknown,
+    options: Partial<{ draft: boolean; unpublishAllLocales: boolean }> = {},
+  ) =>
+    getHomeBreakingChanges(data, home, {
+      draft: false,
+      unpublishAllLocales: false,
+      now,
+      ...options,
+    });
+
+  assert.deepEqual(changes({ _status: "published", title: "Yeni" }), []);
+  assert.deepEqual(changes({ publishedAt: "2026-10-01T00:00:00Z" }), []);
+  assert.deepEqual(
+    changes({ _status: "draft", title: "Taslak" }, { draft: true }),
+    [],
+  );
+  assert.deepEqual(changes({ _status: "draft" }), ["unpublish"]);
+  assert.deepEqual(changes({}, { unpublishAllLocales: true }), ["unpublish"]);
+  assert.deepEqual(changes({ publishedAt: "2026-11-01T00:00:00Z" }), [
+    "schedule",
+  ]);
+  assert.deepEqual(changes({ publishedAt: null }), ["schedule"]);
+  assert.deepEqual(
+    changes({ pageType: "standard", language: "en" }, { draft: true }),
+    ["pageType", "language"],
+    "a draft that would break the home on publish is refused too",
+  );
+  assert.deepEqual(changes({ pageType: "home", language: "tr" }), []);
+  assert.deepEqual(Pages.hooks?.beforeOperation, [protectPublishedHomePage]);
+});
+
+test("the home guard never runs an anonymous REST where with overrideAccess", async () => {
+  const args = {
+    data: { _status: "draft" },
+    where: { title: { like: "Ana" } },
+  };
+  let queried = false;
+  const req = {
+    payloadAPI: "REST",
+    user: null,
+    payload: {
+      find: async () => {
+        queried = true;
+        return { docs: [] };
+      },
+    },
+  };
+  const hook = protectPublishedHomePage as unknown as (input: {
+    args: unknown;
+    operation: string;
+    req: unknown;
+  }) => Promise<unknown>;
+
+  assert.equal(await hook({ args, operation: "update", req }), args);
+  assert.equal(queried, false, "access control refuses the update instead");
+
+  await hook({
+    args,
+    operation: "update",
+    req: { ...req, user: { role: "editor" } },
+  });
+  assert.equal(queried, true, "an editor's bulk update is still checked");
+});
 
 test("English standard pages can be drafted but not published", async () => {
   await assert.doesNotReject(
@@ -656,6 +846,12 @@ test("the English header tab is hidden and English links may only target the Eng
   assert.equal(enHeader.type, "array");
   assert.ok(enHeader.type === "array");
   assert.equal(enHeader.admin?.hidden, true);
+
+  for (const name of ["footerGroups", "enFooter"]) {
+    const footer = findField(Navigation, name);
+    assert.ok(footer.type === "array", name);
+    assert.equal(footer.minRows, 1, `${name} keeps the KVKK/contact links`);
+  }
 
   assert.deepEqual(getNavigationPageFilter("tr"), {
     language: { equals: "tr" },

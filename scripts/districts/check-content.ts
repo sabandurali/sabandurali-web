@@ -18,9 +18,9 @@ const { values: options } = parseArgs({
   options: { report: { type: "string" } },
   strict: true,
 });
-// Reviewed official neighbourhood lists; this input moves to data/districts/
-// (reports/README.md).
-const editorialReviewPath = "reports/istanbul-39/editorial-review.json";
+// Reviewed official neighbourhood lists (moved from reports/istanbul-39/ by
+// ARC-12, see reports/README.md).
+const editorialReviewPath = "data/districts/editorial-review.json";
 
 const research = JSON.parse(
   readFileSync("data/districts/research.json", "utf8"),

@@ -10,6 +10,11 @@ import assert from "node:assert/strict";
 import { mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { districts } from "../src/content/districts/district-registry.ts";
+import {
+  expectsIndexedGuides,
+  localImageUrl,
+  robotsProblem,
+} from "./districts/acceptance-expectations.mjs";
 
 const base = process.env.DISTRICT_TEST_URL || "http://localhost:3017";
 if (!/^http:\/\/(localhost|127\.0\.0\.1):\d+$/.test(base))
@@ -17,6 +22,9 @@ if (!/^http:\/\/(localhost|127\.0\.0\.1):\d+$/.test(base))
 const output = process.env.DISTRICT_TEST_OUTPUT || "/tmp/content-trust-routes";
 
 assert.equal(districts.length, 39);
+// Static builds serve empty `noindex, follow` guides; the indexed
+// expectation applies only with DISTRICT_EXPECT_EDITORIAL=1.
+const indexed = expectsIndexedGuides();
 const results = [];
 for (const { slug } of districts) {
   const response = await fetch(`${base}/istanbul/ilceler/${slug}`, {
@@ -37,13 +45,19 @@ for (const { slug } of districts) {
     !html.includes('href="#arastirmalar"') &&
       !html.includes('href="#haberler"'),
   );
+  const robots = html.match(/<meta name="robots" content="([^"]+)"/)?.[1];
+  const robotsError = robotsProblem(robots, indexed);
+  assert.equal(robotsError, null, `${slug}: ${robotsError}`);
+  // Keep the query string: the optimizer URL (/_next/image?url=…&w=…&q=…)
+  // is the share image; `&` is HTML-escaped in the attribute.
   const image = html.match(/property="og:image" content="([^"]+)"/)[1];
-  const imageResponse = await fetch(base + new URL(image).pathname);
+  const imageResponse = await fetch(localImageUrl(base, image));
   assert.equal(imageResponse.status, 200);
   assert.match(imageResponse.headers.get("content-type"), /image/);
   results.push({
     slug,
     status: response.status,
+    robots,
     image,
     imageStatus: imageResponse.status,
   });

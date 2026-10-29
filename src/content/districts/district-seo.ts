@@ -61,7 +61,12 @@ function districtSocialImage(district: District): SocialImage | null {
   const photo = verifiedDistrictImages[district.slug];
   return photo === undefined
     ? null
-    : createOptimizedSocialImage({ src: photo.src, alt: photo.alt });
+    : createOptimizedSocialImage({
+        src: photo.src,
+        alt: photo.alt,
+        width: photo.width,
+        height: photo.height,
+      });
 }
 
 export function districtMetadata(

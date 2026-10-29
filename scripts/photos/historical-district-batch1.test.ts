@@ -245,6 +245,37 @@ test("J: a completed apply is idempotent and verifies as all skip", async () => 
   assert.deepEqual(repository.created, writes);
 });
 
+test("J2: media re-encoded by the upload (other size, no EXIF) is a conflict, never adopted", async () => {
+  // Media uploads are re-encoded since Phase B (3200 px cap, EXIF removed), so
+  // on a fresh database the stored file no longer has the manifest's bytes or,
+  // above 3200 px, its dimensions. The plan must report that as a conflict
+  // instead of silently treating a different file as the audited source.
+  const manifest = readManifest();
+  const repository = new MemoryRepository();
+  await applyHistoricalPlan(manifest, repository, fileMap(manifest));
+  const snapshot = await repository.readSnapshot();
+  const reencoded: HistoricalSnapshot = {
+    ...snapshot,
+    media: snapshot.media.map((document) => ({
+      ...document,
+      filesize: Number(document.filesize) - 1,
+    })),
+  };
+  const plan = buildHistoricalPlan(manifest, reencoded);
+  assert.deepEqual(plan.count, {
+    collectionCreate: 0,
+    mediaCreate: 0,
+    photoCreate: 0,
+    skip: 0,
+    conflict: 11,
+  });
+  assert.ok(
+    plan.entries.every(
+      (entry) => entry.reason === "source media metadata differs",
+    ),
+  );
+});
+
 test("K: remote SHA mismatch fails before any repository write", () => {
   const repository = new MemoryRepository();
   assert.throws(

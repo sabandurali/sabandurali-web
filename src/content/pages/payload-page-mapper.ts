@@ -471,3 +471,76 @@ export function mapPayloadPage(
     },
   };
 }
+
+const HOME_BLOCK_ARRAY_FIELDS = {
+  hero: ["titleLines"],
+  homeAbout: ["titleLines", "paragraphs"],
+  homeFocusAreas: ["cards"],
+} as const;
+
+function isRecordArray(value: unknown): boolean {
+  return Array.isArray(value) && value.every(isRecord);
+}
+
+type HomeBlock = Extract<
+  PayloadBlock,
+  { blockType: keyof typeof HOME_BLOCK_ARRAY_FIELDS }
+>;
+
+/**
+ * A home block from a write (admin form, REST or Local API) with the shape
+ * the mappers walk: arrays of rows where the schema has arrays. Text values
+ * stay unchecked here; the mappers check them.
+ */
+function isHomeBlockShape(value: unknown): value is HomeBlock {
+  if (!isRecord(value)) return false;
+
+  const { blockType } = value;
+  if (
+    blockType !== "hero" &&
+    blockType !== "homeAbout" &&
+    blockType !== "homeFocusAreas"
+  ) {
+    return false;
+  }
+
+  return (
+    HOME_BLOCK_ARRAY_FIELDS[blockType].every((name) =>
+      isRecordArray(value[name]),
+    ) &&
+    (value.highlights === undefined ||
+      value.highlights === null ||
+      isRecordArray(value.highlights))
+  );
+}
+
+/**
+ * Whether a hero, homeAbout or homeFocusAreas block in a write renders on
+ * the home page: the public mapper's own rules, applied before publishing so
+ * that a published home record never falls back to the static content. An
+ * upload is still an unpopulated ID during a write, so the portrait is
+ * checked by its field filter (images only), not here.
+ */
+export function isRenderableHomeBlock(
+  value: unknown,
+  language: PublicPageLanguage,
+): boolean {
+  if (!isHomeBlockShape(value)) return false;
+
+  const context: MappingContext = { language, now: new Date() };
+
+  switch (value.blockType) {
+    case "hero":
+      return mapHeroBlock(value, 0) !== null;
+    case "homeAbout":
+      return (
+        mapHomeAboutBlock(
+          { ...value, image: isRecord(value.image) ? value.image : null },
+          0,
+          context,
+        ) !== null
+      );
+    case "homeFocusAreas":
+      return mapHomeFocusAreasBlock(value, 0) !== null;
+  }
+}

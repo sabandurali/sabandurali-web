@@ -9,6 +9,7 @@ import type { PublicPhoto } from "@/content/photos/types";
 import {
   buildBookReviewEntries,
   buildSitemap,
+  buildStandardPageEntries,
   findBookReviewTranslation,
   getContentLastModified,
   loadSitemapSource,
@@ -151,6 +152,18 @@ function page(
     ...overrides,
   };
 }
+
+test("English standard pages never reach the sitemap", () => {
+  const entries = buildStandardPageEntries([
+    page({ id: "tr-1", slug: "kunye" }),
+    page({ id: "en-1", slug: "about", language: "en" }),
+  ]);
+
+  assert.deepEqual(
+    entries.map((entry) => entry.url),
+    [`${site}/kunye`],
+  );
+});
 
 function guide(overrides: Partial<DistrictGuide> = {}): DistrictGuide {
   return {

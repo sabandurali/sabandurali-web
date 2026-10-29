@@ -1,4 +1,5 @@
-import Link from "next/link";
+import TextLink from "@/components/ui/TextLink";
+import { getUiStrings } from "@/components/ui/strings";
 import { privacyPaths } from "@/config/site";
 import type { Locale } from "@/content/homeContent";
 
@@ -12,35 +13,37 @@ type PrivacyAcknowledgementProps = {
   id: string;
   locale: Locale;
   content: PrivacyAcknowledgementContent;
-  requiredLabel: string;
 };
 
+/**
+ * Required privacy notice checkbox. The 24 px box and the whole label row
+ * are the touch target; the notice link inside stays a separate, underlined
+ * link (it opens the notice, it does not tick the box).
+ */
 export default function PrivacyAcknowledgement({
   id,
   locale,
   content,
-  requiredLabel,
 }: PrivacyAcknowledgementProps) {
+  const strings = getUiStrings(locale);
+
   return (
-    <div className="rounded-sm border border-border bg-[#223653] p-5 sm:p-6">
-      <label htmlFor={id} className="flex cursor-pointer items-start gap-3">
-        <input
-          id={id}
-          type="checkbox"
-          name="privacyAcknowledgement"
-          required
-          className="mt-1 size-4 shrink-0 accent-[var(--accent)]"
-        />
-        <span className="text-sm leading-6 text-ivory">
-          {content.prefix}
-          <Link
-            href={privacyPaths[locale]}
-            className="text-accent-soft underline decoration-border underline-offset-4 transition-colors hover:text-accent-strong motion-reduce:transition-none"
-          >
-            {content.linkLabel}
-          </Link>
-          {content.suffix}
-          <span className="ml-2 text-xs text-accent-soft">{requiredLabel}</span>
+    <div className="flex items-start gap-3 rounded-card border border-tile-edge bg-land px-4 py-3">
+      <input
+        id={id}
+        type="checkbox"
+        name="privacyAcknowledgement"
+        required
+        className="mt-0.5 size-6 shrink-0 cursor-pointer accent-[var(--color-ink)]"
+      />
+      <label htmlFor={id} className="min-h-tap flex-1 cursor-pointer text-ink">
+        {content.prefix}
+        <TextLink href={privacyPaths[locale]} locale={locale}>
+          {content.linkLabel}
+        </TextLink>
+        {content.suffix}
+        <span className="ml-2 type-caption text-ink-muted">
+          ({strings.required})
         </span>
       </label>
     </div>

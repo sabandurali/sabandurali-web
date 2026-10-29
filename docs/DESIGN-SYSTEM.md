@@ -212,9 +212,9 @@ sınıfı (`focus-visible:` dahil) onları ezebilir (FE-12).
 
 Eski koyu lacivert/altın palet (`--background`, `--ivory`, `--accent` …) `globals.css` sonunda
 "Legacy" bloğundadır ve yalnızca henüz yeniden yapılmamış sayfaları okunur tutar. Yeni kodda kullanılmaz;
-son kullanımı kalkan token silinir. TR ve EN kök layout'ları bu sayfalar için `<html class="scheme-dark">`
-ve `<body class="bg-background text-foreground">` taşır; atlas layout'u bu sınıfları kaldırınca taban
-zemin (`paper`) devreye girer. `--ink` ve `--focus-ring` eski bloktan çıkarıldı: `text-ink` artık Boğaz
+son kullanımı kalkan token silinir. Kök layout'lar artık `scheme-dark` ve `bg-background
+text-foreground` taşımaz: her sayfanın zemini taban `paper`dır; eski bir bileşen kendi zeminini kendisi
+kurmalıdır. `--ink` ve `--focus-ring` eski bloktan çıkarıldı: `text-ink` artık Boğaz
 mavisidir (eski açık zeminlerde de ≥ 5.44:1), odak halkası her yerde iki tonludur.
 
 ## 5. Bileşenler
@@ -243,8 +243,8 @@ yalnızca etkileşim gerektirenlerdir: `SkipLink`, `Disclosure`, `NavMenu`, `For
 | `Breadcrumb` | "Konum" izi; son öğe `aria-current="page"`, ayraçlar gizli. |
 | `SkipLink` | Her sayfanın ilk odaklanılabilir öğesi; odaklanınca görünür, içeriğe klavye odağını taşır. Ana içerik `<main id="main">` olmalı (yoksa ilk `<main>` bulunur). |
 | `VisuallyHidden` | Yalnızca yardımcı teknolojiye metin. |
-| `Disclosure` | Göster/gizle. Panel butonundan hemen sonra gelir, kapalıyken DOM'da `hidden` kalır, Escape kapatıp odağı butona döndürür. |
-| `NavMenu` | Masaüstü açılır menüleri (FE-5). Bir sonraki bölüme bakın. |
+| `Disclosure` | Göster/gizle. Panel butonundan hemen sonra gelir, kapalıyken DOM'da `hidden` kalır, Escape kapatıp odağı butona döndürür. İçteki bir bileşen Escape'i zaten işlediyse (`preventDefault`, ör. açık NavMenu paneli) dokunmaz: Escape her basışta bir katman kapatır. `open` + `onOpenChange` ile kontrollü kullanılabilir; `fullWidth={false}` satır içi buton verir (header'daki "Menü"). |
+| `NavMenu` | Masaüstü açılır menüleri (FE-5). Bir sonraki bölüme bakın. Öğede `current` yalnızca bu sayfanın bağlantısıdır (`aria-current`); `active` sayfanın içinde bulunduğu bölümü kalın yazı ve turuncu çizgiyle gösterir, `aria-current` vermez. |
 | `Timeline` | `axis` (tarih ekseni) ya da `route` (güzergâh; 40 rem altında dikey). Duraklar dekoratif; sıra, tarih ve metin içeriktir. Gerçek tarihlerde `dateTime` verin. |
 | `Card` | Tek başlık bağlantısı; tıklama alanı tüm kartı kaplar, üzerine gelince yalnızca başlığın altı çizilir, odak halkası kartın çevresine çizilir. Kart içindeki başka bağlantılar (kredi, kaynak) tıklanabilir kalır. `cta` yalnızca görsel ipucudur. |
 | `EmptyState` | Veri yoksa taramalı panel ve düz cümle ("… henüz eklenmedi."). |
@@ -292,6 +292,29 @@ kipinde kalır. Klavye modeli `menu-keys.ts` içindedir ve test edilir:
 - Her kare ilçe adını taşıyan gerçek bir bağlantıdır (`prefetch={false}`: 39 bağlantı önceden yüklenmez).
   `featuredSlug` turuncu kare + "öne çıkan rehber" notu; `currentSlug` bağlantı değil, `aria-current="page"`;
   `highlightSlugs` sis renkli kareler (ör. komşular).
+
+### Site kabuğu (`src/components/layout/`)
+
+- **Kök layout'lar** yalnızca `<html lang>`, fontlar, ilk odaklanılabilir öğe olarak `SkipLink` ve
+  `createRootLayoutMetadata(locale)` (başlık, açıklama, Open Graph site adı/dili/türü/varsayılan görsel,
+  büyük Twitter kartı; canonical, hreflang ve `og:url` yok) verir. `export const revalidate = 3600` altındaki
+  her prerender rotaya bir saatlik güvenlik ağı olur (rota, layout ve sayfa değerlerinin en küçüğüyle
+  yenilenir); dinamik rotalar dinamik kalır. Header ve footer'ı sayfa çizer; `<main id="main">` sayfanındır.
+- **Header:** `paper` zemin, 2 px mürekkep alt çizgi. İlk satır `Wordmark` (ŞABAN DURALİ, ana sayfa
+  bağlantısı; adı "ŞABAN DURALİ, ana sayfa") ve dil seçici; 1280 px'ten itibaren altta `NavMenu
+  layout="bar"` (ana sayfa öğesi yok: wordmark onun yerine geçer). Daha dar ekranda "Menü" `Disclosure`'ı:
+  panel tam genişlik, içinde `NavMenu layout="stack"` ve dil seçici; bir bağlantı izlenince kapanır.
+  `toNavMenuItems` (test edilir) mevcut sayfayı ve bölümü işaretler, bir paneldeki yinelenen bağlantıları
+  atar ve ilçe rehberinin 25 + 14 ilçesini iki etiketli grup olarak taşır.
+- **Dil seçici:** TR · EN; her bağlantının adı "TR Türkçe" / "EN English", `lang` ve `hrefLang` taşır;
+  geçerli dil `aria-current`, kalın yazı ve turuncu çizgiyle.
+- **Footer:** `sea` zemin (odak halkası beyaz), wordmark, platform cümlesi, footer bağlantıları (KVKK ve
+  iletişim her zaman vardır), telif satırı.
+- **404 ve hata:** `StatusMessage` (turuncu kod etiketi, tek `h1`, açıklama, çıkış yolları). Grup 404'leri
+  tam header ve footer'la gelir; `/en/*` altındaki eşleşmeyen adresler `[...missing]` ile İngilizce 404'e
+  düşer. `global-not-found` CMS okumaz, fontları ve stilleri kendisi yükler, Türkçe + `lang="en"` blokla iki
+  dillidir. Hata ekranı `retry` kullanır, yalnızca sunucu `digest` değerini gösterir ve odağı başlığa taşır.
+- `BackToTop`: kaydırınca görünen, 2 px mürekkep kenarlı `land` kare; görünmezken sekme sırasında değildir.
 
 ## 6. Erişilebilirlik kuralları
 

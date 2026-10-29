@@ -34,14 +34,16 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          # scripts/districts/production-esenler-final.test.ts reads an older
-          # commit with `git show`, so the full history is required.
-          fetch-depth: 0
+          # No test reads Git history (the archived Esenler test uses a
+          # fixture), so the default shallow checkout is enough.
           persist-credentials: false
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc
+          # .nvmrc names the major only: resolve the newest Node 24 release
+          # instead of an older one cached on the runner.
+          check-latest: true
           cache: npm
 
       - name: Install dependencies
@@ -77,6 +79,7 @@ jobs:
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc
+          check-latest: true
 
       # Reads package-lock.json; no install needed. Fails on critical only:
       # the remaining high and moderate advisories have no non-breaking fix

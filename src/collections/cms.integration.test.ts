@@ -584,6 +584,105 @@ test("pages: English standard pages stay drafts and the home renders only its ow
   );
 });
 
+test("pages: a published home renders all its blocks and stays on the site", async () => {
+  const link = (label: string, href: string) => ({ label, href });
+  const layout = (aboutLink: { label?: string; href?: string }) => [
+    {
+      blockType: "hero" as const,
+      titleLines: [{ text: "Şaban Durali" }],
+      description: "İstanbul üzerine araştırmalar",
+      primaryAction: link("Makaleler", "/makaleler"),
+      secondaryAction: link("İletişim", "/iletisim"),
+    },
+    {
+      blockType: "homeAbout" as const,
+      eyebrow: "Hakkımda",
+      titleLines: [{ text: "Kısa biyografi" }],
+      paragraphs: [{ text: "Paragraf" }],
+      imageAlt: "Portre",
+      link: aboutLink,
+    },
+    {
+      blockType: "homeFocusAreas" as const,
+      eyebrow: "Alanlar",
+      title: "Çalışma alanları",
+      cards: [
+        {
+          icon: "city" as const,
+          title: "İstanbul",
+          description: "İlçe rehberleri",
+          linkLabel: "Rehberler",
+        },
+      ],
+    },
+  ];
+  const homeData = {
+    language: "tr" as const,
+    pageType: "home" as const,
+    slug: "anasayfa-kaydi",
+    summary: "Ana sayfa",
+    title: "Ana sayfa",
+  };
+
+  // A link label without an address passes the field rules but the public
+  // mapper drops the block, so the home would fall back to static content.
+  await assert.rejects(
+    payload.create({
+      collection: "pages",
+      data: {
+        ...homeData,
+        _status: "published",
+        layout: layout({ label: "Devamı" }),
+      },
+    }),
+    (error: unknown) => validationPaths(error).includes("layout"),
+  );
+
+  const home = await payload.create({
+    collection: "pages",
+    data: {
+      ...homeData,
+      _status: "published",
+      layout: layout(link("Devamı", "/hakkimda")),
+    },
+  });
+  assert.ok(home.publishedAt);
+
+  const refused = hasStatus(400, /Yayındaki Türkçe Ana Sayfa/);
+  const update = (data: Record<string, unknown>, draft = false) =>
+    payload.update({ collection: "pages", id: home.id, data, draft });
+
+  await assert.rejects(update({ _status: "draft" }), refused);
+  await assert.rejects(
+    update({ publishedAt: new Date(Date.now() + 86_400_000).toISOString() }),
+    refused,
+  );
+  await assert.rejects(update({ publishedAt: null }), refused);
+  await assert.rejects(update({ pageType: "standard" }), refused);
+  await assert.rejects(update({ language: "en" }, true), refused);
+  await assert.rejects(
+    payload.update({
+      collection: "pages",
+      where: { id: { equals: home.id } },
+      data: { _status: "draft" },
+    }),
+    refused,
+  );
+
+  // A draft over the published home only writes a version.
+  await update({ _status: "draft", title: "Taslak başlık" }, true);
+  const published = await payload.findByID({
+    collection: "pages",
+    id: home.id,
+    draft: false,
+  });
+  assert.equal(published._status, "published");
+  assert.equal(published.title, "Ana sayfa");
+
+  const republished = await update({ _status: "published", title: "Yeni" });
+  assert.equal(republished.title, "Yeni");
+});
+
 test("district guides: anonymous readers cannot filter on hidden fields", async () => {
   await assert.rejects(
     payload.find({

@@ -350,6 +350,9 @@ export function buildStandardPageEntries(
     .filter(
       (page) =>
         page.pageType === "standard" &&
+        // Only Turkish standard pages have a route (/<slug>); /en/<slug>
+        // is a 404, so an English record must never reach the sitemap.
+        page.language === "tr" &&
         page.seo.index &&
         // The legacy "ana-sayfa" record is served as the home page.
         !excludedPageIds.has(page.id),

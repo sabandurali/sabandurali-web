@@ -1,0 +1,57 @@
+/**
+ * Texts and links of the site shell (header, footer, 404 and error pages)
+ * that are not editorial content.
+ */
+export type HeaderLocale = "tr" | "en";
+
+export const localeHomePaths = {
+  tr: "/",
+  en: "/en",
+} as const satisfies Record<HeaderLocale, string>;
+
+type ShellStrings = {
+  /** Visible label of the mobile menu button. */
+  menu: string;
+  /** Appended to the wordmark for assistive technology. */
+  homeLink: string;
+  backToTop: string;
+};
+
+const shellStrings: Record<HeaderLocale, ShellStrings> = {
+  tr: { menu: "Menü", homeLink: "ana sayfa", backToTop: "Sayfanın başına dön" },
+  en: { menu: "Menu", homeLink: "home page", backToTop: "Back to top" },
+};
+
+export function getShellStrings(locale: HeaderLocale): ShellStrings {
+  return shellStrings[locale];
+}
+
+export type LanguageOption = {
+  locale: HeaderLocale;
+  code: string;
+  /** The language's name in that language. */
+  name: string;
+  hrefLang: string;
+  href: string;
+  current: boolean;
+};
+
+const languages = [
+  { locale: "tr", code: "TR", name: "Türkçe", hrefLang: "tr-TR" },
+  { locale: "en", code: "EN", name: "English", hrefLang: "en" },
+] as const;
+
+/**
+ * The language links of a page: the page's own path per language when it
+ * has one, otherwise that language's home page.
+ */
+export function getLanguageOptions(
+  locale: HeaderLocale,
+  hrefs?: Partial<Record<HeaderLocale, string>>,
+): LanguageOption[] {
+  return languages.map((language) => ({
+    ...language,
+    href: hrefs?.[language.locale] ?? localeHomePaths[language.locale],
+    current: language.locale === locale,
+  }));
+}

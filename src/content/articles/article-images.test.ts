@@ -6,17 +6,44 @@ import {
 } from "./article-images";
 import { getSafeArticleHref } from "./article-links";
 
-test("only Payload media paths and Vercel Blob URLs are accepted", () => {
+const store = "abc.public.blob.vercel-storage.com";
+
+test("only Payload media paths and this project's Blob store are accepted", () => {
   assert.equal(
-    getSafePayloadMediaPath("/api/media/file/kadikoy.jpg"),
+    getSafePayloadMediaPath("/api/media/file/kadikoy.jpg", null),
     "/api/media/file/kadikoy.jpg",
   );
   assert.equal(
-    getSafePayloadMediaPath(
-      "https://abc.public.blob.vercel-storage.com/kadikoy.jpg",
-    ),
-    "https://abc.public.blob.vercel-storage.com/kadikoy.jpg",
+    getSafePayloadMediaPath(`https://${store}/kadikoy.jpg`, store),
+    `https://${store}/kadikoy.jpg`,
   );
+
+  for (const value of [
+    "https://other.public.blob.vercel-storage.com/kadikoy.jpg",
+    `https://user:pass@${store}/a.jpg`,
+    `https://${store}:8443/a.jpg`,
+    `https://${store}/`,
+  ]) {
+    assert.equal(getSafePayloadMediaPath(value, store), null, value);
+  }
+  assert.equal(
+    getSafePayloadMediaPath(`https://${store}/kadikoy.jpg`, null),
+    null,
+    "without a Blob token no remote URL is accepted",
+  );
+
+  const previous = process.env.BLOB_READ_WRITE_TOKEN;
+  process.env.BLOB_READ_WRITE_TOKEN = "vercel_blob_rw_abc_fakesecret0000";
+  try {
+    assert.equal(
+      getSafePayloadMediaPath(`https://${store}/kadikoy.jpg`),
+      `https://${store}/kadikoy.jpg`,
+      "the default store comes from BLOB_READ_WRITE_TOKEN",
+    );
+  } finally {
+    if (previous === undefined) delete process.env.BLOB_READ_WRITE_TOKEN;
+    else process.env.BLOB_READ_WRITE_TOKEN = previous;
+  }
 
   for (const value of [
     null,

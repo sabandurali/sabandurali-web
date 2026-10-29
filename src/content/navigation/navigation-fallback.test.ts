@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { getStaticFooterGroups } from "../../components/layout/navigation";
+import { getStaticFooterGroups } from "./static-navigation";
 import { contactPaths, privacyPaths } from "../../config/site";
 import { homeContent } from "../homeContent";
 import { resolveFooterGroups } from "./navigation-fallback";

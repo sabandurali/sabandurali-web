@@ -1,5 +1,5 @@
 import type { CollectionBeforeChangeHook, CollectionConfig } from "payload";
-import { mapDistrictGuide } from "@/content/districts/district-guide-projection";
+import { projectPublicDistrictGuideDocument } from "@/content/districts/district-guide-projection";
 import { APIError } from "payload";
 import {
   districtSectionOptions,
@@ -419,13 +419,12 @@ export const DistrictGuides: CollectionConfig = {
     afterRead: [
       ({ doc, req, overrideAccess }) => {
         if (overrideAccess || isAdminOrEditor(req.user)) return doc;
-        // Apply the same gate to anonymous REST/GraphQL reads, not only page rendering.
-        return {
-          ...doc,
-          ...mapDistrictGuide(doc),
-          researchNotes: undefined,
-          importProvenance: undefined,
-        };
+        // Anonymous REST and Local API reads get the same allowlisted
+        // projection as the page: identity fields plus the public sections.
+        // Stored fields that are not on the allowlist (research notes,
+        // provenance, neighbourhood images, future internal fields) are
+        // never copied instead of being blanked one by one.
+        return projectPublicDistrictGuideDocument(doc);
       },
     ],
   },

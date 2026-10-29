@@ -1,4 +1,4 @@
-import type { SubmissionMessages } from "@/components/forms/FormStatus";
+import type { SubmissionMessages } from "@/components/forms/contact-submission";
 import type { PrivacyAcknowledgementContent } from "@/components/forms/PrivacyAcknowledgement";
 import type { Locale } from "@/content/homeContent";
 

@@ -8,6 +8,7 @@ import type {
   PublicArticleTranslation,
 } from "@/content/articles/public-types";
 import type { ArticleLanguage } from "@/content/articles/types";
+import { isSiteCanonicalUrl } from "@/collections/validation";
 import { reportContentIssue } from "@/content/content-log";
 import {
   getFiniteNumber,
@@ -15,6 +16,7 @@ import {
   isPublishedBy,
   isRecord,
 } from "@/content/guards";
+import { personalBrandName } from "@/content/entity-seo";
 import { mapMediaImage } from "@/content/media";
 import { prepareRichText } from "@/content/rich-text/prepare-rich-text";
 import type { Article as PayloadArticle } from "@/payload-types";
@@ -222,14 +224,30 @@ export function mapPayloadArticle(
     publishedAt: value.publishedAt,
     createdAt: value.createdAt,
     updatedAt: value.updatedAt,
+    ...mapAuthor(value.author),
     seo: {
       title: getText(value.seo?.metaTitle) ?? title,
       description: getText(value.seo?.metaDescription) ?? excerpt,
-      index: true,
-      follow: true,
+      ...mapCanonical(value.seo?.canonical),
+      index: value.seo?.index !== false,
+      follow: value.seo?.follow !== false,
       openGraphImage: featuredImage?.src,
     },
   };
+}
+
+/** A canonical path or URL on this site; anything else is ignored. */
+function mapCanonical(value: unknown): { canonical?: string } {
+  const canonical = getText(value);
+  return canonical !== null && isSiteCanonicalUrl(canonical)
+    ? { canonical }
+    : {};
+}
+
+/** A guest author's name; empty or the owner's name means the owner. */
+function mapAuthor(value: unknown): { author?: string } {
+  const name = isRecord(value) ? getText(value.name) : null;
+  return name === null || name === personalBrandName ? {} : { author: name };
 }
 
 export function toPublicArticleSummary(
@@ -253,6 +271,7 @@ export function toPublicArticleSummary(
     publishedAt: article.publishedAt,
     createdAt: article.createdAt,
     updatedAt: article.updatedAt,
+    ...(article.author === undefined ? {} : { author: article.author }),
     seo: article.seo,
   };
 }

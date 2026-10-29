@@ -7,16 +7,13 @@ import {
   type GlobalSlug,
   type PayloadRequest,
 } from "payload";
+import { isRecord } from "@/content/guards";
 
 type RecordValue = Record<string, unknown>;
 type RelationshipUsage = {
   entity: string;
   source: "current" | "version";
 };
-
-function isRecord(value: unknown): value is RecordValue {
-  return typeof value === "object" && value !== null;
-}
 
 function isMatchingID(value: unknown, mediaID: number | string): boolean {
   return (

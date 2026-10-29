@@ -6,6 +6,7 @@ import {
   type PayloadRequest,
   type Where,
 } from "payload";
+import { isRecord } from "@/content/guards";
 
 function getUserRole(user: unknown): unknown {
   if (typeof user !== "object" || user === null || !("role" in user)) {
@@ -13,10 +14,6 @@ function getUserRole(user: unknown): unknown {
   }
 
   return user.role;
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
 }
 
 /** Reads one operation argument; operation argument types differ per operation. */

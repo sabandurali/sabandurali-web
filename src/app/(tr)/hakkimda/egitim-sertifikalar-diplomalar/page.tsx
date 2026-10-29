@@ -1,72 +1,80 @@
 import type { Metadata } from "next";
-import BackToTop from "@/components/layout/BackToTop";
-import Footer from "@/components/layout/Footer";
-import Header from "@/components/layout/Header";
-import { getAbsoluteUrl } from "@/config/site";
-import { homeContent } from "@/content/homeContent";
+import EmptyState from "@/components/ui/EmptyState";
+import Section from "@/components/ui/Section";
+import TextLink from "@/components/ui/TextLink";
+import PageIntro from "@/components/workspaces/PageIntro";
+import PageShell from "@/components/workspaces/PageShell";
+import { createPageMetadata } from "@/lib/metadata";
 
-const sections = [
-  [
-    "Eğitim",
-    "Doğrulanmış eğitim geçmişi bu alanda yayınlanmak üzere hazırlanmaktadır.",
-  ],
-  [
-    "Sertifikalar",
-    "Mesleki eğitim ve sertifika bilgileri bu alanda yayınlanmak üzere hazırlanmaktadır.",
-  ],
-  [
-    "Diplomalar",
-    "Resmî diploma ve mezuniyet bilgileri bu alanda yayınlanmak üzere hazırlanmaktadır.",
-  ],
-] as const;
+const path = "/hakkimda/egitim-sertifikalar-diplomalar";
 
-export const metadata: Metadata = {
+/* FE-10: no certificate or diploma has been published. The page stays
+   reachable but is noindex, follow and shows an explicit empty state for
+   each part instead of placeholder text. */
+export const metadata: Metadata = createPageMetadata({
   title: "Eğitim, Sertifikalar & Diplomalar | Şaban Durali",
   description:
-    "Şaban Durali eğitim, sertifika ve diploma bilgileri için hazırlanan sayfa.",
-  alternates: {
-    canonical: getAbsoluteUrl("/hakkimda/egitim-sertifikalar-diplomalar"),
+    "Şaban Durali'nin sertifika ve diploma belgeleri henüz yayınlanmadı; eğitim özeti Hakkımda sayfasındadır.",
+  locale: "tr",
+  path,
+  index: false,
+  follow: true,
+});
+
+const parts = [
+  { id: "egitim", title: "Eğitim", empty: "Eğitim belgeleri henüz eklenmedi." },
+  {
+    id: "sertifikalar",
+    title: "Sertifikalar",
+    empty: "Sertifika bilgileri henüz eklenmedi.",
   },
-};
+  {
+    id: "diplomalar",
+    title: "Diplomalar",
+    empty: "Diploma bilgileri henüz eklenmedi.",
+  },
+] as const;
 
 export default function EducationCertificatesDiplomasPage() {
-  const home = homeContent.tr;
-
   return (
-    <div id="top" lang="tr">
-      <Header
-        locale="tr"
-        anchors={home.anchors}
-        content={home.header}
-        homeHref="/"
-        anchorPrefix="/"
-        languageHrefs={{
-          tr: "/hakkimda/egitim-sertifikalar-diplomalar",
-          en: "/en",
-        }}
-      />
-      <main className="bg-[#F5EFE4] text-ink">
-        <section className="mx-auto max-w-4xl px-6 py-16 sm:py-24 lg:px-10 lg:py-32">
-          <p className="text-sm font-medium uppercase tracking-[0.24em] text-accent">
-            Hakkımda
-          </p>
-          <h1 className="mt-6 font-serif text-5xl font-semibold leading-none sm:text-6xl">
-            Eğitim, Sertifikalar &amp; Diplomalar
-          </h1>
-          <div className="mt-12 divide-y divide-border">
-            {sections.map(([title, description]) => (
-              <section key={title} className="py-7 first:pt-0">
-                <h2 className="font-serif text-2xl font-semibold">{title}</h2>
-                <p className="mt-3 max-w-2xl text-base leading-7 text-muted-dark">
-                  {description}
-                </p>
+    <PageShell locale="tr" languageHrefs={{ tr: path, en: "/en" }}>
+      <main id="main" className="scheme-light bg-paper text-ink">
+        <Section>
+          <PageIntro
+            breadcrumb={[
+              { label: "Ana sayfa", href: "/" },
+              { label: "Hakkımda", href: "/hakkimda" },
+              { label: "Eğitim, Sertifikalar & Diplomalar" },
+            ]}
+            eyebrow="Hakkımda"
+            title="Eğitim, Sertifikalar & Diplomalar"
+            lead={
+              <>
+                Özgeçmiş beyanına dayanan eğitim özeti{" "}
+                <TextLink href="/hakkimda#egitim-sertifikalar">
+                  Hakkımda
+                </TextLink>{" "}
+                sayfasındadır.
+              </>
+            }
+          />
+          <div className="mt-12 flex flex-col gap-10">
+            {parts.map((part) => (
+              <section
+                key={part.id}
+                id={part.id}
+                aria-labelledby={`${part.id}-title`}
+                className="flex flex-col gap-4 border-t border-hairline pt-8"
+              >
+                <h2 id={`${part.id}-title`} className="m-0 type-h3">
+                  {part.title}
+                </h2>
+                <EmptyState>{part.empty}</EmptyState>
               </section>
             ))}
           </div>
-        </section>
+        </Section>
       </main>
-      <Footer id={home.anchors.contact} content={home.footer} />
-      <BackToTop label={home.backToTopLabel} />
-    </div>
+    </PageShell>
   );
 }

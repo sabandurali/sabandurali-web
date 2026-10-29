@@ -309,6 +309,20 @@ function collectionMatches(document: HistoricalDocument): boolean {
   );
 }
 
+/**
+ * Exact identity of an imported Media document with its audited manifest
+ * item, including the original file size and dimensions.
+ *
+ * Since Phase B the Media collection re-encodes every image (long edge capped
+ * at 3200 px, EXIF removed; `src/collections/Media.ts`). Records imported
+ * before that keep the original bytes and still match. An import into a
+ * fresh database, however, stores a re-encoded file, and a later
+ * dry-run or verify reports every item as "source media metadata differs"
+ * (`filesize` always, `width`/`height` for the two batch 1 items above
+ * 3200 px). This is deliberate: relaxing the comparison would let the gate
+ * adopt a file it cannot prove to be the audited one (PROJECT-STATE §K, rule
+ * 11), so the comparison stays exact. See PROJECT-STATE §L.
+ */
 function mediaMatches(
   document: HistoricalDocument,
   item: HistoricalBatch1Item,

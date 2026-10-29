@@ -28,12 +28,14 @@ export type ContentIssue = {
 
 export function reportContentIssue(
   issue: ContentIssue,
-  severity: "warn" | "error" = "warn",
+  severity: "info" | "warn" | "error" = "warn",
 ): void {
   const line = `[content] ${JSON.stringify({ severity, ...issue })}`;
 
   if (severity === "error") {
     console.error(line);
+  } else if (severity === "info") {
+    console.info(line);
   } else {
     console.warn(line);
   }

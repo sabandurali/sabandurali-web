@@ -86,20 +86,38 @@ test("the static source serves the static home content without logging", (t) => 
   assert.equal(error.mock.callCount(), 0);
 });
 
+test("tr: a missing CMS home page falls back instead of 404 and is an error", (t) => {
+  const error = t.mock.method(console, "error", () => {});
+  const resolved = resolveHomeContent(
+    { source: "payload", page: null },
+    homeContent.tr,
+  );
+
+  assert.equal(resolved.content, homeContent.tr);
+  assert.equal(resolved.page, null);
+  assert.equal(error.mock.callCount(), 1);
+  assert.match(String(error.mock.calls[0]?.arguments[0]), /"scope":"home"/);
+});
+
+test("en: a missing CMS home page is expected and only logged as info", (t) => {
+  const error = t.mock.method(console, "error", () => {});
+  const info = t.mock.method(console, "info", () => {});
+  const resolved = resolveHomeContent(
+    { source: "payload", page: null },
+    homeContent.en,
+  );
+
+  assert.equal(resolved.content, homeContent.en);
+  assert.equal(resolved.page, null);
+  assert.equal(error.mock.callCount(), 0);
+  assert.equal(info.mock.callCount(), 1);
+  assert.match(
+    String(info.mock.calls[0]?.arguments[0]),
+    /"severity":"info","scope":"home","locale":"en"/,
+  );
+});
+
 for (const locale of ["tr", "en"] as const) {
-  test(`${locale}: a missing CMS home page falls back instead of 404`, (t) => {
-    const error = t.mock.method(console, "error", () => {});
-    const resolved = resolveHomeContent(
-      { source: "payload", page: null },
-      homeContent[locale],
-    );
-
-    assert.equal(resolved.content, homeContent[locale]);
-    assert.equal(resolved.page, null);
-    assert.equal(error.mock.callCount(), 1);
-    assert.match(String(error.mock.calls[0]?.arguments[0]), /"scope":"home"/);
-  });
-
   test(`${locale}: incomplete CMS blocks fall back to static content`, (t) => {
     const error = t.mock.method(console, "error", () => {});
     // A dropped about block (for example a half-filled link) leaves 2 of 3.
