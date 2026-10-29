@@ -12,10 +12,20 @@ export type MetaItem = {
 
 type MetaListProps = {
   items: readonly MetaItem[];
-  /** `inline` for a row under a title, `grid` for a fact sheet. */
-  layout?: "inline" | "grid";
+  /**
+   * `inline` for a row under a title, `grid` for a fact sheet, `sidebar`
+   * for a fact sheet that becomes one column beside the text on wide
+   * screens.
+   */
+  layout?: "inline" | "grid" | "sidebar";
   className?: string;
 };
+
+const layoutClassName = {
+  inline: "flex flex-wrap gap-x-8 gap-y-4",
+  grid: "grid gap-x-8 gap-y-5 sm:grid-cols-2",
+  sidebar: "grid gap-x-8 gap-y-5 sm:grid-cols-2 lg:grid-cols-1",
+} as const;
 
 /** Label/value pairs (publication dates, book details, EXIF). */
 export default function MetaList({
@@ -26,15 +36,7 @@ export default function MetaList({
   if (items.length === 0) return null;
 
   return (
-    <dl
-      className={cx(
-        "m-0",
-        layout === "inline"
-          ? "flex flex-wrap gap-x-8 gap-y-4"
-          : "grid gap-x-8 gap-y-5 sm:grid-cols-2",
-        className,
-      )}
-    >
+    <dl className={cx("m-0", layoutClassName[layout], className)}>
       {items.map((item) => (
         <div key={item.label} className="flex min-w-0 flex-col gap-1">
           <dt className="type-label text-ink-muted">{item.label}</dt>

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { cx } from "@/components/ui/cx";
 import type { CreditInfo } from "@/components/ui/Figure";
+import { getImageCredit } from "@/content/media";
 
 /**
  * Credit for an image whose credit is one free-text line (the Media
@@ -13,6 +14,19 @@ export function creditFromText(
 ): CreditInfo | null {
   const value = text?.trim();
   return value ? { collection: value } : null;
+}
+
+/**
+ * Credit for a cover or content image with structured credit fields
+ * (explicit credit, else owner or source and licence; getImageCredit()).
+ */
+export function creditFromImage(image: {
+  credit?: string;
+  copyrightOwner?: string;
+  source?: string;
+  license?: string;
+}): CreditInfo | null {
+  return creditFromText(getImageCredit(image));
 }
 
 /**

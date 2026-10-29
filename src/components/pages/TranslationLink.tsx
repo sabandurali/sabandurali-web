@@ -26,7 +26,7 @@ export default function TranslationLink({
       variant="secondary"
       size="sm"
       icon={<ArrowRightIcon size={16} />}
-      className="mt-6"
+      className="self-start"
     >
       <span lang={labelLanguage}>{label}</span>
     </ButtonLink>
