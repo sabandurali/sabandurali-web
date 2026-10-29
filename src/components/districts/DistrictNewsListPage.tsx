@@ -1,5 +1,6 @@
 import BackToTop from "@/components/layout/BackToTop";
 import DistrictNewsCard from "@/components/districts/DistrictNewsCard";
+import { districtWorkspaceCrumb } from "@/components/districts/district-breadcrumb";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
 import { homeCrumb } from "@/components/ui/Breadcrumb";
@@ -44,7 +45,7 @@ export default function DistrictNewsListPage({
           layout="page"
           breadcrumb={[
             homeCrumb("tr"),
-            { label: "İstanbul", href: "/gayrimenkul-ve-istanbul" },
+            districtWorkspaceCrumb,
             { label: "İlçeler", href: districtGuidePath },
             { label: district.name, href: getDistrictPath(district.slug) },
             { label: "Haberler" },

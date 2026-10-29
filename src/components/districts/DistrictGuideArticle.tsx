@@ -17,6 +17,7 @@ import {
   selectDistrictGalleryPhotos,
   selectDistrictHeroPhoto,
 } from "@/content/photos/district-photo-selection";
+import { districtWorkspaceCrumb } from "./district-breadcrumb";
 import {
   getDistrictListSections,
   getVisibleDistrictSections,
@@ -135,7 +136,7 @@ export default function DistrictGuideArticle({
         <Breadcrumb
           items={[
             homeCrumb("tr"),
-            { label: "İstanbul", href: "/gayrimenkul-ve-istanbul" },
+            districtWorkspaceCrumb,
             { label: "İlçeler", href: districtGuidePath },
             { label: district.name },
           ]}
