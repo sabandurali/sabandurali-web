@@ -304,19 +304,57 @@ test("H: Batch 2 uses distinct SHA-bound apply approvals", () => {
   );
   assert.throws(
     () => assertHistoricalEnvironment(base, "apply", historicalBatch2Config),
-    /import and PITR approvals/,
+    /import and PITR approvals bound to the deployed SHA/,
   );
+  const approved = {
+    ...base,
+    PRODUCTION_HISTORICAL_PHOTO_BATCH2_IMPORT_APPROVED_SHA: sha,
+    PRODUCTION_HISTORICAL_PHOTO_BATCH2_PITR_CONFIRMED_SHA: sha,
+  };
   assert.doesNotThrow(() =>
-    assertHistoricalEnvironment(
-      {
-        ...base,
-        PRODUCTION_HISTORICAL_PHOTO_BATCH2_IMPORT_APPROVED: "true",
-        PRODUCTION_HISTORICAL_PHOTO_BATCH2_PITR_CONFIRMED: "true",
-      },
-      "apply",
-      historicalBatch2Config,
-    ),
+    assertHistoricalEnvironment(approved, "apply", historicalBatch2Config),
   );
+
+  // Batch 1 approvals never approve Batch 2.
+  assert.throws(
+    () =>
+      assertHistoricalEnvironment(
+        {
+          ...base,
+          PRODUCTION_HISTORICAL_PHOTO_BATCH1_IMPORT_APPROVED_SHA: sha,
+          PRODUCTION_HISTORICAL_PHOTO_BATCH1_PITR_CONFIRMED_SHA: sha,
+        },
+        "apply",
+        historicalBatch2Config,
+      ),
+    /bound to the deployed SHA/,
+  );
+  assert.throws(
+    () =>
+      assertHistoricalEnvironment(
+        {
+          ...approved,
+          PRODUCTION_HISTORICAL_PHOTO_BATCH2_PITR_CONFIRMED_SHA: "c".repeat(40),
+        },
+        "apply",
+        historicalBatch2Config,
+      ),
+    /bound to the deployed SHA/,
+  );
+  for (const retired of [
+    { PRODUCTION_HISTORICAL_PHOTO_BATCH2_IMPORT_APPROVED: "true" },
+    { PRODUCTION_HISTORICAL_PHOTO_BATCH2_PITR_CONFIRMED: "true" },
+  ]) {
+    assert.throws(
+      () =>
+        assertHistoricalEnvironment(
+          { ...approved, ...retired },
+          "apply",
+          historicalBatch2Config,
+        ),
+      /retired boolean approvals/,
+    );
+  }
 });
 
 test("I: Batch 2 historical photo remains gallery-only and never becomes hero", () => {

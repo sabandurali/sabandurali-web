@@ -223,7 +223,7 @@ The applied district importers, their cores and tests are kept for audit in `scr
 - The registry is what `payload migrate` applies: Payload runs every `.ts`/`.js` file in `src/migrations/` except `index.ts`, in file-name order, and does not read the index. `src/migrations/index.ts` (which the CI migration replay reads) must list exactly the same migrations in the same order; a migration file missing from the index, an index entry without a file, another order or a helper module in that folder stops the build with `migration_registry_invalid`, and `npm test` fails on it first. `npm run payload:migrate:create` keeps both in step.
 - Previews and local builds never migrate. No Preview branch is designated for migrations any more, and a non-Production build whose `DATABASE_URL` resolves to the Production database refuses to build. The check compares host, port and database name; it also recognises the Production host in another letter case, with a trailing dot, and the Neon pooled or direct twin of the endpoint (`ep-…-pooler.…` and `ep-….…`). Any other alias of the same database (a custom DNS name or an IP address) is not recognised, so keep the Production `DATABASE_URL` scoped to the Production environment in Vercel. The Production check itself stays exact.
 - The build-time district dry-run (`PRODUCTION_DISTRICT_DRY_RUN_APPROVED_SHA`) is retired: if that variable is set, the build stops before reading anything. Remove it from the Production environment.
-- The boolean `PRODUCTION_MIGRATION_APPROVED` and `PRODUCTION_PITR_CONFIRMED` no longer approve a migration; the build logs that it ignores them. Remove them from Vercel. (`PRODUCTION_PITR_CONFIRMED` is still read by the archived original importer, never by the build.)
+- The boolean `PRODUCTION_MIGRATION_APPROVED` and `PRODUCTION_PITR_CONFIRMED` no longer approve a migration; the build logs that it ignores them. Remove them from Vercel. (`PRODUCTION_PITR_CONFIRMED` is still read by the archived original importer, never by the build.) The historical photo importers retired their boolean approvals the same way (see L.1).
 
 ### K.2 Approving a Production migration
 
@@ -316,6 +316,17 @@ Do not use AI-generated, stock, random, non-commercial-only, no-derivatives, or 
 Since Phase B every Media upload is re-encoded (long edge at most 3200 px, EXIF removed) and limited to 4 MiB. The historical photo importers (`scripts/photos/`) compare an existing Media record with its manifest item exactly, including `filesize`, `width` and `height`. Records imported before the change keep their original bytes and still match. On a fresh database (local or a restored copy) a new import stores a re-encoded file, so a later dry-run or `--verify` reports each item as `source media metadata differs` (two batch 1 items are also larger than 3200 px). This is expected and is not to be "fixed" by relaxing the comparison: the gate must not adopt a file it cannot prove to be the audited source (§K rule 11). `historical-district-batch1.test.ts` (J2) pins the behaviour. All manifest files are below 4 MiB.
 
 Historical imports set `featured: false`. Hero selection prefers an explicitly featured image and otherwise the first non-historical photo, so an imported historical image must remain gallery-only and must not automatically become the district hero.
+
+### L.1 Approving a historical photo import
+
+The importers (`scripts/photos/import-historical-district-batch1.ts` and `…-batch2.ts`, prefix `PRODUCTION_HISTORICAL_PHOTO_BATCH1` or `…_BATCH2`) follow §K. Every approval is the full commit SHA of the Production deployment (`VERCEL_GIT_COMMIT_SHA`) and approves only that commit and that batch:
+
+1. `<prefix>_DRY_RUN_APPROVED_SHA` — allows the dry-run and `--verify`. Record the exact plan counts.
+2. Verify point-in-time recovery for the Production Neon branch (as in K.2 step 2), then set `<prefix>_PITR_CONFIRMED_SHA` to the same SHA.
+3. `<prefix>_IMPORT_APPROVED_SHA` — the same SHA, set only after the owner approved the dry-run counts. Apply refuses to run unless all three values equal the deployed SHA.
+4. Remove the three variables right after the read-only verification.
+
+The boolean `<prefix>_IMPORT_APPROVED` and `<prefix>_PITR_CONFIRMED` are retired: a forgotten `true` would have approved a later commit without a fresh PITR check. While either is set, the importer refuses every mode (dry-run, apply and verify) and names the variable to remove.
 
 ## M. Local machine safety and backups
 
