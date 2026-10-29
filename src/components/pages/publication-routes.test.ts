@@ -58,20 +58,26 @@ for (const [file, factory, locale] of routes) {
 }
 
 test("a missing publication has a localized, non-indexed title", () => {
-  assert.deepEqual(publicationNotFoundMetadata("article", "tr"), {
-    title: "Makale bulunamadı | Şaban Durali",
-    robots: { index: false, follow: false },
-  });
-  assert.equal(
-    publicationNotFoundMetadata("bookReview", "en").title,
-    "Book review not found | Şaban Durali",
-  );
-  assert.equal(
-    publicationNotFoundMetadata("photo", "tr").title,
-    "Fotoğraf bulunamadı | Şaban Durali",
-  );
-  assert.deepEqual(publicationNotFoundMetadata("photo", "en").robots, {
-    index: false,
-    follow: false,
-  });
+  // The titles the six route files used before the factories.
+  const expected = {
+    tr: {
+      article: "Makale bulunamadı",
+      bookReview: "Kitap incelemesi bulunamadı",
+      photo: "Fotoğraf bulunamadı",
+    },
+    en: {
+      article: "Article not found",
+      bookReview: "Book review not found",
+      photo: "Photography not found",
+    },
+  } as const;
+
+  for (const locale of ["tr", "en"] as const) {
+    for (const kind of ["article", "bookReview", "photo"] as const) {
+      assert.deepEqual(publicationNotFoundMetadata(kind, locale), {
+        title: `${expected[locale][kind]} | Şaban Durali`,
+        robots: { index: false, follow: false },
+      });
+    }
+  }
 });
