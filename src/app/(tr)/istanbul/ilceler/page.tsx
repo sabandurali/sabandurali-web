@@ -3,9 +3,9 @@ import DistrictDirectory from "@/components/districts/DistrictDirectory";
 import BackToTop from "@/components/layout/BackToTop";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
-import Breadcrumb, { homeCrumb } from "@/components/ui/Breadcrumb";
-import Container from "@/components/ui/Container";
+import { homeCrumb } from "@/components/ui/Breadcrumb";
 import DistrictTileMap from "@/components/ui/DistrictTileMap";
+import PageIntro from "@/components/ui/PageIntro";
 import Section from "@/components/ui/Section";
 import { getDistrictTiles } from "@/components/ui/district-tile-grid";
 import { getDistrictGuideSummaries } from "@/content/districts/district-guide-data-source";
@@ -60,23 +60,18 @@ export default async function DistrictIndexPage() {
         languageHrefs={{ tr: districtGuidePath, en: "/en" }}
       />
       <main id="main" className="bg-paper text-ink scheme-light">
-        <Container as="header" className="pt-6 pb-10 sm:pb-14">
-          <Breadcrumb
-            items={[
-              homeCrumb("tr"),
-              { label: "İstanbul", href: "/gayrimenkul-ve-istanbul" },
-              { label: "İlçeler" },
-            ]}
-          />
-          <p className="mt-8 mb-0 type-region">İSTANBUL ATLASI</p>
-          <h1 className="mt-3 mb-0 max-w-[18ch] type-display">
-            İstanbul İlçe Rehberi
-          </h1>
-          <p className="mt-5 mb-0 max-w-measure type-lead">
-            39 ilçeyi doğrulanmış içerik ve tarihli kaynaklarla okumak için bir
-            başlangıç noktası. Haritadan ya da listeden bir ilçe seçin.
-          </p>
-          <dl className="mt-8 mb-0 grid max-w-[52rem] grid-cols-2 border-t-2 border-ink sm:grid-cols-4">
+        <PageIntro
+          layout="page"
+          breadcrumb={[
+            homeCrumb("tr"),
+            { label: "İstanbul", href: "/gayrimenkul-ve-istanbul" },
+            { label: "İlçeler" },
+          ]}
+          eyebrow="İSTANBUL ATLASI"
+          title="İstanbul İlçe Rehberi"
+          lead="39 ilçeyi doğrulanmış içerik ve tarihli kaynaklarla okumak için bir başlangıç noktası. Haritadan ya da listeden bir ilçe seçin."
+        >
+          <dl className="m-0 grid max-w-[52rem] grid-cols-2 border-t-2 border-ink sm:grid-cols-4">
             {stats.map((stat) => (
               <div
                 key={stat.label}
@@ -87,7 +82,7 @@ export default async function DistrictIndexPage() {
               </div>
             ))}
           </dl>
-        </Container>
+        </PageIntro>
 
         <Section
           id="atlas"
