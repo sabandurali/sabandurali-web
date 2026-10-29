@@ -33,6 +33,12 @@ coding agent (CLAUDE.md, rule 2).
   and clears it on the account (`access.unlock`). A locked-out person
   therefore sees "wrong email or password" until the lock expires or an
   admin unlocks the account.
+- The session JWT lives only in the HttpOnly `payload-token` cookie
+  (`SameSite=Lax`, `Secure` on HTTPS). `auth.removeTokenFromResponses` keeps
+  it out of the JSON bodies of login, `/api/users/me`, refresh and reset, so
+  a same-origin script cannot read it and replay it as an
+  `Authorization: JWT` header, which neither SameSite nor the CSRF allowlist
+  covers. The admin panel works from the cookie alone.
 
 ### The gap
 

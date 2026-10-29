@@ -13,6 +13,7 @@ import type { Payload, PayloadRequest, SanitizedConfig, Where } from "payload";
 import sharp from "sharp";
 import type { Article } from "../payload-types";
 import { INTERNAL_LINK_COLLECTIONS } from "@/content/rich-text/internal-link-collections";
+import { isRecord } from "@/content/guards";
 
 const temporaryDirectory = await mkdtemp(
   path.join(os.tmpdir(), "cms-integration-"),
@@ -77,6 +78,32 @@ function validationPaths(error: unknown): string[] {
   const errors = (error.data as { errors?: Array<{ path: string }> }).errors;
   assert.ok(Array.isArray(errors));
   return errors.map((entry) => entry.path);
+}
+
+/**
+ * Signs in through `POST /api/users/login` as a browser would and returns the
+ * JSON body together with the session token from the `Set-Cookie` header.
+ */
+async function loginThroughRest(email: string, password: string) {
+  const { handleEndpoints } = await import("payload");
+  const response = await handleEndpoints({
+    config,
+    request: new Request("http://localhost:3000/api/users/login", {
+      body: JSON.stringify({ email, password }),
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+    }),
+  });
+  const cookieName = `${config.cookiePrefix}-token=`;
+  const cookie = response.headers
+    .getSetCookie()
+    .find((value) => value.startsWith(cookieName));
+  const body: unknown = await response.json();
+  return {
+    body,
+    cookieToken: cookie?.slice(cookieName.length).split(";")[0] ?? null,
+    status: response.status,
+  };
 }
 
 const paragraph = (text: string): NonNullable<Article["content"]> => ({
@@ -310,7 +337,9 @@ test("users: every way of setting a password needs 12 characters that are not th
     data: { password: "Correct-Horse-Reset", token },
     overrideAccess: true,
   });
-  assert.ok(reset.token);
+  assert.equal(reset.user.email, firstUser.email);
+  // The session token stays in the cookie, never in a response body.
+  assert.equal("token" in reset, false);
 
   // The next test expects an empty collection (first account is admin).
   await payload.db.deleteOne({
@@ -660,6 +689,47 @@ test("csrf: the allowlist covers production, this Preview deployment and local d
   );
 });
 
+test("users: the session token stays in the HttpOnly cookie and never reaches a response body", async () => {
+  const email = "token-body@example.com";
+  const password = "Correct-Horse-8";
+  const account = await payload.create({
+    collection: "users",
+    data: { email, password, role: "editor" },
+  });
+
+  const login = await loginThroughRest(email, password);
+  assert.equal(login.status, 200);
+  assert.ok(login.cookieToken, "the session cookie is still set");
+  assert.ok(isRecord(login.body));
+  assert.equal("token" in login.body, false, "login body");
+
+  const { handleEndpoints } = await import("payload");
+  const me = await handleEndpoints({
+    config,
+    request: new Request("http://localhost:3000/api/users/me", {
+      headers: {
+        Cookie: `${config.cookiePrefix}-token=${login.cookieToken}`,
+        "Sec-Fetch-Site": "same-origin",
+      },
+      method: "GET",
+    }),
+  });
+  assert.equal(me.status, 200);
+  const meBody: unknown = await me.json();
+  assert.ok(isRecord(meBody));
+  assert.ok(isRecord(meBody.user), "the cookie still signs the user in");
+  assert.equal(meBody.user.email, email);
+  assert.equal("token" in meBody, false, "/me body");
+
+  const local = await payload.login({
+    collection: "users",
+    data: { email, password },
+  });
+  assert.equal("token" in local, false, "Local API login");
+
+  await payload.delete({ collection: "users", id: account.id });
+});
+
 test("csrf: a session cookie is ignored on cross-origin and unmarked requests", async () => {
   const email = "csrf-admin@example.com";
   const password = "Correct-Horse-6";
@@ -667,10 +737,7 @@ test("csrf: a session cookie is ignored on cross-origin and unmarked requests", 
     collection: "users",
     data: { email, password, role: "admin" },
   });
-  const { token } = await payload.login({
-    collection: "users",
-    data: { email, password },
-  });
+  const token = (await loginThroughRest(email, password)).cookieToken;
   assert.ok(token);
 
   const userFor = async (headers: Record<string, string>) =>
