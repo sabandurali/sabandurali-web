@@ -45,7 +45,7 @@ const legacyApprovalVariables = [
 ];
 
 // The build-time dry-run of the original district importer, retired together
-// with the applied importers in scripts/districts/archive/.
+// with the applied importers (removed; Git history, docs/PROJECT-STATE.md §K).
 const retiredDryRunVariable = "PRODUCTION_DISTRICT_DRY_RUN_APPROVED_SHA";
 
 const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
@@ -525,7 +525,7 @@ async function runProductionMigrationGate(
 ) {
   if (env[retiredDryRunVariable]?.trim()) {
     fail(
-      `${retiredDryRunVariable} is set, but the build-time district dry-run was retired with the archived importers (scripts/districts/archive/). Remove the variable from the Production environment; nothing was read or migrated.`,
+      `${retiredDryRunVariable} is set, but the build-time district dry-run was retired with the applied district importers (docs/PROJECT-STATE.md §K). Remove the variable from the Production environment; nothing was read or migrated.`,
     );
   }
   requireMigrationInfrastructure(env);

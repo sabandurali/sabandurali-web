@@ -74,6 +74,14 @@ test("SEC-24: archived Production importers have no npm script", () => {
   }
 });
 
+test("ARCHITECTURE-4: the applied importers live only in the Git history", () => {
+  // Kept for audit at 4b94d32 (docs/PROJECT-STATE.md §K), not compiled,
+  // linted or tested with every change.
+  assert.equal(existsSync("scripts/districts/archive"), false);
+  const state = readFileSync("docs/PROJECT-STATE.md", "utf8");
+  assert.match(state, /git show 4b94d32:scripts\/districts\/archive\//);
+});
+
 test("migrations are replayed once: by the schema-migration unit test", () => {
   assert.equal(scripts["test:migrations"], undefined);
   for (const [name, command] of Object.entries(scripts))

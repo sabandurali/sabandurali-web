@@ -145,8 +145,6 @@ local `git blame`.
   AI agents
 - [reports/](reports/README.md): summaries of past work packages; their
   evidence stays in the Git history
-- [scripts/districts/archive/](scripts/districts/archive/README.md): the
-  applied Production district importers, kept for audit
 - [YONETIM-PANELI-KULLANIM-KILAVUZU.md](YONETIM-PANELI-KULLANIM-KILAVUZU.md):
   admin guide (Turkish), generated from the `/admin/help` source
   `src/components/admin/help/admin-help-guide.ts`
