@@ -201,9 +201,38 @@ test("the Kadıköy page shows no figure the guide projection does not carry", (
 
 test("the guide article never branches on a district slug literal", async () => {
   const { readFile } = await import("node:fs/promises");
-  const source = await readFile(
-    new URL("./DistrictGuideArticle.tsx", import.meta.url),
-    "utf8",
-  );
-  assert.doesNotMatch(source, /slug\s*===\s*["']/);
+  for (const file of [
+    "./DistrictGuideArticle.tsx",
+    "./district-guide-sections.tsx",
+    "./district-guide-parts.tsx",
+  ]) {
+    const source = await readFile(new URL(file, import.meta.url), "utf8");
+    assert.doesNotMatch(source, /slug\s*===\s*["']/, file);
+  }
+});
+
+test("prose paragraphs are spaced by the container gap, not by margins", () => {
+  const html = render({ guide });
+  // history: "Birinci paragraf.\n\nİkinci paragraf." — two paragraphs in one
+  // stack. A `space-y-*` rule loses to the paragraphs' `m-0` in Tailwind 4,
+  // so the stack must carry the gap itself.
+  const stack =
+    /<div class="([^"]*)"><p class="m-0 whitespace-pre-line">Birinci paragraf\.<\/p><p class="m-0 whitespace-pre-line">İkinci paragraf\.<\/p><\/div>/.exec(
+      html,
+    );
+  assert.ok(stack, "history paragraphs render as one stack");
+  const classes = (stack[1] ?? "").split(/\s+/);
+  assert.ok(classes.includes("grid"), stack[1]);
+  assert.ok(classes.includes("gap-5"), stack[1]);
+  assert.ok(!classes.some((name) => name.startsWith("space-y-")), stack[1]);
+});
+
+test("the breadcrumb names the workspace page it links to", () => {
+  const html = render({});
+  const crumb =
+    /<a [^>]*href="\/gayrimenkul-ve-istanbul"[^>]*>([^<]+)<\/a>/.exec(html);
+  assert.ok(crumb);
+  // Same target, same name as the header navigation and the page's h1
+  // (WCAG 3.2.4).
+  assert.equal(crumb[1], "Gayrimenkul &amp; İstanbul");
 });

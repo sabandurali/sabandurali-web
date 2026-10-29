@@ -4,8 +4,11 @@ import type { DistrictSource } from "@/content/districts/district-content-policy
 import type { DistrictGuide } from "@/content/districts/district-guide-projection";
 import { getDistrict } from "@/content/districts/district-registry";
 import type { PublicPhoto } from "@/content/photos/types";
+import { formatDistrictNumber } from "@/content/districts/district-presentation";
+import { formatDate } from "@/lib/format-date";
 import {
   buildDistrictFacts,
+  buildMarketFacts,
   buildSourceRows,
   categoryLabel,
   districtGuideSections,
@@ -367,4 +370,44 @@ test("research and news render with items or after a failed query", () => {
     getDistrictListSections({ ...none, unavailableSections: ["photos"] }),
     { research: false, news: false },
   );
+});
+
+test("market indicators use the district number format and skip missing values", () => {
+  assert.deepEqual(buildMarketFacts(null, [1]), []);
+  const rows = buildMarketFacts(
+    {
+      salePricePerM2: 45250.5,
+      averageRent: null,
+      dataDate: "2026-08-01T00:00:00Z",
+    },
+    [2],
+  );
+  assert.deepEqual(rows, [
+    {
+      id: "sale",
+      label: "Ortalama m² satış fiyatı",
+      value: formatDistrictNumber(45250.5),
+      unit: "TL",
+      date: formatDate("2026-08-01T00:00:00Z"),
+      sources: [2],
+    },
+  ]);
+  assert.equal(rows[0]?.value, "45.250,5");
+  // An undated market row keeps an empty date rather than inventing one.
+  assert.equal(buildMarketFacts({ averageRent: 21000 }, [])[0]?.date, "");
+});
+
+test("neighbour matching reuses the directory's Turkish search folding", async () => {
+  const { readFile } = await import("node:fs/promises");
+  const source = await readFile(
+    new URL("./district-guide-model.ts", import.meta.url),
+    "utf8",
+  );
+  // One folding rule for search and neighbour names (district-directory-filter).
+  assert.doesNotMatch(source, /\.normalize\(/);
+  assert.match(source, /foldSearchText/);
+  assert.deepEqual(parseNeighbourSlugs("ŞİŞLİ ve beyoglu"), [
+    "sisli",
+    "beyoglu",
+  ]);
 });
