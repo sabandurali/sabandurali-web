@@ -9,7 +9,7 @@ import {
 } from "./editorial";
 import { parseArgs } from "node:util";
 import {
-  validateBundle,
+  parseResearchBundle,
   makeDraft,
   decideImport,
   fingerprint,
@@ -31,10 +31,9 @@ const { values } = parseArgs({
 });
 if (values.apply && values["dry-run"])
   throw new Error("Choose --apply or --dry-run.");
-const bundle = JSON.parse(
-  await readFile(values.input, "utf8"),
-) as ResearchBundle;
-validateBundle(bundle);
+const bundle: ResearchBundle = parseResearchBundle(
+  JSON.parse(await readFile(values.input, "utf8")),
+);
 if (values.editorial)
   attachEditorial(
     bundle,
