@@ -6,8 +6,9 @@
  *
  * - Only indexable, self-canonical URLs are listed: CMS pages and reviews with
  *   `seo.index: false`, articles whose canonical points elsewhere, district
- *   pages without an indexable guide, placeholder pages and workspace sections
- *   without published content stay out.
+ *   pages without an indexable guide, district news lists without news,
+ *   placeholder pages and workspace sections without published content stay
+ *   out. Paginated news pages (`?sayfa=2`, …) are reached from page 1.
  * - hreflang alternates come from `createLanguageAlternates`, the helper the
  *   page metadata uses, and pair only URLs that are themselves listed.
  * - `lastModified` is a real content date (the item, the newest listed item of
@@ -35,9 +36,13 @@ import type { DistrictGuide } from "@/content/districts/district-guide-projectio
 import { districts } from "@/content/districts/district-registry";
 import {
   districtGuidePath,
+  getDistrictNewsPath,
   getDistrictPath,
 } from "@/content/districts/district-routes";
-import { isDistrictGuideIndexable } from "@/content/districts/district-seo";
+import {
+  isDistrictGuideIndexable,
+  isDistrictNewsPageIndexable,
+} from "@/content/districts/district-seo";
 import { getPublicPagePath, homePagePaths } from "@/content/pages/page-seo";
 import type { PublicPage } from "@/content/pages/public-types";
 import { getPhotoPath, photoListPaths } from "@/content/photos/photo-routes";
@@ -76,6 +81,8 @@ export type SitemapContent = {
   homePages: Record<SiteLocale, SitemapHomePage>;
   /** Published guide per district slug; a missing slug could not be loaded. */
   districtGuides: ReadonlyMap<string, DistrictGuide | null>;
+  /** Published Turkish district news of every district. */
+  districtNews: readonly PublicArticleSummary[];
 };
 
 type EntryOptions = {
@@ -447,6 +454,33 @@ export function buildDistrictEntries(
 }
 
 /**
+ * Page 1 of every district news list that the news page itself lets search
+ * engines index (`isDistrictNewsPageIndexable`), dated by its newest item.
+ */
+export function buildDistrictNewsEntries(
+  news: readonly PublicArticleSummary[],
+): SitemapEntry[] {
+  return districts.flatMap((district) => {
+    const items = news.filter(
+      (item) =>
+        item.language === "tr" &&
+        item.articleType === "district-news" &&
+        item.district === district.slug,
+    );
+
+    return isDistrictNewsPageIndexable(items)
+      ? [
+          createEntry(getDistrictNewsPath(district.slug), {
+            changeFrequency: "weekly",
+            priority: 0.5,
+            lastModified: getLatestDate(items.map(getContentLastModified)),
+          }),
+        ]
+      : [];
+  });
+}
+
+/**
  * Published Turkish items a workspace section page lists, with the same
  * filters as `WorkspaceEntryPage`: articles by category, photos by collection
  * or tag. `null` when the section has no feed (a placeholder page).
@@ -543,6 +577,7 @@ export function buildSitemap(content: SitemapContent): MetadataRoute.Sitemap {
     ...buildPhotoEntries(content.photos),
     ...buildStandardPageEntries(content.standardPages, homePageIds),
     ...buildDistrictEntries(content.districtGuides),
+    ...buildDistrictNewsEntries(content.districtNews),
     ...buildWorkspaceEntries(content.articles, content.photos),
   ]);
 }

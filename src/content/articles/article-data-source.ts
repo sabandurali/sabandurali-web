@@ -174,6 +174,14 @@ export const getDistrictNews = cache(
       : [],
 );
 
+/** The news of every district in one query (the sitemap groups them). */
+export const getAllDistrictNews = cache(
+  async (language: ArticleLanguage): Promise<PublicArticleSummary[]> =>
+    readPublicSource("ARTICLE_PUBLIC_SOURCE") === "payload"
+      ? payloadArticleRepository.listAllDistrictNews(language)
+      : [],
+);
+
 /**
  * The newest `limit` district news items, read with a database limit for
  * surfaces that show only a few (the district page).

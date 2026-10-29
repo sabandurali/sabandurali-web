@@ -1,5 +1,8 @@
 import type { MetadataRoute } from "next";
-import { getAllPublishedArticles } from "@/content/articles/article-data-source";
+import {
+  getAllDistrictNews,
+  getAllPublishedArticles,
+} from "@/content/articles/article-data-source";
 import { getAllPublishedBookReviews } from "@/content/books/book-data-source";
 import { getPublishedDistrictGuides } from "@/content/districts/district-guide-data-source";
 import {
@@ -28,6 +31,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     turkishHome,
     englishHome,
     districtGuides,
+    districtNews,
   ] = await Promise.all([
     loadSitemapSource(
       "Turkish articles",
@@ -71,6 +75,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       () => getPublishedDistrictGuides(),
       new Map(),
     ),
+    loadSitemapSource("district news", () => getAllDistrictNews("tr"), []),
   ]);
 
   return buildSitemap({
@@ -80,5 +85,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     standardPages,
     homePages: { tr: turkishHome, en: englishHome },
     districtGuides,
+    districtNews,
   });
 }

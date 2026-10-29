@@ -19,6 +19,7 @@ test("every read skips articles without a translation in the query locale", () =
     { kind: "standalone" },
     { kind: "category", categorySlug: "sehir" },
     { kind: "district", articleType: "district-news", district: "kadikoy" },
+    { kind: "all-district-news" },
   ] as const) {
     const conditions = createPublicArticleConditions(now, filter);
 
@@ -66,5 +67,12 @@ test("district pages filter by article type and district in the database", () =>
       { articleType: { equals: "district-research" } },
       { district: { equals: "kadikoy" } },
     ],
+  );
+});
+
+test("the sitemap reads the news of every district in one query", () => {
+  assert.deepEqual(
+    createPublicArticleConditions(now, { kind: "all-district-news" }),
+    [...published, { articleType: { equals: "district-news" } }],
   );
 });

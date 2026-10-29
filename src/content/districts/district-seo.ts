@@ -44,6 +44,17 @@ export function isDistrictGuideIndexable(
   );
 }
 
+/**
+ * A district news list is indexable while it has at least one item; an
+ * empty list is a placeholder. The news page robots rule and the sitemap
+ * both use this.
+ */
+export function isDistrictNewsPageIndexable(
+  news: ReadonlyArray<unknown>,
+): boolean {
+  return news.length > 0;
+}
+
 export function getDistrictTitle(district: District): string {
   return `${district.name} Rehberi: Tarih, Yaşam ve Ulaşım | Şaban Durali`;
 }

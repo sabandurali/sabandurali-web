@@ -4,6 +4,7 @@ import type { PublicArticleSummary } from "@/content/articles/public-types";
 import type { BookReview } from "@/content/books/types";
 import type { DistrictGuide } from "@/content/districts/district-guide-projection";
 import { districts } from "@/content/districts/district-registry";
+import { isDistrictNewsPageIndexable } from "@/content/districts/district-seo";
 import type { PublicPage } from "@/content/pages/public-types";
 import type { PublicPhoto } from "@/content/photos/types";
 import {
@@ -197,6 +198,7 @@ const emptyContent: SitemapContent = {
     en: { source: "static", page: null },
   },
   districtGuides: new Map(),
+  districtNews: [],
 };
 
 function byUrl(entries: readonly SitemapEntry[], path: string) {
@@ -319,6 +321,33 @@ const fullContent: SitemapContent = {
     ["fatih", guide()],
     ["beyoglu", null],
   ]),
+  districtNews: [
+    article({
+      id: "news-1",
+      slug: "kadikoy-haberi",
+      language: "tr",
+      articleType: "district-news",
+      district: "kadikoy",
+      updatedAt: "2026-10-20T09:00:00.000Z",
+    }),
+    article({
+      id: "news-2",
+      slug: "kadikoy-eski-haber",
+      language: "tr",
+      articleType: "district-news",
+      district: "kadikoy",
+      updatedAt: "2026-09-20T09:00:00.000Z",
+    }),
+    // A district whose guide is not indexable still has an indexable news
+    // list: the news page decides on its own items.
+    article({
+      id: "news-3",
+      slug: "beyoglu-haberi",
+      language: "tr",
+      articleType: "district-news",
+      district: "beyoglu",
+    }),
+  ],
 };
 
 test("every URL is listed once, absolute and on the site origin", () => {
@@ -554,6 +583,33 @@ test("district pages are listed only with an indexable guide", () => {
       .length,
     39,
   );
+});
+
+test("district news lists with news are listed like the news page indexes them", () => {
+  const sitemap = buildSitemap(fullContent);
+  const kadikoy = byUrl(sitemap, "/istanbul/ilceler/kadikoy/haberler");
+
+  assert.ok(kadikoy);
+  assert.equal(
+    kadikoy.lastModified?.valueOf(),
+    new Date("2026-10-20T09:00:00.000Z").valueOf(),
+  );
+  assert.ok(byUrl(sitemap, "/istanbul/ilceler/beyoglu/haberler"));
+  assert.equal(byUrl(sitemap, "/istanbul/ilceler/esenler/haberler"), undefined);
+  assert.equal(
+    urls(buildSitemap(emptyContent)).some((url) => url.endsWith("/haberler")),
+    false,
+  );
+
+  for (const district of ["kadikoy", "esenler"]) {
+    const items = fullContent.districtNews.filter(
+      (item) => item.district === district,
+    );
+    assert.equal(
+      byUrl(sitemap, `/istanbul/ilceler/${district}/haberler`) !== undefined,
+      isDistrictNewsPageIndexable(items),
+    );
+  }
 });
 
 test("photo image URLs are absolute and photo translations are paired", () => {

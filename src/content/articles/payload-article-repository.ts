@@ -202,6 +202,18 @@ export class PayloadPublicArticleRepository {
     );
   }
 
+  /** Every public district news item (all districts), for the sitemap. */
+  async listAllDistrictNews(
+    locale: ArticleLanguage,
+    now: Date = new Date(),
+  ): Promise<PublicArticleSummary[]> {
+    return this.findSummaries(
+      locale,
+      createPublicArticleConditions(now, { kind: "all-district-news" }),
+      now,
+    );
+  }
+
   async findPublishedBySlug(
     slug: string,
     locale: ArticleLanguage,

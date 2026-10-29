@@ -7,7 +7,8 @@ export type PublicArticleFilter =
       kind: "district";
       articleType: "district-research" | "district-news";
       district: string;
-    };
+    }
+  | { kind: "all-district-news" };
 
 /**
  * Database conditions for public article reads, so pages never load a whole
@@ -41,6 +42,8 @@ export function createPublicArticleConditions(
         { articleType: { not_equals: "district-news" } },
         { "categories.slug": { equals: filter.categorySlug } },
       ];
+    case "all-district-news":
+      return [...published, { articleType: { equals: "district-news" } }];
     case "district":
       return [
         ...published,
