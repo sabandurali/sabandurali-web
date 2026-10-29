@@ -173,10 +173,10 @@ test("research and news appear with items, or when their query failed", () => {
   assert.match(failed, /Haberler geçici olarak yüklenemedi/);
 });
 
-test("CORRECTNESS-2: the Kadıköy page states no undated year for a source", () => {
-  // The year of the District Governorship count is recorded in no source
-  // record (data/districts/OWNER-ACTIONS.md, item 1), so the page never
-  // claims one in fixed copy; the source table shows the recorded date.
+test("the Kadıköy page shows no figure the guide projection does not carry", () => {
+  // Every number and date on a district page comes from the policy-checked
+  // projection. A figure written into the component would bypass
+  // district-content-policy.ts and stay on the page after the CMS changed.
   const kadikoy = getDistrict("kadikoy");
   assert.ok(kadikoy);
   const html = renderToStaticMarkup(
@@ -191,7 +191,19 @@ test("CORRECTNESS-2: the Kadıköy page states no undated year for a source", ()
       },
     }),
   );
-  assert.match(html, /2025 ADNKS nüfusu/);
-  assert.doesNotMatch(html, /2017/);
-  assert.doesNotMatch(html, /451\.453 kişilik kaydı/);
+  assert.doesNotMatch(html, /458\.573/);
+  assert.doesNotMatch(html, /ADNKS nüfusu/);
+  assert.doesNotMatch(html, /kadikoyakademi\.org/);
+  assert.doesNotMatch(html, /18 Ekim 2026/);
+  // The only population figure is the one of the projected guide.
+  assert.match(html, /419\.878/);
+});
+
+test("the guide article never branches on a district slug literal", async () => {
+  const { readFile } = await import("node:fs/promises");
+  const source = await readFile(
+    new URL("./DistrictGuideArticle.tsx", import.meta.url),
+    "utf8",
+  );
+  assert.doesNotMatch(source, /slug\s*===\s*["']/);
 });
