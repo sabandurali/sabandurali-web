@@ -5,7 +5,7 @@ import PhotoCard from "@/components/photos/PhotoCard";
 import { getPhotoListHref } from "@/components/photos/photo-list-params";
 import { Button } from "@/components/ui/Button";
 import EmptyState from "@/components/ui/EmptyState";
-import { Field } from "@/components/ui/Field";
+import { Field, Select } from "@/components/ui/Field";
 import Pagination from "@/components/ui/Pagination";
 import Section from "@/components/ui/Section";
 import TextLink from "@/components/ui/TextLink";
@@ -15,9 +15,6 @@ import type {
   PhotoListFilters,
   PublishedPhotoList,
 } from "@/content/photos/types";
-
-const selectClassName =
-  "block min-h-12 w-full rounded-control border border-tile-edge bg-land px-3.5 py-2.5 text-base text-ink hover:border-ink focus-visible:border-ink";
 
 /**
  * Photograph list: intro, a filter form (collection and tag, sent as a
@@ -82,11 +79,10 @@ export default function PhotoListPage({
             </h3>
             <Field label={text.collection} locale={locale}>
               {(control) => (
-                <select
+                <Select
                   {...control}
                   name="collection"
                   defaultValue={filters.collection ?? ""}
-                  className={selectClassName}
                 >
                   <option value="">{text.all}</option>
                   {result.collections.map((item) => (
@@ -94,16 +90,15 @@ export default function PhotoListPage({
                       {item.title}
                     </option>
                   ))}
-                </select>
+                </Select>
               )}
             </Field>
             <Field label={text.tag} locale={locale}>
               {(control) => (
-                <select
+                <Select
                   {...control}
                   name="tag"
                   defaultValue={filters.tag ?? ""}
-                  className={selectClassName}
                 >
                   <option value="">{text.all}</option>
                   {result.tags.map((item) => (
@@ -111,7 +106,7 @@ export default function PhotoListPage({
                       {item.title}
                     </option>
                   ))}
-                </select>
+                </Select>
               )}
             </Field>
             <div className="flex flex-wrap items-center gap-x-5 gap-y-2">

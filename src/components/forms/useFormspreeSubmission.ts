@@ -2,8 +2,7 @@
 
 import { useRef, useState, type FormEvent } from "react";
 import {
-  getFormspreeEndpoint,
-  isHoneypotFilled,
+  submitContactForm,
   type SubmissionErrorKind,
   type SubmissionStatus,
 } from "./contact-submission";
@@ -14,6 +13,11 @@ type UseFormspreeSubmissionOptions = {
   formId?: string;
 };
 
+/**
+ * React state around `submitContactForm`, which holds (and tests) every
+ * branch: double-submit guard, validity, honeypot, missing endpoint,
+ * non-2xx response and network failure.
+ */
 export function useFormspreeSubmission({
   formId,
 }: UseFormspreeSubmissionOptions) {
@@ -23,65 +27,23 @@ export function useFormspreeSubmission({
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-
     const form = event.currentTarget;
 
-    // The submit button stays focusable while sending (aria-disabled), so a
-    // second press must be ignored here.
-    if (submissionInFlight.current) return;
+    const outcome = await submitContactForm({
+      form,
+      readFormData: () => new FormData(form),
+      formId,
+      fetch: (url, init) => fetch(url, init),
+      inFlight: submissionInFlight,
+      onLoading: () => {
+        setErrorKind(null);
+        setStatus("loading");
+      },
+    });
 
-    if (!form.checkValidity()) {
-      form.reportValidity();
-      return;
-    }
-
-    const formData = new FormData(form);
-
-    // SEC-14: a filled honeypot is rejected before anything is sent. The bot
-    // sees the usual success so it learns nothing about the trap.
-    if (isHoneypotFilled(formData)) {
-      form.reset();
-      setErrorKind(null);
-      setStatus("success");
-      return;
-    }
-
-    const endpoint = getFormspreeEndpoint(formId);
-
-    if (endpoint === null) {
-      setErrorKind("configuration");
-      setStatus("error");
-      return;
-    }
-
-    submissionInFlight.current = true;
-    setErrorKind(null);
-    setStatus("loading");
-
-    try {
-      const response = await fetch(endpoint, {
-        method: "POST",
-        body: formData,
-        headers: {
-          Accept: "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        setErrorKind("general");
-        setStatus("error");
-        return;
-      }
-
-      form.reset();
-      setErrorKind(null);
-      setStatus("success");
-    } catch {
-      setErrorKind("general");
-      setStatus("error");
-    } finally {
-      submissionInFlight.current = false;
-    }
+    if (outcome.kind === "ignored") return;
+    setErrorKind(outcome.errorKind);
+    setStatus(outcome.status);
   }
 
   function resetStatus() {

@@ -62,6 +62,8 @@ export function DesktopNavigation({
  * a stacked NavMenu and the language switcher. The panel follows the
  * button in the DOM, Escape closes it (one layer at a time) and following
  * any link closes it, also when the next page keeps this header mounted.
+ * The panel floats over the page, so moving focus or tapping outside it
+ * closes it too: it never hides the element that receives focus next.
  */
 export function MobileNavigation({
   locale,
@@ -80,6 +82,7 @@ export function MobileNavigation({
       open={isOpen}
       onOpenChange={setIsOpen}
       fullWidth={false}
+      dismissOnOutside
       className="xl:hidden"
       buttonClassName="rounded-control border-2 border-ink px-3.5 type-small font-bold text-ink hover:bg-land"
       panelClassName="absolute inset-x-0 top-full z-40 max-h-[calc(100dvh-5rem)] overflow-y-auto overscroll-contain border-y border-ink bg-land text-ink shadow-panel"

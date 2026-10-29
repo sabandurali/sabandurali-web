@@ -1,8 +1,11 @@
 import assert from "node:assert/strict";
+import { readdirSync, readFileSync, statSync } from "node:fs";
+import path from "node:path";
 import test from "node:test";
+import { fileURLToPath } from "node:url";
 import { createElement as h, type ReactElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import Breadcrumb from "./Breadcrumb";
+import Breadcrumb, { homeCrumb } from "./Breadcrumb";
 import { Button, ButtonLink } from "./Button";
 import Card from "./Card";
 import { cx } from "./cx";
@@ -11,7 +14,13 @@ import DistrictKeyMap from "./DistrictKeyMap";
 import DistrictTileMap from "./DistrictTileMap";
 import EmptyState from "./EmptyState";
 import FactTable from "./FactTable";
-import { Field, Input, describedBy, type FieldControlProps } from "./Field";
+import {
+  Field,
+  Input,
+  Select,
+  describedBy,
+  type FieldControlProps,
+} from "./Field";
 import { Credit, Figure } from "./Figure";
 import FormStatus, { resultFocusTarget } from "./FormStatus";
 import GridRef from "./GridRef";
@@ -34,6 +43,26 @@ import { isInternalPath } from "./UiLink";
 const render = (element: ReactElement) => renderToStaticMarkup(element);
 const count = (html: string, pattern: RegExp) =>
   [...html.matchAll(new RegExp(pattern.source, "g"))].length;
+const root = fileURLToPath(new URL("../../../", import.meta.url));
+const sourceFiles = (directory: string): string[] =>
+  readdirSync(directory).flatMap((entry) => {
+    const absolute = path.join(directory, entry);
+    if (statSync(absolute).isDirectory()) return sourceFiles(absolute);
+    return /\.tsx?$/.test(entry) && !/\.test\.tsx?$/.test(entry)
+      ? [absolute]
+      : [];
+  });
+/** Public site sources (no admin) whose text matches `pattern`. */
+const publicSourcesMatching = (pattern: RegExp, except: string[] = []) =>
+  [
+    ...sourceFiles(path.join(root, "src/components")),
+    ...sourceFiles(path.join(root, "src/app")),
+  ]
+    .map((file) => path.relative(root, file).split(path.sep).join("/"))
+    .filter((file) => !file.includes("/admin/") && !except.includes(file))
+    .filter((file) =>
+      pattern.test(readFileSync(path.join(root, file), "utf8")),
+    );
 const textOf = (html: string) =>
   html
     .replace(/<[^>]+>/g, "")
@@ -247,7 +276,7 @@ test("Breadcrumb marks the current page and hides separators", () => {
   const html = render(
     h(Breadcrumb, {
       items: [
-        { label: "Ana Sayfa", href: "/" },
+        homeCrumb("tr"),
         { label: "İlçeler", href: "/istanbul/ilceler" },
         { label: "Esenler" },
       ],
@@ -260,6 +289,17 @@ test("Breadcrumb marks the current page and hides separators", () => {
     /<span aria-current="page" class="text-ink font-bold">Esenler<\/span>/,
   );
   assert.equal(count(html, /<span aria-hidden="true">\/<\/span>/), 2);
+});
+
+test("FRONTEND-6: every breadcrumb starts with the same home crumb", () => {
+  assert.deepEqual(homeCrumb("tr"), { label: "Ana sayfa", href: "/" });
+  assert.deepEqual(homeCrumb("en"), { label: "Home", href: "/en" });
+
+  // No page writes its own home crumb: the label comes from homeCrumb().
+  assert.deepEqual(
+    publicSourcesMatching(/label:\s*"(?:Ana [Ss]ayfa|Home)",\s*href:/),
+    [],
+  );
 });
 
 test("Disclosure: the panel follows its button and exists while closed", () => {
@@ -371,6 +411,44 @@ test("Field ties label, hint and error to the control (FE-21)", () => {
     }),
   );
   assert.doesNotMatch(valid, / aria-invalid="| aria-describedby="|zorunlu/);
+});
+
+test("FRONTEND-7: Select shares the control states; no copied select styles", () => {
+  const html = render(
+    h(Field, {
+      label: "Konu",
+      error: "Bir konu seçin.",
+      id: "subject",
+      children: (control: FieldControlProps) =>
+        h(Select, { name: "subject", ...control }, h("option", null, "A")),
+    }),
+  );
+  assert.match(html, /<select [^>]*aria-invalid="true"/);
+  assert.match(html, /aria-invalid:border-danger/);
+  assert.match(html, /min-h-12/);
+  // Every public select goes through the primitive.
+  assert.deepEqual(
+    publicSourcesMatching(/<select\b|selectClassName/, [
+      "src/components/ui/Field.tsx",
+    ]),
+    [],
+  );
+});
+
+test("FRONTEND-7: cards share one shell and hover only to palette tokens", () => {
+  assert.deepEqual(publicSourcesMatching(/\bhover:bg-white\b/), []);
+  // The title link and cue are written once, in Card.tsx.
+  assert.deepEqual(publicSourcesMatching(/data-card-link=""/), [
+    "src/components/ui/Card.tsx",
+  ]);
+  const card = render(
+    h(Card, { title: "Esenler", href: "/x", cta: "Detaylı rehber" }),
+  );
+  assert.match(card, /<span aria-hidden="true" class="mt-auto type-small/);
+  assert.match(
+    render(h(EmptyState, null, "Henüz eklenmedi.")),
+    /class="[^"]*type-body font-semibold/,
+  );
 });
 
 test("FormStatus keeps both live regions mounted and only changes their text", () => {

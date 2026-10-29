@@ -28,7 +28,7 @@ export default function EmptyState({
           size === "lg" ? "min-h-45 py-7" : "py-7",
         )}
       >
-        <p className="m-0 inline-block bg-land px-3.5 py-2.5 text-body leading-[1.55] font-semibold text-ink">
+        <p className="m-0 inline-block bg-land px-3.5 py-2.5 type-body font-semibold text-ink">
           {children}
         </p>
       </div>

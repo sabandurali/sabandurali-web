@@ -166,8 +166,9 @@ sınıfla ezebilirsiniz (`type-data font-bold`). Aynı özelliği iki tek özell
 | `type-data` / `type-data-md` / `type-data-lg` | 12 / 13 / 17 → 22 px, mono | Veri etiketleri, tarihler, tablo değerleri |
 
 **Taban 12 px'tir.** Daha küçük bir token, sınıf ya da `text-[…]` değeri yoktur;
-`typography-guard.test.ts` sitedeki tüm kaynakları tarar. Henüz yeniden yapılmamış eski bileşenler testte
-listelidir; liste yalnızca kısalır.
+`typography-guard.test.ts` sitedeki tüm kaynakları tarar. İstisna listesi boştur; test, listeye
+girmiş bir dosyanın var olduğunu ve gerçekten 12 px altı bir değer taşıdığını da denetler, böylece liste
+yalnızca kısalır.
 
 ### Türkçe karakter kontrolü
 
@@ -208,14 +209,12 @@ sınıfı (`focus-visible:` dahil) onları ezebilir (FE-12).
   Next.js 16 sayfa geçişlerinde yumuşak kaydırmayı kapatır.
 - `::selection`: turuncu zemin, mürekkep metin (4.77:1).
 
-### Geçiş dönemi
+### Geçiş tamamlandı
 
-Eski koyu lacivert/altın palet (`--background`, `--ivory`, `--accent` …) `globals.css` sonunda
-"Legacy" bloğundadır ve yalnızca henüz yeniden yapılmamış sayfaları okunur tutar. Yeni kodda kullanılmaz;
-son kullanımı kalkan token silinir. Kök layout'lar artık `scheme-dark` ve `bg-background
-text-foreground` taşımaz: her sayfanın zemini taban `paper`dır; eski bir bileşen kendi zeminini kendisi
-kurmalıdır. `--ink` ve `--focus-ring` eski bloktan çıkarıldı: `text-ink` artık Boğaz
-mavisidir (eski açık zeminlerde de ≥ 5.44:1), odak halkası her yerde iki tonludur.
+Eski koyu lacivert/altın palet (`--background`, `--foreground`, `--ivory`, `--accent` …) ve onun `@theme`
+eşlemeleri silindi; hiçbir sayfa onu kullanmıyordu. `bg-background`, `text-ivory`, `bg-accent` gibi
+sınıflar artık üretilmez ve `design-tokens.test.ts` bu adların `globals.css`'e geri dönmesini engeller.
+Her sayfanın zemini taban `paper`dır; renkler yalnızca §2'deki Atlas token'larından gelir.
 
 ## 5. Bileşenler
 
@@ -246,10 +245,10 @@ yalnızca etkileşim gerektirenlerdir: `SkipLink`, `Disclosure`, `NavMenu`, `For
 | `Disclosure` | Göster/gizle. Panel butonundan hemen sonra gelir, kapalıyken DOM'da `hidden` kalır, Escape kapatıp odağı butona döndürür. İçteki bir bileşen Escape'i zaten işlediyse (`preventDefault`, ör. açık NavMenu paneli) dokunmaz: Escape her basışta bir katman kapatır. `open` + `onOpenChange` ile kontrollü kullanılabilir; `fullWidth={false}` satır içi buton verir (header'daki "Menü"). |
 | `NavMenu` | Masaüstü açılır menüleri (FE-5). Bir sonraki bölüme bakın. Öğede `current` yalnızca bu sayfanın bağlantısıdır (`aria-current`); `active` sayfanın içinde bulunduğu bölümü kalın yazı ve turuncu çizgiyle gösterir, `aria-current` vermez. |
 | `Timeline` | `axis` (tarih ekseni) ya da `route` (güzergâh; 40 rem altında dikey). Duraklar dekoratif; sıra, tarih ve metin içeriktir. Gerçek tarihlerde `dateTime` verin. |
-| `Card` | Tek başlık bağlantısı; tıklama alanı tüm kartı kaplar, üzerine gelince yalnızca başlığın altı çizilir, odak halkası kartın çevresine çizilir. Kart içindeki başka bağlantılar (kredi, kaynak) tıklanabilir kalır. `cta` yalnızca görsel ipucudur. |
+| `Card` | Tek başlık bağlantısı; tıklama alanı tüm kartı kaplar, üzerine gelince yalnızca başlığın altı çizilir, odak halkası kartın çevresine çizilir. Kart içindeki başka bağlantılar (kredi, kaynak) tıklanabilir kalır. `cta` yalnızca görsel ipucudur. Başka bir kart (ör. çalışma alanı kartları) aynı kabuğu `cardFrameClassName`, `cardFocusClassName`, `CardTitleLink` ve `CardCue` ile kurar; hover zemini yalnızca palet token'ıdır (`hover:bg-paper`), `bg-white` kullanılmaz. |
 | `EmptyState` | Veri yoksa taramalı panel ve düz cümle ("… henüz eklenmedi."). |
 | `Pagination` | Önceki/sonraki ve sayfa numaraları; geçerli sayfa `aria-current`; tek sayfada hiçbir şey çizmez. |
-| `Field` + `Input` / `Textarea` | Görünen `label`, `hint` ve `error` kontrolün `aria-describedby` listesine bağlanır, hata `aria-invalid` ve "Hata:" önekiyle gelir, zorunlu alanlar "(zorunlu)" yazar. |
+| `Field` + `Input` / `Textarea` / `Select` | Üç kontrol aynı kenar, hover, odak ve hata (`aria-invalid`) stillerini paylaşır; sayfada elle stillenmiş `<select>` yazılmaz. Görünen `label`, `hint` ve `error` kontrolün `aria-describedby` listesine bağlanır, hata `aria-invalid` ve "Hata:" önekiyle gelir, zorunlu alanlar "(zorunlu)" yazar. |
 | `FormStatus` | İki kalıcı canlı bölge: ilerleme/başarı `role="status"`, hata `role="alert"`; yalnızca metin değişir, yeni bir sonuçta odak mesaja taşınır (ilk çizimde ve mesajsız sonuçta taşınmaz) (FE-21). `aria-busy` kapsayıcısının dışında durur. |
 | `StationDiagram` | Hat şeması: yalnızca metinde adı geçen duraklar; ilçeye hizmet eden duraklar turuncu ve aralarında düz çizgi, ilçe dışı kesim noktalı. Dar kapsayıcıda dikey liste (390 px'te etiketler sıkışmaz), 36 rem'den itibaren yatay. Yanına `Legend` ile "yalnız metinde adı geçen istasyonlar" notunu koyun. |
 | `Legend` | Harita ve şema sembollerinin anahtarı; her sembol metinle adlandırılır. |

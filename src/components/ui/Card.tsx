@@ -22,6 +22,61 @@ type CardProps = {
   className?: string;
 };
 
+/** Frame shared by every link card on a light ground. */
+export const cardFrameClassName =
+  "relative flex min-w-0 flex-col rounded-card border border-ink bg-land text-ink";
+
+/** Draws the focus ring around the card while its title link has focus. */
+export const cardFocusClassName =
+  "has-[[data-card-link]:focus-visible]:focus-ring";
+
+/**
+ * The card's only link. Its ::after covers the card, so the whole card is
+ * the hit area; the focus ring moves to the frame (`cardFocusClassName`).
+ */
+export function CardTitleLink({
+  href,
+  prefetch,
+  children,
+}: {
+  href: string;
+  prefetch?: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <UiLink
+      href={href}
+      prefetch={prefetch}
+      data-card-link=""
+      className="text-ink no-underline decoration-2 underline-offset-[5px] after:absolute after:inset-0 after:content-[''] hover:underline focus-visible:outline-none focus-visible:[box-shadow:none]"
+    >
+      {children}
+    </UiLink>
+  );
+}
+
+/** Visual "go" cue at the card foot; hidden from screen readers because
+ * the title link already names the destination. */
+export function CardCue({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <span
+      aria-hidden="true"
+      className={cx(
+        "mt-auto type-small font-bold underline decoration-signal decoration-2 underline-offset-[5px]",
+        className,
+      )}
+    >
+      {children}
+    </span>
+  );
+}
+
 /**
  * Card with one title link whose hit area covers the whole card. Hovering
  * underlines only the title; other links inside (credits, sources) stay
@@ -42,20 +97,17 @@ export default function Card({
   const heading = createElement(
     `h${headingLevel}`,
     { className: "m-0 type-card-title" },
-    <UiLink
-      href={href}
-      prefetch={prefetch}
-      data-card-link=""
-      className="text-ink no-underline decoration-2 underline-offset-[5px] after:absolute after:inset-0 after:content-[''] hover:underline focus-visible:outline-none focus-visible:[box-shadow:none]"
-    >
+    <CardTitleLink href={href} prefetch={prefetch}>
       {title}
-    </UiLink>,
+    </CardTitleLink>,
   );
 
   return (
     <article
       className={cx(
-        "relative flex min-w-0 flex-col overflow-hidden rounded-card border border-ink bg-land text-ink has-[[data-card-link]:focus-visible]:focus-ring",
+        cardFrameClassName,
+        "overflow-hidden",
+        cardFocusClassName,
         className,
       )}
     >
@@ -75,14 +127,7 @@ export default function Card({
         ) : null}
         {heading}
         {children}
-        {cta ? (
-          <span
-            aria-hidden="true"
-            className="mt-auto pt-1.5 text-small font-bold underline decoration-signal decoration-2 underline-offset-[5px]"
-          >
-            {cta}
-          </span>
-        ) : null}
+        {cta ? <CardCue className="pt-1.5">{cta}</CardCue> : null}
       </div>
     </article>
   );

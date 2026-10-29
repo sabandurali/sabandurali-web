@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readdirSync, readFileSync, statSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
@@ -12,23 +12,12 @@ import { fileURLToPath } from "node:url";
  * fails on anything below 12 px. The Payload admin is a separate product
  * and not scanned.
  *
- * `legacyFiles` lists pre-atlas components that still contain smaller
- * sizes; they are being rebuilt with src/components/ui. Remove an entry
- * when its file is rebuilt or deleted. Never add one.
+ * `legacyFiles` may only list a component that still contains smaller
+ * sizes while it is rebuilt with src/components/ui. Every component now
+ * uses the type scale, so it is empty; never add an entry. A listed file
+ * must exist and still break the rule, so the list can only shrink.
  */
-const legacyFiles = new Set([
-  "src/components/HomePage.tsx",
-  "src/components/articles/ArticleCard.tsx",
-  "src/components/districts/DistrictEditorialGuidePage.tsx",
-  "src/components/layout/Footer.tsx",
-  "src/components/layout/Header.tsx",
-  "src/components/photos/PhotoCard.tsx",
-  "src/components/sections/About.tsx",
-  "src/components/sections/Hero.tsx",
-  "src/components/sections/HomeEditorialSections.tsx",
-  "src/components/sections/HomeListingSection.tsx",
-  "src/components/sections/WorkspaceQuickAccess.tsx",
-]);
+const legacyFiles: ReadonlySet<string> = new Set<string>();
 
 const excluded = [
   /^src\/app\/\(payload\)\//,
@@ -98,4 +87,16 @@ test("FE-20: no public source sets text below 12 px", () => {
     if (small.length > 0) offenders.push(`${relative}: ${small.join(", ")} px`);
   }
   assert.deepEqual(offenders, [], "text below 12 px; use the type scale");
+});
+
+test("FE-20: the exception list is empty and holds only real offenders", () => {
+  for (const relative of legacyFiles) {
+    const absolute = path.join(root, relative);
+    assert.ok(existsSync(absolute), `${relative} is gone; remove it`);
+    const small = findFontSizesPx(readFileSync(absolute, "utf8")).filter(
+      (size) => size < 12,
+    );
+    assert.ok(small.length > 0, `${relative} follows the scale; remove it`);
+  }
+  assert.equal(legacyFiles.size, 0, "the exception list only shrinks");
 });

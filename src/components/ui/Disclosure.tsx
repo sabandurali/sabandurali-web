@@ -2,9 +2,11 @@
 
 import {
   createElement,
+  useEffect,
   useId,
   useRef,
   useState,
+  type FocusEvent,
   type KeyboardEvent,
   type ReactNode,
 } from "react";
@@ -25,6 +27,10 @@ type DisclosureProps = {
   fullWidth?: boolean;
   /** Wraps the button in a heading (accordion sections). */
   headingLevel?: 2 | 3 | 4 | 5 | 6;
+  /** Close when focus or a pointer press lands outside the disclosure. Set
+   * it for a panel that floats over the page (the header menu), so it never
+   * hides the element that receives focus next (WCAG 2.4.11). */
+  dismissOnOutside?: boolean;
   id?: string;
   className?: string;
   buttonClassName?: string;
@@ -44,11 +50,33 @@ export function shouldCloseOnEscape(
   return key === "Escape" && isOpen && !defaultPrevented;
 }
 
+type Container<T> = { contains: (node: T | null) => boolean };
+
+/**
+ * Whether focus or a pointer press on `target` dismisses an open floating
+ * disclosure: only when it lands outside the disclosure. A null target
+ * (focus left for the browser chrome, a click on non-focusable panel
+ * content) keeps the panel open.
+ */
+export function shouldDismissOnOutside<T>(
+  isOpen: boolean,
+  container: Container<T> | null,
+  target: T | null,
+): boolean {
+  return (
+    isOpen &&
+    container !== null &&
+    target !== null &&
+    !container.contains(target)
+  );
+}
+
 /**
  * Show/hide button (WAI-ARIA disclosure). The panel follows its button in
  * the DOM, stays in the DOM while closed (`hidden`), so `aria-controls`
  * always points to a real element. Escape inside the panel closes it and
- * returns focus to the button. Nothing traps focus.
+ * returns focus to the button. Nothing traps focus. With `dismissOnOutside`
+ * the panel also closes when focus or a pointer press moves outside it.
  */
 export default function Disclosure({
   summary,
@@ -58,6 +86,7 @@ export default function Disclosure({
   onOpenChange,
   fullWidth = true,
   headingLevel,
+  dismissOnOutside = false,
   id,
   className,
   buttonClassName,
@@ -69,6 +98,28 @@ export default function Disclosure({
   const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
   const isOpen = open ?? uncontrolledOpen;
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const onOpenChangeRef = useRef(onOpenChange);
+  const isControlled = open !== undefined;
+
+  useEffect(() => {
+    onOpenChangeRef.current = onOpenChange;
+  });
+
+  useEffect(() => {
+    if (!dismissOnOutside || !isOpen) return;
+
+    function handlePointerDown(event: PointerEvent) {
+      const target = event.target instanceof Node ? event.target : null;
+      if (shouldDismissOnOutside(true, containerRef.current, target)) {
+        if (!isControlled) setUncontrolledOpen(false);
+        onOpenChangeRef.current?.(false);
+      }
+    }
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => document.removeEventListener("pointerdown", handlePointerDown);
+  }, [dismissOnOutside, isOpen, isControlled]);
 
   function setOpen(next: boolean) {
     if (open === undefined) setUncontrolledOpen(next);
@@ -82,6 +133,15 @@ export default function Disclosure({
     event.stopPropagation();
     setOpen(false);
     buttonRef.current?.focus();
+  }
+
+  function handleBlur(event: FocusEvent<HTMLDivElement>) {
+    if (!dismissOnOutside) return;
+    const next =
+      event.relatedTarget instanceof Node ? event.relatedTarget : null;
+    if (shouldDismissOnOutside(isOpen, containerRef.current, next)) {
+      setOpen(false);
+    }
   }
 
   const button = (
@@ -104,7 +164,12 @@ export default function Disclosure({
   );
 
   return (
-    <div className={className} onKeyDown={handleKeyDown}>
+    <div
+      ref={containerRef}
+      className={className}
+      onKeyDown={handleKeyDown}
+      onBlur={handleBlur}
+    >
       {headingLevel
         ? createElement(
             `h${headingLevel}`,

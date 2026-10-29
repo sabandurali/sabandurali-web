@@ -2,6 +2,7 @@ import {
   useId,
   type InputHTMLAttributes,
   type ReactNode,
+  type SelectHTMLAttributes,
   type TextareaHTMLAttributes,
 } from "react";
 import { AlertIcon } from "./icons";
@@ -127,5 +128,18 @@ export function Textarea({
       className={cx(controlClassName, "min-h-36 resize-y", className)}
       {...rest}
     />
+  );
+}
+
+/** Native select with the same boundary, hover, focus and error states. */
+export function Select({
+  className,
+  children,
+  ...rest
+}: SelectHTMLAttributes<HTMLSelectElement>) {
+  return (
+    <select className={cx(controlClassName, "min-h-12", className)} {...rest}>
+      {children}
+    </select>
   );
 }

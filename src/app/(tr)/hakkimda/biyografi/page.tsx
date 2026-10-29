@@ -5,6 +5,7 @@ import TextLink from "@/components/ui/TextLink";
 import PageIntro from "@/components/workspaces/PageIntro";
 import PageShell from "@/components/workspaces/PageShell";
 import { createPageMetadata } from "@/lib/metadata";
+import { homeCrumb } from "@/components/ui/Breadcrumb";
 
 const path = "/hakkimda/biyografi";
 
@@ -28,7 +29,7 @@ export default function BiographyPage() {
         <Section>
           <PageIntro
             breadcrumb={[
-              { label: "Ana sayfa", href: "/" },
+              homeCrumb("tr"),
               { label: "Hakkımda", href: "/hakkimda" },
               { label: "Biyografi" },
             ]}

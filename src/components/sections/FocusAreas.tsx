@@ -1,6 +1,11 @@
 import type { ReactNode } from "react";
 import { cx } from "@/components/ui/cx";
-import UiLink from "@/components/ui/UiLink";
+import {
+  CardCue,
+  CardTitleLink,
+  cardFocusClassName,
+  cardFrameClassName,
+} from "@/components/ui/Card";
 import type { FocusAreaIcon } from "@/content/homeContent";
 
 export function AreaIcon({
@@ -122,9 +127,9 @@ export function FocusAreaCards({
           <li key={card.id} className="flex min-w-0">
             <article
               className={cx(
-                "relative flex w-full min-w-0 flex-col gap-3 rounded-card border border-ink bg-land p-5 text-ink",
-                href !== null &&
-                  "hover:bg-white has-[[data-card-link]:focus-visible]:focus-ring",
+                cardFrameClassName,
+                "w-full gap-3 p-5",
+                href !== null && cx("hover:bg-paper", cardFocusClassName),
               )}
             >
               {visual ?? (
@@ -137,13 +142,7 @@ export function FocusAreaCards({
               )}
               <Heading className="m-0 type-h3 break-words">
                 {href !== null ? (
-                  <UiLink
-                    href={href}
-                    data-card-link=""
-                    className="text-ink no-underline decoration-2 underline-offset-[5px] after:absolute after:inset-0 after:content-[''] hover:underline focus-visible:outline-none focus-visible:[box-shadow:none]"
-                  >
-                    {card.title}
-                  </UiLink>
+                  <CardTitleLink href={href}>{card.title}</CardTitleLink>
                 ) : (
                   card.title
                 )}
@@ -152,12 +151,7 @@ export function FocusAreaCards({
                 {card.description}
               </p>
               {card.linkLabel !== null && href !== null ? (
-                <span
-                  aria-hidden="true"
-                  className="mt-auto pt-1 text-small font-bold underline decoration-signal decoration-2 underline-offset-[5px]"
-                >
-                  {card.linkLabel}
-                </span>
+                <CardCue className="pt-1">{card.linkLabel}</CardCue>
               ) : null}
             </article>
           </li>

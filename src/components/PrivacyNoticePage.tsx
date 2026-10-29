@@ -5,16 +5,15 @@ import PageShell from "@/components/workspaces/PageShell";
 import { contactPaths, privacyPaths } from "@/config/site";
 import type { Locale } from "@/content/homeContent";
 import type { PrivacyContent } from "@/content/privacyContent";
+import { homeCrumb } from "@/components/ui/Breadcrumb";
 
 const pageTexts = {
   tr: {
-    home: "Ana sayfa",
     current: "KVKK Aydınlatma Metni",
     contents: "Bu metinde",
     contact: "İletişim formuna dön",
   },
   en: {
-    home: "Home",
     current: "Privacy Notice",
     contents: "In this notice",
     contact: "Back to the contact form",
@@ -41,10 +40,7 @@ export default function PrivacyNoticePage({
           <PageIntro
             locale={locale}
             size="h2-lg"
-            breadcrumb={[
-              { label: texts.home, href: locale === "tr" ? "/" : "/en" },
-              { label: texts.current },
-            ]}
+            breadcrumb={[homeCrumb(locale), { label: texts.current }]}
             eyebrow={content.eyebrow}
             title={content.heading}
             lead={content.introduction}

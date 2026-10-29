@@ -14,6 +14,15 @@ type BreadcrumbProps = {
   className?: string;
 };
 
+/**
+ * The first item of every trail, from one source so its label and target
+ * never drift between pages ("Ana sayfa" → "/", "Home" → "/en").
+ */
+export function homeCrumb(locale: UiLocale = "tr"): BreadcrumbItem {
+  const { home, homePath } = getUiStrings(locale);
+  return { label: home, href: homePath };
+}
+
 /** "Konum" trail. The last item is the current page (aria-current). */
 export default function Breadcrumb({
   items,

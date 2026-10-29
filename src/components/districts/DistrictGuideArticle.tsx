@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Fragment, type ReactNode } from "react";
 import Badge from "@/components/ui/Badge";
-import Breadcrumb from "@/components/ui/Breadcrumb";
+import Breadcrumb, { homeCrumb } from "@/components/ui/Breadcrumb";
 import Card from "@/components/ui/Card";
 import Chip from "@/components/ui/Chip";
 import Container from "@/components/ui/Container";
@@ -277,7 +277,7 @@ export default function DistrictGuideArticle({
       <Container as="header" className="pt-6 pb-10 sm:pb-14">
         <Breadcrumb
           items={[
-            { label: "Ana Sayfa", href: "/" },
+            homeCrumb("tr"),
             { label: "İstanbul", href: "/gayrimenkul-ve-istanbul" },
             { label: "İlçeler", href: districtGuidePath },
             { label: district.name },

@@ -1,3 +1,5 @@
+import { getUiStrings } from "@/components/ui/strings";
+
 /**
  * Built-in texts of the publication pages that the content layer does not
  * provide (breadcrumbs, counts, filter and section labels). Plural forms:
@@ -48,8 +50,8 @@ export type PublicationCopy = {
 
 export const publicationCopy = {
   tr: {
-    home: "Ana sayfa",
-    homePath: "/",
+    home: getUiStrings("tr").home,
+    homePath: getUiStrings("tr").homePath,
     allArticles: "Tüm makaleler",
     allBooks: "Tüm kitap incelemeleri",
     allPhotos: "Fotoğraflar",
@@ -90,8 +92,8 @@ export const publicationCopy = {
     },
   },
   en: {
-    home: "Home",
-    homePath: "/en",
+    home: getUiStrings("en").home,
+    homePath: getUiStrings("en").homePath,
     allArticles: "All articles",
     allBooks: "All book reviews",
     allPhotos: "Photographs",

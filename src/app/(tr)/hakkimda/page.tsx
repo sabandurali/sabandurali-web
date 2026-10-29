@@ -18,6 +18,7 @@ import {
 import { homeContent } from "@/content/homeContent";
 import { workspaces } from "@/content/workspaces";
 import { createPageMetadata } from "@/lib/metadata";
+import { homeCrumb } from "@/components/ui/Breadcrumb";
 
 export const metadata: Metadata = createPageMetadata({
   title: "Hakkımda | Şaban Durali",
@@ -59,10 +60,7 @@ export default function AboutPage() {
               </div>
             </Figure>
             <PageIntro
-              breadcrumb={[
-                { label: "Ana sayfa", href: "/" },
-                { label: "Hakkımda" },
-              ]}
+              breadcrumb={[homeCrumb("tr"), { label: "Hakkımda" }]}
               eyebrow="Hakkımda / Profil"
               title="Şaban Durali"
               lead={home.about.paragraphs[0]}

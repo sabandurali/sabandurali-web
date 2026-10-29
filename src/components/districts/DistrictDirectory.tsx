@@ -5,8 +5,9 @@ import Card from "@/components/ui/Card";
 import { cx } from "@/components/ui/cx";
 import DistrictKeyMap from "@/components/ui/DistrictKeyMap";
 import EmptyState from "@/components/ui/EmptyState";
-import { Field, Input } from "@/components/ui/Field";
+import { Field, Input, Select } from "@/components/ui/Field";
 import GridRef from "@/components/ui/GridRef";
+import { useHydrated } from "@/components/ui/useHydrated";
 import { getDistrictPath } from "@/content/districts/district-routes";
 import {
   directoryLetters,
@@ -16,13 +17,12 @@ import {
   type DirectoryFilter,
 } from "./district-directory-filter";
 
-const selectClassName =
-  "block min-h-12 w-full rounded-control border border-tile-edge bg-land px-3.5 py-2.5 text-base text-ink hover:border-ink focus-visible:border-ink";
-
 /**
  * Searchable list of the 39 district guides: name search, side select and
- * letter buttons filter the cards on the client; without JavaScript every
- * card is listed. Each card is one link named by the district.
+ * letter buttons filter the cards on the client. The filters only work
+ * through React state, so they stay disabled until hydration; without
+ * JavaScript they stay disabled, a note says why and every card is listed.
+ * Each card is one link named by the district.
  */
 export default function DistrictDirectory({
   entries,
@@ -34,6 +34,7 @@ export default function DistrictDirectory({
     side: "all",
     letter: "",
   });
+  const hydrated = useHydrated();
   const letters = directoryLetters(entries);
   const visible = filterDirectoryEntries(entries, filter);
 
@@ -49,6 +50,7 @@ export default function DistrictDirectory({
               {...control}
               type="search"
               autoComplete="off"
+              disabled={!hydrated}
               value={filter.query}
               onChange={(event) =>
                 setFilter((current) => ({
@@ -62,8 +64,9 @@ export default function DistrictDirectory({
         </Field>
         <Field label="Yaka" id="district-side">
           {(control) => (
-            <select
+            <Select
               {...control}
+              disabled={!hydrated}
               value={filter.side}
               onChange={(event) => {
                 const side = event.target.value;
@@ -71,12 +74,11 @@ export default function DistrictDirectory({
                   setFilter((current) => ({ ...current, side }));
                 }
               }}
-              className={selectClassName}
             >
               <option value="all">Tüm ilçeler</option>
               <option value="avrupa">Avrupa Yakası</option>
               <option value="anadolu">Anadolu Yakası</option>
-            </select>
+            </Select>
           )}
         </Field>
       </div>
@@ -93,6 +95,7 @@ export default function DistrictDirectory({
               key={value || "all"}
               type="button"
               aria-pressed={pressed}
+              disabled={!hydrated}
               onClick={() =>
                 setFilter((current) => ({ ...current, letter: value }))
               }
@@ -100,7 +103,8 @@ export default function DistrictDirectory({
                 "inline-flex min-h-tap min-w-tap items-center justify-center rounded-control px-3 font-mono text-small font-semibold [font-stretch:var(--stretch-mono)]",
                 pressed
                   ? "bg-sea text-on-sea"
-                  : "border border-tile-edge bg-land text-ink hover:border-ink hover:underline",
+                  : "border border-tile-edge bg-land text-ink hover:border-ink hover:underline disabled:border-hairline disabled:text-ink-muted disabled:no-underline",
+                "disabled:cursor-not-allowed",
               )}
             >
               {value || "Tümü"}
@@ -108,6 +112,13 @@ export default function DistrictDirectory({
           );
         })}
       </div>
+
+      <noscript>
+        <p className="m-0 type-small text-ink-muted">
+          Arama ve filtreler JavaScript gerektirir; {entries.length} ilçenin
+          tümü aşağıda listelenmiştir.
+        </p>
+      </noscript>
 
       <p role="status" className="m-0 type-small text-ink-muted">
         {visible.length} ilçe gösteriliyor

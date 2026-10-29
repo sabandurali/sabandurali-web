@@ -4,13 +4,14 @@ import test from "node:test";
 import { fileURLToPath } from "node:url";
 import { createElement as h } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { istanbulYear, withCurrentYear } from "./copyright";
 import { getErrorDigest } from "./ErrorScreen";
 import { getFooterLinkGroups } from "./footer-links";
 import { getLanguageOptions } from "./header-content";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { createRootLayoutMetadata } from "./root-metadata";
 import Wordmark from "./Wordmark";
-import { shouldCloseOnEscape } from "../ui/Disclosure";
+import { shouldCloseOnEscape, shouldDismissOnOutside } from "../ui/Disclosure";
 import Disclosure from "../ui/Disclosure";
 import NavMenu from "../ui/NavMenu";
 import { getStaticFooterGroups } from "../../content/navigation/static-navigation";
@@ -155,6 +156,28 @@ test("Disclosure: Escape closes one layer; controlled state and inline button", 
   assert.doesNotMatch(html, /w-full/);
 });
 
+test("FRONTEND-1: the mobile menu closes when focus or a tap moves outside", () => {
+  const inside = { id: "panel-link" };
+  const outside = { id: "breadcrumb-home" };
+  const container = {
+    contains: (node: { id: string } | null) => node === inside,
+  };
+  assert.equal(shouldDismissOnOutside(true, container, outside), true);
+  assert.equal(shouldDismissOnOutside(true, container, inside), false);
+  assert.equal(shouldDismissOnOutside(true, container, null), false);
+  assert.equal(shouldDismissOnOutside(false, container, outside), false);
+  assert.equal(shouldDismissOnOutside(true, null, outside), false);
+
+  const disclosure = read("src/components/ui/Disclosure.tsx");
+  assert.match(disclosure, /onBlur=\{handleBlur\}/);
+  assert.match(disclosure, /addEventListener\("pointerdown"/);
+  const mobile = read("src/components/layout/HeaderNavigation.tsx");
+  assert.match(
+    mobile.slice(mobile.indexOf("export function MobileNavigation")),
+    /<Disclosure[^>]*\bdismissOnOutside\b/,
+  );
+});
+
 test("NavMenu: an active section is bold with the bar but not aria-current", () => {
   const html = renderToStaticMarkup(
     h(NavMenu, {
@@ -199,6 +222,11 @@ test("shell sources: atlas layouts, retry, English 404 catch-all, global 404", (
   const global = read("src/app/global-not-found.tsx");
   assert.match(global, /fontVariables/);
   assert.match(global, /<body>\s*<SkipLink>/);
+  // WCAG 3.1.2: the English half of the bilingual skip link is marked.
+  assert.match(
+    global,
+    /<SkipLink>\s*İçeriğe geç · <span lang="en">Skip to content<\/span>\s*<\/SkipLink>/,
+  );
   assert.match(global, /lang="en"/);
   for (const file of [
     "src/components/layout/Header.tsx",
@@ -210,5 +238,27 @@ test("shell sources: atlas layouts, retry, English 404 catch-all, global 404", (
       /\b(bg-background|text-foreground|text-ivory|accent|gold|text-muted\b)/,
       file,
     );
+    // FRONTEND-8: the pre-atlas shell API (ignored homeHref / compact) is gone.
+    assert.doesNotMatch(
+      read(file),
+      /@deprecated|\bhomeHref\b|\bcompact\?:/,
+      file,
+    );
   }
+});
+
+test("COMPLETENESS-2: the footer copyright year follows the Istanbul calendar", () => {
+  // 31 Dec 2026 22:30 UTC is already 1 Jan 2027 in Istanbul (UTC+3).
+  const newYear = new Date("2026-12-31T22:30:00Z");
+  assert.equal(istanbulYear(newYear), 2027);
+  assert.equal(istanbulYear(new Date("2026-12-31T20:30:00Z")), 2026);
+  for (const locale of ["tr", "en"] as const) {
+    const line = withCurrentYear(homeContent[locale].footer.copyright, newYear);
+    assert.match(line, /^© 2027 Şaban Durali\. /);
+  }
+  assert.equal(withCurrentYear("Şaban Durali", newYear), "Şaban Durali");
+  assert.match(
+    read("src/components/layout/Footer.tsx"),
+    /withCurrentYear\(content\.copyright, new Date\(\)\)/,
+  );
 });

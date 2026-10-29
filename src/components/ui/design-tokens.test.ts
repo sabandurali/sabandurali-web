@@ -329,6 +329,40 @@ test("signal orange never passes as text on light grounds, so it stays a fill", 
   }
 });
 
+test("the retired navy and gold palette stays deleted", () => {
+  const retired = [
+    "background",
+    "background-deep",
+    "foreground",
+    "surface",
+    "surface-soft",
+    "ivory",
+    "ivory-soft",
+    "muted",
+    "muted-dark",
+    "placeholder",
+    "border",
+    "accent",
+    "accent-strong",
+    "accent-soft",
+    "accent-deep",
+    "accent-hero-glow",
+    "accent-border-soft",
+    "accent-border-hover",
+  ];
+  const defined = new Set(
+    [...css.matchAll(/--(?:color-)?([a-z][a-z0-9-]*)\s*:/g)].map(
+      (match) => match[1],
+    ),
+  );
+  assert.deepEqual(
+    retired.filter((name) => defined.has(name)),
+    [],
+    "legacy token defined in globals.css; use the atlas tokens",
+  );
+  assert.doesNotMatch(css, /#101d32|#c9a24a/i);
+});
+
 test("FE-20: no type token or font-size in globals.css is below 12 px", () => {
   const sizeTokens = [...typeTokens].filter(
     ([name]) => name.startsWith("--text-") && !name.includes("--line-height"),
