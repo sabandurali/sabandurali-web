@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  isStatisticalRelease,
   sectionIsPublic,
   sourceSupportsSection,
   type DistrictSource,
@@ -68,4 +69,86 @@ test("raw CMS sources are type-checked before the policy reads them", () => {
   );
   assert.deepEqual(sanitizeDistrictSources(undefined), []);
   assert.deepEqual(sanitizeDistrictSources({ title: "x" }), []);
+});
+
+const adnks: DistrictSource = {
+  title: "Adrese Dayalı Nüfus Kayıt Sistemi Sonuçları, 2025",
+  publisher: "Türkiye İstatistik Kurumu",
+  url: "https://data.tuik.gov.tr/Bulten/Index?p=Adrese-Dayali-Nufus-Kayit-Sistemi-Sonuclari-2025-53899",
+  sourceType: "official",
+  primary: true,
+  checkedAt: iso(now - day),
+  dataDate: iso(now - 200 * day),
+  needsVerification: false,
+  sections: [
+    "summary",
+    "history",
+    "geography",
+    "life",
+    "transportation",
+    "facts",
+    "neighborhoods",
+    "housingTexture",
+    "regionalAssessment",
+    "placesGuide",
+    "distinctiveFeatures",
+    "researchTopics",
+  ],
+};
+
+test("a population register release supports only population sections", () => {
+  for (const section of [
+    "summary",
+    "facts",
+    "neighborhoods",
+    "regionalAssessment",
+  ] as const)
+    assert.equal(sourceSupportsSection(adnks, section, now), true, section);
+  for (const section of [
+    "history",
+    "geography",
+    "life",
+    "transportation",
+    "housingTexture",
+    "placesGuide",
+    "distinctiveFeatures",
+    "researchTopics",
+  ] as const) {
+    assert.equal(sourceSupportsSection(adnks, section, now), false, section);
+    // Nor can it open a narrative section on its own.
+    assert.equal(sectionIsPublic(section, [section], [adnks], now), false);
+  }
+});
+
+test("statistical releases are recognised by TÜİK host or ADNKS title", () => {
+  assert.equal(isStatisticalRelease(adnks), true);
+  assert.equal(
+    isStatisticalRelease({
+      title: "ADNKS Sonuçları, 2025",
+      url: "https://example.org/tablo",
+    }),
+    true,
+  );
+  assert.equal(
+    isStatisticalRelease({
+      title: "Nüfus tablosu",
+      url: "https://biruni.tuik.gov.tr/medas/",
+    }),
+    true,
+  );
+  assert.equal(
+    isStatisticalRelease({
+      title: "Tarihçe",
+      url: "https://www.kadikoy.bel.tr/tarihce",
+    }),
+    false,
+  );
+  // A host that merely ends in the same letters is not TÜİK.
+  assert.equal(
+    isStatisticalRelease({
+      title: "Rapor",
+      url: "https://nottuik.gov.tr/rapor",
+    }),
+    false,
+  );
 });

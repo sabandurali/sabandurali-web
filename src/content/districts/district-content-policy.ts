@@ -38,6 +38,37 @@ function parsePastDate(value: unknown, now: number): number | null {
   const time = Date.parse(value);
   return Number.isFinite(time) && time <= now ? time : null;
 }
+/**
+ * A population register release (TÜİK ADNKS or another TÜİK table) counts
+ * people. It can support a population figure, a neighbourhood list and the
+ * overview or comparison that quotes them, never a history, everyday life,
+ * transport, places or research text.
+ */
+const statisticalReleaseSections: readonly DistrictSection[] = [
+  "summary",
+  "facts",
+  "neighborhoods",
+  "regionalAssessment",
+];
+export function isStatisticalRelease(
+  source: Pick<DistrictSource, "url" | "title">,
+): boolean {
+  if (/Adrese Dayalı Nüfus Kayıt Sistemi|\bADNKS\b/iu.test(source.title ?? ""))
+    return true;
+  if (!isPublicSourceUrl(source.url)) return false;
+  const host = new URL(source.url).hostname.toLowerCase();
+  return host === "tuik.gov.tr" || host.endsWith(".tuik.gov.tr");
+}
+/** Whether the kind of source can support the section at all. */
+export function sourceKindFitsSection(
+  source: Pick<DistrictSource, "url" | "title">,
+  section: DistrictSection,
+): boolean {
+  return (
+    !isStatisticalRelease(source) ||
+    statisticalReleaseSections.includes(section)
+  );
+}
 /** Periodic values need a dated source; dynamic values expire after 90 days. */
 export function sourceSupportsSection(
   source: DistrictSource,
@@ -70,6 +101,7 @@ export function sourceSupportsSection(
     !source.title?.trim() ||
     !source.publisher?.trim() ||
     !source.sections?.includes(section) ||
+    !sourceKindFitsSection(source, section) ||
     checkedAt === null
   )
     return false;

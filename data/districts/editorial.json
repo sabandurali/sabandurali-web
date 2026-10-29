@@ -5181,15 +5181,7 @@
           "needsVerification": false,
           "sections": [
             "summary",
-            "history",
-            "geography",
-            "life",
-            "transportation",
-            "housingTexture",
             "regionalAssessment",
-            "placesGuide",
-            "distinctiveFeatures",
-            "researchTopics",
             "facts"
           ]
         },
@@ -5404,15 +5396,7 @@
           "needsVerification": false,
           "sections": [
             "summary",
-            "history",
-            "geography",
-            "life",
-            "transportation",
-            "housingTexture",
             "regionalAssessment",
-            "placesGuide",
-            "distinctiveFeatures",
-            "researchTopics",
             "facts"
           ]
         },
@@ -6325,15 +6309,7 @@
           "needsVerification": false,
           "sections": [
             "summary",
-            "history",
-            "geography",
-            "life",
-            "transportation",
-            "housingTexture",
             "regionalAssessment",
-            "placesGuide",
-            "distinctiveFeatures",
-            "researchTopics",
             "facts"
           ]
         },
@@ -6737,15 +6713,7 @@
           "needsVerification": false,
           "sections": [
             "summary",
-            "history",
-            "geography",
-            "life",
-            "transportation",
-            "housingTexture",
             "regionalAssessment",
-            "placesGuide",
-            "distinctiveFeatures",
-            "researchTopics",
             "facts"
           ]
         },
