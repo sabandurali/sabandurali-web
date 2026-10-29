@@ -20,7 +20,19 @@ coding agent (CLAUDE.md, rule 2).
   a reset) needs at least `MIN_PASSWORD_LENGTH` (12) characters and must not
   be the account's email address or its local part (`enforcePasswordPolicy`;
   Payload's own minimum is 3). Existing passwords keep working until they are
-  changed; the owner may ask every account holder to set a new one.
+  changed; the owner may ask every account holder to set a new one. The hook
+  runs before Payload's access check, so it reads the stored email with the
+  caller's own access: a caller who may not update an account gets 403, never
+  a password error that would confirm a guessed email.
+- No account oracle at sign-in: a locked account answers with the same 401
+  and message as an unknown address or a wrong password
+  (`hideLockedAccountOnLogin`), and an unknown or locked account spends the
+  same PBKDF2 work as a real password check (`equalizeLoginTiming`), so
+  neither the text nor the response time tells whether an address has an
+  account. The lock still applies and Payload still logs it; an admin sees
+  and clears it on the account (`access.unlock`). A locked-out person
+  therefore sees "wrong email or password" until the lock expires or an
+  admin unlocks the account.
 
 ### The gap
 
@@ -213,5 +225,12 @@ The REST API at `/api/*` is part of the public surface (CLAUDE.md, rule 5).
   Book reviews use it for `authorId`, `editorId`, `showOnHomepage`,
   `translationStatus` and `relatedBooks`; `reviewStatus` is removed in
   `afterRead` because the collection read access itself filters on it.
+- Rich text fields carry `hideNonPublicRichTextLinks` (`afterRead`). Lexical
+  stores an internal link as `{ relationTo, value: <id> }` and replaces the ID
+  only when the request asks for enough `depth`; for anonymous REST and
+  GraphQL readers the hook keeps an unpopulated ID only when that reader may
+  read the target itself, so `?depth=0` cannot name a draft or scheduled
+  document. A new rich text field gets the same hook
+  (`src/lib/payloadAccess.test.ts` checks every one).
 - A new private field gets `editorialFieldRead` (or stricter) and a
   `cms.integration.test.ts` case that reads it anonymously over REST.

@@ -9,6 +9,7 @@ import {
   adminOnly,
   adminOrEditor,
   publishedOrAdminOrEditor,
+  hideNonPublicRichTextLinks,
 } from "@/lib/payloadAccess";
 import {
   createLocalizedSlugField,
@@ -139,6 +140,7 @@ export const Articles: CollectionConfig = {
       type: "richText",
       label: "Makale içeriği",
       localized: true,
+      hooks: { afterRead: [hideNonPublicRichTextLinks] },
       admin: {
         description:
           "İlçe haberi türünde tam metin saklanmaz; kısa özgün özet ve kaynak bağlantısı kullanılır. Diğer türlerde yayın için içerik zorunludur.",

@@ -4,7 +4,10 @@ import type {
   Access,
   CollectionBeforeOperationHook,
   CollectionConfig,
+  Field,
+  FieldHook,
   PayloadRequest,
+  RichTextField,
   Where,
 } from "payload";
 import {
@@ -12,12 +15,14 @@ import {
   PublicRequestRefusal,
   adminOnly,
   adminOrEditor,
+  collectRawInternalLinkTargets,
   collectWherePaths,
   createAnonymousQueryAllowlist,
   createPublishedBookReviewWhere,
   createPublishedWhere,
   denyAnonymousRestReads,
   editorialFieldRead,
+  hideNonPublicRichTextLinks,
   isAdmin,
   isAdminOrEditor,
   isPublicApiReader,
@@ -26,7 +31,10 @@ import {
   publishedOrAdminOrEditor,
   publishedPageOrAdminOrEditor,
   withAnonymousRestLimits,
+  withoutHiddenInternalLinkTargets,
 } from "./payloadAccess";
+import { Articles } from "../collections/Articles";
+import { pageBlocks } from "../blocks/pageBlocks";
 
 const admin = { id: "u-admin", role: "admin" };
 const editor = { id: "u-editor", role: "editor" };
@@ -401,4 +409,170 @@ test("editorial fields stay hidden from anonymous REST and GraphQL readers only"
   assert.equal(read(null, "local"), true);
   assert.equal(isPublicApiReader(request(null, "REST")), true);
   assert.equal(isPublicApiReader(request(null, "local")), false);
+});
+
+const linkTree = {
+  root: {
+    children: [
+      {
+        children: [
+          {
+            fields: {
+              doc: { relationTo: "articles", value: "draft-1" },
+              linkType: "internal",
+            },
+            type: "link",
+          },
+          {
+            fields: {
+              doc: { relationTo: "pages", value: 7 },
+              linkType: "internal",
+            },
+            type: "link",
+          },
+          {
+            fields: {
+              doc: { relationTo: "articles", value: { id: "populated" } },
+              linkType: "internal",
+            },
+            type: "link",
+          },
+          {
+            fields: {
+              doc: { relationTo: "users", value: "u-1" },
+              linkType: "internal",
+            },
+            type: "link",
+          },
+          { fields: { linkType: "custom", url: "https://example.com" } },
+          { text: "metin", type: "text" },
+        ],
+        type: "paragraph",
+      },
+    ],
+    type: "root",
+  },
+};
+
+test("rich text internal links keep only the targets a public reader may read", async () => {
+  assert.deepEqual(
+    [...collectRawInternalLinkTargets(linkTree)].map(([key, ids]) => [
+      key,
+      [...ids],
+    ]),
+    [
+      ["articles", ["draft-1"]],
+      ["pages", [7]],
+      [null, ["u-1"]],
+    ],
+  );
+
+  const projected = withoutHiddenInternalLinkTargets(
+    linkTree,
+    new Map([["pages", new Set(["7"])]]),
+  );
+  const children = (
+    projected as { root: { children: Array<{ children: unknown[] }> } }
+  ).root.children[0]?.children;
+  assert.ok(children);
+  assert.deepEqual(
+    children.map((node) =>
+      typeof node === "object" && node !== null && "fields" in node
+        ? (node.fields as { doc?: unknown }).doc
+        : "text",
+    ),
+    [
+      null,
+      { relationTo: "pages", value: 7 },
+      { relationTo: "articles", value: { id: "populated" } },
+      null,
+      undefined,
+      "text",
+    ],
+  );
+  // The stored tree is never mutated.
+  assert.deepEqual(linkTree.root.children[0]?.children[0]?.fields?.doc, {
+    relationTo: "articles",
+    value: "draft-1",
+  });
+
+  // The hook asks Payload, with the reader's own access, which IDs exist.
+  const lookups: Array<Record<string, unknown>> = [];
+  const runHook = (req: Record<string, unknown>) =>
+    hideNonPublicRichTextLinks({
+      req: {
+        payload: {
+          find: async (options: Record<string, unknown>) => {
+            lookups.push(options);
+            return {
+              docs: options.collection === "pages" ? [{ id: 7 }] : [],
+            };
+          },
+        },
+        ...req,
+      },
+      value: linkTree,
+    } as unknown as Parameters<FieldHook>[0]);
+
+  assert.deepEqual(await runHook({ payloadAPI: "REST" }), projected);
+  assert.deepEqual(
+    lookups.map(({ collection, overrideAccess, where }) => ({
+      collection,
+      overrideAccess,
+      where,
+    })),
+    [
+      {
+        collection: "articles",
+        overrideAccess: false,
+        where: { id: { in: ["draft-1"] } },
+      },
+      {
+        collection: "pages",
+        overrideAccess: false,
+        where: { id: { in: [7] } },
+      },
+    ],
+  );
+
+  // The site's Local API and signed-in editors read the stored value.
+  lookups.length = 0;
+  assert.equal(await runHook({ payloadAPI: "local" }), linkTree);
+  assert.equal(
+    await runHook({ payloadAPI: "REST", user: { role: "editor" } }),
+    linkTree,
+  );
+  assert.equal(lookups.length, 0);
+});
+
+function collectRichTextFields(fields: readonly Field[]): RichTextField[] {
+  return fields.flatMap((field): RichTextField[] => {
+    if (field.type === "richText") return [field];
+    if (field.type === "tabs") {
+      return field.tabs.flatMap((tab) => collectRichTextFields(tab.fields));
+    }
+    if (field.type === "blocks") {
+      return (field.blocks ?? []).flatMap((block) =>
+        collectRichTextFields(block.fields),
+      );
+    }
+    if ("fields" in field && Array.isArray(field.fields)) {
+      return collectRichTextFields(field.fields);
+    }
+    return [];
+  });
+}
+
+test("every rich text field hides non-public internal link targets", () => {
+  const fields = [
+    ...collectRichTextFields(Articles.fields),
+    ...pageBlocks.flatMap((block) => collectRichTextFields(block.fields)),
+  ];
+  assert.ok(fields.length >= 3);
+  for (const field of fields) {
+    assert.ok(
+      field.hooks?.afterRead?.includes(hideNonPublicRichTextLinks),
+      field.name,
+    );
+  }
 });
