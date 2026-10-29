@@ -2,14 +2,16 @@ import PageIntro from "@/components/ui/PageIntro";
 import PublicationShell from "@/components/pages/PublicationShell";
 import { publicationCopy } from "@/components/pages/publication-copy";
 import PhotoCard from "@/components/photos/PhotoCard";
-import { getPhotoListHref } from "@/components/photos/photo-list-params";
 import { Button } from "@/components/ui/Button";
 import EmptyState from "@/components/ui/EmptyState";
 import { Field, Select } from "@/components/ui/Field";
 import Pagination from "@/components/ui/Pagination";
 import Section from "@/components/ui/Section";
 import TextLink from "@/components/ui/TextLink";
-import { photoListPaths } from "@/content/photos/photo-routes";
+import {
+  getPhotoListPath,
+  photoListPaths,
+} from "@/content/photos/photo-routes";
 import type {
   PhotoLanguage,
   PhotoListFilters,
@@ -142,7 +144,7 @@ export default function PhotoListPage({
         <Pagination
           current={result.page}
           total={result.totalPages}
-          getHref={(page) => getPhotoListHref(locale, filters, page)}
+          getHref={(page) => getPhotoListPath(locale, filters, page)}
           locale={locale}
           className="mt-10"
         />
