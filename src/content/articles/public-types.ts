@@ -1,5 +1,5 @@
 import type { Article } from "@/content/articles/types";
-import type { Article as PayloadArticle } from "@/payload-types";
+import type { PublicRichText } from "@/content/rich-text/public-rich-text";
 
 export type PublicArticleCategory = {
   id: string;
@@ -92,7 +92,7 @@ export type PublicArticleContent =
     }
   | {
       source: "lexical";
-      data: PayloadArticle["content"] | null;
+      data: PublicRichText | null;
     };
 
 export type PublicArticle = PublicArticleSummary & {

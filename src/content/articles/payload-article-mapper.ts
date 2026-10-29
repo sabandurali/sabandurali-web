@@ -22,35 +22,8 @@ import {
   prepareRichText,
   type RichTextLinkContext,
 } from "@/content/rich-text/prepare-rich-text";
+import { isMeaningfulPublicRichText } from "@/content/rich-text/public-rich-text";
 import type { Article as PayloadArticle } from "@/payload-types";
-
-function hasMeaningfulLexicalNode(value: unknown): boolean {
-  if (!isRecord(value)) {
-    return false;
-  }
-
-  if (value.type === "text") {
-    return getText(value.text) !== null;
-  }
-
-  if (value.type === "upload") {
-    return true;
-  }
-
-  return (
-    Array.isArray(value.children) &&
-    value.children.some(hasMeaningfulLexicalNode)
-  );
-}
-
-function isLexicalContent(value: unknown): value is PayloadArticle["content"] {
-  return (
-    isRecord(value) &&
-    isRecord(value.root) &&
-    Array.isArray(value.root.children) &&
-    value.root.children.some(hasMeaningfulLexicalNode)
-  );
-}
 
 function reportInvalidArticle(
   articleID: string,
@@ -244,7 +217,7 @@ export function mapPayloadArticle(
 
       // Internal links are resolved here, where the locale is known.
       content = prepareRichText(value.content, locale, now, links);
-      if (isLexicalContent(content)) return true;
+      if (isMeaningfulPublicRichText(content)) return true;
 
       reportInvalidArticle(
         id,
@@ -261,7 +234,7 @@ export function mapPayloadArticle(
     ...summary,
     content: {
       source: "lexical",
-      data: isLexicalContent(content) ? content : null,
+      data: isMeaningfulPublicRichText(content) ? content : null,
     },
   };
 }

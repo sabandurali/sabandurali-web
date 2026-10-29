@@ -1,4 +1,4 @@
-import { isRecord } from "@/content/guards";
+import { getText, isRecord } from "@/content/guards";
 import {
   districtSectionOptions,
   sectionIsPublic,
@@ -63,9 +63,7 @@ export type DistrictGuide = {
   updatedAt: string | null;
 };
 
-function text(value: unknown): string | null {
-  return typeof value === "string" && value.trim() ? value.trim() : null;
-}
+const text = getText;
 
 /*
  * Allowlist copies. Every public object is built key by key, so a field that
