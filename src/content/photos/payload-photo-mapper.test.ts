@@ -1,5 +1,9 @@
 import assert from "node:assert/strict";
 import test, { type TestContext } from "node:test";
+import {
+  assertWithheldForNonPublishedStatuses,
+  nonPublishedStatuses,
+} from "../shared/status-test-cases";
 import type { Photo } from "../../payload-types";
 import { mediaDocument } from "../rich-text/lexical-fixtures";
 import {
@@ -175,4 +179,14 @@ test("CORRECTNESS-2: a historical photo needs its real creator and licence", (t)
   assert.ok(credited);
   assert.equal(credited.photographer, "Arşiv Fotoğrafçısı");
   assert.equal(credited.creditLicense, "CC BY 4.0");
+});
+
+test("TESTS-INFRA-2: only the exact published status is public", (t) => {
+  const warn = silence(t);
+
+  assertWithheldForNonPublishedStatuses((_status) =>
+    mapPayloadPhoto(photo({ _status }), "tr", now),
+  );
+  assert.equal(warn.mock.callCount(), nonPublishedStatuses.length);
+  assert.match(String(warn.mock.calls[0]?.arguments[0]), /status/);
 });

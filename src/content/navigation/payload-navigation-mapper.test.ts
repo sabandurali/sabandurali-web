@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { assertWithheldForNonPublishedStatuses } from "../shared/status-test-cases";
 import type { Navigation } from "../../payload-types";
 import { mapPayloadNavigation } from "./payload-navigation-mapper";
 
@@ -154,5 +155,11 @@ test("footer links may use mailto and tel; empty groups are dropped", () => {
       group.links.map((item) => item.href),
     ]),
     [["g1", ["mailto:saban@sabandurali.com", "tel:+90 212 000 00 00"]]],
+  );
+});
+
+test("TESTS-INFRA-2: only the exact published status is public", () => {
+  assertWithheldForNonPublishedStatuses((_status) =>
+    mapPayloadNavigation(navigation({ _status }), "tr", now),
   );
 });

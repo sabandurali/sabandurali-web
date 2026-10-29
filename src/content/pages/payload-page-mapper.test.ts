@@ -1,5 +1,9 @@
 import assert from "node:assert/strict";
 import test, { type TestContext } from "node:test";
+import {
+  assertWithheldForNonPublishedStatuses,
+  nonPublishedStatuses,
+} from "../shared/status-test-cases";
 import type { Page as PayloadPage } from "../../payload-types";
 import {
   lexical,
@@ -258,4 +262,14 @@ test("isRenderableHomeBlock applies the mapper rules to unpopulated writes", () 
   );
   assert.equal(isRenderableHomeBlock({ blockType: "cta" }, "tr"), false);
   assert.equal(isRenderableHomeBlock(null, "tr"), false);
+});
+
+test("TESTS-INFRA-2: only the exact published status is public", (t) => {
+  const warn = silence(t);
+
+  assertWithheldForNonPublishedStatuses((_status) =>
+    mapPayloadPage(page([hero], { _status }), "tr", now),
+  );
+  assert.equal(warn.mock.callCount(), nonPublishedStatuses.length);
+  assert.match(String(warn.mock.calls[0]?.arguments[0]), /status/);
 });
