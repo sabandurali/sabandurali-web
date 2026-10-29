@@ -54,7 +54,12 @@ export class PayloadPublicArticleRepository {
         depth: 1,
         draft: false,
         fallbackLocale: false,
-        limit: limit ?? PAYLOAD_ARTICLE_PAGE_SIZE,
+        // A small limit still reads a few rows per query, so skipped
+        // records (incomplete English translations) cost few round trips.
+        limit:
+          limit === undefined
+            ? PAYLOAD_ARTICLE_PAGE_SIZE
+            : Math.min(PAYLOAD_ARTICLE_PAGE_SIZE, Math.max(limit, 10)),
         locale,
         overrideAccess: false,
         page,
@@ -94,7 +99,6 @@ export class PayloadPublicArticleRepository {
     now: Date,
   ): Promise<PublicArticleSummaryPage> {
     const payload = await getPayload({ config });
-    const where: Where = { and: [...conditions, HAS_BODY] };
     const read = (page: number) =>
       payload.find({
         collection: "articles",
@@ -107,29 +111,28 @@ export class PayloadPublicArticleRepository {
         page,
         select: { content: false },
         sort: PUBLIC_ARTICLE_SORT,
-        where,
+        where: { and: [...conditions, HAS_BODY] },
       });
-    const { totalDocs } = await payload.count({
-      collection: "articles",
-      locale: "tr",
-      overrideAccess: false,
-      where,
-    });
-    const totalPages = Math.max(1, Math.ceil(totalDocs / pageSize));
-    const currentPage = Math.min(
-      Math.max(1, Math.floor(requestedPage)),
-      totalPages,
-    );
-    const result = await read(currentPage);
+    const requested = Math.max(1, Math.floor(requestedPage));
+    let result = await read(requested);
+    // Past the end Payload returns no documents and, when the query joins
+    // other tables, no total either: page 1 supplies the real total, then
+    // the last page is read.
+    if (result.docs.length === 0 && requested > 1) {
+      const first = await read(1);
+      const lastPage = Math.max(1, Math.ceil(first.totalDocs / pageSize));
+      result = lastPage === 1 ? first : await read(lastPage);
+    }
+    const totalItems = result.totalDocs;
 
     return {
       items: result.docs.flatMap((document) => {
         const article = mapPayloadArticleSummary(document, "tr", now);
         return article === null ? [] : [article];
       }),
-      currentPage,
-      totalPages,
-      totalItems: totalDocs,
+      currentPage: Math.max(1, Math.min(result.page ?? 1, result.totalPages)),
+      totalPages: Math.max(1, Math.ceil(totalItems / pageSize)),
+      totalItems,
     };
   }
 

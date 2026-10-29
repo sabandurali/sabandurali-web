@@ -39,6 +39,7 @@ import {
   isDistrictGuideIndexable,
   isDistrictNewsPageIndexable,
 } from "@/content/districts/district-seo";
+import { getFilledListPaths, listContentOf } from "@/content/list-seo";
 import {
   getPublicPagePath,
   homePagePaths,
@@ -399,19 +400,33 @@ export function buildListEntries(
 ): SitemapEntry[] {
   const options = { changeFrequency: "weekly", priority: 0.8 } as const;
 
+  // Empty lists are noindex (src/content/list-seo.ts): only the languages
+  // with items are listed and paired.
   return [
-    ...createLocalizedEntries(articleListPaths, {
-      ...options,
-      lastModified: latestByLocale(content.articles, getContentLastModified),
-    }),
-    ...createLocalizedEntries(bookListPaths, {
-      ...options,
-      lastModified: latestByLocale(content.bookReviews, getContentLastModified),
-    }),
-    ...createLocalizedEntries(photoListPaths, {
-      ...options,
-      lastModified: latestByLocale(content.photos, getContentLastModified),
-    }),
+    ...createLocalizedEntries(
+      getFilledListPaths(articleListPaths, listContentOf(content.articles)),
+      {
+        ...options,
+        lastModified: latestByLocale(content.articles, getContentLastModified),
+      },
+    ),
+    ...createLocalizedEntries(
+      getFilledListPaths(bookListPaths, listContentOf(content.bookReviews)),
+      {
+        ...options,
+        lastModified: latestByLocale(
+          content.bookReviews,
+          getContentLastModified,
+        ),
+      },
+    ),
+    ...createLocalizedEntries(
+      getFilledListPaths(photoListPaths, listContentOf(content.photos)),
+      {
+        ...options,
+        lastModified: latestByLocale(content.photos, getContentLastModified),
+      },
+    ),
   ];
 }
 

@@ -393,12 +393,38 @@ test("static pages carry no invented lastModified", () => {
     "/calisma-alanlari",
     "/gayrimenkul-ve-istanbul",
     "/istanbul/ilceler",
-    "/makaleler",
   ]) {
     const entry = byUrl(sitemap, path);
     assert.ok(entry, `${path} is listed`);
     assert.equal(entry.lastModified, undefined, `${path} has no lastModified`);
   }
+});
+
+test("empty content lists are not listed and not paired", () => {
+  const empty = buildSitemap(emptyContent);
+  for (const path of [
+    "/makaleler",
+    "/en/articles",
+    "/kitaplar",
+    "/en/books",
+    "/fotograflar",
+    "/en/photography",
+  ]) {
+    assert.equal(byUrl(empty, path), undefined, `${path} is empty`);
+  }
+
+  // Turkish articles only: /makaleler is listed alone, without /en/articles.
+  const turkishOnly = buildSitemap({
+    ...emptyContent,
+    articles: [article({ id: "a1", slug: "tek", language: "tr" })],
+  });
+  assert.equal(byUrl(turkishOnly, "/en/articles"), undefined);
+  const turkishList = byUrl(turkishOnly, "/makaleler");
+  assert.ok(turkishList);
+  assert.equal(
+    JSON.stringify(turkishList.alternates ?? {}).includes("/en/articles"),
+    false,
+  );
 });
 
 test("dates come from content: items, newest list item, guide, CMS home", () => {

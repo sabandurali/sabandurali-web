@@ -43,18 +43,42 @@ const getCachedPhotoFacets = unstable_cache(
 );
 
 /** One list page; collection and tag filters run in the database. */
+/*
+ * Keyed by primitives: the route's metadata and page parse the query string
+ * separately, so their filter objects differ, but they read the same list
+ * once per request.
+ */
+const getPublishedPhotoPage = cache(
+  async (
+    locale: PhotoLanguage,
+    collection: string | undefined,
+    tag: string | undefined,
+    page: number | undefined,
+  ): Promise<PublishedPhotoList> =>
+    isPayloadSource()
+      ? payloadPhotoRepository.listPublished(
+          locale,
+          {
+            ...(collection === undefined ? {} : { collection }),
+            ...(tag === undefined ? {} : { tag }),
+            ...(page === undefined ? {} : { page }),
+          },
+          new Date(),
+          getCachedPhotoFacets,
+        )
+      : emptyList(),
+);
+
 export async function getPublishedPhotos(
   locale: PhotoLanguage,
   filters: PhotoListFilters = {},
 ): Promise<PublishedPhotoList> {
-  return isPayloadSource()
-    ? payloadPhotoRepository.listPublished(
-        locale,
-        filters,
-        new Date(),
-        getCachedPhotoFacets,
-      )
-    : emptyList();
+  return getPublishedPhotoPage(
+    locale,
+    filters.collection,
+    filters.tag,
+    filters.page,
+  );
 }
 
 export const getPublishedPhotoPageData = cache(
