@@ -63,8 +63,6 @@ export type DistrictGuide = {
   updatedAt: string | null;
 };
 
-const text = getText;
-
 /*
  * Allowlist copies. Every public object is built key by key, so a field that
  * is added to the collection later (an internal note, a verification
@@ -191,7 +189,7 @@ export function mapDistrictGuide(
   const can = (section: DistrictSection) =>
     sectionIsPublic(section, reviewed, sources, now);
   const field = (section: DistrictSection) =>
-    can(section) ? text(item[section]) : null;
+    can(section) ? getText(item[section]) : null;
   const rows = <T>(
     raw: unknown,
     map: (row: Record<string, unknown>) => T | null,
@@ -219,8 +217,8 @@ export function mapDistrictGuide(
         sourceSupportsSection(
           {
             ...source,
-            dataDate: text(row.dataDate ?? row.date),
-            checkedAt: text(row.checkedAt),
+            dataDate: getText(row.dataDate ?? row.date),
+            checkedAt: getText(row.checkedAt),
           },
           section,
           now,
@@ -232,11 +230,11 @@ export function mapDistrictGuide(
    * verified official source and is exempt from the 90-day window below.
    */
   const completedPlanningRow = (row: Record<string, unknown>) =>
-    text(row.status) === "tamamlandi";
+    getText(row.status) === "tamamlandi";
   const currentPlanningRow = (row: Record<string, unknown>) => {
     const threshold = now - 90 * 24 * 60 * 60 * 1000;
-    const checkedAt = Date.parse(text(row.checkedAt) ?? "");
-    const date = Date.parse(text(row.date) ?? "");
+    const checkedAt = Date.parse(getText(row.checkedAt) ?? "");
+    const date = Date.parse(getText(row.date) ?? "");
     return checkedAt >= threshold && date >= threshold;
   };
   const marketData: DistrictMarketData | null =
@@ -250,7 +248,7 @@ export function mapDistrictGuide(
     "planningDevelopments",
   )
     ? rows(item.planningDevelopments, (row) => {
-        const title = text(row.title);
+        const title = getText(row.title);
         return title &&
           (completedPlanningRow(row) ||
             (currentPlanningRow(row) &&
@@ -262,8 +260,8 @@ export function mapDistrictGuide(
               sourceSupportsSection(
                 {
                   ...source,
-                  dataDate: text(row.date),
-                  checkedAt: text(row.checkedAt),
+                  dataDate: getText(row.date),
+                  checkedAt: getText(row.checkedAt),
                 },
                 "planningDevelopments",
                 now,
@@ -271,13 +269,13 @@ export function mapDistrictGuide(
           )
           ? {
               title,
-              id: text(row.id),
-              summary: text(row.summary),
-              neighborhood: text(row.neighborhood),
-              date: text(row.date),
-              status: text(row.status),
-              officialSource: text(row.officialSource),
-              checkedAt: text(row.checkedAt),
+              id: getText(row.id),
+              summary: getText(row.summary),
+              neighborhood: getText(row.neighborhood),
+              date: getText(row.date),
+              status: getText(row.status),
+              officialSource: getText(row.officialSource),
+              checkedAt: getText(row.checkedAt),
               needsVerification: false,
             }
           : null;
@@ -312,13 +310,13 @@ export function mapDistrictGuide(
     facts: can("facts") && isRecord(item.facts) ? copyFacts(item.facts) : null,
     neighborhoods: can("neighborhoods")
       ? rows(item.neighborhoods, (row) => {
-          const name = text(row.name);
+          const name = getText(row.name);
           return name
             ? {
                 name,
-                id: text(row.id),
+                id: getText(row.id),
                 featured: row.featured === true,
-                description: text(row.description),
+                description: getText(row.description),
               }
             : null;
         })
@@ -338,8 +336,8 @@ export function mapDistrictGuide(
         );
       return sections.length > 0 ? [{ ...source, sections }] : [];
     }),
-    publishedAt: text(item.publishedAt),
-    updatedAt: text(item.updatedAt),
+    publishedAt: getText(item.publishedAt),
+    updatedAt: getText(item.updatedAt),
   };
 }
 
@@ -349,7 +347,7 @@ export function projectPublishedDistrictGuide(
   now = Date.now(),
 ): DistrictGuide | null {
   const item = isRecord(value) ? value : null;
-  const publishedAt = item ? text(item.publishedAt) : null;
+  const publishedAt = item ? getText(item.publishedAt) : null;
   if (
     !item ||
     item._status !== "published" ||
