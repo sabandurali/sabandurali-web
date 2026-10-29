@@ -7,6 +7,11 @@ import {
 } from "@/content/books/book-data-source";
 import { createBookReviewMetadata } from "@/content/books/book-seo";
 
+// Prerendered and refreshed at most hourly; CMS writes revalidate this path
+// on demand (src/lib/revalidation.ts), the hour is the time-based safety net
+// for scheduled publishing, which no write announces.
+export const revalidate = 3600;
+
 type EnglishBookReviewPageProps = {
   params: Promise<{ slug: string }>;
 };

@@ -1,32 +1,44 @@
 import type { Metadata } from "next";
 import PhotoListPage from "@/components/photos/PhotoListPage";
+import {
+  isIndexablePhotoList,
+  parsePhotoListParams,
+  type PhotoListSearchParams,
+} from "@/components/photos/photo-list-params";
 import { getPublishedPhotos } from "@/content/photos/photo-data-source";
-import { photoListUrls } from "@/content/photos/photo-routes";
+import { photoListPaths } from "@/content/photos/photo-routes";
+import { createPageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: "Photography | Şaban Durali",
-  description: "Photographs from city, human and animal stories.",
-  alternates: { canonical: photoListUrls.en, languages: photoListUrls },
+// The list reads its filters and page from the query string, so it renders
+// per request; one database query serves each page (photo-data-source).
+
+const locale = "en" as const;
+
+type PhotoListRouteProps = {
+  searchParams: Promise<PhotoListSearchParams>;
 };
 
-function single(value: string | string[] | undefined) {
-  return typeof value === "string" && value.trim() !== "" ? value : undefined;
+export async function generateMetadata({
+  searchParams,
+}: PhotoListRouteProps): Promise<Metadata> {
+  const filters = parsePhotoListParams(await searchParams);
+
+  return createPageMetadata({
+    title: "Photography | Şaban Durali",
+    description: "Photographs from city, human and animal stories.",
+    locale,
+    path: photoListPaths[locale],
+    translations: photoListPaths,
+    index: isIndexablePhotoList(filters),
+    follow: true,
+  });
 }
 
 export default async function EnglishPhotographyPage({
   searchParams,
-}: {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
-}) {
-  const query = await searchParams;
-  const pageValue = Number(single(query.page));
-  const filters = {
-    collection: single(query.collection),
-    tag: single(query.tag),
-    ...(Number.isInteger(pageValue) && pageValue > 0
-      ? { page: pageValue }
-      : {}),
-  };
-  const result = await getPublishedPhotos("en", filters);
-  return <PhotoListPage locale="en" filters={filters} result={result} />;
+}: PhotoListRouteProps) {
+  const filters = parsePhotoListParams(await searchParams);
+  const result = await getPublishedPhotos(locale, filters);
+
+  return <PhotoListPage locale={locale} filters={filters} result={result} />;
 }

@@ -7,6 +7,8 @@ import {
 } from "@/content/photos/photo-data-source";
 import { createPhotoMetadata } from "@/content/photos/photo-seo";
 
+// Rendered per request on purpose (e68b0c4, "prevent stale photography
+// detail"): the related photographs change with other photo documents.
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
