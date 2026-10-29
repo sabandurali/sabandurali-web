@@ -312,7 +312,8 @@ test("users: only admins unlock a locked account, and editors learn nothing abou
   ): Promise<boolean> =>
     payload.unlock({
       collection: "users",
-      data: { email },
+      // The generated login type requires `password`; unlock ignores it.
+      data: { email, password: "" },
       overrideAccess: false,
       req: { user: { ...user, collection: "users" } },
     });
@@ -427,14 +428,15 @@ test("csrf: a session cookie is ignored on cross-origin and unmarked requests", 
 
   // A foreign page, a sibling subdomain or a non-browser client with only
   // the cookie gets no session.
-  for (const headers of [
+  const refused: Array<Record<string, string>> = [
     { Origin: "https://evil.example" },
     { Origin: "https://evil.sabandurali.com" },
     { Origin: "http://www.sabandurali.com" },
     { Origin: "null" },
     { "Sec-Fetch-Site": "cross-site" },
     {},
-  ]) {
+  ];
+  for (const headers of refused) {
     assert.equal(await userFor(headers), null, JSON.stringify(headers));
   }
 
