@@ -27,11 +27,6 @@ const ownBrandFiles = [
 
 /** Files waiting for the owner's licence decision (NEXT-STEPS decision 5). */
 const pendingOwnerDecision = [
-  "next-template/file.svg",
-  "next-template/globe.svg",
-  "next-template/next.svg",
-  "next-template/vercel.svg",
-  "next-template/window.svg",
   "retired-home-images/arastirma-analiz.jpg",
   "retired-home-images/fotograf.jpg",
   "retired-home-images/gayrimenkul-istanbul.jpg",
@@ -65,7 +60,7 @@ test("the pending licence set only shrinks and stays documented", () => {
   const nextSteps = readFileSync("docs/NEXT-STEPS.md", "utf8");
   // Each pending folder is still described as unverified in the README and
   // as an open owner decision in the handoff, or it has been removed.
-  for (const folder of ["retired-home-images", "next-template"]) {
+  for (const folder of ["retired-home-images"]) {
     const remaining = pendingOwnerDecision.filter((file) =>
       file.startsWith(`${folder}/`),
     );
@@ -82,4 +77,26 @@ test("the pending licence set only shrinks and stays documented", () => {
     if (folder === "retired-home-images")
       assert.match(readme, /source and licence are not recorded/);
   }
+});
+
+test("TESTS-INFRA-4: every brand asset has a README row and the template SVGs are gone", () => {
+  const readme = readFileSync("brand-assets/README.md", "utf8");
+  const present = files("brand-assets").filter((file) => file !== "README.md");
+  // A file is described by its own name or by its folder, in backticks.
+  for (const file of present) {
+    const folder = file.includes("/") ? `${file.split("/")[0]}/` : null;
+    const name = path.basename(file);
+    assert.ok(
+      readme.includes(`\`${name}\``) ||
+        (folder !== null && readme.includes(`| \`${folder}\``)),
+      `${file} has no row in brand-assets/README.md`,
+    );
+  }
+  // The create-next-app samples had no brand value and no reference.
+  assert.deepEqual(
+    present.filter((file) =>
+      /(^|\/)(file|globe|next|vercel|window)\.svg$/.test(file),
+    ),
+    [],
+  );
 });
