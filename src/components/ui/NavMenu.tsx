@@ -27,6 +27,12 @@ export type NavMenuItem = {
   href?: string | null;
   /** The current page: aria-current="page". */
   current?: boolean;
+  /**
+   * The current page lies inside this entry (an article under its section)
+   * without being one of its links: bold text and the signal bar, but no
+   * aria-current, which belongs to the one link of the current page.
+   */
+  active?: boolean;
   newTab?: boolean;
   /**
    * Second level. A child with children of its own renders as a labelled
@@ -54,7 +60,11 @@ function hasChildren(item: NavMenuItem) {
 }
 
 function containsCurrent(item: NavMenuItem): boolean {
-  return item.current === true || (item.children ?? []).some(containsCurrent);
+  return (
+    item.current === true ||
+    item.active === true ||
+    (item.children ?? []).some(containsCurrent)
+  );
 }
 
 const topLinkClassName =
@@ -130,8 +140,10 @@ export default function NavMenu({
                 onClick={onNavigate}
                 className={cx(
                   topLinkClassName,
-                  item.current ? "font-bold" : "font-medium",
-                  item.current && layout === "bar" && currentBarClassName,
+                  containsCurrent(item) ? "font-bold" : "font-medium",
+                  containsCurrent(item) &&
+                    layout === "bar" &&
+                    currentBarClassName,
                 )}
               >
                 {item.label}
@@ -389,7 +401,9 @@ function PanelGroup({
       ) : null}
       <ul
         aria-labelledby={groupId}
-        className="m-0 grid list-none grid-cols-2 gap-x-2 p-0 lg:grid-cols-3"
+        // Two columns sized to their longest name: three squeezed columns
+        // ran "Gaziosmanpaşa" into "Güngören" inside the 44 rem panel.
+        className="m-0 grid list-none grid-cols-2 gap-x-2 p-0"
       >
         {(group.children ?? []).map((link) => (
           <li key={link.id}>
