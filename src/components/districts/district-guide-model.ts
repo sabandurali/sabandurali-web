@@ -364,7 +364,34 @@ export function planningStatusLabel(
   return status ? (planningStatuses[status] ?? null) : null;
 }
 
-/** News and photo category slugs ("ulasim-ve-altyapi") as readable text. */
+/**
+ * Turkish labels of the category slugs the CMS stores: `newsCategory`
+ * (src/collections/Articles.ts) and `districtPhotoCategory`
+ * (src/collections/Photos.ts). The slugs are ASCII ("ulasim"); readers see
+ * the Turkish words ("Ulaşım").
+ */
+const categoryLabels: Record<string, string> = {
+  ulasim: "Ulaşım",
+  sehircilik: "Şehircilik",
+  belediye: "Belediye",
+  kultur: "Kültür",
+  yasam: "Yaşam",
+  gayrimenkul: "Gayrimenkul",
+  egitim: "Eğitim",
+  cevre: "Çevre",
+  "onemli-yerel-gelismeler": "Önemli yerel gelişmeler",
+  mimari: "Mimari",
+  sokak: "Sokak",
+  tarih: "Tarih",
+  doga: "Doğa",
+  gece: "Gece",
+};
+
+/**
+ * News and photo category slugs as readable Turkish text. An unknown slug
+ * (an option added later) falls back to its words, so it still shows.
+ */
 export function categoryLabel(value: string | null | undefined): string | null {
-  return value ? value.replaceAll("-", " ") : null;
+  if (!value) return null;
+  return categoryLabels[value] ?? value.replaceAll("-", " ");
 }

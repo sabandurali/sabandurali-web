@@ -7,6 +7,7 @@ import type { PublicPhoto } from "@/content/photos/types";
 import {
   buildDistrictFacts,
   buildSourceRows,
+  categoryLabel,
   districtGuideSections,
   districtPhotoCredit,
   extractLineCodes,
@@ -311,4 +312,32 @@ test("planning statuses map to labels and unknown values are hidden", () => {
   assert.equal(planningStatusLabel("insaat"), "İnşaat");
   assert.equal(planningStatusLabel("başka"), null);
   assert.equal(planningStatusLabel(null), null);
+});
+
+test("category slugs read as Turkish words", () => {
+  // Every newsCategory option (src/collections/Articles.ts).
+  for (const [slug, label] of [
+    ["ulasim", "Ulaşım"],
+    ["sehircilik", "Şehircilik"],
+    ["belediye", "Belediye"],
+    ["kultur", "Kültür"],
+    ["yasam", "Yaşam"],
+    ["gayrimenkul", "Gayrimenkul"],
+    ["egitim", "Eğitim"],
+    ["cevre", "Çevre"],
+    ["onemli-yerel-gelismeler", "Önemli yerel gelişmeler"],
+  ])
+    assert.equal(categoryLabel(slug), label);
+  // Every districtPhotoCategory option (src/collections/Photos.ts).
+  for (const [slug, label] of [
+    ["mimari", "Mimari"],
+    ["sokak", "Sokak"],
+    ["tarih", "Tarih"],
+    ["doga", "Doğa"],
+    ["gece", "Gece"],
+  ])
+    assert.equal(categoryLabel(slug), label);
+  assert.equal(categoryLabel("yeni-kategori"), "yeni kategori");
+  assert.equal(categoryLabel(null), null);
+  assert.equal(categoryLabel(""), null);
 });
