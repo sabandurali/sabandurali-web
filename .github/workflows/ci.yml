@@ -80,8 +80,8 @@ jobs:
           cat "$RUNNER_TEMP/next-start.log"
           exit 1
 
-      # First, so the legacy redirects are checked on their first, uncached
-      # response (x-nextjs-cache: MISS).
+      # First, so the legacy redirects (next.config.ts) are checked on the
+      # very first response of a fresh server.
       - name: E2E content trust (39 districts, redirects, TR/EN routes)
         run: npm run e2e:content-trust
         env:

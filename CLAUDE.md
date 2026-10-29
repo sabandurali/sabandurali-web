@@ -33,7 +33,8 @@ identifiers and commit messages in English.
 
 CI runs `e2e:content-trust`, `e2e:headers` and `e2e:districts:routes` after the build against `next start` on
 `127.0.0.1:3101`. Locally: `npm run build && npm run start -- --hostname 127.0.0.1 --port 3101`, then the same
-scripts with `DISTRICT_TEST_URL=http://127.0.0.1:3101` (content trust first: it checks the uncached redirects).
+scripts with `DISTRICT_TEST_URL=http://127.0.0.1:3101`, in any order (the legacy workspace redirects come from
+`next.config.ts`, so they are never an ISR cache entry).
 
 The CI environment for local builds and tests (no `.env.local` needed) is the one in
 `.github/workflows/ci.yml`: `PAYLOAD_DATABASE=sqlite PAYLOAD_STORAGE=local DATABASE_URL=file:./.data/ci.db`,
