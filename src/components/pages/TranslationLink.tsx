@@ -1,15 +1,16 @@
 import { ButtonLink } from "@/components/ui/Button";
 import { ArrowRightIcon } from "@/components/ui/icons";
+import type { SiteLocale } from "@/content/locales";
 
 type TranslationLinkProps = {
   href: string;
   /** Language of the translation the link opens. */
-  targetLanguage: "tr" | "en";
+  targetLanguage: SiteLocale;
   /** Visible text; it is also the accessible name (WCAG 2.5.3). */
   label: string;
   /** Language of `label` when it differs from the page ("Read in English"
    * on a Turkish page). */
-  labelLanguage?: "tr" | "en";
+  labelLanguage?: SiteLocale;
 };
 
 /** Link to the same document in the other language. */

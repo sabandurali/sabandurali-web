@@ -6,6 +6,7 @@ import type {
   TextFieldSingleValidation,
   Where,
 } from "payload";
+import type { SiteLocale } from "@/content/locales";
 import { adminOrEditor } from "@/lib/payloadAccess";
 import { revalidateNavigationAfterChange } from "@/lib/revalidation";
 import {
@@ -15,7 +16,7 @@ import {
 
 type LinkFieldOptions = {
   allowContactProtocols?: boolean;
-  language?: "en" | "tr";
+  language?: SiteLocale;
 };
 
 function hasLinkType(
@@ -74,7 +75,7 @@ function createExternalUrlValidator(
  * `/<slug>`; English standard pages have no route yet (`/en/<slug>` would be
  * a 404), so English links may only target the English home page.
  */
-export function getNavigationPageFilter(language: "en" | "tr"): Where {
+export function getNavigationPageFilter(language: SiteLocale): Where {
   return language === "tr"
     ? { language: { equals: "tr" } }
     : {
@@ -82,7 +83,7 @@ export function getNavigationPageFilter(language: "en" | "tr"): Where {
       };
 }
 
-function createPageRelationshipField(language: "en" | "tr"): RelationshipField {
+function createPageRelationshipField(language: SiteLocale): RelationshipField {
   return {
     name: "page",
     type: "relationship",

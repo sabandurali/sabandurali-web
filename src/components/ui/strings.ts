@@ -1,5 +1,7 @@
-/** Locale of the built-in texts of the UI primitives. */
-export type UiLocale = "tr" | "en";
+import type { SiteLocale } from "@/content/locales";
+
+/** Locale of the built-in texts of the UI primitives: the site's locales. */
+export type UiLocale = SiteLocale;
 
 export type UiStrings = {
   skipToContent: string;

@@ -12,6 +12,8 @@ import type { MediaLocale } from "./media";
 import type { PublicPageLanguage } from "./pages/public-types";
 import type { PhotoLanguage } from "./photos/types";
 import type { RichTextLocale } from "./rich-text/prepare-rich-text";
+import type { HeaderLocale } from "../components/layout/header-content";
+import type { UiLocale } from "../components/ui/strings";
 
 type Same<A, B> = [A] extends [B] ? ([B] extends [A] ? true : false) : false;
 
@@ -34,8 +36,10 @@ test("per-module language types are the site locale", () => {
     true satisfies Same<RichTextLocale, SiteLocale>,
     true satisfies Same<DateLanguage, SiteLocale>,
     true satisfies Same<Locale, SiteLocale>,
+    true satisfies Same<UiLocale, SiteLocale>,
+    true satisfies Same<HeaderLocale, SiteLocale>,
   ];
-  assert.equal(same.length, 7);
+  assert.equal(same.length, 9);
 });
 
 function sourceFiles(directory: string): string[] {
@@ -48,11 +52,13 @@ function sourceFiles(directory: string): string[] {
   });
 }
 
-test("the content and lib layers spell no locale union of their own", () => {
+test("no layer spells a locale union of its own", () => {
   const source = path.dirname(fileURLToPath(import.meta.url));
   const files = [
     ...sourceFiles(source),
-    ...sourceFiles(path.join(source, "..", "lib")),
+    ...["lib", "components", "collections", "globals", "blocks", "app"].flatMap(
+      (directory) => sourceFiles(path.join(source, "..", directory)),
+    ),
   ];
   const offenders = files.filter((file) =>
     /"(?:tr|en)"\s*\|\s*"(?:tr|en)"/.test(readFileSync(file, "utf8")),
