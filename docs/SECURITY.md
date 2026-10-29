@@ -124,6 +124,15 @@ Formspree, …) on every route except `/admin`, `/api` and `/_next/image`.
 Browsers block nothing because of it; they print each violation to the
 console.
 
+### Report-only on the admin
+
+`/admin` and every page below it (`ADMIN_ROUTES_SOURCE`) get their own
+`Content-Security-Policy-Report-Only`
+(`adminContentSecurityPolicyReportOnlyDirectives`): the public candidate plus
+Monaco from `cdn.jsdelivr.net`, `data:` fonts and `blob:` media. `/api/*` and
+`/_next/image` get neither report-only header; `npm run e2e:headers` checks
+all three cases.
+
 There is no reporting endpoint yet (`report-to` / `report-uri`), so
 violations are only seen in the browser's DevTools.
 
@@ -163,13 +172,10 @@ page view is sent. The privacy notice text is the owner's decision.
 4. **Enforce**: move the directives from the report-only header to the
    enforced one once a Preview deployment shows no violations.
 5. **Admin policy**: the Payload admin loads Monaco from `cdn.jsdelivr.net`
-   and runs workers; it needs its own report-only policy before any
-   enforcement. The candidate is
-   `adminContentSecurityPolicyReportOnlyDirectives` in
-   `src/lib/securityHeaders.ts` (the public candidate plus Monaco,
-   `data:` fonts and `blob:` media). It is **not sent yet**: wiring it in
-   `next.config.ts` and teaching `scripts/security-headers-check.mjs` to
-   expect it on `/admin` go in one change.
+   and runs workers, so it has its own report-only policy (see "Report-only
+   on the admin" above), sent since fix round 6. Watch it on the same
+   Preview as step 1 (sign in, open a district guide's JSON field and the
+   media upload view) before any enforcement.
 
 ### Local measurement (2026-10-29)
 
@@ -183,7 +189,7 @@ in Chrome with Playwright:
   report-only policy. The only console errors are the expected
   `/_vercel/insights/script.js` 404 outside Vercel.
 - Admin, with the candidate injected as a report-only header by the test
-  harness (the server did not send it): login, dashboard, collection lists,
+  harness (the server did not send it then; it does now): login, dashboard, collection lists,
   create views with Lexical typing, the district guide JSON field rendered
   in Monaco, the media upload view, the Navigation global and the account
   view: **no violation** once `admin.avatar` was set to `"default"`.

@@ -111,10 +111,9 @@ export const contentSecurityPolicyReportOnlyDirectives: Readonly<
 export const MONACO_CDN_ORIGIN = "https://cdn.jsdelivr.net";
 
 /**
- * Candidate report-only policy for the Payload admin (`docs/SECURITY.md` §2,
- * step 5). It is not sent yet: `scripts/security-headers-check.mjs` expects
- * no report-only header on `/admin`, so wiring it up in `next.config.ts`
- * and updating that check belong in one change.
+ * Report-only policy for the Payload admin (`docs/SECURITY.md` §2, step 5),
+ * sent on `/admin` and below (`ADMIN_ROUTES_SOURCE`). Like the public one it
+ * blocks nothing; browsers only print violations to the console.
  *
  * Measured on 2026-10-29 against a local production build with Chrome
  * (login, dashboard, collection lists, create views with Lexical typing,
@@ -159,8 +158,9 @@ export const adminContentSecurityPolicyReportOnlyDirectives: Readonly<
 /**
  * Every route except the Payload admin, the API and the image optimizer
  * (which sends its own sandbox policy). The admin needs Monaco from
- * cdn.jsdelivr.net and workers and gets its own policy later.
- * `path-to-regexp` syntax as used by `next.config.ts` `headers()`.
+ * cdn.jsdelivr.net and workers and gets its own policy
+ * (`ADMIN_ROUTES_SOURCE`). `path-to-regexp` syntax as used by
+ * `next.config.ts` `headers()`.
  */
 export const PUBLIC_ROUTES_SOURCE =
   "/:path((?!admin(?:/|$)|api(?:/|$)|_next/image(?:/|$)).*)";
@@ -170,6 +170,21 @@ export const publicRouteSecurityHeaders: readonly SecurityHeader[] = [
     key: "Content-Security-Policy-Report-Only",
     value: serializeContentSecurityPolicy(
       contentSecurityPolicyReportOnlyDirectives,
+    ),
+  },
+];
+
+/**
+ * The Payload admin: `/admin` itself and every page below it. The REST API
+ * (`/api/*`) answers JSON and gets no report-only policy.
+ */
+export const ADMIN_ROUTES_SOURCE = "/admin/:path*";
+
+export const adminRouteSecurityHeaders: readonly SecurityHeader[] = [
+  {
+    key: "Content-Security-Policy-Report-Only",
+    value: serializeContentSecurityPolicy(
+      adminContentSecurityPolicyReportOnlyDirectives,
     ),
   },
 ];

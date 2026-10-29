@@ -11,10 +11,12 @@ import ContactForm from "@/components/forms/ContactForm";
 import { getFormspreeEndpoint } from "@/components/forms/contact-submission";
 import { contactContent } from "@/content/contactContent";
 import {
+  ADMIN_ROUTES_SOURCE,
   FORMSPREE_ORIGIN,
   MONACO_CDN_ORIGIN,
   PUBLIC_ROUTES_SOURCE,
   adminContentSecurityPolicyReportOnlyDirectives,
+  adminRouteSecurityHeaders,
   contentSecurityPolicyDirectives,
   contentSecurityPolicyReportOnlyDirectives,
   publicRouteSecurityHeaders,
@@ -291,7 +293,7 @@ test("the report-only CSP is a full policy that keeps every enforced directive",
   );
 });
 
-test("next.config sends the report-only CSP on public routes only", async () => {
+test("next.config sends the public report-only CSP on public routes and the admin one on /admin", async () => {
   assert.ok(nextConfig.headers);
   const routes = await nextConfig.headers();
   const reportOnly = routes.filter(({ headers }) =>
@@ -304,8 +306,33 @@ test("next.config sends the report-only CSP on public routes only", async () => 
         source: PUBLIC_ROUTES_SOURCE,
         headers: [...publicRouteSecurityHeaders],
       },
+      {
+        source: ADMIN_ROUTES_SOURCE,
+        headers: [...adminRouteSecurityHeaders],
+      },
     ],
   );
+
+  // The two report-only sources never overlap, so no route gets two
+  // report-only headers.
+  const matchesAdmin = getPathMatch(ADMIN_ROUTES_SOURCE, { strict: true });
+  for (const pathname of [
+    "/admin",
+    "/admin/login",
+    "/admin/collections/books",
+    "/admin/collections/districts/1",
+  ]) {
+    assert.notEqual(matchesAdmin(pathname), false, pathname);
+  }
+  for (const pathname of [
+    "/",
+    "/administration-notes",
+    "/api/users",
+    "/en/admin",
+    "/_next/image",
+  ]) {
+    assert.equal(matchesAdmin(pathname), false, pathname);
+  }
 
   // Compiled the way Next.js compiles a headers() source.
   const matches = getPathMatch(PUBLIC_ROUTES_SOURCE, { strict: true });
@@ -364,13 +391,16 @@ test("the admin candidate policy keeps the public one and adds only Monaco, data
   const value = serializeContentSecurityPolicy(admin);
   assert.ok(!value.includes("gravatar"), "no Gravatar origin");
 
-  // Not sent yet (see the module comment): no route carries it.
+  // Sent as report-only on the admin routes only, never enforced.
+  assert.deepEqual(adminRouteSecurityHeaders, [
+    { key: "Content-Security-Policy-Report-Only", value },
+  ]);
   assert.ok(nextConfig.headers);
   const routes = await nextConfig.headers();
-  assert.equal(
-    routes.some(({ headers }) =>
-      headers.some((header) => header.value === value),
-    ),
-    false,
+  assert.deepEqual(
+    routes
+      .filter(({ headers }) => headers.some((header) => header.value === value))
+      .map(({ source }) => source),
+    [ADMIN_ROUTES_SOURCE],
   );
 });
