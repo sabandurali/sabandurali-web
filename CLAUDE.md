@@ -52,6 +52,9 @@ need the owner's request.
   `*-data-source.ts` (chooses `static` or `payload` from `<TYPE>_PUBLIC_SOURCE`) →
   `payload-*-repository.ts` (Payload Local API, always `overrideAccess: false` and `draft: false`) →
   `payload-*-mapper.ts` (pure, tested) → `public-types.ts`. Components only consume public types.
+  The one exception is the `Navigation` global: it is closed to anonymous reads so the REST API never exposes
+  it, so its repository reads the published version with `overrideAccess: true` and the mapper passes on only
+  published, active and safe links. `src/content/content-access.test.ts` keeps it the only exception.
 - Payload: collections in `src/collections`, the `Navigation` global in `src/globals`, access rules in
   `src/lib/payloadAccess.ts`, delete guards in `src/lib/payloadDeleteGuards.ts`, fail-closed infrastructure
   checks in `src/lib/payloadInfrastructure.ts`, cache revalidation in `src/lib/revalidation.ts`.
@@ -75,7 +78,7 @@ need the owner's request.
    Missing content gets an explicit empty state, never filler.
 4. **Schema.** Postgres `push` is disabled in production. Any collection, field or index change needs a
    generated, reviewed migration in `src/migrations/`. Never apply migrations to production yourself.
-5. **Access.** Public reads keep `overrideAccess: false`. New private fields get field-level `access.read`
+5. **Access.** Public reads keep `overrideAccess: false` (the `Navigation` global above is the only exception). New private fields get field-level `access.read`
    and must stay out of the public projection. The anonymous REST API is part of the public surface.
 6. **Git.** Work on a branch, keep commits focused, and open a pull request. Never push to `main` and never
    force-push. Pushing a branch creates a Preview deployment — ask before the first push of a branch.
