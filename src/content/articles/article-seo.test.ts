@@ -274,6 +274,6 @@ test("a scheduled article never reports a modification before publication", () =
 
   assert.equal(jsonLd.datePublished, "2026-10-10T09:00:00.000Z");
   assert.equal(jsonLd.dateModified, "2026-10-10T09:00:00.000Z");
-  assert.ok(openGraph !== undefined && "modifiedTime" in openGraph);
+  assert.ok(openGraph && "modifiedTime" in openGraph);
   assert.equal(openGraph.modifiedTime, "2026-10-10T09:00:00.000Z");
 });
