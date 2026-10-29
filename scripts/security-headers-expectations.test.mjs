@@ -22,8 +22,20 @@ test("a ready admin login redirects to the first user or shows the form", () => 
     ),
     true,
   );
+  // What `next start` really sends with a user (Payload 3.92): the view
+  // only in the escaped RSC payload of a script.
+  assert.equal(
+    isReadyAdminLogin(
+      String.raw`self.__next_f.push([1,"[\"$\",\"div\",null,{\"className\":\"login__brand\",\"children\":[]}]"])`,
+    ),
+    true,
+  );
   assert.equal(
     isReadyAdminLogin('<div class="login__brand-extra"></div>'),
+    false,
+  );
+  assert.equal(
+    isReadyAdminLogin(String.raw`{\"className\":\"login__brand-extra\"}`),
     false,
   );
   // Payload's error page: 200, a digest, no redirect and no form.
