@@ -292,4 +292,19 @@ test("the seed writes publicly readable records and refuses a second run", async
   assert.ok(labels.includes(`"/${fixtureSlugs.page}"`));
 
   await assert.rejects(seedFixtures(payload), /empty database only/);
+
+  // With every seeded collection empty again, the filled Navigation global
+  // alone still refuses a second seed (it would overwrite the menus).
+  await payload.updateGlobal({
+    slug: "navigation",
+    data: { footerGroups: [], enFooter: [] },
+  });
+  for (const collection of SEEDED_COLLECTIONS)
+    await payload.delete({ collection, where: { id: { exists: true } } });
+  for (const collection of SEEDED_COLLECTIONS)
+    assert.equal((await payload.count({ collection })).totalDocs, 0);
+  await assert.rejects(
+    seedFixtures(payload),
+    /Navigation global already holds links/,
+  );
 });
