@@ -2,10 +2,9 @@ import "server-only";
 import { getPayload, type Where } from "payload";
 import config from "@payload-config";
 import {
-  clampPage,
   collectMappedPages,
   getReadBatchSize,
-  normalizeRequestedPage,
+  readClampedPage,
 } from "@/content/shared/pagination";
 import { createPublicArticleConditions } from "@/content/articles/article-query-conditions";
 import { isOfferedArticleContent } from "@/content/articles/article-translation";
@@ -108,25 +107,20 @@ export class PayloadPublicArticleRepository {
         sort: PUBLIC_ARTICLE_SORT,
         where: { and: [...conditions, HAS_BODY] },
       });
-    const requested = normalizeRequestedPage(requestedPage);
-    let result = await read(requested);
-    // Past the end Payload returns no documents and, when the query joins
-    // other tables, no total either: page 1 supplies the real total, then
-    // the last page is read.
-    if (result.docs.length === 0 && requested > 1) {
-      const first = await read(1);
-      const lastPage = clampPage(requested, first.totalDocs, pageSize).page;
-      result = lastPage === 1 ? first : await read(lastPage);
-    }
-    const totalItems = result.totalDocs;
+    const { result, page, totalPages, totalItems } = await readClampedPage(
+      read,
+      (found) => found.docs.length,
+      requestedPage,
+      pageSize,
+    );
 
     return {
       items: result.docs.flatMap((document) => {
         const article = mapPayloadArticleSummary(document, "tr", now);
         return article === null ? [] : [article];
       }),
-      currentPage: Math.max(1, Math.min(result.page ?? 1, result.totalPages)),
-      totalPages: Math.max(1, Math.ceil(totalItems / pageSize)),
+      currentPage: page,
+      totalPages,
       totalItems,
     };
   }

@@ -3,8 +3,10 @@ import test from "node:test";
 import {
   getWorkspaceEntry,
   getWorkspaceSectionParams,
+  SHARED_WORKSPACE_FEEDS,
   workspaces,
 } from "./workspaces";
+import { isSlug } from "./shared/slug";
 import { homeContent } from "./homeContent";
 
 test("section params cover exactly the entries served by the [section] route", () => {
@@ -64,4 +66,56 @@ test("FRONTEND-4: home focus cards name the workspaces as the site does", () => 
       assert.notEqual(title, title.toLocaleUpperCase(locale), title);
     }
   }
+});
+
+test("CORRECTNESS-1: every section feed is a slug a category can actually have", () => {
+  for (const workspace of workspaces) {
+    for (const entry of workspace.entries) {
+      for (const feed of [entry.articleCategory, entry.photoCategory]) {
+        if (feed !== undefined) {
+          assert.ok(isSlug(feed), `${workspace.key}/${entry.slug}: ${feed}`);
+        }
+      }
+    }
+  }
+});
+
+test("CORRECTNESS-1: an article feed lists only one section unless documented as shared", () => {
+  const sections = new Map<string, string[]>();
+  for (const workspace of workspaces) {
+    for (const entry of workspace.entries) {
+      if (entry.articleCategory === undefined) continue;
+      sections.set(entry.articleCategory, [
+        ...(sections.get(entry.articleCategory) ?? []),
+        `${workspace.key}/${entry.slug}`,
+      ]);
+    }
+  }
+  for (const [feed, owners] of sections) {
+    assert.equal(
+      owners.length > 1,
+      SHARED_WORKSPACE_FEEDS.has(feed),
+      `${feed}: ${owners.join(", ")}`,
+    );
+  }
+  for (const feed of SHARED_WORKSPACE_FEEDS) {
+    assert.ok(sections.has(feed), `stale shared feed ${feed}`);
+  }
+});
+
+test("CORRECTNESS-1: sales sections each read their own category", () => {
+  assert.deepEqual(
+    getWorkspaceSectionParams("satis-ve-muzakere").map(
+      ({ section }) =>
+        getWorkspaceEntry("satis-ve-muzakere", section)?.articleCategory,
+    ),
+    [
+      "satis",
+      "muzakere",
+      "iletisim",
+      "ikna",
+      "musteri-iliskileri",
+      "satis-rehberleri",
+    ],
+  );
 });

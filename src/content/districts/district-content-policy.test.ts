@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { DistrictGuides } from "@/collections/DistrictGuides";
 import {
+  districtSourceTypeOptions,
+  isDistrictSourceType,
   isStatisticalRelease,
   sectionIsPublic,
   sourceSupportsSection,
@@ -185,4 +188,114 @@ test("CORRECTNESS-3: transportation needs a source checked within the window", (
     ),
     false,
   );
+});
+
+/** Every field named `name` in a (nested) Payload field list. */
+function findFields(fields: unknown, name: string): unknown[] {
+  if (!Array.isArray(fields)) return [];
+  return fields.flatMap((field: unknown): unknown[] => {
+    if (typeof field !== "object" || field === null) return [];
+    const own = "name" in field && field.name === name ? [field] : [];
+    const nested = [
+      "fields" in field ? field.fields : undefined,
+      ...("tabs" in field && Array.isArray(field.tabs)
+        ? field.tabs.map((tab: unknown) =>
+            typeof tab === "object" && tab !== null && "fields" in tab
+              ? tab.fields
+              : undefined,
+          )
+        : []),
+    ];
+    return [...own, ...nested.flatMap((list) => findFields(list, name))];
+  });
+}
+
+test("ARCHITECTURE-4: the CMS select offers exactly the shared source types", () => {
+  const [field, ...others] = findFields(DistrictGuides.fields, "sourceType");
+  assert.equal(others.length, 0);
+  assert.ok(typeof field === "object" && field !== null && "options" in field);
+  assert.deepEqual(field.options, [...districtSourceTypeOptions]);
+});
+
+test("ARCHITECTURE-4: every shared source type survives the projection", () => {
+  for (const { value } of districtSourceTypeOptions) {
+    assert.equal(isDistrictSourceType(value), true, value);
+    const [projected] = sanitizeDistrictSources([
+      {
+        title: "Kaynak",
+        publisher: "Yayıncı",
+        url: "https://example.org/kaynak",
+        sourceType: value,
+      },
+    ]);
+    assert.equal(projected?.sourceType, value);
+  }
+  assert.equal(isDistrictSourceType("press"), false);
+  assert.equal(
+    sanitizeDistrictSources([
+      {
+        title: "Kaynak",
+        publisher: "Yayıncı",
+        url: "https://example.org/kaynak",
+        sourceType: "press",
+      },
+    ])[0]?.sourceType,
+    "unclassified",
+  );
+});
+
+/*
+ * TESTS-INFRA-3: an "official" source must come from a public authority
+ * host: *.gov.tr, *.bel.tr or one of the listed Istanbul agencies (and its
+ * subdomains). Look-alike hosts are not official.
+ */
+test("TESTS-INFRA-3: only allowlisted hosts count as official sources", () => {
+  const official = (url: string): DistrictSource => ({
+    title: "Resmî kaynak",
+    publisher: "Kurum",
+    url,
+    sourceType: "official",
+    primary: true,
+    dataDate: "2026-09-01T00:00:00Z",
+    checkedAt: "2026-09-10T00:00:00Z",
+    needsVerification: false,
+    sections: ["history"],
+  });
+  const accepted = [
+    "https://www.esenler.gov.tr/tarihce",
+    "https://www.esenler.bel.tr/tarihce",
+    "https://metro.istanbul/hatlar",
+    "https://www.metro.istanbul/hatlar",
+    "https://iett.istanbul/x",
+    "https://ibb.istanbul/x",
+    "https://data.ibb.istanbul/x",
+    "https://sehirhatlari.istanbul/x",
+    "https://bahcelievler.istanbul/x",
+  ];
+  const rejected = [
+    "https://example.com/x",
+    "https://gov.tr.example.com/x",
+    "https://esenler.gov.tr.example.com/x",
+    "https://evil-ibb.istanbul.attacker.net/x",
+    "https://notmetro.istanbul/x",
+    "https://metro.istanbul.example.org/x",
+    "https://istanbul/x",
+    "https://examplegov.tr/x",
+    "https://belediye.bel.tr.evil.com/x",
+  ];
+
+  for (const url of accepted) {
+    assert.equal(
+      sourceSupportsSection(official(url), "history", now),
+      true,
+      url,
+    );
+  }
+  for (const url of rejected) {
+    assert.equal(
+      sourceSupportsSection(official(url), "history", now),
+      false,
+      url,
+    );
+  }
 });

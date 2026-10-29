@@ -183,6 +183,21 @@ test("pages and book reviews use their own language", () => {
     ),
     "/en",
   );
+  // CORRECTNESS-2: `/ana-sayfa` redirects to `/`, so a link to the legacy
+  // home record points at `/` directly.
+  assert.equal(
+    getInternalDocumentPath(
+      internal("pages", {
+        ...page,
+        language: "tr",
+        pageType: "standard",
+        slug: "ana-sayfa",
+      }),
+      "tr",
+      now,
+    ),
+    "/",
+  );
   // English standard pages have no public route.
   assert.equal(
     getInternalDocumentPath(

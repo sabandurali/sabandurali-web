@@ -3,12 +3,12 @@ import { getPayload, type Where } from "payload";
 import config from "@payload-config";
 import { collectMappedPages } from "@/content/shared/pagination";
 import { getEnglishRichTextLinkContext } from "@/content/rich-text/offered-article-links";
+import { LEGACY_TURKISH_HOME_SLUG } from "@/content/pages/legacy-home";
 import { mapPayloadPage } from "@/content/pages/payload-page-mapper";
 import type { SiteLocale } from "@/content/locales";
 import type { PublicPage } from "@/content/pages/public-types";
 
 const PAYLOAD_PAGE_SIZE = 100;
-const TURKISH_HOME_SLUG = "ana-sayfa";
 const PUBLIC_PAGE_SORT = ["-publishedAt", "-updatedAt", "id"];
 
 function createPublicConditions(now: Date): Where[] {
@@ -74,7 +74,7 @@ export class PayloadPublicPageRepository {
     const legacyHome = await this.findOne(
       [
         { pageType: { equals: "standard" } },
-        { slug: { equals: TURKISH_HOME_SLUG } },
+        { slug: { equals: LEGACY_TURKISH_HOME_SLUG } },
       ],
       language,
     );

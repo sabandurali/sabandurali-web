@@ -117,3 +117,12 @@ test("CMS robots settings and image size are kept", () => {
     },
   ]);
 });
+
+test("CORRECTNESS-2: the legacy ana-sayfa record always lives at /", () => {
+  // `/ana-sayfa` redirects to `/` whether or not the record is served as home.
+  assert.equal(getPublicPagePath(page({ slug: "ana-sayfa" })), "/");
+  assert.equal(
+    getPublicPagePath(page({ slug: "ana-sayfa", pageType: "home" })),
+    "/",
+  );
+});

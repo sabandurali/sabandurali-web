@@ -1,6 +1,7 @@
 import { getText, isRecord } from "@/content/guards";
 import {
   districtSectionOptions,
+  isDistrictSourceType,
   sectionIsPublic,
   sourceSupportsSection,
   type DistrictSection,
@@ -123,23 +124,12 @@ function copyMarketData(value: Record<string, unknown>): DistrictMarketData {
   });
 }
 
-const sourceTypes: ReadonlyArray<DistrictSource["sourceType"]> = [
-  "official",
-  "academic",
-  "secondary",
-  "market",
-  "unclassified",
-];
 const sectionValues: ReadonlyArray<string> = districtSectionOptions.map(
   ({ value }) => value,
 );
 
 function isDistrictSection(value: unknown): value is DistrictSection {
   return typeof value === "string" && sectionValues.includes(value);
-}
-
-function isSourceType(value: unknown): value is DistrictSource["sourceType"] {
-  return sourceTypes.some((type) => type === value);
 }
 
 /** A source reduced to the fields of DistrictSource with checked types. */
@@ -155,7 +145,7 @@ function sanitizeSource(value: Record<string, unknown>): DistrictSource {
     title: typeof value.title === "string" ? value.title : "",
     publisher: typeof value.publisher === "string" ? value.publisher : "",
     url: typeof value.url === "string" ? value.url : "",
-    sourceType: isSourceType(value.sourceType)
+    sourceType: isDistrictSourceType(value.sourceType)
       ? value.sourceType
       : "unclassified",
     ...optional,

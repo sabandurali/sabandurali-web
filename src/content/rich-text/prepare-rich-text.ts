@@ -5,6 +5,7 @@ import { getDistrict } from "@/content/districts/district-registry";
 import { getDistrictPath } from "@/content/districts/district-routes";
 import { reportContentIssue } from "@/content/content-log";
 import { getText, isPublishedBy, isRecord } from "@/content/guards";
+import { isLegacyTurkishHome } from "@/content/pages/legacy-home";
 import { getPhotoPath } from "@/content/photos/photo-routes";
 
 function getLanguage(value: unknown): SiteLocale | null {
@@ -100,10 +101,12 @@ export function getInternalDocumentPath(
       if (language === null || !isPublishedDocument(value, now)) return null;
       if (value.pageType === "home") return language === "en" ? "/en" : "/";
 
-      // Only Turkish standard pages have a public route.
-      return value.pageType === "standard" && language === "tr" && slug !== null
-        ? `/${slug}`
-        : null;
+      if (value.pageType !== "standard" || language !== "tr" || slug === null) {
+        // Only Turkish standard pages have a public route.
+        return null;
+      }
+      // `/ana-sayfa` redirects to `/`: link the target directly.
+      return isLegacyTurkishHome({ language, slug }) ? "/" : `/${slug}`;
     }
     case "district-guides": {
       /*

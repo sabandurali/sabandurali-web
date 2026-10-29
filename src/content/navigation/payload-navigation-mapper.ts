@@ -1,4 +1,5 @@
 import { getText, isRecord } from "@/content/guards";
+import { isLegacyTurkishHome } from "@/content/pages/legacy-home";
 import type { SiteLocale } from "@/content/locales";
 import {
   isExternalNavigationHref,
@@ -56,7 +57,8 @@ function resolvePageHref(
 
   const localePrefix = language === "en" ? "/en" : "";
 
-  return value.pageType === "home"
+  // `/ana-sayfa` redirects to `/`: link the target directly.
+  return value.pageType === "home" || isLegacyTurkishHome(value)
     ? localePrefix || "/"
     : `${localePrefix}/${value.slug}`;
 }

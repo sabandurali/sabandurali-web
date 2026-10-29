@@ -7,6 +7,7 @@ import {
   type HomePageData,
   type ResolvedHomeContent,
 } from "@/content/pages/home-page-content";
+import { excludeLegacyTurkishHome } from "@/content/pages/legacy-home";
 import { PayloadPublicPageRepository } from "@/content/pages/payload-page-repository";
 import type { PublicPage } from "@/content/pages/public-types";
 import {
@@ -50,9 +51,16 @@ export const getPublishedTurkishPageBySlug = cache(
   },
 );
 
+/**
+ * Standard pages served at `/<slug>`. The legacy home record is not one of
+ * them: `/ana-sayfa` redirects to `/`, so it never gets a static param or a
+ * sitemap entry, even after a real home record replaced it.
+ */
 export const getAllPublishedTurkishStandardPages = cache(
   async (): Promise<PublicPage[]> =>
     getPublicPageSource() === "static"
       ? []
-      : payloadPageRepository.listStandards("tr"),
+      : excludeLegacyTurkishHome(
+          await payloadPageRepository.listStandards("tr"),
+        ),
 );

@@ -50,6 +50,7 @@
  */
 import { describeError } from "@/content/content-log";
 import { getText, isRecord } from "@/content/guards";
+import { isSlug } from "@/content/shared/slug";
 import { isSiteLocale, siteLocales, type SiteLocale } from "@/content/locales";
 import { revalidatePath, revalidateTag } from "next/cache";
 import type {
@@ -117,16 +118,15 @@ const HOME_PATHS: Readonly<Record<SiteLocale, string>> = {
   en: new URL(homeUrls.en).pathname,
 };
 
-/** Slugs produced by `normalizeSlug`; anything else is covered by patterns. */
-const SAFE_SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-
 function getLanguage(value: unknown): SiteLocale | null {
   return isSiteLocale(value) ? value : null;
 }
 
 function getSafeSlug(value: unknown): string | null {
   const slug = getText(value);
-  return slug !== null && SAFE_SLUG.test(slug) ? slug : null;
+  // Only slugs of the shared slug contract are revalidated by path; anything
+  // else is covered by the route patterns.
+  return isSlug(slug) ? slug : null;
 }
 
 /**

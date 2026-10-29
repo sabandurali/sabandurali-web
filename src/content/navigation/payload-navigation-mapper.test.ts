@@ -163,3 +163,25 @@ test("TESTS-INFRA-2: only the exact published status is public", () => {
     mapPayloadNavigation(navigation({ _status }), "tr", now),
   );
 });
+
+test("CORRECTNESS-2: a link to the legacy ana-sayfa record points at /", () => {
+  const mapped = mapPayloadNavigation(
+    navigation({
+      headerItems: [
+        {
+          id: "h1",
+          label: "Ana sayfa",
+          linkType: "page",
+          page: { ...publishedPage, slug: "ana-sayfa" },
+        },
+      ],
+    }),
+    "tr",
+    now,
+  );
+
+  assert.deepEqual(
+    mapped?.headerItems.map((item) => item.href),
+    ["/"],
+  );
+});

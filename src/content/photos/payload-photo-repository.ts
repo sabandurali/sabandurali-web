@@ -1,7 +1,10 @@
 import "server-only";
 import { getPayload, type Where } from "payload";
 import config from "@payload-config";
-import { collectMappedPages } from "@/content/shared/pagination";
+import {
+  collectMappedPages,
+  readClampedPage,
+} from "@/content/shared/pagination";
 import { hasPublicDocument } from "@/content/photos/has-public-document";
 import { mapPayloadPhoto } from "@/content/photos/payload-photo-mapper";
 import {
@@ -9,14 +12,12 @@ import {
   type PhotoFacets,
 } from "@/content/photos/photo-facets";
 import {
-  clampPhotoPage,
   createDistrictPhotoConditions,
   createIstanbulPhotoConditions,
   createPhotoCategoryConditions,
   createPhotoListConditions,
   createPublicPhotoConditions,
   createRelatedPhotoConditions,
-  normalizeRequestedPage,
   PHOTO_LIST_PAGE_SIZE,
 } from "@/content/photos/photo-query-conditions";
 import type {
@@ -126,36 +127,32 @@ export class PayloadPublicPhotoRepository {
       this.listFacets(language, now),
   ): Promise<PublishedPhotoList> {
     const conditions = createPhotoListConditions(now, filters);
-    const requestedPage = normalizeRequestedPage(filters.page);
-    const findListPage = (page: number) =>
-      this.findPage(locale, conditions, page, PHOTO_LIST_PAGE_SIZE, now);
-    const [requested, facets] = await Promise.all([
-      findListPage(requestedPage),
-      loadFacets(locale),
-    ]);
-    // A page number past the end shows the last page. Payload returns no
-    // documents there and, when the query joins other tables (localized
-    // fields, collection or tag filters), a total of 0, so the first page
-    // supplies the real total.
-    const first =
-      requestedPage === 1 || requested.found > 0
-        ? requested
-        : await findListPage(1);
-    const { page, totalPages } = clampPhotoPage(requestedPage, first.totalDocs);
-    const current =
-      page === requestedPage
-        ? requested
-        : page === 1
-          ? first
-          : await findListPage(page);
+    const [{ result, page, totalPages, totalItems }, facets] =
+      await Promise.all([
+        // A page number past the end shows the last page.
+        readClampedPage(
+          (listPage) =>
+            this.findPage(
+              locale,
+              conditions,
+              listPage,
+              PHOTO_LIST_PAGE_SIZE,
+              now,
+            ),
+          ({ found }) => found,
+          filters.page,
+          PHOTO_LIST_PAGE_SIZE,
+        ),
+        loadFacets(locale),
+      ]);
 
     return {
-      photos: current.photos,
+      photos: result.photos,
       collections: facets.collections,
       tags: facets.tags,
       page,
       totalPages,
-      totalItems: first.totalDocs,
+      totalItems,
     };
   }
 
