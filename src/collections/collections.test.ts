@@ -1372,10 +1372,10 @@ test("ARCHITECTURE-4: book validation errors are built in one place", () => {
   }
 });
 
-test("articles, pages and photos run the shared publishedAt hook", () => {
+test("articles, pages, photos and district guides run the shared publishedAt hook", () => {
   // Every public read filters on `publishedAt <= now`, so a published record
   // without a date silently leaves the site (CORRECTNESS-4).
-  for (const collection of [Articles, Pages, Photos]) {
+  for (const collection of [Articles, Pages, Photos, DistrictGuides]) {
     assert.ok(
       collection.hooks?.beforeChange?.includes(ensurePublishedAt),
       collection.slug,

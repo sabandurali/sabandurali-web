@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import type { DistrictGuide } from "../../src/payload-types";
 import { districts } from "../../src/content/districts/district-registry";
 import {
+  isDistrictSourceType,
   isPublicSourceUrl,
   districtSectionOptions,
   type DistrictSection,
@@ -242,20 +243,8 @@ export function decideImport(
 const sectionValues: ReadonlySet<string> = new Set(
   districtSectionOptions.map(({ value }) => value),
 );
-const sourceTypes: ReadonlySet<string> = new Set([
-  "official",
-  "academic",
-  "secondary",
-  "market",
-  "unclassified",
-]);
-
 function isDistrictSection(value: unknown): value is DistrictSection {
   return typeof value === "string" && sectionValues.has(value);
-}
-
-function isSourceType(value: unknown): value is DistrictSource["sourceType"] {
-  return typeof value === "string" && sourceTypes.has(value);
 }
 
 function invalidResearch(where: string, expected: string): never {
@@ -300,7 +289,7 @@ function isSectionList(value: unknown): value is DistrictSection[] {
 function parseSource(value: unknown, where: string): DistrictSource {
   if (!isRecord(value)) return invalidResearch(where, "a source object");
   const sourceType = value.sourceType;
-  if (!isSourceType(sourceType)) {
+  if (!isDistrictSourceType(sourceType)) {
     return invalidResearch(`${where}.sourceType`, "a known source type");
   }
   const source: DistrictSource = {

@@ -60,6 +60,7 @@ including how to generate the secret, is
 | `npm run e2e:content-trust`          | Legacy redirects, metadata, share image and route regression check against a local server at `DISTRICT_TEST_URL`; JSON to `DISTRICT_TEST_OUTPUT` |
 | `npm run e2e:a11y` | axe WCAG 2.2 AA, 390/820/1440 px overflow, skip link, focus, header menu and reduced-motion check of every public route type against a local server at `A11Y_TEST_URL` (default `http://127.0.0.1:3101`); report and screenshots to `A11Y_TEST_OUTPUT` |
 | `npm run report:districts:content`   | Run the content acceptance check and write its JSON result to the ignored `reports/istanbul-39/content-acceptance.json`        |
+| `npm run report:districts:freshness` | Which reviewed district content is withheld today or within 30 days (wall clock; run weekly by `content-freshness.yml`, not part of `npm test`) |
 
 Scripts whose names contain `production`, `migrate`, `:apply`, `:dry-run` or
 `:verify`, plus `vercel:build`, touch the production database or prepare

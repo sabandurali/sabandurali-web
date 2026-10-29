@@ -4,6 +4,7 @@ import {
   sanitizeDistrictSources,
 } from "@/content/districts/district-guide-projection";
 import { APIError } from "payload";
+import { ensurePublishedAt } from "@/lib/publishedAt";
 import {
   districtSectionOptions,
   districtSourceTypeOptions,
@@ -35,20 +36,6 @@ export const PUBLIC_DISTRICT_GUIDE_QUERY_PATHS = [
   "publishedAt",
   "updatedAt",
 ] as const;
-
-const setPublishedAtOnFirstPublish: CollectionBeforeChangeHook = ({
-  data,
-  originalDoc,
-}) => {
-  if (
-    originalDoc?._status !== "published" &&
-    data._status === "published" &&
-    !data.publishedAt
-  ) {
-    return { ...data, publishedAt: new Date().toISOString() };
-  }
-  return data;
-};
 
 const protectDistrictPublication: CollectionBeforeChangeHook = ({
   data,
@@ -408,7 +395,7 @@ export const DistrictGuides: CollectionConfig = {
   hooks: {
     afterChange: [revalidation.afterChange],
     afterDelete: [revalidation.afterDelete],
-    beforeChange: [protectDistrictPublication, setPublishedAtOnFirstPublish],
+    beforeChange: [protectDistrictPublication, ensurePublishedAt],
     // `afterRead` hides raw values from anonymous readers, but `where` and
     // `sort` run on the stored columns; without this allowlist a query such
     // as `where[marketData.salePricePerM2][greater_than]=N` would reveal them.
