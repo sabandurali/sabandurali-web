@@ -313,6 +313,8 @@ Publication-safe rights are restricted to item-level evidence such as:
 
 Do not use AI-generated, stock, random, non-commercial-only, no-derivatives, or ambiguously licensed images as historical evidence. Recheck the source page, rights statement, attribution, and current availability immediately before publication.
 
+Since Phase B every Media upload is re-encoded (long edge at most 3200 px, EXIF removed) and limited to 4 MiB. The historical photo importers (`scripts/photos/`) compare an existing Media record with its manifest item exactly, including `filesize`, `width` and `height`. Records imported before the change keep their original bytes and still match. On a fresh database (local or a restored copy) a new import stores a re-encoded file, so a later dry-run or `--verify` reports each item as `source media metadata differs` (two batch 1 items are also larger than 3200 px). This is expected and is not to be "fixed" by relaxing the comparison: the gate must not adopt a file it cannot prove to be the audited source (§K rule 11). `historical-district-batch1.test.ts` (J2) pins the behaviour. All manifest files are below 4 MiB.
+
 Historical imports set `featured: false`. Hero selection prefers an explicitly featured image and otherwise the first non-historical photo, so an imported historical image must remain gallery-only and must not automatically become the district hero.
 
 ## M. Local machine safety and backups
