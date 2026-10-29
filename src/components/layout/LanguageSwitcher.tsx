@@ -39,7 +39,9 @@ export default function LanguageSwitcher({
             href={option.href}
             hrefLang={option.hrefLang}
             lang={option.locale}
-            aria-current={option.current ? "page" : undefined}
+            // "true", not "page": without a translation the link opens the
+            // home page, and the page link of the header owns "page".
+            aria-current={option.current ? "true" : undefined}
             onClick={onNavigate}
             className={cx(
               "relative flex min-h-tap min-w-tap items-center justify-center px-2 type-small text-ink no-underline hover:underline hover:decoration-2 hover:underline-offset-[0.3em]",
