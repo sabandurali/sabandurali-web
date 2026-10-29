@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import EmptyState from "@/components/ui/EmptyState";
 import Section from "@/components/ui/Section";
 import TextLink from "@/components/ui/TextLink";
-import PageIntro from "@/components/workspaces/PageIntro";
+import PageIntro from "@/components/ui/PageIntro";
 import PageShell from "@/components/workspaces/PageShell";
 import { createPageMetadata } from "@/lib/metadata";
 import { homeCrumb } from "@/components/ui/Breadcrumb";

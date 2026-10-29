@@ -22,7 +22,7 @@ import type { PublicPageBlock } from "../../content/pages/public-types";
 import type { PublicPhoto } from "../../content/photos/types";
 import MetaList from "./MetaList";
 import { getVisibleBlocks, opensWithHero } from "./PageBlocks";
-import PageIntro from "./PageIntro";
+import PageIntro from "@/components/ui/PageIntro";
 import {
   altLanguageAttribute,
   creditFromImage,
@@ -225,6 +225,7 @@ test("a standard page opens with its hero only when the hero comes first", () =>
 test("PageIntro renders one h1, the breadcrumb and the lead", () => {
   const html = renderToStaticMarkup(
     createElement(PageIntro, {
+      layout: "page",
       locale: "tr",
       breadcrumb: [{ label: "Ana sayfa", href: "/" }, { label: "Makaleler" }],
       eyebrow: "YAYINLAR",

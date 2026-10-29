@@ -161,7 +161,7 @@ sınıfla ezebilirsiniz (`type-data font-bold`). Aynı özelliği iki tek özell
 | `type-label` | 12 px, 600 | Kısa UI etiketleri |
 | `type-sign` | 17 px, 700 | Yön levhası adı |
 | `type-tile` | 14 px, 600, 76 % | Harita karesi etiketi |
-| `type-region` | 13 px, 700, 125 %, 0.16 em | AVRUPA YAKASI gibi bölge etiketleri |
+| `type-region` | 13 px, 700, 125 %, 0.16 em, büyük harf | AVRUPA YAKASI gibi bölge etiketleri ve ana sayfa bölüm etiketleri |
 | `type-wordmark` / `type-tagline` | 17 / 12 px | ŞABAN DURALİ ve alt satırı |
 | `type-data` / `type-data-md` / `type-data-lg` | 12 / 13 / 17 → 22 px, mono | Veri etiketleri, tarihler, tablo değerleri |
 
@@ -179,6 +179,11 @@ kuyrukları kesilmemeli, satır yüksekliği sıkışmamalı.
 
 - Büyük harfli sabit etiketleri doğrudan büyük harfle yazın (`İSTANBUL BOĞAZI`). `uppercase` yalnızca
   doğru `lang` değerinin olduğu yerde kullanılabilir; `lang="tr"` "i" harfini "İ" yapar.
+- `type-region` metni her zaman büyük harf gösterir (`text-transform: uppercase`, FRONTEND-4). Böylece
+  CMS'ten ya da statik içerikten karışık harfle gelen bir etiket ("Ana çalışma alanları") öteki bölüm
+  etiketleriyle aynı görünür ve ekran okuyucu özgün yazımı okur. Bu sınıfı yalnızca sayfanın dilinde
+  olan metne verin; başka dildeki bir etiketin kapsayıcısı kendi `lang` değerini taşımalıdır. Karışık
+  harf isteniyorsa `type-label` kullanın.
 - Uzun ilçe adları dar karelerde yumuşak tire (U+00AD) ile bölünür; bölme noktaları
   `district-tile-grid.ts` içindeki `breaks` alanındadır ("Gazi|osman|paşa"), `getDistrictLabel(slug)` bu
   biçimi verir.
@@ -240,6 +245,9 @@ yalnızca etkileşim gerektirenlerdir: `SkipLink`, `Disclosure`, `NavMenu`, `For
 | `SourceRef` / `SourceRefList` | Kaynak atfı köşeli parantezli numaradır: [3]. Kaynak tablosu satırı `id="kaynak-3"` (`sourceAnchorId`). 44 × 44 px dokunma alanı. Deniz zemininde `tone="on-sea"` (`Timeline tone="sea"` bunu kendisi verir). |
 | `FactTable` | `dl` tabanlı veri tablosu: etiket, mono değer + birim, veri tarihi, kaynak atıfları; değeri çip olan satırlar (raylı sistem) için `extra`. Dar kapsayıcıda bloklar ("Veri tarihi:" etiketiyle), 42 rem'den itibaren dört sütun ve görsel başlık satırı. Eksik tarih/kaynak ızgarada "—" ve ekran okuyucuya "yok"; dar düzende hiç gösterilmez. |
 | `Breadcrumb` | "Konum" izi; son öğe `aria-current="page"`, ayraçlar gizli. |
+| `Eyebrow` | Başlık üstü kısa etiket: turuncu çizgi (dolgu, asla turuncu metin), isteğe bağlı mono bölüm numarası ("02") ve `type-label` metin. `tone="on-sea"` deniz zemini. |
+| `PageIntro` | Her sayfanın açılışı: `Breadcrumb`, `Eyebrow`, sayfanın tek `h1`'i (`break-words hyphens-auto`), giriş paragrafı ve altındaki meta. `layout="section"` (varsayılan) bir `Section` içinde durur (çalışma alanı, Hakkımda, iletişim, KVKK); `layout="page"` yayın sayfalarında kendi `Container`'ını ve boşluğunu kurar, `aside` (kitap kapağı) geniş ekranda yanına gelir. Sayfaya özel ikinci bir açılış bileşeni yazılmaz. |
+| `TitleLines` | Büyük başlığın satırları (ana sayfa hero'su, CMS hero bloğu). Vurgulu satır turuncu dolgu üstünde mürekkep metindir (`box-decoration-clone bg-signal`); alt çizgi kullanılmaz, çünkü altı çizili metin bağlantı sanılır (§6). |
 | `SkipLink` | Her sayfanın ilk odaklanılabilir öğesi; odaklanınca görünür, içeriğe klavye odağını taşır. Ana içerik `<main id="main">` olmalı (yoksa ilk `<main>` bulunur). |
 | `VisuallyHidden` | Yalnızca yardımcı teknolojiye metin. |
 | `Disclosure` | Göster/gizle. Panel butonundan hemen sonra gelir, kapalıyken DOM'da `hidden` kalır, Escape kapatıp odağı butona döndürür. İçteki bir bileşen Escape'i zaten işlediyse (`preventDefault`, ör. açık NavMenu paneli) dokunmaz: Escape her basışta bir katman kapatır. `open` + `onOpenChange` ile kontrollü kullanılabilir; `fullWidth={false}` satır içi buton verir (header'daki "Menü"). |
@@ -250,8 +258,8 @@ yalnızca etkileşim gerektirenlerdir: `SkipLink`, `Disclosure`, `NavMenu`, `For
 | `Pagination` | Önceki/sonraki ve sayfa numaraları; geçerli sayfa `aria-current`; tek sayfada hiçbir şey çizmez. |
 | `Field` + `Input` / `Textarea` / `Select` | Üç kontrol aynı kenar, hover, odak ve hata (`aria-invalid`) stillerini paylaşır; sayfada elle stillenmiş `<select>` yazılmaz. Görünen `label`, `hint` ve `error` kontrolün `aria-describedby` listesine bağlanır, hata `aria-invalid` ve "Hata:" önekiyle gelir, zorunlu alanlar "(zorunlu)" yazar. |
 | `FormStatus` | İki kalıcı canlı bölge: ilerleme/başarı `role="status"`, hata `role="alert"`; yalnızca metin değişir, yeni bir sonuçta odak mesaja taşınır (ilk çizimde ve mesajsız sonuçta taşınmaz) (FE-21). `aria-busy` kapsayıcısının dışında durur. |
-| `StationDiagram` | Hat şeması: yalnızca metinde adı geçen duraklar; ilçeye hizmet eden duraklar turuncu ve aralarında düz çizgi, ilçe dışı kesim noktalı. Dar kapsayıcıda dikey liste (390 px'te etiketler sıkışmaz), 36 rem'den itibaren yatay. Yanına `Legend` ile "yalnız metinde adı geçen istasyonlar" notunu koyun. |
-| `Legend` | Harita ve şema sembollerinin anahtarı; her sembol metinle adlandırılır. |
+| `StationDiagram` | Hat şeması: yalnızca metinde adı geçen duraklar; ilçeye hizmet eden duraklar turuncu ve aralarında düz çizgi, ilçe dışı kesim noktalı. Turuncu dolgu tek başına bilgi taşımaz: hizmet eden durak ekran okuyucuya "…, ilçeye hizmet eder" der (`stationServes`), hizmet etmeyen durak `land` dolguludur. Dar kapsayıcıda dikey liste (390 px'te etiketler sıkışmaz), 36 rem'den itibaren yatay. Yanına `Legend` ile "yalnız metinde adı geçen istasyonlar" notunu koyun. **Henüz hiçbir sayfada kullanılmıyor:** ilçe rehberinin ulaşım bölümü için ayrılmıştır ve yalnız tarihli, kaynaklı istasyon verisiyle kullanılabilir; o veri gelene kadar testleri sözleşmeyi korur. |
+| `Legend` | Harita ve şema sembollerinin anahtarı; her sembol metinle adlandırılır. Sembol dolguları da yalnız Atlas token'larıdır (`bg-white` yok, test eder). |
 | `DistrictTileMap` | 39 ilçelik atlas. Bir sonraki bölüme bakın. |
 | `DistrictKeyMap` | Küçük anahtar harita (kartlar, rehber başlığı); `title` verilmezse dekoratiftir. |
 

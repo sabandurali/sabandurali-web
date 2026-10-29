@@ -10,7 +10,8 @@ import { cx } from "@/components/ui/cx";
 import { Credit, Figure } from "@/components/ui/Figure";
 import Section from "@/components/ui/Section";
 import type { UiLocale } from "@/components/ui/strings";
-import { Eyebrow } from "@/components/workspaces/PageIntro";
+import Eyebrow from "@/components/ui/Eyebrow";
+import TitleLines from "@/components/ui/TitleLines";
 import type {
   PublicPageBlock,
   PublicPageImage,
@@ -99,18 +100,7 @@ function HeroPageBlock({
             id={headingId(block)}
             className="m-0 max-w-[20ch] type-display break-words"
           >
-            {block.titleLines.map((line, index) => (
-              <span key={`${line.text}-${index}`} className="block">
-                {line.accent ? (
-                  <span className="underline decoration-signal decoration-[0.12em] underline-offset-[0.14em]">
-                    {line.text}
-                  </span>
-                ) : (
-                  line.text
-                )}
-                {index < block.titleLines.length - 1 ? " " : ""}
-              </span>
-            ))}
+            <TitleLines lines={block.titleLines} />
           </Heading>
           <p className="m-0 max-w-measure type-lead">{block.description}</p>
           <div className="mt-3 flex flex-wrap gap-3">

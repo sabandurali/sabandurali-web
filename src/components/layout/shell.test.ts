@@ -247,6 +247,25 @@ test("shell sources: atlas layouts, retry, English 404 catch-all, global 404", (
   }
 });
 
+test("FRONTEND-6: every long page shell, the home page included, has BackToTop", () => {
+  const shells = [
+    "src/components/HomePage.tsx",
+    "src/components/workspaces/PageShell.tsx",
+    "src/components/districts/DistrictEditorialGuidePage.tsx",
+    "src/components/districts/DistrictNewsListPage.tsx",
+    "src/app/(tr)/istanbul/ilceler/page.tsx",
+  ];
+  for (const file of shells) {
+    const source = read(file);
+    assert.match(source, /<div id="top"/, `${file}: #top target`);
+    assert.match(
+      source,
+      /<BackToTop label=\{[\w.]+\.backToTopLabel\} \/>/,
+      `${file}: BackToTop`,
+    );
+  }
+});
+
 test("COMPLETENESS-2: the footer copyright year follows the Istanbul calendar", () => {
   // 31 Dec 2026 22:30 UTC is already 1 Jan 2027 in Istanbul (UTC+3).
   const newYear = new Date("2026-12-31T22:30:00Z");

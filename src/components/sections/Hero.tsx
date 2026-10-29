@@ -2,6 +2,7 @@ import { ButtonLink } from "@/components/ui/Button";
 import Container from "@/components/ui/Container";
 import DistrictKeyMap from "@/components/ui/DistrictKeyMap";
 import { ArrowRightIcon } from "@/components/ui/icons";
+import TitleLines from "@/components/ui/TitleLines";
 import type { HeroContent, HomeAnchors } from "@/content/homeContent";
 
 type HeroProps = {
@@ -41,18 +42,7 @@ export default function Hero({
             </p>
           ) : null}
           <h1 id="ana-baslik" className="m-0 type-display">
-            {content.titleLines.map((line, index) => (
-              <span key={`${line.text}-${index}`} className="block">
-                {line.accent ? (
-                  <span className="box-decoration-clone bg-signal px-[0.12em]">
-                    {line.text}
-                  </span>
-                ) : (
-                  line.text
-                )}
-                {index < content.titleLines.length - 1 ? " " : null}
-              </span>
-            ))}
+            <TitleLines lines={content.titleLines} />
           </h1>
           <p className="m-0 mt-6 max-w-measure type-lead text-ink">
             {content.description}

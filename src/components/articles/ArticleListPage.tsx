@@ -1,5 +1,5 @@
 import ArticleCard from "@/components/articles/ArticleCard";
-import PageIntro from "@/components/pages/PageIntro";
+import PageIntro from "@/components/ui/PageIntro";
 import PublicationShell from "@/components/pages/PublicationShell";
 import { publicationCopy } from "@/components/pages/publication-copy";
 import EmptyState from "@/components/ui/EmptyState";
@@ -29,6 +29,7 @@ export default function ArticleListPage({
   return (
     <PublicationShell locale={locale} languageHrefs={articleListPaths}>
       <PageIntro
+        layout="page"
         locale={locale}
         breadcrumb={[
           { label: copy.home, href: copy.homePath },

@@ -13,7 +13,11 @@ import {
   upload,
 } from "../../content/rich-text/lexical-fixtures";
 import { Credit, Figure } from "../ui/Figure";
-import PayloadRichText, { renderRichTextUpload } from "./PayloadRichText";
+import { NodeFormat } from "@payloadcms/richtext-lexical";
+import PayloadRichText, {
+  renderRichTextUpload,
+  TEXT_FORMAT,
+} from "./PayloadRichText";
 
 type RichTextData = ComponentProps<typeof PayloadRichText>["data"];
 
@@ -252,4 +256,106 @@ test("unknown node types are skipped with a report", (t) => {
   assert.match(html, /Kalan/);
   assert.equal(warnings.length, 1);
   assert.match(warnings[0] ?? "", /mystery node skipped/);
+});
+
+function formattedText(value: string, format: number) {
+  return { ...text(value), format };
+}
+
+function list(listType: "bullet" | "number" | "check", ...items: unknown[]) {
+  return {
+    type: "list",
+    listType,
+    tag: listType === "number" ? "ol" : "ul",
+    start: 1,
+    children: items,
+    direction: null,
+    format: "",
+    indent: 0,
+    version: 1,
+  };
+}
+
+function listItem(value: number, checked: boolean | undefined, label: string) {
+  return {
+    type: "listitem",
+    value,
+    checked,
+    children: [text(label)],
+    direction: null,
+    format: "",
+    indent: 0,
+    version: 1,
+  };
+}
+
+test("the local text format bits match Lexical's NodeFormat", () => {
+  assert.deepEqual(TEXT_FORMAT, {
+    bold: NodeFormat.IS_BOLD,
+    italic: NodeFormat.IS_ITALIC,
+    strikethrough: NodeFormat.IS_STRIKETHROUGH,
+    underline: NodeFormat.IS_UNDERLINE,
+    code: NodeFormat.IS_CODE,
+    subscript: NodeFormat.IS_SUBSCRIPT,
+    superscript: NodeFormat.IS_SUPERSCRIPT,
+  });
+});
+
+test("underlined text is not drawn like a link and no format uses inline styles", (t) => {
+  const { html } = render(
+    t,
+    lexical(
+      paragraph(
+        formattedText("altı çizili", TEXT_FORMAT.underline),
+        formattedText("üstü çizili", TEXT_FORMAT.strikethrough),
+        formattedText(
+          "kalın italik",
+          TEXT_FORMAT.bold | TEXT_FORMAT.italic | TEXT_FORMAT.underline,
+        ),
+        formattedText("H2O", TEXT_FORMAT.subscript),
+      ),
+    ),
+  );
+
+  assert.doesNotMatch(html, /style=/);
+  assert.doesNotMatch(html, /underline/);
+  assert.match(html, /<p>altı çizili<s>üstü çizili<\/s>/);
+  assert.match(html, /<em><strong>kalın italik<\/strong><\/em>/);
+  assert.match(html, /<sub>H2O<\/sub>/);
+});
+
+test("checklists render without nested interactive roles", (t) => {
+  const { html } = render(
+    t,
+    lexical(
+      list("check", listItem(1, true, "Bitti"), listItem(2, false, "Açık")),
+    ),
+  );
+
+  assert.doesNotMatch(html, /role=/);
+  assert.doesNotMatch(html, /tabindex/i);
+  assert.doesNotMatch(html, /aria-checked/);
+  const inputs = html.match(/<input[^>]*>/g) ?? [];
+  assert.equal(inputs.length, 2);
+  for (const input of inputs) {
+    assert.match(input, /type="checkbox"/);
+    assert.match(input, /disabled=""/);
+  }
+  assert.match(inputs[0] ?? "", /checked=""/);
+  assert.doesNotMatch(inputs[1] ?? "", /checked=""/);
+  // Each checkbox sits inside the label that carries its item text.
+  assert.match(html, /<label[^>]*><input[^>]*\/?><span>Bitti<\/span><\/label>/);
+});
+
+test("bullet and numbered lists keep their semantic tags", (t) => {
+  const { html } = render(
+    t,
+    lexical(
+      list("bullet", listItem(1, undefined, "Bir")),
+      list("number", listItem(1, undefined, "İki")),
+    ),
+  );
+
+  assert.match(html, /<ul><li value="1">Bir<\/li><\/ul>/);
+  assert.match(html, /<ol><li value="1">İki<\/li><\/ol>/);
 });

@@ -4,7 +4,7 @@ import ArticleContent, {
   articleSourceAnchorId,
 } from "@/components/articles/ArticleContent";
 import MetaList, { type MetaItem } from "@/components/pages/MetaList";
-import PageIntro from "@/components/pages/PageIntro";
+import PageIntro from "@/components/ui/PageIntro";
 import PublicationShell from "@/components/pages/PublicationShell";
 import { publicationCopy } from "@/components/pages/publication-copy";
 import {
@@ -203,6 +203,7 @@ export default function ArticleDetailPage({
       />
       <article aria-labelledby="article-title">
         <PageIntro
+          layout="page"
           locale={locale}
           breadcrumb={[
             { label: copy.home, href: copy.homePath },

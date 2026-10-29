@@ -21,6 +21,8 @@ export type UiStrings = {
   sectionOf: (number: number, total?: number) => string;
   gridRef: string;
   line: string;
+  /** Screen-reader note after a station that serves the district. */
+  stationServes: string;
   source: (number: number) => string;
   relatedSources: string;
   photo: string;
@@ -28,6 +30,8 @@ export type UiStrings = {
   originalSource: string;
   overview: (label: string) => string;
   fact: { indicator: string; value: string; date: string; source: string };
+  /** Document titles of publication detail pages whose slug is unknown. */
+  notFound: { article: string; bookReview: string; photo: string };
   map: {
     label: string;
     schematic: string;
@@ -64,12 +68,18 @@ const tr: UiStrings = {
     total ? `Bölüm ${number}, ${total} bölümden` : `Bölüm ${number}`,
   gridRef: "Harita karesi",
   line: "hattı",
+  stationServes: ", ilçeye hizmet eder",
   source: (number) => `Kaynak ${number}`,
   relatedSources: "İlgili kaynaklar",
   photo: "Fotoğraf",
   licence: "Lisans",
   originalSource: "Kaynak",
   overview: (label) => `${label}: tümü`,
+  notFound: {
+    article: "Makale bulunamadı",
+    bookReview: "Kitap incelemesi bulunamadı",
+    photo: "Fotoğraf bulunamadı",
+  },
   fact: {
     indicator: "Gösterge",
     value: "Değer",
@@ -113,12 +123,18 @@ const en: UiStrings = {
     total ? `Section ${number} of ${total}` : `Section ${number}`,
   gridRef: "Map square",
   line: "line",
+  stationServes: ", serves the district",
   source: (number) => `Source ${number}`,
   relatedSources: "Related sources",
   photo: "Photo",
   licence: "Licence",
   originalSource: "Source",
   overview: (label) => `${label}: overview`,
+  notFound: {
+    article: "Article not found",
+    bookReview: "Book review not found",
+    photo: "Photography not found",
+  },
   fact: {
     indicator: "Indicator",
     value: "Value",

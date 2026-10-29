@@ -13,6 +13,7 @@ import Disclosure from "./Disclosure";
 import DistrictKeyMap from "./DistrictKeyMap";
 import DistrictTileMap from "./DistrictTileMap";
 import EmptyState from "./EmptyState";
+import Eyebrow from "./Eyebrow";
 import FactTable from "./FactTable";
 import {
   Field,
@@ -26,6 +27,7 @@ import FormStatus, { resultFocusTarget } from "./FormStatus";
 import GridRef from "./GridRef";
 import { LineChip, StationMarker } from "./LineChip";
 import NavMenu from "./NavMenu";
+import PageIntro from "./PageIntro";
 import Pagination from "./Pagination";
 import PlateTitle, { plateCharacters } from "./PlateTitle";
 import SectionSign from "./SectionSign";
@@ -38,6 +40,7 @@ import {
 } from "./SourceRef";
 import StationDiagram from "./StationDiagram";
 import Timeline from "./Timeline";
+import TitleLines from "./TitleLines";
 import { isInternalPath } from "./UiLink";
 
 const render = (element: ReactElement) => renderToStaticMarkup(element);
@@ -564,6 +567,85 @@ test("Timeline and StationDiagram expose order and notes as text", () => {
   assert.match(diagram, /Giyimkent–<wbr\/>Tekstilkent/);
   assert.match(textOf(diagram), /Mahmutbeyhat ucu/);
   assert.match(diagram, /border-dotted/);
+  // FRONTEND-5: serving is said in text, not only with the orange fill.
+  assert.match(
+    textOf(diagram),
+    /Giyimkent–Tekstilkent, ilçeye hizmet ederkuzey kesim/,
+  );
+  assert.doesNotMatch(textOf(diagram), /Mahmutbey, ilçeye/);
+  const englishDiagram = render(
+    h(StationDiagram, {
+      code: "M7",
+      name: "Yıldız–Mahmutbey",
+      label: "M7 stations named in the text",
+      locale: "en",
+      stations: [{ name: "Giyimkent", serves: true }],
+    }),
+  );
+  assert.match(textOf(englishDiagram), /Giyimkent, serves the district/);
+});
+
+test("FRONTEND-5: primitives draw fills from Atlas tokens, never raw white", () => {
+  assert.deepEqual(publicSourcesMatching(/\bbg-white\b/), []);
+});
+
+test("FRONTEND-3: an accent title line is a signal fill, never an underline", () => {
+  const html = render(
+    h(
+      "h1",
+      null,
+      h(TitleLines, {
+        lines: [{ text: "İstanbul'u" }, { text: "okumak", accent: true }],
+      }),
+    ),
+  );
+
+  assert.equal(textOf(html), "İstanbul'u okumak");
+  assert.match(
+    html,
+    /<span class="box-decoration-clone bg-signal px-\[0.12em\]">okumak<\/span>/,
+  );
+  assert.doesNotMatch(html, /underline/);
+  // The home hero and the CMS hero block share the component.
+  assert.deepEqual(
+    publicSourcesMatching(/titleLines\.map\(/, [
+      "src/components/ui/TitleLines.tsx",
+    ]),
+    [],
+  );
+});
+
+test("ARCHITECTURE-3: one Eyebrow and one PageIntro, both primitives", () => {
+  const html = render(
+    h(PageIntro, {
+      eyebrow: "İLETİŞİM",
+      title: "İletişim",
+      lead: "Giriş",
+      breadcrumb: [homeCrumb("tr"), { label: "İletişim" }],
+    }),
+  );
+  assert.equal(count(html, /<h1\b/), 1);
+  assert.match(html, /^<header class="flex flex-col gap-5">/);
+  assert.match(html, /aria-current="page"/);
+  assert.match(
+    html,
+    /<span aria-hidden="true" class="h-1 w-8 shrink-0 bg-signal"><\/span>/,
+  );
+
+  const page = render(
+    h(PageIntro, { layout: "page", title: "Makaleler", titleLang: "tr" }),
+  );
+  assert.match(page, /^<header class="[^"]*pt-6 pb-10/);
+  assert.match(page, /<h1 lang="tr" class="[^"]*hyphens-auto/);
+
+  assert.deepEqual(
+    publicSourcesMatching(/export (default )?function (Eyebrow|PageIntro)\b/),
+    ["src/components/ui/Eyebrow.tsx", "src/components/ui/PageIntro.tsx"],
+  );
+  assert.equal(
+    render(h(Eyebrow, { number: 2, children: "Bölüm" })).includes(">02<"),
+    true,
+  );
 });
 
 test("EmptyState states the gap in text", () => {

@@ -6,7 +6,8 @@ import Chip from "@/components/ui/Chip";
 import { Figure } from "@/components/ui/Figure";
 import Section from "@/components/ui/Section";
 import Timeline from "@/components/ui/Timeline";
-import PageIntro, { Eyebrow } from "@/components/workspaces/PageIntro";
+import Eyebrow from "@/components/ui/Eyebrow";
+import PageIntro from "@/components/ui/PageIntro";
 import PageShell from "@/components/workspaces/PageShell";
 import { contactPaths } from "@/config/site";
 import {

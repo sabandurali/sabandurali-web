@@ -467,3 +467,10 @@ test("FE-17: the public root layouts take their fonts from fonts.ts only", () =>
     assert.match(source, /data-scroll-behavior="smooth"/, layout);
   }
 });
+
+test("FRONTEND-4: region labels are capitals whatever case the content uses", async () => {
+  const output = await buildCss(["type-region"]);
+  const rule = /\.type-region \{([^}]*)\}/.exec(output)?.[1] ?? "";
+  assert.match(rule, /text-transform:\s*uppercase/);
+  assert.match(rule, /letter-spacing:\s*0\.16em/);
+});

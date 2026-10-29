@@ -365,7 +365,7 @@ export default function DistrictTileMap(props: DistrictTileMapProps) {
                   },
                   <>
                     <span>{title}</span>
-                    <span className="type-data font-medium tracking-normal text-ink-muted">
+                    <span className="type-data font-medium tracking-normal normal-case text-ink-muted">
                       {strings.map.count(sideTiles.length)}
                     </span>
                   </>,
