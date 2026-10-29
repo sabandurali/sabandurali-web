@@ -141,7 +141,7 @@ export function withTurkishHeaderShortcuts(
   );
 
   return [
-    internalLink("home", "Ana Sayfa", "/"),
+    internalLink("home", "Ana sayfa", "/"),
     ...primaryWorkspaces,
     {
       ...(about ?? internalLink("about", "Hakkımda", "/hakkimda")),

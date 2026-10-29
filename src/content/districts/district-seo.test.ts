@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import test from "node:test";
+import { getUiStrings } from "@/components/ui/strings";
 import { fileURLToPath } from "node:url";
 import { siteSocialImage } from "@/config/site";
 import { verifiedDistrictImages } from "@/content/photos/verified-district-images";
@@ -178,4 +179,17 @@ test("district metadata keeps canonical, Turkish-only hreflang and a large card"
       : null,
     "summary_large_image",
   );
+});
+
+test("FRONTEND-6: the JSON-LD breadcrumb names home like the visible one", () => {
+  const district = districts[0];
+  assert.ok(district);
+  const graph = districtJsonLd(district, null)["@graph"];
+  const breadcrumb = graph.find(
+    (node) => "@type" in node && node["@type"] === "BreadcrumbList",
+  );
+  assert.ok(breadcrumb && "itemListElement" in breadcrumb);
+  const home = breadcrumb.itemListElement?.[0];
+  assert.equal(home?.name, getUiStrings("tr").home);
+  assert.equal(home?.name, "Ana sayfa");
 });
