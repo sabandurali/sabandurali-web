@@ -1,6 +1,6 @@
 import Image from "next/image";
 import type { ReactNode } from "react";
-import type { BreadcrumbItem } from "@/components/ui/Breadcrumb";
+import { homeCrumb, type BreadcrumbItem } from "@/components/ui/Breadcrumb";
 import Card from "@/components/ui/Card";
 import EmptyState from "@/components/ui/EmptyState";
 import { Credit } from "@/components/ui/Figure";
@@ -33,7 +33,7 @@ function workspaceBreadcrumb(
   entry?: WorkspaceEntry,
 ): BreadcrumbItem[] {
   const trail: BreadcrumbItem[] = [
-    { label: "Ana sayfa", href: "/" },
+    homeCrumb("tr"),
     { label: indexTitle, href: workspacePath },
     ...(workspace
       ? [{ label: workspace.title, href: `/${workspace.key}` }]

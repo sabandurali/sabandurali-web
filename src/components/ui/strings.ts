@@ -4,6 +4,9 @@ export type UiLocale = "tr" | "en";
 export type UiStrings = {
   skipToContent: string;
   breadcrumb: string;
+  /** First breadcrumb item: the home page of the locale. */
+  home: string;
+  homePath: string;
   pagination: string;
   previousPage: string;
   nextPage: string;
@@ -44,6 +47,8 @@ export type UiStrings = {
 const tr: UiStrings = {
   skipToContent: "İçeriğe geç",
   breadcrumb: "Konum",
+  home: "Ana sayfa",
+  homePath: "/",
   pagination: "Sayfalar",
   previousPage: "Önceki sayfa",
   nextPage: "Sonraki sayfa",
@@ -91,6 +96,8 @@ const tr: UiStrings = {
 const en: UiStrings = {
   skipToContent: "Skip to content",
   breadcrumb: "Breadcrumb",
+  home: "Home",
+  homePath: "/en",
   pagination: "Pages",
   previousPage: "Previous page",
   nextPage: "Next page",

@@ -2,7 +2,7 @@ import BackToTop from "@/components/layout/BackToTop";
 import DistrictNewsCard from "@/components/districts/DistrictNewsCard";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
-import Breadcrumb from "@/components/ui/Breadcrumb";
+import Breadcrumb, { homeCrumb } from "@/components/ui/Breadcrumb";
 import Container from "@/components/ui/Container";
 import EmptyState from "@/components/ui/EmptyState";
 import Pagination from "@/components/ui/Pagination";
@@ -47,7 +47,7 @@ export default function DistrictNewsListPage({
         <Container className="pt-6 pb-section">
           <Breadcrumb
             items={[
-              { label: "Ana Sayfa", href: "/" },
+              homeCrumb("tr"),
               { label: "İstanbul", href: "/gayrimenkul-ve-istanbul" },
               { label: "İlçeler", href: districtGuidePath },
               { label: district.name, href: getDistrictPath(district.slug) },

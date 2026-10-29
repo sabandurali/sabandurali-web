@@ -1,8 +1,11 @@
 import assert from "node:assert/strict";
+import { readdirSync, readFileSync, statSync } from "node:fs";
+import path from "node:path";
 import test from "node:test";
+import { fileURLToPath } from "node:url";
 import { createElement as h, type ReactElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import Breadcrumb from "./Breadcrumb";
+import Breadcrumb, { homeCrumb } from "./Breadcrumb";
 import { Button, ButtonLink } from "./Button";
 import Card from "./Card";
 import { cx } from "./cx";
@@ -247,7 +250,7 @@ test("Breadcrumb marks the current page and hides separators", () => {
   const html = render(
     h(Breadcrumb, {
       items: [
-        { label: "Ana Sayfa", href: "/" },
+        homeCrumb("tr"),
         { label: "İlçeler", href: "/istanbul/ilceler" },
         { label: "Esenler" },
       ],
@@ -260,6 +263,34 @@ test("Breadcrumb marks the current page and hides separators", () => {
     /<span aria-current="page" class="text-ink font-bold">Esenler<\/span>/,
   );
   assert.equal(count(html, /<span aria-hidden="true">\/<\/span>/), 2);
+});
+
+test("FRONTEND-6: every breadcrumb starts with the same home crumb", () => {
+  assert.deepEqual(homeCrumb("tr"), { label: "Ana sayfa", href: "/" });
+  assert.deepEqual(homeCrumb("en"), { label: "Home", href: "/en" });
+
+  // No page writes its own home crumb: the label comes from homeCrumb().
+  const root = fileURLToPath(new URL("../../../", import.meta.url));
+  const files = (directory: string): string[] =>
+    readdirSync(directory).flatMap((entry) => {
+      const absolute = path.join(directory, entry);
+      if (statSync(absolute).isDirectory()) return files(absolute);
+      return /\.tsx?$/.test(entry) && !/\.test\.tsx?$/.test(entry)
+        ? [absolute]
+        : [];
+    });
+  const offenders = [
+    ...files(path.join(root, "src/components")),
+    ...files(path.join(root, "src/app")),
+  ]
+    .filter((file) => !file.includes(`${path.sep}admin${path.sep}`))
+    .filter((file) =>
+      /label:\s*"(?:Ana [Ss]ayfa|Home)",\s*href:/.test(
+        readFileSync(file, "utf8"),
+      ),
+    )
+    .map((file) => path.relative(root, file));
+  assert.deepEqual(offenders, []);
 });
 
 test("Disclosure: the panel follows its button and exists while closed", () => {

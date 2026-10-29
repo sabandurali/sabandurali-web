@@ -3,7 +3,7 @@ import DistrictDirectory from "@/components/districts/DistrictDirectory";
 import BackToTop from "@/components/layout/BackToTop";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
-import Breadcrumb from "@/components/ui/Breadcrumb";
+import Breadcrumb, { homeCrumb } from "@/components/ui/Breadcrumb";
 import Container from "@/components/ui/Container";
 import DistrictTileMap from "@/components/ui/DistrictTileMap";
 import Section from "@/components/ui/Section";
@@ -64,7 +64,7 @@ export default async function DistrictIndexPage() {
         <Container as="header" className="pt-6 pb-10 sm:pb-14">
           <Breadcrumb
             items={[
-              { label: "Ana Sayfa", href: "/" },
+              homeCrumb("tr"),
               { label: "İstanbul", href: "/gayrimenkul-ve-istanbul" },
               { label: "İlçeler" },
             ]}

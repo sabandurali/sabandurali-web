@@ -6,6 +6,7 @@ import PageShell from "@/components/workspaces/PageShell";
 import { contactPaths, privacyPaths } from "@/config/site";
 import type { ContactContent } from "@/content/contactContent";
 import type { Locale } from "@/content/homeContent";
+import { homeCrumb } from "@/components/ui/Breadcrumb";
 
 type ContactPageProps = {
   content: ContactContent;
@@ -13,7 +14,6 @@ type ContactPageProps = {
 
 const pageTexts = {
   tr: {
-    home: "Ana sayfa",
     current: "İletişim",
     formTitle: "Mesaj formu",
     formNote:
@@ -21,7 +21,6 @@ const pageTexts = {
     privacyLead: "Kişisel verilerin nasıl işlendiğini okuyun:",
   },
   en: {
-    home: "Home",
     current: "Contact",
     formTitle: "Message form",
     formNote:
@@ -40,10 +39,7 @@ export default function ContactPage({ content }: ContactPageProps) {
         <Container className="grid gap-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
           <PageIntro
             locale={locale}
-            breadcrumb={[
-              { label: texts.home, href: locale === "tr" ? "/" : "/en" },
-              { label: texts.current },
-            ]}
+            breadcrumb={[homeCrumb(locale), { label: texts.current }]}
             eyebrow={content.eyebrow}
             title={content.heading}
             lead={content.description}
