@@ -16,6 +16,11 @@ coding agent (CLAUDE.md, rule 2).
   (`refusePasswordResetWithoutEmail`): a locked-out or forgotten password is
   recovered only by another admin.
 - The last admin cannot be deleted or demoted (`src/lib/payloadDeleteGuards.ts`).
+- Every password that is set (first registration, a new user, a profile edit,
+  a reset) needs at least `MIN_PASSWORD_LENGTH` (12) characters and must not
+  be the account's email address or its local part (`enforcePasswordPolicy`;
+  Payload's own minimum is 3). Existing passwords keep working until they are
+  changed; the owner may ask every account holder to set a new one.
 
 ### The gap
 
@@ -159,7 +164,35 @@ page view is sent. The privacy notice text is the owner's decision.
    enforced one once a Preview deployment shows no violations.
 5. **Admin policy**: the Payload admin loads Monaco from `cdn.jsdelivr.net`
    and runs workers; it needs its own report-only policy before any
-   enforcement.
+   enforcement. The candidate is
+   `adminContentSecurityPolicyReportOnlyDirectives` in
+   `src/lib/securityHeaders.ts` (the public candidate plus Monaco,
+   `data:` fonts and `blob:` media). It is **not sent yet**: wiring it in
+   `next.config.ts` and teaching `scripts/security-headers-check.mjs` to
+   expect it on `/admin` go in one change.
+
+### Local measurement (2026-10-29)
+
+A local production build (`next start`, SQLite, CI environment) was opened
+in Chrome with Playwright:
+
+- Public routes (home TR/EN, about, contact TR/EN, privacy notice, district
+  index and two district guides, focus areas, a section page, books,
+  articles, photography TR/EN, a 404) at 1440 px, plus the home and a
+  district guide at 390, 820 and 1440 px: **no violation** of the
+  report-only policy. The only console errors are the expected
+  `/_vercel/insights/script.js` 404 outside Vercel.
+- Admin, with the candidate injected as a report-only header by the test
+  harness (the server did not send it): login, dashboard, collection lists,
+  create views with Lexical typing, the district guide JSON field rendered
+  in Monaco, the media upload view, the Navigation global and the account
+  view: **no violation** once `admin.avatar` was set to `"default"`.
+  Before that, Payload's default Gravatar avatar loaded
+  `https://www.gravatar.com/avatar/<email hash>` on every admin page.
+
+This does not cover a Vercel Preview (toolbar, Blob media, Web Analytics),
+so step 1 still needs the owner's Preview check. Neither candidate is a
+script defence yet: both keep `'unsafe-inline'` (step 3).
 
 ## 3. Anonymous REST API
 

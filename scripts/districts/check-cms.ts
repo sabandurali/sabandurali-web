@@ -12,7 +12,13 @@ import { createRequire } from "node:module";
 import { readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { decideImport, fingerprint, type ResearchBundle } from "./import-core";
+import {
+  decideImport,
+  fingerprint,
+  isRecord,
+  toFieldRecord,
+  type ResearchBundle,
+} from "./import-core";
 
 const isolatedPrefixes = [
   "/tmp/istanbul-39-",
@@ -87,7 +93,8 @@ try {
     overrideAccess: false,
   });
   assert.equal(anonymousDrafts.totalDocs, 0);
-  const original = docs.docs.find((d) => d.district === "esenler")!;
+  const original = docs.docs.find((d) => d.district === "esenler");
+  assert.ok(original, "esenler draft was imported");
   const restore = structuredClone(original);
   try {
     await assert.rejects(
@@ -119,10 +126,10 @@ try {
     const bundle = JSON.parse(
       await readFile("data/districts/research.json", "utf8"),
     ) as ResearchBundle;
-    const research = bundle.districts.find((d) => d.district === "esenler")!;
+    const research = bundle.districts.find((d) => d.district === "esenler");
+    assert.ok(research, "esenler research record exists");
     assert.equal(
-      decideImport(changed as unknown as Record<string, unknown>, research)
-        .reason,
+      decideImport(toFieldRecord(changed), research).reason,
       "manual/unmanaged content protected",
     );
     const now = new Date().toISOString();
@@ -268,10 +275,10 @@ try {
       draft: true,
       data: {
         importProvenance: {
-          ...(restore.importProvenance as object),
-          fingerprint: fingerprint(
-            restored as unknown as Record<string, unknown>,
-          ),
+          ...(isRecord(restore.importProvenance)
+            ? restore.importProvenance
+            : {}),
+          fingerprint: fingerprint(toFieldRecord(restored)),
         },
       },
     });

@@ -120,6 +120,8 @@ test("configuration: depth cap, anonymous REST limits and a rich text editor the
   assert.match(String(config.upload.responseOnLimit), /4 MiB/);
   // Deliberate refusals are named Forbidden and logged at info level.
   assert.equal(config.loggingLevels.Forbidden, "info");
+  // No Gravatar request (email hash to a third party) from the admin.
+  assert.equal(config.admin.avatar, "default");
 
   for (const slug of [
     "users",
@@ -168,6 +170,123 @@ test("configuration: depth cap, anonymous REST limits and a rich text editor the
     [...INTERNAL_LINK_COLLECTIONS],
   );
   assert.ok(features.has("upload") && features.has("paragraph"));
+});
+
+test("users: every way of setting a password needs 12 characters that are not the email", async () => {
+  const { handleEndpoints } = await import("payload");
+  const restPost = (endpoint: string, body: Record<string, unknown>) =>
+    handleEndpoints({
+      config,
+      request: new Request(`http://localhost:3000/api/users/${endpoint}`, {
+        body: JSON.stringify(body),
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
+      }),
+    });
+  const countUsers = async () =>
+    (await payload.count({ collection: "users" })).totalDocs;
+  const refusedPassword = (pattern: RegExp) => (error: unknown) =>
+    hasStatus(400)(error) &&
+    validationPaths(error).includes("password") &&
+    error instanceof Error &&
+    "data" in error &&
+    pattern.test(JSON.stringify(error.data));
+
+  // The first registration (REST, no account yet) follows the same rule.
+  assert.equal(await countUsers(), 0);
+  for (const password of ["abc", "Short-Pass1", "first@example.com"]) {
+    const response = await restPost("first-register", {
+      confirmPassword: password,
+      email: "first@example.com",
+      password,
+    });
+    assert.equal(response.status, 400, password);
+    assert.match(await response.text(), /Parola/, password);
+  }
+  assert.equal(await countUsers(), 0);
+  const registered = await restPost("first-register", {
+    confirmPassword: "Correct-Horse-0",
+    email: "first@example.com",
+    password: "Correct-Horse-0",
+  });
+  assert.equal(registered.status, 200);
+  const first = await payload.find({
+    collection: "users",
+    where: { email: { equals: "first@example.com" } },
+  });
+  const firstUser = first.docs[0];
+  assert.ok(firstUser);
+
+  // Local API create and update, by an admin or through the account page.
+  await assert.rejects(
+    payload.create({
+      collection: "users",
+      data: { email: "weak@example.com", password: "abc", role: "editor" },
+    }),
+    refusedPassword(/en az 12 karakter/),
+  );
+  await assert.rejects(
+    payload.create({
+      collection: "users",
+      data: {
+        email: "Long.Address@Example.com",
+        password: "long.address@example.com",
+        role: "editor",
+      },
+    }),
+    refusedPassword(/e-posta adresiyle aynı/),
+  );
+  await assert.rejects(
+    payload.update({
+      collection: "users",
+      data: { password: "abc" },
+      id: firstUser.id,
+    }),
+    refusedPassword(/en az 12 karakter/),
+  );
+  await assert.rejects(
+    payload.update({
+      collection: "users",
+      data: { password: "first@example.com" },
+      id: firstUser.id,
+      overrideAccess: false,
+      req: { user: { ...firstUser, collection: "users" } },
+    }),
+    refusedPassword(/e-posta adresiyle aynı/),
+  );
+  assert.equal(await countUsers(), 1);
+
+  // Reset with a valid token: the short password is refused, the token stays.
+  const token = "integration-reset-token";
+  await payload.db.updateOne({
+    collection: "users",
+    data: {
+      resetPasswordExpiration: new Date(Date.now() + 60_000).toISOString(),
+      resetPasswordToken: token,
+    },
+    id: firstUser.id,
+  });
+  await assert.rejects(
+    payload.resetPassword({
+      collection: "users",
+      data: { password: "abc", token },
+      overrideAccess: true,
+    }),
+    refusedPassword(/en az 12 karakter/),
+  );
+  const reset = await payload.resetPassword({
+    collection: "users",
+    data: { password: "Correct-Horse-Reset", token },
+    overrideAccess: true,
+  });
+  assert.ok(reset.token);
+
+  // The next test expects an empty collection (first account is admin).
+  await payload.db.deleteOne({
+    collection: "users",
+    where: { id: { equals: firstUser.id } },
+  });
+  assert.equal(await countUsers(), 0);
 });
 
 test("users: first account is admin, new accounts are editors, the last admin is protected", async () => {

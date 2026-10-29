@@ -17,7 +17,9 @@ import {
   makeHistoricalPhotoData,
   type HistoricalPhotoItem,
   type HistoricalPhotoManifest,
+  type HistoricalCollectionData,
   type HistoricalDocument,
+  type HistoricalPhotoData,
   type HistoricalRepository,
   type HistoricalSnapshot,
   validateHistoricalManifest,
@@ -74,7 +76,7 @@ function historicalPublicPhoto(
 class MemoryRepository implements HistoricalRepository {
   snapshot: HistoricalSnapshot;
   created = { collection: 0, media: 0, photo: 0 };
-  deleted: Array<string | number> = [];
+  deleted: string[] = [];
   failPhoto = false;
   nextId = 100;
 
@@ -87,9 +89,9 @@ class MemoryRepository implements HistoricalRepository {
   async readSnapshot() {
     return structuredClone(this.snapshot);
   }
-  async createCollection(data: Record<string, unknown>) {
+  async createCollection(data: HistoricalCollectionData) {
     this.created.collection++;
-    const document = { id: this.nextId++, ...data };
+    const document = { id: String(this.nextId++), ...data };
     this.snapshot.collections.push(document);
     return structuredClone(document);
   }
@@ -97,7 +99,7 @@ class MemoryRepository implements HistoricalRepository {
   async createMedia(item: HistoricalPhotoItem) {
     this.created.media++;
     const document = {
-      id: this.nextId++,
+      id: String(this.nextId++),
       alt: historicalAlt(item),
       description: historicalDescription(item),
       sourceCopyright: item.requiredAttribution,
@@ -109,26 +111,26 @@ class MemoryRepository implements HistoricalRepository {
     this.snapshot.media.push(document);
     return structuredClone(document);
   }
-  async createPhoto(data: Record<string, unknown>) {
+  async createPhoto(data: HistoricalPhotoData) {
     if (this.failPhoto) throw new Error("fixture photo failure");
     this.created.photo++;
-    const document = { id: this.nextId++, ...data };
+    const document = { id: String(this.nextId++), ...data };
     this.snapshot.photos.push(document);
     return structuredClone(document);
   }
-  async deletePhoto(id: string | number) {
+  async deletePhoto(id: string) {
     this.deleted.push(id);
     this.snapshot.photos = this.snapshot.photos.filter(
       (document) => document.id !== id,
     );
   }
-  async deleteMedia(id: string | number) {
+  async deleteMedia(id: string) {
     this.deleted.push(id);
     this.snapshot.media = this.snapshot.media.filter(
       (document) => document.id !== id,
     );
   }
-  async deleteCollection(id: string | number) {
+  async deleteCollection(id: string) {
     this.deleted.push(id);
     this.snapshot.collections = this.snapshot.collections.filter(
       (document) => document.id !== id,
@@ -188,7 +190,7 @@ test("E: manifest rejects duplicate URLs and district-title pairs", () => {
 
 test("F: imported historical photo metadata is never featured", () => {
   const item = readManifest().items[0];
-  const data = makeHistoricalPhotoData(item, 1, 2);
+  const data = makeHistoricalPhotoData(item, "1", "2");
   assert.equal(data.featured, false);
   assert.equal(data.districtPhotoCategory, "tarih");
   assert.equal(data.takenAt, null);
@@ -341,7 +343,7 @@ test("M: compensating cleanup never deletes pre-existing media or photos", async
 });
 
 test("N: public photo metadata omits private audit and raw source fields", () => {
-  const data = makeHistoricalPhotoData(readManifest().items[0], 1, 2);
+  const data = makeHistoricalPhotoData(readManifest().items[0], "1", "2");
   for (const privateField of [
     "sha256",
     "bytes",

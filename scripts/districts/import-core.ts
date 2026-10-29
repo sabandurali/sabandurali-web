@@ -119,11 +119,34 @@ export function validateBundle(bundle: ResearchBundle) {
       throw new Error(`Invalid sources: ${row.district}`);
   }
 }
+type GuideDistrict = DistrictGuide["district"];
+
+function isGuideDistrict(value: string): value is GuideDistrict {
+  return districts.some((district) => district.slug === value);
+}
+
+export function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+/**
+ * A typed Payload document (or draft) as a plain record of its fields, for
+ * the fingerprint and decision helpers. Spreading copies the fields without
+ * a cast, so a renamed field still fails the typecheck where it is written.
+ */
+export function toFieldRecord(doc: object): Record<string, unknown> {
+  const fields: Record<string, unknown> = { ...doc };
+  return fields;
+}
+
 export function makeDraft(
   row: ResearchRecord,
 ): Partial<DistrictGuide> & Pick<DistrictGuide, "district"> {
+  if (!isGuideDistrict(row.district)) {
+    throw new Error(`Unknown district: ${row.district}`);
+  }
   return {
-    district: row.district as DistrictGuide["district"],
+    district: row.district,
     _status: "draft",
     summary: "",
     history: row.editorial ? "" : row.sections.history,
@@ -179,10 +202,9 @@ export function decideImport(
   row: ResearchRecord,
 ): { action: "create" | "update" | "skip"; reason: string } {
   if (!existing) return { action: "create", reason: "new district draft" };
-  const provenance = existing.importProvenance as Record<
-    string,
-    unknown
-  > | null;
+  const provenance = isRecord(existing.importProvenance)
+    ? existing.importProvenance
+    : null;
   if (
     !provenance?.fingerprint ||
     provenance.fingerprint !== fingerprint(existing)
@@ -193,7 +215,7 @@ export function decideImport(
       adoption?.currentFingerprint === fingerprint(existing) &&
       adoption.contentFingerprint === editorialContentFingerprint(existing) &&
       adoption.contentFingerprint ===
-        editorialContentFingerprint(makeDraft(row) as Record<string, unknown>)
+        editorialContentFingerprint(toFieldRecord(makeDraft(row)))
     )
       return { action: "skip", reason: "unchanged source" };
     return { action: "skip", reason: "manual/unmanaged content protected" };

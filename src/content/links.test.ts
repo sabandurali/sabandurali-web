@@ -4,6 +4,7 @@ import { getSafeArticleHref } from "./articles/article-links";
 import { isPublicSourceUrl } from "./districts/district-content-policy";
 import { normalizeExternalNavigationUrl } from "./navigation/navigation-links";
 import { mapPayloadPage } from "./pages/payload-page-mapper";
+import { validatePageLink } from "../collections/validation";
 import { getSafeHref } from "./links";
 
 const credentialUrls = [
@@ -41,6 +42,34 @@ test("site paths and anchors only when the caller allows them", () => {
     "/makaleler/x",
   );
   assert.equal(getSafeHref("//evil.example", { allowRelative: true }), null);
+  assert.equal(
+    getSafeHref("/kitaplar/x?dil=tr#not", { allowRelative: true }),
+    "/kitaplar/x?dil=tr#not",
+  );
+  // An encoded backslash is an ordinary character of a path on this site.
+  assert.equal(
+    getSafeHref("/%5Cevil.example", { allowRelative: true }),
+    "/%5Cevil.example",
+  );
+});
+
+test("a site path that a browser resolves to another origin is refused", () => {
+  // Browsers read `\` as `/` and drop TAB, LF and CR, so each of these
+  // would open https://evil.example while looking like a site path.
+  for (const href of [
+    "/\\evil.example",
+    "/\\\\evil.example",
+    "/\t/evil.example",
+    "/\n/evil.example",
+    "/\r/evil.example",
+    "/\\/evil.example",
+    "/x\u0000y",
+  ]) {
+    const options = { allowAnchor: true, allowRelative: true };
+    assert.equal(getSafeHref(href, options), null, JSON.stringify(href));
+    assert.notEqual(validatePageLink(href), true, JSON.stringify(href));
+    assert.equal(getSafeArticleHref(href), null, JSON.stringify(href));
+  }
   assert.equal(getSafeHref("#bolum-2"), null);
   assert.equal(getSafeHref("#bolum-2", { allowAnchor: true }), "#bolum-2");
   assert.equal(getSafeHref("#Bölüm", { allowAnchor: true }), null);
