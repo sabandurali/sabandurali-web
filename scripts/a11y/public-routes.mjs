@@ -13,8 +13,10 @@
 //   npm run build && npm run start -- --hostname 127.0.0.1 --port 3101
 //   A11Y_TEST_URL=http://127.0.0.1:3101 npm run e2e:a11y
 // BROWSER_CHANNEL picks the browser (default "chrome", CI uses "chromium").
-// A11Y_FIXTURES=1 checks the detail templates and the CMS block page against
-// a server on the CI fixture database instead (see docs/LOCAL-DEVELOPMENT.md).
+// A11Y_FIXTURES=1 checks the detail templates, the CMS block page, the filled
+// district guide and the CMS navigation against a server on the CI fixture
+// database instead (see docs/LOCAL-DEVELOPMENT.md); each fixture route must
+// also render its fixture texts (`requiredContent`).
 // The JSON report and screenshots go to A11Y_TEST_OUTPUT (default
 // /tmp/public-a11y), never into the repository.
 import assert from "node:assert/strict";
@@ -24,6 +26,7 @@ import { chromium } from "playwright";
 import {
   axeProblems,
   axeTags,
+  contentProblems,
   detailRoutes,
   focusIndicatorProblem,
   localOriginProblem,
@@ -34,6 +37,8 @@ import {
   pickDetailPath,
   reducedMotionProblems,
   routePlan,
+  sameTabStop,
+  skipLinkHydrated,
   skipLinkProblem,
   skippedDetailsProblems,
   viewportWidths,
@@ -50,6 +55,7 @@ const requireDetails =
   plan.requireDetails || process.env.A11Y_REQUIRE_DETAILS === "1";
 await mkdir(output, { recursive: true });
 const maxTabStops = 30;
+const hydrationTimeoutMs = 20_000;
 
 const browser = await chromium.launch({
   headless: true,
@@ -97,6 +103,11 @@ function describeFocus() {
       rect.top < innerHeight &&
       rect.right > 0 &&
       rect.left < innerWidth,
+    // Document coordinates tell two links with the same label apart.
+    position: {
+      x: Math.round(rect.left + scrollX),
+      y: Math.round(rect.top + scrollY),
+    },
     style: pick(style),
     ancestors,
     insideMain: Boolean(element.closest("main")),
@@ -127,6 +138,17 @@ async function open(page, path, expectedStatus) {
   });
   assert.equal(response?.status(), expectedStatus, `${path} status`);
   await page.evaluate(() => document.fonts.ready);
+  // Keyboard checks test the hydrated page. A page that never hydrates its
+  // skip link is not excused: the wait ends and the skip-link check fails.
+  await page
+    .waitForFunction(
+      skipLinkHydrated,
+      await page.evaluateHandle(() => document.body),
+      {
+        timeout: hydrationTimeoutMs,
+      },
+    )
+    .catch(() => {});
 }
 
 async function checkSkipLink(page, path, status) {
@@ -152,7 +174,7 @@ async function checkTabStops(page, path, status, width) {
     await page.evaluate(settleScroll);
     const stop = await page.evaluate(describeFocus);
     if (!stop) break; // focus left the document: the page is done
-    if (previous && stop.label === previous.label) {
+    if (sameTabStop(previous, stop)) {
       repeated += 1;
       if (repeated >= 2) {
         problems.push(`${width}px: focus trap at ${stop.label}`);
@@ -265,6 +287,22 @@ async function checkReducedMotion(page, path, status) {
   }
 }
 
+/** The route renders its fixture content (see `fixtureRoutes`). */
+async function checkContent(page, route) {
+  if (!route.requiredContent && !route.forbiddenContent) return [];
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await open(page, route.path, route.status);
+  const found = {};
+  for (const { selector, text } of route.requiredContent ?? []) {
+    const texts = await page
+      .locator(selector)
+      .evaluateAll((elements) => elements.map((e) => e.textContent ?? ""));
+    found[`${selector} ${text}`] = texts.some((value) => value.includes(text));
+  }
+  const bodyText = await page.evaluate(() => document.body.textContent ?? "");
+  return contentProblems(route, found, bodyText);
+}
+
 async function checkRoute(route) {
   const { path, status, type } = route;
   const page = await context.newPage();
@@ -278,6 +316,7 @@ async function checkRoute(route) {
   const name = path === "/" ? "home" : path.slice(1).replace(/\//g, "_");
   const problems = [];
   const steps = [
+    () => checkContent(page, route),
     () => checkSkipLink(page, path, status),
     () => checkTabStops(page, path, status, 1440),
     () => checkTabStops(page, path, status, 390),

@@ -88,8 +88,18 @@ test("TESTS-INFRA-1: CI renders every detail template from seeded fixtures", () 
   for (const [, url] of fixtures.matchAll(/A11Y_TEST_URL:\s*(\S+)/g))
     assert.equal(url, "http://127.0.0.1:3102");
   // Every fixture route is compiled before the check.
+  const warmUp = new Set(fixtures.match(/(?<=\s)\/[\w/-]*/g) ?? []);
   for (const fixturePath of fixturePaths)
-    assert.ok(fixtures.includes(fixturePath), fixturePath);
+    assert.ok(warmUp.has(fixturePath), fixturePath);
+});
+
+test("TESTS-INFRA-3: the fixture job renders the CMS navigation and the filled guide", () => {
+  const fixtures = job("fixtures");
+  // The district guide follows PAGE_PUBLIC_SOURCE; the header and footer
+  // read the seeded Navigation global only with the payload source.
+  assert.match(fixtures, /NAVIGATION_PUBLIC_SOURCE: payload/);
+  assert.doesNotMatch(fixtures, /NAVIGATION_PUBLIC_SOURCE: static/);
+  assert.ok(fixturePaths.includes("/istanbul/ilceler/esenler"));
 });
 
 test("CI keeps the e2e evidence as a short-lived, SHA-pinned artifact", () => {

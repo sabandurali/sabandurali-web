@@ -20,9 +20,11 @@ import {
   FIXTURE_MARK_EN,
   articleBody,
   bookReviewFields,
+  districtGuideFields,
   fixtureImage,
   fixtureProblems,
   fixtureSlugs,
+  navigationFields,
   pageLayout,
 } from "./fixture-content";
 import { resolveCiSqliteFile } from "./sqlite-schema";
@@ -31,6 +33,7 @@ import { resolveCiSqliteFile } from "./sqlite-schema";
 export const SEEDED_COLLECTIONS = [
   "articles",
   "books",
+  "district-guides",
   "pages",
   "photos",
 ] as const;
@@ -113,6 +116,19 @@ export async function seedFixtures(
         `Refusing: ${collection} already holds ${totalDocs} record(s); the fixtures go into an empty database only.`,
       );
   }
+  const existingNavigation = await payload.findGlobal({
+    slug: "navigation",
+    depth: 0,
+    draft: true,
+  });
+  if (
+    (existingNavigation.headerItems?.length ?? 0) > 0 ||
+    (existingNavigation.footerGroups?.length ?? 0) > 0 ||
+    (existingNavigation.enFooter?.length ?? 0) > 0
+  )
+    throw new Error(
+      "Refusing: the Navigation global already holds links; the fixtures go into an empty database only.",
+    );
 
   const mediaId = await createMedia(payload);
 
@@ -237,6 +253,11 @@ export async function seedFixtures(
       altText: fixtureImage.alt,
       image: mediaId,
       collections: [photoCollection.id],
+      // Also the hero of the district guide fixture.
+      district: FIXTURE_DISTRICT,
+      districtPhotoCategory: "sokak",
+      neighborhood: "CI test mahallesi A",
+      featured: true,
       photographer: "CI test",
       creditLicense: "Telif yok (üretilmiş görsel)",
       publishedAt: minutesAgo(60),
@@ -257,7 +278,35 @@ export async function seedFixtures(
     },
   });
 
+  // The guide's gallery: an archive-style frame with a source record link.
   await payload.create({
+    collection: "photos",
+    locale: "tr",
+    data: {
+      title: `${FIXTURE_MARK}: ilçe arşiv karesi`,
+      slug: fixtureSlugs.districtArchivePhoto,
+      description:
+        "İlçe rehberi galerisinin denetimi için üretilmiş düz renkli görsel.",
+      altText: fixtureImage.alt,
+      image: mediaId,
+      collections: [photoCollection.id],
+      district: FIXTURE_DISTRICT,
+      districtPhotoCategory: "tarih",
+      photographer: "CI test",
+      creditLicense:
+        "Telif yok (üretilmiş görsel) · Kaynak kaydı: https://example.org/ci-test-kaynak-kaydi",
+      publishedAt: minutesAgo(55),
+      _status: "published",
+    },
+  });
+
+  await payload.create({
+    collection: "district-guides",
+    locale: "tr",
+    data: districtGuideFields(Date.now()),
+  });
+
+  const page = await payload.create({
     collection: "pages",
     data: {
       title: `${FIXTURE_MARK}: sayfa blokları`,
@@ -271,6 +320,12 @@ export async function seedFixtures(
       seo: { index: false, follow: false },
       _status: "published",
     },
+  });
+
+  // Published, so the site reads it with NAVIGATION_PUBLIC_SOURCE=payload.
+  await payload.updateGlobal({
+    slug: "navigation",
+    data: navigationFields(String(page.id)),
   });
 
   const counts: Record<string, number> = {};

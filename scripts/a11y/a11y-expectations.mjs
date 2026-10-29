@@ -76,17 +76,76 @@ export const detailRoutes = Object.freeze([
 
 /**
  * Routes that exist only with the CI fixtures (`npm run ci:seed-fixtures`,
- * scripts/ci/fixture-content.ts): a standard CMS page with every block and
- * a district news list with an item. Checked in fixture mode only.
+ * scripts/ci/fixture-content.ts): a standard CMS page with every block, the
+ * filled district guide and a district news list with an item. Checked in
+ * fixture mode only.
+ *
+ * `requiredContent` lists texts the rendered page must contain inside a
+ * selector, so a guide that fell back to its empty states, or a header and
+ * footer that fell back to the static navigation, fails instead of passing
+ * the checks on the wrong markup. `forbiddenContent` must never render (the
+ * guide's private research note). The texts are those of the fixtures; a
+ * test keeps them equal.
  */
 export const fixtureRoutes = Object.freeze([
-  { path: "/ci-test-sayfasi", status: 200, type: "CMS block page" },
+  {
+    path: "/ci-test-sayfasi",
+    status: 200,
+    type: "CMS block page",
+    requiredContent: [
+      { selector: "header", text: "CI test menüsü" },
+      { selector: "footer", text: "CI test bağlantıları" },
+    ],
+  },
+  {
+    path: "/istanbul/ilceler/esenler",
+    status: 200,
+    type: "district guide (filled)",
+    requiredContent: [
+      {
+        selector: "#genel-bakis",
+        text: "CI test kaydı: ilçe rehberi genel bakış metni",
+      },
+      { selector: "#genel-bakis dl", text: "Mahalle" },
+      { selector: "#yasam", text: "M1B" },
+      { selector: "#mahalleler", text: "CI test mahallesi A" },
+      {
+        selector: "#imar",
+        text: "CI test kaydı: tamamlanmış imar satırı",
+      },
+      { selector: "#kareler", text: "CI test kaydı: ilçe arşiv karesi" },
+      {
+        selector: "#kaynaklar",
+        text: "CI test kaydı: kurgusal resmî kaynak",
+      },
+      { selector: "#haberler", text: "CI test kaydı: ilçe haberi şablonu" },
+      { selector: "header", text: "CI test menüsü" },
+      { selector: "footer", text: "CI test bağlantıları" },
+    ],
+    forbiddenContent: ["public dışı araştırma notu"],
+  },
   {
     path: "/istanbul/ilceler/esenler/haberler",
     status: 200,
     type: "district news (filled)",
   },
 ]);
+
+/**
+ * Content problems of a rendered route: `found` maps each required
+ * selector/text pair (`${selector} ${text}`) to whether the page had it,
+ * and `bodyText` is the page's full text for the forbidden texts.
+ */
+export function contentProblems(route, found, bodyText) {
+  const problems = [];
+  for (const { selector, text } of route.requiredContent ?? [])
+    if (!found[`${selector} ${text}`])
+      problems.push(`missing content in ${selector}: "${text}"`);
+  for (const text of route.forbiddenContent ?? [])
+    if (bodyText.includes(text))
+      problems.push(`forbidden content rendered: "${text}"`);
+  return problems;
+}
 
 /**
  * The routes of one run. The static build checks every public route type;
@@ -176,6 +235,22 @@ export function axeProblems(violations) {
 const skipLabel = /İçeriğe geç|Skip to content/;
 
 /**
+ * Whether React has hydrated the skip link (the first `#` link of the
+ * body): React keeps its props on the DOM node under a `__reactProps$`
+ * key. The skip link moves focus with a click handler, so the keyboard
+ * checks wait for it; `next dev` (the fixture run) hydrates a large page
+ * such as the filled district guide well after the load event. Evaluated
+ * in the page, so it stays self-contained.
+ */
+export function skipLinkHydrated(root) {
+  const link = root.querySelector('a[href^="#"]');
+  return (
+    link !== null &&
+    Object.keys(link).some((key) => key.startsWith("__reactProps$"))
+  );
+}
+
+/**
  * The first Tab stop is the visible skip link to the main content, and
  * activating it moves focus into <main>.
  */
@@ -209,6 +284,21 @@ export function menuProblem({ found, opened, firstStop, closed }, required) {
   if (closed?.expanded || !closed?.focusOnButton)
     return "Escape does not close the menu and return focus to its button";
   return null;
+}
+
+/**
+ * Whether two Tab stops are the same element: the same label at the same
+ * place in the document. Distinct links may share a label (the guide's
+ * repeated "[1] Kaynak 1" source references), so the label alone would
+ * report a focus trap where focus moves on.
+ */
+export function sameTabStop(a, b) {
+  return (
+    Boolean(a && b) &&
+    a.label === b.label &&
+    a.position?.x === b.position?.x &&
+    a.position?.y === b.position?.y
+  );
 }
 
 function pixels(value) {

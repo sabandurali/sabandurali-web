@@ -18,11 +18,18 @@ import {
 } from "../a11y/a11y-expectations.mjs";
 import { HOME_BLOCK_TYPES } from "../../src/collections/Pages";
 import { pageBlocks } from "../../src/blocks/pageBlocks";
+import { mapDistrictGuide } from "../../src/content/districts/district-guide-projection";
+import { mapPayloadNavigation } from "../../src/content/navigation/payload-navigation-mapper";
 import {
   FIXTURE_DISTRICT,
+  districtGuideFields,
+  districtGuideFixtureProblems,
+  fixtureGuideMarks,
+  fixtureNavigationMarks,
   fixturePaths,
   fixtureProblems,
   fixtureSlugs,
+  navigationFields,
   pageLayout,
 } from "./fixture-content";
 import { SEEDED_COLLECTIONS, seedEnvironmentProblem } from "./seed-fixtures";
@@ -115,6 +122,59 @@ test("the a11y fixture run reaches every fixture path", () => {
     );
 });
 
+test("the guide fixture states no district fact and passes the content policy", () => {
+  assert.deepEqual(districtGuideFixtureProblems(), []);
+  const now = Date.now();
+  const guide = mapDistrictGuide(districtGuideFields(now), now);
+  assert.ok(guide);
+  // Every section the fixture fills is public, so the page renders it.
+  for (const key of [
+    "summary",
+    "history",
+    "geography",
+    "life",
+    "transportation",
+    "housingTexture",
+    "regionalAssessment",
+    "placesGuide",
+    "distinctiveFeatures",
+    "researchTopics",
+  ] as const)
+    assert.ok(guide[key], key);
+  assert.ok(guide.facts);
+  assert.equal(guide.neighborhoods.length, 2);
+  assert.equal(guide.planningDevelopments.length, 1);
+  assert.equal(guide.sources.length, 2);
+  assert.equal(guide.marketData, null);
+  // The private research note never reaches the projection.
+  assert.ok(!JSON.stringify(guide).includes("public dışı araştırma notu"));
+});
+
+test("the a11y fixture texts are the texts the fixtures render", () => {
+  const guideRoute = fixtureRoutes.find(
+    ({ type }) => type === "district guide (filled)",
+  );
+  assert.ok(guideRoute?.requiredContent && guideRoute.forbiddenContent);
+  assert.equal(guideRoute.path, `/istanbul/ilceler/${FIXTURE_DISTRICT}`);
+  const texts = guideRoute.requiredContent.map(({ text }) => text);
+  for (const mark of [
+    ...Object.values(fixtureGuideMarks),
+    ...Object.values(fixtureNavigationMarks),
+  ])
+    assert.ok(texts.includes(mark), mark);
+  const guide = districtGuideFields(Date.now());
+  assert.ok(guide.summary.includes(fixtureGuideMarks.summary));
+  assert.ok(guideRoute.forbiddenContent.length > 0);
+  for (const text of guideRoute.forbiddenContent)
+    assert.ok(guide.researchNotes.includes(text), text);
+  const navigation = navigationFields("page-id");
+  assert.equal(navigation.headerItems[0]?.label, fixtureNavigationMarks.header);
+  assert.equal(
+    navigation.footerGroups[0]?.title,
+    fixtureNavigationMarks.footer,
+  );
+});
+
 test("the seed writes publicly readable records and refuses a second run", async () => {
   const directory = await mkdtemp(path.join(os.tmpdir(), "ci-fixtures-"));
   const databaseUrl = `file:${path.join(directory, "fixtures.db")}`;
@@ -189,5 +249,62 @@ test("the seed writes publicly readable records and refuses a second run", async
   assert.ok(seo && "index" in seo);
   assert.equal(seo.index, false);
 
+  // The district guide is published and public in full, as the page reads
+  // it; its private research note stays out of the anonymous read.
+  const { docs: guides } = await payload.find({
+    collection: "district-guides",
+    locale: "tr",
+    ...publicRead,
+    where: { district: { equals: FIXTURE_DISTRICT } },
+  });
+  assert.equal(guides.length, 1);
+  assert.ok(!JSON.stringify(guides[0]).includes("public dışı araştırma notu"));
+  const guide = mapDistrictGuide(guides[0]);
+  assert.ok(guide?.summary?.includes(fixtureGuideMarks.summary));
+  assert.equal(guide?.neighborhoods.length, 2);
+  assert.equal(guide?.planningDevelopments.length, 1);
+
+  // Both district photos are public and filed under the fixture district.
+  const { docs: districtPhotos } = await payload.find({
+    collection: "photos",
+    locale: "tr",
+    ...publicRead,
+    where: { district: { equals: FIXTURE_DISTRICT } },
+  });
+  assert.equal(districtPhotos.length, 2);
+
+  // The Navigation global is published and maps to the CMS header and
+  // footer (the site reads it server-side, as the repository does).
+  const navigation = mapPayloadNavigation(
+    await payload.findGlobal({
+      slug: "navigation",
+      depth: 1,
+      draft: false,
+      overrideAccess: true,
+    }),
+    "tr",
+  );
+  assert.ok(navigation);
+  const labels = JSON.stringify(navigation);
+  assert.ok(labels.includes(fixtureNavigationMarks.header));
+  assert.ok(labels.includes(fixtureNavigationMarks.footer));
+  // The CMS page child link resolves to the fixture page.
+  assert.ok(labels.includes(`"/${fixtureSlugs.page}"`));
+
   await assert.rejects(seedFixtures(payload), /empty database only/);
+
+  // With every seeded collection empty again, the filled Navigation global
+  // alone still refuses a second seed (it would overwrite the menus).
+  await payload.updateGlobal({
+    slug: "navigation",
+    data: { footerGroups: [], enFooter: [] },
+  });
+  for (const collection of SEEDED_COLLECTIONS)
+    await payload.delete({ collection, where: { id: { exists: true } } });
+  for (const collection of SEEDED_COLLECTIONS)
+    assert.equal((await payload.count({ collection })).totalDocs, 0);
+  await assert.rejects(
+    seedFixtures(payload),
+    /Navigation global already holds links/,
+  );
 });
