@@ -1,33 +1,19 @@
 import { getText } from "@/content/guards";
-import { getSafeHref } from "@/content/links";
-
-const INTERNAL_ORIGIN = "https://internal.sabandurali.invalid";
-
-function hasUnsafeCharacters(value: string): boolean {
-  return /[\u0000-\u001F\u007F\\]/.test(value);
-}
+import {
+  INTERNAL_ORIGIN,
+  getSafeHref,
+  hasUnsafeUrlCharacters as hasUnsafeCharacters,
+  isSameOriginPath,
+} from "@/content/links";
 
 export function normalizeInternalNavigationPath(value: unknown): string | null {
   const path = getText(value);
 
-  if (
-    path === null ||
-    !path.startsWith("/") ||
-    path.startsWith("//") ||
-    hasUnsafeCharacters(path)
-  ) {
-    return null;
-  }
+  if (path === null || !isSameOriginPath(path)) return null;
 
-  try {
-    const url = new URL(path, INTERNAL_ORIGIN);
+  const url = new URL(path, INTERNAL_ORIGIN);
 
-    if (url.origin !== INTERNAL_ORIGIN) return null;
-
-    return `${url.pathname}${url.search}${url.hash}`;
-  } catch {
-    return null;
-  }
+  return `${url.pathname}${url.search}${url.hash}`;
 }
 
 function normalizeMailto(value: string): string | null {
