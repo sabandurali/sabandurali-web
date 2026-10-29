@@ -1,20 +1,11 @@
 import type { Where } from "payload";
 import { siteUrl } from "@/config/site";
+import { getText, isRecord } from "@/content/guards";
 
 /**
  * Shared validation rules for Payload collections. Everything here is pure so
  * that `node:test` covers it without a database.
  */
-
-export function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
-}
-
-export function getText(value: unknown): string | null {
-  return typeof value === "string" && value.trim().length > 0
-    ? value.trim()
-    : null;
-}
 
 /** Upload and relationship fields that render as images accept only images. */
 export const imageMediaFilter: Where = {

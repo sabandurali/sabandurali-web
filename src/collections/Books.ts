@@ -16,11 +16,10 @@ import {
 import { createBookReviewSlug, normalizeIsbn } from "@/content/books/helpers";
 import { getBookPublicationIssues } from "@/collections/bookPublication";
 import {
-  getText,
   imageMediaFilter,
-  isRecord,
   validateOptionalSiteCanonical,
 } from "@/collections/validation";
+import { getText, isRecord } from "@/content/guards";
 import {
   adminOnly,
   adminOrEditor,

@@ -14,7 +14,7 @@ import type {
   ReadingStatus,
   ReviewStatus,
 } from "@/content/books/types";
-import { getText, isRecord } from "@/collections/validation";
+import { getText, isRecord } from "@/content/guards";
 
 /**
  * Publication gate for book reviews.
