@@ -13,23 +13,23 @@ import {
   historicalAlt,
   historicalCollection,
   historicalDescription,
-  type HistoricalBatch1Item,
-  type HistoricalBatch1Manifest,
+  type HistoricalPhotoItem,
+  type HistoricalPhotoManifest,
   type HistoricalDocument,
   type HistoricalRepository,
   type HistoricalSnapshot,
   validateHistoricalManifest,
   verifyDownloadedBytes,
-} from "./historical-district-batch1-core";
+} from "./historical-district-photo-engine";
 import {
   historicalBatch2Config,
   historicalBatch2Districts,
 } from "./historical-district-batch2-config";
 
-function readManifest(): HistoricalBatch1Manifest {
+function readManifest(): HistoricalPhotoManifest {
   return JSON.parse(
     readFileSync("data/districts/historical-photo-batch2.json", "utf8"),
-  ) as HistoricalBatch1Manifest;
+  ) as HistoricalPhotoManifest;
 }
 
 class MemoryRepository implements HistoricalRepository {
@@ -51,7 +51,7 @@ class MemoryRepository implements HistoricalRepository {
     throw new Error("Batch 2 must never create a collection");
   }
   async updateCollectionEnglish() {}
-  async createMedia(item: HistoricalBatch1Item) {
+  async createMedia(item: HistoricalPhotoItem) {
     this.created.media++;
     const document = {
       id: this.nextId++,
@@ -108,7 +108,7 @@ function repositoryWithCollection(extra: Partial<HistoricalSnapshot> = {}) {
   });
 }
 
-function fileMap(manifest: HistoricalBatch1Manifest): Map<string, string> {
+function fileMap(manifest: HistoricalPhotoManifest): Map<string, string> {
   return new Map(
     manifest.items.map((item) => [item.recordUrl, `/tmp/${item.district}.jpg`]),
   );

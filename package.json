@@ -27,6 +27,7 @@
     "e2e:districts:cms": "tsx scripts/districts/check-cms.ts",
     "e2e:districts:routes": "node scripts/districts/acceptance.mjs",
     "e2e:content-trust": "node scripts/content-trust-routes.mjs",
+    "e2e:a11y": "node scripts/a11y/public-routes.mjs",
     "test:districts:content": "tsx scripts/districts/check-content.ts",
     "report:districts:content": "tsx scripts/districts/check-content.ts --report reports/istanbul-39/content-acceptance.json",
     "historical-photo:batch2:dry-run": "tsx scripts/photos/import-historical-district-batch2.ts --dry-run",
@@ -50,6 +51,7 @@
     "sharp": "0.35.5"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
     "@electric-sql/pglite": "0.5.9",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^24",

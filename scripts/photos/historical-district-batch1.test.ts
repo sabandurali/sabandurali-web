@@ -12,23 +12,26 @@ import {
   buildHistoricalPlan,
   configurationStatus,
   historicalAlt,
-  historicalBatch1Districts,
   historicalCollection,
   historicalDescription,
   makeHistoricalPhotoData,
-  type HistoricalBatch1Item,
-  type HistoricalBatch1Manifest,
+  type HistoricalPhotoItem,
+  type HistoricalPhotoManifest,
   type HistoricalDocument,
   type HistoricalRepository,
   type HistoricalSnapshot,
   validateHistoricalManifest,
   verifyDownloadedBytes,
-} from "./historical-district-batch1-core";
+} from "./historical-district-photo-engine";
+import {
+  historicalBatch1Config as batch1,
+  historicalBatch1Districts,
+} from "./historical-district-batch1-config";
 
-function readManifest(): HistoricalBatch1Manifest {
+function readManifest(): HistoricalPhotoManifest {
   return JSON.parse(
     readFileSync("data/districts/historical-photo-batch1.json", "utf8"),
-  ) as HistoricalBatch1Manifest;
+  ) as HistoricalPhotoManifest;
 }
 
 function historicalPublicPhoto(
@@ -91,7 +94,7 @@ class MemoryRepository implements HistoricalRepository {
     return structuredClone(document);
   }
   async updateCollectionEnglish() {}
-  async createMedia(item: HistoricalBatch1Item) {
+  async createMedia(item: HistoricalPhotoItem) {
     this.created.media++;
     const document = {
       id: this.nextId++,
@@ -133,7 +136,7 @@ class MemoryRepository implements HistoricalRepository {
   }
 }
 
-function fileMap(manifest: HistoricalBatch1Manifest): Map<string, string> {
+function fileMap(manifest: HistoricalPhotoManifest): Map<string, string> {
   return new Map(
     manifest.items.map((item) => [item.recordUrl, `/tmp/${item.district}.jpg`]),
   );
@@ -141,7 +144,7 @@ function fileMap(manifest: HistoricalBatch1Manifest): Map<string, string> {
 
 test("A: manifest contains only publication-safe allowed rights", () => {
   const manifest = readManifest();
-  assert.doesNotThrow(() => validateHistoricalManifest(manifest));
+  assert.doesNotThrow(() => validateHistoricalManifest(manifest, batch1));
   assert.ok(manifest.items.every((item) => item.publicationSafe));
   assert.ok(
     manifest.items.every(
@@ -178,7 +181,7 @@ test("E: manifest rejects duplicate URLs and district-title pairs", () => {
   const duplicate = structuredClone(manifest);
   duplicate.items[1].downloadUrl = duplicate.items[0].downloadUrl;
   assert.throws(
-    () => validateHistoricalManifest(duplicate),
+    () => validateHistoricalManifest(duplicate, batch1),
     /duplicate source or title/,
   );
 });
@@ -220,6 +223,7 @@ test("I: initial dry-run is exactly 1 collection, 11 media, 11 photos and zero w
   const plan = buildHistoricalPlan(
     readManifest(),
     await new MemoryRepository().readSnapshot(),
+    batch1,
   );
   assert.deepEqual(plan.count, {
     collectionCreate: 1,
@@ -233,9 +237,13 @@ test("I: initial dry-run is exactly 1 collection, 11 media, 11 photos and zero w
 test("J: a completed apply is idempotent and verifies as all skip", async () => {
   const manifest = readManifest();
   const repository = new MemoryRepository();
-  await applyHistoricalPlan(manifest, repository, fileMap(manifest));
+  await applyHistoricalPlan(manifest, repository, fileMap(manifest), batch1);
   const writes = structuredClone(repository.created);
-  const second = buildHistoricalPlan(manifest, await repository.readSnapshot());
+  const second = buildHistoricalPlan(
+    manifest,
+    await repository.readSnapshot(),
+    batch1,
+  );
   assert.deepEqual(second.count, {
     collectionCreate: 0,
     mediaCreate: 0,
@@ -253,7 +261,7 @@ test("J2: media re-encoded by the upload (other size, no EXIF) is a conflict, ne
   // instead of silently treating a different file as the audited source.
   const manifest = readManifest();
   const repository = new MemoryRepository();
-  await applyHistoricalPlan(manifest, repository, fileMap(manifest));
+  await applyHistoricalPlan(manifest, repository, fileMap(manifest), batch1);
   const snapshot = await repository.readSnapshot();
   const reencoded: HistoricalSnapshot = {
     ...snapshot,
@@ -262,7 +270,7 @@ test("J2: media re-encoded by the upload (other size, no EXIF) is a conflict, ne
       filesize: Number(document.filesize) - 1,
     })),
   };
-  const plan = buildHistoricalPlan(manifest, reencoded);
+  const plan = buildHistoricalPlan(manifest, reencoded, batch1);
   assert.deepEqual(plan.count, {
     collectionCreate: 0,
     mediaCreate: 0,
@@ -292,7 +300,7 @@ test("L: photo creation failure removes only records created by this run", async
   const repository = new MemoryRepository();
   repository.failPhoto = true;
   await assert.rejects(
-    () => applyHistoricalPlan(manifest, repository, fileMap(manifest)),
+    () => applyHistoricalPlan(manifest, repository, fileMap(manifest), batch1),
     /cleaned up/,
   );
   assert.deepEqual(repository.snapshot, {
@@ -320,7 +328,7 @@ test("M: compensating cleanup never deletes pre-existing media or photos", async
   repository.failPhoto = true;
   const manifest = readManifest();
   await assert.rejects(() =>
-    applyHistoricalPlan(manifest, repository, fileMap(manifest)),
+    applyHistoricalPlan(manifest, repository, fileMap(manifest), batch1),
   );
   assert.ok(
     repository.snapshot.media.some(({ id }) => id === existingMedia.id),
@@ -360,9 +368,11 @@ test("O: apply approvals are separate and SHA-bound", () => {
     VERCEL_GIT_COMMIT_SHA: sha,
     PRODUCTION_HISTORICAL_PHOTO_BATCH1_DRY_RUN_APPROVED_SHA: sha,
   };
-  assert.doesNotThrow(() => assertHistoricalEnvironment(base, "dry-run"));
+  assert.doesNotThrow(() =>
+    assertHistoricalEnvironment(base, "dry-run", batch1),
+  );
   assert.throws(
-    () => assertHistoricalEnvironment(base, "apply"),
+    () => assertHistoricalEnvironment(base, "apply", batch1),
     /import and PITR approvals bound to the deployed SHA/,
   );
   const approved = {
@@ -370,12 +380,14 @@ test("O: apply approvals are separate and SHA-bound", () => {
     PRODUCTION_HISTORICAL_PHOTO_BATCH1_IMPORT_APPROVED_SHA: sha,
     PRODUCTION_HISTORICAL_PHOTO_BATCH1_PITR_CONFIRMED_SHA: sha,
   };
-  assert.doesNotThrow(() => assertHistoricalEnvironment(approved, "apply"));
+  assert.doesNotThrow(() =>
+    assertHistoricalEnvironment(approved, "apply", batch1),
+  );
   assert.deepEqual(
     {
-      import: configurationStatus(approved).IMPORT_APPROVAL,
-      pitr: configurationStatus(approved).PITR_CONFIRMATION,
-      retired: configurationStatus(approved).RETIRED_BOOLEAN_APPROVALS,
+      import: configurationStatus(approved, batch1).IMPORT_APPROVAL,
+      pitr: configurationStatus(approved, batch1).PITR_CONFIRMATION,
+      retired: configurationStatus(approved, batch1).RETIRED_BOOLEAN_APPROVALS,
     },
     { import: "PRESENT_VALID", pitr: "PRESENT_VALID", retired: "ABSENT" },
   );
@@ -389,15 +401,19 @@ test("O: apply approvals are separate and SHA-bound", () => {
     { PRODUCTION_HISTORICAL_PHOTO_BATCH1_PITR_CONFIRMED_SHA: "" },
   ]) {
     assert.throws(
-      () => assertHistoricalEnvironment({ ...approved, ...stale }, "apply"),
+      () =>
+        assertHistoricalEnvironment({ ...approved, ...stale }, "apply", batch1),
       /bound to the deployed SHA/,
     );
   }
   assert.equal(
-    configurationStatus({
-      ...approved,
-      PRODUCTION_HISTORICAL_PHOTO_BATCH1_PITR_CONFIRMED_SHA: otherSha,
-    }).PITR_CONFIRMATION,
+    configurationStatus(
+      {
+        ...approved,
+        PRODUCTION_HISTORICAL_PHOTO_BATCH1_PITR_CONFIRMED_SHA: otherSha,
+      },
+      batch1,
+    ).PITR_CONFIRMATION,
     "PRESENT_INVALID",
   );
 
@@ -409,12 +425,17 @@ test("O: apply approvals are separate and SHA-bound", () => {
   ]) {
     for (const mode of ["dry-run", "apply", "verify"] as const) {
       assert.throws(
-        () => assertHistoricalEnvironment({ ...approved, ...retired }, mode),
+        () =>
+          assertHistoricalEnvironment(
+            { ...approved, ...retired },
+            mode,
+            batch1,
+          ),
         /retired boolean approvals/,
       );
     }
     assert.equal(
-      configurationStatus({ ...approved, ...retired })
+      configurationStatus({ ...approved, ...retired }, batch1)
         .RETIRED_BOOLEAN_APPROVALS,
       "PRESENT_INVALID",
     );
@@ -429,6 +450,7 @@ test("O: apply approvals are separate and SHA-bound", () => {
           ),
         },
         "dry-run",
+        batch1,
       ),
     /SHA-bound/,
   );

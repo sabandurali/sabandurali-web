@@ -8,7 +8,9 @@ document exactly which gates, baselines and fingerprints protected each write.
 Do not copy them for new work. Every importer here repeats the same gate around a
 hard-coded batch, so a fix in one copy never reaches the others. A new Production
 import needs one parameterised engine with a small per-batch configuration (the
-pattern of `scripts/photos/`: one engine plus a config per batch), a dry-run, exact
+pattern of `scripts/photos/`: the engine `historical-district-photo-engine.ts`, the
+runner `historical-district-photo-importer.ts`, and per batch only
+`historical-district-batch<N>-config.ts` plus a thin `import-historical-district-batch<N>.ts`), a dry-run, exact
 counts, SHA-bound approval, verified PITR and read-only verification
 (`docs/PROJECT-STATE.md` §K).
 

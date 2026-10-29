@@ -101,9 +101,36 @@ jobs:
           DISTRICT_TEST_OUTPUT: ${{ runner.temp }}/istanbul-39-acceptance
           BROWSER_CHANNEL: chromium
 
+      # Definition of Done on every public route type (TR/EN, lists, details
+      # when published, contact, 404): axe WCAG 2.2 AA, no horizontal scroll
+      # at 390/820/1440 px, skip link, focus indicator, header menu keyboard
+      # use and reduced motion.
+      - name: E2E accessibility and layout (Playwright + axe)
+        run: npm run e2e:a11y
+        env:
+          A11Y_TEST_URL: http://127.0.0.1:3101
+          A11Y_TEST_OUTPUT: ${{ runner.temp }}/public-a11y
+          BROWSER_CHANNEL: chromium
+
       - name: Server log
         if: failure()
         run: cat "$RUNNER_TEMP/next-start.log" || true
+
+      # The e2e reports and screenshots, kept also when a check fails so the
+      # failing route, width or page error can be inspected without a rerun.
+      # They come from the CI-only static build: no secret or production data.
+      - name: Upload e2e evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: e2e-evidence
+          path: |
+            ${{ runner.temp }}/content-trust-routes
+            ${{ runner.temp }}/istanbul-39-acceptance
+            ${{ runner.temp }}/public-a11y
+            ${{ runner.temp }}/next-start.log
+          if-no-files-found: ignore
+          retention-days: 7
 
   audit:
     name: Audit production dependencies

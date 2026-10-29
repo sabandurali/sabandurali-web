@@ -1,7 +1,12 @@
+/**
+ * Batch-independent engine of the verified historical district photo
+ * importers: manifest validation, planning, SHA-bound approval gates, apply
+ * and verify. Each batch supplies a `HistoricalBatchConfig` in its own
+ * `historical-district-batch<N>-config.ts`; the engine never defaults to one.
+ */
 import { createHash } from "node:crypto";
 import { districts } from "../../src/content/districts/district-registry";
 
-export const historicalBatch1Name = "historical-district-photos-batch1";
 export const historicalCollection = {
   tr: {
     title: "Tarihi İstanbul",
@@ -17,34 +22,12 @@ export const historicalCollection = {
   },
 } as const;
 
-export const historicalBatch1Districts = [
-  "bakirkoy",
-  "besiktas",
-  "beyoglu",
-  "eyupsultan",
-  "fatih",
-  "kagithane",
-  "sariyer",
-  "adalar",
-  "beykoz",
-  "kadikoy",
-  "uskudar",
-] as const;
-
 export type HistoricalBatchConfig = {
   name: string;
   label: string;
   districts: readonly string[];
   envPrefix: string;
   requireExistingCollection: boolean;
-};
-
-export const historicalBatch1Config: HistoricalBatchConfig = {
-  name: historicalBatch1Name,
-  label: "Historical Batch 1",
-  districts: historicalBatch1Districts,
-  envPrefix: "PRODUCTION_HISTORICAL_PHOTO_BATCH1",
-  requireExistingCollection: false,
 };
 
 const allowedLicenses = new Set([
@@ -56,7 +39,7 @@ const allowedLicenses = new Set([
   "CC BY-SA",
 ]);
 
-export type HistoricalBatch1Item = {
+export type HistoricalPhotoItem = {
   district: string;
   title: string;
   depictedPlace: string;
@@ -77,11 +60,11 @@ export type HistoricalBatch1Item = {
   publicationSafe: boolean;
 };
 
-export type HistoricalBatch1Manifest = {
+export type HistoricalPhotoManifest = {
   schemaVersion: number;
   batch: string;
   auditedAt: string;
-  items: HistoricalBatch1Item[];
+  items: HistoricalPhotoItem[];
 };
 
 export type HistoricalDocument = Record<string, unknown> & {
@@ -95,7 +78,7 @@ export type HistoricalSnapshot = {
 };
 
 export type HistoricalPlanEntry = {
-  item: HistoricalBatch1Item;
+  item: HistoricalPhotoItem;
   media: "create" | "skip" | "conflict";
   photo: "create" | "skip" | "conflict";
   existingMedia?: HistoricalDocument;
@@ -124,7 +107,7 @@ export type HistoricalRepository = {
     data: Record<string, unknown>,
   ): Promise<void>;
   createMedia(
-    item: HistoricalBatch1Item,
+    item: HistoricalPhotoItem,
     filePath: string,
   ): Promise<HistoricalDocument>;
   createPhoto(data: Record<string, unknown>): Promise<HistoricalDocument>;
@@ -133,7 +116,7 @@ export type HistoricalRepository = {
   deleteCollection(id: number | string): Promise<void>;
 };
 
-export class HistoricalBatch1Error extends Error {
+export class HistoricalPhotoImportError extends Error {
   readonly category:
     | "approval_failed"
     | "configuration_failed"
@@ -144,9 +127,12 @@ export class HistoricalBatch1Error extends Error {
     | "cleanup_failed"
     | "verify_failed";
 
-  constructor(category: HistoricalBatch1Error["category"], message: string) {
+  constructor(
+    category: HistoricalPhotoImportError["category"],
+    message: string,
+  ) {
     super(message);
-    this.name = "HistoricalBatch1Error";
+    this.name = "HistoricalPhotoImportError";
     this.category = category;
   }
 }
@@ -173,50 +159,46 @@ function sameId(a: unknown, b: unknown): boolean {
 
 function containsSource(
   document: HistoricalDocument,
-  item: HistoricalBatch1Item,
+  item: HistoricalPhotoItem,
 ): boolean {
   return [document.sourceCopyright, document.creditLicense].some(
     (value) => typeof value === "string" && value.includes(item.recordUrl),
   );
 }
 
-export function historicalFilename(item: HistoricalBatch1Item): string {
+export function historicalFilename(item: HistoricalPhotoItem): string {
   return `historical-${item.district}-${item.sha256.slice(0, 12)}.jpg`;
 }
 
-export function historicalAlt(item: HistoricalBatch1Item): string {
+export function historicalAlt(item: HistoricalPhotoItem): string {
   return `${item.depictedPlace}, ${item.approximateDate} tarihî görünümü`;
 }
 
-export function historicalDescription(item: HistoricalBatch1Item): string {
+export function historicalDescription(item: HistoricalPhotoItem): string {
   return `${item.depictedPlace}. Yaklaşık tarih: ${item.approximateDate}.`;
 }
 
 export function historicalNeighborhood(
-  item: HistoricalBatch1Item,
+  item: HistoricalPhotoItem,
 ): string | null {
-  const safe: Partial<
-    Record<(typeof historicalBatch1Districts)[number], string>
-  > = {
+  const safe: Readonly<Partial<Record<string, string>>> = {
     bakirkoy: "Yeşilköy",
     besiktas: "Bebek",
     sariyer: "Tarabya",
   };
-  return (
-    safe[item.district as (typeof historicalBatch1Districts)[number]] ?? null
-  );
+  return safe[item.district] ?? null;
 }
 
 export function validateHistoricalManifest(
-  manifest: HistoricalBatch1Manifest,
-  batchConfig: HistoricalBatchConfig = historicalBatch1Config,
+  manifest: HistoricalPhotoManifest,
+  batchConfig: HistoricalBatchConfig,
 ): void {
   if (
     manifest.schemaVersion !== 1 ||
     manifest.batch !== batchConfig.name ||
     manifest.items.length !== batchConfig.districts.length
   ) {
-    throw new HistoricalBatch1Error(
+    throw new HistoricalPhotoImportError(
       "input_failed",
       `${batchConfig.label} manifest header is invalid.`,
     );
@@ -229,7 +211,7 @@ export function validateHistoricalManifest(
   const seenTitles = new Set<string>();
   for (const item of manifest.items) {
     if (!item.publicationSafe || !allowedLicenses.has(item.license)) {
-      throw new HistoricalBatch1Error(
+      throw new HistoricalPhotoImportError(
         "input_failed",
         "Manifest contains an unsafe rights entry.",
       );
@@ -238,13 +220,13 @@ export function validateHistoricalManifest(
       !knownDistricts.has(item.district) ||
       !expectedDistricts.has(item.district)
     ) {
-      throw new HistoricalBatch1Error(
+      throw new HistoricalPhotoImportError(
         "input_failed",
         "Manifest contains an unexpected district.",
       );
     }
     if (seenDistricts.has(item.district)) {
-      throw new HistoricalBatch1Error(
+      throw new HistoricalPhotoImportError(
         "input_failed",
         "Manifest contains a duplicate district.",
       );
@@ -253,13 +235,13 @@ export function validateHistoricalManifest(
       !item.recordUrl.startsWith("https://") ||
       !item.downloadUrl.startsWith("https://")
     ) {
-      throw new HistoricalBatch1Error(
+      throw new HistoricalPhotoImportError(
         "input_failed",
         "Manifest URLs must use HTTPS.",
       );
     }
     if (!/^[a-f0-9]{64}$/.test(item.sha256)) {
-      throw new HistoricalBatch1Error(
+      throw new HistoricalPhotoImportError(
         "input_failed",
         "Manifest SHA-256 is invalid.",
       );
@@ -270,7 +252,7 @@ export function validateHistoricalManifest(
       item.width <= 0 ||
       item.height <= 0
     ) {
-      throw new HistoricalBatch1Error(
+      throw new HistoricalPhotoImportError(
         "input_failed",
         "Manifest image metadata is invalid.",
       );
@@ -281,7 +263,7 @@ export function validateHistoricalManifest(
       seenDownloads.has(item.downloadUrl) ||
       seenTitles.has(normalizedTitle)
     ) {
-      throw new HistoricalBatch1Error(
+      throw new HistoricalPhotoImportError(
         "input_failed",
         "Manifest contains a duplicate source or title.",
       );
@@ -292,7 +274,7 @@ export function validateHistoricalManifest(
     seenTitles.add(normalizedTitle);
   }
   if ([...expectedDistricts].some((district) => !seenDistricts.has(district))) {
-    throw new HistoricalBatch1Error(
+    throw new HistoricalPhotoImportError(
       "input_failed",
       "Manifest district set is incomplete.",
     );
@@ -325,7 +307,7 @@ function collectionMatches(document: HistoricalDocument): boolean {
  */
 function mediaMatches(
   document: HistoricalDocument,
-  item: HistoricalBatch1Item,
+  item: HistoricalPhotoItem,
 ): boolean {
   return (
     text(document.alt) === historicalAlt(item) &&
@@ -340,7 +322,7 @@ function mediaMatches(
 
 function photoMatches(
   document: HistoricalDocument,
-  item: HistoricalBatch1Item,
+  item: HistoricalPhotoItem,
   media: HistoricalDocument,
   collection: HistoricalDocument,
 ): boolean {
@@ -366,9 +348,9 @@ function photoMatches(
 }
 
 export function buildHistoricalPlan(
-  manifest: HistoricalBatch1Manifest,
+  manifest: HistoricalPhotoManifest,
   snapshot: HistoricalSnapshot,
-  batchConfig: HistoricalBatchConfig = historicalBatch1Config,
+  batchConfig: HistoricalBatchConfig,
 ): HistoricalPlan {
   validateHistoricalManifest(manifest, batchConfig);
   const collections = snapshot.collections.filter(collectionMatches);
@@ -470,7 +452,7 @@ export function buildHistoricalPlan(
 }
 
 export function makeHistoricalPhotoData(
-  item: HistoricalBatch1Item,
+  item: HistoricalPhotoItem,
   mediaId: number | string,
   collectionId: number | string,
 ): Record<string, unknown> {
@@ -497,7 +479,7 @@ export function makeHistoricalPhotoData(
 export function assertHistoricalEnvironment(
   env: Readonly<Record<string, string | undefined>>,
   mode: "dry-run" | "apply" | "verify",
-  batchConfig: HistoricalBatchConfig = historicalBatch1Config,
+  batchConfig: HistoricalBatchConfig,
 ): void {
   if (
     env.PAYLOAD_DATABASE !== "postgres" ||
@@ -506,14 +488,14 @@ export function assertHistoricalEnvironment(
     !env.PAYLOAD_SECRET ||
     !env.BLOB_READ_WRITE_TOKEN
   ) {
-    throw new HistoricalBatch1Error(
+    throw new HistoricalPhotoImportError(
       "configuration_failed",
       "Production PostgreSQL and Vercel Blob configuration is required.",
     );
   }
   const retired = retiredHistoricalApprovalVariables(env, batchConfig);
   if (retired.length > 0) {
-    throw new HistoricalBatch1Error(
+    throw new HistoricalPhotoImportError(
       "approval_failed",
       `${batchConfig.label} refuses retired boolean approvals; remove ${retired.join(", ")}.`,
     );
@@ -526,7 +508,7 @@ export function assertHistoricalEnvironment(
     env[`${batchConfig.envPrefix}_DRY_RUN_APPROVED_SHA`] ===
       env.VERCEL_GIT_COMMIT_SHA;
   if (!shaBound) {
-    throw new HistoricalBatch1Error(
+    throw new HistoricalPhotoImportError(
       "approval_failed",
       `${batchConfig.label} requires SHA-bound Production approval.`,
     );
@@ -541,7 +523,7 @@ export function assertHistoricalEnvironment(
       env[`${batchConfig.envPrefix}_PITR_CONFIRMED_SHA`] !==
         env.VERCEL_GIT_COMMIT_SHA)
   ) {
-    throw new HistoricalBatch1Error(
+    throw new HistoricalPhotoImportError(
       "approval_failed",
       `${batchConfig.label} apply requires import and PITR approvals bound to the deployed SHA.`,
     );
@@ -556,7 +538,7 @@ export function assertHistoricalEnvironment(
  */
 export function retiredHistoricalApprovalVariables(
   env: Readonly<Record<string, string | undefined>>,
-  batchConfig: HistoricalBatchConfig = historicalBatch1Config,
+  batchConfig: HistoricalBatchConfig,
 ): string[] {
   return [
     `${batchConfig.envPrefix}_IMPORT_APPROVED`,
@@ -577,7 +559,7 @@ function shaApprovalStatus(
 
 export function configurationStatus(
   env: Readonly<Record<string, string | undefined>>,
-  batchConfig: HistoricalBatchConfig = historicalBatch1Config,
+  batchConfig: HistoricalBatchConfig,
 ) {
   const required = [
     "DATABASE_URL",
@@ -634,12 +616,12 @@ export function configurationStatus(
 }
 
 export function verifyDownloadedBytes(
-  item: HistoricalBatch1Item,
+  item: HistoricalPhotoItem,
   bytes: Uint8Array,
 ): void {
   const digest = createHash("sha256").update(bytes).digest("hex");
   if (bytes.byteLength !== item.bytes || digest !== item.sha256) {
-    throw new HistoricalBatch1Error(
+    throw new HistoricalPhotoImportError(
       "remote_changed",
       "A historical source file changed after audit.",
     );
@@ -647,10 +629,10 @@ export function verifyDownloadedBytes(
 }
 
 export async function applyHistoricalPlan(
-  manifest: HistoricalBatch1Manifest,
+  manifest: HistoricalPhotoManifest,
   repository: HistoricalRepository,
   filePaths: ReadonlyMap<string, string>,
-  batchConfig: HistoricalBatchConfig = historicalBatch1Config,
+  batchConfig: HistoricalBatchConfig,
 ): Promise<HistoricalPlan> {
   const plan = buildHistoricalPlan(
     manifest,
@@ -658,7 +640,7 @@ export async function applyHistoricalPlan(
     batchConfig,
   );
   if (plan.count.conflict > 0) {
-    throw new HistoricalBatch1Error(
+    throw new HistoricalPhotoImportError(
       "conflict",
       `${batchConfig.label} plan contains a conflict.`,
     );
@@ -683,7 +665,7 @@ export async function applyHistoricalPlan(
       if (!media) {
         const filePath = filePaths.get(entry.item.recordUrl);
         if (!filePath)
-          throw new HistoricalBatch1Error(
+          throw new HistoricalPhotoImportError(
             "input_failed",
             "Verified local source file is missing.",
           );
@@ -709,7 +691,7 @@ export async function applyHistoricalPlan(
       verified.count.photoCreate !== 0 ||
       verified.count.skip !== manifest.items.length
     ) {
-      throw new HistoricalBatch1Error(
+      throw new HistoricalPhotoImportError(
         "verify_failed",
         "Historical Batch 1 post-apply verification failed.",
       );
@@ -722,13 +704,13 @@ export async function applyHistoricalPlan(
       if (createdCollection)
         await repository.deleteCollection(createdCollection.id);
     } catch {
-      throw new HistoricalBatch1Error(
+      throw new HistoricalPhotoImportError(
         "cleanup_failed",
         "Historical Batch 1 compensating cleanup failed.",
       );
     }
-    if (error instanceof HistoricalBatch1Error) throw error;
-    throw new HistoricalBatch1Error(
+    if (error instanceof HistoricalPhotoImportError) throw error;
+    throw new HistoricalPhotoImportError(
       "write_failed",
       "Historical Batch 1 write failed and created records were cleaned up.",
     );

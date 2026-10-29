@@ -1,4 +1,4 @@
-import type { HistoricalBatchConfig } from "./historical-district-batch1-core";
+import type { HistoricalBatchConfig } from "./historical-district-photo-engine";
 
 export const historicalBatch2Districts = [
   "sile",
