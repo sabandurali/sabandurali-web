@@ -19,6 +19,8 @@ type CardProps = {
    * link already names the destination). */
   cta?: string;
   prefetch?: boolean;
+  /** Language of the linked page when it differs from this page's. */
+  hrefLang?: string;
   className?: string;
 };
 
@@ -37,16 +39,19 @@ export const cardFocusClassName =
 export function CardTitleLink({
   href,
   prefetch,
+  hrefLang,
   children,
 }: {
   href: string;
   prefetch?: boolean;
+  hrefLang?: string;
   children: ReactNode;
 }) {
   return (
     <UiLink
       href={href}
       prefetch={prefetch}
+      hrefLang={hrefLang}
       data-card-link=""
       className="text-ink no-underline decoration-2 underline-offset-[5px] after:absolute after:inset-0 after:content-[''] hover:underline focus-visible:outline-none focus-visible:[box-shadow:none]"
     >
@@ -92,12 +97,13 @@ export default function Card({
   children,
   cta,
   prefetch,
+  hrefLang,
   className,
 }: CardProps) {
   const heading = createElement(
     `h${headingLevel}`,
     { className: "m-0 type-card-title" },
-    <CardTitleLink href={href} prefetch={prefetch}>
+    <CardTitleLink href={href} prefetch={prefetch} hrefLang={hrefLang}>
       {title}
     </CardTitleLink>,
   );

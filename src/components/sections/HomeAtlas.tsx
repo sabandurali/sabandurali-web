@@ -70,6 +70,7 @@ function FeaturedGuideCard({
     <Card
       title={district.name}
       href={getDistrictPath(featured.slug)}
+      hrefLang={locale === "en" ? "tr" : undefined}
       headingLevel={4}
       cta={copy.guideCta}
       media={
@@ -144,6 +145,7 @@ export default function HomeAtlas({ locale, featured }: HomeAtlasProps) {
         className="mt-8"
         locale={locale}
         featuredSlug={featured?.slug}
+        hrefLang={locale === "en" ? "tr" : undefined}
         groupHeadingLevel={3}
         caption={copy.caption ?? undefined}
       />
