@@ -313,7 +313,7 @@ Historical imports set `featured: false`. Hero selection prefers an explicitly f
 
 ### L.1 Approving a historical photo import
 
-The importers (`scripts/photos/import-historical-district-batch1.ts` and `…-batch2.ts`, prefix `PRODUCTION_HISTORICAL_PHOTO_BATCH1` or `…_BATCH2`) follow §K. Every approval is the full commit SHA of the Production deployment (`VERCEL_GIT_COMMIT_SHA`) and approves only that commit and that batch:
+The importers (`scripts/photos/import-historical-district-batch1.ts` and `…-batch2.ts`: thin entry points that pass `historical-district-batch<N>-config.ts` to the shared engine `historical-district-photo-engine.ts` and runner `historical-district-photo-importer.ts`; prefix `PRODUCTION_HISTORICAL_PHOTO_BATCH1` or `…_BATCH2`) follow §K. Every approval is the full commit SHA of the Production deployment (`VERCEL_GIT_COMMIT_SHA`) and approves only that commit and that batch:
 
 1. `<prefix>_DRY_RUN_APPROVED_SHA` — allows the dry-run and `--verify`. Record the exact plan counts.
 2. Verify point-in-time recovery for the Production Neon branch (as in K.2 step 2), then set `<prefix>_PITR_CONFIRMED_SHA` to the same SHA.

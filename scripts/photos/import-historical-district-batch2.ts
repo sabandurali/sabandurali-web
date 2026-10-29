@@ -2,7 +2,7 @@
 import {
   reportHistoricalImporterError,
   runHistoricalImporter,
-} from "./import-historical-district-batch1";
+} from "./historical-district-photo-importer";
 import { historicalBatch2Config } from "./historical-district-batch2-config";
 
 runHistoricalImporter({
