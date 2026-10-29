@@ -316,7 +316,7 @@ test("article reads filter in the database and prepare rich text for the page", 
   );
 });
 
-test("lists read summaries without the rich text and require a body", async () => {
+test("lists read summaries without the rich text and require a body", async (t) => {
   // The body is removed at the adapter level, bypassing the publish
   // validation that normally guarantees it.
   const bodiless = await payload.create({
@@ -337,7 +337,17 @@ test("lists read summaries without the rich text and require a body", async () =
     id: bodiless.id,
     data: { _status: "published" },
   });
+  const find = t.mock.method(payload, "find");
   const listed = await articles.listPublished("tr");
+  // The rich text is excluded in the query itself, not dropped afterwards.
+  const articleReads = find.mock.calls.filter(
+    (call) => call.arguments[0]?.collection === "articles",
+  );
+  assert.ok(articleReads.length > 0);
+  for (const call of articleReads) {
+    assert.deepEqual(call.arguments[0]?.select, { content: false });
+  }
+  find.mock.restore();
   assert.deepEqual(slugs(listed), ["kaynak", "hedef", "kadikoy-arastirmasi"]);
   for (const item of listed) assert.equal("content" in item, false);
   assert.equal(JSON.stringify(listed).includes("Gövde metni"), false);
