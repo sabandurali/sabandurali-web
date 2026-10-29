@@ -3,7 +3,7 @@ import { getPayload, type Where } from "payload";
 import config from "@payload-config";
 import { createPublicArticleConditions } from "@/content/articles/article-query-conditions";
 import { isOfferedArticleContent } from "@/content/articles/article-translation";
-import { getEnglishRichTextLinkContext } from "@/content/articles/offered-article-links";
+import { getEnglishRichTextLinkContext } from "@/content/rich-text/offered-article-links";
 import {
   mapPayloadArticle,
   mapPayloadArticleSummary,

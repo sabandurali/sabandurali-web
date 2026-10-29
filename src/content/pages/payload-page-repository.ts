@@ -1,7 +1,7 @@
 import "server-only";
 import { getPayload, type Where } from "payload";
 import config from "@payload-config";
-import { getEnglishRichTextLinkContext } from "@/content/articles/offered-article-links";
+import { getEnglishRichTextLinkContext } from "@/content/rich-text/offered-article-links";
 import { mapPayloadPage } from "@/content/pages/payload-page-mapper";
 import type {
   PublicPage,

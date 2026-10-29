@@ -39,6 +39,15 @@ test("book reviews do not depend on the articles module", () => {
   );
 });
 
+test("CMS pages reach article rules only through rich text", () => {
+  assert.deepEqual(
+    importsOf(moduleFiles("pages")).filter(({ from }) =>
+      from.startsWith("@/content/articles/"),
+    ),
+    [],
+  );
+});
+
 test("shared modules import no content type", () => {
   const shared = [
     "media.ts",
