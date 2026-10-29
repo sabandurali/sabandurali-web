@@ -17,7 +17,7 @@ import {
   fingerprint,
   isRecord,
   toFieldRecord,
-  type ResearchBundle,
+  parseResearchBundle,
 } from "./import-core";
 
 const isolatedPrefixes = [
@@ -123,9 +123,9 @@ try {
       draft: true,
       data: { history: "LOCAL TEST ONLY: manual edit" },
     });
-    const bundle = JSON.parse(
-      await readFile("data/districts/research.json", "utf8"),
-    ) as ResearchBundle;
+    const bundle = parseResearchBundle(
+      JSON.parse(await readFile("data/districts/research.json", "utf8")),
+    );
     const research = bundle.districts.find((d) => d.district === "esenler");
     assert.ok(research, "esenler research record exists");
     assert.equal(

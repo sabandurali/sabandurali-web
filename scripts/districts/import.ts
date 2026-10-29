@@ -5,8 +5,9 @@ import {
   assertBatch1PopulationImportPlan,
   attachEditorial,
   type Batch1PopulationImportPlan,
-  type EditorialBundle,
 } from "./editorial";
+import { isEditorialBundle } from "./content-acceptance";
+import { isRecord } from "../../src/content/guards";
 import { parseArgs } from "node:util";
 import {
   parseResearchBundle,
@@ -34,11 +35,16 @@ if (values.apply && values["dry-run"])
 const bundle: ResearchBundle = parseResearchBundle(
   JSON.parse(await readFile(values.input, "utf8")),
 );
-if (values.editorial)
-  attachEditorial(
-    bundle,
-    JSON.parse(await readFile(values.editorial, "utf8")) as EditorialBundle,
+if (values.editorial) {
+  const editorial: unknown = JSON.parse(
+    await readFile(values.editorial, "utf8"),
   );
+  if (!isEditorialBundle(editorial))
+    throw new Error(
+      `${values.editorial} is not an editorial bundle (schemaVersion 1 with complete district reviews).`,
+    );
+  attachEditorial(bundle, editorial);
+}
 if (values["offline-empty"]) {
   if (values.apply || values.database)
     throw new Error("Offline plan cannot apply or inspect a database.");
@@ -75,7 +81,7 @@ if (values["offline-empty"]) {
     if ((await realpath(target)).startsWith(path.resolve(".data") + path.sep))
       throw new Error("Protected database symlink.");
   } catch (error) {
-    if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+    if (!isRecord(error) || error.code !== "ENOENT") throw error;
   }
   const apply = values.apply === true;
   Object.assign(process.env, { NODE_ENV: "development" });

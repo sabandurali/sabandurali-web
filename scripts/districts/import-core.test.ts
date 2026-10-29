@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { parseResearchBundle } from "./import-core";
+import { isEditorialBundle } from "./content-acceptance";
+import { attachEditorial, editorialSectionKeys } from "./editorial";
 import {
   HistoricalPhotoImportError,
   parseHistoricalManifest,
@@ -125,12 +127,22 @@ test("ARCHITECTURE-9: a historical photo manifest is parsed from unknown JSON", 
 test("ARCHITECTURE-9: the import entry points parse instead of casting JSON", () => {
   for (const file of [
     "scripts/districts/import.ts",
+    "scripts/districts/check-cms.ts",
     "scripts/photos/historical-district-photo-importer.ts",
   ]) {
     const source = readFileSync(file, "utf8");
     assert.doesNotMatch(source, /\bas\s+ResearchBundle\b/, file);
     assert.doesNotMatch(source, /\bas\s+HistoricalPhotoManifest\b/, file);
+    assert.doesNotMatch(source, /\bas\s+EditorialBundle\b/, file);
   }
+  assert.match(
+    readFileSync("scripts/districts/import.ts", "utf8"),
+    /isEditorialBundle\(/,
+  );
+  assert.match(
+    readFileSync("scripts/districts/check-cms.ts", "utf8"),
+    /parseResearchBundle\(/,
+  );
   assert.match(
     readFileSync("scripts/districts/import.ts", "utf8"),
     /parseResearchBundle\(/,
@@ -141,5 +153,41 @@ test("ARCHITECTURE-9: the import entry points parse instead of casting JSON", ()
       "utf8",
     ),
     /parseHistoricalManifest\(/,
+  );
+});
+
+test("ARCHITECTURE-2: editorial section keys from JSON are checked, not cast", () => {
+  assert.deepEqual(
+    editorialSectionKeys({ summary: "a", history: "b", geography: "c" }),
+    ["summary", "history", "geography"],
+  );
+  for (const key of ["summery", "facts", "neighborhoods", "__proto__x"])
+    assert.throws(
+      () => editorialSectionKeys({ [key]: "x" }),
+      new RegExp(`Unknown editorial section: ${key}`),
+    );
+
+  // The real bundles: an unknown section in one review stops the import
+  // before any write instead of reaching the reviewed-section list.
+  const research = parseResearchBundle(
+    readJson("data/districts/research.json"),
+  );
+  const editorial = readJson("data/districts/editorial.json");
+  assert.ok(isEditorialBundle(editorial));
+  const [first] = editorial.districts;
+  assert.ok(first);
+  const misspelt = {
+    ...editorial,
+    districts: [
+      { ...first, sections: { ...first.sections, summery: "x" } },
+      ...editorial.districts.slice(1),
+    ],
+  };
+  assert.throws(
+    () => attachEditorial(structuredClone(research), misspelt),
+    /Unknown editorial section: summery/,
+  );
+  assert.doesNotThrow(() =>
+    attachEditorial(structuredClone(research), editorial),
   );
 });
