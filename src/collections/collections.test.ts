@@ -27,6 +27,7 @@ import {
   DistrictGuides,
   PUBLIC_DISTRICT_GUIDE_QUERY_PATHS,
 } from "./DistrictGuides";
+import { PUBLIC_DISTRICT_GUIDE_DOCUMENT_KEYS } from "../content/districts/district-guide-projection";
 import { MEDIA_MAX_IMAGE_EDGE, Media } from "./Media";
 import {
   LEGACY_TURKISH_HOME_SLUG,
@@ -277,6 +278,53 @@ test("District Guides refuse anonymous queries on hidden fields", () => {
     "publishedAt",
     "updatedAt",
   ]);
+});
+
+test("District Guides return the allowlisted public document to anonymous readers", async () => {
+  const [project] = DistrictGuides.hooks?.afterRead ?? [];
+  assert.ok(project);
+
+  const stored = {
+    id: "guide-1",
+    district: "esenler",
+    _status: "published",
+    publishedAt: "2026-09-13T10:00:00Z",
+    createdAt: "2026-09-01T00:00:00Z",
+    updatedAt: "2026-09-13T11:00:00Z",
+    summary: "İncelenmemiş özet",
+    neighborhoods: [{ id: "n1", name: "Örnek", image: "media-secret-id" }],
+    researchNotes: "PRIVATE-RESEARCH-NOTES",
+    importProvenance: { pdfSha256: "PRIVATE-PROVENANCE" },
+    internalComment: "PRIVATE-FUTURE-FIELD",
+  };
+  const run = (user: unknown, overrideAccess = false) =>
+    project({
+      doc: stored,
+      overrideAccess,
+      req: { user },
+    } as unknown as Parameters<NonNullable<typeof project>>[0]);
+
+  const anonymous: unknown = await run(null);
+  const keys = Object.keys(anonymous as Record<string, unknown>);
+  assert.deepEqual(
+    keys.filter(
+      (key) =>
+        !(PUBLIC_DISTRICT_GUIDE_DOCUMENT_KEYS as readonly string[]).includes(
+          key,
+        ),
+    ),
+    [],
+  );
+  assert.equal(JSON.stringify(anonymous).includes("PRIVATE"), false);
+  assert.equal(JSON.stringify(anonymous).includes("media-secret-id"), false);
+  assert.equal(
+    (anonymous as Record<string, unknown>).summary,
+    null,
+    "an unreviewed section stays hidden",
+  );
+
+  assert.equal(await run(editor), stored, "editors read the stored document");
+  assert.equal(await run(null, true), stored, "trusted server reads");
 });
 
 test("book translations and related books cannot expand recursively", () => {
