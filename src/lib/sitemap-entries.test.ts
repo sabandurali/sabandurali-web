@@ -862,3 +862,16 @@ test("CORRECTNESS-2: a legacy ana-sayfa page next to a real home record stays ou
     [],
   );
 });
+
+test("TESTS-INFRA-5: home and photo entries keep their crawl signals", () => {
+  const sitemap = buildSitemap(fullContent);
+
+  assert.equal(byUrl(sitemap, "/")?.priority, 1);
+  assert.equal(byUrl(sitemap, "/")?.changeFrequency, "weekly");
+  assert.equal(byUrl(sitemap, "/en")?.priority, 0.9);
+  assert.equal(byUrl(sitemap, "/en")?.changeFrequency, "weekly");
+  for (const path of ["/fotograflar/galata", "/fotograflar/blob"]) {
+    assert.equal(byUrl(sitemap, path)?.changeFrequency, "monthly", path);
+    assert.equal(byUrl(sitemap, path)?.priority, 0.65, path);
+  }
+});

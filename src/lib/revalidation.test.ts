@@ -308,6 +308,20 @@ test("pages revalidate every route because navigation links resolve them", () =>
   const listed = paths(standard);
   assert.ok(listed.includes("/yeni-sayfa"));
   assert.ok(listed.includes("/(tr)/[slug]#page"));
+  // TESTS-INFRA-5: an English standard page has no route, so its slug is
+  // never revalidated as a Turkish path.
+  assert.equal(listed.includes("/new-page"), false);
+  // A value outside the slug contract is left to the route pattern.
+  assert.equal(
+    paths(
+      getCollectionRevalidationTargets(
+        "pages",
+        [{ language: "tr", pageType: "standard", slug: "Yeni_Sayfa" }],
+        "tr",
+      ),
+    ).includes("/Yeni_Sayfa"),
+    false,
+  );
   assert.ok(
     !listed.includes("/en/new-page"),
     "there is no English standard-page route",
@@ -436,6 +450,11 @@ test("draft saves of never-published documents are skipped; publish and unpublis
     shouldRevalidateChange({ doc: { id: "tag" }, operation: "create" }),
     true,
     "collections without drafts always revalidate",
+  );
+  // TESTS-INFRA-5: a null status (no draft state stored) is public.
+  assert.equal(
+    shouldRevalidateChange({ doc: { _status: null }, operation: "create" }),
+    true,
   );
 });
 
