@@ -108,7 +108,14 @@ export function getInternalDocumentPath(
         : null;
     }
     case "district-guides": {
-      // Every registered district has a page, published guide or not.
+      /*
+       * Every registered district has a page, published guide or not, but
+       * an anonymous reader can only populate a published guide: a link to
+       * a draft or scheduled guide arrives without `value` and stays plain
+       * text until the guide is published. Publishing the guide refreshes
+       * the pages that render rich text (`districtGuideTargets` in
+       * src/lib/revalidation.ts), so the link appears at once.
+       */
       const district = getText(value.district);
 
       return district !== null && getDistrict(district) !== null

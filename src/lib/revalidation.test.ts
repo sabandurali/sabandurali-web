@@ -582,6 +582,7 @@ test("a target that rich text can link to refreshes every page rendering rich te
     ["articles", { _status: "published", slug: "eski-makale" }],
     ["photos", { _status: "published", slug: "galata" }],
     ["books", { language: "tr", slug: "derin-calisma" }],
+    ["district-guides", { _status: "published", district: "esenler" }],
   ] as const) {
     const listed = paths(getCollectionRevalidationTargets(collection, [doc]));
 

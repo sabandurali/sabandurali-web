@@ -303,6 +303,9 @@ function districtGuideTargets(docs: readonly unknown[]): RevalidationTarget[] {
     // Both home pages render the featured district card and its summary.
     ...homeTargets(),
     ...districtPageTargets(getDistricts(docs), { news: true }),
+    // A rich text link to an unpublished guide renders as plain text; it
+    // becomes a link when the guide is published.
+    ...richTextLinkSourceTargets(),
     pathTarget(SITEMAP_PATH),
   ];
 }
