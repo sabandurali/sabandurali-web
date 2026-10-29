@@ -1,7 +1,7 @@
 import { verifiedDistrictImages } from "@/content/photos/verified-district-images";
 import type { Metadata } from "next";
 import { getAbsoluteUrl } from "@/config/site";
-import { getContentLastModified } from "@/lib/content-dates";
+import { getContentLastModifiedIso } from "@/lib/content-dates";
 import { homeCrumb } from "@/content/home-crumb";
 import {
   createOptimizedSocialImage,
@@ -129,9 +129,7 @@ export function districtJsonLd(
         name: `${district.name} İlçe Rehberi`,
         inLanguage: "tr-TR",
         description: metaDescription(district, guide),
-        dateModified: guide
-          ? getContentLastModified(guide)?.toISOString()
-          : undefined,
+        dateModified: guide ? getContentLastModifiedIso(guide) : undefined,
         breadcrumb: { "@id": `${url}#breadcrumb` },
         about: { "@type": "Place", name: `${district.name}, İstanbul` },
       },

@@ -290,3 +290,36 @@ test("a source lists planning only for a published planning row", () => {
     false,
   );
 });
+
+test("CORRECTNESS-4: only a completed planning row outlives the 90-day window", () => {
+  const planningSource = {
+    ...source,
+    url: "https://www.esenler.bel.tr/imar",
+    sections: ["planningDevelopments" as const],
+    dataDate: "2020-06-01T00:00:00Z",
+    checkedAt: "2024-09-13T00:00:00Z",
+  };
+  const row = {
+    title: "Eski düzenleme",
+    date: "2020-06-01T00:00:00Z",
+    checkedAt: "2024-09-13T00:00:00Z",
+    officialSource: planningSource.url,
+    needsVerification: false,
+  };
+  const guide = (status: string) =>
+    mapDistrictGuide(
+      {
+        ...stored,
+        reviewedSections: [...stored.reviewedSections, "planningDevelopments"],
+        sources: [source, planningSource],
+        planningDevelopments: [{ ...row, status }],
+      },
+      now,
+    );
+
+  // A completed project is a dated historical fact.
+  assert.equal(guide("tamamlandi")?.planningDevelopments.length, 1);
+  // A plan that can still change must be current.
+  assert.deepEqual(guide("uygulama")?.planningDevelopments, []);
+  assert.deepEqual(guide("insaat")?.planningDevelopments, []);
+});

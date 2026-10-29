@@ -10,6 +10,7 @@ import {
   createFallbackMetaTitle,
 } from "@/lib/metadata";
 import { mapMediaImage } from "@/content/media";
+import { getPhotoCreditIssue } from "@/content/photos/photo-credit-policy";
 import type { Photo } from "@/payload-types";
 import type {
   PublicPhoto,
@@ -112,6 +113,19 @@ export function mapPayloadPhoto(
   if (image === null) return skip("image is missing or not a servable image");
   if (collections.length === 0) return skip("no public photo collection");
 
+  const photographer = getText(value.photographer);
+  const creditLicense = getText(value.creditLicense);
+  const districtPhotoCategory = getText(value.districtPhotoCategory);
+  const creditIssue = getPhotoCreditIssue({
+    photographer,
+    creditLicense,
+    districtPhotoCategory,
+  });
+
+  if (creditIssue !== null || photographer === null) {
+    return skip(creditIssue ?? "photographer is missing");
+  }
+
   const tags = (value.tags ?? [])
     .map(mapPhotoTag)
     .filter((item): item is PublicPhotoTag => item !== null)
@@ -136,10 +150,10 @@ export function mapPayloadPhoto(
     locationName: getText(value.locationName),
     district: getText(value.district),
     neighborhood: getText(value.neighborhood),
-    districtPhotoCategory: getText(value.districtPhotoCategory),
+    districtPhotoCategory,
     dayPeriod: getText(value.dayPeriod),
-    photographer: getText(value.photographer) ?? "Şaban Durali",
-    creditLicense: getText(value.creditLicense),
+    photographer,
+    creditLicense,
     exif: {
       camera: getText(value.exif?.camera),
       lens: getText(value.exif?.lens),

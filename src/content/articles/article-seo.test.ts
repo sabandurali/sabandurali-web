@@ -262,3 +262,18 @@ test("a page that is noindex or canonical elsewhere emits no hreflang at all", (
     );
   }
 });
+
+test("a scheduled article never reports a modification before publication", () => {
+  // Saved on 1 October, scheduled for 10 October.
+  const scheduled = payloadArticle({
+    publishedAt: "2026-10-10T09:00:00.000Z",
+    updatedAt: "2026-10-01T09:00:00.000Z",
+  });
+  const jsonLd = createArticleJsonLd(scheduled);
+  const openGraph = createArticleMetadata(scheduled, null).openGraph;
+
+  assert.equal(jsonLd.datePublished, "2026-10-10T09:00:00.000Z");
+  assert.equal(jsonLd.dateModified, "2026-10-10T09:00:00.000Z");
+  assert.ok(openGraph && "modifiedTime" in openGraph);
+  assert.equal(openGraph.modifiedTime, "2026-10-10T09:00:00.000Z");
+});

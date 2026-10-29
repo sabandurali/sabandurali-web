@@ -69,7 +69,16 @@ export function sourceKindFitsSection(
     statisticalReleaseSections.includes(section)
   );
 }
-/** Periodic values need a dated source; dynamic values expire after 90 days. */
+const dayMs = 24 * 60 * 60 * 1000;
+/** Market figures are dynamic: data and check expire after 90 days. */
+export const MARKET_DATA_MAX_AGE_DAYS = 90;
+/**
+ * "Transportation claims require current support" (§H): lines, stops and
+ * timetables change, so a transport source must have been checked within
+ * this window. Provisional value; the owner sets the final one.
+ */
+export const TRANSPORTATION_CHECK_MAX_AGE_DAYS = 365;
+/** Periodic values need a dated source; dynamic values expire. */
 export function sourceSupportsSection(
   source: DistrictSource,
   section: DistrictSection,
@@ -122,10 +131,15 @@ export function sourceSupportsSection(
   )
     return false;
   if (section === "marketData") {
-    const threshold = now - 90 * 24 * 60 * 60 * 1000;
+    const threshold = now - MARKET_DATA_MAX_AGE_DAYS * dayMs;
     if (dataDate === null || checkedAt < threshold || dataDate < threshold)
       return false;
   }
+  if (
+    section === "transportation" &&
+    checkedAt < now - TRANSPORTATION_CHECK_MAX_AGE_DAYS * dayMs
+  )
+    return false;
   return true;
 }
 export function sectionIsPublic(

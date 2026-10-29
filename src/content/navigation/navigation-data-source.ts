@@ -1,4 +1,5 @@
 import "server-only";
+import { unstable_cache } from "next/cache";
 import { cache } from "react";
 import {
   getEnglishHeaderNavigationItems,
@@ -8,6 +9,7 @@ import {
 } from "@/content/navigation/static-navigation";
 import { contactPaths, privacyPaths } from "@/config/site";
 import { reportContentIssue } from "@/content/content-log";
+import { NAVIGATION_CACHE_TAG } from "@/content/navigation/navigation-cache-tags";
 import { resolveFooterGroups } from "@/content/navigation/navigation-fallback";
 import { PayloadPublicNavigationRepository } from "@/content/navigation/payload-navigation-repository";
 import type {
@@ -25,9 +27,23 @@ import { readPublicSource } from "@/content/public-source";
 
 const payloadNavigationRepository = new PayloadPublicNavigationRepository();
 
+/*
+ * The header and footer render on every page, including the per-request
+ * ones (photo lists, district news, unmatched English URLs), so the
+ * published global is cached across requests. A Navigation save and any
+ * page write (a linked page can be published or withdrawn) invalidate the
+ * tag (`src/lib/revalidation.ts`); the hour covers scheduled pages.
+ * `unstable_cache` is used because the app does not enable Cache Components.
+ */
+const getCachedPayloadNavigation = unstable_cache(
+  (locale: Locale) => payloadNavigationRepository.findPublished(locale),
+  ["navigation"],
+  { tags: [NAVIGATION_CACHE_TAG], revalidate: 3600 },
+);
+
 const getPayloadNavigation = cache(
   async (locale: Locale): Promise<PublicNavigation | null> => {
-    const navigation = await payloadNavigationRepository.findPublished(locale);
+    const navigation = await getCachedPayloadNavigation(locale);
 
     if (navigation === null) {
       reportContentIssue({

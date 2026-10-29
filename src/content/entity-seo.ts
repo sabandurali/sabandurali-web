@@ -1,5 +1,5 @@
 import { getAbsoluteUrl, homeUrls } from "@/config/site";
-import type { SiteLocale } from "@/lib/metadata";
+import type { SiteLocale } from "@/content/locales";
 
 export const personalBrandName = "Şaban Durali";
 export const websiteEntityId = `${homeUrls["tr-TR"]}#website`;

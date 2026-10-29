@@ -1,12 +1,11 @@
 import "server-only";
 import { getPayload, type Where } from "payload";
 import config from "@payload-config";
+import { collectMappedPages } from "@/content/shared/pagination";
 import { getEnglishRichTextLinkContext } from "@/content/rich-text/offered-article-links";
 import { mapPayloadPage } from "@/content/pages/payload-page-mapper";
-import type {
-  PublicPage,
-  PublicPageLanguage,
-} from "@/content/pages/public-types";
+import type { SiteLocale } from "@/content/locales";
+import type { PublicPage } from "@/content/pages/public-types";
 
 const PAYLOAD_PAGE_SIZE = 100;
 const TURKISH_HOME_SLUG = "ana-sayfa";
@@ -30,7 +29,7 @@ function createPublicConditions(now: Date): Where[] {
 export class PayloadPublicPageRepository {
   private async findOne(
     conditions: Where[],
-    language: PublicPageLanguage,
+    language: SiteLocale,
     now: Date = new Date(),
   ): Promise<PublicPage | null> {
     const payload = await getPayload({ config });
@@ -64,7 +63,7 @@ export class PayloadPublicPageRepository {
     return mapPayloadPage(document, language, now, links);
   }
 
-  async findHome(language: PublicPageLanguage): Promise<PublicPage | null> {
+  async findHome(language: SiteLocale): Promise<PublicPage | null> {
     const home = await this.findOne(
       [{ pageType: { equals: "home" } }],
       language,
@@ -85,7 +84,7 @@ export class PayloadPublicPageRepository {
 
   async findStandardBySlug(
     slug: string,
-    language: PublicPageLanguage,
+    language: SiteLocale,
   ): Promise<PublicPage | null> {
     return this.findOne(
       [{ pageType: { equals: "standard" } }, { slug: { equals: slug } }],
@@ -93,14 +92,11 @@ export class PayloadPublicPageRepository {
     );
   }
 
-  async listStandards(language: PublicPageLanguage): Promise<PublicPage[]> {
+  async listStandards(language: SiteLocale): Promise<PublicPage[]> {
     const payload = await getPayload({ config });
     const now = new Date();
-    const pages: PublicPage[] = [];
-    let page = 1;
-    let totalPages = 1;
 
-    while (page <= totalPages) {
+    return collectMappedPages(async (page) => {
       const result = await payload.find({
         collection: "pages",
         depth: 1,
@@ -125,15 +121,13 @@ export class PayloadPublicPageRepository {
           ? await getEnglishRichTextLinkContext(result.docs)
           : undefined;
 
-      for (const document of result.docs) {
-        const mapped = mapPayloadPage(document, language, now, links);
-        if (mapped !== null) pages.push(mapped);
-      }
-
-      totalPages = result.totalPages;
-      page += 1;
-    }
-
-    return pages;
+      return {
+        items: result.docs.flatMap((document): PublicPage[] => {
+          const mapped = mapPayloadPage(document, language, now, links);
+          return mapped === null ? [] : [mapped];
+        }),
+        totalPages: result.totalPages,
+      };
+    });
   }
 }

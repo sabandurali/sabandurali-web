@@ -1,5 +1,9 @@
 import assert from "node:assert/strict";
 import test, { type TestContext } from "node:test";
+import {
+  assertWithheldForNonPublishedStatuses,
+  nonPublishedStatuses,
+} from "../shared/status-test-cases";
 import type { Article as PayloadArticle } from "../../payload-types";
 import {
   heading,
@@ -295,4 +299,17 @@ test("the list projection equals the summary of the full article without reading
     mapPayloadArticleSummary(article({ _status: "draft" }), "tr", now),
     null,
   );
+});
+
+test("TESTS-INFRA-2: only the exact published status is public", (t) => {
+  const warn = silence(t);
+
+  assertWithheldForNonPublishedStatuses((_status) =>
+    mapPayloadArticle(article({ _status }), "tr", now),
+  );
+  assertWithheldForNonPublishedStatuses((_status) =>
+    mapPayloadArticleSummary(article({ _status }), "tr", now),
+  );
+  assert.equal(warn.mock.callCount(), 2 * nonPublishedStatuses.length);
+  assert.match(String(warn.mock.calls[0]?.arguments[0]), /status/);
 });

@@ -32,3 +32,15 @@ export function getContentLastModified(item: {
 }): Date | undefined {
   return getLatestDate([toDate(item.updatedAt), toDate(item.publishedAt)]);
 }
+
+/**
+ * `getContentLastModified` as an ISO string, for the Open Graph
+ * `modifiedTime`, JSON-LD `dateModified` and the visible update line, so
+ * a scheduled item never reports a change before its publication.
+ */
+export function getContentLastModifiedIso(item: {
+  updatedAt: string | null;
+  publishedAt: string | null;
+}): string | undefined {
+  return getContentLastModified(item)?.toISOString();
+}

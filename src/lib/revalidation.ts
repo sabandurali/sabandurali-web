@@ -69,7 +69,11 @@ import {
   getDistrictNewsPath,
   getDistrictPath,
 } from "@/content/districts/district-routes";
-import { PHOTO_FACETS_CACHE_TAG } from "@/content/photos/photo-cache-tags";
+import { NAVIGATION_CACHE_TAG } from "@/content/navigation/navigation-cache-tags";
+import {
+  PHOTO_FACETS_CACHE_TAG,
+  PHOTO_LIST_CACHE_TAG,
+} from "@/content/photos/photo-cache-tags";
 import { getPhotoPath, photoListPaths } from "@/content/photos/photo-routes";
 import { workspaces } from "@/content/workspaces";
 
@@ -89,18 +93,16 @@ export type RevalidatedCollection =
   | "photos"
   | "tags";
 
-type Language = SiteLocale;
-
 type Revalidate = (path: string, type?: "layout" | "page") => void;
 
 type RevalidateTag = (tag: string, profile: { expire: number }) => void;
 
 type RevalidationLogger = Readonly<{ warn: (message: string) => void }>;
 
-const LANGUAGES: readonly Language[] = siteLocales;
+const LANGUAGES: readonly SiteLocale[] = siteLocales;
 
 /** Route groups that own the Turkish and English trees in `src/app`. */
-const ROUTE_GROUPS: Readonly<Record<Language, string>> = {
+const ROUTE_GROUPS: Readonly<Record<SiteLocale, string>> = {
   tr: "/(tr)",
   en: "/(en)",
 };
@@ -110,7 +112,7 @@ export const ALL_PAGES: RevalidationTarget = { path: "/", type: "layout" };
 
 export const SITEMAP_PATH = "/sitemap.xml";
 
-const HOME_PATHS: Readonly<Record<Language, string>> = {
+const HOME_PATHS: Readonly<Record<SiteLocale, string>> = {
   tr: new URL(homeUrls["tr-TR"]).pathname,
   en: new URL(homeUrls.en).pathname,
 };
@@ -118,7 +120,7 @@ const HOME_PATHS: Readonly<Record<Language, string>> = {
 /** Slugs produced by `normalizeSlug`; anything else is covered by patterns. */
 const SAFE_SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
-function getLanguage(value: unknown): Language | null {
+function getLanguage(value: unknown): SiteLocale | null {
   return isSiteLocale(value) ? value : null;
 }
 
@@ -133,8 +135,8 @@ function getSafeSlug(value: unknown): string | null {
  */
 function getLocalizedSlugs(
   value: unknown,
-  requestLanguage: Language,
-): Array<{ language: Language; slug: string }> {
+  requestLanguage: SiteLocale,
+): Array<{ language: SiteLocale; slug: string }> {
   const slug = getSafeSlug(value);
 
   if (slug !== null) return [{ language: requestLanguage, slug }];
@@ -157,7 +159,7 @@ function pathTarget(path: string): RevalidationTarget {
   return { path };
 }
 
-function patternTarget(language: Language, path: string): RevalidationTarget {
+function patternTarget(language: SiteLocale, path: string): RevalidationTarget {
   return { path: `${ROUTE_GROUPS[language]}${path}`, type: "page" };
 }
 
@@ -206,7 +208,7 @@ function districtPageTargets(
 
 function articleTargets(
   docs: readonly unknown[],
-  requestLanguage: Language,
+  requestLanguage: SiteLocale,
 ): RevalidationTarget[] {
   return [
     ...homeTargets(),
@@ -276,7 +278,7 @@ function pageTargets(docs: readonly unknown[]): RevalidationTarget[] {
 
 function photoTargets(
   docs: readonly unknown[],
-  requestLanguage: Language,
+  requestLanguage: SiteLocale,
 ): RevalidationTarget[] {
   return [
     ...homeTargets(),
@@ -303,6 +305,9 @@ function districtGuideTargets(docs: readonly unknown[]): RevalidationTarget[] {
     // Both home pages render the featured district card and its summary.
     ...homeTargets(),
     ...districtPageTargets(getDistricts(docs), { news: true }),
+    // A rich text link to an unpublished guide renders as plain text; it
+    // becomes a link when the guide is published.
+    ...richTextLinkSourceTargets(),
     pathTarget(SITEMAP_PATH),
   ];
 }
@@ -328,7 +333,7 @@ function uniqueTargets(
 export function getCollectionRevalidationTargets(
   collection: RevalidatedCollection,
   docs: readonly unknown[],
-  requestLanguage: Language = "tr",
+  requestLanguage: SiteLocale = "tr",
 ): RevalidationTarget[] {
   switch (collection) {
     case "articles":
@@ -367,7 +372,13 @@ export function getCollectionRevalidationTags(
     case "photo-collections":
     case "photos":
     case "tags":
-      return [PHOTO_FACETS_CACHE_TAG];
+      return [PHOTO_FACETS_CACHE_TAG, PHOTO_LIST_CACHE_TAG];
+    // The first photo list page carries image URLs and alt texts.
+    case "media":
+      return [PHOTO_LIST_CACHE_TAG];
+    // The cached navigation links pages only while they are public.
+    case "pages":
+      return [NAVIGATION_CACHE_TAG];
     default:
       return [];
   }
@@ -470,7 +481,7 @@ export function revalidateTags(
   }
 }
 
-function getRequestLanguage(req: PayloadRequest): Language {
+function getRequestLanguage(req: PayloadRequest): SiteLocale {
   return req.locale === "en" ? "en" : "tr";
 }
 
@@ -536,12 +547,17 @@ export function createRevalidationHooks(
 /** `afterChange` hook for the Navigation global. */
 export function createNavigationRevalidationHook({
   revalidate,
+  revalidateTag: revalidateCacheTag,
 }: HookOptions = {}): GlobalAfterChangeHook {
   return ({ doc, previousDoc, req }) => {
     if (shouldRevalidateChange({ doc, operation: "update", previousDoc })) {
       revalidateTargets(getNavigationRevalidationTargets(), {
         logger: getLogger(req),
         revalidate,
+      });
+      revalidateTags([NAVIGATION_CACHE_TAG], {
+        logger: getLogger(req),
+        revalidate: revalidateCacheTag,
       });
     }
 

@@ -2,8 +2,6 @@ import type { SiteLocale } from "@/content/locales";
 import { getSafePayloadMediaPath } from "@/content/media-paths";
 import { getPositiveNumber, getText, isRecord } from "@/content/guards";
 
-export type MediaLocale = SiteLocale;
-
 export type MappedMediaImage = {
   src: string;
   alt: string;
@@ -12,7 +10,7 @@ export type MappedMediaImage = {
    * Turkish (the CMS is Turkish); a localized alt or the fallback is in the
    * requested locale. English pages mark a Turkish alt with lang="tr".
    */
-  altLanguage: MediaLocale;
+  altLanguage: SiteLocale;
   width: number | null;
   height: number | null;
   /** Media "Açıklama"; Turkish content only (the CMS field is Turkish). */
@@ -27,7 +25,7 @@ export type MappedMediaImage = {
  */
 export function mapMediaImage(
   value: unknown,
-  options: { alt?: unknown; fallbackAlt: string; locale: MediaLocale },
+  options: { alt?: unknown; fallbackAlt: string; locale: SiteLocale },
 ): MappedMediaImage | null {
   if (!isRecord(value)) return null;
 

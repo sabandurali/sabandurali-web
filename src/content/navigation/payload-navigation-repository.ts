@@ -3,7 +3,7 @@ import { getPayload } from "payload";
 import config from "@payload-config";
 import { mapPayloadNavigation } from "@/content/navigation/payload-navigation-mapper";
 import type { PublicNavigation } from "@/content/navigation/public-types";
-import type { SiteLocale as Locale } from "@/content/locales";
+import type { SiteLocale } from "@/content/locales";
 
 export class PayloadPublicNavigationRepository {
   /**
@@ -13,7 +13,7 @@ export class PayloadPublicNavigationRepository {
    * (draft: false), and the mapper only passes on published, active and
    * safe links.
    */
-  async findPublished(language: Locale): Promise<PublicNavigation | null> {
+  async findPublished(language: SiteLocale): Promise<PublicNavigation | null> {
     const payload = await getPayload({ config });
     const navigation = await payload.findGlobal({
       slug: "navigation",

@@ -7,9 +7,7 @@ import { reportContentIssue } from "@/content/content-log";
 import { getText, isPublishedBy, isRecord } from "@/content/guards";
 import { getPhotoPath } from "@/content/photos/photo-routes";
 
-export type RichTextLocale = SiteLocale;
-
-function getLanguage(value: unknown): RichTextLocale | null {
+function getLanguage(value: unknown): SiteLocale | null {
   return isSiteLocale(value) ? value : null;
 }
 
@@ -46,7 +44,7 @@ function isPublishedDocument(value: Record<string, unknown>, now: Date) {
  */
 export function getInternalDocumentPath(
   doc: unknown,
-  locale: RichTextLocale,
+  locale: SiteLocale,
   now: Date,
   context: RichTextLinkContext = {},
 ): string | null {
@@ -108,7 +106,14 @@ export function getInternalDocumentPath(
         : null;
     }
     case "district-guides": {
-      // Every registered district has a page, published guide or not.
+      /*
+       * Every registered district has a page, published guide or not, but
+       * an anonymous reader can only populate a published guide: a link to
+       * a draft or scheduled guide arrives without `value` and stays plain
+       * text until the guide is published. Publishing the guide refreshes
+       * the pages that render rich text (`districtGuideTargets` in
+       * src/lib/revalidation.ts), so the link appears at once.
+       */
       const district = getText(value.district);
 
       return district !== null && getDistrict(district) !== null
@@ -129,7 +134,7 @@ export function getInternalDocumentPath(
  */
 function projectUploadValue(
   value: Record<string, unknown>,
-  locale: RichTextLocale,
+  locale: SiteLocale,
 ): Record<string, unknown> {
   const description = locale === "tr" ? getText(value.description) : null;
   const credit = getText(value.sourceCopyright);
@@ -166,7 +171,7 @@ function isRelationshipNode(node: unknown): boolean {
 
 function prepareNode(
   node: unknown,
-  locale: RichTextLocale,
+  locale: SiteLocale,
   now: Date,
   context: RichTextLinkContext,
 ): unknown {
@@ -221,7 +226,7 @@ function prepareNode(
  */
 export function prepareRichText(
   content: unknown,
-  locale: RichTextLocale,
+  locale: SiteLocale,
   now: Date,
   context: RichTextLinkContext = {},
 ): unknown {

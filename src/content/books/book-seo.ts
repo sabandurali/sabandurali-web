@@ -11,7 +11,13 @@ import {
   personalBrandName,
   serializeJsonLd,
 } from "@/content/entity-seo";
-import { createPageMetadata, createSocialImage } from "@/lib/metadata";
+import { getContentLastModifiedIso } from "@/lib/content-dates";
+import {
+  createOptimizedSocialImage,
+  createPageMetadata,
+  createSocialImage,
+  type SocialImage,
+} from "@/lib/metadata";
 
 type CanonicalBookReview = Pick<PublicBookReview, "language" | "seo" | "slug">;
 
@@ -43,14 +49,48 @@ export function isBookReviewHreflangEligible(
   );
 }
 
-export function createBookReviewMetadata(
+/** The cover as the page renders it, or null when it is not servable. */
+function getBookCover(bookReview: PublicBookReview) {
+  const cover = bookReview.coverImage;
+  const src = cover === null ? null : getAvailableLocalBookImage(cover.src);
+
+  return cover === null || src === null ? null : { ...cover, src };
+}
+
+/**
+ * A prepared share image is used as uploaded; otherwise the cover the page
+ * shows is shared through the image optimizer, like the featured image of
+ * an article. Without either the site-wide image remains.
+ */
+function getBookReviewSocialImage(
   bookReview: PublicBookReview,
-  translation: PublicBookReview | null,
-): Metadata {
+): SocialImage | null {
+  const alt = bookReview.coverImage?.alt || bookReview.title;
   const openGraphImage = getAvailableLocalBookImage(
     bookReview.seo.openGraphImage,
   );
 
+  if (openGraphImage !== null) {
+    return createSocialImage({ src: openGraphImage, alt });
+  }
+
+  const cover = getBookCover(bookReview);
+
+  return cover === null
+    ? null
+    : createOptimizedSocialImage({
+        src: cover.src,
+        alt,
+        width: cover.width,
+        height: cover.height,
+      });
+}
+
+export function createBookReviewMetadata(
+  bookReview: PublicBookReview,
+  translation: PublicBookReview | null,
+): Metadata {
+  const image = getBookReviewSocialImage(bookReview);
   const hreflang = isBookReviewHreflangEligible(bookReview);
 
   return createPageMetadata({
@@ -71,28 +111,21 @@ export function createBookReviewMetadata(
             ),
           },
     canonical: getBookReviewCanonicalUrl(bookReview),
-    images:
-      openGraphImage === null
-        ? undefined
-        : [
-            createSocialImage({
-              src: openGraphImage,
-              alt: bookReview.coverImage?.alt || bookReview.title,
-            }),
-          ],
+    images: image === null ? undefined : [image],
     index: bookReview.seo.index,
     follow: bookReview.seo.follow,
     socialTitle: bookReview.seo.openGraphTitle,
     socialDescription: bookReview.seo.openGraphDescription,
     article: {
       publishedTime: bookReview.publishedAt,
-      modifiedTime: bookReview.updatedAt,
+      modifiedTime: getContentLastModifiedIso(bookReview),
       authors: [personalBrandName],
     },
   });
 }
 
 export function createBookReviewJsonLd(bookReview: PublicBookReview) {
+  const cover = getBookCover(bookReview);
   const book = {
     "@type": "Book",
     name: bookReview.originalTitle ?? bookReview.title,
@@ -108,6 +141,7 @@ export function createBookReviewJsonLd(bookReview: PublicBookReview) {
             name: bookReview.publisher,
           },
     isbn: bookReview.isbn13 ?? bookReview.isbn10 ?? undefined,
+    image: cover === null ? undefined : getAbsoluteUrl(cover.src),
   };
 
   return {
@@ -118,7 +152,7 @@ export function createBookReviewJsonLd(bookReview: PublicBookReview) {
     author: createPersonReference(),
     reviewBody: bookReview.personalEvaluation || bookReview.summary,
     datePublished: bookReview.publishedAt ?? undefined,
-    dateModified: bookReview.updatedAt,
+    dateModified: getContentLastModifiedIso(bookReview),
     inLanguage: bookReview.language === "tr" ? "tr-TR" : "en",
     url: getBookReviewCanonicalUrl(bookReview),
     itemReviewed: book,

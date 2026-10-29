@@ -4,6 +4,7 @@ import {
   formatArticleDate,
 } from "@/content/articles/article-page-content";
 import type { PublicArticle } from "@/content/articles/public-types";
+import { getContentLastModifiedIso } from "@/lib/content-dates";
 import { toDateTimeAttribute } from "@/lib/format-date";
 
 /** Published, updated (when later) and author lines under the lead. */
@@ -13,7 +14,10 @@ export function getArticleMetaItems(article: PublicArticle): MetaItem[] {
     article.content.source === "static" ? article.content.details : null;
   const author = staticDetails?.author?.name ?? article.author ?? null;
   const publishedAt = formatArticleDate(article.publishedAt, content);
-  const updatedAt = formatArticleDate(article.updatedAt, content);
+  // A scheduled article is saved before it goes live: its last change is
+  // never earlier than its publication.
+  const modifiedAt = getContentLastModifiedIso(article) ?? null;
+  const updatedAt = formatArticleDate(modifiedAt, content);
   const items: MetaItem[] = [];
 
   if (publishedAt !== null) {
@@ -29,7 +33,7 @@ export function getArticleMetaItems(article: PublicArticle): MetaItem[] {
     items.push({
       label: content.updatedLabel,
       value: updatedAt,
-      dateTime: toDateTimeAttribute(article.updatedAt),
+      dateTime: toDateTimeAttribute(modifiedAt),
       data: true,
     });
   }

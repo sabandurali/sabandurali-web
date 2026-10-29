@@ -4,6 +4,7 @@ import {
   isStatisticalRelease,
   sectionIsPublic,
   sourceSupportsSection,
+  TRANSPORTATION_CHECK_MAX_AGE_DAYS,
   type DistrictSource,
 } from "./district-content-policy";
 import { sanitizeDistrictSources } from "./district-guide-projection";
@@ -149,6 +150,39 @@ test("statistical releases are recognised by TÜİK host or ADNKS title", () => 
       title: "Rapor",
       url: "https://nottuik.gov.tr/rapor",
     }),
+    false,
+  );
+});
+
+test("CORRECTNESS-3: transportation needs a source checked within the window", () => {
+  const transport: DistrictSource = {
+    title: "Metro hattı açıldı",
+    publisher: "Ulaştırma ve Altyapı Bakanlığı",
+    url: "https://www.uab.gov.tr/haberler/metro",
+    sourceType: "official",
+    dataDate: iso(now - 4 * 365 * day),
+    needsVerification: false,
+    sections: ["transportation"],
+  };
+  const checked = (age: number) =>
+    sourceSupportsSection(
+      { ...transport, checkedAt: iso(now - age * day) },
+      "transportation",
+      now,
+    );
+
+  // An old opening announcement is fine while someone re-checked it.
+  assert.equal(checked(0), true);
+  assert.equal(checked(TRANSPORTATION_CHECK_MAX_AGE_DAYS), true);
+  assert.equal(checked(TRANSPORTATION_CHECK_MAX_AGE_DAYS + 1), false);
+  assert.equal(checked(4 * 365), false);
+  assert.equal(
+    sectionIsPublic(
+      "transportation",
+      ["transportation"],
+      [{ ...transport, checkedAt: iso(now - 400 * day) }],
+      now,
+    ),
     false,
   );
 });

@@ -252,6 +252,16 @@ test("district guides link to every registered district page", () => {
   );
 });
 
+test("MISSED-1: a link to a guide the reader cannot populate stays plain text", () => {
+  // Payload leaves `value` null (or the bare ID) when access is denied.
+  for (const value of [null, "guide-id"]) {
+    assert.equal(
+      getInternalDocumentPath(internal("district-guides", value), "tr", now),
+      null,
+    );
+  }
+});
+
 test("internal links become paths and never keep the populated document", () => {
   const article = {
     id: "a1",

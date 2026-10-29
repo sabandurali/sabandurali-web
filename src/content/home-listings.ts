@@ -3,7 +3,7 @@ import type { PublicBookReviewSummary } from "@/content/books/public-types";
 import { refuseDegradedCachedRender } from "@/content/degraded-render";
 import type { PublicPhoto } from "@/content/photos/types";
 import { settleSection } from "@/content/settle-section";
-import type { SiteLocale } from "@/lib/metadata";
+import type { SiteLocale } from "@/content/locales";
 
 /**
  * The home page's main content is the home record (static or CMS). The

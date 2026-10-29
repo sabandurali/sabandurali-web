@@ -1,4 +1,5 @@
 import type { Where } from "payload";
+import { clampPage, normalizeRequestedPage } from "@/content/shared/pagination";
 import type { PhotoListFilters, PublicPhoto } from "@/content/photos/types";
 
 /** Photos per list page. */
@@ -108,21 +109,12 @@ export function createRelatedPhotoConditions(
 }
 
 /** A positive integer page number; anything else means page 1. */
-export function normalizeRequestedPage(requested: number | undefined): number {
-  return requested !== undefined && Number.isFinite(requested)
-    ? Math.max(1, Math.floor(requested))
-    : 1;
-}
+export { normalizeRequestedPage };
 
 /** Requested list page clamped to the available pages (at least 1). */
 export function clampPhotoPage(
   requested: number | undefined,
   totalItems: number,
 ): { page: number; totalPages: number } {
-  const totalPages = Math.max(1, Math.ceil(totalItems / PHOTO_LIST_PAGE_SIZE));
-
-  return {
-    page: Math.min(normalizeRequestedPage(requested), totalPages),
-    totalPages,
-  };
+  return clampPage(requested, totalItems, PHOTO_LIST_PAGE_SIZE);
 }
