@@ -3,8 +3,8 @@ import { getAbsoluteUrl } from "@/config/site";
 import {
   getAvailableLocalArticleImage,
   getAvailablePublicArticleImage,
-  getSafePayloadMediaPath,
 } from "@/content/articles/article-images";
+import { getSafePayloadMediaPath } from "@/content/media-paths";
 import {
   getArticlePath,
   getArticleUrl,

@@ -62,3 +62,19 @@ test("shared modules import no content type", () => {
     [],
   );
 });
+
+test("ARCHITECTURE-4: book publication rules take media paths from the shared module", () => {
+  const source = readFileSync(
+    path.join(contentDirectory, "../collections/bookPublication.ts"),
+    "utf8",
+  );
+  assert.doesNotMatch(source, /@\/content\/articles\//);
+  // The articles module no longer re-exports the shared helper.
+  assert.doesNotMatch(
+    readFileSync(
+      path.join(contentDirectory, "articles/article-images.ts"),
+      "utf8",
+    ),
+    /export \{[^}]*getSafePayloadMediaPath/,
+  );
+});
