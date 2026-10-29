@@ -226,6 +226,11 @@ export function mapDistrictGuide(
           now,
         ),
     );
+  /*
+   * "Current" in §H applies to plans that can still change. A completed
+   * project is a dated historical fact: it stays public with its dated,
+   * verified official source and is exempt from the 90-day window below.
+   */
   const completedPlanningRow = (row: Record<string, unknown>) =>
     text(row.status) === "tamamlandi";
   const currentPlanningRow = (row: Record<string, unknown>) => {
