@@ -10,7 +10,7 @@ import { getLanguageOptions } from "./header-content";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { createRootLayoutMetadata } from "./root-metadata";
 import Wordmark from "./Wordmark";
-import { shouldCloseOnEscape } from "../ui/Disclosure";
+import { shouldCloseOnEscape, shouldDismissOnOutside } from "../ui/Disclosure";
 import Disclosure from "../ui/Disclosure";
 import NavMenu from "../ui/NavMenu";
 import { getStaticFooterGroups } from "../../content/navigation/static-navigation";
@@ -153,6 +153,28 @@ test("Disclosure: Escape closes one layer; controlled state and inline button", 
   assert.match(html, /aria-expanded="true"/);
   assert.doesNotMatch(html, /hidden=""/);
   assert.doesNotMatch(html, /w-full/);
+});
+
+test("FRONTEND-1: the mobile menu closes when focus or a tap moves outside", () => {
+  const inside = { id: "panel-link" };
+  const outside = { id: "breadcrumb-home" };
+  const container = {
+    contains: (node: { id: string } | null) => node === inside,
+  };
+  assert.equal(shouldDismissOnOutside(true, container, outside), true);
+  assert.equal(shouldDismissOnOutside(true, container, inside), false);
+  assert.equal(shouldDismissOnOutside(true, container, null), false);
+  assert.equal(shouldDismissOnOutside(false, container, outside), false);
+  assert.equal(shouldDismissOnOutside(true, null, outside), false);
+
+  const disclosure = read("src/components/ui/Disclosure.tsx");
+  assert.match(disclosure, /onBlur=\{handleBlur\}/);
+  assert.match(disclosure, /addEventListener\("pointerdown"/);
+  const mobile = read("src/components/layout/HeaderNavigation.tsx");
+  assert.match(
+    mobile.slice(mobile.indexOf("export function MobileNavigation")),
+    /<Disclosure[^>]*\bdismissOnOutside\b/,
+  );
 });
 
 test("NavMenu: an active section is bold with the bar but not aria-current", () => {
