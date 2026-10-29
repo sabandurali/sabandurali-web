@@ -49,7 +49,7 @@ test("every district-guides query in the content layer uses those builders", () 
 
   assert.deepEqual(
     queries.map(({ file }) => path.relative(contentDirectory, file)),
-    [path.join("districts", "district-guide-data-source.ts")],
+    [path.join("districts", "payload-district-guide-repository.ts")],
     "a new district-guides query must use district-guide-queries.ts",
   );
 
@@ -61,5 +61,9 @@ test("every district-guides query in the content layer uses those builders", () 
     );
     assert.equal(source.match(/where:\s*\{/g), null);
     assert.equal(source.match(/sort:\s*["'`]/g), null);
+    // The one query keeps the public access options.
+    assert.match(source, /overrideAccess: false/);
+    assert.match(source, /draft: false/);
+    assert.equal(source.match(/overrideAccess: true/), null);
   }
 });
