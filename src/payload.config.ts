@@ -124,8 +124,10 @@ function localPort(port: string | undefined): number {
  * - every environment: the canonical production origin;
  * - Production (`VERCEL_ENV=production`): also `VERCEL_PROJECT_PRODUCTION_URL`;
  * - Preview: the branch URL and the deployment URL of this deployment only;
- * - anywhere else (`next dev`, local `next start`, CI): `localhost`,
- *   `127.0.0.1` and `[::1]` on `PORT` (default 3000), over plain HTTP.
+ * - off Vercel (`next dev`, local `next start`, CI): `localhost`,
+ *   `127.0.0.1` and `[::1]` on `PORT` (default 3000), over plain HTTP;
+ * - on Vercel (`VERCEL=1`) without a known `VERCEL_ENV` (system variables
+ *   not exposed): the canonical origin only, never localhost.
  *
  * The admin of a Production deployment opened through its `*.vercel.app`
  * deployment URL therefore cannot save; use the canonical domain.
@@ -144,7 +146,7 @@ export function getCsrfAllowedOrigins(
   } else if (env.VERCEL_ENV === "preview") {
     addHost(env.VERCEL_BRANCH_URL);
     addHost(env.VERCEL_URL);
-  } else {
+  } else if (env.VERCEL !== "1") {
     const port = localPort(env.PORT);
     for (const host of ["localhost", "127.0.0.1", "[::1]"]) {
       origins.add(`http://${host}:${port}`);

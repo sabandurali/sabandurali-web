@@ -393,6 +393,12 @@ test("csrf: the allowlist covers production, this Preview deployment and local d
     }),
     ["https://www.sabandurali.com"],
   );
+
+  // On Vercel without VERCEL_ENV (system variables not exposed) the list
+  // does not fall back to the local origins.
+  assert.deepEqual(getCsrfAllowedOrigins({ VERCEL: "1", PORT: "3000" }), [
+    "https://www.sabandurali.com",
+  ]);
 });
 
 test("csrf: a session cookie is ignored on cross-origin and unmarked requests", async () => {
