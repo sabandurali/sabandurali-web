@@ -22,7 +22,13 @@ function harness({
   respond = async (): Promise<{ ok: boolean }> => ({ ok: true }),
   formId = "abc123" as string | undefined,
 } = {}) {
-  const calls = { reset: 0, validate: 0, loading: 0, fetch: [] as string[] };
+  const calls = {
+    reset: 0,
+    validate: 0,
+    valid: 0,
+    loading: 0,
+    fetch: [] as string[],
+  };
   const inFlight = { current: false };
   const options = {
     form: {
@@ -39,9 +45,13 @@ function harness({
     fetch: async (url: string) => {
       calls.fetch.push(url);
       assert.equal(inFlight.current, true, "in flight while sending");
+      assert.equal(calls.valid, 1, "stale field messages cleared first");
       return respond();
     },
     inFlight,
+    onValid: () => {
+      calls.valid += 1;
+    },
     onLoading: () => {
       calls.loading += 1;
     },
@@ -120,6 +130,10 @@ test("TESTS-INFRA-6: invalid, honeypot and unconfigured submits never send", asy
     assert.deepEqual(calls.fetch, []);
     assert.equal(calls.loading, 0);
   }
+  // FRONTEND-3: only a valid form clears the field messages.
+  assert.equal(invalid.calls.valid, 0);
+  assert.equal(bot.calls.valid, 1);
+  assert.equal(unconfigured.calls.valid, 1);
 });
 
 function formDataWith(entries: Record<string, string>): FormData {

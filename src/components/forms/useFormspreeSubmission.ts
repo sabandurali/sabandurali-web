@@ -99,6 +99,10 @@ export function useFormspreeSubmission({
       formId,
       fetch: (url, init) => fetch(url, init),
       inFlight: submissionInFlight,
+      // A valid submit drops any stale field message (and with it the
+      // validation summary) before the result, so a following network
+      // error is a new state and FormStatus moves focus to it.
+      onValid: () => setFieldErrors({}),
       onLoading: () => {
         setErrorKind(null);
         setStatus("loading");

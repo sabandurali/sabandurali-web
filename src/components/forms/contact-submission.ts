@@ -97,6 +97,11 @@ type SubmitContactFormOptions = {
   fetch: (url: string, init: RequestInit) => Promise<{ ok: boolean }>;
   /** Shared across submits: true while a request is on its way. */
   inFlight: { current: boolean };
+  /**
+   * Called as soon as the form is valid, before anything is sent, so stale
+   * field messages are gone before the result is shown (FRONTEND-3).
+   */
+  onValid?: () => void;
   /** Called when the request starts, to show the "sending" state. */
   onLoading: () => void;
 };
@@ -121,12 +126,14 @@ export async function submitContactForm({
   formId,
   fetch,
   inFlight,
+  onValid,
   onLoading,
 }: SubmitContactFormOptions): Promise<SubmissionOutcome> {
   if (inFlight.current) return { kind: "ignored" };
 
   const errors = validate();
   if (Object.keys(errors).length > 0) return { kind: "invalid", errors };
+  onValid?.();
 
   const formData = readFormData();
 
