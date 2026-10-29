@@ -1,3 +1,5 @@
+import type { SiteLocale } from "@/content/locales";
+
 export type VerifiedDistrictImage = {
   src: string;
   /** Turkish alt text. */
@@ -55,7 +57,7 @@ export type LocalizedDistrictImage = {
 /** The verified image of a district with alt text and credit in `locale`. */
 export function getVerifiedDistrictImage(
   district: string,
-  locale: "tr" | "en",
+  locale: SiteLocale,
 ): LocalizedDistrictImage | null {
   const image = Object.hasOwn(verifiedDistrictImages, district)
     ? verifiedDistrictImages[district]

@@ -1,5 +1,8 @@
 import assert from "node:assert/strict";
+import { readFileSync, readdirSync, statSync } from "node:fs";
+import path from "node:path";
 import test from "node:test";
+import { fileURLToPath } from "node:url";
 import { siteLocales as metadataLocales } from "../lib/metadata";
 import type { DateLanguage } from "../lib/format-date";
 import type { ArticleLanguage } from "./articles/types";
@@ -33,4 +36,30 @@ test("per-module language types are the site locale", () => {
     true satisfies Same<Locale, SiteLocale>,
   ];
   assert.equal(same.length, 7);
+});
+
+function sourceFiles(directory: string): string[] {
+  return readdirSync(directory).flatMap((entry) => {
+    const candidate = path.join(directory, entry);
+    if (statSync(candidate).isDirectory()) return sourceFiles(candidate);
+    return /\.tsx?$/.test(entry) && !/\.test\.tsx?$/.test(entry)
+      ? [candidate]
+      : [];
+  });
+}
+
+test("the content and lib layers spell no locale union of their own", () => {
+  const source = path.dirname(fileURLToPath(import.meta.url));
+  const files = [
+    ...sourceFiles(source),
+    ...sourceFiles(path.join(source, "..", "lib")),
+  ];
+  const offenders = files.filter((file) =>
+    /"(?:tr|en)"\s*\|\s*"(?:tr|en)"/.test(readFileSync(file, "utf8")),
+  );
+
+  assert.deepEqual(
+    offenders.map((file) => path.relative(source, file)),
+    [],
+  );
 });

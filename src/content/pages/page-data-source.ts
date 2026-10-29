@@ -1,6 +1,7 @@
 import "server-only";
 import { cache } from "react";
 import { homeContent } from "@/content/homeContent";
+import type { SiteLocale } from "@/content/locales";
 import {
   resolveHomeContent,
   type HomePageData,
@@ -56,7 +57,7 @@ export const getEnglishHomePageData = cache(
  * complete, otherwise the static home content (never a 404).
  */
 export const getHomeContent = cache(
-  async (locale: "tr" | "en"): Promise<ResolvedHomeContent> =>
+  async (locale: SiteLocale): Promise<ResolvedHomeContent> =>
     resolveHomeContent(
       locale === "tr"
         ? await getTurkishHomePageData()
