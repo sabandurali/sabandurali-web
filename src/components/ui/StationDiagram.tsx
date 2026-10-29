@@ -6,7 +6,8 @@ import {
   type DiagramStation,
   type SegmentStyle,
 } from "./station-diagram";
-import type { UiLocale } from "./strings";
+import { getUiStrings, type UiLocale } from "./strings";
+import VisuallyHidden from "./VisuallyHidden";
 
 type StationDiagramProps = {
   /** Line code shown as a LineChip, e.g. "M1B". */
@@ -54,7 +55,8 @@ function railClassName(style: SegmentStyle) {
 /**
  * Schematic rail line: stops in order, signal stops for stations that serve
  * the district, solid line between them and dotted where the line leaves the
- * district. A vertical list in narrow containers (no cramped labels at
+ * district. The fill is decorative: a serving station also says so in text
+ * for screen readers (colour never carries the information alone). A vertical list in narrow containers (no cramped labels at
  * 390 px), a horizontal line from a 36 rem container width.
  */
 export default function StationDiagram({
@@ -67,6 +69,7 @@ export default function StationDiagram({
   className,
 }: StationDiagramProps) {
   const segments = getSegmentStyles(stations);
+  const strings = getUiStrings(locale);
 
   return (
     <div
@@ -99,13 +102,16 @@ export default function StationDiagram({
                 <span
                   className={cx(
                     "absolute top-2 left-0 size-[18px] rounded-full border-[3px] border-ink @xl:top-px @xl:left-1/2 @xl:-translate-x-1/2",
-                    station.serves ? "bg-signal" : "bg-white",
+                    station.serves ? "bg-signal" : "bg-land",
                   )}
                 />
               </span>
               <span className="flex min-w-0 flex-col py-2 @xl:py-0">
                 <span className="text-small leading-tight font-bold [font-stretch:var(--stretch-display)] @xl:text-caption">
                   {breakableName(station.name)}
+                  {station.serves ? (
+                    <VisuallyHidden>{strings.stationServes}</VisuallyHidden>
+                  ) : null}
                 </span>
                 {station.note ? (
                   <span className="text-label leading-tight text-ink-muted">

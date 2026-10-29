@@ -1,5 +1,5 @@
 import MetaList from "@/components/pages/MetaList";
-import PageIntro from "@/components/pages/PageIntro";
+import PageIntro from "@/components/ui/PageIntro";
 import PublicationShell from "@/components/pages/PublicationShell";
 import { publicationCopy } from "@/components/pages/publication-copy";
 import { PublicationImage } from "@/components/pages/publication-media";
@@ -48,6 +48,7 @@ export default function PhotoDetailPage({
     <PublicationShell locale={locale} languageHrefs={languagePaths}>
       <article aria-labelledby="photo-title">
         <PageIntro
+          layout="page"
           locale={locale}
           breadcrumb={[
             { label: copy.home, href: copy.homePath },

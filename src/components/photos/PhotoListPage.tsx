@@ -1,4 +1,4 @@
-import PageIntro from "@/components/pages/PageIntro";
+import PageIntro from "@/components/ui/PageIntro";
 import PublicationShell from "@/components/pages/PublicationShell";
 import { publicationCopy } from "@/components/pages/publication-copy";
 import PhotoCard from "@/components/photos/PhotoCard";
@@ -38,6 +38,7 @@ export default function PhotoListPage({
   return (
     <PublicationShell locale={locale} languageHrefs={photoListPaths}>
       <PageIntro
+        layout="page"
         locale={locale}
         breadcrumb={[
           { label: copy.home, href: copy.homePath },

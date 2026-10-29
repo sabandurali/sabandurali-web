@@ -1,6 +1,6 @@
 import { ButtonLink } from "@/components/ui/Button";
 import Container from "@/components/ui/Container";
-import PageIntro from "@/components/workspaces/PageIntro";
+import PageIntro from "@/components/ui/PageIntro";
 import PageShell from "@/components/workspaces/PageShell";
 import { contactPaths, privacyPaths } from "@/config/site";
 import type { Locale } from "@/content/homeContent";

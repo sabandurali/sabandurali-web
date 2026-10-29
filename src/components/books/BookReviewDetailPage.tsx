@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import BookMetadata from "@/components/books/BookMetadata";
-import PageIntro from "@/components/pages/PageIntro";
+import PageIntro from "@/components/ui/PageIntro";
 import PublicationShell from "@/components/pages/PublicationShell";
 import { publicationCopy } from "@/components/pages/publication-copy";
 import {
@@ -245,6 +245,7 @@ export default function BookReviewDetailPage({
       />
       <article aria-labelledby="book-title">
         <PageIntro
+          layout="page"
           locale={locale}
           breadcrumb={[
             { label: copy.home, href: copy.homePath },

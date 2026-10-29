@@ -1,7 +1,7 @@
 import ContactForm from "@/components/forms/ContactForm";
 import Container from "@/components/ui/Container";
 import TextLink from "@/components/ui/TextLink";
-import PageIntro from "@/components/workspaces/PageIntro";
+import PageIntro from "@/components/ui/PageIntro";
 import PageShell from "@/components/workspaces/PageShell";
 import { contactPaths, privacyPaths } from "@/config/site";
 import type { ContactContent } from "@/content/contactContent";

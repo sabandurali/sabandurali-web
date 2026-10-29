@@ -21,6 +21,8 @@ export type UiStrings = {
   sectionOf: (number: number, total?: number) => string;
   gridRef: string;
   line: string;
+  /** Screen-reader note after a station that serves the district. */
+  stationServes: string;
   source: (number: number) => string;
   relatedSources: string;
   photo: string;
@@ -64,6 +66,7 @@ const tr: UiStrings = {
     total ? `Bölüm ${number}, ${total} bölümden` : `Bölüm ${number}`,
   gridRef: "Harita karesi",
   line: "hattı",
+  stationServes: ", ilçeye hizmet eder",
   source: (number) => `Kaynak ${number}`,
   relatedSources: "İlgili kaynaklar",
   photo: "Fotoğraf",
@@ -113,6 +116,7 @@ const en: UiStrings = {
     total ? `Section ${number} of ${total}` : `Section ${number}`,
   gridRef: "Map square",
   line: "line",
+  stationServes: ", serves the district",
   source: (number) => `Source ${number}`,
   relatedSources: "Related sources",
   photo: "Photo",

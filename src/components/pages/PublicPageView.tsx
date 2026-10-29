@@ -1,5 +1,5 @@
 import PageBlocks, { opensWithHero } from "@/components/pages/PageBlocks";
-import PageIntro from "@/components/pages/PageIntro";
+import PageIntro from "@/components/ui/PageIntro";
 import PublicationShell from "@/components/pages/PublicationShell";
 import { publicationCopy } from "@/components/pages/publication-copy";
 import Breadcrumb from "@/components/ui/Breadcrumb";
@@ -30,6 +30,7 @@ export default function PublicPageView({ page }: { page: PublicPage }) {
         </Container>
       ) : (
         <PageIntro
+          layout="page"
           locale={locale}
           breadcrumb={breadcrumb}
           title={page.title}

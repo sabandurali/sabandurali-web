@@ -21,7 +21,7 @@ const swatchClassName: Record<LegendSwatch, string> = {
   "line-solid": "h-0 w-6 border-t-4 border-solid border-ink",
   "line-dotted": "h-0 w-6 border-t-4 border-dotted border-ink",
   "line-dashed": "h-0 w-6 border-t-[3px] border-dashed border-ink-muted",
-  station: "size-3.5 rounded-full border-[3px] border-ink bg-white",
+  station: "size-3.5 rounded-full border-[3px] border-ink bg-land",
   "station-serves": "size-3.5 rounded-full border-[3px] border-ink bg-signal",
   "stop-pending": "size-3.5 rounded-full border-[3px] border-dashed border-ink",
 };

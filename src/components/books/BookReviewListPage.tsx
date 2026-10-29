@@ -1,5 +1,5 @@
 import BookReviewCard from "@/components/books/BookReviewCard";
-import PageIntro from "@/components/pages/PageIntro";
+import PageIntro from "@/components/ui/PageIntro";
 import PublicationShell from "@/components/pages/PublicationShell";
 import { publicationCopy } from "@/components/pages/publication-copy";
 import EmptyState from "@/components/ui/EmptyState";
@@ -29,6 +29,7 @@ export default function BookReviewListPage({
   return (
     <PublicationShell locale={locale} languageHrefs={bookListPaths}>
       <PageIntro
+        layout="page"
         locale={locale}
         breadcrumb={[
           { label: copy.home, href: copy.homePath },
