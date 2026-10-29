@@ -1,6 +1,6 @@
 # Şaban Durali Web — Project State
 
-Last verified handoff: 2026-10-04
+Last verified handoff: 2026-10-29
 
 ## A. Project identity
 
@@ -23,7 +23,7 @@ The final application baseline for the Istanbul district quality milestone is:
 
 This commit is the final application baseline after the 39-district quality tour. It is a historical code/content baseline, not a promise that it will remain the repository's latest commit.
 
-The current documentation HEAD is the later docs-only commit containing this handoff. Always distinguish **application baseline** from **current documentation HEAD**, and check `git log` before starting work.
+This document is updated together with the code after that dated application baseline, so later sections (for example §K.5) describe newer commits. No section names the current HEAD: `git log` shows the current state. Always distinguish the **application baseline** above from the current HEAD, and check `git log` before starting work.
 
 ## C. Tech stack
 

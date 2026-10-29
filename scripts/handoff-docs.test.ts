@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import test from "node:test";
 
 // docs/PROJECT-STATE.md and docs/NEXT-STEPS.md are the binding handoff
@@ -41,4 +41,27 @@ test("§H states that a failed research/news query keeps the section", () => {
   assert.match(contract, /query failed/);
   assert.match(contract, /temporarily unavailable/);
   assert.match(contract, /getVisibleDistrictSections/);
+});
+
+test("ARCHITECTURE-9: the handoff date covers the newest migration and names no HEAD", () => {
+  const [, projectState] = handoff[0];
+  const date = /^Last verified handoff: (\d{4})-(\d{2})-(\d{2})$/m.exec(
+    projectState,
+  );
+  assert.ok(date, "the handoff date line is missing");
+  const verified = `${date[1]}${date[2]}${date[3]}`;
+  // A migration is a code change §K describes; the handoff must be
+  // re-verified on or after the newest one.
+  const newest = readdirSync("src/migrations")
+    .map((file) => /^(\d{8})_/.exec(file)?.[1])
+    .filter((value): value is string => value !== undefined)
+    .sort()
+    .at(-1);
+  assert.ok(newest);
+  assert.ok(
+    verified >= newest,
+    `handoff verified ${verified}, newest migration ${newest}`,
+  );
+  // The document is edited with the code; it never claims to be HEAD.
+  assert.doesNotMatch(projectState, /documentation HEAD is the later/);
 });
