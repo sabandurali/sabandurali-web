@@ -3,6 +3,7 @@ import { getPayload, type Where } from "payload";
 import config from "@payload-config";
 import { createPublicArticleConditions } from "@/content/articles/article-query-conditions";
 import { isOfferedArticleVersion } from "@/content/articles/article-translation";
+import { getEnglishRichTextLinkContext } from "@/content/articles/offered-article-links";
 import {
   mapPayloadArticle,
   toPublicArticleSummary,
@@ -41,8 +42,13 @@ export class PayloadPublicArticleRepository {
         where: { and: conditions },
       });
 
+      const links =
+        locale === "en"
+          ? await getEnglishRichTextLinkContext(result.docs)
+          : undefined;
+
       for (const document of result.docs) {
-        const article = mapPayloadArticle(document, locale, now);
+        const article = mapPayloadArticle(document, locale, now, links);
         if (article !== null) articles.push(article);
       }
 
@@ -75,9 +81,14 @@ export class PayloadPublicArticleRepository {
     });
     const document = result.docs[0];
 
-    return document === undefined
-      ? null
-      : mapPayloadArticle(document, locale, now);
+    if (document === undefined) return null;
+
+    const links =
+      locale === "en"
+        ? await getEnglishRichTextLinkContext([document])
+        : undefined;
+
+    return mapPayloadArticle(document, locale, now, links);
   }
 
   /**

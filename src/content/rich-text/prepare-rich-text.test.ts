@@ -11,7 +11,11 @@ import {
   upload,
 } from "./lexical-fixtures";
 import { INTERNAL_LINK_COLLECTIONS } from "./internal-link-collections";
-import { getInternalDocumentPath, prepareRichText } from "./prepare-rich-text";
+import {
+  collectLinkedArticles,
+  getInternalDocumentPath,
+  prepareRichText,
+} from "./prepare-rich-text";
 
 const now = new Date("2026-10-28T12:00:00Z");
 const past = "2026-10-01T09:00:00Z";
@@ -34,7 +38,9 @@ test("articles and photos link to the page locale", () => {
     "/makaleler/kadikoy-rehberi",
   );
   assert.equal(
-    getInternalDocumentPath(internal("articles", article), "en", now),
+    getInternalDocumentPath(internal("articles", article), "en", now, {
+      offeredEnglishArticleIds: new Set(["a1"]),
+    }),
     "/en/articles/kadikoy-rehberi",
   );
   assert.equal(
@@ -42,6 +48,8 @@ test("articles and photos link to the page locale", () => {
       internal("photos", {
         id: "p1",
         slug: "galata",
+        title: "Galata",
+        altText: "Galata Kulesi",
         _status: "published",
         publishedAt: past,
       }),
@@ -50,6 +58,73 @@ test("articles and photos link to the page locale", () => {
     ),
     "/en/photography/galata",
   );
+});
+
+test("English article links resolve only to offered (complete) translations", () => {
+  const article = {
+    id: "a1",
+    slug: "kadikoy-guide",
+    _status: "published",
+    publishedAt: past,
+  };
+
+  // No link context: the English version may be an unfinished translation
+  // that the detail page refuses, so the link stays plain text.
+  assert.equal(
+    getInternalDocumentPath(internal("articles", article), "en", now),
+    null,
+  );
+  assert.equal(
+    getInternalDocumentPath(internal("articles", article), "en", now, {
+      offeredEnglishArticleIds: new Set(["other"]),
+    }),
+    null,
+  );
+  // Turkish links never need the context.
+  assert.equal(
+    getInternalDocumentPath(internal("articles", article), "tr", now),
+    "/makaleler/kadikoy-guide",
+  );
+});
+
+test("photo links need the localized title and alt text the detail page requires", () => {
+  const photo = {
+    id: "p1",
+    slug: "galata",
+    title: "Galata",
+    altText: "Galata Kulesi",
+    _status: "published",
+    publishedAt: past,
+  };
+
+  for (const value of [
+    { ...photo, altText: null },
+    { ...photo, altText: " " },
+    { ...photo, title: undefined },
+  ]) {
+    assert.equal(
+      getInternalDocumentPath(internal("photos", value), "en", now),
+      null,
+    );
+  }
+});
+
+test("collectLinkedArticles finds populated article targets anywhere", () => {
+  const articleLink = link({
+    linkType: "internal",
+    doc: internal("articles", { id: "a1", slug: "x", content: "EN" }),
+  });
+  const found = collectLinkedArticles([
+    { layout: [{ content: lexical(paragraph(articleLink)) }] },
+    lexical(
+      paragraph(
+        link({ linkType: "internal", doc: internal("articles", "a2") }),
+        link({ linkType: "internal", doc: internal("photos", { id: "p" }) }),
+      ),
+    ),
+  ]);
+
+  assert.deepEqual([...found.entries()], [["a1", "EN"]]);
 });
 
 test("unpublished, scheduled, unpopulated and district news targets do not resolve", () => {
@@ -303,7 +378,13 @@ test("every collection the editor can link to resolves to a public page", () => 
         reviewStatus: "published",
         seo: { index: true },
       },
-      photos: { ...published, id: "f", slug: "galata" },
+      photos: {
+        ...published,
+        id: "f",
+        slug: "galata",
+        title: "Galata",
+        altText: "Galata Kulesi",
+      },
       "district-guides": { id: "d", district: "esenler" },
     };
 

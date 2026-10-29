@@ -12,6 +12,20 @@ function getLanguage(value: unknown): RichTextLocale | null {
   return value === "tr" || value === "en" ? value : null;
 }
 
+/**
+ * What the renderer of a page must know beyond the linked document itself.
+ *
+ * An English article version is only served when it covers its Turkish
+ * source (`isCompleteTranslation`), which needs the Turkish rich text that a
+ * link populated in English does not carry. The repository therefore
+ * resolves the English article targets first (`collectLinkedArticles`) and
+ * passes the IDs it may link to. Without that set, English article links
+ * stay unresolved and render as plain text: never a link to a 404.
+ */
+export type RichTextLinkContext = {
+  offeredEnglishArticleIds?: ReadonlySet<string>;
+};
+
 function isPublishedDocument(value: Record<string, unknown>, now: Date) {
   return (
     (value._status === undefined || value._status === "published") &&
@@ -33,6 +47,7 @@ export function getInternalDocumentPath(
   doc: unknown,
   locale: RichTextLocale,
   now: Date,
+  context: RichTextLinkContext = {},
 ): string | null {
   if (!isRecord(doc) || !isRecord(doc.value)) return null;
 
@@ -41,14 +56,31 @@ export function getInternalDocumentPath(
   const slug = getText(value.slug);
 
   switch (relationTo) {
-    case "articles":
-      return slug !== null &&
-        value.articleType !== "district-news" &&
-        isPublishedDocument(value, now)
-        ? getArticlePath(slug, locale)
-        : null;
+    case "articles": {
+      if (
+        slug === null ||
+        value.articleType === "district-news" ||
+        !isPublishedDocument(value, now)
+      ) {
+        return null;
+      }
+      if (locale === "en") {
+        const id = getText(value.id);
+        const offered = context.offeredEnglishArticleIds;
+
+        if (id === null || offered === undefined || !offered.has(id)) {
+          return null;
+        }
+      }
+      return getArticlePath(slug, locale);
+    }
     case "photos":
-      return slug !== null && isPublishedDocument(value, now)
+      // Same rule as the photo detail page (`createPublicPhotoConditions`):
+      // the localized title and alt text must exist in this locale.
+      return slug !== null &&
+        getText(value.title) !== null &&
+        getText(value.altText) !== null &&
+        isPublishedDocument(value, now)
         ? getPhotoPath(slug, locale)
         : null;
     case "books": {
@@ -135,12 +167,15 @@ function prepareNode(
   node: unknown,
   locale: RichTextLocale,
   now: Date,
+  context: RichTextLinkContext,
 ): unknown {
   if (!isRecord(node)) return node;
 
   const children = Array.isArray(node.children)
     ? node.children.flatMap((child) =>
-        isRelationshipNode(child) ? [] : [prepareNode(child, locale, now)],
+        isRelationshipNode(child)
+          ? []
+          : [prepareNode(child, locale, now, context)],
       )
     : node.children;
   const withChildren =
@@ -165,7 +200,7 @@ function prepareNode(
     return withChildren;
   }
 
-  const href = getInternalDocumentPath(node.fields.doc, locale, now);
+  const href = getInternalDocumentPath(node.fields.doc, locale, now, context);
 
   // The populated target document is never passed on to the renderer.
   return {
@@ -187,8 +222,43 @@ export function prepareRichText(
   content: unknown,
   locale: RichTextLocale,
   now: Date,
+  context: RichTextLinkContext = {},
 ): unknown {
   if (!isRecord(content) || !isRecord(content.root)) return content;
 
-  return { ...content, root: prepareNode(content.root, locale, now) };
+  return { ...content, root: prepareNode(content.root, locale, now, context) };
+}
+
+function collectLinks(value: unknown, found: Map<string, unknown>): void {
+  if (Array.isArray(value)) {
+    for (const item of value) collectLinks(item, found);
+    return;
+  }
+  if (!isRecord(value)) return;
+
+  if (
+    value.type === "link" &&
+    isRecord(value.fields) &&
+    value.fields.linkType === "internal" &&
+    isRecord(value.fields.doc) &&
+    value.fields.doc.relationTo === "articles" &&
+    isRecord(value.fields.doc.value)
+  ) {
+    const target = value.fields.doc.value;
+    const id = getText(target.id);
+    if (id !== null && !found.has(id)) found.set(id, target.content);
+  }
+
+  for (const child of Object.values(value)) collectLinks(child, found);
+}
+
+/**
+ * Populated article targets of every internal link anywhere in `value` (an
+ * article, a page layout, …): article ID → its rich text in the locale the
+ * link was populated in.
+ */
+export function collectLinkedArticles(value: unknown): Map<string, unknown> {
+  const found = new Map<string, unknown>();
+  collectLinks(value, found);
+  return found;
 }

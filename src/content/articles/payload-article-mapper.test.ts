@@ -206,6 +206,7 @@ test("internal links in the body are resolved for the requested locale", (t) => 
     }),
     "en",
     now,
+    { offeredEnglishArticleIds: new Set(["article-2"]) },
   );
   const serialized = JSON.stringify(
     mapped?.content.source === "lexical" ? mapped.content.data : null,
@@ -213,6 +214,23 @@ test("internal links in the body are resolved for the requested locale", (t) => 
 
   assert.ok(serialized.includes('"url":"/en/articles/moda-sahili"'));
   assert.ok(serialized.includes('"linkType":"custom"'));
+
+  // Not known to be a complete translation: plain text, never a 404 link.
+  const unresolved = mapPayloadArticle(
+    article({
+      content: lexical(
+        paragraph(link({ linkType: "internal", newTab: false, doc: target })),
+      ),
+    }),
+    "en",
+    now,
+  );
+  assert.equal(
+    JSON.stringify(
+      unresolved?.content.source === "lexical" ? unresolved.content.data : null,
+    ).includes("/en/articles/moda-sahili"),
+    false,
+  );
 });
 
 test("SEO controls and a guest author reach the public article", (t) => {

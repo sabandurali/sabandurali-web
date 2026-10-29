@@ -98,3 +98,28 @@ export function isOfferedTranslationPair(
     isOfferedArticleVersion(article, getLexicalData(turkishSource))
   );
 }
+
+/**
+ * English article versions an internal link may point to: those whose
+ * Turkish source is known and covered (`englishContent` maps article ID →
+ * English rich text, `turkishContent` article ID → Turkish rich text). An
+ * article missing from `turkishContent` is not readable in Turkish and is
+ * not offered.
+ */
+export function selectOfferedEnglishArticleIds(
+  englishContent: ReadonlyMap<string, unknown>,
+  turkishContent: ReadonlyMap<string, unknown>,
+): Set<string> {
+  const offered = new Set<string>();
+
+  for (const [id, content] of englishContent) {
+    if (
+      turkishContent.has(id) &&
+      isCompleteTranslation(turkishContent.get(id), content)
+    ) {
+      offered.add(id);
+    }
+  }
+
+  return offered;
+}

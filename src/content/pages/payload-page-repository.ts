@@ -1,6 +1,7 @@
 import "server-only";
 import { getPayload, type Where } from "payload";
 import config from "@payload-config";
+import { getEnglishRichTextLinkContext } from "@/content/articles/offered-article-links";
 import { mapPayloadPage } from "@/content/pages/payload-page-mapper";
 import type {
   PublicPage,
@@ -53,9 +54,14 @@ export class PayloadPublicPageRepository {
     });
     const document = result.docs[0];
 
-    return document === undefined
-      ? null
-      : mapPayloadPage(document, language, now);
+    if (document === undefined) return null;
+
+    const links =
+      language === "en"
+        ? await getEnglishRichTextLinkContext([document])
+        : undefined;
+
+    return mapPayloadPage(document, language, now, links);
   }
 
   async findHome(language: PublicPageLanguage): Promise<PublicPage | null> {
@@ -114,8 +120,13 @@ export class PayloadPublicPageRepository {
         },
       });
 
+      const links =
+        language === "en"
+          ? await getEnglishRichTextLinkContext(result.docs)
+          : undefined;
+
       for (const document of result.docs) {
-        const mapped = mapPayloadPage(document, language, now);
+        const mapped = mapPayloadPage(document, language, now, links);
         if (mapped !== null) pages.push(mapped);
       }
 

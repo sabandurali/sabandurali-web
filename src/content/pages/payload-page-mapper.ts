@@ -1,7 +1,10 @@
 import { reportContentIssue } from "@/content/content-log";
 import { getText, isPublishedBy, isRecord } from "@/content/guards";
 import { mapMediaImage } from "@/content/media";
-import { prepareRichText } from "@/content/rich-text/prepare-rich-text";
+import {
+  prepareRichText,
+  type RichTextLinkContext,
+} from "@/content/rich-text/prepare-rich-text";
 import type {
   PublicCardGroupBlock,
   PublicCtaBlock,
@@ -99,14 +102,23 @@ function isRichText(value: unknown): value is PublicRichTextBlock["content"] {
 }
 
 type PayloadBlock = NonNullable<PayloadPage["layout"]>[number];
-type MappingContext = { language: PublicPageLanguage; now: Date };
+type MappingContext = {
+  language: PublicPageLanguage;
+  now: Date;
+  links?: RichTextLinkContext;
+};
 
 /** Rich text with internal links resolved for the page language. */
 function mapRichText(
   value: unknown,
   context: MappingContext,
 ): PublicRichTextBlock["content"] | null {
-  const prepared = prepareRichText(value, context.language, context.now);
+  const prepared = prepareRichText(
+    value,
+    context.language,
+    context.now,
+    context.links,
+  );
   return isRichText(prepared) ? prepared : null;
 }
 
@@ -406,6 +418,7 @@ export function mapPayloadPage(
   value: PayloadPage,
   language: PublicPageLanguage,
   now: Date = new Date(),
+  links: RichTextLinkContext = {},
 ): PublicPage | null {
   const id = getText(value.id);
   const title = getText(value.title);
@@ -429,7 +442,7 @@ export function mapPayloadPage(
     return null;
   }
 
-  const context: MappingContext = { language, now };
+  const context: MappingContext = { language, now, links };
 
   return {
     id,

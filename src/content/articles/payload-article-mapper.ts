@@ -18,7 +18,10 @@ import {
 } from "@/content/guards";
 import { personalBrandName } from "@/content/entity-seo";
 import { mapMediaImage } from "@/content/media";
-import { prepareRichText } from "@/content/rich-text/prepare-rich-text";
+import {
+  prepareRichText,
+  type RichTextLinkContext,
+} from "@/content/rich-text/prepare-rich-text";
 import type { Article as PayloadArticle } from "@/payload-types";
 
 function hasMeaningfulLexicalNode(value: unknown): boolean {
@@ -140,6 +143,7 @@ export function mapPayloadArticle(
   value: PayloadArticle,
   locale: ArticleLanguage,
   now: Date = new Date(),
+  links: RichTextLinkContext = {},
 ): PublicArticle | null {
   const id = getText(value.id);
   const title = getText(value.title);
@@ -169,7 +173,7 @@ export function mapPayloadArticle(
   const content =
     articleType === "district-news"
       ? null
-      : prepareRichText(value.content, locale, now);
+      : prepareRichText(value.content, locale, now, links);
 
   if (articleType !== "district-news" && !isLexicalContent(content)) {
     reportInvalidArticle(
