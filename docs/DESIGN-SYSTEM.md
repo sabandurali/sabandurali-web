@@ -3,8 +3,10 @@
 Sitenin görsel dili: İstanbul bir atlas gibi okunur. Serin harita kâğıdı zemin, Boğaz mavisi mürekkep, tek
 bir sinyal turuncusu; Archivo'nun genişlik ekseni başlıkları ve harita etiketlerini, Martian Mono verileri
 taşır. Ana fikir 39 ilçenin Boğaz şeridiyle 25'e 14 bölünmüş şematik kare haritası, ilçe rehberinin yön
-levhası başlıkları ve veri tablosudur. Hat şeması bileşeni (`StationDiagram`) hiçbir sayfada kullanılmadığı
-için kaldırıldı; tarihli ve kaynaklı istasyon verisi geldiğinde, o veriyle birlikte yeniden eklenir.
+levhası başlıkları ve veri tablosudur. Hat şeması (`StationDiagram`) ve durak işareti (`StationMarker`)
+hiçbir sayfada kullanılmadığı için kaldırıldı; tarihli ve kaynaklı istasyon verisi geldiğinde, o veriyle
+birlikte yeniden eklenir. `src/components/ui/ui-usage-guard.test.ts` hiçbir kaynağın kullanmadığı bir
+bileşenin burada kalmasına izin vermez.
 
 Kaynaklar (tek doğru kaynak bunlardır, bu belge onları açıklar):
 
@@ -240,7 +242,6 @@ yalnızca etkileşim gerektirenlerdir: `SkipLink`, `Disclosure`, `NavMenu`, `For
 | `Chip` | Çerçeveli mono etiket ("Eylül 2026 itibarıyla"). Etkileşimsiz. |
 | `GridRef` | Kare adresi (F2): harf + rakam, çerçeveli mono. Harfler I, O ve K kullanmaz. |
 | `LineChip` | Yalnızca hat kodları (M1B, M7): dolu yuvarlak köşeli çip; `other` bağlantı hattı, `on-sea` deniz zemini. |
-| `StationMarker` | Durak ya da kurum (Davutpaşa–YTÜ): durak halkası + ad; asla çip değil. |
 | `Badge` | Kısa durum: `signal` (2026), `neutral`, `soon` ("Yakında"). Anlamı metin taşır. |
 | `Figure` + `Credit` | Görsel + altyazı + kredi (yazar/koleksiyon · tarih · lisans bağlantısı · kaynak bağlantısı). `credit` prop'u zorunludur: kredi gerektirmeyen görsel için açıkça `null`. |
 | `SourceRef` / `SourceRefList` | Kaynak atfı köşeli parantezli numaradır: [3]. Kaynak tablosu satırı `id="kaynak-3"` (`sourceAnchorId`). 44 × 44 px dokunma alanı. Deniz zemininde `tone="on-sea"` (`Timeline tone="sea"` bunu kendisi verir). |
@@ -345,7 +346,7 @@ kipinde kalır. Klavye modeli `menu-keys.ts` içindedir ve test edilir:
 | Açık zeminde turuncuyu dolgu olarak, üstünde mürekkep | Açık zeminde turuncu metin |
 | Eksik veri için `EmptyState` | "Yakında", örnek sayı ya da stok görselle doldurmak |
 | Kaynak atfı `[3]`, kare adresi `F2`, hat `M1B` | Kaynağı `K03` gibi harf+rakamla yazmak |
-| Kurum/durak için `StationMarker` | YTÜ'yü hat çipiyle göstermek |
+| Hat çipi yalnızca hat kodu için (`LineChip`); durak ve kurum adı düz metin | YTÜ'yü hat çipiyle göstermek |
 | Görselde `credit` ya da bilinçli `null` | Lisans gerektiren görselde krediyi atlamak |
 | `Section tone="sea"` ile koyu bölüm | `bg-sea` verip odak ve metin renklerini unutmak |
 | 12 px ve üzeri | `text-[10px]`, `text-[0.6rem]` |
