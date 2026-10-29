@@ -7,6 +7,11 @@ import {
 } from "@/content/articles/article-data-source";
 import { createArticleMetadata } from "@/content/articles/article-seo";
 
+// Prerendered and refreshed at most hourly; CMS writes revalidate this path
+// on demand (src/lib/revalidation.ts), the hour is the time-based safety net
+// for scheduled publishing, which no write announces.
+export const revalidate = 3600;
+
 const locale = "tr" as const;
 
 type TurkishArticlePageProps = {

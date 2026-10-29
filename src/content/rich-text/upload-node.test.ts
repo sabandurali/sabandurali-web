@@ -13,6 +13,7 @@ test("toolbar uploads with fields: null and {} are images", () => {
         kind: "image",
         src: mediaDocument.url,
         alt: mediaDocument.alt,
+        altLanguage: "tr",
         width: 1600,
         height: 900,
         caption: mediaDocument.description,
@@ -29,6 +30,8 @@ test("a node-level alt text wins over the media alt text", () => {
 
   assert.ok(result.ok && result.upload.kind === "image");
   assert.equal(result.upload.alt, "Bu bağlamdaki açıklama");
+  // The node's own alt is in the document's language, not marked Turkish.
+  assert.equal(result.upload.altLanguage, undefined);
 });
 
 test("missing dimensions, caption and credit are null", () => {

@@ -9,6 +9,7 @@ test("media images carry alt, size, caption (Turkish only) and credit", () => {
     {
       src: mediaDocument.url,
       alt: mediaDocument.alt,
+      altLanguage: "tr",
       width: 1600,
       height: 900,
       caption: mediaDocument.description,
@@ -25,6 +26,29 @@ test("media images carry alt, size, caption (Turkish only) and credit", () => {
       { alt: " ", fallbackAlt: "Yedek", locale: "tr" },
     )?.alt,
     "Yedek",
+  );
+});
+
+test("the media alt text is Turkish; a localized alt or the fallback is not", () => {
+  assert.equal(
+    mapMediaImage(mediaDocument, { fallbackAlt: "x", locale: "en" })
+      ?.altLanguage,
+    "tr",
+  );
+  assert.equal(
+    mapMediaImage(mediaDocument, {
+      alt: "Kadıköy pier",
+      fallbackAlt: "x",
+      locale: "en",
+    })?.altLanguage,
+    "en",
+  );
+  assert.equal(
+    mapMediaImage(
+      { ...mediaDocument, alt: "" },
+      { fallbackAlt: "Article title", locale: "en" },
+    )?.altLanguage,
+    "en",
   );
 });
 

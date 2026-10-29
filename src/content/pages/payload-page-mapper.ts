@@ -80,6 +80,9 @@ function mapImage(
   return {
     src: image.src,
     alt: image.alt,
+    ...(image.altLanguage === language
+      ? {}
+      : { altLanguage: image.altLanguage }),
     ...(image.width === null ? {} : { width: image.width }),
     ...(image.height === null ? {} : { height: image.height }),
     ...(image.caption === null ? {} : { caption: image.caption }),

@@ -6,6 +6,13 @@ export type RichTextUpload =
       kind: "image";
       src: string;
       alt: string;
+      /**
+       * "tr" when `alt` is the media document's own alt text, which is
+       * written in Turkish. Absent when the node carries its own alt (in the
+       * document's language). English documents render a Turkish alt with
+       * lang="tr".
+       */
+      altLanguage?: "tr";
       width: number | null;
       height: number | null;
       caption: string | null;
@@ -58,13 +65,16 @@ export function getRichTextUpload(node: unknown): RichTextUploadResult {
   }
 
   const fields = isRecord(node.fields) ? node.fields : null;
+  const nodeAlt = getText(fields?.alt);
+  const mediaAlt = nodeAlt === null ? getText(media.alt) : null;
 
   return {
     ok: true,
     upload: {
       kind: "image",
       src,
-      alt: getText(fields?.alt) ?? getText(media.alt) ?? "",
+      alt: nodeAlt ?? mediaAlt ?? "",
+      ...(mediaAlt === null ? {} : { altLanguage: "tr" as const }),
       width: getPositiveNumber(media.width),
       height: getPositiveNumber(media.height),
       caption: getText(media.description),

@@ -91,6 +91,17 @@ test("an English review keeps the credit but not the Turkish caption", (t) => {
   assert.equal(review?.coverImage?.caption, undefined);
 });
 
+test("an English review without its own cover alt marks the Turkish media alt", (t) => {
+  silence(t);
+  const review = mapPayloadBookReview(
+    book({ language: "en", slug: "deep-work", coverImageAlt: null }),
+    now,
+  );
+
+  assert.equal(review?.coverImage?.alt, mediaDocument.alt);
+  assert.equal(review?.coverImage?.altLanguage, "tr");
+});
+
 test("reviews that the public schema rejects are skipped and logged", (t) => {
   const warn = silence(t);
 

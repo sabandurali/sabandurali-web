@@ -12,6 +12,7 @@ import {
   text,
   upload,
 } from "../../content/rich-text/lexical-fixtures";
+import { Credit, Figure } from "../ui/Figure";
 import PayloadRichText, { renderRichTextUpload } from "./PayloadRichText";
 
 type RichTextData = ComponentProps<typeof PayloadRichText>["data"];
@@ -37,41 +38,70 @@ function render(t: TestContext, value: unknown) {
 }
 
 // next/image cannot be rendered outside Next (CommonJS interop), so image
-// uploads are checked on the element that the converter returns.
-function figureParts(t: TestContext, node: unknown) {
+// uploads are checked on the <Figure> element that the converter returns.
+function figureParts(t: TestContext, node: unknown, locale?: "tr" | "en") {
   const errors = t.mock.method(console, "error", () => {});
-  const element = renderRichTextUpload(node);
+  const element = renderRichTextUpload(node, locale);
 
   assert.deepEqual(errors.mock.calls, []);
-  assert.ok(isValidElement<{ children: unknown[] }>(element));
-  assert.equal(element.type, "figure");
-  const [media, caption] = element.props.children;
+  assert.ok(
+    isValidElement<{ children: unknown; caption?: unknown; credit: unknown }>(
+      element,
+    ),
+  );
+  assert.equal(element.type, Figure);
+  const media = element.props.children;
   assert.ok(isValidElement<Record<string, unknown>>(media));
 
   return {
     media,
-    caption: isValidElement(caption) ? renderToStaticMarkup(caption) : null,
+    caption: element.props.caption ?? null,
+    credit: element.props.credit,
   };
 }
 
 for (const fields of [null, {}]) {
   test(`an upload with fields: ${JSON.stringify(fields)} renders its image, caption and credit`, (t) => {
-    const { media, caption } = figureParts(t, upload(mediaDocument, fields));
+    const { media, caption, credit } = figureParts(
+      t,
+      upload(mediaDocument, fields),
+    );
 
     assert.equal(media.props.src, mediaDocument.url);
     assert.equal(media.props.alt, "Kadıköy rıhtımı");
     assert.equal(media.props.width, 1600);
     assert.equal(media.props.height, 900);
-    assert.match(caption ?? "", /<span>Kadıköy iskelesi, sabah<\/span>/);
-    assert.match(
-      caption ?? "",
-      /data-image-credit="">Şaban Durali · CC BY 4\.0</,
-    );
+    assert.equal(media.props.lang, undefined);
+    assert.equal(caption, "Kadıköy iskelesi, sabah");
+    assert.deepEqual(credit, { collection: "Şaban Durali · CC BY 4.0" });
   });
 }
 
-test("an image without dimensions uses a sized frame and no caption", (t) => {
-  const { media, caption } = figureParts(
+test("the credit line renders as the editor wrote it", () => {
+  const html = renderToStaticMarkup(
+    createElement(Credit, {
+      credit: { collection: "Şaban Durali · CC BY 4.0" },
+    }),
+  );
+
+  assert.match(html, /Şaban Durali · CC BY 4\.0/);
+  assert.doesNotMatch(html, /Fotoğraf:/);
+});
+
+test("an English document marks a Turkish media alt text with lang", (t) => {
+  assert.equal(
+    figureParts(t, upload(mediaDocument, null), "en").media.props.lang,
+    "tr",
+  );
+  assert.equal(
+    figureParts(t, upload(mediaDocument, { alt: "Kadıköy pier" }), "en").media
+      .props.lang,
+    undefined,
+  );
+});
+
+test("an image without dimensions has no caption or credit", (t) => {
+  const { media, caption, credit } = figureParts(
     t,
     upload({
       id: "m2",
@@ -81,8 +111,10 @@ test("an image without dimensions uses a sized frame and no caption", (t) => {
     }),
   );
 
-  assert.equal(media.type, "span");
+  assert.equal(media.props.width, null);
+  assert.equal(media.props.height, null);
   assert.equal(caption, null);
+  assert.equal(credit, null);
 });
 
 test("the converter never throws on malformed upload nodes", (t) => {
@@ -125,8 +157,25 @@ test("PDF uploads render as download links", (t) => {
 
   assert.match(
     html,
-    /<a href="\/api\/media\/file\/rapor\.pdf"[^>]*><span>rapor\.pdf<\/span>/,
+    /<a href="\/api\/media\/file\/rapor\.pdf"[^>]*><span[^>]*>rapor\.pdf<\/span><span[^>]*>PDF<\/span>/,
   );
+});
+
+test("links that open a new tab say so to screen readers", (t) => {
+  const { html } = render(
+    t,
+    lexical(
+      paragraph(
+        link(
+          { linkType: "custom", newTab: true, url: "https://example.org/" },
+          "dış",
+        ),
+      ),
+    ),
+  );
+
+  assert.match(html, /dış<svg[^>]*aria-hidden="true"/);
+  assert.match(html, /<span class="sr-only"> \(yeni sekmede açılır\)<\/span>/);
 });
 
 test("resolved internal links and safe custom links render as anchors", (t) => {
@@ -149,7 +198,7 @@ test("resolved internal links and safe custom links render as anchors", (t) => {
   assert.match(html, /<a href="\/makaleler\/kadikoy"[^>]*>iç<\/a>/);
   assert.match(
     html,
-    /<a href="https:\/\/example\.org\/" target="_blank" rel="noopener noreferrer"[^>]*>dış<\/a>/,
+    /<a href="https:\/\/example\.org\/" target="_blank" rel="noopener noreferrer"[^>]*>dış<svg/,
   );
   assert.deepEqual(warnings, []);
 });

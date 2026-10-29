@@ -12,6 +12,9 @@ export type PublicArticleImage = {
   source: "static" | "payload";
   src: string;
   alt: string;
+  /** Set only when `alt` is not in the article's language (Turkish media alt
+   * on an English page); render the image with this `lang`. */
+  altLanguage?: Article["language"];
   caption?: string;
   /** Source / copyright line that must be shown with the image. */
   credit?: string;

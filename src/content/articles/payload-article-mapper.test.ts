@@ -97,6 +97,26 @@ test("English images keep the credit but not the Turkish caption", (t) => {
 
   assert.equal(mapped?.featuredImage?.credit, mediaDocument.sourceCopyright);
   assert.equal(mapped?.featuredImage?.caption, undefined);
+  // The localized alt is in English: no language mark.
+  assert.equal(mapped?.featuredImage?.altLanguage, undefined);
+});
+
+test("an English article without its own alt marks the Turkish media alt", (t) => {
+  silence(t);
+  const english = mapPayloadArticle(
+    article({ featuredImageAlt: null }),
+    "en",
+    now,
+  );
+  const turkish = mapPayloadArticle(
+    article({ featuredImageAlt: null }),
+    "tr",
+    now,
+  );
+
+  assert.equal(english?.featuredImage?.alt, mediaDocument.alt);
+  assert.equal(english?.featuredImage?.altLanguage, "tr");
+  assert.equal(turkish?.featuredImage?.altLanguage, undefined);
 });
 
 test("drafts, scheduled articles and missing locale fields are skipped and logged", (t) => {

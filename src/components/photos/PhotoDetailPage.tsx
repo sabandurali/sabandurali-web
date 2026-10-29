@@ -1,10 +1,20 @@
-import Image from "next/image";
-import Link from "next/link";
+import MetaList from "@/components/pages/MetaList";
+import PageIntro from "@/components/pages/PageIntro";
+import PublicationShell from "@/components/pages/PublicationShell";
+import { publicationCopy } from "@/components/pages/publication-copy";
+import { PublicationImage } from "@/components/pages/publication-media";
+import TranslationLink from "@/components/pages/TranslationLink";
 import PhotoCard from "@/components/photos/PhotoCard";
-import BackToTop from "@/components/layout/BackToTop";
-import Footer from "@/components/layout/Footer";
-import Header from "@/components/layout/Header";
-import { homeContent } from "@/content/homeContent";
+import {
+  getPhotoCredit,
+  getPhotoExif,
+  getPhotoFacts,
+} from "@/components/photos/photo-details";
+import Chip from "@/components/ui/Chip";
+import Container from "@/components/ui/Container";
+import { Figure } from "@/components/ui/Figure";
+import Section from "@/components/ui/Section";
+import TextLink from "@/components/ui/TextLink";
 import {
   getPhotoLanguagePaths,
   photoListPaths,
@@ -14,15 +24,10 @@ import type {
   PublicPhotoTranslation,
 } from "@/content/photos/types";
 
-function formatDate(value: string | null, locale: "tr" | "en") {
-  if (value === null || !Number.isFinite(Date.parse(value))) return null;
-  return new Intl.DateTimeFormat(locale === "tr" ? "tr-TR" : "en", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  }).format(new Date(value));
-}
-
+/**
+ * Photograph page: intro, the photograph whole (never cropped) with its
+ * credit, the facts, tags and camera details, then related photographs.
+ */
 export default function PhotoDetailPage({
   photo,
   translation,
@@ -33,186 +38,118 @@ export default function PhotoDetailPage({
   related: PublicPhoto[];
 }) {
   const locale = photo.language;
-  const home = homeContent[locale];
-  const homePath = locale === "tr" ? "/" : "/en";
-  const takenAt = formatDate(photo.takenAt, locale);
-  const exif = [
-    [locale === "tr" ? "Kamera" : "Camera", photo.exif.camera],
-    [locale === "tr" ? "Lens" : "Lens", photo.exif.lens],
-    [
-      locale === "tr" ? "Odak uzaklığı" : "Focal length",
-      photo.exif.focalLength,
-    ],
-    [locale === "tr" ? "Diyafram" : "Aperture", photo.exif.aperture],
-    [locale === "tr" ? "Enstantane" : "Shutter speed", photo.exif.shutterSpeed],
-    [locale === "tr" ? "ISO" : "ISO", photo.exif.iso],
-  ].filter((item): item is [string, string] => item[1] !== null);
-  const labels =
-    locale === "tr"
-      ? {
-          back: "Fotoğraflara dön",
-          location: "Konum",
-          date: "Tarih",
-          photographer: "Fotoğrafçı",
-          credit: "Kredi / lisans",
-          exif: "EXIF",
-          related: "İlgili fotoğraflar",
-          translation: "English",
-        }
-      : {
-          back: "Back to photography",
-          location: "Location",
-          date: "Date",
-          photographer: "Photographer",
-          credit: "Credit / license",
-          exif: "EXIF",
-          related: "Related photographs",
-          translation: "View in Turkish",
-        };
+  const copy = publicationCopy[locale];
+  const text = copy.photos;
+  const languagePaths = getPhotoLanguagePaths(photo, translation);
+  const collections = photo.collections.map((item) => item.title).join(" · ");
+  const exif = getPhotoExif(photo);
 
   return (
-    <div id="top" lang={locale}>
-      <Header
-        locale={locale}
-        anchors={home.anchors}
-        content={home.header}
-        homeHref={homePath}
-        anchorPrefix={homePath}
-        languageHrefs={getPhotoLanguagePaths(photo, translation)}
-      />
-      <main className="px-4 py-10 sm:px-6 sm:py-14 lg:py-18">
-        <article className="mx-auto max-w-6xl">
-          <nav aria-label={labels.back} className="mb-8">
-            <Link
-              href={photoListPaths[locale]}
-              className="inline-flex min-h-11 items-center text-sm text-accent-soft underline decoration-border underline-offset-4 hover:text-accent-strong"
-            >
-              ← {labels.back}
-            </Link>
-          </nav>
-          <header className="border-b border-border pb-9 sm:pb-12">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent-soft">
-              {photo.collections.map((item) => item.title).join(" · ")}
-            </p>
-            <h1 className="mt-4 text-4xl leading-[1.08] text-ivory sm:text-5xl lg:text-6xl">
-              {photo.title}
-            </h1>
-            {photo.description !== null && (
-              <p className="mt-6 max-w-3xl text-lg leading-8 text-muted sm:text-xl">
-                {photo.description}
-              </p>
-            )}
-            {translation !== null && (
-              <Link
-                href={
-                  getPhotoLanguagePaths(photo, translation)[
-                    translation.language
-                  ]
-                }
-                className="mt-7 inline-flex min-h-11 items-center rounded-full border border-border px-5 text-sm font-semibold text-accent-strong hover:border-accent hover:text-ivory"
-              >
-                {labels.translation} →
-              </Link>
-            )}
-          </header>
-          <figure className="mt-10 sm:mt-12">
-            {photo.image.width !== undefined &&
-            photo.image.height !== undefined ? (
-              <Image
-                src={photo.image.src}
-                alt={photo.image.alt}
-                width={photo.image.width}
-                height={photo.image.height}
-                sizes="(min-width: 1280px) 1152px, 100vw"
-                priority
-                className="h-auto w-full rounded-xl border border-border object-contain"
-              />
-            ) : (
-              <span className="relative block aspect-[4/3] overflow-hidden rounded-xl border border-border">
-                <Image
-                  src={photo.image.src}
-                  alt={photo.image.alt}
-                  fill
-                  sizes="(min-width: 1280px) 1152px, 100vw"
-                  priority
-                  className="object-contain"
-                />
-              </span>
-            )}
-            <figcaption className="mt-3 text-sm text-muted">
-              {photo.image.alt}
-            </figcaption>
-          </figure>
-          <dl className="mt-10 grid gap-5 border-y border-border py-8 text-sm sm:grid-cols-2 lg:grid-cols-4">
-            {photo.locationName !== null && (
-              <div>
-                <dt className="font-semibold text-ivory">{labels.location}</dt>
-                <dd className="mt-1 text-muted">{photo.locationName}</dd>
-              </div>
-            )}
-            {takenAt !== null && (
-              <div>
-                <dt className="font-semibold text-ivory">{labels.date}</dt>
-                <dd className="mt-1 text-muted">{takenAt}</dd>
-              </div>
-            )}
-            <div>
-              <dt className="font-semibold text-ivory">
-                {labels.photographer}
-              </dt>
-              <dd className="mt-1 text-muted">{photo.photographer}</dd>
+    <PublicationShell locale={locale} languageHrefs={languagePaths}>
+      <article aria-labelledby="photo-title">
+        <PageIntro
+          locale={locale}
+          breadcrumb={[
+            { label: copy.home, href: copy.homePath },
+            { label: copy.allPhotos, href: photoListPaths[locale] },
+            { label: photo.title },
+          ]}
+          eyebrow={collections === "" ? undefined : collections}
+          title={photo.title}
+          titleId="photo-title"
+          lead={photo.description}
+        >
+          {translation !== null ? (
+            <TranslationLink
+              href={languagePaths[translation.language]}
+              targetLanguage={translation.language}
+              label={text.translation}
+              labelLanguage={locale === "tr" ? "en" : undefined}
+            />
+          ) : null}
+        </PageIntro>
+
+        <Container className="pb-10 sm:pb-14">
+          <Figure credit={getPhotoCredit(photo)} locale={locale}>
+            <PublicationImage
+              src={photo.image.src}
+              alt={photo.image.alt}
+              width={photo.image.width}
+              height={photo.image.height}
+              fit="contain"
+              sizes="(min-width: 1440px) 1296px, 100vw"
+              preload
+              className="max-h-[85vh] rounded-card border border-ink bg-band"
+            />
+          </Figure>
+        </Container>
+
+        <Section
+          tone="paper"
+          spacing="none"
+          divider
+          labelledBy="photo-details-heading"
+          className="pt-10 pb-section sm:pt-14"
+        >
+          <h2 id="photo-details-heading" className="m-0 type-h2">
+            {text.details}
+          </h2>
+          <MetaList items={getPhotoFacts(photo)} className="mt-6" />
+
+          {photo.tags.length > 0 ? (
+            <div className="mt-8">
+              <h3 className="m-0 type-label text-ink-muted">{text.tags}</h3>
+              <ul className="mt-2 mb-0 flex list-none flex-wrap gap-2 p-0">
+                {photo.tags.map((item) => (
+                  <li key={item.id}>
+                    <Chip>{item.title}</Chip>
+                  </li>
+                ))}
+              </ul>
             </div>
-            {photo.creditLicense !== null && (
-              <div>
-                <dt className="font-semibold text-ivory">{labels.credit}</dt>
-                <dd className="mt-1 text-muted">{photo.creditLicense}</dd>
-              </div>
-            )}
-          </dl>
-          {photo.tags.length > 0 && (
-            <p className="mt-6 text-sm text-muted">
-              {photo.tags.map((item) => `#${item.title}`).join(" ")}
-            </p>
-          )}
-          {exif.length > 0 && (
-            <section className="mt-12" aria-labelledby="photo-exif">
-              <h2 id="photo-exif" className="text-2xl text-ivory">
-                {labels.exif}
-              </h2>
-              <dl className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {exif.map(([label, value]) => (
-                  <div
-                    key={label}
-                    className="rounded-lg border border-border bg-surface p-4"
-                  >
-                    <dt className="text-sm font-semibold text-ivory">
-                      {label}
-                    </dt>
-                    <dd className="mt-1 text-sm text-muted">{value}</dd>
-                  </div>
-                ))}
-              </dl>
-            </section>
-          )}
-          {related.length > 0 && (
-            <section
-              className="mt-14 border-t border-border pt-10"
-              aria-labelledby="related-photos"
-            >
-              <h2 id="related-photos" className="text-3xl text-ivory">
-                {labels.related}
-              </h2>
-              <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                {related.map((item) => (
-                  <PhotoCard key={item.id} photo={item} />
-                ))}
-              </div>
-            </section>
-          )}
-        </article>
-      </main>
-      <Footer id={home.anchors.contact} content={home.footer} />
-      <BackToTop label={home.backToTopLabel} />
-    </div>
+          ) : null}
+
+          {exif.length > 0 ? (
+            <div className="mt-10 max-w-[52rem]">
+              <h3 className="m-0 type-h3">{text.exif}</h3>
+              <MetaList
+                items={exif}
+                layout="grid"
+                className="mt-5 rounded-card border border-ink bg-land p-5 sm:p-6 lg:grid-cols-3"
+              />
+            </div>
+          ) : null}
+
+          <TextLink
+            href={photoListPaths[locale]}
+            variant="standalone"
+            locale={locale}
+            className="mt-10"
+          >
+            {copy.allPhotos}
+          </TextLink>
+        </Section>
+      </article>
+
+      {related.length > 0 ? (
+        <Section
+          tone="band"
+          spacing="compact"
+          divider
+          labelledBy="related-photos-heading"
+        >
+          <h2 id="related-photos-heading" className="m-0 mb-6 type-h2">
+            {text.related}
+          </h2>
+          <ul className="m-0 grid list-none gap-5 p-0 md:grid-cols-2 xl:grid-cols-4">
+            {related.map((item) => (
+              <li key={item.id} className="grid">
+                <PhotoCard photo={item} headingLevel="h3" />
+              </li>
+            ))}
+          </ul>
+        </Section>
+      ) : null}
+    </PublicationShell>
   );
 }
