@@ -307,7 +307,9 @@ export function getCollectionRevalidationTargets(
     case "district-guides":
       return uniqueTargets(districtGuideTargets(docs));
     case "media":
-      return [ALL_PAGES];
+      // The sitemap lists image URLs; it is a metadata route, so it is
+      // named explicitly instead of relying on the root layout target.
+      return [ALL_PAGES, pathTarget(SITEMAP_PATH)];
     case "pages":
       return uniqueTargets(pageTargets(docs));
     case "photo-collections":
