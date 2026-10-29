@@ -81,7 +81,7 @@ export async function loadHomeListings(
 /** Shown instead of a list whose query failed (not "nothing published"). */
 export const homeListingUnavailableCopy: Record<
   SiteLocale,
-  Record<Exclude<HomeListingName, "districts">, string>
+  Record<HomeListingName, string>
 > = {
   tr: {
     articles:
@@ -90,6 +90,8 @@ export const homeListingUnavailableCopy: Record<
       "Kitap incelemeleri geçici olarak yüklenemedi. Sayfayı biraz sonra yeniden açın.",
     photos:
       "Fotoğraflar geçici olarak yüklenemedi. Sayfayı biraz sonra yeniden açın.",
+    districts:
+      "Öne çıkan ilçe rehberi geçici olarak yüklenemedi. Sayfayı biraz sonra yeniden açın.",
   },
   en: {
     articles:
@@ -98,5 +100,7 @@ export const homeListingUnavailableCopy: Record<
       "Book reviews could not be loaded right now. Please reopen the page shortly.",
     photos:
       "Photographs could not be loaded right now. Please reopen the page shortly.",
+    districts:
+      "The featured district guide could not be loaded right now. Please reopen the page shortly.",
   },
 };

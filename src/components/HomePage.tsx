@@ -117,7 +117,13 @@ export default async function HomePage({
           featuredSlug={featured?.slug}
         />
 
-        <HomeAtlas locale={locale} featured={featured} />
+        <HomeAtlas
+          locale={locale}
+          featured={featured}
+          featuredUnavailable={
+            unavailable.includes("districts") ? unavailableCopy.districts : null
+          }
+        />
 
         <HomeListingSection
           id={locale === "tr" ? "son-makaleler" : "latest-articles"}

@@ -3,6 +3,7 @@ import test from "node:test";
 import { createElement as h } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { homeContent } from "@/content/homeContent";
+import { homeListingUnavailableCopy } from "@/content/home-listings";
 import type { PublicPage } from "@/content/pages/public-types";
 import { getVerifiedDistrictImage } from "@/content/photos/verified-district-images";
 import ContactCallToAction from "./ContactCallToAction";
@@ -61,6 +62,28 @@ test("without a published guide the atlas says so instead of featuring one", () 
   assert.doesNotMatch(html, /Öne çıkan rehber:/);
   assert.ok(count(html, /href="\/istanbul\/ilceler\/[a-z]+"/) >= 39);
   assert.match(html, /aria-labelledby="istanbul-atlasi-baslik"/);
+});
+
+test("ARCHITECTURE-1: a failed guide query says unavailable, not unpublished", () => {
+  for (const locale of ["tr", "en"] as const) {
+    const message = homeListingUnavailableCopy[locale].districts;
+    const html = renderToStaticMarkup(
+      h(HomeAtlas, { locale, featured: null, featuredUnavailable: message }),
+    );
+
+    assert.ok(html.includes(message), locale);
+    assert.doesNotMatch(html, /henüz yayımlanmadı|has been published yet/);
+    assert.doesNotMatch(
+      html,
+      /Rehberler yayımlandıkça|Once guides are published/,
+    );
+    // The tile map still links every district.
+    assert.ok(count(html, /href="\/istanbul\/ilceler\/[a-z]+"/) >= 39);
+  }
+  assert.match(
+    homeListingUnavailableCopy.tr.districts,
+    /geçici olarak yüklenemedi/,
+  );
 });
 
 test("the English atlas features the guide, marks the Turkish summary and links in Turkish", () => {
