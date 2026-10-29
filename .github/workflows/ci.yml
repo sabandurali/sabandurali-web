@@ -137,11 +137,12 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
 
-  # The static build above publishes no article, book, photo or CMS page, so
-  # its a11y run can only reach the list empty states. This job renders the
-  # detail templates, the CMS block page and a filled district news list
-  # from clearly fictional records (scripts/ci/fixture-content.ts) seeded
-  # into a CI-only SQLite file through the Payload Local API.
+  # The static build above publishes no article, book, photo, CMS page or
+  # district guide and uses the static navigation, so its a11y run can only
+  # reach empty states. This job renders the detail templates, the CMS block
+  # page, a filled district guide and news list, and the CMS header and
+  # footer from clearly fictional records (scripts/ci/fixture-content.ts)
+  # seeded into a CI-only SQLite file through the Payload Local API.
   #
   # It serves `next dev`: a production build or `next start` with a Payload
   # public source fails closed without PostgreSQL and Vercel Blob
@@ -162,7 +163,7 @@ jobs:
       ARTICLE_PUBLIC_SOURCE: payload
       BOOK_PUBLIC_SOURCE: payload
       PAGE_PUBLIC_SOURCE: payload
-      NAVIGATION_PUBLIC_SOURCE: static
+      NAVIGATION_PUBLIC_SOURCE: payload
       PHOTO_PUBLIC_SOURCE: payload
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -193,7 +194,7 @@ jobs:
             /makaleler/ci-test-makalesi /en/articles/ci-test-article \
             /kitaplar/ci-test-kitap-incelemesi /en/books/ci-test-book-review \
             /fotograflar/ci-test-fotografi /en/photography/ci-test-photo \
-            /ci-test-sayfasi /istanbul/ilceler/esenler/haberler; do
+            /ci-test-sayfasi /istanbul/ilceler/esenler /istanbul/ilceler/esenler/haberler; do
             curl --silent --show-error --fail --max-time 300 --output /dev/null "http://127.0.0.1:3102$path" || { cat "$RUNNER_TEMP/next-dev.log"; exit 1; }
           done
 

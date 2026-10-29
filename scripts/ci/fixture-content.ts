@@ -1,18 +1,23 @@
 // Representative, clearly fictional CMS records that the CI end-to-end
 // checks render: one published article (TR and EN), one district news item,
-// one book review (TR and EN), one photo (TR and EN) and one standard page
-// with every non-home CMS block. They exist only in the CI SQLite database
-// that `scripts/ci/seed-fixtures.ts` writes; nothing here is site content.
+// one book review (TR and EN), two photos (both in the district guide's
+// photo section), one standard page with every non-home CMS block, one
+// published district guide and a published Navigation global. They exist
+// only in the CI SQLite database that `scripts/ci/seed-fixtures.ts` writes;
+// nothing here is site content.
 //
 // Every visible text says it is a test fixture, so a screenshot or report can
-// never be mistaken for a real article, review, photo or district fact.
+// never be mistaken for a real article, review, photo or district fact. The
+// district guide states no number, name or date about the district: its
+// only figure is the count of its own two fictional neighbourhood rows, its
+// sources are `example.*` addresses and every date is relative to the seed.
 // The module is pure (no Payload, no database), so node:test checks it.
 
 /** Marker that every fixture title and credit carries. */
 export const FIXTURE_MARK = "CI test kaydı";
 export const FIXTURE_MARK_EN = "CI test record";
 
-/** The district the news fixture is filed under (a registry slug). */
+/** The district the news, photo and guide fixtures are filed under. */
 export const FIXTURE_DISTRICT = "esenler";
 
 /** Slugs of the fixture records, shared with the a11y route list. */
@@ -24,6 +29,7 @@ export const fixtureSlugs = Object.freeze({
   bookEn: "ci-test-book-review",
   photoTr: "ci-test-fotografi",
   photoEn: "ci-test-photo",
+  districtArchivePhoto: "ci-test-ilce-arsiv-fotografi",
   page: "ci-test-sayfasi",
 });
 
@@ -39,6 +45,7 @@ export const fixturePaths = Object.freeze([
   `/fotograflar/${fixtureSlugs.photoTr}`,
   `/en/photography/${fixtureSlugs.photoEn}`,
   `/${fixtureSlugs.page}`,
+  `/istanbul/ilceler/${FIXTURE_DISTRICT}`,
   `/istanbul/ilceler/${FIXTURE_DISTRICT}/haberler`,
 ]);
 
@@ -54,7 +61,12 @@ export const fixtureImage = Object.freeze({
   sourceCopyright: `${FIXTURE_MARK} · tek renkli üretilmiş görsel, telif yok`,
 });
 
-import type { Book, Page } from "../../src/payload-types";
+import type {
+  Book,
+  DistrictGuide,
+  Navigation,
+  Page,
+} from "../../src/payload-types";
 
 /** A Lexical node as the generated rich-text types accept it. */
 type LexicalNode = { [k: string]: unknown; type: string; version: number };
@@ -291,6 +303,247 @@ export function bookReviewFields(language: "tr" | "en") {
   } satisfies Partial<Book>;
 }
 
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+/** An ISO date `days` before `now`: fixture dates never pose as real ones. */
+function daysBefore(now: number, days: number): string {
+  return new Date(now - days * DAY_MS).toISOString();
+}
+
+/**
+ * Texts the a11y run requires on the filled district guide and in the CMS
+ * header and footer (`fixtureRoutes` in scripts/a11y/a11y-expectations.mjs),
+ * so an empty guide or the static navigation can never pass for the
+ * fixture. A test checks that the fixtures below carry each of them.
+ */
+export const fixtureGuideMarks = Object.freeze({
+  summary: `${FIXTURE_MARK}: ilçe rehberi genel bakış metni`,
+  neighbourhood: "CI test mahallesi A",
+  planning: `${FIXTURE_MARK}: tamamlanmış imar satırı`,
+  source: `${FIXTURE_MARK}: kurgusal resmî kaynak`,
+});
+
+export const fixtureNavigationMarks = Object.freeze({
+  header: "CI test menüsü",
+  footer: "CI test bağlantıları",
+});
+
+/** Fictional sources: `example.*` hosts, dates relative to the seed. */
+export const fixtureGuideSourceUrls = Object.freeze({
+  official: "https://www.example.gov.tr/ci-test-kaynagi",
+  secondary: "https://example.org/ci-test-ikincil-kaynak",
+});
+
+const guideSections = [
+  "summary",
+  "history",
+  "geography",
+  "life",
+  "transportation",
+  "facts",
+  "neighborhoods",
+  "housingTexture",
+  "regionalAssessment",
+  "planningDevelopments",
+  "placesGuide",
+  "distinctiveFeatures",
+  "researchTopics",
+] as const;
+
+const guideText = (subject: string) =>
+  `${FIXTURE_MARK}: ${subject}. Bu paragraf yalnız sürekli entegrasyonda ilçe rehberi şablonunun yerleşim ve erişilebilirlik denetimi için yazıldı; ilçe hakkında bilgi vermez.\n\nİkinci paragraf, paragraf aralığının ve okuma sütunu genişliğinin denetlenmesi içindir.`;
+
+/**
+ * The published district guide fixture: every public section filled and
+ * backed by a fictional, dated and checked source, so the content policy
+ * publishes it and the guide renders the fact table, source references,
+ * line chips, the neighbourhood list and a planning row. Market data is
+ * left out on purpose: prices are the figure a screenshot could most easily
+ * pass on as a fact.
+ */
+export function districtGuideFields(now: number) {
+  const dataDate = daysBefore(now, 30);
+  const checkedAt = daysBefore(now, 2);
+  return {
+    district: FIXTURE_DISTRICT,
+    summary: `${fixtureGuideMarks.summary}. Rehberin dolu hâli yalnız bu test kaydıyla denetlenir.`,
+    history: guideText("tarihçe bölümü"),
+    geography: guideText("konum ve kentsel yapı bölümü"),
+    life: guideText("gündelik yaşam bölümü"),
+    // Line codes only to render the line chips; the text says so.
+    transportation: `${FIXTURE_MARK}: ulaşım bölümü. Hat çipi bileşenini denetlemek için yalnız örnek kod olarak M1B ve T1 yazıldı; ilçenin ulaşımı hakkında bilgi vermez.`,
+    facts: {
+      neighborhoodCount: 2,
+      neighboringDistricts: `${FIXTURE_MARK}: kurgusal komşu ilçe satırı`,
+      locationSummary: `${FIXTURE_MARK}: konum özeti`,
+    },
+    neighborhoods: [
+      {
+        name: fixtureGuideMarks.neighbourhood,
+        featured: true,
+        description: `${FIXTURE_MARK}: öne çıkan kurgusal mahalle satırı`,
+      },
+      {
+        name: "CI test mahallesi B",
+        featured: false,
+        description: `${FIXTURE_MARK}: ikinci kurgusal mahalle satırı`,
+      },
+    ],
+    housingTexture: guideText("konut ve yapı dokusu bölümü"),
+    regionalAssessment: guideText("bölgesel değerlendirme bölümü"),
+    planningDevelopments: [
+      {
+        title: fixtureGuideMarks.planning,
+        summary: `${FIXTURE_MARK}: imar satırı şablonunun kurgusal özeti.`,
+        neighborhood: fixtureGuideMarks.neighbourhood,
+        date: dataDate,
+        status: "tamamlandi" as const,
+        officialSource: fixtureGuideSourceUrls.official,
+        checkedAt,
+        needsVerification: false,
+      },
+    ],
+    placesGuide: guideText("görülecek ve fotoğraflanacak yerler bölümü"),
+    distinctiveFeatures: guideText("ilçeyi özel kılanlar bölümü"),
+    researchTopics: guideText("ileri araştırma konuları bölümü"),
+    reviewedSections: [...guideSections],
+    sources: [
+      {
+        title: fixtureGuideMarks.source,
+        publisher: "CI test yayıncısı (kurgusal)",
+        url: fixtureGuideSourceUrls.official,
+        sourceType: "official" as const,
+        primary: true,
+        dataDate,
+        checkedAt,
+        needsVerification: false,
+        sections: [...guideSections],
+      },
+      {
+        title: `${FIXTURE_MARK}: kurgusal ikincil kaynak`,
+        publisher: "CI test yayıncısı (kurgusal)",
+        url: fixtureGuideSourceUrls.secondary,
+        sourceType: "secondary" as const,
+        primary: false,
+        dataDate,
+        checkedAt,
+        needsVerification: false,
+        sections: ["history" as const, "life" as const, "placesGuide" as const],
+      },
+    ],
+    researchNotes: `${FIXTURE_MARK}: public dışı araştırma notu; sayfada görünmemeli.`,
+    publishedAt: daysBefore(now, 1),
+    _status: "published" as const,
+  } satisfies Partial<DistrictGuide>;
+}
+
+/**
+ * The published Navigation global fixture: CMS labels for the header's
+ * about and contact items, and TR and EN footer groups with a CMS page, an
+ * internal and an external link. The site adds the required KVKK and
+ * contact footer links (src/content/navigation/navigation-fallback.ts).
+ */
+export function navigationFields(pageId: string) {
+  return {
+    // The Turkish header keeps its fixed shortcuts and takes only the
+    // about and contact labels from the CMS (withTurkishHeaderShortcuts in
+    // src/content/navigation/static-navigation.ts), so those are the two
+    // items whose CMS labels can reach the rendered header.
+    headerItems: [
+      {
+        label: fixtureNavigationMarks.header,
+        linkType: "internal" as const,
+        internalPath: "/hakkimda",
+      },
+      {
+        label: "CI test iletişim",
+        linkType: "internal" as const,
+        internalPath: "/iletisim",
+      },
+    ],
+    footerGroups: [
+      {
+        title: fixtureNavigationMarks.footer,
+        links: [
+          {
+            label: "CI test sayfası",
+            linkType: "page" as const,
+            page: pageId,
+          },
+          {
+            label: "CI test dış bağlantısı",
+            linkType: "external" as const,
+            externalUrl: "https://example.org/ci-test",
+            newTab: true,
+          },
+        ],
+      },
+    ],
+    enFooter: [
+      {
+        title: "CI test links",
+        links: [
+          {
+            label: "CI test articles",
+            linkType: "internal" as const,
+            internalPath: "/en/articles",
+          },
+        ],
+      },
+    ],
+    _status: "published" as const,
+  } satisfies Partial<Navigation>;
+}
+
+/** Why the district guide fixture could pass for district content, if so. */
+export function districtGuideFixtureProblems(now = Date.now()): string[] {
+  const problems: string[] = [];
+  const guide = districtGuideFields(now);
+  const texts: Array<[string, string]> = [
+    ...(
+      [
+        "summary",
+        "history",
+        "geography",
+        "life",
+        "transportation",
+        "housingTexture",
+        "regionalAssessment",
+        "placesGuide",
+        "distinctiveFeatures",
+        "researchTopics",
+      ] as const
+    ).map((key): [string, string] => [key, guide[key]]),
+    ["facts.neighboringDistricts", guide.facts.neighboringDistricts],
+    ["facts.locationSummary", guide.facts.locationSummary],
+    ...guide.planningDevelopments.map((row): [string, string] => [
+      "planning row",
+      row.title,
+    ]),
+  ];
+  for (const [key, value] of texts)
+    if (!value.includes(FIXTURE_MARK))
+      problems.push(`district guide ${key} lacks the fixture mark`);
+  for (const row of guide.neighborhoods)
+    if (!row.name.startsWith("CI test "))
+      problems.push(`neighbourhood row is not a CI test name: ${row.name}`);
+  for (const source of guide.sources) {
+    if (!/^https:\/\/(www\.)?example\.(gov\.tr|org)\//.test(source.url))
+      problems.push(`guide source is not an example address: ${source.url}`);
+    if (!source.publisher.includes("kurgusal"))
+      problems.push(`guide source publisher is not fictional: ${source.url}`);
+  }
+  // The only figure is the count of the guide's own fictional rows.
+  const facts: Record<string, unknown> = guide.facts;
+  for (const key of ["population", "populationYear", "areaKm2"])
+    if (facts[key] !== undefined)
+      problems.push(`district guide states a district figure: ${key}`);
+  if (guide.facts.neighborhoodCount !== guide.neighborhoods.length)
+    problems.push("neighbourhood count is not the count of its own rows");
+  if ("marketData" in guide) problems.push("district guide states prices");
+  return problems;
+}
+
 /**
  * Problems of a fixture set: every visible title carries the fixture mark
  * and every slug is a `ci-test-` slug, so no fixture can pose as content.
@@ -308,5 +561,6 @@ export function fixtureProblems(): string[] {
   }
   if (!fixtureImage.sourceCopyright.includes(FIXTURE_MARK))
     problems.push("image credit lacks the fixture mark");
+  problems.push(...districtGuideFixtureProblems());
   return problems;
 }

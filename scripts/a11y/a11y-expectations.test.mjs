@@ -4,6 +4,7 @@ import test from "node:test";
 import {
   axeProblems,
   axeTags,
+  contentProblems,
   detailRoutes,
   fixtureRoutes,
   focusIndicatorProblem,
@@ -18,6 +19,7 @@ import {
   publicRoutes,
   reducedMotionProblems,
   routePlan,
+  sameTabStop,
   skipLinkProblem,
   skippedDetailsProblems,
   viewportWidths,
@@ -419,4 +421,67 @@ test("TESTS-INFRA-1: a fixture run must reach every detail template", () => {
   const types = fixtureRoutes.map(({ type }) => type);
   assert.ok(types.includes("CMS block page"));
   assert.ok(types.includes("district news (filled)"));
+});
+
+test("FRONTEND-2 / TESTS-INFRA-3: the fixture run checks the filled district guide and the CMS navigation", () => {
+  const guide = fixtureRoutes.find(
+    ({ type }) => type === "district guide (filled)",
+  );
+  assert.ok(guide, "the filled district guide is not a fixture route");
+  assert.equal(guide.path, "/istanbul/ilceler/esenler");
+  const required = guide.requiredContent.map(({ selector }) => selector);
+  // Every filled part of the guide that the review found untested, plus
+  // the CMS header and footer.
+  for (const selector of [
+    "#genel-bakis",
+    "#genel-bakis dl",
+    "#yasam",
+    "#mahalleler",
+    "#imar",
+    "#kareler",
+    "#kaynaklar",
+    "header",
+    "footer",
+  ])
+    assert.ok(required.includes(selector), selector);
+  assert.ok(guide.forbiddenContent.length > 0);
+  // The static run keeps the guide empty and never asks for fixture texts.
+  assert.ok(publicRoutes.every((route) => !route.requiredContent));
+});
+
+test("a focus trap is the same element twice, not two links with one label", () => {
+  const source = (x, y) => ({
+    label: 'a "[1]Kaynak 1" #kaynak-1',
+    position: { x, y },
+  });
+  // The filled guide's fact rows each link "[1] Kaynak 1": focus moves on.
+  assert.equal(sameTabStop(source(105, 1822), source(67, 1996)), false);
+  assert.equal(sameTabStop(source(67, 1996), source(67, 1996)), true);
+  assert.equal(sameTabStop(null, source(67, 1996)), false);
+});
+
+test("contentProblems reports a missing fixture text and a private text", () => {
+  const route = {
+    requiredContent: [
+      { selector: "#imar", text: "row" },
+      { selector: "header", text: "menu" },
+    ],
+    forbiddenContent: ["private note"],
+  };
+  assert.deepEqual(
+    contentProblems(route, { "#imar row": true, "header menu": true }, "page"),
+    [],
+  );
+  assert.deepEqual(
+    contentProblems(
+      route,
+      { "#imar row": false, "header menu": true },
+      "page with a private note",
+    ),
+    [
+      'missing content in #imar: "row"',
+      'forbidden content rendered: "private note"',
+    ],
+  );
+  assert.deepEqual(contentProblems({}, {}, "anything"), []);
 });
