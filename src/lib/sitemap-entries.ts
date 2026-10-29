@@ -612,37 +612,3 @@ export async function loadSitemapSource<T>(
     return fallback;
   }
 }
-
-/**
- * Loads one value per key. Keys whose load fails are left out of the map and
- * reported together, so a single failing record does not hide the others.
- */
-export async function loadSitemapSourcesByKey<T>(
-  source: string,
-  keys: readonly string[],
-  load: (key: string) => Promise<T>,
-  report: SitemapErrorReporter = reportSitemapSourceError,
-): Promise<Map<string, T>> {
-  // `async` turns a synchronous throw into a rejection of that key only.
-  const results = await Promise.allSettled(keys.map(async (key) => load(key)));
-  const values = new Map<string, T>();
-  const failed: string[] = [];
-  let firstError: unknown;
-
-  results.forEach((result, index) => {
-    const key = keys[index];
-    if (key === undefined) return;
-    if (result.status === "fulfilled") {
-      values.set(key, result.value);
-    } else {
-      failed.push(key);
-      firstError ??= result.reason;
-    }
-  });
-
-  if (failed.length > 0) {
-    report(`${source} (${failed.join(", ")})`, firstError);
-  }
-
-  return values;
-}
