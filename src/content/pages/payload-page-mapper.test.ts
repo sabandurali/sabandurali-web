@@ -125,6 +125,45 @@ test("a half-filled optional link or a PDF portrait drops the block and logs it"
   );
 });
 
+test("focus area cards accept site paths, anchors and http(s) links like other block links", (t) => {
+  const warn = silence(t);
+  const focus = (id: string, linkHref: string) => ({
+    blockType: "homeFocusAreas",
+    id,
+    eyebrow: "Odak",
+    title: "Odak alanları",
+    cards: [
+      {
+        id: `${id}-card`,
+        icon: "city",
+        title: "Şehir",
+        description: "Açıklama",
+        linkLabel: "Aç",
+        linkHref,
+      },
+    ],
+  });
+  const mapped = mapPayloadPage(
+    page([
+      focus("path", "/istanbul/ilceler"),
+      focus("anchor", "#ilceler"),
+      focus("external", "https://example.com/rapor"),
+      focus("credentials", "https://user:pass@example.com/"),
+      focus("protocol-relative", "//example.com/"),
+    ]),
+    "tr",
+    now,
+  );
+
+  assert.deepEqual(
+    mapped?.layout.map((block) =>
+      block.blockType === "homeFocusAreas" ? block.cards[0]?.linkHref : null,
+    ),
+    ["/istanbul/ilceler", "#ilceler", "https://example.com/rapor"],
+  );
+  assert.equal(warn.mock.callCount(), 2);
+});
+
 test("drafts, scheduled pages and pages of another language are not public", (t) => {
   silence(t);
   assert.equal(

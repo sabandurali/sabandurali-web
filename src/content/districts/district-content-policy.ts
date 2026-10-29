@@ -1,3 +1,5 @@
+import { getSafeHref } from "@/content/links";
+
 /** Shared by CMS validation, import validation and public projection. */
 export const districtSectionOptions = [
   { value: "summary", label: "Genel bakış" },
@@ -28,24 +30,13 @@ export type DistrictSource = {
   sections?: DistrictSection[] | null;
 };
 export function isPublicSourceUrl(value: unknown): value is string {
-  if (typeof value !== "string") return false;
-  try {
-    const url = new URL(value);
-    return (
-      ["https:", "http:"].includes(url.protocol) &&
-      !url.username &&
-      !url.password
-    );
-  } catch {
-    return false;
-  }
+  return typeof value === "string" && getSafeHref(value) !== null;
 }
-function validPastDate(value: unknown, now: number): boolean {
-  return (
-    typeof value === "string" &&
-    Number.isFinite(Date.parse(value)) &&
-    Date.parse(value) <= now
-  );
+/** The timestamp of a valid date string that is not in the future. */
+function parsePastDate(value: unknown, now: number): number | null {
+  if (typeof value !== "string") return null;
+  const time = Date.parse(value);
+  return Number.isFinite(time) && time <= now ? time : null;
 }
 /** Periodic values need a dated source; dynamic values expire after 90 days. */
 export function sourceSupportsSection(
@@ -71,13 +62,15 @@ export function sourceSupportsSection(
     ))
       return false;
   }
+  const checkedAt = parsePastDate(source.checkedAt, now);
+  const dataDate = parsePastDate(source.dataDate, now);
   if (
     source.needsVerification !== false ||
     !isPublicSourceUrl(source.url) ||
     !source.title?.trim() ||
     !source.publisher?.trim() ||
     !source.sections?.includes(section) ||
-    !validPastDate(source.checkedAt, now)
+    checkedAt === null
   )
     return false;
   if (
@@ -88,7 +81,7 @@ export function sourceSupportsSection(
       "marketData",
       "planningDevelopments",
     ].includes(section) &&
-    !validPastDate(source.dataDate, now)
+    dataDate === null
   )
     return false;
   if (
@@ -98,10 +91,7 @@ export function sourceSupportsSection(
     return false;
   if (section === "marketData") {
     const threshold = now - 90 * 24 * 60 * 60 * 1000;
-    if (
-      Date.parse(source.checkedAt!) < threshold ||
-      Date.parse(source.dataDate!) < threshold
-    )
+    if (dataDate === null || checkedAt < threshold || dataDate < threshold)
       return false;
   }
   return true;

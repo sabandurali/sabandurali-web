@@ -6,6 +6,7 @@ import {
   createArticleJsonLd,
   createArticleMetadata,
   getArticleCanonicalUrl,
+  isArticleHreflangEligible,
   serializeArticleJsonLd,
 } from "./article-seo";
 import type { PublicArticle } from "./public-types";
@@ -104,6 +105,7 @@ test("article metadata emits canonical, hreflang pair, OG article and Twitter", 
     language: "en",
     slug: "housing-in-istanbul",
     title: "Housing in Istanbul",
+    seo: { index: true },
   });
 
   assert.equal(
@@ -207,4 +209,56 @@ test("serialized JSON-LD cannot close the script element", () => {
     JSON.parse(serialized).headline,
     "</script><script>alert(1)</script>",
   );
+});
+
+const english = {
+  id: "article-1",
+  language: "en",
+  slug: "housing-in-istanbul",
+  title: "Housing in Istanbul",
+} as const;
+
+test("a noindex or foreign-canonical translation is not an hreflang alternate", () => {
+  for (const seo of [
+    { index: false },
+    { index: true, canonical: "/en/articles/another-article" },
+  ]) {
+    const metadata = createArticleMetadata(payloadArticle(), {
+      ...english,
+      seo,
+    });
+
+    assert.deepEqual(metadata.alternates?.languages, {
+      "tr-TR": `${site}/makaleler/istanbulda-konut`,
+    });
+    assert.equal(isArticleHreflangEligible({ ...english, seo }), false);
+  }
+  // A canonical that names its own URL keeps the pair.
+  assert.equal(
+    isArticleHreflangEligible({
+      ...english,
+      seo: { index: true, canonical: "/en/articles/housing-in-istanbul" },
+    }),
+    true,
+  );
+});
+
+test("a page that is noindex or canonical elsewhere emits no hreflang at all", () => {
+  for (const seo of [
+    { index: false, follow: true },
+    { index: true, follow: true, canonical: "/makaleler/asil-yazi" },
+  ]) {
+    const metadata = createArticleMetadata(
+      payloadArticle({ seo: { title: "T", description: "D", ...seo } }),
+      { ...english, seo: { index: true } },
+    );
+
+    assert.equal(metadata.alternates?.languages, undefined);
+    assert.equal(
+      metadata.openGraph !== null &&
+        metadata.openGraph !== undefined &&
+        "alternateLocale" in metadata.openGraph,
+      false,
+    );
+  }
 });

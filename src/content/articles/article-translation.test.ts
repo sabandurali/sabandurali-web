@@ -12,6 +12,7 @@ import {
   isOfferedArticleVersion,
   isOfferedTranslationPair,
   MIN_TRANSLATION_TEXT_RATIO,
+  selectOfferedEnglishArticleIds,
 } from "./article-translation";
 import type { PublicArticle } from "./public-types";
 
@@ -153,5 +154,34 @@ test("article pages apply the rule to the loaded pair", (t) => {
   assert.equal(
     isOfferedTranslationPair(version("en", turkish), version("tr", turkish)),
     true,
+  );
+});
+
+test("internal links only target English versions that cover their Turkish source", () => {
+  const complete = lexical(
+    heading("h2", "Location"),
+    paragraph(text(words(60))),
+    heading("h2", "Legal"),
+    paragraph(text(words(60))),
+    heading("h3", "Documents"),
+    paragraph(text(words(30))),
+  );
+  const halfFinished = lexical(paragraph(text(words(20))));
+
+  assert.deepEqual(
+    [
+      ...selectOfferedEnglishArticleIds(
+        new Map<string, unknown>([
+          ["complete", complete],
+          ["half", halfFinished],
+          ["unreadable", complete],
+        ]),
+        new Map<string, unknown>([
+          ["complete", turkish],
+          ["half", turkish],
+        ]),
+      ),
+    ],
+    ["complete"],
   );
 });

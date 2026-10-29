@@ -26,7 +26,9 @@ import {
   type SocialImage,
 } from "@/lib/metadata";
 
-type CanonicalArticle = Pick<PublicArticleSummary, "language" | "seo" | "slug">;
+type CanonicalArticle = Pick<PublicArticleSummary, "language" | "slug"> & {
+  seo: Pick<PublicArticleSummary["seo"], "canonical">;
+};
 
 export function getArticleCanonicalUrl(article: CanonicalArticle): string {
   if (article.seo.canonical !== undefined) {
@@ -38,6 +40,23 @@ export function getArticleCanonicalUrl(article: CanonicalArticle): string {
   }
 
   return getArticleUrl(article.slug, article.language);
+}
+
+/**
+ * Whether a version may take part in an hreflang cluster: it is indexable
+ * and its canonical URL is its own. The page metadata and the sitemap use
+ * the same rule, so both publish the same pairs.
+ */
+export function isArticleHreflangEligible(
+  article: Pick<PublicArticleSummary, "language" | "slug"> & {
+    seo: Pick<PublicArticleSummary["seo"], "index" | "canonical">;
+  },
+): boolean {
+  return (
+    article.seo.index &&
+    getArticleCanonicalUrl(article) ===
+      getArticleUrl(article.slug, article.language)
+  );
 }
 
 /**
@@ -79,14 +98,18 @@ export function createArticleMetadata(
   translation: PublicArticleTranslation | null,
 ): Metadata {
   const image = getArticleSocialImage(article);
+  const hreflang = isArticleHreflangEligible(article);
 
   return createPageMetadata({
     title: article.seo.title,
     description: article.seo.description,
     locale: article.language,
     path: getArticlePath(article.slug, article.language),
+    hreflang,
     translations:
-      translation === null
+      !hreflang ||
+      translation === null ||
+      !isArticleHreflangEligible(translation)
         ? undefined
         : {
             [translation.language]: getArticlePath(

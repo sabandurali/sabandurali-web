@@ -1,16 +1,12 @@
 import { getAbsoluteUrl } from "@/config/site";
 import type { BookReview, BookReviewLanguage } from "@/content/books/types";
 
+type RoutableBookReview = Pick<BookReview, "language" | "slug">;
+
 export const bookListPaths = {
   tr: "/kitaplar",
   en: "/en/books",
 } as const satisfies Record<BookReviewLanguage, string>;
-
-export const bookListUrls = {
-  "tr-TR": getAbsoluteUrl(bookListPaths.tr),
-  en: getAbsoluteUrl(bookListPaths.en),
-  "x-default": getAbsoluteUrl(bookListPaths.tr),
-} as const;
 
 export function getBookReviewPath(
   slug: string,
@@ -27,8 +23,8 @@ export function getBookReviewUrl(
 }
 
 export function getBookReviewLanguagePaths(
-  bookReview: BookReview,
-  translation: BookReview | null,
+  bookReview: RoutableBookReview,
+  translation: RoutableBookReview | null,
 ): Record<BookReviewLanguage, string> {
   const paths: Record<BookReviewLanguage, string> = {
     tr: bookListPaths.tr,
@@ -48,25 +44,4 @@ export function getBookReviewLanguagePaths(
   }
 
   return paths;
-}
-
-export function getBookReviewAlternateUrls(
-  bookReview: BookReview,
-  translation: BookReview | null,
-): Record<string, string> {
-  const currentUrl = getBookReviewUrl(bookReview.slug, bookReview.language);
-  const urls: Record<string, string> = {
-    [bookReview.language === "tr" ? "tr-TR" : "en"]: currentUrl,
-  };
-
-  if (translation !== null) {
-    urls[translation.language === "tr" ? "tr-TR" : "en"] = getBookReviewUrl(
-      translation.slug,
-      translation.language,
-    );
-  }
-
-  urls["x-default"] = urls["tr-TR"] ?? currentUrl;
-
-  return urls;
 }

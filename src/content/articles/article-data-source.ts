@@ -174,6 +174,35 @@ export const getDistrictNews = cache(
       : [],
 );
 
+/** The news of every district in one query (the sitemap groups them). */
+export const getAllDistrictNews = cache(
+  async (language: ArticleLanguage): Promise<PublicArticleSummary[]> =>
+    readPublicSource("ARTICLE_PUBLIC_SOURCE") === "payload"
+      ? payloadArticleRepository.listAllDistrictNews(language)
+      : [],
+);
+
+/**
+ * The newest `limit` district news items, read with a database limit for
+ * surfaces that show only a few (the district page).
+ */
+export const getLatestDistrictNews = cache(
+  async (
+    district: string,
+    language: ArticleLanguage,
+    limit: number,
+  ): Promise<PublicArticleSummary[]> =>
+    readPublicSource("ARTICLE_PUBLIC_SOURCE") === "payload"
+      ? payloadArticleRepository.listDistrictArticles(
+          "district-news",
+          district,
+          language,
+          new Date(),
+          limit,
+        )
+      : [],
+);
+
 /** District research articles, filtered in the database. */
 export const getDistrictResearch = cache(
   async (

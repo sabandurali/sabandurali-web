@@ -1,4 +1,5 @@
 import { getText } from "@/content/guards";
+import { getSafeHref } from "@/content/links";
 
 const INTERNAL_ORIGIN = "https://internal.sabandurali.invalid";
 
@@ -70,17 +71,7 @@ export function normalizeExternalNavigationUrl(
     return normalizeTel(href);
   }
 
-  try {
-    const url = new URL(href);
-
-    return url.protocol === "https:" &&
-      url.username === "" &&
-      url.password === ""
-      ? url.toString()
-      : null;
-  } catch {
-    return null;
-  }
+  return getSafeHref(href, { httpsOnly: true });
 }
 
 export function isExternalNavigationHref(href: string): boolean {

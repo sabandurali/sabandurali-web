@@ -17,6 +17,7 @@
  */
 import type { Metadata } from "next";
 import { getAbsoluteUrl, siteSocialImage } from "@/config/site";
+import { siteLocales, type SiteLocale } from "@/content/locales";
 
 export const siteName = "Şaban Durali";
 
@@ -24,13 +25,8 @@ export const siteName = "Şaban Durali";
 export const metaTitleMaxLength = 60;
 export const metaDescriptionMaxLength = 160;
 
-export type SiteLocale = "tr" | "en";
-
 /** Locales in hreflang order; the first available one is `x-default`. */
-export const siteLocales = [
-  "tr",
-  "en",
-] as const satisfies readonly SiteLocale[];
+export { siteLocales, type SiteLocale } from "@/content/locales";
 
 export type LocalizedPaths = Partial<Record<SiteLocale, string>>;
 
@@ -210,6 +206,11 @@ export type PageMetadataInput = {
   path: string;
   /** Published versions of the same page in the other language(s). */
   translations?: LocalizedPaths;
+  /**
+   * False for a page outside any hreflang cluster (noindex, or canonical
+   * elsewhere): no hreflang link at all, not even its own. Defaults to true.
+   */
+  hreflang?: boolean;
   /** Overrides the canonical URL; defaults to `path`. */
   canonical?: string;
   /** Defaults to the site-wide social image. */
@@ -228,10 +229,10 @@ export type PageMetadataInput = {
  * robots, Open Graph (with a default image) and a large Twitter card.
  */
 export function createPageMetadata(input: PageMetadataInput): Metadata {
-  const paths: LocalizedPaths = {
-    ...input.translations,
-    [input.locale]: input.path,
-  };
+  const hreflang = input.hreflang ?? true;
+  const paths: LocalizedPaths = hreflang
+    ? { ...input.translations, [input.locale]: input.path }
+    : {};
   const canonical = toAbsoluteUrl(input.canonical ?? input.path);
   const images =
     input.images !== undefined && input.images.length > 0
@@ -258,10 +259,9 @@ export function createPageMetadata(input: PageMetadataInput): Metadata {
   return {
     title: input.title,
     description: input.description,
-    alternates: {
-      canonical,
-      languages: createLanguageAlternates(paths),
-    },
+    alternates: hreflang
+      ? { canonical, languages: createLanguageAlternates(paths) }
+      : { canonical },
     robots: {
       index: input.index ?? true,
       follow: input.follow ?? true,

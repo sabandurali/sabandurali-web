@@ -7,6 +7,10 @@ import {
   findStaticPublishedBookReview,
   listStaticPublishedBookReviews,
 } from "@/content/books/static-book-reviews";
+import {
+  toPublicBookReview,
+  type PublicBookReview,
+} from "@/content/books/public-types";
 import type { BookReview, BookReviewLanguage } from "@/content/books/types";
 import { readPublicSource } from "@/content/public-source";
 
@@ -14,9 +18,19 @@ const staticBookReviews = createStaticBookReviewFixtures(process.env.NODE_ENV);
 const payloadBookReviewRepository = new PayloadPublicBookReviewRepository();
 
 export type PublishedBookReviewPageData = {
-  bookReview: BookReview | null;
-  translation: BookReview | null;
+  bookReview: PublicBookReview | null;
+  translation: PublicBookReview | null;
 };
+
+function toPublicPageData(
+  bookReview: BookReview | null,
+  translation: BookReview | null,
+): PublishedBookReviewPageData {
+  return {
+    bookReview: bookReview === null ? null : toPublicBookReview(bookReview),
+    translation: translation === null ? null : toPublicBookReview(translation),
+  };
+}
 
 export const getPublishedBookReviewPageData = cache(
   async (
@@ -34,16 +48,15 @@ export const getPublishedBookReviewPageData = cache(
       );
 
       return bookReview === null
-        ? { bookReview: null, translation: null }
-        : {
+        ? toPublicPageData(null, null)
+        : toPublicPageData(
             bookReview,
-            translation:
-              await payloadBookReviewRepository.findPublishedTranslation(
-                bookReview,
-                targetLanguage,
-                now,
-              ),
-          };
+            await payloadBookReviewRepository.findPublishedTranslation(
+              bookReview,
+              targetLanguage,
+              now,
+            ),
+          );
     }
 
     const bookReview = findStaticPublishedBookReview(
@@ -54,16 +67,16 @@ export const getPublishedBookReviewPageData = cache(
     );
 
     return bookReview === null
-      ? { bookReview: null, translation: null }
-      : {
+      ? toPublicPageData(null, null)
+      : toPublicPageData(
           bookReview,
-          translation: findStaticBookReviewTranslation(
+          findStaticBookReviewTranslation(
             staticBookReviews,
             bookReview,
             targetLanguage,
             now,
           ),
-        };
+        );
   },
 );
 

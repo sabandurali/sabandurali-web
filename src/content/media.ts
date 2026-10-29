@@ -1,7 +1,8 @@
-import { getSafePayloadMediaPath } from "@/content/articles/article-images";
+import type { SiteLocale } from "@/content/locales";
+import { getSafePayloadMediaPath } from "@/content/media-paths";
 import { getPositiveNumber, getText, isRecord } from "@/content/guards";
 
-export type MediaLocale = "tr" | "en";
+export type MediaLocale = SiteLocale;
 
 export type MappedMediaImage = {
   src: string;

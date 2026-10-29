@@ -1,4 +1,5 @@
 import { getText, isRecord } from "@/content/guards";
+import type { SiteLocale } from "@/content/locales";
 import {
   isExternalNavigationHref,
   normalizeExternalNavigationUrl,
@@ -26,7 +27,7 @@ type PayloadLink = PayloadHeaderItem | PayloadChildItem | PayloadFooterLink;
 
 function isPublicPage(
   value: unknown,
-  language: "en" | "tr",
+  language: SiteLocale,
   now: Date,
 ): value is PayloadPage {
   if (!isRecord(value)) return false;
@@ -48,7 +49,7 @@ function isPublicPage(
 
 function resolvePageHref(
   value: unknown,
-  language: "en" | "tr",
+  language: SiteLocale,
   now: Date,
 ): string | null {
   if (!isPublicPage(value, language, now)) return null;
@@ -63,7 +64,7 @@ function resolvePageHref(
 function resolveHref(
   item: PayloadLink,
   allowContactProtocols: boolean,
-  language: "en" | "tr",
+  language: SiteLocale,
   now: Date,
 ): string | null {
   if (item.linkType === "page") {
@@ -90,7 +91,7 @@ function mapLink(
   options: {
     allowContactProtocols: boolean;
     allowChildren: boolean;
-    language: "en" | "tr";
+    language: SiteLocale;
     now: Date;
     parentID?: string;
   },
@@ -145,7 +146,7 @@ function mapLink(
 
 function mapFooterGroups(
   groups: PayloadNavigation["footerGroups"] | PayloadNavigation["enFooter"],
-  language: "en" | "tr",
+  language: SiteLocale,
   now: Date,
 ): PublicFooterGroup[] {
   return (
@@ -174,7 +175,7 @@ function mapFooterGroups(
 
 export function mapPayloadNavigation(
   value: PayloadNavigation,
-  language: "en" | "tr",
+  language: SiteLocale,
   now: Date = new Date(),
 ): PublicNavigation | null {
   if (value._status !== "published") return null;

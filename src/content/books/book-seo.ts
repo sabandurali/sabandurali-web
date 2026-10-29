@@ -5,7 +5,7 @@ import {
   getBookReviewPath,
   getBookReviewUrl,
 } from "@/content/books/book-routes";
-import type { BookReview } from "@/content/books/types";
+import type { PublicBookReview } from "@/content/books/public-types";
 import {
   createPersonReference,
   personalBrandName,
@@ -13,7 +13,7 @@ import {
 } from "@/content/entity-seo";
 import { createPageMetadata, createSocialImage } from "@/lib/metadata";
 
-type CanonicalBookReview = Pick<BookReview, "language" | "seo" | "slug">;
+type CanonicalBookReview = Pick<PublicBookReview, "language" | "seo" | "slug">;
 
 export function getBookReviewCanonicalUrl(
   bookReview: CanonicalBookReview,
@@ -29,21 +29,40 @@ export function getBookReviewCanonicalUrl(
   return getBookReviewUrl(bookReview.slug, bookReview.language);
 }
 
+/**
+ * Whether a review may take part in an hreflang cluster: indexable and
+ * self-canonical. The page metadata and the sitemap use the same rule.
+ */
+export function isBookReviewHreflangEligible(
+  bookReview: CanonicalBookReview,
+): boolean {
+  return (
+    bookReview.seo.index &&
+    getBookReviewCanonicalUrl(bookReview) ===
+      getBookReviewUrl(bookReview.slug, bookReview.language)
+  );
+}
+
 export function createBookReviewMetadata(
-  bookReview: BookReview,
-  translation: BookReview | null,
+  bookReview: PublicBookReview,
+  translation: PublicBookReview | null,
 ): Metadata {
   const openGraphImage = getAvailableLocalBookImage(
     bookReview.seo.openGraphImage,
   );
+
+  const hreflang = isBookReviewHreflangEligible(bookReview);
 
   return createPageMetadata({
     title: bookReview.seo.title,
     description: bookReview.seo.description,
     locale: bookReview.language,
     path: getBookReviewPath(bookReview.slug, bookReview.language),
+    hreflang,
     translations:
-      translation === null
+      !hreflang ||
+      translation === null ||
+      !isBookReviewHreflangEligible(translation)
         ? undefined
         : {
             [translation.language]: getBookReviewPath(
@@ -73,7 +92,7 @@ export function createBookReviewMetadata(
   });
 }
 
-export function createBookReviewJsonLd(bookReview: BookReview) {
+export function createBookReviewJsonLd(bookReview: PublicBookReview) {
   const book = {
     "@type": "Book",
     name: bookReview.originalTitle ?? bookReview.title,
@@ -115,6 +134,8 @@ export function createBookReviewJsonLd(bookReview: BookReview) {
   };
 }
 
-export function serializeBookReviewJsonLd(bookReview: BookReview): string {
+export function serializeBookReviewJsonLd(
+  bookReview: PublicBookReview,
+): string {
   return serializeJsonLd(createBookReviewJsonLd(bookReview));
 }

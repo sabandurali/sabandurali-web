@@ -2,7 +2,10 @@ import "server-only";
 import { getPayload, type Where } from "payload";
 import config from "@payload-config";
 import { mapPayloadPhoto } from "@/content/photos/payload-photo-mapper";
-import { collectPhotoFacets } from "@/content/photos/photo-facets";
+import {
+  collectPhotoFacets,
+  type PhotoFacets,
+} from "@/content/photos/photo-facets";
 import {
   clampPhotoPage,
   createDistrictPhotoConditions,
@@ -87,8 +90,15 @@ export class PayloadPublicPhotoRepository {
     return photos;
   }
 
-  /** Filter options: only the relationship fields of the public photos. */
-  private async listFacets(locale: PhotoLanguage, now: Date) {
+  /**
+   * Filter options: only the relationship fields of the public photos. They
+   * do not depend on the request, so the data source caches them
+   * (`getPublishedPhotos`); this query scans every public photo.
+   */
+  async listFacets(
+    locale: PhotoLanguage,
+    now: Date = new Date(),
+  ): Promise<PhotoFacets> {
     const payload = await getPayload({ config });
     const result = await payload.find({
       collection: "photos",
@@ -118,6 +128,8 @@ export class PayloadPublicPhotoRepository {
     locale: PhotoLanguage,
     filters: PhotoListFilters = {},
     now: Date = new Date(),
+    loadFacets: (locale: PhotoLanguage) => Promise<PhotoFacets> = (language) =>
+      this.listFacets(language, now),
   ): Promise<PublishedPhotoList> {
     const conditions = createPhotoListConditions(now, filters);
     const requestedPage = normalizeRequestedPage(filters.page);
@@ -125,7 +137,7 @@ export class PayloadPublicPhotoRepository {
       this.findPage(locale, conditions, page, PHOTO_LIST_PAGE_SIZE, now);
     const [requested, facets] = await Promise.all([
       findListPage(requestedPage),
-      this.listFacets(locale, now),
+      loadFacets(locale),
     ]);
     // A page number past the end shows the last page. Payload returns no
     // documents there and, when the query joins other tables (localized

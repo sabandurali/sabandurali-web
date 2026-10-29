@@ -166,6 +166,15 @@ function sanitizeSource(value: Record<string, unknown>): DistrictSource {
   };
 }
 
+/**
+ * Raw CMS `sources` normalized for the content policy: non-objects are
+ * dropped and every field is type-checked. CMS validation and the public
+ * projection read sources the same way.
+ */
+export function sanitizeDistrictSources(value: unknown): DistrictSource[] {
+  return Array.isArray(value) ? value.filter(isRecord).map(sanitizeSource) : [];
+}
+
 export function mapDistrictGuide(
   value: unknown,
   now = Date.now(),
@@ -175,9 +184,7 @@ export function mapDistrictGuide(
   const reviewed = Array.isArray(item.reviewedSections)
     ? item.reviewedSections.filter((x): x is string => typeof x === "string")
     : [];
-  const sources = Array.isArray(item.sources)
-    ? item.sources.filter(isRecord).map(sanitizeSource)
-    : [];
+  const sources = sanitizeDistrictSources(item.sources);
   const can = (section: DistrictSection) =>
     sectionIsPublic(section, reviewed, sources, now);
   const field = (section: DistrictSection) =>

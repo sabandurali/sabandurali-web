@@ -1,21 +1,12 @@
 import type {
   ArticleCategory,
   ArticleLanguage,
-  TranslationStatus,
 } from "@/content/articles/types";
 
 export const ARTICLE_LANGUAGES = [
   "tr",
   "en",
 ] as const satisfies ReadonlyArray<ArticleLanguage>;
-
-export const TRANSLATION_STATUSES = [
-  "none",
-  "pending",
-  "in_progress",
-  "completed",
-  "outdated",
-] as const satisfies ReadonlyArray<TranslationStatus>;
 
 export const ARTICLE_CATEGORY_LABELS = {
   real_estate: {
@@ -44,7 +35,7 @@ export const ARTICLE_CATEGORY_LABELS = {
   },
 } as const satisfies Record<ArticleCategory, Record<ArticleLanguage, string>>;
 
-export const SEO_DESCRIPTION_RECOMMENDED_LENGTH = {
-  min: 140,
-  max: 160,
-} as const;
+export {
+  SEO_DESCRIPTION_RECOMMENDED_LENGTH,
+  TRANSLATION_STATUSES,
+} from "@/content/shared/content-types";

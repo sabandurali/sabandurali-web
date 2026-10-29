@@ -75,6 +75,11 @@ in [CLAUDE.md](CLAUDE.md) and [docs/PROJECT-STATE.md](docs/PROJECT-STATE.md) §K
   static data and Payload through `<TYPE>_PUBLIC_SOURCE`. Payload repositories
   read with the Local API (`overrideAccess: false`, no drafts), pure mappers
   turn documents into public types, and components only consume those types.
+  The one exception is the `Navigation` global: it is closed to anonymous
+  reads so the public REST API never exposes it, and its repository reads the
+  published version with `overrideAccess: true`; the mapper passes on only
+  published, active and safe links. `src/content/content-access.test.ts` keeps
+  it the only exception.
 - **CMS.** Collections live in `src/collections`, the `Navigation` global in
   `src/globals`, access rules in `src/lib/payloadAccess.ts`, delete guards in
   `src/lib/payloadDeleteGuards.ts` and fail-closed infrastructure checks in

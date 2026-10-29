@@ -11,6 +11,7 @@ import {
 } from "../rich-text/lexical-fixtures";
 import {
   mapPayloadArticle,
+  mapPayloadArticleSummary,
   toPublicArticleSummary,
   toPublicArticleTranslation,
 } from "./payload-article-mapper";
@@ -88,6 +89,7 @@ test("a complete published article maps to the public shape", (t) => {
     language: "tr",
     slug: "kadikoyde-yasam",
     title: "Kadıköy’de yaşam",
+    seo: { index: true },
   });
 });
 
@@ -206,6 +208,7 @@ test("internal links in the body are resolved for the requested locale", (t) => 
     }),
     "en",
     now,
+    { offeredEnglishArticleIds: new Set(["article-2"]) },
   );
   const serialized = JSON.stringify(
     mapped?.content.source === "lexical" ? mapped.content.data : null,
@@ -213,6 +216,23 @@ test("internal links in the body are resolved for the requested locale", (t) => 
 
   assert.ok(serialized.includes('"url":"/en/articles/moda-sahili"'));
   assert.ok(serialized.includes('"linkType":"custom"'));
+
+  // Not known to be a complete translation: plain text, never a 404 link.
+  const unresolved = mapPayloadArticle(
+    article({
+      content: lexical(
+        paragraph(link({ linkType: "internal", newTab: false, doc: target })),
+      ),
+    }),
+    "en",
+    now,
+  );
+  assert.equal(
+    JSON.stringify(
+      unresolved?.content.source === "lexical" ? unresolved.content.data : null,
+    ).includes("/en/articles/moda-sahili"),
+    false,
+  );
 });
 
 test("SEO controls and a guest author reach the public article", (t) => {
@@ -256,4 +276,22 @@ test("the owner, blank authors and foreign canonicals fall back to defaults", (t
     assert.equal(mapped.seo.index, true);
     assert.equal(mapped.seo.follow, true);
   }
+});
+
+test("the list projection equals the summary of the full article without reading the body", (t) => {
+  silence(t);
+  const full = mapPayloadArticle(article(), "tr", now);
+  assert.ok(full);
+  const { content: _content, ...expected } = full;
+  void _content;
+
+  assert.deepEqual(
+    mapPayloadArticleSummary(article({ content: undefined }), "tr", now),
+    toPublicArticleSummary(full),
+  );
+  assert.deepEqual(toPublicArticleSummary(full), expected);
+  assert.equal(
+    mapPayloadArticleSummary(article({ _status: "draft" }), "tr", now),
+    null,
+  );
 });

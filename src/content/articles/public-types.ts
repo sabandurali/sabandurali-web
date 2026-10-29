@@ -65,10 +65,14 @@ export type PublicArticleSummary = {
   seo: PublicArticleSeo;
 };
 
+/**
+ * The other-language version of an article. Its SEO controls decide whether
+ * it may appear as an hreflang alternate (`isArticleHreflangEligible`).
+ */
 export type PublicArticleTranslation = Pick<
   PublicArticleSummary,
   "id" | "language" | "slug" | "title"
->;
+> & { seo: Pick<PublicArticleSummary["seo"], "index" | "canonical"> };
 
 export type PublicArticleContent =
   | {

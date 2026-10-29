@@ -1,7 +1,11 @@
 import { reportContentIssue } from "@/content/content-log";
 import { getText, isPublishedBy, isRecord } from "@/content/guards";
+import { getSafeHref } from "@/content/links";
 import { mapMediaImage } from "@/content/media";
-import { prepareRichText } from "@/content/rich-text/prepare-rich-text";
+import {
+  prepareRichText,
+  type RichTextLinkContext,
+} from "@/content/rich-text/prepare-rich-text";
 import type {
   PublicCardGroupBlock,
   PublicCtaBlock,
@@ -18,34 +22,16 @@ import type {
 } from "@/content/pages/public-types";
 import type { Page as PayloadPage } from "@/payload-types";
 
-function getSafeHref(value: unknown): string | null {
-  const href = getText(value);
-
-  if (href === null) return null;
-
-  if (/^#[a-z][a-z0-9-]*$/.test(href)) {
-    return href;
-  }
-
-  if (href.startsWith("/") && !href.startsWith("//")) {
-    return href;
-  }
-
-  try {
-    const url = new URL(href);
-    return url.protocol === "http:" || url.protocol === "https:"
-      ? url.toString()
-      : null;
-  } catch {
-    return null;
-  }
+/** Block links: an anchor, a site path or an http(s) URL. */
+function getSafeBlockHref(value: unknown): string | null {
+  return getSafeHref(value, { allowAnchor: true, allowRelative: true });
 }
 
 function mapLink(value: unknown): PublicPageLink | null {
   if (!isRecord(value)) return null;
 
   const label = getText(value.label);
-  const href = getSafeHref(value.href);
+  const href = getSafeBlockHref(value.href);
 
   return label === null || href === null ? null : { label, href };
 }
@@ -59,7 +45,7 @@ function mapOptionalLink(value: unknown): PublicPageLink | null | undefined {
   if (label === null && href === null) return undefined;
   if (label === null || href === null) return null;
 
-  const safeHref = getSafeHref(href);
+  const safeHref = getSafeBlockHref(href);
   return safeHref === null ? null : { label, href: safeHref };
 }
 
@@ -99,14 +85,23 @@ function isRichText(value: unknown): value is PublicRichTextBlock["content"] {
 }
 
 type PayloadBlock = NonNullable<PayloadPage["layout"]>[number];
-type MappingContext = { language: PublicPageLanguage; now: Date };
+type MappingContext = {
+  language: PublicPageLanguage;
+  now: Date;
+  links?: RichTextLinkContext;
+};
 
 /** Rich text with internal links resolved for the page language. */
 function mapRichText(
   value: unknown,
   context: MappingContext,
 ): PublicRichTextBlock["content"] | null {
-  const prepared = prepareRichText(value, context.language, context.now);
+  const prepared = prepareRichText(
+    value,
+    context.language,
+    context.now,
+    context.links,
+  );
   return isRichText(prepared) ? prepared : null;
 }
 
@@ -301,7 +296,7 @@ function mapHomeFocusAreasBlock(
     const description = getText(card.description);
     const linkLabel = getText(card.linkLabel);
     const linkHref =
-      getText(card.linkHref) === null ? null : getSafeHref(card.linkHref);
+      getText(card.linkHref) === null ? null : getSafeBlockHref(card.linkHref);
 
     if (
       cardTitle === null ||
@@ -406,6 +401,7 @@ export function mapPayloadPage(
   value: PayloadPage,
   language: PublicPageLanguage,
   now: Date = new Date(),
+  links: RichTextLinkContext = {},
 ): PublicPage | null {
   const id = getText(value.id);
   const title = getText(value.title);
@@ -429,7 +425,7 @@ export function mapPayloadPage(
     return null;
   }
 
-  const context: MappingContext = { language, now };
+  const context: MappingContext = { language, now, links };
 
   return {
     id,

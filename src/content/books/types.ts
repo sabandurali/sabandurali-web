@@ -1,15 +1,15 @@
+import type { SiteLocale } from "@/content/locales";
 import type {
-  ArticleLanguage,
-  ArticleSeo,
+  ContentSeo,
   CoverImage,
   TranslationStatus,
   ValidationIssue,
-} from "@/content/articles/types";
+} from "@/content/shared/content-types";
 
-export type BookReviewLanguage = ArticleLanguage;
+export type BookReviewLanguage = SiteLocale;
 export type BookReviewTranslationStatus = TranslationStatus;
 export type BookCoverImage = CoverImage;
-export type BookReviewSeo = ArticleSeo;
+export type BookReviewSeo = ContentSeo;
 
 export type BookCategory =
   | "business_and_management"

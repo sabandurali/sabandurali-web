@@ -1,51 +1,11 @@
-import { existsSync, statSync } from "node:fs";
-import { extname, isAbsolute, relative, resolve, sep } from "node:path";
-import { getSafePayloadMediaPath } from "@/content/articles/article-images";
+import {
+  getAvailableLocalImage,
+  getSafePayloadMediaPath,
+} from "@/content/media-paths";
 
-const SUPPORTED_BOOK_IMAGE_EXTENSIONS = new Set([
-  ".avif",
-  ".gif",
-  ".jpeg",
-  ".jpg",
-  ".png",
-  ".webp",
-]);
-
+/** A book cover or share image: a Payload media path or a `public/` image. */
 export function getAvailableLocalBookImage(
   src: string | undefined,
 ): string | null {
-  const payloadMediaPath = getSafePayloadMediaPath(src);
-
-  if (payloadMediaPath !== null) {
-    return payloadMediaPath;
-  }
-
-  if (
-    src === undefined ||
-    !src.startsWith("/") ||
-    src.startsWith("//") ||
-    !SUPPORTED_BOOK_IMAGE_EXTENSIONS.has(extname(src).toLowerCase())
-  ) {
-    return null;
-  }
-
-  const publicDirectory = resolve(process.cwd(), "public");
-  const absolutePath = resolve(publicDirectory, `.${src}`);
-  const relativePath = relative(publicDirectory, absolutePath);
-
-  if (
-    relativePath.startsWith(`..${sep}`) ||
-    relativePath === ".." ||
-    isAbsolute(relativePath)
-  ) {
-    return null;
-  }
-
-  try {
-    return existsSync(absolutePath) && statSync(absolutePath).isFile()
-      ? src
-      : null;
-  } catch {
-    return null;
-  }
+  return getSafePayloadMediaPath(src) ?? getAvailableLocalImage(src);
 }

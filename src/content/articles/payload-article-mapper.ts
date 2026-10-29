@@ -18,7 +18,10 @@ import {
 } from "@/content/guards";
 import { personalBrandName } from "@/content/entity-seo";
 import { mapMediaImage } from "@/content/media";
-import { prepareRichText } from "@/content/rich-text/prepare-rich-text";
+import {
+  prepareRichText,
+  type RichTextLinkContext,
+} from "@/content/rich-text/prepare-rich-text";
 import type { Article as PayloadArticle } from "@/payload-types";
 
 function hasMeaningfulLexicalNode(value: unknown): boolean {
@@ -136,11 +139,17 @@ function mapFeaturedImage(
   };
 }
 
-export function mapPayloadArticle(
+/**
+ * Summary fields shared by the full article and the list projection.
+ * `acceptContent` runs after the identity checks and before the source and
+ * date checks, so the order of the reported reasons stays the same for both.
+ */
+function mapArticleSummaryFields(
   value: PayloadArticle,
   locale: ArticleLanguage,
-  now: Date = new Date(),
-): PublicArticle | null {
+  now: Date,
+  acceptContent: (id: string, articleType: DistrictArticleType) => boolean,
+): PublicArticleSummary | null {
   const id = getText(value.id);
   const title = getText(value.title);
   const slug = getText(value.slug);
@@ -165,20 +174,7 @@ export function mapPayloadArticle(
     return null;
   }
 
-  // Internal links are resolved here, where the locale is known.
-  const content =
-    articleType === "district-news"
-      ? null
-      : prepareRichText(value.content, locale, now);
-
-  if (articleType !== "district-news" && !isLexicalContent(content)) {
-    reportInvalidArticle(
-      id,
-      locale,
-      "Lexical content is missing for the requested locale",
-    );
-    return null;
-  }
+  if (!acceptContent(id, articleType)) return null;
 
   const externalSource = mapExternalSource(value.externalSource);
   if (articleType === "district-news" && externalSource === null) {
@@ -209,10 +205,6 @@ export function mapPayloadArticle(
     language: locale,
     translationKey: id,
     summary: excerpt,
-    content: {
-      source: "lexical",
-      data: isLexicalContent(content) ? content : null,
-    },
     categories: mapCategories(value.categories, locale),
     featuredImage,
     featured: value.featured === true,
@@ -234,6 +226,58 @@ export function mapPayloadArticle(
       openGraphImage: featuredImage?.src,
     },
   };
+}
+
+export function mapPayloadArticle(
+  value: PayloadArticle,
+  locale: ArticleLanguage,
+  now: Date = new Date(),
+  links: RichTextLinkContext = {},
+): PublicArticle | null {
+  let content: unknown = null;
+  const summary = mapArticleSummaryFields(
+    value,
+    locale,
+    now,
+    (id, articleType) => {
+      if (articleType === "district-news") return true;
+
+      // Internal links are resolved here, where the locale is known.
+      content = prepareRichText(value.content, locale, now, links);
+      if (isLexicalContent(content)) return true;
+
+      reportInvalidArticle(
+        id,
+        locale,
+        "Lexical content is missing for the requested locale",
+      );
+      return false;
+    },
+  );
+
+  if (summary === null) return null;
+
+  return {
+    ...summary,
+    content: {
+      source: "lexical",
+      data: isLexicalContent(content) ? content : null,
+    },
+  };
+}
+
+/**
+ * List projection of an article read without its rich text (`select`
+ * excludes `content`). The repository's query requires the content to exist
+ * instead, and publishing requires it to be meaningful
+ * (`validateArticleContent`).
+ */
+export function mapPayloadArticleSummary(
+  value: PayloadArticle,
+  locale: ArticleLanguage,
+  now: Date = new Date(),
+): PublicArticleSummary | null {
+  return mapArticleSummaryFields(value, locale, now, () => true);
 }
 
 /** A canonical path or URL on this site; anything else is ignored. */
@@ -284,5 +328,11 @@ export function toPublicArticleTranslation(
     language: article.language,
     slug: article.slug,
     title: article.title,
+    seo: {
+      index: article.seo.index,
+      ...(article.seo.canonical === undefined
+        ? {}
+        : { canonical: article.seo.canonical }),
+    },
   };
 }

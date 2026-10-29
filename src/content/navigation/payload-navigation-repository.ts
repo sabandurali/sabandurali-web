@@ -3,7 +3,7 @@ import { getPayload } from "payload";
 import config from "@payload-config";
 import { mapPayloadNavigation } from "@/content/navigation/payload-navigation-mapper";
 import type { PublicNavigation } from "@/content/navigation/public-types";
-import type { Locale } from "@/content/homeContent";
+import type { SiteLocale as Locale } from "@/content/locales";
 
 export class PayloadPublicNavigationRepository {
   /**

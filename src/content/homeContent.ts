@@ -1,5 +1,6 @@
+import type { SiteLocale } from "@/content/locales";
 import { biography } from "./biography";
-export type Locale = "tr" | "en";
+export type Locale = SiteLocale;
 
 export type HomeAnchors = {
   about: string;

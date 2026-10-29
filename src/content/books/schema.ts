@@ -17,7 +17,7 @@ import type {
   BookReview,
   BookReviewValidationResult,
 } from "@/content/books/types";
-import type { ValidationIssue } from "@/content/articles/types";
+import type { ValidationIssue } from "@/content/shared/content-types";
 
 function isBlank(value: string): boolean {
   return value.trim().length === 0;
