@@ -3,14 +3,16 @@ import {
   WorkspaceLandingPage,
   createWorkspaceMetadata,
 } from "@/components/workspaces/WorkspacePage";
-import { getWorkspace } from "@/content/workspaces";
+import { requireWorkspace } from "@/components/workspaces/workspace-routes";
 
-const workspace = getWorkspace("gayrimenkul-ve-istanbul")!;
+const workspace = requireWorkspace("gayrimenkul-ve-istanbul");
+
 export const metadata: Metadata = createWorkspaceMetadata(
   workspace.title,
   workspace.description,
   "/gayrimenkul-ve-istanbul",
 );
+
 export default function RealEstatePage() {
   return (
     <WorkspaceLandingPage

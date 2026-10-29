@@ -1,246 +1,237 @@
+import type { Metadata } from "next";
+import Image from "next/image";
+import { ButtonLink } from "@/components/ui/Button";
+import Card from "@/components/ui/Card";
+import Chip from "@/components/ui/Chip";
+import { Figure } from "@/components/ui/Figure";
+import Section from "@/components/ui/Section";
+import Timeline from "@/components/ui/Timeline";
+import PageIntro, { Eyebrow } from "@/components/workspaces/PageIntro";
+import PageShell from "@/components/workspaces/PageShell";
+import { contactPaths } from "@/config/site";
 import {
+  biographyNotice,
   education,
   experience,
   softwareExperience,
-  biographyNotice,
 } from "@/content/biography";
-import Image from "next/image";
-import Link from "next/link";
-import type { Metadata } from "next";
-import BackToTop from "@/components/layout/BackToTop";
-import Footer from "@/components/layout/Footer";
-import Header from "@/components/layout/Header";
-import { AreaIcon } from "@/components/sections/FocusAreas";
-import ContactCallToAction from "@/components/sections/ContactCallToAction";
-import { contactPaths, getAbsoluteUrl } from "@/config/site";
 import { homeContent } from "@/content/homeContent";
 import { workspaces } from "@/content/workspaces";
+import { createPageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMetadata({
   title: "Hakkımda | Şaban Durali",
   description:
     "Şaban Durali'nin çalışma alanları, platform yaklaşımı ve profesyonel profili.",
-  alternates: { canonical: getAbsoluteUrl("/hakkimda") },
-};
+  locale: "tr",
+  path: "/hakkimda",
+});
+
+const manifesto = [
+  "Bilgi, paylaşıldığında büyür.",
+  "Analiz, doğru sorularla başlar.",
+  "Değer, tutarlılıkla oluşur.",
+] as const;
 
 export default function AboutPage() {
   const home = homeContent.tr;
+  const software = softwareExperience
+    .split(",")
+    .map((item) => item.trim())
+    .filter((item) => item !== "");
 
   return (
-    <div id="top" lang="tr">
-      <Header
-        locale="tr"
-        anchors={home.anchors}
-        content={home.header}
-        homeHref="/"
-        anchorPrefix="/"
-        languageHrefs={{ tr: "/hakkimda", en: "/en" }}
-      />
-
-      <main>
-        <section
-          id="hakkimda"
-          data-about-section="profile"
-          className="scroll-mt-24 border-y border-accent/60 bg-[#F5EFE4] text-ink"
-        >
-          <div className="mx-auto grid max-w-[1440px] gap-8 px-5 py-10 sm:px-8 sm:py-14 md:grid-cols-[15rem_1fr] md:items-center md:gap-12 lg:grid-cols-[18rem_1fr] lg:px-10 lg:py-20">
-            <div className="w-44 border border-[var(--accent-border-soft)] bg-ivory-soft p-2 sm:w-52 md:w-full">
-              <Image
-                src="/brand/saban-durali-profile.jpg"
-                alt={home.about.imageAlt}
-                width={480}
-                height={600}
-                sizes="(min-width: 1024px) 288px, (min-width: 768px) 240px, 208px"
-                priority
-                className="aspect-[4/5] h-auto w-full object-cover object-top"
-              />
-            </div>
-
-            <div className="max-w-3xl md:border-l md:border-ink/20 md:pl-10">
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent-deep">
-                Hakkımda / Profil
-              </p>
-              <h1 className="mt-4 font-serif text-[2.75rem] font-semibold leading-[0.96] text-ink sm:text-6xl lg:text-7xl">
-                Şaban Durali
-              </h1>
-              <p className="mt-6 max-w-2xl text-base leading-7 text-muted-dark sm:text-lg sm:leading-8">
-                {home.about.paragraphs[0]}
-              </p>
-            </div>
+    <PageShell locale="tr" languageHrefs={{ tr: "/hakkimda", en: "/en" }}>
+      <main id="main" className="scheme-light bg-paper text-ink">
+        <Section id="hakkimda" className="scroll-mt-24">
+          <div className="grid gap-10 md:grid-cols-[15rem_minmax(0,1fr)] md:items-end lg:grid-cols-[19rem_minmax(0,1fr)] lg:gap-16">
+            <Figure credit={null} className="w-48 sm:w-56 md:w-full">
+              <div className="overflow-hidden rounded-card border border-ink bg-land">
+                <Image
+                  src="/brand/saban-durali-profile.jpg"
+                  alt={home.about.imageAlt}
+                  width={900}
+                  height={1100}
+                  sizes="(min-width: 1024px) 304px, (min-width: 768px) 240px, 224px"
+                  preload
+                  className="block aspect-[9/11] h-auto w-full object-cover object-top"
+                />
+              </div>
+            </Figure>
+            <PageIntro
+              breadcrumb={[
+                { label: "Ana sayfa", href: "/" },
+                { label: "Hakkımda" },
+              ]}
+              eyebrow="Hakkımda / Profil"
+              title="Şaban Durali"
+              lead={home.about.paragraphs[0]}
+            />
           </div>
-        </section>
+        </Section>
 
-        <section
+        <Section
           id="biyografi"
-          data-about-section="biography"
-          className="scroll-mt-24 border-b border-[var(--accent-border-soft)] bg-background text-ivory"
+          tone="sea"
+          labelledBy="biyografi-title"
+          className="scroll-mt-24"
         >
-          <div className="mx-auto grid max-w-[1440px] gap-7 px-5 py-12 sm:px-8 sm:py-16 md:grid-cols-[0.42fr_1fr] md:gap-12 lg:px-10 lg:py-20">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent-strong">
-                01 / Biyografi
-              </p>
-              <h2 className="mt-4 font-serif text-4xl font-semibold leading-tight sm:text-5xl">
+          <div className="grid gap-8 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:gap-16">
+            <div className="flex flex-col gap-4">
+              <Eyebrow number={1} tone="on-sea">
+                Biyografi
+              </Eyebrow>
+              <h2 id="biyografi-title" className="m-0 type-h2-lg">
                 Araştırma, uygulama ve uzun vadeli değer.
               </h2>
             </div>
-            <div className="border-l border-accent/60 pl-5 sm:pl-8 md:self-center">
-              <p className="max-w-3xl text-lg leading-8 text-muted sm:text-xl sm:leading-9">
-                {home.about.paragraphs[1]}
-              </p>
-            </div>
+            <p className="m-0 max-w-measure self-center type-lead text-on-sea-soft">
+              {home.about.paragraphs[1]}
+            </p>
           </div>
-        </section>
+        </Section>
 
-        <section
+        <Section
           id="deneyim"
-          className="scroll-mt-24 border-b border-border bg-surface text-ivory"
+          labelledBy="deneyim-title"
+          className="scroll-mt-24"
         >
-          <div className="mx-auto max-w-[1440px] px-5 py-12 sm:px-8 lg:px-10">
-            <p className="text-xs uppercase tracking-[0.2em] text-accent-strong">
-              02 / Mesleki deneyim
-            </p>
-            <h2 className="mt-4 font-serif text-4xl">1996’dan bugüne</h2>
-            <ol className="mt-8 divide-y divide-border">
-              {experience.map(([period, role, company]) => (
-                <li
-                  key={`${period}-${company}`}
-                  className="grid gap-2 py-5 sm:grid-cols-[140px_1fr]"
-                >
-                  <p className="text-accent-soft">{period}</p>
-                  <div>
-                    <h3 className="text-lg">{role}</h3>
-                    <p className="mt-1 text-muted">{company}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-            <h3 className="mt-8 text-xl">Yazılım deneyimi</h3>
-            <p className="mt-3 text-muted">{softwareExperience}</p>
-            <p className="mt-6 text-sm leading-7 text-muted">
-              {biographyNotice}
-            </p>
-          </div>
-        </section>
-
-        <section
-          data-about-section="work-areas"
-          className="border-b border-[var(--accent-border-soft)] bg-ivory-soft text-ink"
-        >
-          <div className="mx-auto max-w-[1440px] px-5 py-12 sm:px-8 sm:py-16 lg:px-10 lg:py-20">
-            <div className="max-w-3xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent-deep">
-                03 / Çalışma ve İlgi Alanları
-              </p>
-              <h2 className="mt-4 font-serif text-4xl font-semibold leading-tight sm:text-5xl">
-                Birbirini besleyen altı çalışma alanı.
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
+            <div className="flex flex-col gap-4 lg:self-start">
+              <Eyebrow number={2}>Mesleki deneyim</Eyebrow>
+              <h2 id="deneyim-title" className="m-0 type-h2-lg">
+                1996’dan bugüne
               </h2>
-            </div>
-
-            <div className="mt-10 grid gap-px border border-[var(--accent-border-soft)] bg-[var(--accent-border-soft)] sm:grid-cols-2 lg:grid-cols-3">
-              {workspaces.map((workspace) => (
-                <article
-                  key={workspace.key}
-                  className="flex min-w-0 flex-col bg-[#F5EFE4] p-5 sm:p-6"
-                >
-                  <div className="flex size-10 items-center justify-center border border-[var(--accent-border-soft)] text-accent-deep">
-                    <AreaIcon icon={workspace.icon} className="size-5" />
-                  </div>
-                  <h3 className="mt-5 font-serif text-2xl font-semibold leading-tight">
-                    {workspace.title}
-                  </h3>
-                  <p className="mt-3 text-sm leading-6 text-muted-dark sm:text-base sm:leading-7">
-                    {workspace.description}
-                  </p>
-                  <Link
-                    href={`/${workspace.key}`}
-                    className="mt-auto inline-flex min-h-11 items-end self-start pt-6 text-sm font-semibold text-accent-deep underline decoration-[var(--accent-border-soft)] underline-offset-4 hover:text-ink"
-                  >
-                    Alanı keşfet →
-                  </Link>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section
-          id="egitim-sertifikalar"
-          data-about-section="education"
-          className="scroll-mt-24 border-b border-[var(--accent-border-soft)] bg-surface text-ivory"
-        >
-          <div className="mx-auto max-w-[1440px] px-5 py-12 sm:px-8 sm:py-16 lg:px-10 lg:py-20">
-            <div className="max-w-3xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent-strong">
-                04 / Eğitim
-              </p>
-              <h2 className="mt-4 font-serif text-4xl font-semibold leading-tight sm:text-5xl">
-                Eğitim
-              </h2>
-              <p className="mt-5 max-w-2xl text-base leading-7 text-muted">
+              <h3 className="mt-6 mb-0 type-h4">Yazılım deneyimi</h3>
+              <ul className="m-0 flex list-none flex-wrap gap-2 p-0">
+                {software.map((item) => (
+                  <li key={item}>
+                    <Chip>{item}</Chip>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-4 mb-0 max-w-measure type-small text-ink-muted">
                 {biographyNotice}
               </p>
             </div>
-
-            <div className="mt-10 grid border-y border-border md:grid-cols-2 md:divide-x md:divide-border">
-              {education.map((section) => (
-                <article
-                  key={section.title}
-                  className="border-b border-border py-6 last:border-b-0 md:border-b-0 md:px-7 md:first:pl-0 md:last:pr-0"
-                >
-                  <h3 className="font-serif text-2xl font-semibold text-ivory">
-                    {section.title}
-                  </h3>
-                  <p className="mt-3 text-sm leading-6 text-muted">
-                    {section.description}
-                  </p>
-                </article>
-              ))}
-            </div>
+            <Timeline
+              label="Mesleki deneyim, yeniden eskiye"
+              entries={experience.map(([period, role, company], index) => ({
+                id: `${period}-${company}`,
+                when: period,
+                highlight: index === 0,
+                children: (
+                  <>
+                    <h3 className="m-0 type-h4">{role}</h3>
+                    <p className="m-0 mt-1 type-small text-ink-muted">
+                      {company}
+                    </p>
+                  </>
+                ),
+              }))}
+            />
           </div>
-        </section>
+        </Section>
 
-        <section
-          data-about-section="platform-purpose"
-          className="border-b border-[var(--accent-border-soft)] bg-[#F5EFE4] text-ink"
+        <Section
+          tone="band"
+          labelledBy="calisma-alanlari-title"
+          divider
+          className="scroll-mt-24"
         >
-          <div className="mx-auto grid max-w-[1440px] gap-10 px-5 py-12 sm:px-8 sm:py-16 md:grid-cols-[1fr_0.8fr] md:items-center lg:px-10 lg:py-20">
-            <div className="max-w-3xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent-deep">
-                05 / Platformun Amacı
+          <div className="flex max-w-measure flex-col gap-4">
+            <Eyebrow number={3}>Çalışma ve ilgi alanları</Eyebrow>
+            <h2 id="calisma-alanlari-title" className="m-0 type-h2-lg">
+              Birbirini besleyen altı çalışma alanı.
+            </h2>
+          </div>
+          <ul className="m-0 mt-10 grid list-none gap-5 p-0 md:grid-cols-2 xl:grid-cols-3">
+            {workspaces.map((workspace) => (
+              <li key={workspace.key} className="flex min-w-0">
+                <Card
+                  title={workspace.title}
+                  href={`/${workspace.key}`}
+                  eyebrow={<span>{workspace.eyebrow}</span>}
+                  cta="Alanı keşfet"
+                  className="w-full"
+                >
+                  <p className="m-0 type-small text-ink-muted">
+                    {workspace.description}
+                  </p>
+                </Card>
+              </li>
+            ))}
+          </ul>
+        </Section>
+
+        <Section
+          id="egitim-sertifikalar"
+          labelledBy="egitim-title"
+          className="scroll-mt-24"
+        >
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
+            <div className="flex flex-col gap-4">
+              <Eyebrow number={4}>Eğitim</Eyebrow>
+              <h2 id="egitim-title" className="m-0 type-h2-lg">
+                Eğitim
+              </h2>
+              <p className="m-0 max-w-measure type-small text-ink-muted">
+                {biographyNotice}
               </p>
-              <h2 className="mt-4 font-serif text-4xl font-semibold leading-tight sm:text-5xl">
+            </div>
+            <ul className="m-0 list-none border-t border-ink p-0">
+              {education.map((item) => (
+                <li key={item.title} className="border-b border-hairline py-6">
+                  <h3 className="m-0 type-h3">{item.title}</h3>
+                  <p className="m-0 mt-2 type-body text-ink-muted">
+                    {item.description}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </Section>
+
+        <Section tone="land" labelledBy="amac-title" divider>
+          <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,0.8fr)] md:items-center md:gap-16">
+            <div className="flex max-w-measure flex-col gap-4">
+              <Eyebrow number={5}>Platformun amacı</Eyebrow>
+              <h2 id="amac-title" className="m-0 type-h2-lg">
                 Bilgiyi araştırmak, uygulamak ve paylaşmak.
               </h2>
-              <p className="mt-6 text-base leading-7 text-muted-dark sm:text-lg sm:leading-8">
-                {home.hero.description}
-              </p>
-              <p className="mt-4 text-base leading-7 text-muted-dark sm:text-lg sm:leading-8">
-                {home.footer.description}
-              </p>
+              <p className="m-0 type-body">{home.hero.description}</p>
+              <p className="m-0 type-body">{home.footer.description}</p>
             </div>
-
-            <blockquote
-              data-about-section="manifesto"
-              className="border-l-2 border-accent bg-[#E9E0CF] px-6 py-7 font-serif text-2xl leading-snug text-ink sm:px-8 sm:py-9 sm:text-3xl"
-            >
-              Bilgi, paylaşıldığında büyür.
-              <br />
-              Analiz, doğru sorularla başlar.
-              <br />
-              Değer, tutarlılıkla oluşur.
+            <blockquote className="m-0 border-l-4 border-signal bg-paper px-6 py-7 sm:px-8 sm:py-9">
+              {manifesto.map((line) => (
+                <p key={line} className="m-0 type-h3">
+                  {line}
+                </p>
+              ))}
             </blockquote>
           </div>
-        </section>
+        </Section>
 
-        <ContactCallToAction
-          content={home.contactCallToAction}
-          href={contactPaths.tr}
-        />
+        <Section tone="sea" labelledBy="iletisim-title">
+          <div className="flex flex-col items-start gap-5 md:flex-row md:items-end md:justify-between md:gap-12">
+            <div className="flex max-w-measure flex-col gap-4">
+              <h2 id="iletisim-title" className="m-0 type-h2-lg">
+                {home.contactCallToAction.title}
+              </h2>
+              <p className="m-0 type-lead text-on-sea-soft">
+                {home.contactCallToAction.description}
+              </p>
+            </div>
+            <ButtonLink
+              href={contactPaths.tr}
+              variant="on-sea"
+              className="shrink-0"
+            >
+              {home.contactCallToAction.buttonLabel}
+            </ButtonLink>
+          </div>
+        </Section>
       </main>
-
-      <Footer id={home.anchors.contact} content={home.footer} />
-      <BackToTop label={home.backToTopLabel} />
-    </div>
+    </PageShell>
   );
 }

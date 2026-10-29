@@ -1,29 +1,18 @@
 "use client";
 
 import { useRef, useState, type FormEvent } from "react";
+import {
+  getFormspreeEndpoint,
+  isHoneypotFilled,
+  type SubmissionErrorKind,
+  type SubmissionStatus,
+} from "./contact-submission";
 
-export type SubmissionStatus = "idle" | "loading" | "success" | "error";
-export type SubmissionErrorKind = "general" | "configuration" | null;
+export type { SubmissionErrorKind, SubmissionStatus };
 
 type UseFormspreeSubmissionOptions = {
   formId?: string;
 };
-
-function isSafeFormId(formId: string) {
-  return /^[a-zA-Z0-9_-]+$/.test(formId);
-}
-
-async function readJsonResponse(response: Response): Promise<unknown> {
-  const contentType = response.headers.get("content-type");
-
-  if (!contentType?.includes("application/json")) return null;
-
-  try {
-    return await response.json();
-  } catch {
-    return null;
-  }
-}
 
 export function useFormspreeSubmission({
   formId,
@@ -37,6 +26,8 @@ export function useFormspreeSubmission({
 
     const form = event.currentTarget;
 
+    // The submit button stays focusable while sending (aria-disabled), so a
+    // second press must be ignored here.
     if (submissionInFlight.current) return;
 
     if (!form.checkValidity()) {
@@ -44,21 +35,22 @@ export function useFormspreeSubmission({
       return;
     }
 
-    const normalizedFormId = formId?.trim() ?? "";
-
-    if (!normalizedFormId || !isSafeFormId(normalizedFormId)) {
-      setErrorKind("configuration");
-      setStatus("error");
-      return;
-    }
-
     const formData = new FormData(form);
-    const honeypotValue = formData.get("website");
 
-    if (typeof honeypotValue === "string" && honeypotValue.trim()) {
+    // SEC-14: a filled honeypot is rejected before anything is sent. The bot
+    // sees the usual success so it learns nothing about the trap.
+    if (isHoneypotFilled(formData)) {
       form.reset();
       setErrorKind(null);
       setStatus("success");
+      return;
+    }
+
+    const endpoint = getFormspreeEndpoint(formId);
+
+    if (endpoint === null) {
+      setErrorKind("configuration");
+      setStatus("error");
       return;
     }
 
@@ -67,20 +59,15 @@ export function useFormspreeSubmission({
     setStatus("loading");
 
     try {
-      const response = await fetch(
-        `https://formspree.io/f/${normalizedFormId}`,
-        {
-          method: "POST",
-          body: formData,
-          headers: {
-            Accept: "application/json",
-          },
+      const response = await fetch(endpoint, {
+        method: "POST",
+        body: formData,
+        headers: {
+          Accept: "application/json",
         },
-      );
-      const responseData = await readJsonResponse(response);
+      });
 
       if (!response.ok) {
-        void responseData;
         setErrorKind("general");
         setStatus("error");
         return;
