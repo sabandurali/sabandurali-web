@@ -30,6 +30,10 @@ import { bookListPaths } from "@/content/books/book-routes";
 import { getDistrictGuideSummaries } from "@/content/districts/district-guide-data-source";
 import { createHomeEntityJsonLd, serializeJsonLd } from "@/content/entity-seo";
 import type { HomeContent } from "@/content/homeContent";
+import {
+  homeListingUnavailableCopy,
+  loadHomeListings,
+} from "@/content/home-listings";
 import { homeEditorialContent } from "@/content/homeEditorialContent";
 import type { PublicPage } from "@/content/pages/public-types";
 import { getHomePagePhotos } from "@/content/photos/photo-data-source";
@@ -56,14 +60,25 @@ export default async function HomePage({
   const locale = content.locale;
   const copy = homeCopy[locale];
   // Limited reads: each list is read with a database limit (newest first;
-  // Istanbul photos lead), never the whole collection (SEO-PERF-1).
-  const [latestArticles, latestBooks, latestPhotos, guideSummaries] =
-    await Promise.all([
-      getLatestPublishedArticles(locale, homeListLimits.articles),
-      getLatestPublishedBookReviews(locale, homeListLimits.books),
-      getHomePagePhotos(locale, homeListLimits.photos),
-      getDistrictGuideSummaries(),
-    ]);
+  // Istanbul photos lead), never the whole collection (SEO-PERF-1). A
+  // failing list query empties only that list (ARCHITECTURE-1).
+  const { listings, unavailable } = await loadHomeListings(locale, {
+    articles: () => getLatestPublishedArticles(locale, homeListLimits.articles),
+    books: () => getLatestPublishedBookReviews(locale, homeListLimits.books),
+    photos: () => getHomePagePhotos(locale, homeListLimits.photos),
+    districts: () => getDistrictGuideSummaries(),
+  });
+  const {
+    articles: latestArticles,
+    books: latestBooks,
+    photos: latestPhotos,
+    districts: guideSummaries,
+  } = listings;
+  const unavailableCopy = homeListingUnavailableCopy[locale];
+  const emptyMessage = (
+    name: "articles" | "books" | "photos",
+    empty: string,
+  ) => (unavailable.includes(name) ? unavailableCopy[name] : empty);
 
   const featuredSlug = pickFeaturedDistrict(
     guideSummaries,
@@ -112,7 +127,7 @@ export default async function HomePage({
           title={content.listingSections.articles.title}
           linkLabel={content.listingSections.articles.linkLabel}
           href={articleListPaths[locale]}
-          emptyMessage={copy.articles.empty}
+          emptyMessage={emptyMessage("articles", copy.articles.empty)}
           itemCount={latestArticles.length}
         >
           <ArticleCardList articles={latestArticles} locale={locale} />
@@ -127,7 +142,7 @@ export default async function HomePage({
           title={content.listingSections.books.title}
           linkLabel={content.listingSections.books.linkLabel}
           href={bookListPaths[locale]}
-          emptyMessage={copy.books.empty}
+          emptyMessage={emptyMessage("books", copy.books.empty)}
           itemCount={latestBooks.length}
         >
           <BookReviewCardList books={latestBooks} locale={locale} />
@@ -141,7 +156,7 @@ export default async function HomePage({
           title={content.listingSections.photography.title}
           linkLabel={content.listingSections.photography.linkLabel}
           href={photoListPaths[locale]}
-          emptyMessage={copy.photos.empty}
+          emptyMessage={emptyMessage("photos", copy.photos.empty)}
           itemCount={latestPhotos.length}
         >
           <PhotoCardList photos={latestPhotos} columns={4} />
