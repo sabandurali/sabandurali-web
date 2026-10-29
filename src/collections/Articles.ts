@@ -9,6 +9,7 @@ import {
   adminOnly,
   adminOrEditor,
   publishedOrAdminOrEditor,
+  hideNonPublicRichTextLinks,
 } from "@/lib/payloadAccess";
 import {
   createLocalizedSlugField,
@@ -21,6 +22,8 @@ import {
   imageMediaFilter,
   isHttpsUrl,
   validateOptionalSiteCanonical,
+  SEO_DESCRIPTION_MAX_LENGTH,
+  SEO_TITLE_MAX_LENGTH,
 } from "@/collections/validation";
 import { getText, isRecord } from "@/content/guards";
 
@@ -139,6 +142,7 @@ export const Articles: CollectionConfig = {
       type: "richText",
       label: "Makale içeriği",
       localized: true,
+      hooks: { afterRead: [hideNonPublicRichTextLinks] },
       admin: {
         description:
           "İlçe haberi türünde tam metin saklanmaz; kısa özgün özet ve kaynak bağlantısı kullanılır. Diğer türlerde yayın için içerik zorunludur.",
@@ -294,13 +298,13 @@ export const Articles: CollectionConfig = {
           name: "metaTitle",
           type: "text",
           localized: true,
-          maxLength: 60,
+          maxLength: SEO_TITLE_MAX_LENGTH,
         },
         {
           name: "metaDescription",
           type: "textarea",
           localized: true,
-          maxLength: 160,
+          maxLength: SEO_DESCRIPTION_MAX_LENGTH,
         },
         {
           name: "canonical",

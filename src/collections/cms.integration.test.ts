@@ -494,6 +494,90 @@ test("users: only admins unlock a locked account, and editors learn nothing abou
   }
 });
 
+test("users: a password change cannot confirm another account's email, and login hides the lock", async () => {
+  const target = await payload.create({
+    collection: "users",
+    data: {
+      email: "oracle-target@example.com",
+      password: "Correct-Horse-6",
+      role: "admin",
+    },
+  });
+  const otherEditor = await payload.create({
+    collection: "users",
+    data: {
+      email: "oracle-editor@example.com",
+      password: "Correct-Horse-7",
+      role: "editor",
+    },
+  });
+
+  // The guessed email of another account is refused by access (403), never
+  // by the password rule (400), for anonymous readers and editors alike.
+  for (const req of [
+    anonymousRest(),
+    {
+      payloadAPI: "REST" as const,
+      user: { ...otherEditor, collection: "users" as const },
+    },
+  ]) {
+    for (const password of [
+      "oracle-target@example.com",
+      "Not-The-Email-At-All",
+    ]) {
+      await assert.rejects(
+        payload.update({
+          collection: "users",
+          data: { password },
+          id: target.id,
+          overrideAccess: false,
+          req,
+        }),
+        hasStatus(403),
+        password,
+      );
+    }
+  }
+
+  const { handleEndpoints } = await import("payload");
+  const login = async (email: string, password: string) => {
+    const response = await handleEndpoints({
+      config,
+      request: new Request("http://localhost:3000/api/users/login", {
+        body: JSON.stringify({ email, password }),
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
+      }),
+    });
+    return { body: await response.json(), status: response.status };
+  };
+
+  const unknown = await login("nobody-here@example.com", "Wrong-Password-1");
+  assert.equal(unknown.status, 401);
+  for (let attempt = 1; attempt <= MAX_LOGIN_ATTEMPTS; attempt += 1) {
+    assert.deepEqual(
+      await login("oracle-target@example.com", "Wrong-Password-1"),
+      unknown,
+      `attempt ${attempt}`,
+    );
+  }
+  // Locked now, even for the right password, but the answer does not say so.
+  assert.deepEqual(
+    await login("oracle-target@example.com", "Correct-Horse-6"),
+    unknown,
+  );
+  const locked = await payload.findByID({
+    collection: "users",
+    id: target.id,
+    showHiddenFields: true,
+  });
+  assert.ok(locked.lockUntil, "the lock still applies");
+
+  for (const user of [target, otherEditor]) {
+    await payload.delete({ collection: "users", id: user.id });
+  }
+});
+
 test("csrf: the allowlist covers production, this Preview deployment and local development only", () => {
   assert.deepEqual(config.csrf, getCsrfAllowedOrigins(process.env));
   assert.ok(config.csrf.includes(PRODUCTION_SITE_ORIGIN));
@@ -760,6 +844,150 @@ test("anonymous REST: media cannot be listed, other lists are capped, population
     "media relationships still populate for anonymous readers",
   );
   assert.equal(featuredImage.id, image.id);
+});
+
+test("anonymous REST: rich text links never name a document the reader cannot read", async () => {
+  const internalLink = (
+    target: { id: string | number },
+    text: string,
+  ): Record<string, unknown> => ({
+    children: [
+      {
+        detail: 0,
+        format: 0,
+        mode: "normal",
+        style: "",
+        text,
+        type: "text",
+        version: 1,
+      },
+    ],
+    direction: "ltr",
+    fields: {
+      doc: { relationTo: "articles", value: target.id },
+      linkType: "internal",
+      newTab: false,
+    },
+    format: "",
+    indent: 0,
+    type: "link",
+    version: 3,
+  });
+  const [category] = (
+    await payload.find({ collection: "categories", limit: 1 })
+  ).docs;
+  assert.ok(category);
+  const draft = await payload.create({
+    collection: "articles",
+    data: {
+      _status: "draft",
+      articleType: "article",
+      categories: [category.id],
+      content: paragraph("Henüz yayımlanmadı."),
+      excerpt: "Taslak",
+      slug: "gizli-taslak-makale",
+      title: "Gizli taslak makale",
+    },
+    draft: true,
+  });
+  const published = await payload.create({
+    collection: "articles",
+    data: {
+      _status: "published",
+      articleType: "article",
+      categories: [category.id],
+      content: paragraph("Yayımlanmış hedef."),
+      excerpt: "Hedef",
+      slug: "yayimlanmis-hedef",
+      title: "Yayımlanmış hedef",
+    },
+  });
+  const content = paragraph("Bağlantılar: ");
+  const firstParagraph = content.root.children[0];
+  assert.ok(firstParagraph && Array.isArray(firstParagraph.children));
+  firstParagraph.children.push(
+    internalLink(draft, "taslak"),
+    internalLink(published, "hedef"),
+  );
+  const linking = await payload.create({
+    collection: "articles",
+    data: {
+      _status: "published",
+      articleType: "article",
+      categories: [category.id],
+      content,
+      excerpt: "Bağlantılı",
+      slug: "baglantili-makale",
+      title: "Bağlantılı makale",
+    },
+  });
+
+  const linkTargets = (doc: { content?: unknown }) => {
+    const paragraphNode = (
+      doc.content as { root: { children: Array<{ children: unknown[] }> } }
+    ).root.children[0];
+    assert.ok(paragraphNode);
+    return paragraphNode.children
+      .filter(
+        (node): node is { fields: { doc: unknown } } =>
+          typeof node === "object" &&
+          node !== null &&
+          "type" in node &&
+          node.type === "link",
+      )
+      .map((node) => node.fields.doc);
+  };
+  const readAs = async (
+    depth: number,
+    req: Partial<PayloadRequest> = anonymousRest(),
+  ) =>
+    payload.findByID({
+      collection: "articles",
+      depth,
+      id: linking.id,
+      overrideAccess: false,
+      req,
+    });
+
+  // depth=0: the published target keeps its reference, the draft loses it.
+  assert.deepEqual(linkTargets(await readAs(0)), [
+    null,
+    { relationTo: "articles", value: published.id },
+  ]);
+  // depth=1: Payload populates what the reader may read.
+  const [hidden, shown] = linkTargets(await readAs(1));
+  assert.ok(
+    hidden === null ||
+      (typeof hidden === "object" &&
+        "value" in hidden &&
+        hidden.value === null),
+    JSON.stringify(hidden),
+  );
+  assert.ok(
+    typeof shown === "object" &&
+      shown !== null &&
+      "value" in shown &&
+      typeof shown.value === "object" &&
+      shown.value !== null &&
+      "id" in shown.value &&
+      shown.value.id === published.id,
+  );
+  // The site (Local API) and signed-in editors keep the stored reference.
+  const local = await payload.findByID({
+    collection: "articles",
+    depth: 0,
+    draft: false,
+    id: linking.id,
+    overrideAccess: false,
+  });
+  assert.deepEqual(linkTargets(local)[0], {
+    relationTo: "articles",
+    value: draft.id,
+  });
+
+  for (const doc of [linking, published, draft]) {
+    await payload.delete({ collection: "articles", id: doc.id });
+  }
 });
 
 test("articles: district news need an https source, other articles need body text; writes never fail on revalidation", async () => {

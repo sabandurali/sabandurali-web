@@ -1,5 +1,9 @@
 import type { CollectionBeforeChangeHook, CollectionConfig } from "payload";
-import { imageMediaFilter } from "@/collections/validation";
+import {
+  SEO_DESCRIPTION_MAX_LENGTH,
+  SEO_TITLE_MAX_LENGTH,
+  imageMediaFilter,
+} from "@/collections/validation";
 import {
   adminOnly,
   adminOrEditor,
@@ -231,13 +235,13 @@ export const Photos: CollectionConfig = {
                   name: "metaTitle",
                   type: "text",
                   localized: true,
-                  maxLength: 60,
+                  maxLength: SEO_TITLE_MAX_LENGTH,
                 },
                 {
                   name: "metaDescription",
                   type: "textarea",
                   localized: true,
-                  maxLength: 160,
+                  maxLength: SEO_DESCRIPTION_MAX_LENGTH,
                 },
                 {
                   name: "openGraphImage",

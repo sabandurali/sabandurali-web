@@ -37,29 +37,35 @@ const DESTRUCTIVE_STATEMENTS: readonly RegExp[] = [
 const REVIEWED_MARKER = /--\s*destructive-reviewed:\s*\S/;
 
 /**
- * Migrations already committed, with the sha256 of their file. A committed
- * migration may already have run somewhere, so its file must not change; a
- * new migration is not listed here and is checked line by line below.
+ * Migrations already committed, with the sha256 of their UP part (everything
+ * before `export async function down`: imports and `up`). A committed UP may
+ * already have run somewhere, so it must not change; a new migration is not
+ * listed here and is checked line by line below.
+ *
+ * DOWN is not locked: it never runs on the forward path, and a broken
+ * rollback has to be fixable in place (TESTS-INFRA-1, day19). The rollback
+ * replay in src/collections/schema-migration.test.ts runs every reversible
+ * DOWN on PostgreSQL instead.
  */
-const COMMITTED_MIGRATIONS: Readonly<Record<string, string>> = {
+const COMMITTED_MIGRATION_UPS: Readonly<Record<string, string>> = {
   "20260731_034937_initial_postgres_schema":
-    "488f2a84eab4d4436769c0d9a1c62082b32f6e91d1d4ab23ea5297dbfb99eeae",
+    "00167e0a8a8e0661accc57f8e578158a29fef7c55719e8b3edd92857a5120210",
   "20260807_205132_day19_photography":
-    "4cec984f45d34dc5e7cd158c75a53d224717099769e3e3c84e90db12af0324b1",
+    "4e55950fc9d22a9b3e5fa78c0bba70863fbfecad42acbf047853974c517c5c39",
   "20260820_090000_day21_focus_area_icons":
-    "a52c78549e507cacf414a8e751dafec985bec58f2ca123f6325eade33e4f6993",
+    "38e646d9a17dfd49dd117a3ed08796f90beb4359330d87fcc8dad7d66828044d",
   "20260820_100000_day21_versioned_focus_area_icons":
-    "e7a7a46a581c1061018c0f8571043009d2baf34a17603497c9dba058c67bc259",
+    "d1b5c8b6e286f4668b303472bb3164eae7b9d38dbaff6e991dafc36464e71619",
   "20260820_103626_day22_bilingual_navigation":
-    "00795a8ad197e2ef3828fc815bf6552ff089466b9f2fa377bc64f341501152e2",
+    "c29471bde70559aa17c73a378043d26c501992e88607f554cd7108515f4b342a",
   "20260830_151918_istanbul_district_guides":
-    "233612f7e24c62b7a0486677d14a137e5200d99621e5771fcfb67ffad4573b55",
+    "948a8e14b30984af937c454f189aba17f3d8138b98085c256a49617c3ddc5aac",
   "20260909_181042_istanbul_district_sources":
-    "1267e524afa129e694d8f61f197be5de0f316c28477f6c771811a6a2d4bd3187",
+    "50fa26177b3ff9b5cdd46bfb31134d92bace822170d2446d2fb0ee4963e8b7b3",
   "20261017_210129_payload_3_91_security_schema":
-    "6ab1a39d5868782b247ab3b5228ef9396164871ff35d84ee16dd7249b488a2f6",
+    "90c82f13401df70e79361aa5845fd1db045447287ed0a415f07a7cf77e49ae1d",
   "20261028_205938_article_seo_book_slug_unique":
-    "da5dae3f1bf08b88529daf582317c061c10af5a5084a7d64f4de603ac477ebcb",
+    "929647007bbabaf345bcaea949384bd2e4700759e85630313c5d358a1ceaa0d5",
 };
 
 function upSource(source: string): string {
@@ -129,8 +135,10 @@ function listedMigrations(): string[] {
   );
 }
 
-function sha256(file: string): string {
-  return createHash("sha256").update(readFileSync(file)).digest("hex");
+function upSha256(file: string): string {
+  return createHash("sha256")
+    .update(upSource(readFileSync(file, "utf8")))
+    .digest("hex");
 }
 
 const migration = (up: string, down = "") =>
@@ -270,15 +278,15 @@ test("every listed migration exists and every UP is additive", () => {
   }
 });
 
-test("committed migrations are unchanged and still listed", () => {
+test("committed migration UPs are unchanged and still listed", () => {
   const names = new Set(listedMigrations());
 
-  for (const [name, hash] of Object.entries(COMMITTED_MIGRATIONS)) {
+  for (const [name, hash] of Object.entries(COMMITTED_MIGRATION_UPS)) {
     assert.ok(names.has(name), `${name} was removed from the index`);
     assert.equal(
-      sha256(`src/migrations/${name}.ts`),
+      upSha256(`src/migrations/${name}.ts`),
       hash,
-      `${name} changed after it was committed; add a new migration instead`,
+      `${name}: UP changed after it was committed; add a new migration instead`,
     );
   }
 });

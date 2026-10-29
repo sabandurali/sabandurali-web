@@ -1,5 +1,8 @@
+import { pbkdf2, randomBytes } from "node:crypto";
 import {
+  AuthenticationError,
   ValidationError,
+  type CollectionAfterErrorHook,
   type CollectionBeforeChangeHook,
   type CollectionBeforeOperationHook,
   type CollectionConfig,
@@ -116,9 +119,15 @@ type BeforeOperationRequest =
 
 /**
  * The addresses a new password must not repeat: the submitted one and the
- * stored one of every account the operation changes. A bulk update (`where`,
- * no `id`) reads the matching accounts with the caller's own access, so the
- * check cannot reveal an account the caller could not update anyway.
+ * stored one of every account the operation changes.
+ *
+ * `beforeOperation` runs before Payload's access check, so both lookups use
+ * the caller's own access: a Local API call that overrides access (a script,
+ * no user) reads every account; a REST or admin call reads only the accounts
+ * that caller may see. A caller without read access gets no address here,
+ * the password is compared with nothing private and the update itself is
+ * then refused with 403. The check therefore cannot confirm a guessed email
+ * address of an account the caller could not update anyway.
  */
 async function getAccountEmails(
   args: Record<string, unknown>,
@@ -128,28 +137,25 @@ async function getAccountEmails(
   const emails: string[] = [];
 
   if (typeof data.email === "string") emails.push(data.email);
+  const overrideAccess = args.overrideAccess === true;
   if (typeof args.id === "string" || typeof args.id === "number") {
     const existing = await req.payload.findByID({
       collection: "users",
       depth: 0,
       disableErrors: true,
       id: args.id,
-      overrideAccess: true,
+      overrideAccess,
       req,
     });
     if (existing !== null && typeof existing.email === "string") {
       emails.push(existing.email);
     }
   } else if (isWhere(args.where)) {
-    // Same access as the operation: a Local API call that overrides access
-    // (a script, no user) reads every match; a REST or admin call reads only
-    // what the caller may see. A caller without read access gets no rows here
-    // (not an error), and the update itself then refuses it.
     const matching = await req.payload.find({
       collection: "users",
       depth: 0,
       disableErrors: true,
-      overrideAccess: args.overrideAccess === true,
+      overrideAccess,
       pagination: false,
       req,
       where: args.where,
@@ -205,6 +211,110 @@ export const enforcePasswordPolicy: CollectionBeforeOperationHook = async ({
   return args;
 };
 
+/**
+ * Parameters of Payload's current password hash (PBKDF2-SHA256, 600 000
+ * iterations, 32 bytes; `generatePasswordSaltHash` in Payload).
+ */
+const PASSWORD_HASH_ITERATIONS = 600_000;
+const PASSWORD_HASH_KEY_LENGTH = 32;
+
+/** One PBKDF2 computation that costs as much as checking a real password. */
+export function computeDecoyPasswordHash(password: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    randomBytes(32, (saltError, salt) => {
+      if (saltError) {
+        reject(saltError);
+        return;
+      }
+      pbkdf2(
+        password,
+        salt.toString("hex"),
+        PASSWORD_HASH_ITERATIONS,
+        PASSWORD_HASH_KEY_LENGTH,
+        "sha256",
+        (hashError) => (hashError ? reject(hashError) : resolve()),
+      );
+    });
+  });
+}
+
+/** True while Payload refuses every login of the account (`lockUntil`). */
+export function isLoginLocked(
+  lockUntil: unknown,
+  now: Date = new Date(),
+): boolean {
+  if (typeof lockUntil !== "string" && !(lockUntil instanceof Date)) {
+    return false;
+  }
+  const until = new Date(lockUntil).getTime();
+  return Number.isFinite(until) && until > now.getTime();
+}
+
+/**
+ * Payload hashes the submitted password only for an existing, unlocked
+ * account: an unknown address or a locked account is refused before PBKDF2
+ * runs, and the faster answer tells which addresses have an account. This
+ * `login` hook spends the same hash on those two paths, so every refusal
+ * takes about as long as a wrong password.
+ */
+export function createLoginTimingEqualizer(
+  computeHash: (password: string) => Promise<void> = computeDecoyPasswordHash,
+): CollectionBeforeOperationHook {
+  return async ({ args, operation, req }) => {
+    if (operation !== "login") return args;
+    const loginArgs: unknown = args;
+    if (!isRecord(loginArgs) || !isRecord(loginArgs.data)) return args;
+
+    const { email, password } = loginArgs.data;
+    if (typeof email !== "string" || typeof password !== "string") {
+      return args;
+    }
+    if (password.trim() === "") return args;
+
+    const account: unknown = await req.payload.db.findOne({
+      collection: "users",
+      req,
+      where: { email: { equals: email.toLowerCase().trim() } },
+    });
+    if (!isRecord(account) || isLoginLocked(account.lockUntil)) {
+      await computeHash(password);
+    }
+
+    return args;
+  };
+}
+
+export const equalizeLoginTiming = createLoginTimingEqualizer();
+
+/**
+ * Payload answers a locked account with "This user is locked due to having
+ * too many failed login attempts", which an unknown address never gets: five
+ * wrong passwords would reveal whether an address has an admin account.
+ * REST and admin responses get the same 401 as a wrong email or password
+ * instead. The lock itself still applies, Payload still logs the original
+ * error, and an admin still sees and clears the lock on the account.
+ */
+export const hideLockedAccountOnLogin: CollectionAfterErrorHook = ({
+  error,
+  req,
+}) => {
+  if (error.name !== "LockedAuth") return;
+
+  const refusal = new AuthenticationError(req.t);
+  return {
+    response: { errors: [{ message: refusal.message }] },
+    status: refusal.status,
+  };
+};
+
+/**
+ * Shown under the role field. Media is the only collection an editor may
+ * delete from (`Media.access.delete`, admin-help-guide.ts); a test keeps the
+ * text, the access rules and the admin guide in agreement.
+ */
+export const USER_ROLE_DESCRIPTION =
+  "Editor içerik ekler ve düzenler, kullanılmayan Media dosyalarını silebilir. Admin ayrıca kullanıcıları yönetir ve diğer içerikleri siler. Sistemde her zaman en az bir Admin kalır.";
+
 export const Users: CollectionConfig = {
   slug: "users",
   access: {
@@ -249,8 +359,7 @@ export const Users: CollectionConfig = {
         update: ({ req }) => isAdmin(req.user),
       },
       admin: {
-        description:
-          "Editor içerik ekler ve düzenler. Admin ayrıca kullanıcıları yönetir ve içerik siler. Sistemde her zaman en az bir Admin kalır.",
+        description: USER_ROLE_DESCRIPTION,
       },
       defaultValue: "editor",
       options: [
@@ -262,8 +371,13 @@ export const Users: CollectionConfig = {
     },
   ],
   hooks: {
+    afterError: [hideLockedAccountOnLogin],
     beforeChange: [assignFirstUserAdminRole, preventDemotingLastAdmin],
     beforeDelete: [preventDeletingLastAdmin],
-    beforeOperation: [refusePasswordResetWithoutEmail, enforcePasswordPolicy],
+    beforeOperation: [
+      refusePasswordResetWithoutEmail,
+      enforcePasswordPolicy,
+      equalizeLoginTiming,
+    ],
   },
 };

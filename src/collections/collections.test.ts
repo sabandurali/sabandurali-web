@@ -51,13 +51,19 @@ import {
   LOGIN_LOCK_TIME_MS,
   MAX_LOGIN_ATTEMPTS,
   MIN_PASSWORD_LENGTH,
+  USER_ROLE_DESCRIPTION,
   Users,
   assignFirstUserAdminRole,
+  createLoginTimingEqualizer,
   enforcePasswordPolicy,
+  equalizeLoginTiming,
   getPasswordProblem,
+  hideLockedAccountOnLogin,
+  isLoginLocked,
   refusePasswordResetWithoutEmail,
 } from "./Users";
 import { Navigation, getNavigationPageFilter } from "../globals/Navigation";
+import { SEO_DESCRIPTION_MAX_LENGTH, SEO_TITLE_MAX_LENGTH } from "./validation";
 import {
   denyAnonymousRestReads,
   editorialFieldRead,
@@ -181,6 +187,14 @@ test("the security runbook matches the lockout and names every sign-in endpoint"
     runbook,
     new RegExp(`\\(${LOGIN_LOCK_TIME_MS / 60_000} minutes\\)`),
   );
+  // The account-oracle defences are documented where the lockout is.
+  for (const name of [
+    "hideLockedAccountOnLogin",
+    "equalizeLoginTiming",
+    "hideNonPublicRichTextLinks",
+  ]) {
+    assert.match(runbook, new RegExp(`\`${name}\``), name);
+  }
   // Payload's unauthenticated auth endpoints the firewall rule must cover.
   for (const endpoint of [
     "login",
@@ -339,6 +353,137 @@ test("a bulk password update checks the stored email of every matching account",
       req: undefined,
       where: { role: { equals: "editor" } },
     },
+  );
+});
+
+test("a password update by ID reads the stored email with the caller's own access", async () => {
+  // `beforeOperation` runs before Payload's access check: reading the
+  // account with access overridden would let anyone who knows an ID confirm
+  // a guessed email (400 on a match, 403 otherwise).
+  const lookups: Array<Record<string, unknown>> = [];
+  const req = {
+    payload: {
+      findByID: async (options: Record<string, unknown>) => {
+        lookups.push(options);
+        return options.overrideAccess === true
+          ? { email: "owner@example.com" }
+          : null;
+      },
+    },
+  };
+  const run = async (args: Record<string, unknown>) =>
+    enforcePasswordPolicy({
+      args,
+      collection: {},
+      context: {},
+      operation: "update",
+      req,
+    } as unknown as Parameters<CollectionBeforeOperationHook>[0]);
+
+  // REST, the admin and `overrideAccess: false`: no stored email is read, the
+  // update continues to the access check, which refuses it with 403.
+  const asCaller = { data: { password: "owner@example.com" }, id: "u-1" };
+  assert.deepEqual(await run(asCaller), asCaller);
+  assert.equal(lookups[0]?.overrideAccess, false);
+
+  // A script (Local API, access overridden) still compares the stored email.
+  await assert.rejects(
+    run({ ...asCaller, overrideAccess: true }),
+    (error: unknown) =>
+      error instanceof ValidationError &&
+      error.data.errors.some((entry) =>
+        /e-posta adresiyle aynı/.test(entry.message),
+      ),
+  );
+  assert.equal(lookups[1]?.overrideAccess, true);
+});
+
+test("a locked or unknown account is refused like a wrong password", async () => {
+  assert.ok(Users.hooks?.beforeOperation?.includes(equalizeLoginTiming));
+  assert.ok(Users.hooks?.afterError?.includes(hideLockedAccountOnLogin));
+
+  const now = new Date("2026-10-29T10:00:00.000Z");
+  assert.equal(isLoginLocked("2026-10-29T10:05:00.000Z", now), true);
+  assert.equal(isLoginLocked(new Date("2026-10-29T10:05:00.000Z"), now), true);
+  assert.equal(isLoginLocked("2026-10-29T09:55:00.000Z", now), false);
+  assert.equal(isLoginLocked(null, now), false);
+  assert.equal(isLoginLocked("not a date", now), false);
+
+  // Payload hashes the password only for an existing, unlocked account; the
+  // hook spends the same work on the other two paths.
+  const hashed: string[] = [];
+  const hook = createLoginTimingEqualizer(async (password) => {
+    hashed.push(password);
+  });
+  const accounts: Record<string, Record<string, unknown>> = {
+    "locked@example.com": {
+      email: "locked@example.com",
+      lockUntil: new Date(Date.now() + 60_000).toISOString(),
+    },
+    "open@example.com": { email: "open@example.com", lockUntil: null },
+  };
+  const login = (email: string, password = "Wrong-Password-1") =>
+    hook({
+      args: { data: { email, password } },
+      collection: {},
+      context: {},
+      operation: "login",
+      req: {
+        payload: {
+          db: {
+            findOne: async ({ where }: { where: Record<string, unknown> }) => {
+              const condition = where.email as { equals: string };
+              return accounts[condition.equals] ?? null;
+            },
+          },
+        },
+      },
+    } as unknown as Parameters<CollectionBeforeOperationHook>[0]);
+
+  await login("open@example.com");
+  assert.deepEqual(hashed, []);
+  await login(" Locked@Example.com ", "first");
+  await login("nobody@example.com", "second");
+  assert.deepEqual(hashed, ["first", "second"]);
+  // Payload refuses an empty password itself, before any lookup.
+  await login("nobody@example.com", " ");
+  assert.equal(hashed.length, 2);
+
+  // The lock message would confirm the account; the response matches the
+  // one for an unknown address. Other errors keep Payload's response.
+  const t = ((key: string) => key) as unknown as PayloadRequest["t"];
+  const afterError = (name: string) => {
+    const error = new Error("original");
+    error.name = name;
+    return hideLockedAccountOnLogin({
+      collection: Users,
+      context: {},
+      error,
+      req: { t } as PayloadRequest,
+    } as unknown as Parameters<typeof hideLockedAccountOnLogin>[0]);
+  };
+  assert.deepEqual(afterError("LockedAuth"), {
+    response: { errors: [{ message: "error:emailOrPasswordIncorrect" }] },
+    status: 401,
+  });
+  assert.equal(afterError("AuthenticationError"), undefined);
+  assert.equal(afterError("ValidationError"), undefined);
+});
+
+test("the role description matches the delete rights and the admin guide", async () => {
+  const role = findField(Users, "role");
+  assert.ok(role.type === "select");
+  assert.equal(role.admin?.description, USER_ROLE_DESCRIPTION);
+  // Editors may delete Media and nothing else that the role text calls content.
+  assert.equal(runAccess(Media.access?.delete, editor), true);
+  assert.match(USER_ROLE_DESCRIPTION, /Editor[^.]*Media dosyalarını silebilir/);
+  assert.match(USER_ROLE_DESCRIPTION, /Admin ayrıca kullanıcıları yönetir/);
+  const { ADMIN_HELP_GUIDE } =
+    await import("../components/admin/help/admin-help-guide");
+  assert.ok(
+    ADMIN_HELP_GUIDE.includes(
+      "içerik silme yetkisi yalnız `Media` kayıtlarındadır",
+    ),
   );
 });
 
@@ -1166,4 +1311,60 @@ test("ARCHITECTURE-3: book collections use the shared content guards, not local 
     publication,
     /\bgetFiniteNumber\b[\s\S]*?from "@\/content\/guards"/,
   );
+});
+
+test("ARCHITECTURE-8: every SEO title and description has the same 60/160 limit", () => {
+  assert.equal(SEO_TITLE_MAX_LENGTH, 60);
+  assert.equal(SEO_DESCRIPTION_MAX_LENGTH, 160);
+
+  const seoLimits = (collection: CollectionConfig) => {
+    const seo = findField(collection, "seo");
+    assert.ok(seo.type === "group", collection.slug);
+    return Object.fromEntries(
+      seo.fields.flatMap((field) =>
+        "name" in field && (field.type === "text" || field.type === "textarea")
+          ? [[field.name, field.maxLength]]
+          : [],
+      ),
+    );
+  };
+
+  for (const collection of [Articles, Photos]) {
+    const limits = seoLimits(collection);
+    assert.equal(limits.metaTitle, SEO_TITLE_MAX_LENGTH, collection.slug);
+    assert.equal(
+      limits.metaDescription,
+      SEO_DESCRIPTION_MAX_LENGTH,
+      collection.slug,
+    );
+  }
+  for (const collection of [Pages, Books]) {
+    const limits = seoLimits(collection);
+    assert.equal(limits.title, SEO_TITLE_MAX_LENGTH, collection.slug);
+    assert.equal(
+      limits.description,
+      SEO_DESCRIPTION_MAX_LENGTH,
+      collection.slug,
+    );
+  }
+});
+
+test("ARCHITECTURE-4: book validation errors are built in one place", () => {
+  const source = readFileSync(
+    path.resolve(appDirectory, "../collections/Books.ts"),
+    "utf8",
+  );
+  assert.equal(
+    source.match(/new ValidationError\(/g)?.length,
+    1,
+    "only throwBookValidationError constructs a ValidationError",
+  );
+  // The rules are separate functions the hook calls in order.
+  for (const rule of [
+    "assertUniqueSlugPerLanguage",
+    "assertUniqueIsbn",
+    "assertValidTranslation",
+  ]) {
+    assert.match(source, new RegExp(`await ${rule}\\(`), rule);
+  }
 });

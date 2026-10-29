@@ -463,6 +463,99 @@ export function buildHistoricalPlan(
   };
 }
 
+function isPlainRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function invalidManifest(where: string, expected: string): never {
+  throw new HistoricalPhotoImportError(
+    "input_failed",
+    `Manifest field ${where} must be ${expected}.`,
+  );
+}
+
+function manifestText(
+  record: Record<string, unknown>,
+  key: string,
+  where: string,
+): string {
+  const value = record[key];
+  return typeof value === "string"
+    ? value
+    : invalidManifest(`${where}.${key}`, "a string");
+}
+
+function manifestNumber(
+  record: Record<string, unknown>,
+  key: string,
+  where: string,
+): number {
+  const value = record[key];
+  return typeof value === "number" && Number.isFinite(value)
+    ? value
+    : invalidManifest(`${where}.${key}`, "a number");
+}
+
+function parseHistoricalItem(
+  value: unknown,
+  where: string,
+): HistoricalPhotoItem {
+  if (!isPlainRecord(value)) return invalidManifest(where, "an object");
+  const publicationSafe = value.publicationSafe;
+  if (typeof publicationSafe !== "boolean") {
+    return invalidManifest(`${where}.publicationSafe`, "a boolean");
+  }
+  const read = (key: string) => manifestText(value, key, where);
+  const count = (key: string) => manifestNumber(value, key, where);
+
+  return {
+    district: read("district"),
+    title: read("title"),
+    depictedPlace: read("depictedPlace"),
+    approximateDate: read("approximateDate"),
+    creator: read("creator"),
+    archive: read("archive"),
+    recordUrl: read("recordUrl"),
+    downloadUrl: read("downloadUrl"),
+    license: read("license"),
+    rightsStatement: read("rightsStatement"),
+    requiredAttribution: read("requiredAttribution"),
+    sha256: read("sha256"),
+    bytes: count("bytes"),
+    mimeType: read("mimeType"),
+    width: count("width"),
+    height: count("height"),
+    auditedAt: read("auditedAt"),
+    publicationSafe,
+  };
+}
+
+/**
+ * Reads a historical photo manifest (already `JSON.parse`d) into a typed
+ * manifest, then runs {@link validateHistoricalManifest}. A missing or
+ * mistyped field stops the import with its path (`input_failed`) instead of
+ * a TypeError inside the gates; no shape is assumed through a cast.
+ */
+export function parseHistoricalManifest(
+  json: unknown,
+  batchConfig: HistoricalBatchConfig,
+): HistoricalPhotoManifest {
+  if (!isPlainRecord(json)) return invalidManifest("$", "an object");
+  const items = json.items;
+  if (!Array.isArray(items)) return invalidManifest("$.items", "a list");
+
+  const manifest: HistoricalPhotoManifest = {
+    schemaVersion: manifestNumber(json, "schemaVersion", "$"),
+    batch: manifestText(json, "batch", "$"),
+    auditedAt: manifestText(json, "auditedAt", "$"),
+    items: items.map((item, index) =>
+      parseHistoricalItem(item, `$.items[${index}]`),
+    ),
+  };
+  validateHistoricalManifest(manifest, batchConfig);
+  return manifest;
+}
+
 export function makeHistoricalPhotoData(
   item: HistoricalPhotoItem,
   mediaId: string,

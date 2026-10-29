@@ -1,5 +1,6 @@
 import type { Block, Field } from "payload";
 import { imageMediaFilter, validatePageLink } from "@/collections/validation";
+import { hideNonPublicRichTextLinks } from "@/lib/payloadAccess";
 
 function isValidAnchor(value: unknown): true | string {
   if (value === null || value === undefined || value === "") return true;
@@ -142,6 +143,7 @@ export const RichTextBlock: Block = {
     {
       name: "content",
       type: "richText",
+      hooks: { afterRead: [hideNonPublicRichTextLinks] },
       label: "İçerik",
       required: true,
     },
@@ -261,6 +263,7 @@ export const ImageTextBlock: Block = {
     {
       name: "content",
       type: "richText",
+      hooks: { afterRead: [hideNonPublicRichTextLinks] },
       label: "Metin",
       required: true,
     },

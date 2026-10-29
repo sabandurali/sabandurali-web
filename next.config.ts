@@ -13,6 +13,7 @@ import {
   PUBLIC_ROUTES_SOURCE,
   adminRouteSecurityHeaders,
   publicRouteSecurityHeaders,
+  scopePayloadClientHintHeaders,
   securityHeaders,
 } from "./src/lib/securityHeaders";
 
@@ -110,4 +111,21 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withPayload(nextConfig, { devBundleServerPackages: false });
+const payloadConfig = withPayload(nextConfig, {
+  devBundleServerPackages: false,
+});
+
+/**
+ * `withPayload` appends `Accept-CH`, `Critical-CH` and `Vary` for the admin's
+ * color-scheme hint on every route; they stay on the admin only
+ * (`scopePayloadClientHintHeaders`).
+ */
+const config: NextConfig = {
+  ...payloadConfig,
+  async headers() {
+    const rules = (await payloadConfig.headers?.()) ?? [];
+    return scopePayloadClientHintHeaders(rules);
+  },
+};
+
+export default config;

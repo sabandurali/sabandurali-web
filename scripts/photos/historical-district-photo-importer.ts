@@ -24,11 +24,10 @@ import {
   HistoricalPhotoImportError,
   type HistoricalBatchConfig,
   type HistoricalPhotoItem,
-  type HistoricalPhotoManifest,
   type HistoricalDocument,
   type HistoricalRepository,
   type HistoricalSnapshot,
-  validateHistoricalManifest,
+  parseHistoricalManifest,
   verifyDownloadedBytes,
 } from "./historical-district-photo-engine";
 
@@ -250,10 +249,10 @@ export async function runHistoricalImporter({
     );
   }
 
-  const manifest = JSON.parse(
-    await readFile(values.manifest, "utf8"),
-  ) as HistoricalPhotoManifest;
-  validateHistoricalManifest(manifest, batchConfig);
+  const manifest = parseHistoricalManifest(
+    JSON.parse(await readFile(values.manifest, "utf8")),
+    batchConfig,
+  );
 
   const downloaded = new Map<string, string>();
   for (const [index, item] of manifest.items.entries()) {

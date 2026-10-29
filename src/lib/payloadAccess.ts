@@ -4,10 +4,15 @@ import {
   type CollectionBeforeOperationHook,
   type CollectionConfig,
   type FieldAccess,
+  type FieldHook,
   type PayloadRequest,
   type Where,
 } from "payload";
 import { isRecord } from "@/content/guards";
+import {
+  INTERNAL_LINK_COLLECTIONS,
+  type InternalLinkCollection,
+} from "@/content/rich-text/internal-link-collections";
 
 function getUserRole(user: unknown): unknown {
   if (typeof user !== "object" || user === null || !("role" in user)) {
@@ -335,3 +340,121 @@ export function createAnonymousQueryAllowlist(
     return args;
   };
 }
+
+// ---------------------------------------------------------------------------
+// Rich text internal links in public API responses
+
+type RawLinkTarget = string | number;
+
+function isRawLinkTarget(value: unknown): value is RawLinkTarget {
+  return typeof value === "string" || typeof value === "number";
+}
+
+function isInternalLinkCollection(
+  value: unknown,
+): value is InternalLinkCollection {
+  return INTERNAL_LINK_COLLECTIONS.some((slug) => slug === value);
+}
+
+/**
+ * Every unpopulated internal link target (`fields.doc.value` still an ID) in
+ * a Lexical tree, grouped by collection. Targets in an unknown collection are
+ * grouped under `null`: no public reader may see them.
+ */
+export function collectRawInternalLinkTargets(
+  tree: unknown,
+): Map<InternalLinkCollection | null, Set<RawLinkTarget>> {
+  const targets = new Map<InternalLinkCollection | null, Set<RawLinkTarget>>();
+
+  const visit = (node: unknown): void => {
+    if (Array.isArray(node)) {
+      node.forEach(visit);
+      return;
+    }
+    if (!isRecord(node)) return;
+
+    const fields = node.fields;
+    if (isRecord(fields) && isRecord(fields.doc)) {
+      const { relationTo, value } = fields.doc;
+      if (isRawLinkTarget(value)) {
+        const key = isInternalLinkCollection(relationTo) ? relationTo : null;
+        const ids = targets.get(key) ?? new Set<RawLinkTarget>();
+        ids.add(value);
+        targets.set(key, ids);
+      }
+    }
+
+    visit(node.root);
+    visit(node.children);
+  };
+
+  visit(tree);
+  return targets;
+}
+
+/**
+ * A copy of the Lexical tree in which every unpopulated internal link whose
+ * target is not in `visible` loses its `doc` reference. Populated targets
+ * (objects or `null`) are already access-checked by Payload and stay as they
+ * are; so does everything that is not an internal link reference.
+ */
+export function withoutHiddenInternalLinkTargets(
+  tree: unknown,
+  visible: ReadonlyMap<InternalLinkCollection, ReadonlySet<string>>,
+): unknown {
+  const visit = (node: unknown): unknown => {
+    if (Array.isArray(node)) return node.map(visit);
+    if (!isRecord(node)) return node;
+
+    const next: Record<string, unknown> = { ...node };
+    const fields = node.fields;
+    if (isRecord(fields) && isRecord(fields.doc)) {
+      const { relationTo, value } = fields.doc;
+      if (isRawLinkTarget(value)) {
+        const isVisible =
+          isInternalLinkCollection(relationTo) &&
+          visible.get(relationTo)?.has(String(value)) === true;
+        if (!isVisible) next.fields = { ...fields, doc: null };
+      }
+    }
+    if ("root" in node) next.root = visit(node.root);
+    if ("children" in node) next.children = visit(node.children);
+    return next;
+  };
+
+  return visit(tree);
+}
+
+/**
+ * Field `afterRead` hook for every rich text field (CLAUDE.md, rule 5).
+ *
+ * Lexical stores an internal link as `{ relationTo, value: <id> }` and only
+ * replaces the ID with the access-checked document when the request asks for
+ * enough `depth`. A REST client asking for `depth=0` (or reading the deepest
+ * populated level) would otherwise receive the collection and ID of a draft
+ * or scheduled document that a published text links to. For public API
+ * readers, an ID stays only when the reader may read that document itself;
+ * the Local API used by the site and editors keep the stored value.
+ */
+export const hideNonPublicRichTextLinks: FieldHook = async ({ req, value }) => {
+  if (!isPublicApiReader(req)) return value;
+
+  const targets = collectRawInternalLinkTargets(value);
+  if (targets.size === 0) return value;
+
+  const visible = new Map<InternalLinkCollection, Set<string>>();
+  for (const [collection, ids] of targets) {
+    if (collection === null) continue;
+    const { docs } = await req.payload.find({
+      collection,
+      depth: 0,
+      limit: ids.size,
+      overrideAccess: false,
+      req,
+      where: { id: { in: [...ids] } },
+    });
+    visible.set(collection, new Set(docs.map((doc) => String(doc.id))));
+  }
+
+  return withoutHiddenInternalLinkTargets(value, visible);
+};
