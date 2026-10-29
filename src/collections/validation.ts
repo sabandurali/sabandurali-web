@@ -1,6 +1,6 @@
 import type { Where } from "payload";
 import { siteUrl } from "@/config/site";
-import { getText, isRecord } from "@/content/guards";
+import { getText } from "@/content/guards";
 import { getSafeHref } from "@/content/links";
 
 /**
