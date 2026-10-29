@@ -1,47 +1,76 @@
 import ContactForm from "@/components/forms/ContactForm";
-import BackToTop from "@/components/layout/BackToTop";
-import Footer from "@/components/layout/Footer";
-import Header from "@/components/layout/Header";
-import { contactPaths } from "@/config/site";
+import Container from "@/components/ui/Container";
+import TextLink from "@/components/ui/TextLink";
+import PageIntro from "@/components/workspaces/PageIntro";
+import PageShell from "@/components/workspaces/PageShell";
+import { contactPaths, privacyPaths } from "@/config/site";
 import type { ContactContent } from "@/content/contactContent";
-import { homeContent } from "@/content/homeContent";
+import type { Locale } from "@/content/homeContent";
 
 type ContactPageProps = {
   content: ContactContent;
 };
 
+const pageTexts = {
+  tr: {
+    home: "Ana sayfa",
+    current: "İletişim",
+    formTitle: "Mesaj formu",
+    formNote:
+      "Zorunlu alanlar “(zorunlu)” ile işaretlidir. Mesajınız Formspree form hizmeti aracılığıyla iletilir.",
+    privacyLead: "Kişisel verilerin nasıl işlendiğini okuyun:",
+  },
+  en: {
+    home: "Home",
+    current: "Contact",
+    formTitle: "Message form",
+    formNote:
+      "Required fields are marked “(required)”. Your message is delivered through the Formspree form service.",
+    privacyLead: "Read how personal data is processed:",
+  },
+} as const satisfies Record<Locale, Record<string, string>>;
+
 export default function ContactPage({ content }: ContactPageProps) {
-  const home = homeContent[content.locale];
-  const homePath = content.locale === "tr" ? "/" : "/en";
+  const locale = content.locale;
+  const texts = pageTexts[locale];
 
   return (
-    <div id="top" lang={content.locale}>
-      <Header
-        locale={content.locale}
-        anchors={home.anchors}
-        content={home.header}
-        homeHref={homePath}
-        anchorPrefix={homePath}
-        languageHrefs={contactPaths}
-      />
-      <main className="bg-[#182A42] px-4 py-10 sm:px-6 sm:py-14 lg:py-18">
-        <div className="mx-auto max-w-3xl">
-          <header className="mb-8 border-b border-border pb-8 sm:mb-10 sm:pb-10">
-            <p className="text-xs font-semibold tracking-[0.22em] text-accent-soft">
-              {content.eyebrow}
+    <PageShell locale={locale} languageHrefs={contactPaths}>
+      <main id="main" className="bg-paper py-section text-ink">
+        <Container className="grid gap-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
+          <PageIntro
+            locale={locale}
+            breadcrumb={[
+              { label: texts.home, href: locale === "tr" ? "/" : "/en" },
+              { label: texts.current },
+            ]}
+            eyebrow={content.eyebrow}
+            title={content.heading}
+            lead={content.description}
+            className="lg:self-start"
+          >
+            <p className="m-0 max-w-measure border-t border-hairline pt-5 type-small text-ink-muted">
+              {texts.privacyLead}{" "}
+              <TextLink href={privacyPaths[locale]} locale={locale}>
+                {content.privacyAcknowledgement.linkLabel}
+              </TextLink>
             </p>
-            <h1 className="mt-4 max-w-2xl text-4xl leading-[1.05] text-ivory sm:text-5xl">
-              {content.heading}
-            </h1>
-            <p className="mt-5 max-w-2xl text-base leading-7 text-muted sm:text-lg sm:leading-8">
-              {content.description}
+          </PageIntro>
+
+          <section
+            aria-labelledby="contact-form-title"
+            className="rounded-card border border-ink bg-land p-5 sm:p-8"
+          >
+            <h2 id="contact-form-title" className="m-0 type-h3">
+              {texts.formTitle}
+            </h2>
+            <p className="mt-2 mb-6 type-small text-ink-muted">
+              {texts.formNote}
             </p>
-          </header>
-          <ContactForm content={content} />
-        </div>
+            <ContactForm content={content} labelledBy="contact-form-title" />
+          </section>
+        </Container>
       </main>
-      <Footer id={home.anchors.contact} content={home.footer} />
-      <BackToTop label={home.backToTopLabel} />
-    </div>
+    </PageShell>
   );
 }
