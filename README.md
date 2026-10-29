@@ -26,7 +26,7 @@ Payload packages are pinned exactly and must be upgraded together.
 ## Quick start
 
 ```sh
-nvm use                       # Node 24 from .nvmrc (24.22.1 or newer)
+nvm install                   # reads .nvmrc and installs/uses the latest Node 24
 npm ci
 cp .env.example .env.local    # first setup only; never overwrite an existing .env.local
 # then set a local-only PAYLOAD_SECRET in .env.local
@@ -38,7 +38,7 @@ Open the site at <http://127.0.0.1:3000> and the CMS at
 <http://127.0.0.1:3000/admin>. `.env.example` already holds working local
 defaults: SQLite, local media and static public content. The full setup guide,
 including how to generate the secret, is
-[docs/LOCAL_DEVELOPMENT.md](docs/LOCAL_DEVELOPMENT.md) (Turkish).
+[docs/LOCAL-DEVELOPMENT.md](docs/LOCAL-DEVELOPMENT.md) (Turkish).
 
 ## Commands
 
@@ -131,7 +131,7 @@ local `git blame`.
 
 ## Further documentation
 
-- [docs/LOCAL_DEVELOPMENT.md](docs/LOCAL_DEVELOPMENT.md): local setup (Turkish)
+- [docs/LOCAL-DEVELOPMENT.md](docs/LOCAL-DEVELOPMENT.md): local setup (Turkish)
 - [docs/PROJECT-STATE.md](docs/PROJECT-STATE.md): project handoff, district
   contract and production rules
 - [docs/NEXT-STEPS.md](docs/NEXT-STEPS.md): open work and open owner decisions
