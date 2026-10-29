@@ -57,6 +57,8 @@ export type PublicArticleSummary = {
   publishedAt: string;
   createdAt: string;
   updatedAt: string;
+  /** A CMS article's guest author; absent when Şaban Durali wrote it. */
+  author?: string;
   seo: PublicArticleSeo;
 };
 

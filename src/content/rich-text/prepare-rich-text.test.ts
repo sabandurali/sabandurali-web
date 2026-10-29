@@ -1,11 +1,13 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  heading,
   lexical,
   link,
   mediaDocument,
   paragraph,
   relationship,
+  text,
   upload,
 } from "./lexical-fixtures";
 import { INTERNAL_LINK_COLLECTIONS } from "./internal-link-collections";
@@ -240,18 +242,40 @@ test("uploads keep public fields only; captions are Turkish-only, credits stay",
   assert.equal(english.includes(mediaDocument.description), false);
 });
 
-test("relationship nodes lose their populated document", () => {
+test("relationship nodes are dropped and logged", (t) => {
+  const warn = t.mock.method(console, "warn", () => {});
   const prepared = prepareRichText(
-    lexical(relationship({ id: "a9", title: "Gizli taslak" })),
+    lexical(
+      relationship({ id: "a9", title: "Gizli taslak" }),
+      paragraph(text("Kalan metin")),
+    ),
     "tr",
     now,
   );
+  const serialized = JSON.stringify(prepared);
 
-  assert.equal(JSON.stringify(prepared).includes("Gizli taslak"), false);
-  assert.equal(
-    (prepared as ReturnType<typeof lexical>).root.children[0] !== undefined,
-    true,
+  assert.equal(serialized.includes("Gizli taslak"), false);
+  assert.equal(serialized.includes('"relationship"'), false);
+  assert.ok(serialized.includes("Kalan metin"));
+  assert.equal(warn.mock.callCount(), 1);
+  assert.match(String(warn.mock.calls[0]?.arguments[0]), /relationship node/);
+});
+
+test("a legacy h1 in the body becomes an h2", () => {
+  const prepared = JSON.stringify(
+    prepareRichText(
+      lexical(
+        { ...heading("h2", "Eski başlık"), tag: "h1" },
+        heading("h3", "Alt başlık"),
+      ),
+      "tr",
+      now,
+    ),
   );
+
+  assert.equal(prepared.includes('"tag":"h1"'), false);
+  assert.ok(prepared.includes('"tag":"h2"'));
+  assert.ok(prepared.includes('"tag":"h3"'));
 });
 
 test("non-Lexical values pass through unchanged", () => {

@@ -1,15 +1,20 @@
 import {
+  APIError,
   ValidationError,
   type CollectionBeforeChangeHook,
+  type CollectionBeforeOperationHook,
   type CollectionBeforeValidateHook,
   type CollectionConfig,
   type Where,
 } from "payload";
 import { pageBlocks } from "@/blocks/pageBlocks";
-import { getText, imageMediaFilter, isRecord } from "@/collections/validation";
+import { imageMediaFilter } from "@/collections/validation";
+import { getText, isRecord } from "@/content/guards";
+import { isRenderableHomeBlock } from "@/content/pages/payload-page-mapper";
 import {
   adminOnly,
   adminOrEditor,
+  isAdminOrEditor,
   publishedPageOrAdminOrEditor,
 } from "@/lib/payloadAccess";
 import { normalizeSlug } from "@/lib/localizedSlug";
@@ -73,6 +78,24 @@ function countVisibleHomeBlocks(
       block.blockType === blockType &&
       block.visible !== false,
   ).length;
+}
+
+/** Visible home blocks the public mapper would skip, as "hero#1" labels. */
+export function getUnrenderableHomeBlocks(
+  layout: unknown,
+  language: "tr" | "en",
+): string[] {
+  if (!Array.isArray(layout)) return [];
+
+  return layout.flatMap((block, index) =>
+    isRecord(block) &&
+    block.visible !== false &&
+    typeof block.blockType === "string" &&
+    HOME_BLOCK_TYPES.has(block.blockType) &&
+    !isRenderableHomeBlock(block, language)
+      ? [`${block.blockType}#${index + 1}`]
+      : [],
+  );
 }
 
 function getVisibleUnsupportedHomeBlocks(layout: unknown): string[] {
@@ -228,6 +251,18 @@ export const validatePageIdentity: CollectionBeforeValidateHook = async ({
       });
     }
 
+    const unrenderableBlocks = getUnrenderableHomeBlocks(
+      layout,
+      language === "en" ? "en" : "tr",
+    );
+
+    if (status === "published" && unrenderableBlocks.length > 0) {
+      errors.push({
+        message: `Ana Sayfa bloklarında zorunlu alanlar eksik veya bağlantılar geçersiz; yayındaki sitede gösterilemezler: ${unrenderableBlocks.join(", ")}. Başlık satırlarını, metinleri ve bağlantıları (etiket ve / ile başlayan ya da https adres) tamamlayın.`,
+        path: "layout",
+      });
+    }
+
     const unsupportedBlocks = getVisibleUnsupportedHomeBlocks(layout);
 
     if (status === "published" && unsupportedBlocks.length > 0) {
@@ -251,6 +286,135 @@ export const validatePageIdentity: CollectionBeforeValidateHook = async ({
   }
 
   return data;
+};
+
+type HomeChange = "unpublish" | "schedule" | "pageType" | "language";
+
+/**
+ * The changes in an update that would take a published home record off the
+ * site. Saving a draft over the published home only writes a version, so it
+ * is allowed, but a draft that changes the page type or language would break
+ * the home as soon as it is published and is refused as well.
+ */
+export function getHomeBreakingChanges(
+  data: unknown,
+  home: { language: unknown },
+  options: { draft: boolean; unpublishAllLocales: boolean; now: Date },
+): HomeChange[] {
+  if (!isRecord(data)) return options.unpublishAllLocales ? ["unpublish"] : [];
+
+  const savingDraft = options.draft && data._status !== "published";
+  const changes: HomeChange[] = [];
+
+  if (
+    options.unpublishAllLocales ||
+    (!savingDraft && data._status === "draft")
+  ) {
+    changes.push("unpublish");
+  }
+
+  if (!savingDraft && data.publishedAt !== undefined) {
+    const publishedAt =
+      typeof data.publishedAt === "string" ? Date.parse(data.publishedAt) : NaN;
+
+    if (!Number.isFinite(publishedAt) || publishedAt > options.now.getTime()) {
+      changes.push("schedule");
+    }
+  }
+
+  if (data.pageType !== undefined && data.pageType !== "home") {
+    changes.push("pageType");
+  }
+
+  if (data.language !== undefined && data.language !== home.language) {
+    changes.push("language");
+  }
+
+  return changes;
+}
+
+const homeChangeMessages: Record<HomeChange, string> = {
+  unpublish: "yayından kaldırılamaz",
+  schedule: "ileri bir tarihe planlanamaz ve yayın tarihi silinemez",
+  pageType: "standart sayfaya çevrilemez",
+  language: "başka bir dile taşınamaz",
+};
+
+/**
+ * Keeps the published home records on the site. `/` would otherwise fall
+ * back to the static content (COR-2). Runs before the operation because only
+ * the operation arguments tell a draft save from an unpublish.
+ */
+export const protectPublishedHomePage: CollectionBeforeOperationHook = async ({
+  args,
+  operation,
+  req,
+}) => {
+  if (operation !== "update") return args;
+  // This hook runs before access control. A REST or GraphQL request that
+  // may not update pages is refused by access control anyway, so its
+  // user-supplied `where` never reaches the overrideAccess query below
+  // (which would otherwise answer whether the home matches it).
+  if (req.payloadAPI !== "local" && !isAdminOrEditor(req.user)) return args;
+
+  // Operation argument types differ per operation; read them as unknowns.
+  const values = new Map<string, unknown>(Object.entries(args));
+  const data = values.get("data");
+  const id = values.get("id");
+  const where = values.get("where");
+  const unpublishAllLocales = values.get("unpublishAllLocales");
+  const options = {
+    draft: values.get("draft") === true,
+    unpublishAllLocales:
+      unpublishAllLocales === true || unpublishAllLocales === "true",
+    now: new Date(),
+  };
+  // Without a stored language every language in the data counts as a
+  // change, so this cheap check never misses an update that needs a look.
+  if (
+    getHomeBreakingChanges(data, { language: undefined }, options).length === 0
+  ) {
+    return args;
+  }
+
+  const target: Where | null =
+    typeof id === "string" || typeof id === "number"
+      ? { id: { equals: id } }
+      : isRecord(where)
+        ? // A bulk update's `where`, already parsed by Payload.
+          (where as Where)
+        : null;
+
+  if (target === null) return args;
+
+  const homes = await req.payload.find({
+    collection: "pages",
+    depth: 0,
+    draft: false,
+    overrideAccess: true,
+    pagination: false,
+    req,
+    where: {
+      and: [
+        target,
+        { pageType: { equals: "home" } },
+        { _status: { equals: "published" } },
+      ],
+    },
+  });
+
+  for (const home of homes.docs) {
+    const changes = getHomeBreakingChanges(data, home, options);
+
+    if (changes.length > 0) {
+      throw new APIError(
+        `Yayındaki ${home.language === "en" ? "İngilizce" : "Türkçe"} Ana Sayfa ${changes.map((change) => homeChangeMessages[change]).join(", ")}. İçeriği düzenleyip yeniden yayınlayın; ana sayfayı değiştirmek için bu kaydı güncelleyin.`,
+        400,
+      );
+    }
+  }
+
+  return args;
 };
 
 const setPublishedAtOnFirstPublish: CollectionBeforeChangeHook = ({
@@ -440,6 +604,7 @@ export const Pages: CollectionConfig = {
     afterDelete: [revalidation.afterDelete],
     beforeChange: [setPublishedAtOnFirstPublish],
     beforeDelete: [preventDeletingHomePage],
+    beforeOperation: [protectPublishedHomePage],
     beforeValidate: [validatePageIdentity],
   },
   indexes: [

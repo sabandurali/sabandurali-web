@@ -194,3 +194,46 @@ test("internal links in the body are resolved for the requested locale", (t) => 
   assert.ok(serialized.includes('"url":"/en/articles/moda-sahili"'));
   assert.ok(serialized.includes('"linkType":"custom"'));
 });
+
+test("SEO controls and a guest author reach the public article", (t) => {
+  silence(t);
+  const mapped = mapPayloadArticle(
+    article({
+      author: { name: "Konuk Yazar" },
+      seo: {
+        canonical: "/makaleler/ozgun-makale",
+        index: false,
+        follow: false,
+      },
+    }),
+    "tr",
+    now,
+  );
+
+  assert.ok(mapped);
+  assert.equal(mapped.author, "Konuk Yazar");
+  assert.equal(mapped.seo.canonical, "/makaleler/ozgun-makale");
+  assert.equal(mapped.seo.index, false);
+  assert.equal(mapped.seo.follow, false);
+  assert.equal(toPublicArticleSummary(mapped).author, "Konuk Yazar");
+});
+
+test("the owner, blank authors and foreign canonicals fall back to defaults", (t) => {
+  silence(t);
+  for (const name of ["Şaban Durali", "  ", null]) {
+    const mapped = mapPayloadArticle(
+      article({
+        author: { name },
+        seo: { canonical: "https://example.com/kopya" },
+      }),
+      "tr",
+      now,
+    );
+
+    assert.ok(mapped);
+    assert.equal("author" in mapped, false, String(name));
+    assert.equal(mapped.seo.canonical, undefined);
+    assert.equal(mapped.seo.index, true);
+    assert.equal(mapped.seo.follow, true);
+  }
+});

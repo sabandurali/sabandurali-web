@@ -40,12 +40,16 @@ export function getArticleCanonicalUrl(article: CanonicalArticle): string {
   return getArticleUrl(article.slug, article.language);
 }
 
-/** Static articles name their author; CMS articles are written by the owner. */
+/**
+ * Static articles name their author in their details; CMS articles carry a
+ * guest author only when the editor named someone other than the owner.
+ */
 export function getArticleAuthorName(article: PublicArticle): string {
-  return article.content.source === "static" &&
-    article.content.details.author !== null
-    ? article.content.details.author.name
-    : personalBrandName;
+  if (article.content.source === "static") {
+    return article.content.details.author?.name ?? personalBrandName;
+  }
+
+  return article.author ?? personalBrandName;
 }
 
 function getArticleSocialImage(article: PublicArticle): SocialImage | null {

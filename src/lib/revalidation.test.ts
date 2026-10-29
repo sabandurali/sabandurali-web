@@ -392,6 +392,7 @@ test("district guides reach the directory, the guide and its news page", () => {
 test("media and navigation reach every page", () => {
   assert.deepEqual(getCollectionRevalidationTargets("media", [{ id: "m1" }]), [
     ALL_PAGES,
+    { path: SITEMAP_PATH },
   ]);
   assert.deepEqual(getNavigationRevalidationTargets(), [ALL_PAGES]);
   assert.deepEqual(ALL_PAGES, { path: "/", type: "layout" });
@@ -545,6 +546,10 @@ test("every content collection maps to at least one existing route", () => {
   for (const collection of collections) {
     const targets = getCollectionRevalidationTargets(collection, [], "tr");
     assert.ok(targets.length > 0, collection);
+    assert.ok(
+      targets.some((target) => target.path === SITEMAP_PATH),
+      `${collection} changes can change /sitemap.xml`,
+    );
     assertTargetsAreRoutes(targets);
   }
 });

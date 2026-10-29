@@ -17,13 +17,12 @@ import {
 import { createRevalidationHooks } from "@/lib/revalidation";
 import { districtOptions } from "@/content/districts/district-registry";
 import {
-  getText,
   hasMeaningfulRichText,
   imageMediaFilter,
   isHttpsUrl,
-  isRecord,
   validateOptionalSiteCanonical,
 } from "@/collections/validation";
+import { getText, isRecord } from "@/content/guards";
 
 /** The author every article has unless an editor names someone else. */
 export const DEFAULT_ARTICLE_AUTHOR = "Şaban Durali";

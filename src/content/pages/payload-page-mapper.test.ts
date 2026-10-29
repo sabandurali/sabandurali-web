@@ -8,7 +8,7 @@ import {
   paragraph,
   text,
 } from "../rich-text/lexical-fixtures";
-import { mapPayloadPage } from "./payload-page-mapper";
+import { isRenderableHomeBlock, mapPayloadPage } from "./payload-page-mapper";
 
 const now = new Date("2026-10-28T12:00:00Z");
 
@@ -186,4 +186,37 @@ test("rich text blocks resolve internal links for the page language", (t) => {
 
   assert.ok(block?.blockType === "richText");
   assert.ok(JSON.stringify(block.content).includes('"url":"/biyografi-detay"'));
+});
+
+test("isRenderableHomeBlock applies the mapper rules to unpopulated writes", () => {
+  assert.equal(isRenderableHomeBlock(hero, "tr"), true);
+  assert.equal(
+    isRenderableHomeBlock(
+      { ...hero, secondaryAction: { label: "X", href: "javascript:x" } },
+      "tr",
+    ),
+    false,
+  );
+  const about = {
+    blockType: "homeAbout",
+    eyebrow: "Hakkımda",
+    titleLines: [{ text: "Başlık" }],
+    paragraphs: [{ text: "Metin" }],
+    imageAlt: "Portre",
+  };
+  assert.equal(
+    isRenderableHomeBlock({ ...about, image: "unpopulated-id" }, "tr"),
+    true,
+    "an upload ID is not populated during a write",
+  );
+  assert.equal(
+    isRenderableHomeBlock({ ...about, titleLines: [{ text: " " }] }, "tr"),
+    false,
+  );
+  assert.equal(
+    isRenderableHomeBlock({ ...about, paragraphs: null }, "tr"),
+    false,
+  );
+  assert.equal(isRenderableHomeBlock({ blockType: "cta" }, "tr"), false);
+  assert.equal(isRenderableHomeBlock(null, "tr"), false);
 });

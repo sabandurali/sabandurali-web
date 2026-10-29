@@ -1,4 +1,5 @@
 import type { Block, Field } from "payload";
+import { imageMediaFilter } from "@/collections/validation";
 
 function isSafeLink(value: unknown): true | string {
   if (typeof value !== "string" || value.trim().length === 0) {
@@ -215,6 +216,7 @@ export const CardGroupBlock: Block = {
           type: "upload",
           label: "Görsel",
           relationTo: "media",
+          filterOptions: imageMediaFilter,
         },
         {
           name: "imageAlt",
@@ -292,6 +294,7 @@ export const ImageTextBlock: Block = {
       type: "upload",
       label: "Görsel",
       relationTo: "media",
+      filterOptions: imageMediaFilter,
       required: true,
     },
     {
@@ -384,6 +387,7 @@ export const HomeAboutBlock: Block = {
       type: "upload",
       label: "Portre görseli (isteğe bağlı)",
       relationTo: "media",
+      filterOptions: imageMediaFilter,
       admin: {
         description:
           "Boş bırakılırsa mevcut statik Şaban Durali portresi kullanılır.",

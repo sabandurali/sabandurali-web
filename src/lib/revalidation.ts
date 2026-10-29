@@ -38,6 +38,7 @@
  * covers every route below them, because a route revalidates at the lowest
  * `revalidate` of its layouts and page.
  */
+import { getText, isRecord } from "@/content/guards";
 import { revalidatePath } from "next/cache";
 import type {
   CollectionAfterChangeHook,
@@ -101,16 +102,6 @@ const HOME_PATHS: Readonly<Record<Language, string>> = {
 
 /** Slugs produced by `normalizeSlug`; anything else is covered by patterns. */
 const SAFE_SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
-}
-
-function getText(value: unknown): string | null {
-  return typeof value === "string" && value.trim().length > 0
-    ? value.trim()
-    : null;
-}
 
 function getLanguage(value: unknown): Language | null {
   return value === "tr" || value === "en" ? value : null;
@@ -316,7 +307,9 @@ export function getCollectionRevalidationTargets(
     case "district-guides":
       return uniqueTargets(districtGuideTargets(docs));
     case "media":
-      return [ALL_PAGES];
+      // The sitemap lists image URLs; it is a metadata route, so it is
+      // named explicitly instead of relying on the root layout target.
+      return [ALL_PAGES, pathTarget(SITEMAP_PATH)];
     case "pages":
       return uniqueTargets(pageTargets(docs));
     case "photo-collections":
