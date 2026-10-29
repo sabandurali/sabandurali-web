@@ -47,13 +47,11 @@ export function isDistrictGuideIndexable(
 
 /**
  * A district news list is indexable while it has at least one item; an
- * empty list is a placeholder. The news page robots rule and the sitemap
- * both use this.
+ * empty list is a placeholder. The news page robots rule (with the total
+ * the database counted) and the sitemap both use this.
  */
-export function isDistrictNewsPageIndexable(
-  news: ReadonlyArray<unknown>,
-): boolean {
-  return news.length > 0;
+export function isDistrictNewsPageIndexable(totalItems: number): boolean {
+  return totalItems > 0;
 }
 
 export function getDistrictTitle(district: District): string {

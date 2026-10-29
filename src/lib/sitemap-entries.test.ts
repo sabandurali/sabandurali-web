@@ -634,7 +634,7 @@ test("district news lists with news are listed like the news page indexes them",
     );
     assert.equal(
       byUrl(sitemap, `/istanbul/ilceler/${district}/haberler`) !== undefined,
-      isDistrictNewsPageIndexable(items),
+      isDistrictNewsPageIndexable(items.length),
     );
   }
 });

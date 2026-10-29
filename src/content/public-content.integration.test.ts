@@ -742,6 +742,42 @@ test("home photos put Istanbul photos first with two limited reads", async (t) =
   await payload.delete({ collection: "photo-collections", id: nature.id });
 });
 
+test("home photos still fill the limit when the mapper rejects a document", async (t) => {
+  t.mock.method(console, "warn", () => {});
+  // The first document of every first page loses its title, so the mapper
+  // rejects it: the selection reads on instead of returning fewer photos.
+  const find = payload.find.bind(payload);
+  const reads = t.mock.method(
+    payload,
+    "find",
+    async (...args: Parameters<Payload["find"]>) => {
+      const result = await find(...args);
+      if (args[0].collection !== "photos" || args[0].page !== 1) {
+        return result;
+      }
+      return {
+        ...result,
+        docs: result.docs.map((document, index) =>
+          index === 0 ? { ...document, title: null } : document,
+        ),
+      };
+    },
+  );
+
+  assert.deepEqual(slugs(await photos.listHomePhotos("tr", 4)), [
+    "kare-1",
+    "kare-2",
+    "kare-3",
+    "kare-4",
+  ]);
+  assert.equal(
+    reads.mock.calls.filter(
+      (call) => call.arguments[0]?.collection === "photos",
+    ).length,
+    2,
+  );
+});
+
 const { PayloadPublicBookReviewRepository } =
   await import("./books/payload-book-review-repository");
 const { PayloadPublicPageRepository } =

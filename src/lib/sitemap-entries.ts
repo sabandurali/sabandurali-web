@@ -471,7 +471,7 @@ export function buildDistrictNewsEntries(
         item.district === district.slug,
     );
 
-    return isDistrictNewsPageIndexable(items)
+    return isDistrictNewsPageIndexable(items.length)
       ? [
           createEntry(getDistrictNewsPath(district.slug), {
             changeFrequency: "weekly",

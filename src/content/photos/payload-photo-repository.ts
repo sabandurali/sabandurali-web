@@ -173,9 +173,44 @@ export class PayloadPublicPhotoRepository {
   }
 
   /**
+   * Up to `wanted` public photos matching `conditions`, newest first,
+   * skipping the IDs in `exclude`. Reads pages of `pageSize` documents and
+   * stops as soon as enough photos are collected; a further page is read
+   * only when the mapper rejected documents or excluded ones took room.
+   */
+  private async collectUpTo(
+    locale: PhotoLanguage,
+    conditions: Where[],
+    wanted: number,
+    pageSize: number,
+    now: Date,
+    exclude: ReadonlySet<string> = new Set(),
+  ): Promise<PublicPhoto[]> {
+    const photos: PublicPhoto[] = [];
+    let page = 1;
+    let totalPages = 1;
+
+    while (photos.length < wanted && page <= totalPages) {
+      const result = await this.findPage(
+        locale,
+        conditions,
+        page,
+        pageSize,
+        now,
+      );
+      photos.push(...result.photos.filter(({ id }) => !exclude.has(id)));
+      totalPages = result.totalPages;
+      page += 1;
+    }
+
+    return photos.slice(0, wanted);
+  }
+
+  /**
    * The home selection with database limits: up to `limit` Istanbul photos,
-   * newest first, then the newest other photos until `limit` is reached. At
-   * most two queries of `limit` documents, whatever the collection size.
+   * newest first, then the newest other photos until `limit` is reached.
+   * Usually one or two queries of `limit` documents, whatever the collection
+   * size; a further page is read only when the mapper rejects documents.
    */
   async listHomePhotos(
     locale: PhotoLanguage,
@@ -183,29 +218,26 @@ export class PayloadPublicPhotoRepository {
     now: Date = new Date(),
   ): Promise<PublicPhoto[]> {
     if (limit <= 0) return [];
-    const istanbul = await this.findPage(
+    const istanbul = await this.collectUpTo(
       locale,
       createIstanbulPhotoConditions(now),
-      1,
+      limit,
       limit,
       now,
     );
-    if (istanbul.photos.length >= limit) return istanbul.photos;
+    if (istanbul.length >= limit) return istanbul;
 
-    // Fewer Istanbul photos than `limit` means all of them are listed, so
-    // the newest `limit` photos hold enough of the others.
-    const listed = new Set(istanbul.photos.map(({ id }) => id));
-    const newest = await this.findPage(
+    // Every public Istanbul photo is listed now, so the others are the
+    // newest public photos that are not among them.
+    const others = await this.collectUpTo(
       locale,
       createPublicPhotoConditions(now),
-      1,
+      limit - istanbul.length,
       limit,
       now,
+      new Set(istanbul.map(({ id }) => id)),
     );
-    return [
-      ...istanbul.photos,
-      ...newest.photos.filter(({ id }) => !listed.has(id)),
-    ].slice(0, limit);
+    return [...istanbul, ...others];
   }
 
   async listByDistrict(
