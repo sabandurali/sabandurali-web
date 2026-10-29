@@ -21,16 +21,11 @@ import { contactPaths, privacyPaths } from "@/config/site";
 import {
   articleListPaths,
   getArticlePath,
-  getArticleUrl,
 } from "@/content/articles/article-routes";
-import { getArticleCanonicalUrl } from "@/content/articles/article-seo";
+import { isArticleHreflangEligible } from "@/content/articles/article-seo";
 import type { PublicArticleSummary } from "@/content/articles/public-types";
-import {
-  bookListPaths,
-  getBookReviewPath,
-  getBookReviewUrl,
-} from "@/content/books/book-routes";
-import { getBookReviewCanonicalUrl } from "@/content/books/book-seo";
+import { bookListPaths, getBookReviewPath } from "@/content/books/book-routes";
+import { isBookReviewHreflangEligible } from "@/content/books/book-seo";
 import type { BookReview } from "@/content/books/types";
 import type { DistrictGuide } from "@/content/districts/district-guide-projection";
 import { districts } from "@/content/districts/district-registry";
@@ -167,11 +162,7 @@ function createLocalizedEntries(
 }
 
 function isListedArticle(article: PublicArticleSummary): boolean {
-  return (
-    article.seo.index &&
-    getArticleCanonicalUrl(article) ===
-      getArticleUrl(article.slug, article.language)
-  );
+  return isArticleHreflangEligible(article);
 }
 
 export function buildArticleEntries(
@@ -213,11 +204,7 @@ export function buildArticleEntries(
 }
 
 function isListedBookReview(bookReview: BookReview): boolean {
-  return (
-    bookReview.seo.index &&
-    getBookReviewCanonicalUrl(bookReview) ===
-      getBookReviewUrl(bookReview.slug, bookReview.language)
-  );
+  return isBookReviewHreflangEligible(bookReview);
 }
 
 /**

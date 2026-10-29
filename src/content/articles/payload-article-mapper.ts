@@ -328,5 +328,11 @@ export function toPublicArticleTranslation(
     language: article.language,
     slug: article.slug,
     title: article.title,
+    seo: {
+      index: article.seo.index,
+      ...(article.seo.canonical === undefined
+        ? {}
+        : { canonical: article.seo.canonical }),
+    },
   };
 }

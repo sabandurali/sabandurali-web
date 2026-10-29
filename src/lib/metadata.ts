@@ -210,6 +210,11 @@ export type PageMetadataInput = {
   path: string;
   /** Published versions of the same page in the other language(s). */
   translations?: LocalizedPaths;
+  /**
+   * False for a page outside any hreflang cluster (noindex, or canonical
+   * elsewhere): no hreflang link at all, not even its own. Defaults to true.
+   */
+  hreflang?: boolean;
   /** Overrides the canonical URL; defaults to `path`. */
   canonical?: string;
   /** Defaults to the site-wide social image. */
@@ -228,10 +233,10 @@ export type PageMetadataInput = {
  * robots, Open Graph (with a default image) and a large Twitter card.
  */
 export function createPageMetadata(input: PageMetadataInput): Metadata {
-  const paths: LocalizedPaths = {
-    ...input.translations,
-    [input.locale]: input.path,
-  };
+  const hreflang = input.hreflang ?? true;
+  const paths: LocalizedPaths = hreflang
+    ? { ...input.translations, [input.locale]: input.path }
+    : {};
   const canonical = toAbsoluteUrl(input.canonical ?? input.path);
   const images =
     input.images !== undefined && input.images.length > 0
@@ -258,10 +263,9 @@ export function createPageMetadata(input: PageMetadataInput): Metadata {
   return {
     title: input.title,
     description: input.description,
-    alternates: {
-      canonical,
-      languages: createLanguageAlternates(paths),
-    },
+    alternates: hreflang
+      ? { canonical, languages: createLanguageAlternates(paths) }
+      : { canonical },
     robots: {
       index: input.index ?? true,
       follow: input.follow ?? true,

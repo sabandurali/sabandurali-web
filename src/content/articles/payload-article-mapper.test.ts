@@ -89,6 +89,7 @@ test("a complete published article maps to the public shape", (t) => {
     language: "tr",
     slug: "kadikoyde-yasam",
     title: "Kadıköy’de yaşam",
+    seo: { index: true },
   });
 });
 

@@ -29,6 +29,20 @@ export function getBookReviewCanonicalUrl(
   return getBookReviewUrl(bookReview.slug, bookReview.language);
 }
 
+/**
+ * Whether a review may take part in an hreflang cluster: indexable and
+ * self-canonical. The page metadata and the sitemap use the same rule.
+ */
+export function isBookReviewHreflangEligible(
+  bookReview: CanonicalBookReview,
+): boolean {
+  return (
+    bookReview.seo.index &&
+    getBookReviewCanonicalUrl(bookReview) ===
+      getBookReviewUrl(bookReview.slug, bookReview.language)
+  );
+}
+
 export function createBookReviewMetadata(
   bookReview: BookReview,
   translation: BookReview | null,
@@ -37,13 +51,18 @@ export function createBookReviewMetadata(
     bookReview.seo.openGraphImage,
   );
 
+  const hreflang = isBookReviewHreflangEligible(bookReview);
+
   return createPageMetadata({
     title: bookReview.seo.title,
     description: bookReview.seo.description,
     locale: bookReview.language,
     path: getBookReviewPath(bookReview.slug, bookReview.language),
+    hreflang,
     translations:
-      translation === null
+      !hreflang ||
+      translation === null ||
+      !isBookReviewHreflangEligible(translation)
         ? undefined
         : {
             [translation.language]: getBookReviewPath(

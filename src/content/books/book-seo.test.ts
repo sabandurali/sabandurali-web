@@ -5,6 +5,7 @@ import { personEntityId } from "@/content/entity-seo";
 import {
   createBookReviewJsonLd,
   createBookReviewMetadata,
+  isBookReviewHreflangEligible,
   serializeBookReviewJsonLd,
 } from "./book-seo";
 import type { BookReview } from "./types";
@@ -145,7 +146,32 @@ test("a prepared CMS share image is used as uploaded and noindex is kept", () =>
     },
   ]);
   assert.deepEqual(metadata.robots, { index: false, follow: true });
-  assert.deepEqual(metadata.alternates?.languages, {
-    "tr-TR": `${site}/kitaplar/ultra-ogrenme`,
+  // A noindex page is in no hreflang cluster (the sitemap leaves it out too).
+  assert.equal(metadata.alternates?.languages, undefined);
+});
+
+test("hreflang pairs only indexable, self-canonical reviews", () => {
+  const english = review({
+    id: "review-en",
+    slug: "ultralearning",
+    language: "en",
+    translationSourceBookReviewId: "review-tr",
   });
+
+  for (const seo of [
+    { ...english.seo, index: false },
+    { ...english.seo, canonical: "/en/books/another-review" },
+  ]) {
+    const metadata = createBookReviewMetadata(review(), { ...english, seo });
+    assert.deepEqual(metadata.alternates?.languages, {
+      "tr-TR": `${site}/kitaplar/ultra-ogrenme`,
+    });
+  }
+
+  const noindex = createBookReviewMetadata(
+    review({ seo: { ...review().seo, index: false } }),
+    english,
+  );
+  assert.equal(noindex.alternates?.languages, undefined);
+  assert.equal(isBookReviewHreflangEligible(english), true);
 });
