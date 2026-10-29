@@ -5,12 +5,15 @@ import { ImageOptimizerCache } from "next/dist/server/image-optimizer.js";
 import nextConfig from "../../next.config";
 import { siteSocialImage } from "@/config/site";
 import {
+  createFallbackMetaDescription,
+  createFallbackMetaTitle,
   createLanguageAlternates,
   createOptimizedSocialImage,
   createPageMetadata,
   createSocialImage,
   defaultSocialImage,
   metaDescriptionMaxLength,
+  metaTitleMaxLength,
   siteName,
   truncateMetaDescription,
 } from "./metadata";
@@ -313,4 +316,37 @@ test("a long first sentence is cut at a word boundary with an ellipsis", () => {
   assert.ok(result.length <= 50);
   assert.match(result, /^(kelime )*kelime…$/);
   assert.equal(truncateMetaDescription("a, b, c, d, e, f, g", 8), "a, b, c…");
+});
+
+test("SEO-PERF-2: a CMS fallback title gets the brand suffix when it fits", () => {
+  assert.equal(
+    createFallbackMetaTitle("Galata akşamüstü"),
+    "Galata akşamüstü | Şaban Durali",
+  );
+  // Too long with the suffix: the bare title, never a cut one.
+  const long = "İstanbul’un kıyı mahallelerinde dönüşüm ve kira artışı";
+  assert.ok(`${long} | Şaban Durali`.length > metaTitleMaxLength);
+  assert.equal(createFallbackMetaTitle(long), long);
+  // A title that already names the site is not branded twice.
+  assert.equal(
+    createFallbackMetaTitle("Şaban Durali — Araştırma"),
+    "Şaban Durali — Araştırma",
+  );
+  assert.equal(
+    createFallbackMetaTitle("  Boşluklu   başlık "),
+    "Boşluklu başlık | Şaban Durali",
+  );
+});
+
+test("SEO-PERF-1/2: a CMS fallback description uses the first filled candidate, cut to 160", () => {
+  assert.equal(createFallbackMetaDescription(null, "", "  "), null);
+  assert.equal(
+    createFallbackMetaDescription(null, "Galata Kulesi akşam ışığında."),
+    "Galata Kulesi akşam ışığında.",
+  );
+  const excerpt = "Kadıköy’de yaşam ".repeat(20).trim();
+  const description = createFallbackMetaDescription(excerpt);
+  assert.ok(description !== null);
+  assert.ok(description.length <= metaDescriptionMaxLength);
+  assert.ok(description.endsWith("…"));
 });

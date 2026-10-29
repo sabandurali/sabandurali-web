@@ -191,6 +191,35 @@ export function truncateMetaDescription(
   return `${words.replace(/[\s,;:–—-]+$/u, "")}…`;
 }
 
+/**
+ * The document title of a CMS item whose editor left the SEO title empty:
+ * the content title with the brand suffix every static page carries, or the
+ * bare title when the suffix would push it past 60 characters. A title that
+ * already names the site is kept as it is. An SEO title the editor wrote is
+ * never passed through here.
+ */
+export function createFallbackMetaTitle(title: string): string {
+  const value = title.replace(/\s+/g, " ").trim();
+  if (value.includes(siteName)) return value;
+  const branded = `${value} | ${siteName}`;
+  return branded.length <= metaTitleMaxLength ? branded : value;
+}
+
+/**
+ * The meta description of a CMS item whose editor left the SEO description
+ * empty: the first non-empty candidate (an excerpt, a caption, alt text),
+ * shortened to 160 characters. Null when every candidate is empty.
+ */
+export function createFallbackMetaDescription(
+  ...candidates: ReadonlyArray<string | null | undefined>
+): string | null {
+  for (const candidate of candidates) {
+    const value = candidate?.trim();
+    if (value) return truncateMetaDescription(value);
+  }
+  return null;
+}
+
 export type ArticleOpenGraph = {
   publishedTime?: string | null;
   modifiedTime?: string | null;

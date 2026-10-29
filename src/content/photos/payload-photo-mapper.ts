@@ -5,6 +5,10 @@ import {
   isPublishedBy,
   isRecord,
 } from "@/content/guards";
+import {
+  createFallbackMetaDescription,
+  createFallbackMetaTitle,
+} from "@/lib/metadata";
 import { mapMediaImage } from "@/content/media";
 import type { Photo } from "@/payload-types";
 import type {
@@ -112,7 +116,11 @@ export function mapPayloadPhoto(
     .map(mapPhotoTag)
     .filter((item): item is PublicPhotoTag => item !== null)
     .toSorted((left, right) => left.title.localeCompare(right.title, locale));
-  const fallbackDescription = getText(value.description) ?? "";
+  // An empty caption must not leave the page without a meta description:
+  // the alt text, which every public photo has, is the last fallback.
+  const fallbackDescription =
+    createFallbackMetaDescription(getText(value.description), altText) ??
+    altText;
   const ogImage = mapImage(value.seo?.openGraphImage, altText, locale);
 
   return {
@@ -145,7 +153,7 @@ export function mapPayloadPhoto(
     createdAt: value.createdAt,
     updatedAt: value.updatedAt,
     seo: {
-      title: getText(value.seo?.metaTitle) ?? title,
+      title: getText(value.seo?.metaTitle) ?? createFallbackMetaTitle(title),
       description: getText(value.seo?.metaDescription) ?? fallbackDescription,
       openGraphImage: ogImage,
     },

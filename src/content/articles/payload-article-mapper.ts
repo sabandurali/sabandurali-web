@@ -16,6 +16,10 @@ import {
   isPublishedBy,
   isRecord,
 } from "@/content/guards";
+import {
+  createFallbackMetaDescription,
+  createFallbackMetaTitle,
+} from "@/lib/metadata";
 import { personalBrandName } from "@/content/entity-seo";
 import { mapMediaImage } from "@/content/media";
 import {
@@ -191,8 +195,11 @@ function mapArticleSummaryFields(
     updatedAt: value.updatedAt,
     ...mapAuthor(value.author),
     seo: {
-      title: getText(value.seo?.metaTitle) ?? title,
-      description: getText(value.seo?.metaDescription) ?? excerpt,
+      title: getText(value.seo?.metaTitle) ?? createFallbackMetaTitle(title),
+      description:
+        getText(value.seo?.metaDescription) ??
+        createFallbackMetaDescription(excerpt) ??
+        excerpt,
       ...mapCanonical(value.seo?.canonical),
       index: value.seo?.index !== false,
       follow: value.seo?.follow !== false,

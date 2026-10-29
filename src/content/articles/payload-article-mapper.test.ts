@@ -81,7 +81,8 @@ test("a complete published article maps to the public shape", (t) => {
     width: 1600,
     height: 900,
   });
-  assert.equal(mapped.seo.title, "Kadıköy’de yaşam");
+  // No SEO title in the CMS: the title gets the brand suffix (SEO-PERF-2).
+  assert.equal(mapped.seo.title, "Kadıköy’de yaşam | Şaban Durali");
   assert.equal(mapped.seo.openGraphImage, mediaDocument.url);
   assert.equal(toPublicArticleSummary(mapped).summary, mapped.summary);
   assert.deepEqual(toPublicArticleTranslation(mapped), {
