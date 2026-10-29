@@ -68,6 +68,7 @@ import {
   denyAnonymousRestReads,
   editorialFieldRead,
 } from "../lib/payloadAccess";
+import { ensurePublishedAt } from "../lib/publishedAt";
 import {
   preventDeletingLastAdmin,
   preventDemotingLastAdmin,
@@ -1368,5 +1369,16 @@ test("ARCHITECTURE-4: book validation errors are built in one place", () => {
     "assertValidTranslation",
   ]) {
     assert.match(source, new RegExp(`await ${rule}\\(`), rule);
+  }
+});
+
+test("articles, pages and photos run the shared publishedAt hook", () => {
+  // Every public read filters on `publishedAt <= now`, so a published record
+  // without a date silently leaves the site (CORRECTNESS-4).
+  for (const collection of [Articles, Pages, Photos]) {
+    assert.ok(
+      collection.hooks?.beforeChange?.includes(ensurePublishedAt),
+      collection.slug,
+    );
   }
 });

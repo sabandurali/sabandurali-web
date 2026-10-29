@@ -367,7 +367,8 @@ export const protectPublishedHomePage: CollectionBeforeOperationHook = async ({
   const values = new Map<string, unknown>(Object.entries(args));
   const data = values.get("data");
   const id = values.get("id");
-  const where = values.get("where");
+  // A bulk update's `where`, already parsed and typed by Payload.
+  const where = "where" in args ? args.where : undefined;
   const unpublishAllLocales = values.get("unpublishAllLocales");
   const options = {
     draft: values.get("draft") === true,
@@ -387,8 +388,7 @@ export const protectPublishedHomePage: CollectionBeforeOperationHook = async ({
     typeof id === "string" || typeof id === "number"
       ? { id: { equals: id } }
       : isRecord(where)
-        ? // A bulk update's `where`, already parsed by Payload.
-          (where as Where)
+        ? where
         : null;
 
   if (target === null) return args;
