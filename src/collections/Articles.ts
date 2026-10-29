@@ -22,6 +22,8 @@ import {
   imageMediaFilter,
   isHttpsUrl,
   validateOptionalSiteCanonical,
+  SEO_DESCRIPTION_MAX_LENGTH,
+  SEO_TITLE_MAX_LENGTH,
 } from "@/collections/validation";
 import { getText, isRecord } from "@/content/guards";
 
@@ -296,13 +298,13 @@ export const Articles: CollectionConfig = {
           name: "metaTitle",
           type: "text",
           localized: true,
-          maxLength: 60,
+          maxLength: SEO_TITLE_MAX_LENGTH,
         },
         {
           name: "metaDescription",
           type: "textarea",
           localized: true,
-          maxLength: 160,
+          maxLength: SEO_DESCRIPTION_MAX_LENGTH,
         },
         {
           name: "canonical",

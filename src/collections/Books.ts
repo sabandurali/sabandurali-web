@@ -20,6 +20,8 @@ import { getBookPublicationIssues } from "@/collections/bookPublication";
 import {
   imageMediaFilter,
   validateOptionalSiteCanonical,
+  SEO_DESCRIPTION_MAX_LENGTH,
+  SEO_TITLE_MAX_LENGTH,
 } from "@/collections/validation";
 import { getRelationshipID, getText, isRecord } from "@/content/guards";
 import {
@@ -92,6 +94,148 @@ function normalizeNestedSlugs(value: unknown, sourceField: string): unknown {
   });
 }
 
+/** One slug per language: the public route is `/<language>/kitaplar/<slug>`. */
+async function assertUniqueSlugPerLanguage(
+  req: PayloadRequest,
+  slug: string,
+  language: string | null,
+  currentID: string | null,
+): Promise<void> {
+  if (slug === "" || language === null) return;
+
+  const duplicate = await req.payload.find({
+    collection: "books",
+    depth: 0,
+    limit: 1,
+    overrideAccess: true,
+    pagination: false,
+    req,
+    where: {
+      and: [
+        { slug: { equals: slug } },
+        { language: { equals: language } },
+        ...(currentID === null ? [] : [{ id: { not_equals: currentID } }]),
+      ],
+    },
+  });
+
+  if (duplicate.docs.length > 0) {
+    throwBookValidationError(
+      req,
+      [
+        {
+          message:
+            "Bu dilde aynı slug değerine sahip başka bir kitap incelemesi var.",
+          path: "slug",
+        },
+      ],
+      currentID,
+    );
+  }
+}
+
+/** An ISBN (10 or 13) belongs to one review across both languages. */
+async function assertUniqueIsbn(
+  req: PayloadRequest,
+  data: Record<string, unknown>,
+  currentID: string | null,
+): Promise<void> {
+  const isbnValues = [getText(data.isbn10), getText(data.isbn13)].filter(
+    (value): value is string => value !== null,
+  );
+  if (isbnValues.length === 0) return;
+
+  const duplicate = await req.payload.find({
+    collection: "books",
+    depth: 0,
+    limit: 1,
+    overrideAccess: true,
+    pagination: false,
+    req,
+    where: {
+      and: [
+        {
+          or: isbnValues.flatMap((isbn): Where[] => [
+            { isbn10: { equals: isbn } },
+            { isbn13: { equals: isbn } },
+          ]),
+        },
+        ...(currentID === null ? [] : [{ id: { not_equals: currentID } }]),
+      ],
+    },
+  });
+
+  if (duplicate.docs.length > 0) {
+    throwBookValidationError(
+      req,
+      [
+        {
+          message: "Bu ISBN değerine sahip başka bir kitap incelemesi var.",
+          path: data.isbn13 ? "isbn13" : "isbn10",
+        },
+      ],
+      currentID,
+    );
+  }
+}
+
+/**
+ * A translation is another review in the other language, and translations
+ * are 1:1 pairs. Otherwise the reverse lookup that builds hreflang links
+ * finds several candidates and picks one at random.
+ */
+async function assertValidTranslation(
+  req: PayloadRequest,
+  translationID: string | null,
+  language: string | null,
+  currentID: string | null,
+): Promise<void> {
+  if (translationID === null) return;
+
+  const refuse = (message: string): never =>
+    throwBookValidationError(
+      req,
+      [{ message, path: "translation" }],
+      currentID,
+    );
+
+  if (translationID === currentID) {
+    refuse("Bir kayıt kendi çevirisi olarak seçilemez.");
+  }
+
+  const translation = await req.payload.findByID({
+    collection: "books",
+    depth: 0,
+    id: translationID,
+    overrideAccess: true,
+    req,
+  });
+
+  if (language !== null && getText(translation.language) === language) {
+    refuse("Çeviri kaydı mevcut kayıttan farklı bir dilde olmalıdır.");
+  }
+
+  const targetsOwnTranslation = getRelationshipID(translation.translation);
+  if (targetsOwnTranslation !== null && targetsOwnTranslation !== currentID) {
+    refuse(
+      "Seçilen kayıt başka bir incelemeye çeviri olarak bağlı. Önce o bağlantıyı kaldırın.",
+    );
+  }
+
+  if ((await findBooksTranslatedAs(req, translationID, currentID)).length > 0) {
+    refuse("Seçilen kayıt başka bir incelemenin çevirisi olarak zaten seçili.");
+  }
+
+  if (
+    currentID !== null &&
+    (await findBooksTranslatedAs(req, currentID, translationID)).length > 0
+  ) {
+    refuse(
+      "Bu inceleme başka bir kaydın çevirisi olarak bağlı. Çeviri olarak o kaydı seçin veya önce o bağlantıyı kaldırın.",
+    );
+  }
+}
+
 export const normalizeAndValidateBook: CollectionBeforeValidateHook = async ({
   data,
   operation,
@@ -123,188 +267,14 @@ export const normalizeAndValidateBook: CollectionBeforeValidateHook = async ({
     data[field] = value === null ? null : normalizeIsbn(value);
   }
 
-  if (slug !== "" && language !== null) {
-    const where: Where = {
-      and: [
-        { slug: { equals: slug } },
-        { language: { equals: language } },
-        ...(currentID === null ? [] : [{ id: { not_equals: currentID } }]),
-      ],
-    };
-    const duplicate = await req.payload.find({
-      collection: "books",
-      depth: 0,
-      limit: 1,
-      overrideAccess: true,
-      pagination: false,
-      req,
-      where,
-    });
-
-    if (duplicate.docs.length > 0) {
-      throw new ValidationError(
-        {
-          collection: "books",
-          errors: [
-            {
-              message:
-                "Bu dilde aynı slug değerine sahip başka bir kitap incelemesi var.",
-              path: "slug",
-            },
-          ],
-          id: currentID ?? undefined,
-          req,
-        },
-        req.t,
-      );
-    }
-  }
-
-  const isbnValues = [getText(data.isbn10), getText(data.isbn13)].filter(
-    (value): value is string => value !== null,
+  await assertUniqueSlugPerLanguage(req, slug, language, currentID);
+  await assertUniqueIsbn(req, data, currentID);
+  await assertValidTranslation(
+    req,
+    getRelationshipID(data.translation),
+    language,
+    currentID,
   );
-
-  if (isbnValues.length > 0) {
-    const duplicate = await req.payload.find({
-      collection: "books",
-      depth: 0,
-      limit: 1,
-      overrideAccess: true,
-      pagination: false,
-      req,
-      where: {
-        and: [
-          {
-            or: isbnValues.flatMap((isbn): Where[] => [
-              { isbn10: { equals: isbn } },
-              { isbn13: { equals: isbn } },
-            ]),
-          },
-          ...(currentID === null ? [] : [{ id: { not_equals: currentID } }]),
-        ],
-      },
-    });
-
-    if (duplicate.docs.length > 0) {
-      throw new ValidationError(
-        {
-          collection: "books",
-          errors: [
-            {
-              message: "Bu ISBN değerine sahip başka bir kitap incelemesi var.",
-              path: data.isbn13 ? "isbn13" : "isbn10",
-            },
-          ],
-          id: currentID ?? undefined,
-          req,
-        },
-        req.t,
-      );
-    }
-  }
-
-  const translationID = getRelationshipID(data.translation);
-
-  if (translationID !== null) {
-    if (translationID === currentID) {
-      throw new ValidationError(
-        {
-          collection: "books",
-          errors: [
-            {
-              message: "Bir kayıt kendi çevirisi olarak seçilemez.",
-              path: "translation",
-            },
-          ],
-          id: currentID ?? undefined,
-          req,
-        },
-        req.t,
-      );
-    }
-
-    const translation = await req.payload.findByID({
-      collection: "books",
-      depth: 0,
-      id: translationID,
-      overrideAccess: true,
-      req,
-    });
-
-    if (language !== null && getText(translation.language) === language) {
-      throw new ValidationError(
-        {
-          collection: "books",
-          errors: [
-            {
-              message:
-                "Çeviri kaydı mevcut kayıttan farklı bir dilde olmalıdır.",
-              path: "translation",
-            },
-          ],
-          id: currentID ?? undefined,
-          req,
-        },
-        req.t,
-      );
-    }
-
-    // Translations are 1:1 pairs. Otherwise the reverse lookup that builds
-    // hreflang links finds several candidates and picks one at random.
-    const targetsOwnTranslation = getRelationshipID(translation.translation);
-
-    if (targetsOwnTranslation !== null && targetsOwnTranslation !== currentID) {
-      throwBookValidationError(
-        req,
-        [
-          {
-            message:
-              "Seçilen kayıt başka bir incelemeye çeviri olarak bağlı. Önce o bağlantıyı kaldırın.",
-            path: "translation",
-          },
-        ],
-        currentID,
-      );
-    }
-
-    if (
-      (await findBooksTranslatedAs(req, translationID, currentID)).length > 0
-    ) {
-      throwBookValidationError(
-        req,
-        [
-          {
-            message:
-              "Seçilen kayıt başka bir incelemenin çevirisi olarak zaten seçili.",
-            path: "translation",
-          },
-        ],
-        currentID,
-      );
-    }
-
-    if (currentID !== null) {
-      const linkedFrom = await findBooksTranslatedAs(
-        req,
-        currentID,
-        translationID,
-      );
-
-      if (linkedFrom.length > 0) {
-        throwBookValidationError(
-          req,
-          [
-            {
-              message:
-                "Bu inceleme başka bir kaydın çevirisi olarak bağlı. Çeviri olarak o kaydı seçin veya önce o bağlantıyı kaldırın.",
-              path: "translation",
-            },
-          ],
-          currentID,
-        );
-      }
-    }
-  }
 
   return data;
 };
@@ -886,12 +856,14 @@ export const Books: CollectionConfig = {
                   name: "title",
                   type: "text",
                   label: "SEO başlığı",
+                  maxLength: SEO_TITLE_MAX_LENGTH,
                   required: true,
                 },
                 {
                   name: "description",
                   type: "textarea",
                   label: "SEO açıklaması",
+                  maxLength: SEO_DESCRIPTION_MAX_LENGTH,
                   required: true,
                 },
                 {

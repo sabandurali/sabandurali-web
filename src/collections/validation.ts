@@ -8,6 +8,14 @@ import { getSafeHref } from "@/content/links";
  * that `node:test` covers it without a database.
  */
 
+/**
+ * Hard limits of every SEO title and description field (articles, pages,
+ * photos and book reviews), the lengths search results display. The admin
+ * guide's checklist asks for the same limits for every content type.
+ */
+export const SEO_TITLE_MAX_LENGTH = 60;
+export const SEO_DESCRIPTION_MAX_LENGTH = 160;
+
 /** Upload and relationship fields that render as images accept only images. */
 export const imageMediaFilter: Where = {
   mimeType: {

@@ -63,6 +63,7 @@ import {
   refusePasswordResetWithoutEmail,
 } from "./Users";
 import { Navigation, getNavigationPageFilter } from "../globals/Navigation";
+import { SEO_DESCRIPTION_MAX_LENGTH, SEO_TITLE_MAX_LENGTH } from "./validation";
 import {
   denyAnonymousRestReads,
   editorialFieldRead,
@@ -1310,4 +1311,60 @@ test("ARCHITECTURE-3: book collections use the shared content guards, not local 
     publication,
     /\bgetFiniteNumber\b[\s\S]*?from "@\/content\/guards"/,
   );
+});
+
+test("ARCHITECTURE-8: every SEO title and description has the same 60/160 limit", () => {
+  assert.equal(SEO_TITLE_MAX_LENGTH, 60);
+  assert.equal(SEO_DESCRIPTION_MAX_LENGTH, 160);
+
+  const seoLimits = (collection: CollectionConfig) => {
+    const seo = findField(collection, "seo");
+    assert.ok(seo.type === "group", collection.slug);
+    return Object.fromEntries(
+      seo.fields.flatMap((field) =>
+        "name" in field && (field.type === "text" || field.type === "textarea")
+          ? [[field.name, field.maxLength]]
+          : [],
+      ),
+    );
+  };
+
+  for (const collection of [Articles, Photos]) {
+    const limits = seoLimits(collection);
+    assert.equal(limits.metaTitle, SEO_TITLE_MAX_LENGTH, collection.slug);
+    assert.equal(
+      limits.metaDescription,
+      SEO_DESCRIPTION_MAX_LENGTH,
+      collection.slug,
+    );
+  }
+  for (const collection of [Pages, Books]) {
+    const limits = seoLimits(collection);
+    assert.equal(limits.title, SEO_TITLE_MAX_LENGTH, collection.slug);
+    assert.equal(
+      limits.description,
+      SEO_DESCRIPTION_MAX_LENGTH,
+      collection.slug,
+    );
+  }
+});
+
+test("ARCHITECTURE-4: book validation errors are built in one place", () => {
+  const source = readFileSync(
+    path.resolve(appDirectory, "../collections/Books.ts"),
+    "utf8",
+  );
+  assert.equal(
+    source.match(/new ValidationError\(/g)?.length,
+    1,
+    "only throwBookValidationError constructs a ValidationError",
+  );
+  // The rules are separate functions the hook calls in order.
+  for (const rule of [
+    "assertUniqueSlugPerLanguage",
+    "assertUniqueIsbn",
+    "assertValidTranslation",
+  ]) {
+    assert.match(source, new RegExp(`await ${rule}\\(`), rule);
+  }
 });

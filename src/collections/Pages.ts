@@ -8,7 +8,11 @@ import {
   type Where,
 } from "payload";
 import { pageBlocks } from "@/blocks/pageBlocks";
-import { imageMediaFilter } from "@/collections/validation";
+import {
+  SEO_DESCRIPTION_MAX_LENGTH,
+  SEO_TITLE_MAX_LENGTH,
+  imageMediaFilter,
+} from "@/collections/validation";
 import { getText, isRecord } from "@/content/guards";
 import type { SiteLocale } from "@/content/locales";
 import { isRenderableHomeBlock } from "@/content/pages/payload-page-mapper";
@@ -567,13 +571,13 @@ export const Pages: CollectionConfig = {
                   name: "title",
                   type: "text",
                   label: "SEO başlığı",
-                  maxLength: 60,
+                  maxLength: SEO_TITLE_MAX_LENGTH,
                 },
                 {
                   name: "description",
                   type: "textarea",
                   label: "SEO açıklaması",
-                  maxLength: 160,
+                  maxLength: SEO_DESCRIPTION_MAX_LENGTH,
                 },
                 {
                   name: "index",
