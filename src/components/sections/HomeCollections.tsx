@@ -6,7 +6,7 @@ import type { PublicArticleSummary } from "@/content/articles/public-types";
 import { getArticlePath } from "@/content/articles/article-routes";
 import { getAvailableLocalBookImage } from "@/content/books/book-images";
 import { getBookReviewPath } from "@/content/books/book-routes";
-import type { BookReview } from "@/content/books/types";
+import type { PublicBookReview } from "@/content/books/public-types";
 import { getImageCredit } from "@/content/media";
 import { getPhotoPath } from "@/content/photos/photo-routes";
 import type { PublicPhoto } from "@/content/photos/types";
@@ -98,7 +98,7 @@ export function HomeBookList({
   books,
   locale,
 }: {
-  books: readonly BookReview[];
+  books: readonly PublicBookReview[];
   locale: SiteLocale;
 }) {
   return (
