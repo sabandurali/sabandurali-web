@@ -64,7 +64,10 @@ export function shouldDismissOnOutside<T>(
   target: T | null,
 ): boolean {
   return (
-    isOpen && container !== null && target !== null && !container.contains(target)
+    isOpen &&
+    container !== null &&
+    target !== null &&
+    !container.contains(target)
   );
 }
 
