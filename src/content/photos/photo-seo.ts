@@ -5,6 +5,7 @@ import {
   personalBrandName,
   serializeJsonLd,
 } from "@/content/entity-seo";
+import { historicalDistrictPhotoCategory } from "@/content/photos/photo-credit-policy";
 import { getPhotoPath } from "@/content/photos/photo-routes";
 import type {
   PublicPhoto,
@@ -51,15 +52,38 @@ export function createPhotoMetadata(
   });
 }
 
+/** The explicit value an editor enters when the creator is not known. */
+const unknownPhotographer = "Bilinmiyor";
+
+/**
+ * The creator as a schema.org entity, only when the credit names a person.
+ * The owner is the site's Person entity. A historical archive credit can
+ * name a studio or agency (Abdullah Frères, Underwood & Underwood) or no
+ * one, and an unknown creator is not a person called "Bilinmiyor", so
+ * neither is typed as a Person; the credit text still names them.
+ */
+function getPhotoCreator(photo: PublicPhoto, photographer: string) {
+  if (photographer === personalBrandName) return createPersonReference();
+  if (
+    photographer === unknownPhotographer ||
+    photo.districtPhotoCategory === historicalDistrictPhotoCategory
+  ) {
+    return undefined;
+  }
+  return { "@type": "Person", name: photographer };
+}
+
 /**
  * ImageObject for a photo page. Only what the CMS states is published: the
- * photographer is the creator and credit, and the free-text credit/licence
- * field is the copyright notice. `license` and `acquireLicensePage` need
- * verified licence URLs, which the photo model does not hold, so they are
- * left out rather than guessed.
+ * photographer is the credit (and the creator when it names a person), and
+ * the free-text credit/licence field is the copyright notice. A historical
+ * photo is credited with its required attribution. `license` and
+ * `acquireLicensePage` need verified licence URLs, which the photo model
+ * does not hold, so they are left out rather than guessed.
  */
 export function createPhotoJsonLd(photo: PublicPhoto) {
   const photographer = photo.photographer.trim();
+  const creditLicense = photo.creditLicense?.trim() || null;
   const url = getAbsoluteUrl(getPhotoPath(photo.slug, photo.language));
 
   return {
@@ -73,12 +97,13 @@ export function createPhotoJsonLd(photo: PublicPhoto) {
     caption: photo.image.alt,
     width: photo.image.width,
     height: photo.image.height,
-    creator:
-      photographer === personalBrandName
-        ? createPersonReference()
-        : { "@type": "Person", name: photographer },
-    creditText: photographer,
-    copyrightNotice: photo.creditLicense ?? undefined,
+    creator: getPhotoCreator(photo, photographer),
+    creditText:
+      photo.districtPhotoCategory === historicalDistrictPhotoCategory &&
+      creditLicense !== null
+        ? creditLicense
+        : photographer,
+    copyrightNotice: creditLicense ?? undefined,
     datePublished: photo.publishedAt,
     dateModified: getContentLastModifiedIso(photo),
     inLanguage: photo.language === "tr" ? "tr-TR" : "en",

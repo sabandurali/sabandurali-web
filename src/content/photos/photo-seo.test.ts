@@ -188,7 +188,8 @@ test("SEO-PERF-3: another creator is named as given and no licence is guessed", 
     }),
   );
 
-  assert.deepEqual(jsonLd.creator, { "@type": "Person", name: "Bilinmiyor" });
+  // An unknown creator is credited as entered, never typed as a person.
+  assert.equal(jsonLd.creator, undefined);
   assert.equal(jsonLd.creditText, "Bilinmiyor");
   assert.equal(jsonLd.copyrightNotice, undefined);
   assert.equal(
@@ -200,6 +201,29 @@ test("SEO-PERF-3: another creator is named as given and no licence is guessed", 
   assert.equal(jsonLd.inLanguage, "en");
   assert.equal("license" in jsonLd, false);
   assert.equal("acquireLicensePage" in jsonLd, false);
+});
+
+test("SEO-PERF-3: a named photographer is the creator Person", () => {
+  const jsonLd = createPhotoJsonLd(photo({ photographer: "Ayşe Yılmaz" }));
+
+  assert.deepEqual(jsonLd.creator, { "@type": "Person", name: "Ayşe Yılmaz" });
+  assert.equal(jsonLd.creditText, "Ayşe Yılmaz");
+});
+
+test("SEO-PERF-3: a historical photo is credited with its attribution, not as a Person", () => {
+  const attribution =
+    "Abdullah Frères · Library of Congress / Wikimedia Commons · Public domain";
+  const jsonLd = createPhotoJsonLd(
+    photo({
+      districtPhotoCategory: "tarih",
+      photographer: "Abdullah Frères",
+      creditLicense: attribution,
+    }),
+  );
+
+  assert.equal(jsonLd.creator, undefined);
+  assert.equal(jsonLd.creditText, attribution);
+  assert.equal(jsonLd.copyrightNotice, attribution);
 });
 
 test("SEO-PERF-3: serialized photo JSON-LD cannot close the script element", () => {
