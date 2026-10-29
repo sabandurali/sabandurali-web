@@ -65,18 +65,18 @@ function getLexicalData(article: PublicArticle): unknown {
 }
 
 /**
- * Whether an article version may be shown and linked. Only English versions
- * are checked; the Turkish rich text is their source. Rejections are logged
- * so editors can see why a translation is not online.
+ * Whether an article version may be shown and linked, given its rich text
+ * and the Turkish rich text. Only English versions are checked; the Turkish
+ * rich text is their source. Rejections are logged so editors can see why a
+ * translation is not online.
  */
-export function isOfferedArticleVersion(
-  article: PublicArticle,
+export function isOfferedArticleContent(
+  article: Pick<PublicArticle, "id" | "language">,
+  content: unknown,
   turkishContent: unknown,
 ): boolean {
   if (article.language !== "en") return true;
-  if (isCompleteTranslation(turkishContent, getLexicalData(article))) {
-    return true;
-  }
+  if (isCompleteTranslation(turkishContent, content)) return true;
 
   reportContentIssue({
     scope: "articles",
@@ -86,6 +86,18 @@ export function isOfferedArticleVersion(
       "translation is incomplete compared with the Turkish source and is not offered",
   });
   return false;
+}
+
+/** `isOfferedArticleContent` for a loaded article. */
+export function isOfferedArticleVersion(
+  article: PublicArticle,
+  turkishContent: unknown,
+): boolean {
+  return isOfferedArticleContent(
+    article,
+    getLexicalData(article),
+    turkishContent,
+  );
 }
 
 /** The pair form used by article pages, where both versions are loaded. */

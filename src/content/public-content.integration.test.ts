@@ -316,6 +316,78 @@ test("article reads filter in the database and prepare rich text for the page", 
   );
 });
 
+test("lists read summaries without the rich text and require a body", async () => {
+  // The body is removed at the adapter level, bypassing the publish
+  // validation that normally guarantees it.
+  const bodiless = await payload.create({
+    collection: "articles",
+    draft: true,
+    locale: "tr",
+    data: {
+      title: "Gövdesiz yazı",
+      slug: "govdesiz",
+      excerpt: "Özet",
+      articleType: "article",
+      publishedAt: minutesAgo(5),
+      _status: "draft",
+    } as never,
+  });
+  await payload.db.updateOne({
+    collection: "articles",
+    id: bodiless.id,
+    data: { _status: "published" },
+  });
+  const listed = await articles.listPublished("tr");
+  assert.deepEqual(slugs(listed), ["kaynak", "hedef", "kadikoy-arastirmasi"]);
+  for (const item of listed) assert.equal("content" in item, false);
+  assert.equal(JSON.stringify(listed).includes("Gövde metni"), false);
+  assert.deepEqual(
+    slugs(
+      await articles.listDistrictArticles(
+        "district-news",
+        "kadikoy",
+        "tr",
+        new Date(),
+        1,
+      ),
+    ),
+    ["kadikoy-haberi"],
+  );
+});
+
+test("English rich text links only to complete translations", async () => {
+  const english = await createArticle({
+    title: "Bağlantılı yazı",
+    slug: "baglantili",
+    content: lexical(
+      block("paragraph", [
+        text("Hedef ve kaynak."),
+        internalLink(target.id, "hedef"),
+        internalLink(source.id, "kaynak"),
+      ]),
+    ),
+  });
+  await translateArticle(english.id, {
+    title: "Linked article",
+    slug: "linked",
+    excerpt: "A sourced summary",
+    content: lexical(
+      block("paragraph", [
+        text("Target and source."),
+        internalLink(target.id, "target"),
+        internalLink(source.id, "source"),
+      ]),
+    ),
+  });
+
+  const article = await articles.findPublishedBySlug("linked", "en");
+  const serialized = JSON.stringify(article?.content);
+  assert.ok(serialized.includes('"url":"/en/articles/target"'));
+  // `source` is a half-finished translation that its own page refuses.
+  assert.equal(serialized.includes("/en/articles/source"), false);
+  await payload.delete({ collection: "articles", id: english.id });
+});
+
 test("English lists, pages and links only offer complete translations", async (t) => {
   const warn = t.mock.method(console, "warn", () => {});
 

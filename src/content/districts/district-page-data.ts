@@ -1,8 +1,8 @@
 import "server-only";
 import { cache } from "react";
 import {
-  getDistrictNews,
   getDistrictResearch,
+  getLatestDistrictNews,
 } from "@/content/articles/article-data-source";
 import {
   getDistrictGuide,
@@ -14,6 +14,12 @@ import {
   type DistrictSections,
 } from "@/content/districts/district-sections";
 import { getDistrictPhotos } from "@/content/photos/photo-data-source";
+
+/**
+ * News items the district page shows (`DistrictGuideArticle`); the full list
+ * is on the paginated news page.
+ */
+export const DISTRICT_PAGE_NEWS_LIMIT = 3;
 
 export type DistrictPageData = DistrictSections & {
   guide: DistrictGuide | null;
@@ -33,7 +39,8 @@ export const getDistrictPageData = cache(
       settleDistrictSections(district, {
         photos: () => getDistrictPhotos(district, "tr"),
         research: () => getDistrictResearch(district, "tr"),
-        news: () => getDistrictNews(district, "tr"),
+        news: () =>
+          getLatestDistrictNews(district, "tr", DISTRICT_PAGE_NEWS_LIMIT),
       }),
     ]);
 

@@ -11,6 +11,7 @@ import {
 } from "../rich-text/lexical-fixtures";
 import {
   mapPayloadArticle,
+  mapPayloadArticleSummary,
   toPublicArticleSummary,
   toPublicArticleTranslation,
 } from "./payload-article-mapper";
@@ -274,4 +275,22 @@ test("the owner, blank authors and foreign canonicals fall back to defaults", (t
     assert.equal(mapped.seo.index, true);
     assert.equal(mapped.seo.follow, true);
   }
+});
+
+test("the list projection equals the summary of the full article without reading the body", (t) => {
+  silence(t);
+  const full = mapPayloadArticle(article(), "tr", now);
+  assert.ok(full);
+  const { content: _content, ...expected } = full;
+  void _content;
+
+  assert.deepEqual(
+    mapPayloadArticleSummary(article({ content: undefined }), "tr", now),
+    toPublicArticleSummary(full),
+  );
+  assert.deepEqual(toPublicArticleSummary(full), expected);
+  assert.equal(
+    mapPayloadArticleSummary(article({ _status: "draft" }), "tr", now),
+    null,
+  );
 });

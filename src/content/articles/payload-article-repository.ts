@@ -2,11 +2,11 @@ import "server-only";
 import { getPayload, type Where } from "payload";
 import config from "@payload-config";
 import { createPublicArticleConditions } from "@/content/articles/article-query-conditions";
-import { isOfferedArticleVersion } from "@/content/articles/article-translation";
+import { isOfferedArticleContent } from "@/content/articles/article-translation";
 import { getEnglishRichTextLinkContext } from "@/content/articles/offered-article-links";
 import {
   mapPayloadArticle,
-  toPublicArticleSummary,
+  mapPayloadArticleSummary,
 } from "@/content/articles/payload-article-mapper";
 import type {
   PublicArticle,
@@ -17,14 +17,29 @@ import type { ArticleLanguage } from "@/content/articles/types";
 const PAYLOAD_ARTICLE_PAGE_SIZE = 100;
 const PUBLIC_ARTICLE_SORT = ["-publishedAt", "id"];
 
+/** District news has no body by design; every other article needs one. */
+const HAS_BODY: Where = {
+  or: [
+    { articleType: { equals: "district-news" } },
+    { content: { exists: true } },
+  ],
+};
+
 export class PayloadPublicArticleRepository {
-  private async findMany(
+  /**
+   * List reads: every field but the rich text, which lists never show. The
+   * mapper cannot check the body then, so the query requires it to exist
+   * (publishing requires it to be meaningful). `limit` reads only the
+   * newest matches instead of every page.
+   */
+  private async findSummaries(
     locale: ArticleLanguage,
     conditions: Where[],
     now: Date,
-  ): Promise<PublicArticle[]> {
+    limit?: number,
+  ): Promise<PublicArticleSummary[]> {
     const payload = await getPayload({ config });
-    const articles: PublicArticle[] = [];
+    const articles: PublicArticleSummary[] = [];
     let page = 1;
     let totalPages = 1;
 
@@ -34,25 +49,21 @@ export class PayloadPublicArticleRepository {
         depth: 1,
         draft: false,
         fallbackLocale: false,
-        limit: PAYLOAD_ARTICLE_PAGE_SIZE,
+        limit: limit ?? PAYLOAD_ARTICLE_PAGE_SIZE,
         locale,
         overrideAccess: false,
         page,
+        select: { content: false },
         sort: PUBLIC_ARTICLE_SORT,
-        where: { and: conditions },
+        where: { and: [...conditions, HAS_BODY] },
       });
 
-      const links =
-        locale === "en"
-          ? await getEnglishRichTextLinkContext(result.docs)
-          : undefined;
-
       for (const document of result.docs) {
-        const article = mapPayloadArticle(document, locale, now, links);
+        const article = mapPayloadArticleSummary(document, locale, now);
         if (article !== null) articles.push(article);
       }
 
-      totalPages = result.totalPages;
+      totalPages = limit === undefined ? result.totalPages : 1;
       page += 1;
     }
 
@@ -91,54 +102,73 @@ export class PayloadPublicArticleRepository {
     return mapPayloadArticle(document, locale, now, links);
   }
 
+  /** Rich text of `ids` in `locale`, unpopulated (depth 0). */
+  private async readContent(
+    ids: string[],
+    locale: ArticleLanguage,
+  ): Promise<Map<string, unknown>> {
+    const payload = await getPayload({ config });
+    const result = await payload.find({
+      collection: "articles",
+      depth: 0,
+      draft: false,
+      fallbackLocale: false,
+      limit: ids.length,
+      locale,
+      overrideAccess: false,
+      pagination: false,
+      select: { content: true },
+      where: { id: { in: ids } },
+    });
+
+    return new Map(
+      result.docs.map((document) => [document.id, document.content]),
+    );
+  }
+
   /**
-   * English versions are compared with their Turkish source; one extra
-   * query per 100 articles selects only the Turkish rich text.
+   * English versions are compared with their Turkish source; two extra
+   * queries per 100 articles read only the English and Turkish rich text,
+   * without populating links or uploads.
    */
   private async withoutIncompleteTranslations(
-    articles: PublicArticle[],
-  ): Promise<PublicArticle[]> {
-    if (articles.length === 0) return articles;
-
-    const payload = await getPayload({ config });
-    const turkishContent = new Map<string, unknown>();
+    articles: PublicArticleSummary[],
+  ): Promise<PublicArticleSummary[]> {
+    const offered: PublicArticleSummary[] = [];
 
     for (let start = 0; start < articles.length; start += 100) {
-      const ids = articles.slice(start, start + 100).map(({ id }) => id);
-      const result = await payload.find({
-        collection: "articles",
-        depth: 0,
-        draft: false,
-        fallbackLocale: false,
-        limit: ids.length,
-        locale: "tr",
-        overrideAccess: false,
-        pagination: false,
-        select: { content: true },
-        where: { id: { in: ids } },
-      });
+      const batch = articles.slice(start, start + 100);
+      const ids = batch.map(({ id }) => id);
+      const [english, turkish] = await Promise.all([
+        this.readContent(ids, "en"),
+        this.readContent(ids, "tr"),
+      ]);
 
-      for (const document of result.docs) {
-        turkishContent.set(document.id, document.content);
+      for (const article of batch) {
+        if (
+          isOfferedArticleContent(
+            article,
+            english.get(article.id),
+            turkish.get(article.id),
+          )
+        ) {
+          offered.push(article);
+        }
       }
     }
 
-    return articles.filter((article) =>
-      isOfferedArticleVersion(article, turkishContent.get(article.id)),
-    );
+    return offered;
   }
 
   async listPublished(
     locale: ArticleLanguage,
     now: Date = new Date(),
   ): Promise<PublicArticleSummary[]> {
-    const articles = await this.findMany(
+    return this.findSummaries(
       locale,
       createPublicArticleConditions(now, { kind: "standalone" }),
       now,
     );
-
-    return articles.map(toPublicArticleSummary);
   }
 
   async listByCategory(
@@ -146,13 +176,11 @@ export class PayloadPublicArticleRepository {
     locale: ArticleLanguage,
     now: Date = new Date(),
   ): Promise<PublicArticleSummary[]> {
-    const articles = await this.findMany(
+    return this.findSummaries(
       locale,
       createPublicArticleConditions(now, { kind: "category", categorySlug }),
       now,
     );
-
-    return articles.map(toPublicArticleSummary);
   }
 
   async listDistrictArticles(
@@ -160,8 +188,9 @@ export class PayloadPublicArticleRepository {
     district: string,
     locale: ArticleLanguage,
     now: Date = new Date(),
+    limit?: number,
   ): Promise<PublicArticleSummary[]> {
-    const articles = await this.findMany(
+    return this.findSummaries(
       locale,
       createPublicArticleConditions(now, {
         kind: "district",
@@ -169,9 +198,8 @@ export class PayloadPublicArticleRepository {
         district,
       }),
       now,
+      limit,
     );
-
-    return articles.map(toPublicArticleSummary);
   }
 
   async findPublishedBySlug(
