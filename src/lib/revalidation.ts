@@ -49,7 +49,7 @@
  * rules.
  */
 import { getText, isRecord } from "@/content/guards";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import type {
   CollectionAfterChangeHook,
   CollectionAfterDeleteHook,
@@ -67,6 +67,7 @@ import {
   getDistrictNewsPath,
   getDistrictPath,
 } from "@/content/districts/district-routes";
+import { PHOTO_FACETS_CACHE_TAG } from "@/content/photos/photo-cache-tags";
 import { getPhotoPath, photoListPaths } from "@/content/photos/photo-routes";
 import { workspaces } from "@/content/workspaces";
 
@@ -89,6 +90,8 @@ export type RevalidatedCollection =
 type Language = "en" | "tr";
 
 type Revalidate = (path: string, type?: "layout" | "page") => void;
+
+type RevalidateTag = (tag: string, profile: { expire: number }) => void;
 
 type RevalidationLogger = Readonly<{ warn: (message: string) => void }>;
 
@@ -348,6 +351,24 @@ export function getCollectionRevalidationTargets(
   }
 }
 
+/**
+ * Data cache tags (`unstable_cache`) that `collection` feeds. Paths only
+ * refresh rendered pages; cached data that a per-request page reads needs
+ * its tag invalidated too.
+ */
+export function getCollectionRevalidationTags(
+  collection: RevalidatedCollection,
+): string[] {
+  switch (collection) {
+    case "photo-collections":
+    case "photos":
+    case "tags":
+      return [PHOTO_FACETS_CACHE_TAG];
+    default:
+      return [];
+  }
+}
+
 /** The header and footer render on every page. */
 export function getNavigationRevalidationTargets(): RevalidationTarget[] {
   return [ALL_PAGES];
@@ -422,6 +443,33 @@ export function revalidateTargets(
   }
 }
 
+/**
+ * Invalidates data cache tags at once (`expire: 0`: the next read is a
+ * fresh query, never stale filter options). Same failure rules as
+ * `revalidateTargets`.
+ */
+export function revalidateTags(
+  tags: readonly string[],
+  {
+    logger,
+    revalidate = revalidateTag,
+  }: { logger?: RevalidationLogger; revalidate?: RevalidateTag } = {},
+): void {
+  for (const tag of tags) {
+    try {
+      revalidate(tag, { expire: 0 });
+    } catch (error) {
+      if (isOutsideNextRequest(error)) return;
+
+      logger?.warn(
+        `[revalidation] tag ${tag} was not revalidated: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+      );
+    }
+  }
+}
+
 function getRequestLanguage(req: PayloadRequest): Language {
   return req.locale === "en" ? "en" : "tr";
 }
@@ -433,16 +481,20 @@ function getLogger(req: PayloadRequest): RevalidationLogger {
 type HookOptions = Readonly<{
   /** Replaces Next.js `revalidatePath`; tests pass a recorder. */
   revalidate?: Revalidate;
+  /** Replaces Next.js `revalidateTag`; tests pass a recorder. */
+  revalidateTag?: RevalidateTag;
 }>;
 
 /** `afterChange` and `afterDelete` hooks that revalidate `collection`. */
 export function createRevalidationHooks(
   collection: RevalidatedCollection,
-  { revalidate }: HookOptions = {},
+  { revalidate, revalidateTag: revalidateCacheTag }: HookOptions = {},
 ): {
   afterChange: CollectionAfterChangeHook;
   afterDelete: CollectionAfterDeleteHook;
 } {
+  const tags = getCollectionRevalidationTags(collection);
+
   return {
     afterChange: ({ doc, operation, previousDoc, req }) => {
       if (shouldRevalidateChange({ doc, operation, previousDoc })) {
@@ -454,6 +506,10 @@ export function createRevalidationHooks(
           ),
           { logger: getLogger(req), revalidate },
         );
+        revalidateTags(tags, {
+          logger: getLogger(req),
+          revalidate: revalidateCacheTag,
+        });
       }
 
       return doc;
@@ -467,6 +523,10 @@ export function createRevalidationHooks(
         ),
         { logger: getLogger(req), revalidate },
       );
+      revalidateTags(tags, {
+        logger: getLogger(req),
+        revalidate: revalidateCacheTag,
+      });
 
       return doc;
     },

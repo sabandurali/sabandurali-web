@@ -9,6 +9,11 @@ import type {
   PublicPhotoTag,
 } from "@/content/photos/types";
 
+export type PhotoFacets = {
+  collections: PublicPhotoCollection[];
+  tags: PublicPhotoTag[];
+};
+
 /**
  * Filter options of the photo list: every collection and tag used by at
  * least one public photo, de-duplicated and sorted. The input is the light
@@ -17,7 +22,7 @@ import type {
 export function collectPhotoFacets(
   documents: ReadonlyArray<unknown>,
   locale: PhotoLanguage,
-): { collections: PublicPhotoCollection[]; tags: PublicPhotoTag[] } {
+): PhotoFacets {
   const collections = new Map<string, PublicPhotoCollection>();
   const tags = new Map<string, PublicPhotoTag>();
 

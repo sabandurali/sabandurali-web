@@ -16,7 +16,9 @@ import {
   createNavigationRevalidationHook,
   createRevalidationHooks,
   getCollectionRevalidationTargets,
+  getCollectionRevalidationTags,
   getNavigationRevalidationTargets,
+  revalidateTags,
   revalidateTargets,
   shouldRevalidateChange,
   type RevalidatedCollection,
@@ -616,4 +618,38 @@ test("the time-based safety net covers every public route", () => {
       `${path.relative(appDirectory, file)}: on-demand revalidation keeps it fresh`,
     );
   }
+});
+
+test("photo, collection and tag writes invalidate the cached photo filter options", () => {
+  for (const collection of ["photos", "photo-collections", "tags"] as const) {
+    assert.deepEqual(getCollectionRevalidationTags(collection), [
+      "photo-facets",
+    ]);
+  }
+  for (const collection of ["articles", "books", "pages", "media"] as const) {
+    assert.deepEqual(getCollectionRevalidationTags(collection), []);
+  }
+
+  const tags: Array<[string, { expire: number }]> = [];
+  const hooks = createRevalidationHooks("tags", {
+    revalidate: () => {},
+    revalidateTag: (tag, profile) => tags.push([tag, profile]),
+  });
+  afterDelete(hooks.afterDelete, { slug: "kule" });
+  afterChange(hooks.afterChange, {
+    doc: { slug: "kule" },
+    operation: "update",
+    previousDoc: { slug: "kule" },
+  });
+  assert.deepEqual(tags, [
+    ["photo-facets", { expire: 0 }],
+    ["photo-facets", { expire: 0 }],
+  ]);
+
+  // Outside a Next.js request the call is a silent no-op.
+  revalidateTags(["photo-facets"], {
+    revalidate: () => {
+      throw new Error("Invariant: static generation store missing");
+    },
+  });
 });

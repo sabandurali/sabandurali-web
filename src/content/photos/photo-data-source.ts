@@ -1,6 +1,8 @@
 import "server-only";
+import { unstable_cache } from "next/cache";
 import { cache } from "react";
 import { PayloadPublicPhotoRepository } from "@/content/photos/payload-photo-repository";
+import { PHOTO_FACETS_CACHE_TAG } from "@/content/photos/photo-cache-tags";
 import type {
   PhotoLanguage,
   PhotoListFilters,
@@ -27,13 +29,31 @@ function emptyList(): PublishedPhotoList {
   };
 }
 
+/**
+ * The list's filter options scan every public photo and do not depend on
+ * the URL, so they are cached across requests: photo, photo collection and
+ * tag writes invalidate the tag (`src/lib/revalidation.ts`), the hour is the
+ * safety net for scheduled publishing. `unstable_cache` is used because the
+ * app does not enable Cache Components (`use cache`).
+ */
+const getCachedPhotoFacets = unstable_cache(
+  (locale: PhotoLanguage) => payloadPhotoRepository.listFacets(locale),
+  ["photo-facets"],
+  { tags: [PHOTO_FACETS_CACHE_TAG], revalidate: 3600 },
+);
+
 /** One list page; collection and tag filters run in the database. */
 export async function getPublishedPhotos(
   locale: PhotoLanguage,
   filters: PhotoListFilters = {},
 ): Promise<PublishedPhotoList> {
   return isPayloadSource()
-    ? payloadPhotoRepository.listPublished(locale, filters)
+    ? payloadPhotoRepository.listPublished(
+        locale,
+        filters,
+        new Date(),
+        getCachedPhotoFacets,
+      )
     : emptyList();
 }
 
