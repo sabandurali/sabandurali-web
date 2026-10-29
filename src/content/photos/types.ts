@@ -1,4 +1,6 @@
-export type PhotoLanguage = "tr" | "en";
+import type { SiteLocale } from "@/content/locales";
+
+export type PhotoLanguage = SiteLocale;
 
 export type PublicPhotoImage = {
   src: string;

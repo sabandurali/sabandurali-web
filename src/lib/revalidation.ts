@@ -49,6 +49,7 @@
  * rules.
  */
 import { getText, isRecord } from "@/content/guards";
+import { isSiteLocale, siteLocales, type SiteLocale } from "@/content/locales";
 import { revalidatePath, revalidateTag } from "next/cache";
 import type {
   CollectionAfterChangeHook,
@@ -87,7 +88,7 @@ export type RevalidatedCollection =
   | "photos"
   | "tags";
 
-type Language = "en" | "tr";
+type Language = SiteLocale;
 
 type Revalidate = (path: string, type?: "layout" | "page") => void;
 
@@ -95,7 +96,7 @@ type RevalidateTag = (tag: string, profile: { expire: number }) => void;
 
 type RevalidationLogger = Readonly<{ warn: (message: string) => void }>;
 
-const LANGUAGES: readonly Language[] = ["tr", "en"];
+const LANGUAGES: readonly Language[] = siteLocales;
 
 /** Route groups that own the Turkish and English trees in `src/app`. */
 const ROUTE_GROUPS: Readonly<Record<Language, string>> = {
@@ -117,7 +118,7 @@ const HOME_PATHS: Readonly<Record<Language, string>> = {
 const SAFE_SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 function getLanguage(value: unknown): Language | null {
-  return value === "tr" || value === "en" ? value : null;
+  return isSiteLocale(value) ? value : null;
 }
 
 function getSafeSlug(value: unknown): string | null {

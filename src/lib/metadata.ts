@@ -17,6 +17,7 @@
  */
 import type { Metadata } from "next";
 import { getAbsoluteUrl, siteSocialImage } from "@/config/site";
+import { siteLocales, type SiteLocale } from "@/content/locales";
 
 export const siteName = "Şaban Durali";
 
@@ -24,13 +25,8 @@ export const siteName = "Şaban Durali";
 export const metaTitleMaxLength = 60;
 export const metaDescriptionMaxLength = 160;
 
-export type SiteLocale = "tr" | "en";
-
 /** Locales in hreflang order; the first available one is `x-default`. */
-export const siteLocales = [
-  "tr",
-  "en",
-] as const satisfies readonly SiteLocale[];
+export { siteLocales, type SiteLocale } from "@/content/locales";
 
 export type LocalizedPaths = Partial<Record<SiteLocale, string>>;
 

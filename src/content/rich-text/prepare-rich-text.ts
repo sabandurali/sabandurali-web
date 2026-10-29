@@ -1,3 +1,4 @@
+import { isSiteLocale, type SiteLocale } from "@/content/locales";
 import { getArticlePath } from "@/content/articles/article-routes";
 import { getBookReviewPath } from "@/content/books/book-routes";
 import { getDistrict } from "@/content/districts/district-registry";
@@ -6,10 +7,10 @@ import { reportContentIssue } from "@/content/content-log";
 import { getText, isPublishedBy, isRecord } from "@/content/guards";
 import { getPhotoPath } from "@/content/photos/photo-routes";
 
-export type RichTextLocale = "tr" | "en";
+export type RichTextLocale = SiteLocale;
 
 function getLanguage(value: unknown): RichTextLocale | null {
-  return value === "tr" || value === "en" ? value : null;
+  return isSiteLocale(value) ? value : null;
 }
 
 /**

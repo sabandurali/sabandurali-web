@@ -1,4 +1,6 @@
-export type ArticleLanguage = "tr" | "en";
+import type { SiteLocale } from "@/content/locales";
+
+export type ArticleLanguage = SiteLocale;
 
 export type TranslationStatus =
   "none" | "pending" | "in_progress" | "completed" | "outdated";

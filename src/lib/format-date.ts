@@ -4,9 +4,10 @@
  * everything stamped between 00:00 and 03:00 in Istanbul. Every date shown on
  * the site is therefore formatted in Europe/Istanbul.
  */
+import type { SiteLocale } from "@/content/locales";
 export const SITE_TIME_ZONE = "Europe/Istanbul";
 
-export type DateLanguage = "tr" | "en";
+export type DateLanguage = SiteLocale;
 
 /** "tr" and "en" map to the site's date locales; full BCP 47 tags pass through. */
 function resolveDateLocale(locale: string): string {
