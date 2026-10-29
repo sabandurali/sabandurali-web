@@ -221,6 +221,11 @@ test("shell sources: atlas layouts, retry, English 404 catch-all, global 404", (
   const global = read("src/app/global-not-found.tsx");
   assert.match(global, /fontVariables/);
   assert.match(global, /<body>\s*<SkipLink>/);
+  // WCAG 3.1.2: the English half of the bilingual skip link is marked.
+  assert.match(
+    global,
+    /<SkipLink>\s*İçeriğe geç · <span lang="en">Skip to content<\/span>\s*<\/SkipLink>/,
+  );
   assert.match(global, /lang="en"/);
   for (const file of [
     "src/components/layout/Header.tsx",

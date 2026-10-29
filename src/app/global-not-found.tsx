@@ -26,7 +26,9 @@ export default function GlobalNotFound() {
   return (
     <html lang="tr" data-scroll-behavior="smooth" className={fontVariables}>
       <body>
-        <SkipLink>İçeriğe geç · Skip to content</SkipLink>
+        <SkipLink>
+          İçeriğe geç · <span lang="en">Skip to content</span>
+        </SkipLink>
         <Masthead locale="tr" />
         <StatusMessage
           code="404"
