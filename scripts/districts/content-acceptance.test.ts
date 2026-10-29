@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   checkDistrictRecord,
+  contentReferenceTime,
   isEditorialBundle,
   isHistoricalPhotoBundle,
   isNeighbourhoodEvidence,
@@ -24,10 +25,11 @@ function loadAttached() {
     "data/districts/editorial-review.json",
     isNeighbourhoodEvidence,
   );
-  attachEditorial(research, editorial);
+  const referenceTime = contentReferenceTime(editorial);
+  attachEditorial(research, editorial, referenceTime);
   const record = research.districts[0];
   assert.ok(record);
-  return { record, evidence };
+  return { record, evidence, referenceTime };
 }
 
 test("the repository data passes the input guards", () => {
@@ -66,11 +68,11 @@ test("a wrongly shaped JSON input is rejected by its guard", () => {
 });
 
 test("a missing editorial-review record fails with the district name", () => {
-  const { record, evidence } = loadAttached();
+  const { record, evidence, referenceTime } = loadAttached();
   const without = evidence.filter((row) => row.district !== record.district);
 
   assert.throws(
-    () => checkDistrictRecord(record, without, undefined),
+    () => checkDistrictRecord(record, without, undefined, referenceTime),
     (error: unknown) =>
       error instanceof assert.AssertionError &&
       error.message === `${record.district}: editorial-review record missing`,
@@ -78,7 +80,7 @@ test("a missing editorial-review record fails with the district name", () => {
 });
 
 test("a record without an attached review fails with the district name", () => {
-  const { record, evidence } = loadAttached();
+  const { record, evidence, referenceTime } = loadAttached();
 
   assert.throws(
     () =>
@@ -86,6 +88,7 @@ test("a record without an attached review fails with the district name", () => {
         { ...record, editorial: undefined },
         evidence,
         undefined,
+        referenceTime,
       ),
     (error: unknown) =>
       error instanceof assert.AssertionError &&
@@ -102,4 +105,40 @@ test("requireDistrictRow names the district and the list", () => {
     requireDistrictRow([{ district: "esenler" }], "esenler", "editorial"),
     { district: "esenler" },
   );
+});
+
+test("TESTS-INFRA-1: the reference time is the latest recorded review", () => {
+  const editorial = readCheckedJson(
+    "data/districts/editorial.json",
+    isEditorialBundle,
+  );
+  const latest = Math.max(
+    ...editorial.districts.map((row) => Date.parse(row.checkedAt)),
+  );
+  assert.equal(contentReferenceTime(editorial), latest);
+  assert.throws(
+    () =>
+      contentReferenceTime({
+        ...editorial,
+        districts: [{ ...editorial.districts[0], checkedAt: "not a date" }],
+      }),
+    /valid checkedAt/,
+  );
+  assert.throws(() => contentReferenceTime({ ...editorial, districts: [] }));
+});
+
+test("TESTS-INFRA-1: a district record gives the same result years later", () => {
+  const { record, evidence, referenceTime } = loadAttached();
+  const count = evidence.find((row) => row.district === record.district)
+    ?.officialNames.length;
+  const realNow = Date.now;
+  try {
+    Date.now = () => referenceTime + 3650 * 24 * 60 * 60 * 1000;
+    assert.equal(
+      checkDistrictRecord(record, evidence, count, referenceTime).result,
+      "PASS",
+    );
+  } finally {
+    Date.now = realNow;
+  }
 });

@@ -138,6 +138,8 @@ Content rules:
 - `marketData` remains private unless it has a recent, supported market source and passes the freshness rules.
 - Unverified/private research and import provenance must never leak through the public projection.
 
+Dated windows and CI: the content gate (`npm run test:districts:content`, part of `npm test`) evaluates the content policy at the latest `checkedAt` recorded in `data/districts/editorial.json`, never at the wall clock, so a commit gives the same result on every day. Whether reviewed content is still public today (a planning row's 90-day window, the transport check age, market data age) is reported by `npm run report:districts:freshness`, which `.github/workflows/content-freshness.yml` runs every Monday and on demand, never on a pull request. It warns about content that expires within 30 days and fails only when content is already withheld; the fix is a new dated review in the data, never a looser threshold.
+
 Editorial goal: **“İlçeyi geziyor hissi; rapor okuyor hissi değil.”**
 
 The district experience combines Sini Kadıköy readability, Apple-like whitespace and restraint, and the İstanbul Atlası identity (wayfinding section signs, data tables, schematic maps). Preserve hierarchy, breathing room, source clarity, and a grounded local sense of place.

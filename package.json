@@ -33,6 +33,7 @@
     "e2e:a11y": "node scripts/a11y/public-routes.mjs",
     "test:districts:content": "tsx scripts/districts/check-content.ts",
     "report:districts:content": "tsx scripts/districts/check-content.ts --report reports/istanbul-39/content-acceptance.json",
+    "report:districts:freshness": "tsx scripts/districts/report-freshness.ts",
     "historical-photo:batch2:dry-run": "tsx scripts/photos/import-historical-district-batch2.ts --dry-run",
     "historical-photo:batch2:apply": "tsx scripts/photos/import-historical-district-batch2.ts --apply",
     "historical-photo:batch2:verify": "tsx scripts/photos/import-historical-district-batch2.ts --verify"

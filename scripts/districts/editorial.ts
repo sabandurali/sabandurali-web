@@ -129,9 +129,15 @@ export function assertBatch1PopulationImportPlan(
     );
   }
 }
+/**
+ * Attaches each editorial review to its research record. `now` is the time
+ * the content policy is evaluated at: the wall clock for an import, the
+ * recorded review time for the deterministic content gate (TESTS-INFRA-1).
+ */
 export function attachEditorial(
   research: ResearchBundle,
   editorial: EditorialBundle,
+  now = Date.now(),
 ) {
   if (
     editorial.schemaVersion !== 1 ||
@@ -167,7 +173,7 @@ export function attachEditorial(
             source.publisher === "Türkiye İstatistik Kurumu" &&
             source.dataDate === tuikAdnks2025DataDate &&
             source.checkedAt === review.checkedAt &&
-            sourceSupportsSection(source, "facts"),
+            sourceSupportsSection(source, "facts", now),
         )
       )
         throw new Error(`Invalid TÜİK population source: ${row.district}`);
@@ -185,7 +191,7 @@ export function attachEditorial(
       if (!review.sections[section]?.trim())
         throw new Error(`Missing core editorial: ${row.district}/${section}`);
     for (const section of reviewed)
-      if (!sectionIsPublic(section, reviewed, review.sources))
+      if (!sectionIsPublic(section, reviewed, review.sources, now))
         throw new Error(`Unsupported editorial: ${row.district}/${section}`);
     if (
       !review.methodology ||

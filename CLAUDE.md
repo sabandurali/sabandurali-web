@@ -30,6 +30,7 @@ identifiers and commit messages in English.
 | `npm run e2e:headers -- <url>` | Security header check against a local production server |
 | `npm run e2e:districts:cms` | District guide CMS rules on a temporary SQLite database |
 | `npm run e2e:districts:routes` / `e2e:content-trust` | Playwright (routes) and fetch (content trust) checks against a local server at `DISTRICT_TEST_URL` (output in `DISTRICT_TEST_OUTPUT`) |
+| `npm run report:districts:freshness` | Which reviewed district content is withheld today or within 30 days (wall clock; scheduled workflow, not part of `npm test`) |
 | `npm run e2e:a11y` | Definition of Done on every public route type: axe WCAG 2.2 AA, no horizontal scroll at 390/820/1440 px, skip link, focus indicator, header menu by keyboard, reduced motion; local server at `A11Y_TEST_URL` (output in `A11Y_TEST_OUTPUT`) |
 
 CI runs `e2e:content-trust`, `e2e:headers`, `e2e:districts:routes` and `e2e:a11y` after the build against `next start` on
