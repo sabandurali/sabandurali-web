@@ -127,6 +127,24 @@ test("the list titles keep their wording in both languages", () => {
   assert.equal(publicationListSeo.bookReview.en.title, "Books | Şaban Durali");
 });
 
+test("each list factory reads the titles of its own type", () => {
+  const source = read("src/components/pages/publication-list-routes.tsx");
+  const factory = (name: string) => {
+    const start = source.indexOf(`export function ${name}(`);
+    assert.ok(start >= 0, name);
+    const end = source.indexOf("\nexport function ", start + 1);
+    return source.slice(start, end === -1 ? undefined : end);
+  };
+  assert.match(
+    factory("createArticleListRoute"),
+    /\.\.\.publicationListSeo\.article\[locale\],\s*locale,\s*paths: articleListPaths,/,
+  );
+  assert.match(
+    factory("createBookReviewListRoute"),
+    /\.\.\.publicationListSeo\.bookReview\[locale\],\s*locale,\s*paths: bookListPaths,/,
+  );
+});
+
 test("the photo detail page lists related photos of the served photo", () => {
   // The factory loads server-only data sources, so its wiring is read from
   // the source: the related photos come from the served photo and reach
