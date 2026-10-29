@@ -40,6 +40,8 @@ under "Veri/gözlem tarihi".
 4. If the page cannot be verified, remove the source from the guide's
    `housingTexture` sources, or mark it `needsVerification: true`, which
    removes it from the public page.
-5. `src/components/districts/DistrictGuideArticle.tsx` repeats
-   "Kaymakamlığın 451.453 kişilik kaydı 2017 verisidir" as fixed copy.
-   Align it with the result of step 1, or remove it.
+5. `src/components/districts/DistrictGuideArticle.tsx` no longer says
+   "Kaymakamlığın 451.453 kişilik kaydı 2017 verisidir": the sentence was
+   removed on 2026-10-29 because no source record dates the count. If
+   step 1 confirms a year and step 2 records it, the source table shows
+   that date itself; no fixed copy is needed.
