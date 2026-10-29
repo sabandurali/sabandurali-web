@@ -24,11 +24,11 @@ import {
 } from "@/content/books/book-routes";
 import { serializeBookReviewJsonLd } from "@/content/books/book-seo";
 import { BOOK_CATEGORY_LABELS } from "@/content/books/constants";
-import type { BookReview } from "@/content/books/types";
+import type { PublicBookReview } from "@/content/books/public-types";
 
 type BookReviewDetailPageProps = {
-  bookReview: BookReview;
-  translation: BookReview | null;
+  bookReview: PublicBookReview;
+  translation: PublicBookReview | null;
 };
 
 function ReviewSection({
@@ -102,7 +102,7 @@ function ReviewBody({
   bookReview,
   content,
 }: {
-  bookReview: BookReview;
+  bookReview: PublicBookReview;
   content: BookPageContent;
 }) {
   const byOrder = <T extends { order: number }>(items: ReadonlyArray<T>) =>

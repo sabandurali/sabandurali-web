@@ -4,11 +4,11 @@ import {
   formatBookReviewDate,
 } from "@/content/books/book-page-content";
 import { BOOK_CATEGORY_LABELS } from "@/content/books/constants";
-import type { BookReview } from "@/content/books/types";
+import type { PublicBookReview } from "@/content/books/public-types";
 import { toDateTimeAttribute } from "@/lib/format-date";
 
 type BookMetadataProps = {
-  bookReview: BookReview;
+  bookReview: PublicBookReview;
   content: BookPageContent;
   className?: string;
 };
@@ -24,7 +24,7 @@ type Entry = {
 
 /** Book facts that are present, in reading order; empty values are left out. */
 export function getBookMetadataItems(
-  bookReview: BookReview,
+  bookReview: PublicBookReview,
   content: BookPageContent,
 ): MetaItem[] {
   const year = (value: number | null) =>

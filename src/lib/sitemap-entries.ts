@@ -26,7 +26,7 @@ import { isArticleHreflangEligible } from "@/content/articles/article-seo";
 import type { PublicArticleSummary } from "@/content/articles/public-types";
 import { bookListPaths, getBookReviewPath } from "@/content/books/book-routes";
 import { isBookReviewHreflangEligible } from "@/content/books/book-seo";
-import type { BookReview } from "@/content/books/types";
+import type { PublicBookReview } from "@/content/books/public-types";
 import type { DistrictGuide } from "@/content/districts/district-guide-projection";
 import { districts } from "@/content/districts/district-registry";
 import {
@@ -68,7 +68,7 @@ export type SitemapContent = {
   /** Published articles in both languages. */
   articles: readonly PublicArticleSummary[];
   /** Published book reviews in both languages. */
-  bookReviews: readonly BookReview[];
+  bookReviews: readonly PublicBookReview[];
   /** Published photos in both languages. */
   photos: readonly PublicPhoto[];
   /** Published Turkish standard CMS pages. */
@@ -203,7 +203,7 @@ export function buildArticleEntries(
   });
 }
 
-function isListedBookReview(bookReview: BookReview): boolean {
+function isListedBookReview(bookReview: PublicBookReview): boolean {
   return isBookReviewHreflangEligible(bookReview);
 }
 
@@ -213,9 +213,9 @@ function isListedBookReview(bookReview: BookReview): boolean {
  * same with a reverse lookup), then the shared translation group.
  */
 export function findBookReviewTranslation(
-  bookReview: BookReview,
-  candidates: readonly BookReview[],
-): BookReview | undefined {
+  bookReview: PublicBookReview,
+  candidates: readonly PublicBookReview[],
+): PublicBookReview | undefined {
   const others = candidates.filter(
     (candidate) =>
       candidate.id !== bookReview.id &&
@@ -239,7 +239,7 @@ export function findBookReviewTranslation(
 }
 
 export function buildBookReviewEntries(
-  bookReviews: readonly BookReview[],
+  bookReviews: readonly PublicBookReview[],
 ): SitemapEntry[] {
   const listed = bookReviews.filter(isListedBookReview);
 

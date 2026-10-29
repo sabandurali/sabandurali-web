@@ -13,18 +13,18 @@ import {
 } from "@/content/books/book-page-content";
 import { getBookReviewPath } from "@/content/books/book-routes";
 import { BOOK_CATEGORY_LABELS } from "@/content/books/constants";
-import type { BookReview } from "@/content/books/types";
+import type { PublicBookReview } from "@/content/books/public-types";
 import { toDateTimeAttribute } from "@/lib/format-date";
 
 type BookReviewCardProps = {
-  bookReview: BookReview;
+  bookReview: PublicBookReview;
   content: BookPageContent;
   headingLevel?: "h2" | "h3";
 };
 
 /** Rating, reading status and review date of a review card. */
 export function getBookReviewCardFacts(
-  bookReview: BookReview,
+  bookReview: PublicBookReview,
   content: BookPageContent,
 ): MetaItem[] {
   const facts: MetaItem[] = [

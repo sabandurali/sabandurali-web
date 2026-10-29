@@ -1,6 +1,8 @@
 import { getAbsoluteUrl } from "@/config/site";
 import type { BookReview, BookReviewLanguage } from "@/content/books/types";
 
+type RoutableBookReview = Pick<BookReview, "language" | "slug">;
+
 export const bookListPaths = {
   tr: "/kitaplar",
   en: "/en/books",
@@ -21,8 +23,8 @@ export function getBookReviewUrl(
 }
 
 export function getBookReviewLanguagePaths(
-  bookReview: BookReview,
-  translation: BookReview | null,
+  bookReview: RoutableBookReview,
+  translation: RoutableBookReview | null,
 ): Record<BookReviewLanguage, string> {
   const paths: Record<BookReviewLanguage, string> = {
     tr: bookListPaths.tr,
