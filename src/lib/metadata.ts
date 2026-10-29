@@ -220,6 +220,30 @@ export function createFallbackMetaDescription(
   return null;
 }
 
+const pageLabel = {
+  tr: (page: number) => `Sayfa ${page}`,
+  en: (page: number) => `Page ${page}`,
+} as const satisfies Record<SiteLocale, (page: number) => string>;
+
+/**
+ * Title and description of page `page` of a paginated list. Every later
+ * page is its own indexable, self-canonical URL, so it names its number:
+ * "Fotoğraflar — Sayfa 2 | Şaban Durali". Page 1 is returned unchanged.
+ */
+export function createPaginatedCopy(
+  copy: { title: string; description: string },
+  page: number,
+  locale: SiteLocale,
+): { title: string; description: string } {
+  if (!Number.isSafeInteger(page) || page <= 1) return copy;
+  const label = pageLabel[locale](page);
+  const suffix = ` | ${siteName}`;
+  const title = copy.title.endsWith(suffix)
+    ? `${copy.title.slice(0, -suffix.length)} — ${label}${suffix}`
+    : `${copy.title} — ${label}`;
+  return { title, description: `${copy.description} ${label}.` };
+}
+
 export type ArticleOpenGraph = {
   publishedTime?: string | null;
   modifiedTime?: string | null;

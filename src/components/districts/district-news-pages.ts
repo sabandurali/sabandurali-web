@@ -3,7 +3,7 @@ import type { PublicArticleSummaryPage } from "@/content/articles/public-types";
 import type { District } from "@/content/districts/district-registry";
 import { getDistrictNewsPath } from "@/content/districts/district-routes";
 import { isDistrictNewsPageIndexable } from "@/content/districts/district-seo";
-import { createPageMetadata } from "@/lib/metadata";
+import { createPageMetadata, createPaginatedCopy } from "@/lib/metadata";
 
 /** Items per page of a district's news list. */
 export const districtNewsPageSize = 12;
@@ -26,7 +26,7 @@ export function getDistrictNewsPagePath(slug: string, page: number): string {
  * Metadata of one page of a district's news list, read with
  * `getDistrictNewsPage` (paginated in the database; a page past the end is
  * already clamped to the last one). Each page is its own canonical URL
- * (page 1 has no query), and the robots rule is the one the sitemap applies
+ * (page 1 has no query) whose title and description name its number, and the robots rule is the one the sitemap applies
  * (`isDistrictNewsPageIndexable`).
  */
 export function createDistrictNewsMetadata(
@@ -34,8 +34,14 @@ export function createDistrictNewsMetadata(
   page: Pick<PublicArticleSummaryPage, "currentPage" | "totalItems">,
 ): Metadata {
   return createPageMetadata({
-    title: `${district.name} Haberleri | Şaban Durali`,
-    description: `${district.name} ile ilgili yerel gelişmeler ve kaynakları.`,
+    ...createPaginatedCopy(
+      {
+        title: `${district.name} Haberleri | Şaban Durali`,
+        description: `${district.name} ile ilgili yerel gelişmeler ve kaynakları.`,
+      },
+      page.currentPage,
+      "tr",
+    ),
     locale: "tr",
     path: getDistrictNewsPagePath(district.slug, page.currentPage),
     index: isDistrictNewsPageIndexable(page.totalItems),

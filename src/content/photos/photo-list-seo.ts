@@ -10,7 +10,7 @@ import type {
   PhotoListFilters,
   PublishedPhotoList,
 } from "@/content/photos/types";
-import { createPageMetadata } from "@/lib/metadata";
+import { createPageMetadata, createPaginatedCopy } from "@/lib/metadata";
 
 const copy = {
   tr: {
@@ -33,7 +33,8 @@ const copy = {
  * - page 1 without filters is the list: indexable with photos, paired with
  *   the other language's list when that one has photos too;
  * - a later page is its own canonical URL (`?page=N`), indexable, outside
- *   the hreflang cluster (the pages do not correspond across languages);
+ *   the hreflang cluster (the pages do not correspond across languages),
+ *   with its page number in the title and description;
  * - a filtered view repeats photos of the list: noindex, follow, with its
  *   own URL as canonical (never noindex combined with a canonical that
  *   points elsewhere).
@@ -61,7 +62,7 @@ export function createPhotoListMetadata(
   }
 
   return createPageMetadata({
-    ...copy[locale],
+    ...createPaginatedCopy(copy[locale], list.page, locale),
     locale,
     path: getPhotoListPath(locale, filters, list.page),
     hreflang: false,
