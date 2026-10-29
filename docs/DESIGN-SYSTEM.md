@@ -161,7 +161,7 @@ sınıfla ezebilirsiniz (`type-data font-bold`). Aynı özelliği iki tek özell
 | `type-label` | 12 px, 600 | Kısa UI etiketleri |
 | `type-sign` | 17 px, 700 | Yön levhası adı |
 | `type-tile` | 14 px, 600, 76 % | Harita karesi etiketi |
-| `type-region` | 13 px, 700, 125 %, 0.16 em | AVRUPA YAKASI gibi bölge etiketleri |
+| `type-region` | 13 px, 700, 125 %, 0.16 em, büyük harf | AVRUPA YAKASI gibi bölge etiketleri ve ana sayfa bölüm etiketleri |
 | `type-wordmark` / `type-tagline` | 17 / 12 px | ŞABAN DURALİ ve alt satırı |
 | `type-data` / `type-data-md` / `type-data-lg` | 12 / 13 / 17 → 22 px, mono | Veri etiketleri, tarihler, tablo değerleri |
 
@@ -179,6 +179,11 @@ kuyrukları kesilmemeli, satır yüksekliği sıkışmamalı.
 
 - Büyük harfli sabit etiketleri doğrudan büyük harfle yazın (`İSTANBUL BOĞAZI`). `uppercase` yalnızca
   doğru `lang` değerinin olduğu yerde kullanılabilir; `lang="tr"` "i" harfini "İ" yapar.
+- `type-region` metni her zaman büyük harf gösterir (`text-transform: uppercase`, FRONTEND-4). Böylece
+  CMS'ten ya da statik içerikten karışık harfle gelen bir etiket ("Ana çalışma alanları") öteki bölüm
+  etiketleriyle aynı görünür ve ekran okuyucu özgün yazımı okur. Bu sınıfı yalnızca sayfanın dilinde
+  olan metne verin; başka dildeki bir etiketin kapsayıcısı kendi `lang` değerini taşımalıdır. Karışık
+  harf isteniyorsa `type-label` kullanın.
 - Uzun ilçe adları dar karelerde yumuşak tire (U+00AD) ile bölünür; bölme noktaları
   `district-tile-grid.ts` içindeki `breaks` alanındadır ("Gazi|osman|paşa"), `getDistrictLabel(slug)` bu
   biçimi verir.
