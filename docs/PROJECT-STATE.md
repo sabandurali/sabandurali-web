@@ -46,7 +46,7 @@ Versions are recorded only in `package.json` (ranges, `engines`), `package-lock.
 - Local development defaults to SQLite and local media.
 - Production Payload uses PostgreSQL/Neon when `PAYLOAD_DATABASE=postgres` and Vercel Blob when `PAYLOAD_STORAGE=vercel-blob`.
 - PostgreSQL schema push is disabled. Production schema changes require reviewed migrations.
-- Blob storage applies only to the `media` collection and retains Payload validation, MIME restrictions, and the 10 MiB application limit.
+- Blob storage applies only to the `media` collection and retains Payload validation and MIME restrictions. Every upload (local or Blob) is limited to 4 MiB (`MAX_UPLOAD_BYTES` in `src/payload.config.ts`, below the 4.5 MB request body limit of Vercel Functions), and images are re-encoded to at most 3200 px on the long edge without EXIF metadata (`src/collections/Media.ts`).
 - Production builds fail closed if a Payload-backed public source is selected without the required persistent database, storage, and secret configuration.
 
 Public content source selection is controlled independently by:
@@ -265,6 +265,41 @@ The Production database identity (sha256 of `host:port/database`) is a reviewed 
 1. Confirm the new endpoint is the intended Production database.
 2. Compute its fingerprint without printing the URL: `read -rs DATABASE_URL; export DATABASE_URL; node scripts/database-fingerprint.mjs; unset DATABASE_URL` (paste the value from Vercel; the script prints only the fingerprint).
 3. Change `productionDatabaseFingerprint` in a reviewed pull request, merge it, and let the Production build verify the migration state against the restored database.
+
+### K.5 Pending migration `20261028_205938_article_seo_book_slug_unique`
+
+This migration is additive: it sets the default user role to `editor`, adds `focal_x`/`focal_y` to `media`, adds the article author and SEO columns (`author_name`, `seo_index`, `seo_follow`, `seo_canonical`, and their version columns) and creates the unique index `language_slug_1_idx` on `books (language, slug)`. Its `down` refuses to run; when rolling application code back, keep the schema.
+
+The unique index fails, and with it the whole migration, if Production already holds two book reviews with the same language and slug. Before step 3 of K.2, run these read-only pre-flight queries against Production (a read-only role or `BEGIN READ ONLY; … ROLLBACK;`), with the owner's approval, and record the results with the approval:
+
+```sql
+-- 1. Duplicate book slugs: must return no rows.
+SELECT language, slug, count(*) FROM books GROUP BY 1,2 HAVING count(*) > 1;
+
+-- 2. Rich text the editor no longer offers: level-1 headings and relationship nodes.
+SELECT 'articles_locales' AS source, _parent_id::text AS parent_id, _locale AS locale,
+       jsonb_path_exists(content, 'lax $.** ? (@.type == "heading" && @.tag == "h1")') AS has_h1,
+       jsonb_path_exists(content, 'lax $.** ? (@.type == "relationship")') AS has_relationship
+  FROM articles_locales
+ WHERE jsonb_path_exists(content, 'lax $.** ? (@.type == "relationship" || (@.type == "heading" && @.tag == "h1"))')
+UNION ALL
+SELECT 'pages_blocks_rich_text', _parent_id::text, NULL,
+       jsonb_path_exists(content, 'lax $.** ? (@.type == "heading" && @.tag == "h1")'),
+       jsonb_path_exists(content, 'lax $.** ? (@.type == "relationship")')
+  FROM pages_blocks_rich_text
+ WHERE jsonb_path_exists(content, 'lax $.** ? (@.type == "relationship" || (@.type == "heading" && @.tag == "h1"))')
+UNION ALL
+SELECT 'pages_blocks_image_text', _parent_id::text, NULL,
+       jsonb_path_exists(content, 'lax $.** ? (@.type == "heading" && @.tag == "h1")'),
+       jsonb_path_exists(content, 'lax $.** ? (@.type == "relationship")')
+  FROM pages_blocks_image_text
+ WHERE jsonb_path_exists(content, 'lax $.** ? (@.type == "relationship" || (@.type == "heading" && @.tag == "h1"))');
+```
+
+- Query 1 returning rows stops the release: an editor renames one slug of each pair in the admin (never a manual database edit, rule 12), then the query is run again.
+- Query 2 does not block the migration. The rich-text editor now allows `h2`–`h4` and no relationship blocks, so each listed document must be opened in the admin and the `h1` changed to `h2` and the relationship replaced by a link before it is saved again. Until then the public site does not show the relationship nodes (`PayloadRichText` skips and logs them), and an `h1` in the body competes with the page title. Record the number of rows per source.
+
+Both queries were checked against PGlite with the committed schema; they only read.
 
 ## L. Historical photos
 
