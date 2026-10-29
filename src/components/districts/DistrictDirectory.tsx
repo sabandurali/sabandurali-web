@@ -5,7 +5,7 @@ import Card from "@/components/ui/Card";
 import { cx } from "@/components/ui/cx";
 import DistrictKeyMap from "@/components/ui/DistrictKeyMap";
 import EmptyState from "@/components/ui/EmptyState";
-import { Field, Input } from "@/components/ui/Field";
+import { Field, Input, Select } from "@/components/ui/Field";
 import GridRef from "@/components/ui/GridRef";
 import { getDistrictPath } from "@/content/districts/district-routes";
 import {
@@ -15,9 +15,6 @@ import {
   type DirectoryEntry,
   type DirectoryFilter,
 } from "./district-directory-filter";
-
-const selectClassName =
-  "block min-h-12 w-full rounded-control border border-tile-edge bg-land px-3.5 py-2.5 text-base text-ink hover:border-ink focus-visible:border-ink";
 
 /**
  * Searchable list of the 39 district guides: name search, side select and
@@ -62,7 +59,7 @@ export default function DistrictDirectory({
         </Field>
         <Field label="Yaka" id="district-side">
           {(control) => (
-            <select
+            <Select
               {...control}
               value={filter.side}
               onChange={(event) => {
@@ -71,12 +68,11 @@ export default function DistrictDirectory({
                   setFilter((current) => ({ ...current, side }));
                 }
               }}
-              className={selectClassName}
             >
               <option value="all">Tüm ilçeler</option>
               <option value="avrupa">Avrupa Yakası</option>
               <option value="anadolu">Anadolu Yakası</option>
-            </select>
+            </Select>
           )}
         </Field>
       </div>

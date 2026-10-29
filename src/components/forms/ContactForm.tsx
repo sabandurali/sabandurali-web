@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/Button";
-import { Field, Input, Textarea } from "@/components/ui/Field";
+import { Field, Input, Select, Textarea } from "@/components/ui/Field";
 import FormStatus from "@/components/ui/FormStatus";
 import type { ContactContent } from "@/content/contactContent";
 import {
@@ -24,9 +24,6 @@ type ContactFormProps = {
 /* Same boundary, ground and focus treatment as <Input>; the native arrow
    stays (it is the affordance people know). */
 const firstFieldId = "contact-name";
-
-const selectClassName =
-  "block min-h-12 w-full rounded-control border border-tile-edge bg-land px-3.5 py-2.5 text-base text-ink hover:border-ink focus-visible:border-ink";
 
 /**
  * Contact form (FE-21, SEC-14). Visible labels with "(zorunlu)", native
@@ -97,12 +94,7 @@ export default function ContactForm({
 
         <Field label={content.fields.subject} required locale={locale}>
           {(control) => (
-            <select
-              {...control}
-              name="subject"
-              defaultValue=""
-              className={selectClassName}
-            >
+            <Select {...control} name="subject" defaultValue="">
               <option value="" disabled>
                 {content.fields.subjectPlaceholder}
               </option>
@@ -111,7 +103,7 @@ export default function ContactForm({
                   {option}
                 </option>
               ))}
-            </select>
+            </Select>
           )}
         </Field>
 
