@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
+import path from "node:path";
 import test from "node:test";
+import { fileURLToPath } from "node:url";
 import { siteSocialImage } from "@/config/site";
 import { verifiedDistrictImages } from "@/content/photos/verified-district-images";
 import { metaDescriptionMaxLength, metaTitleMaxLength } from "@/lib/metadata";
@@ -119,14 +121,40 @@ test("district photos are shared through the optimizer, others use the site imag
       assert.deepEqual(images, [siteSocialImage]);
       continue;
     }
+    const width = Math.min(1200, photo.width);
     assert.deepEqual(images, [
       {
         url: `https://www.sabandurali.com/_next/image?url=${encodeURIComponent(photo.src)}&w=1200&q=75`,
         alt: photo.alt,
+        width,
+        height: Math.round((width * photo.height) / photo.width),
       },
     ]);
   }
   assert.ok(verifiedDistrictImages.esenler);
+});
+
+test("verified district image sizes match the files in public/", async () => {
+  const { default: sharp } = await import("sharp");
+  const publicDirectory = path.resolve(
+    path.dirname(fileURLToPath(import.meta.url)),
+    "../../../public",
+  );
+
+  for (const [slug, photo] of Object.entries(verifiedDistrictImages)) {
+    const metadata = await sharp(
+      path.join(publicDirectory, photo.src),
+    ).metadata();
+    // EXIF orientations 5–8 swap the displayed width and height.
+    const swapped = (metadata.orientation ?? 1) >= 5;
+    assert.deepEqual(
+      { width: photo.width, height: photo.height },
+      swapped
+        ? { width: metadata.height, height: metadata.width }
+        : { width: metadata.width, height: metadata.height },
+      slug,
+    );
+  }
 });
 
 test("district metadata keeps canonical, Turkish-only hreflang and a large card", () => {
