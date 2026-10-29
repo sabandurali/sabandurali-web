@@ -39,7 +39,11 @@ import {
   isDistrictGuideIndexable,
   isDistrictNewsPageIndexable,
 } from "@/content/districts/district-seo";
-import { getPublicPagePath, homePagePaths } from "@/content/pages/page-seo";
+import {
+  getPublicPagePath,
+  homePagePaths,
+  isHomePageIndexable,
+} from "@/content/pages/page-seo";
 import type { PublicPage } from "@/content/pages/public-types";
 import { getPhotoPath, photoListPaths } from "@/content/photos/photo-routes";
 import type { PublicPhoto } from "@/content/photos/types";
@@ -304,13 +308,9 @@ export function buildPhotoEntries(
   });
 }
 
-/**
- * Both home pages always render (a missing or invalid CMS home falls back to
- * the static one), so each is listed unless a loaded CMS home page explicitly
- * opts out of indexing.
- */
+/** The home page metadata uses the same rule for its hreflang pair. */
 function isHomePageListed(home: SitemapHomePage): boolean {
-  return home?.page?.seo.index !== false;
+  return isHomePageIndexable(home?.page ?? null);
 }
 
 export function buildHomeEntries(

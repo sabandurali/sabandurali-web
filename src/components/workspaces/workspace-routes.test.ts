@@ -173,9 +173,8 @@ test("FE-7: workspace metadata goes through the shared builder", () => {
     metadata.alternates?.canonical,
     `${site}/satis-ve-muzakere/satis`,
   );
-  assert.deepEqual(metadata.alternates?.languages, {
-    "tr-TR": `${site}/satis-ve-muzakere/satis`,
-  });
+  // A noindex section is outside every hreflang cluster (SEO-PERF-4).
+  assert.equal(metadata.alternates?.languages, undefined);
   assert.ok(metadata.openGraph);
   assert.equal((metadata.openGraph as { locale?: string }).locale, "tr_TR");
   assert.equal(

@@ -75,6 +75,26 @@ test("page metadata always has canonical, hreflang, robots, OG and Twitter", () 
   });
 });
 
+test("a noindex page announces no hreflang, even with translations", () => {
+  const metadata = createPageMetadata({
+    title: "Biyografi | Şaban Durali",
+    description: "Biyografi.",
+    locale: "tr",
+    path: "/hakkimda/biyografi",
+    translations: { en: "/en/about/biography" },
+    index: false,
+  });
+
+  assert.deepEqual(metadata.alternates, {
+    canonical: `${site}/hakkimda/biyografi`,
+  });
+  assert.deepEqual(metadata.robots, { index: false, follow: true });
+  assert.equal(
+    (metadata.openGraph as Record<string, unknown>).alternateLocale,
+    undefined,
+  );
+});
+
 test("single-language pages have no alternate OG locale", () => {
   const metadata = createPageMetadata({
     title: "Hakkımda | Şaban Durali",
@@ -104,7 +124,6 @@ test("canonical override, robots, social copy, images and article fields", () =>
     translations: { tr: "/makaleler/a" },
     canonical: "https://www.sabandurali.com/makaleler/a",
     images: [image],
-    index: false,
     follow: false,
     socialTitle: "Share title",
     socialDescription: "Share description",
@@ -121,7 +140,7 @@ test("canonical override, robots, social copy, images and article fields", () =>
     en: `${site}/en/articles/a`,
     "x-default": `${site}/makaleler/a`,
   });
-  assert.deepEqual(metadata.robots, { index: false, follow: false });
+  assert.deepEqual(metadata.robots, { index: true, follow: false });
   assert.deepEqual(metadata.openGraph, {
     title: "Share title",
     description: "Share description",

@@ -32,9 +32,10 @@ test("39 district metadata: unique, complete, canonical, OG, Twitter, no fictiti
       metadata.alternates?.canonical,
       `https://www.sabandurali.com/istanbul/ilceler/${district.slug}`,
     );
-    assert.deepEqual(Object.keys(metadata.alternates?.languages ?? {}), [
-      "tr-TR",
-    ]);
+    // Without a guide the page is noindex and therefore announces no
+    // hreflang; it never names a fictitious English version either.
+    assert.deepEqual(metadata.robots, { index: false, follow: true });
+    assert.equal(metadata.alternates?.languages, undefined);
     assert.ok(metadata.openGraph?.images);
     assert.ok(metadata.twitter && "card" in metadata.twitter);
     assert.equal(metadata.twitter.card, "summary_large_image");

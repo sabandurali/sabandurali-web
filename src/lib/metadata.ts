@@ -207,8 +207,9 @@ export type PageMetadataInput = {
   /** Published versions of the same page in the other language(s). */
   translations?: LocalizedPaths;
   /**
-   * False for a page outside any hreflang cluster (noindex, or canonical
-   * elsewhere): no hreflang link at all, not even its own. Defaults to true.
+   * False for a page outside any hreflang cluster (canonical elsewhere): no
+   * hreflang link at all, not even its own. Defaults to true. A noindex page
+   * (`index: false`) is always outside every cluster, whatever this says.
    */
   hreflang?: boolean;
   /** Overrides the canonical URL; defaults to `path`. */
@@ -229,7 +230,9 @@ export type PageMetadataInput = {
  * robots, Open Graph (with a default image) and a large Twitter card.
  */
 export function createPageMetadata(input: PageMetadataInput): Metadata {
-  const hreflang = input.hreflang ?? true;
+  // A noindex URL cannot be a hreflang target, so it announces none either:
+  // the page tags then agree with the sitemap, which leaves it out.
+  const hreflang = (input.hreflang ?? true) && (input.index ?? true);
   const paths: LocalizedPaths = hreflang
     ? { ...input.translations, [input.locale]: input.path }
     : {};
