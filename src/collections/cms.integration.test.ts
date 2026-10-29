@@ -9,7 +9,7 @@ import { mkdtemp, rm } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { after, test } from "node:test";
-import type { Payload, PayloadRequest, SanitizedConfig } from "payload";
+import type { Payload, PayloadRequest, SanitizedConfig, Where } from "payload";
 import sharp from "sharp";
 import type { Article } from "../payload-types";
 import { INTERNAL_LINK_COLLECTIONS } from "@/content/rich-text/internal-link-collections";
@@ -931,4 +931,121 @@ test("district guides: anonymous readers cannot filter on hidden fields", async 
     where: { district: { equals: "esenler" } },
   });
   assert.equal(visible.totalDocs, 0);
+});
+
+test("books: anonymous REST readers never see or filter on editorial fields", async () => {
+  const [author] = (
+    await payload.find({ collection: "users", limit: 1, sort: "createdAt" })
+  ).docs;
+  assert.ok(author);
+
+  const base = {
+    language: "tr" as const,
+    personalEvaluation: "Kişisel değerlendirme",
+    readingStatus: "completed" as const,
+    seo: {
+      description: "Açıklama",
+      follow: true,
+      index: true,
+      title: "Başlık",
+    },
+    summary: "Özet",
+  };
+  // Written directly: only the read rules are under test here. The draft is
+  // a review the public must not learn about through `relatedBooks`.
+  const hidden = await payload.db.create({
+    collection: "books",
+    data: {
+      ...base,
+      _status: "draft",
+      reviewStatus: "draft",
+      slug: "gizli-taslak",
+      title: "Gizli taslak",
+      translationStatus: "none",
+    },
+    req: {},
+  });
+  const published = await payload.db.create({
+    collection: "books",
+    data: {
+      ...base,
+      _status: "published",
+      authorId: author.id,
+      editorId: author.id,
+      publishedAt: "2026-01-01T00:00:00.000Z",
+      relatedBooks: [hidden.id],
+      reviewStatus: "published",
+      showOnHomepage: true,
+      slug: "editoryal-alanlar",
+      title: "Editoryal alanlar",
+      translationStatus: "draft",
+    },
+    req: {},
+  });
+  const editorialKeys = [
+    "authorId",
+    "editorId",
+    "relatedBooks",
+    "reviewStatus",
+    "showOnHomepage",
+    "translationStatus",
+  ];
+
+  const anonymous = await payload.find({
+    collection: "books",
+    depth: 0,
+    overrideAccess: false,
+    req: anonymousRest(),
+    where: { slug: { equals: "editoryal-alanlar" } },
+  });
+  assert.equal(anonymous.docs.length, 1);
+  const publicDoc: Record<string, unknown> = { ...anonymous.docs[0] };
+  assert.deepEqual(
+    editorialKeys.filter((key) => key in publicDoc),
+    [],
+    "editorial fields are removed from the anonymous REST response",
+  );
+  assert.equal(publicDoc.title, "Editoryal alanlar");
+
+  const editorialFilters: Where[] = [
+    { authorId: { equals: author.id } },
+    { showOnHomepage: { equals: true } },
+    { relatedBooks: { in: [hidden.id] } },
+  ];
+  for (const where of editorialFilters) {
+    await assert.rejects(
+      payload.find({
+        collection: "books",
+        overrideAccess: false,
+        req: anonymousRest(),
+        where,
+      }),
+      (error: unknown) =>
+        error instanceof Error && "status" in error && error.status === 400,
+      JSON.stringify(where),
+    );
+  }
+
+  // The public pages read through the Local API: the mapper still gets the
+  // workflow values it checks and then drops.
+  const local = await payload.findByID({
+    collection: "books",
+    depth: 0,
+    id: published.id,
+    overrideAccess: false,
+  });
+  assert.equal(local.reviewStatus, "published");
+  assert.equal(local.translationStatus, "draft");
+
+  // Editors keep every field in the REST API (and so in the admin).
+  const asEditor = await payload.findByID({
+    collection: "books",
+    depth: 0,
+    id: published.id,
+    overrideAccess: false,
+    req: { payloadAPI: "REST", user: { ...author, collection: "users" } },
+  });
+  assert.equal(asEditor.showOnHomepage, true);
+  assert.equal(asEditor.reviewStatus, "published");
+  assert.deepEqual(asEditor.relatedBooks, [hidden.id]);
 });

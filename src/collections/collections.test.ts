@@ -23,9 +23,11 @@ import {
 } from "./Articles";
 import {
   Books,
+  hideReviewStatusFromPublicApi,
   normalizeAndValidateBook,
   validateBookPublication,
 } from "./Books";
+import { PRIVATE_BOOK_REVIEW_FIELDS } from "../content/books/public-types";
 import { Categories } from "./Categories";
 import {
   DistrictGuides,
@@ -53,7 +55,10 @@ import {
   refusePasswordResetWithoutEmail,
 } from "./Users";
 import { Navigation, getNavigationPageFilter } from "../globals/Navigation";
-import { denyAnonymousRestReads } from "../lib/payloadAccess";
+import {
+  denyAnonymousRestReads,
+  editorialFieldRead,
+} from "../lib/payloadAccess";
 import {
   preventDeletingLastAdmin,
   preventDemotingLastAdmin,
@@ -349,6 +354,53 @@ test("book translations and related books cannot expand recursively", () => {
   assert.deepEqual(Books.indexes, [
     { fields: ["language", "slug"], unique: true },
   ]);
+});
+
+test("editorial book fields are hidden from the public API", () => {
+  // Model fields that are not Payload fields one to one: `relatedBookIds` is
+  // `relatedBooks`, `translationSourceUpdatedAt` is derived from the
+  // populated translation and `reviewStatus` is dropped in `afterRead`
+  // because the collection's read access filters on it.
+  const fieldNames: Record<string, string | null> = {
+    relatedBookIds: "relatedBooks",
+    reviewStatus: null,
+    translationSourceUpdatedAt: null,
+  };
+
+  for (const modelField of PRIVATE_BOOK_REVIEW_FIELDS) {
+    const name = modelField in fieldNames ? fieldNames[modelField] : modelField;
+    if (name === null) continue;
+    const field = findField(Books, name);
+    assert.equal(
+      "access" in field ? field.access?.read : undefined,
+      editorialFieldRead,
+      name,
+    );
+  }
+
+  const run = (payloadAPI: string, user: unknown, overrideAccess = false) =>
+    hideReviewStatusFromPublicApi({
+      collection: {},
+      context: {},
+      doc: { id: "b1", reviewStatus: "published", title: "Kitap" },
+      overrideAccess,
+      req: { payloadAPI, user },
+    } as unknown as Parameters<typeof hideReviewStatusFromPublicApi>[0]);
+
+  assert.ok(Books.hooks?.afterRead?.includes(hideReviewStatusFromPublicApi));
+  assert.deepEqual(run("REST", null), { id: "b1", title: "Kitap" });
+  assert.deepEqual(run("GraphQL", null), { id: "b1", title: "Kitap" });
+  for (const kept of [
+    run("REST", editor),
+    run("REST", admin),
+    run("local", null),
+    run("REST", null, true),
+  ]) {
+    assert.equal(
+      (kept as { reviewStatus?: unknown }).reviewStatus,
+      "published",
+    );
+  }
 });
 
 test("a database failure while publishing a book is not reported as a missing cover", async () => {

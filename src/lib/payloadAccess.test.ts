@@ -17,8 +17,10 @@ import {
   createPublishedBookReviewWhere,
   createPublishedWhere,
   denyAnonymousRestReads,
+  editorialFieldRead,
   isAdmin,
   isAdminOrEditor,
+  isPublicApiReader,
   limitAnonymousRestQueries,
   publishedBookReviewOrAdminOrEditor,
   publishedOrAdminOrEditor,
@@ -381,4 +383,22 @@ test("the anonymous query allowlist blocks oracles on hidden fields", () => {
     hidden,
     "writes are governed by access control, not this allowlist",
   );
+});
+
+test("editorial fields stay hidden from anonymous REST and GraphQL readers only", () => {
+  const read = (user: unknown, api: "GraphQL" | "local" | "REST") =>
+    editorialFieldRead({ req: request(user, api) } as Parameters<
+      typeof editorialFieldRead
+    >[0]);
+
+  assert.equal(read(null, "REST"), false);
+  assert.equal(read(null, "GraphQL"), false);
+  assert.equal(read({ id: "u-x", role: "viewer" }, "REST"), false);
+  assert.equal(read(admin, "REST"), true);
+  assert.equal(read(editor, "REST"), true);
+  // The public pages read through the Local API and drop the fields in
+  // their mappers.
+  assert.equal(read(null, "local"), true);
+  assert.equal(isPublicApiReader(request(null, "REST")), true);
+  assert.equal(isPublicApiReader(request(null, "local")), false);
 });
