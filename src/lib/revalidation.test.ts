@@ -489,8 +489,12 @@ test("draft saves call nothing; create, delete and navigation changes do", () =>
   assert.ok(deleted.calls.some((call) => call.path === "/kitaplar/silinen"));
 
   const navigation = recorder();
+  const navigationTags: string[] = [];
   const navigationHook: GlobalAfterChangeHook =
-    createNavigationRevalidationHook({ revalidate: navigation.revalidate });
+    createNavigationRevalidationHook({
+      revalidate: navigation.revalidate,
+      revalidateTag: (tag) => navigationTags.push(tag),
+    });
   navigationHook({
     context: {},
     doc: { _status: "published" },
@@ -499,6 +503,8 @@ test("draft saves call nothing; create, delete and navigation changes do", () =>
     req: fakeRequest(),
   } as unknown as Parameters<GlobalAfterChangeHook>[0]);
   assert.deepEqual(navigation.calls, [{ path: "/", type: "layout" }]);
+  // SEO-PERF-4: the cross-request navigation cache is dropped as well.
+  assert.deepEqual(navigationTags, ["navigation"]);
 });
 
 test("outside a Next.js request revalidation is a silent no-op", () => {
@@ -646,9 +652,19 @@ test("photo, collection and tag writes invalidate the cached photo filter option
   for (const collection of ["photos", "photo-collections", "tags"] as const) {
     assert.deepEqual(getCollectionRevalidationTags(collection), [
       "photo-facets",
+      "photo-list",
     ]);
   }
-  for (const collection of ["articles", "books", "pages", "media"] as const) {
+  // SEO-PERF-4: the cached first list page shows media; the cached
+  // navigation links pages.
+  assert.deepEqual(getCollectionRevalidationTags("media"), ["photo-list"]);
+  assert.deepEqual(getCollectionRevalidationTags("pages"), ["navigation"]);
+  for (const collection of [
+    "articles",
+    "books",
+    "categories",
+    "district-guides",
+  ] as const) {
     assert.deepEqual(getCollectionRevalidationTags(collection), []);
   }
 
@@ -665,7 +681,9 @@ test("photo, collection and tag writes invalidate the cached photo filter option
   });
   assert.deepEqual(tags, [
     ["photo-facets", { expire: 0 }],
+    ["photo-list", { expire: 0 }],
     ["photo-facets", { expire: 0 }],
+    ["photo-list", { expire: 0 }],
   ]);
 });
 

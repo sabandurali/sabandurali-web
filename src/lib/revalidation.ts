@@ -69,7 +69,11 @@ import {
   getDistrictNewsPath,
   getDistrictPath,
 } from "@/content/districts/district-routes";
-import { PHOTO_FACETS_CACHE_TAG } from "@/content/photos/photo-cache-tags";
+import { NAVIGATION_CACHE_TAG } from "@/content/navigation/navigation-cache-tags";
+import {
+  PHOTO_FACETS_CACHE_TAG,
+  PHOTO_LIST_CACHE_TAG,
+} from "@/content/photos/photo-cache-tags";
 import { getPhotoPath, photoListPaths } from "@/content/photos/photo-routes";
 import { workspaces } from "@/content/workspaces";
 
@@ -370,7 +374,13 @@ export function getCollectionRevalidationTags(
     case "photo-collections":
     case "photos":
     case "tags":
-      return [PHOTO_FACETS_CACHE_TAG];
+      return [PHOTO_FACETS_CACHE_TAG, PHOTO_LIST_CACHE_TAG];
+    // The first photo list page carries image URLs and alt texts.
+    case "media":
+      return [PHOTO_LIST_CACHE_TAG];
+    // The cached navigation links pages only while they are public.
+    case "pages":
+      return [NAVIGATION_CACHE_TAG];
     default:
       return [];
   }
@@ -539,12 +549,17 @@ export function createRevalidationHooks(
 /** `afterChange` hook for the Navigation global. */
 export function createNavigationRevalidationHook({
   revalidate,
+  revalidateTag: revalidateCacheTag,
 }: HookOptions = {}): GlobalAfterChangeHook {
   return ({ doc, previousDoc, req }) => {
     if (shouldRevalidateChange({ doc, operation: "update", previousDoc })) {
       revalidateTargets(getNavigationRevalidationTargets(), {
         logger: getLogger(req),
         revalidate,
+      });
+      revalidateTags([NAVIGATION_CACHE_TAG], {
+        logger: getLogger(req),
+        revalidate: revalidateCacheTag,
       });
     }
 

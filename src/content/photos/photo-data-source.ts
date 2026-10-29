@@ -2,7 +2,11 @@ import "server-only";
 import { unstable_cache } from "next/cache";
 import { cache } from "react";
 import { PayloadPublicPhotoRepository } from "@/content/photos/payload-photo-repository";
-import { PHOTO_FACETS_CACHE_TAG } from "@/content/photos/photo-cache-tags";
+import {
+  isFirstUnfilteredPhotoPage,
+  PHOTO_FACETS_CACHE_TAG,
+  PHOTO_LIST_CACHE_TAG,
+} from "@/content/photos/photo-cache-tags";
 import { toPublicPhotoTranslation } from "@/content/photos/payload-photo-mapper";
 import type {
   PublicPhoto,
@@ -42,6 +46,23 @@ const getCachedPhotoFacets = unstable_cache(
   { tags: [PHOTO_FACETS_CACHE_TAG], revalidate: 3600 },
 );
 
+/*
+ * The unfiltered first page is the canonical list URL that the sitemap and
+ * crawlers request most; it is cached across requests like the facets.
+ * Filtered and later pages stay per request.
+ */
+const getCachedFirstPhotoPage = unstable_cache(
+  (locale: PhotoLanguage) =>
+    payloadPhotoRepository.listPublished(
+      locale,
+      {},
+      new Date(),
+      getCachedPhotoFacets,
+    ),
+  ["photo-list-first-page"],
+  { tags: [PHOTO_LIST_CACHE_TAG, PHOTO_FACETS_CACHE_TAG], revalidate: 3600 },
+);
+
 /** One list page; collection and tag filters run in the database. */
 /*
  * Keyed by primitives: the route's metadata and page parse the query string
@@ -55,18 +76,20 @@ const getPublishedPhotoPage = cache(
     tag: string | undefined,
     page: number | undefined,
   ): Promise<PublishedPhotoList> =>
-    isPayloadSource()
-      ? payloadPhotoRepository.listPublished(
-          locale,
-          {
-            ...(collection === undefined ? {} : { collection }),
-            ...(tag === undefined ? {} : { tag }),
-            ...(page === undefined ? {} : { page }),
-          },
-          new Date(),
-          getCachedPhotoFacets,
-        )
-      : emptyList(),
+    !isPayloadSource()
+      ? emptyList()
+      : isFirstUnfilteredPhotoPage(collection, tag, page)
+        ? getCachedFirstPhotoPage(locale)
+        : payloadPhotoRepository.listPublished(
+            locale,
+            {
+              ...(collection === undefined ? {} : { collection }),
+              ...(tag === undefined ? {} : { tag }),
+              ...(page === undefined ? {} : { page }),
+            },
+            new Date(),
+            getCachedPhotoFacets,
+          ),
 );
 
 export async function getPublishedPhotos(
