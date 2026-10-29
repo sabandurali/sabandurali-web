@@ -64,6 +64,12 @@ jobs:
       - name: Test
         run: npm test
 
+      # The production build never pushes a schema, so the CI SQLite database
+      # gets one here: the admin pages of the e2e server render the real
+      # login instead of Payload's error page. Local file only, no content.
+      - name: Prepare the CI SQLite schema
+        run: npm run ci:sqlite-schema
+
       - name: Build
         run: npm run build
 

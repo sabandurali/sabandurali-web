@@ -2,10 +2,14 @@ import "server-only";
 import { getPayload, type Where } from "payload";
 import config from "@payload-config";
 import { createPublicBookReviewConditions } from "@/content/books/book-query-conditions";
-import { mapPayloadBookReview } from "@/content/books/payload-book-review-mapper";
+import {
+  mapPayloadBookReview,
+  mapPayloadBookReviewSummary,
+} from "@/content/books/payload-book-review-mapper";
 import {
   toPublicBookReview,
   type PublicBookReview,
+  type PublicBookReviewSummary,
 } from "@/content/books/public-types";
 import type { BookReviewLanguage } from "@/content/books/types";
 
@@ -20,6 +24,21 @@ const PUBLIC_BOOK_SORT = ["-publishedAt", "id"];
  */
 export const BOOK_RELATION_POPULATE = {
   books: { updatedAt: true },
+} as const;
+
+/**
+ * List reads leave out the long-form fields only the review page shows
+ * (`BOOK_REVIEW_DETAIL_FIELDS`): on Postgres each of them is a separate
+ * array table, joined for every listed review.
+ */
+export const BOOK_LIST_SELECT = {
+  keyIdeas: false,
+  strengths: false,
+  weaknesses: false,
+  whoShouldRead: false,
+  whoShouldNotRead: false,
+  applicationNotes: false,
+  quotes: false,
 } as const;
 
 /**
@@ -55,14 +74,17 @@ export class PayloadPublicBookReviewRepository {
     return bookReview === null ? null : toPublicBookReview(bookReview);
   }
 
-  /** Every public review of one language, or only the newest `limit`. */
+  /**
+   * Every public review of one language, or only the newest `limit`, as
+   * list summaries (no long-form detail fields).
+   */
   async listPublished(
     language: BookReviewLanguage,
     now: Date = new Date(),
     limit?: number,
-  ): Promise<PublicBookReview[]> {
+  ): Promise<PublicBookReviewSummary[]> {
     const payload = await getPayload({ config });
-    const bookReviews: PublicBookReview[] = [];
+    const bookReviews: PublicBookReviewSummary[] = [];
     let page = 1;
     let totalPages = 1;
 
@@ -78,6 +100,7 @@ export class PayloadPublicBookReviewRepository {
         overrideAccess: false,
         page,
         populate: BOOK_RELATION_POPULATE,
+        select: BOOK_LIST_SELECT,
         sort: PUBLIC_BOOK_SORT,
         where: {
           and: [
@@ -88,10 +111,8 @@ export class PayloadPublicBookReviewRepository {
       });
 
       for (const document of result.docs) {
-        const bookReview = mapPayloadBookReview(document, now);
-        if (bookReview !== null) {
-          bookReviews.push(toPublicBookReview(bookReview));
-        }
+        const bookReview = mapPayloadBookReviewSummary(document, now);
+        if (bookReview !== null) bookReviews.push(bookReview);
       }
 
       totalPages = result.totalPages;

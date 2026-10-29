@@ -32,7 +32,9 @@ const {
   getCsrfAllowedOrigins,
   MAX_UPLOAD_BYTES,
   PRODUCTION_SITE_ORIGIN,
+  RICH_TEXT_REMOVED_FEATURES,
 } = await import("../payload.config");
+const { siteUrl } = await import("../config/site");
 const { sqliteAdapter } = await import("@payloadcms/db-sqlite");
 const { getPayload } = await import("payload");
 const { limitAnonymousRestQueries } = await import("../lib/payloadAccess");
@@ -152,7 +154,11 @@ test("configuration: depth cap, anonymous REST limits and a rich text editor the
   ).editorConfig;
   const features = editorConfig.resolvedFeatureMap;
 
-  assert.equal(features.has("relationship"), false);
+  // The resolved editor (not only configureRichTextFeatures) offers no
+  // feature the public renderer has no design for (FRONTEND-1).
+  for (const key of RICH_TEXT_REMOVED_FEATURES) {
+    assert.equal(features.has(key), false, key);
+  }
   assert.deepEqual(
     features.get("heading")?.sanitizedServerFeatureProps?.enabledHeadingSizes,
     ["h2", "h3", "h4"],
@@ -341,6 +347,9 @@ test("users: only admins unlock a locked account, and editors learn nothing abou
 test("csrf: the allowlist covers production, this Preview deployment and local development only", () => {
   assert.deepEqual(config.csrf, getCsrfAllowedOrigins(process.env));
   assert.ok(config.csrf.includes(PRODUCTION_SITE_ORIGIN));
+  // One source for the canonical origin: src/config/site.ts.
+  assert.equal(PRODUCTION_SITE_ORIGIN, "https://www.sabandurali.com");
+  assert.equal(PRODUCTION_SITE_ORIGIN, new URL(siteUrl).origin);
   assert.equal(config.serverURL, "", "serverURL would pin one origin");
 
   assert.deepEqual(getCsrfAllowedOrigins({}), [
@@ -976,6 +985,8 @@ test("books: anonymous REST readers never see or filter on editorial fields", as
       relatedBooks: [hidden.id],
       reviewStatus: "published",
       showOnHomepage: true,
+      // A draft translation: its ID must not reach the anonymous API.
+      translation: hidden.id,
       slug: "editoryal-alanlar",
       title: "Editoryal alanlar",
       translationStatus: "draft",
@@ -988,6 +999,7 @@ test("books: anonymous REST readers never see or filter on editorial fields", as
     "relatedBooks",
     "reviewStatus",
     "showOnHomepage",
+    "translation",
     "translationStatus",
   ];
 
@@ -1011,6 +1023,7 @@ test("books: anonymous REST readers never see or filter on editorial fields", as
     { authorId: { equals: author.id } },
     { showOnHomepage: { equals: true } },
     { relatedBooks: { in: [hidden.id] } },
+    { translation: { equals: hidden.id } },
   ];
   for (const where of editorialFilters) {
     await assert.rejects(
@@ -1036,6 +1049,7 @@ test("books: anonymous REST readers never see or filter on editorial fields", as
   });
   assert.equal(local.reviewStatus, "published");
   assert.equal(local.translationStatus, "draft");
+  assert.equal(local.translation, hidden.id);
 
   // Editors keep every field in the REST API (and so in the admin).
   const asEditor = await payload.findByID({

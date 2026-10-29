@@ -81,3 +81,14 @@ test("CI keeps the e2e evidence as a short-lived, SHA-pinned artifact", () => {
   for (const [, ref] of workflow.matchAll(/uses:\s*\S+@(\S+)/g))
     assert.match(ref, /^[0-9a-f]{40}$/);
 });
+
+test("CI pushes the Payload schema to its SQLite file before the server starts", () => {
+  const schema = runIndex("npm run ci:sqlite-schema");
+  const start = workflow.indexOf(
+    "npm run start -- --hostname 127.0.0.1 --port 3101",
+  );
+  const headers = runIndex("npm run e2e:headers -- http://127.0.0.1:3101");
+  assert.ok(schema >= 0, "ci:sqlite-schema is missing from ci.yml");
+  // e2e:headers checks /admin/login, which needs the users table.
+  assert.ok(schema < start && start < headers);
+});

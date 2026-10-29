@@ -195,8 +195,8 @@ const emptyContent: SitemapContent = {
   photos: [],
   standardPages: [],
   homePages: {
-    tr: { source: "static", page: null },
-    en: { source: "static", page: null },
+    tr: { page: null },
+    en: { page: null },
   },
   districtGuides: new Map(),
   districtNews: [],
@@ -303,7 +303,6 @@ const fullContent: SitemapContent = {
   ],
   homePages: {
     tr: {
-      source: "payload",
       page: page({
         id: "legacy-home",
         slug: "ana-sayfa",
@@ -311,7 +310,7 @@ const fullContent: SitemapContent = {
         updatedAt: "2026-09-01T09:00:00.000Z",
       }),
     },
-    en: { source: "payload", page: null },
+    en: { page: null },
   },
   districtGuides: new Map<string, DistrictGuide | null>([
     [
@@ -502,9 +501,8 @@ test("a CMS home page with index disabled is not listed", () => {
   const sitemap = buildSitemap({
     ...emptyContent,
     homePages: {
-      tr: { source: "static", page: null },
+      tr: { page: null },
       en: {
-        source: "payload",
         page: page({
           id: "en-home",
           slug: "home",
@@ -634,7 +632,7 @@ test("district news lists with news are listed like the news page indexes them",
     );
     assert.equal(
       byUrl(sitemap, `/istanbul/ilceler/${district}/haberler`) !== undefined,
-      isDistrictNewsPageIndexable(items),
+      isDistrictNewsPageIndexable(items.length),
     );
   }
 });

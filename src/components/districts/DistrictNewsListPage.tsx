@@ -7,29 +7,25 @@ import Container from "@/components/ui/Container";
 import EmptyState from "@/components/ui/EmptyState";
 import Pagination from "@/components/ui/Pagination";
 import TextLink from "@/components/ui/TextLink";
-import type { PublicArticleSummary } from "@/content/articles/public-types";
+import type { PublicArticleSummaryPage } from "@/content/articles/public-types";
 import type { District } from "@/content/districts/district-registry";
 import {
   districtGuidePath,
   getDistrictPath,
 } from "@/content/districts/district-routes";
 import { homeContent } from "@/content/homeContent";
-import {
-  getDistrictNewsPagePath,
-  paginateDistrictNews,
-} from "./district-news-pages";
+import { getDistrictNewsPagePath } from "./district-news-pages";
 
 export default function DistrictNewsListPage({
   district,
   news,
-  page,
 }: {
   district: District;
-  news: PublicArticleSummary[];
-  page: number;
+  /** One page of news, paginated in the database (`getDistrictNewsPage`). */
+  news: PublicArticleSummaryPage;
 }) {
   const home = homeContent.tr;
-  const { items, currentPage, totalPages } = paginateDistrictNews(news, page);
+  const { items, currentPage, totalPages } = news;
   const href = (target: number) =>
     getDistrictNewsPagePath(district.slug, target);
 

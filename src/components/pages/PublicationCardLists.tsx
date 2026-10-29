@@ -5,7 +5,7 @@ import { cx } from "@/components/ui/cx";
 import { articlePageContent } from "@/content/articles/article-page-content";
 import type { PublicArticleSummary } from "@/content/articles/public-types";
 import { bookPageContent } from "@/content/books/book-page-content";
-import type { PublicBookReview } from "@/content/books/public-types";
+import type { PublicBookReviewSummary } from "@/content/books/public-types";
 import type { PublicPhoto } from "@/content/photos/types";
 import type { SiteLocale } from "@/lib/metadata";
 
@@ -44,7 +44,7 @@ export function BookReviewCardList({
   books,
   locale,
 }: {
-  books: readonly PublicBookReview[];
+  books: readonly PublicBookReviewSummary[];
   locale: SiteLocale;
 }) {
   return (

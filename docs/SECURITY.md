@@ -122,6 +122,21 @@ console.
 There is no reporting endpoint yet (`report-to` / `report-uri`), so
 violations are only seen in the browser's DevTools.
 
+### Vercel Web Analytics
+
+`<Analytics />` from `@vercel/analytics/next` (pinned) is rendered once in
+each public root layout (`src/app/(tr)/layout.tsx`, `src/app/(en)/layout.tsx`),
+never in the Payload admin. In a production build it loads
+`/_vercel/insights/script.js` and sends page views to `/_vercel/insights/*`:
+same origin, so the enforced policy (no script or fetch directive) and the
+report-only policy (`script-src 'self'`, `connect-src 'self'`) both allow
+it. It sets no cookie and uses no Web Storage. `src/lib/web-analytics.test.ts`
+pins all of this. Only `npm run dev` loads the debug script from
+`https://va.vercel-scripts.com`; the report-only policy then prints one
+`[Report Only]` message in development, which is expected and blocks
+nothing. On `next start` outside Vercel the script path returns 404 and no
+page view is sent. The privacy notice text is the owner's decision.
+
 ### Next steps (in order)
 
 1. **Watch a Preview deployment** (needs the owner's go-ahead for the push):
@@ -129,9 +144,13 @@ violations are only seen in the browser's DevTools.
    photo pages and the contact form in DevTools with the toolbar active, and
    list every `[Report Only]` message. Widen the policy only for a source the
    site really uses.
-2. **Collect reports** (optional): add a small `/api/csp-report` route or a
-   reporting service and set `report-to`. A route is application code and a
-   reporting service is an owner decision.
+2. **Collect reports** (optional, deliberately not built yet): a
+   `/api/csp-report` route would be an anonymous POST endpoint that writes
+   to the logs. Until the admin auth rate limit of §1 exists in the Vercel
+   Firewall it could be used to flood the logs, and step 1 (DevTools on a
+   Preview) already shows every violation. Add the route, with a body size
+   limit and a Firewall rate limit, or a reporting service (owner decision),
+   only when enforcing (step 4) is near; then set `report-to`.
 3. **Remove `'unsafe-inline'` from `script-src`**: either per-request nonces
    (every page becomes dynamically rendered; see
    `node_modules/next/dist/docs/01-app/02-guides/content-security-policy.md`)

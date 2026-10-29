@@ -10,7 +10,6 @@ import {
   getPhotoExif,
   getPhotoFacts,
 } from "../photos/photo-details";
-import { getPhotoListHref } from "../photos/photo-list-params";
 import { exampleEnglishArticle } from "../../content/articles/examples";
 import { mapStaticArticle } from "../../content/articles/static-articles";
 import { bookPageContent } from "../../content/books/book-page-content";
@@ -19,6 +18,7 @@ import {
   exampleTurkishBookReview,
 } from "../../content/books/examples";
 import type { PublicPageBlock } from "../../content/pages/public-types";
+import { getPhotoListPath } from "../../content/photos/photo-routes";
 import type { PublicPhoto } from "../../content/photos/types";
 import MetaList from "./MetaList";
 import { getVisibleBlocks, opensWithHero } from "./PageBlocks";
@@ -184,9 +184,9 @@ test("photo credit, facts and EXIF", () => {
 });
 
 test("photo list links keep the filters and drop page 1", () => {
-  assert.equal(getPhotoListHref("tr", {}, 1), "/fotograflar");
+  assert.equal(getPhotoListPath("tr", {}, 1), "/fotograflar");
   assert.equal(
-    getPhotoListHref("en", { collection: "city", tag: "cats" }, 3),
+    getPhotoListPath("en", { collection: "city", tag: "cats" }, 3),
     "/en/photography?collection=city&tag=cats&page=3",
   );
 });

@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/next";
 import { createRootLayoutMetadata } from "@/components/layout/root-metadata";
 import SkipLink from "@/components/ui/SkipLink";
 import { fontVariables } from "../fonts";
@@ -18,6 +19,9 @@ export default function EnglishRootLayout({
       <body>
         <SkipLink>Skip to content</SkipLink>
         {children}
+        {/* Vercel Web Analytics: cookieless page views, sent to this
+            origin (/_vercel/insights); see docs/SECURITY.md. */}
+        <Analytics />
       </body>
     </html>
   );

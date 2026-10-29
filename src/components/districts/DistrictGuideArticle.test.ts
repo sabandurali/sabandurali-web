@@ -172,3 +172,26 @@ test("research and news appear with items, or when their query failed", () => {
   assert.match(failed, /Fotoğraflar geçici olarak yüklenemedi/);
   assert.match(failed, /Haberler geçici olarak yüklenemedi/);
 });
+
+test("CORRECTNESS-2: the Kadıköy page states no undated year for a source", () => {
+  // The year of the District Governorship count is recorded in no source
+  // record (data/districts/OWNER-ACTIONS.md, item 1), so the page never
+  // claims one in fixed copy; the source table shows the recorded date.
+  const kadikoy = getDistrict("kadikoy");
+  assert.ok(kadikoy);
+  const html = renderToStaticMarkup(
+    h(DistrictGuideArticle, {
+      district: kadikoy,
+      data: {
+        guide,
+        photos: [],
+        research: [],
+        news: [],
+        unavailableSections: [],
+      },
+    }),
+  );
+  assert.match(html, /2025 ADNKS nüfusu/);
+  assert.doesNotMatch(html, /2017/);
+  assert.doesNotMatch(html, /451\.453 kişilik kaydı/);
+});

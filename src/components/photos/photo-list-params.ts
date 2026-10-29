@@ -1,5 +1,4 @@
-import { photoListPaths } from "@/content/photos/photo-routes";
-import type { PhotoLanguage, PhotoListFilters } from "@/content/photos/types";
+import type { PhotoListFilters } from "@/content/photos/types";
 
 export type PhotoListSearchParams = Record<
   string,
@@ -38,30 +37,4 @@ export function parsePhotoListParams(
     ...(tag === undefined ? {} : { tag }),
     ...(page === undefined || page === 1 ? {} : { page }),
   };
-}
-
-/**
- * Only the plain first page is indexed; filtered and later pages repeat
- * photographs of the list and point their canonical URL to it.
- */
-export function isIndexablePhotoList(filters: PhotoListFilters): boolean {
-  return (
-    filters.collection === undefined &&
-    filters.tag === undefined &&
-    (filters.page === undefined || filters.page === 1)
-  );
-}
-
-/** URL of one list page with the active filters (page 1 has no number). */
-export function getPhotoListHref(
-  locale: PhotoLanguage,
-  filters: Pick<PhotoListFilters, "collection" | "tag">,
-  page: number,
-): string {
-  const params = new URLSearchParams();
-  if (filters.collection) params.set("collection", filters.collection);
-  if (filters.tag) params.set("tag", filters.tag);
-  if (page > 1) params.set("page", String(page));
-  const query = params.toString();
-  return `${photoListPaths[locale]}${query ? `?${query}` : ""}`;
 }

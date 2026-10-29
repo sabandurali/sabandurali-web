@@ -53,6 +53,10 @@ need the owner's request.
   `*-data-source.ts` (chooses `static` or `payload` from `<TYPE>_PUBLIC_SOURCE`) →
   `payload-*-repository.ts` (Payload Local API, always `overrideAccess: false` and `draft: false`) →
   `payload-*-mapper.ts` (pure, tested) → `public-types.ts`. Components only consume public types.
+  Two types differ on purpose: `districts` has no mapper, the repository calls the allowlist projection
+  `district-guide-projection.ts` (input typed `unknown`); `books` maps to the internal `BookReview` model
+  (validated with `schema.ts`) and projects it to `PublicBookReview` or, for lists, `PublicBookReviewSummary`
+  at the repository boundary, so no caller sees editorial fields.
   The one exception is the `Navigation` global: it is closed to anonymous reads so the REST API never exposes
   it, so its repository reads the published version with `overrideAccess: true` and the mapper passes on only
   published, active and safe links. `src/content/content-access.test.ts` keeps it the only exception.

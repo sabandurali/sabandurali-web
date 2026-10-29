@@ -7,8 +7,7 @@ import { getAllPublishedBookReviews } from "@/content/books/book-data-source";
 import { getPublishedDistrictGuides } from "@/content/districts/district-guide-data-source";
 import {
   getAllPublishedTurkishStandardPages,
-  getEnglishHomePageData,
-  getTurkishHomePageData,
+  getHomeContent,
 } from "@/content/pages/page-data-source";
 import { getAllPublishedPhotos } from "@/content/photos/photo-data-source";
 import { buildSitemap, loadSitemapSource } from "@/lib/sitemap-entries";
@@ -60,16 +59,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       () => getAllPublishedTurkishStandardPages(),
       [],
     ),
-    loadSitemapSource(
-      "Turkish home page",
-      () => getTurkishHomePageData(),
-      null,
-    ),
-    loadSitemapSource(
-      "English home page",
-      () => getEnglishHomePageData(),
-      null,
-    ),
+    loadSitemapSource("Turkish home page", () => getHomeContent("tr"), null),
+    loadSitemapSource("English home page", () => getHomeContent("en"), null),
     loadSitemapSource(
       "district guides",
       () => getPublishedDistrictGuides(),

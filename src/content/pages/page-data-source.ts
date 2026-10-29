@@ -20,40 +20,26 @@ export function getPublicPageSource(): PublicContentSource {
   return readPublicSource("PAGE_PUBLIC_SOURCE");
 }
 
-export const getTurkishHomePageData = cache(async (): Promise<HomePageData> => {
-  if (getPublicPageSource() === "static") {
-    return { source: "static", page: null };
-  }
-
-  return {
-    source: "payload",
-    page: await payloadPageRepository.findHome("tr"),
-  };
-});
-
-export const getEnglishHomePageData = cache(async (): Promise<HomePageData> => {
-  if (getPublicPageSource() === "static") {
-    return { source: "static", page: null };
-  }
-
-  return {
-    source: "payload",
-    page: await payloadPageRepository.findHome("en"),
-  };
-});
+/** The CMS home record of one locale, or the static marker. */
+const getHomePageData = cache(
+  async (locale: SiteLocale): Promise<HomePageData> =>
+    getPublicPageSource() === "static"
+      ? { source: "static", page: null }
+      : {
+          source: "payload",
+          page: await payloadPageRepository.findHome(locale),
+        },
+);
 
 /**
  * Home content for one locale: the CMS home page when it is public and
- * complete, otherwise the static home content (never a 404).
+ * complete, otherwise the static home content (never a 404). The page, its
+ * metadata, the other locale's hreflang pair and the sitemap all read the
+ * served home through this function, so they agree on `page`.
  */
 export const getHomeContent = cache(
   async (locale: SiteLocale): Promise<ResolvedHomeContent> =>
-    resolveHomeContent(
-      locale === "tr"
-        ? await getTurkishHomePageData()
-        : await getEnglishHomePageData(),
-      homeContent[locale],
-    ),
+    resolveHomeContent(await getHomePageData(locale), homeContent[locale]),
 );
 
 export const getPublishedTurkishPageBySlug = cache(

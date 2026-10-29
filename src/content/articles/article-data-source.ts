@@ -182,24 +182,10 @@ export const getPublishedArticlesByCategory = cache(
         ),
 );
 
-/** Source-linked district news; the static source has none. */
-export const getDistrictNews = cache(
-  async (
-    district: string,
-    language: ArticleLanguage,
-  ): Promise<PublicArticleSummary[]> =>
-    readPublicSource("ARTICLE_PUBLIC_SOURCE") === "payload"
-      ? payloadArticleRepository.listDistrictArticles(
-          "district-news",
-          district,
-          language,
-        )
-      : [],
-);
-
 /**
- * One page of a district's news, paginated in the database: a request reads
- * `pageSize` items and the totals instead of the district's whole history.
+ * One page of a district's (Turkish) news, paginated in the database: a
+ * request reads `pageSize` items and the totals instead of the district's
+ * whole history. The static source has no district news.
  */
 export const getDistrictNewsPage = cache(
   async (

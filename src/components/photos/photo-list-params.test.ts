@@ -1,9 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import {
-  isIndexablePhotoList,
-  parsePhotoListParams,
-} from "./photo-list-params";
+import { parsePhotoListParams } from "./photo-list-params";
 
 test("reads collection, tag and page from the query string", () => {
   assert.deepEqual(
@@ -29,12 +26,4 @@ test("accepts only plain positive page numbers and drops page 1", () => {
   }
   assert.deepEqual(parsePhotoListParams({ page: "1" }), {});
   assert.deepEqual(parsePhotoListParams({ page: "12" }), { page: 12 });
-});
-
-test("indexes only the unfiltered first page", () => {
-  assert.equal(isIndexablePhotoList({}), true);
-  assert.equal(isIndexablePhotoList({ page: 1 }), true);
-  assert.equal(isIndexablePhotoList({ page: 2 }), false);
-  assert.equal(isIndexablePhotoList({ collection: "sehir" }), false);
-  assert.equal(isIndexablePhotoList({ tag: "kedi" }), false);
 });

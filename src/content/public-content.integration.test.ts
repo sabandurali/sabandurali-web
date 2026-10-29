@@ -742,8 +742,45 @@ test("home photos put Istanbul photos first with two limited reads", async (t) =
   await payload.delete({ collection: "photo-collections", id: nature.id });
 });
 
-const { PayloadPublicBookReviewRepository } =
+test("home photos still fill the limit when the mapper rejects a document", async (t) => {
+  t.mock.method(console, "warn", () => {});
+  // The first document of every first page loses its title, so the mapper
+  // rejects it: the selection reads on instead of returning fewer photos.
+  const find = payload.find.bind(payload);
+  const reads = t.mock.method(
+    payload,
+    "find",
+    async (...args: Parameters<Payload["find"]>) => {
+      const result = await find(...args);
+      if (args[0].collection !== "photos" || args[0].page !== 1) {
+        return result;
+      }
+      return {
+        ...result,
+        docs: result.docs.map((document, index) =>
+          index === 0 ? { ...document, title: null } : document,
+        ),
+      };
+    },
+  );
+
+  assert.deepEqual(slugs(await photos.listHomePhotos("tr", 4)), [
+    "kare-1",
+    "kare-2",
+    "kare-3",
+    "kare-4",
+  ]);
+  assert.equal(
+    reads.mock.calls.filter(
+      (call) => call.arguments[0]?.collection === "photos",
+    ).length,
+    2,
+  );
+});
+
+const { BOOK_LIST_SELECT, PayloadPublicBookReviewRepository } =
   await import("./books/payload-book-review-repository");
+const { BOOK_REVIEW_DETAIL_FIELDS } = await import("./books/public-types");
 const { PayloadPublicPageRepository } =
   await import("./pages/payload-page-repository");
 
@@ -841,11 +878,35 @@ test("book reviews: public rules, both translation directions, limits and narrow
       books: { updatedAt: true },
     });
   }
+  // The list queries (sorted; relationship population reads are not) leave
+  // the long-form detail fields out.
+  const listReads = bookReads.filter(
+    (call) => call.arguments[0]?.sort !== undefined,
+  );
+  assert.ok(listReads.length > 0);
+  for (const call of listReads) {
+    assert.deepEqual(call.arguments[0]?.select, BOOK_LIST_SELECT);
+    // The database answer itself holds none of the detail fields, so a
+    // field dropped from BOOK_LIST_SELECT fails here, not only in review.
+    const result = await call.result;
+    assert.ok(result !== undefined && result.docs.length > 0);
+    for (const document of result.docs) {
+      for (const field of BOOK_REVIEW_DETAIL_FIELDS) {
+        assert.equal(field in document, false, field);
+      }
+    }
+  }
   find.mock.restore();
   assert.deepEqual(slugs(turkish), ["derin-calisma", "eski-inceleme"]);
-  // The repository returns public types: no editorial field leaves it.
+  // The repository returns public list summaries: no editorial or detail
+  // field leaves it.
   for (const review of turkish) {
-    for (const field of ["reviewStatus", "relatedBookIds", "showOnHomepage"]) {
+    for (const field of [
+      "reviewStatus",
+      "relatedBookIds",
+      "showOnHomepage",
+      ...BOOK_REVIEW_DETAIL_FIELDS,
+    ]) {
       assert.equal(field in review, false, field);
     }
   }
@@ -867,6 +928,9 @@ test("book reviews: public rules, both translation directions, limits and narrow
     "en",
   );
   assert.ok(turkishReview && englishReview);
+  // The review page still receives the detail fields.
+  assert.deepEqual(turkishReview.keyIdeas, []);
+  assert.ok(Array.isArray(turkishReview.quotes));
   assert.equal(
     (await bookReviews.findPublishedTranslation(turkishReview, "en"))?.slug,
     "deep-work",

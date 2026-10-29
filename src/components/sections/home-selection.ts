@@ -1,61 +1,22 @@
 /**
- * Pure selection rules of the home page: which published items it lists and
+ * Pure selection rules of the home page: how many published items it lists and
  * which district guide the atlas puts forward. Kept free of data fetching so
  * the rules are tested without Payload.
  */
 import { districts } from "@/content/districts/district-registry";
 
-type Dated = { publishedAt: string | null };
-
-function publicationTime(item: Dated): number {
-  if (item.publishedAt === null) return 0;
-  const time = Date.parse(item.publishedAt);
-  return Number.isFinite(time) ? time : 0;
-}
-
-/** Sort comparator: newest publication first; undated items last. */
-export function newestPublicationFirst(left: Dated, right: Dated): number {
-  return publicationTime(right) - publicationTime(left);
-}
-
-/** The `limit` newest items, without changing the input. */
-export function selectLatest<T extends Dated>(
-  items: readonly T[],
-  limit: number,
-): T[] {
-  return items.toSorted(newestPublicationFirst).slice(0, Math.max(0, limit));
-}
-
-type RankedPhoto = Dated & {
-  district: string | null;
-  districtPhotoCategory: string | null;
-  collections: ReadonlyArray<{ slug: string }>;
-};
-
-/** Istanbul photos (a district, history, an Istanbul or architecture
- * collection) lead the home selection; the rest follow, newest first. */
-export function isIstanbulPhoto(photo: RankedPhoto): boolean {
-  return (
-    photo.district !== null ||
-    photo.districtPhotoCategory === "tarih" ||
-    photo.collections.some((collection) =>
-      /istanbul|mimari|architecture/i.test(collection.slug),
-    )
-  );
-}
-
-export function selectHomePhotos<T extends RankedPhoto>(
-  photos: readonly T[],
-  limit: number,
-): T[] {
-  return photos
-    .toSorted(
-      (left, right) =>
-        Number(isIstanbulPhoto(right)) - Number(isIstanbulPhoto(left)) ||
-        newestPublicationFirst(left, right),
-    )
-    .slice(0, Math.max(0, limit));
-}
+/**
+ * How many items each home list shows. The lists are read with these
+ * database limits (`getLatestPublishedArticles`,
+ * `getLatestPublishedBookReviews`, `getHomePagePhotos`): newest first, and
+ * Istanbul photos ahead of the others. The home page never reads a whole
+ * collection.
+ */
+export const homeListLimits = {
+  articles: 3,
+  books: 3,
+  photos: 4,
+} as const;
 
 const registryOrder = new Map(
   districts.map((district, index) => [district.slug, index]),

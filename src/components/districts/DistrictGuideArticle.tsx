@@ -380,8 +380,7 @@ export default function DistrictGuideArticle({
                           Kadıköy Belediyesi Akademi
                         </TextLink>{" "}
                         aktarımı 18 Ekim 2026’da kontrol edildi; yayın tarihi
-                        doğrulanamadı. Kaymakamlığın 451.453 kişilik kaydı 2017
-                        verisidir ve 2025 nüfusunun yerine kullanılmaz.
+                        doğrulanamadı.
                       </>
                     ) : null}
                   </>

@@ -17,23 +17,22 @@ import HomeListingSection from "@/components/sections/HomeListingSection";
 import HomeSectionHeading from "@/components/sections/HomeSectionHeading";
 import { homeCopy } from "@/components/sections/home-copy";
 import {
+  homeListLimits,
   pickFeaturedDistrict,
-  selectHomePhotos,
-  selectLatest,
 } from "@/components/sections/home-selection";
 import { getPortraitCredit } from "@/components/sections/home-portrait";
 import Section from "@/components/ui/Section";
 import { contactPaths } from "@/config/site";
-import { getAllPublishedArticles } from "@/content/articles/article-data-source";
+import { getLatestPublishedArticles } from "@/content/articles/article-data-source";
 import { articleListPaths } from "@/content/articles/article-routes";
-import { getAllPublishedBookReviews } from "@/content/books/book-data-source";
+import { getLatestPublishedBookReviews } from "@/content/books/book-data-source";
 import { bookListPaths } from "@/content/books/book-routes";
 import { getDistrictGuideSummaries } from "@/content/districts/district-guide-data-source";
 import { createHomeEntityJsonLd, serializeJsonLd } from "@/content/entity-seo";
 import type { HomeContent } from "@/content/homeContent";
 import { homeEditorialContent } from "@/content/homeEditorialContent";
 import type { PublicPage } from "@/content/pages/public-types";
-import { getAllPublishedPhotos } from "@/content/photos/photo-data-source";
+import { getHomePagePhotos } from "@/content/photos/photo-data-source";
 import { photoListPaths } from "@/content/photos/photo-routes";
 import { getVerifiedDistrictImage } from "@/content/photos/verified-district-images";
 
@@ -56,16 +55,15 @@ export default async function HomePage({
 }: HomePageProps) {
   const locale = content.locale;
   const copy = homeCopy[locale];
-  const [articles, books, photos, guideSummaries] = await Promise.all([
-    getAllPublishedArticles(locale),
-    getAllPublishedBookReviews(locale),
-    getAllPublishedPhotos(locale),
-    getDistrictGuideSummaries(),
-  ]);
-
-  const latestArticles = selectLatest(articles, 3);
-  const latestBooks = selectLatest(books, 3);
-  const latestPhotos = selectHomePhotos(photos, 4);
+  // Limited reads: each list is read with a database limit (newest first;
+  // Istanbul photos lead), never the whole collection (SEO-PERF-1).
+  const [latestArticles, latestBooks, latestPhotos, guideSummaries] =
+    await Promise.all([
+      getLatestPublishedArticles(locale, homeListLimits.articles),
+      getLatestPublishedBookReviews(locale, homeListLimits.books),
+      getHomePagePhotos(locale, homeListLimits.photos),
+      getDistrictGuideSummaries(),
+    ]);
 
   const featuredSlug = pickFeaturedDistrict(
     guideSummaries,

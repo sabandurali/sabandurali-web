@@ -532,7 +532,25 @@ test("any other revalidation failure is logged and never fails the write", () =>
   );
   assert.deepEqual(attempted, ["/a", "/b"]);
   assert.equal(logged.length, 2);
-  assert.match(logged[0], /\/a was not revalidated: cache handler unavailable/);
+  // The shared describeError: name and message, no stack, and a fixed text
+  // for a non-Error value (never its serialized contents).
+  assert.equal(
+    logged[0],
+    "[revalidation] /a was not revalidated: Error: cache handler unavailable",
+  );
+});
+
+test("a non-Error revalidation failure is logged without its contents", () => {
+  const logged: string[] = [];
+  revalidateTags(["photo-facets"], {
+    logger: { warn: (message) => logged.push(message) },
+    revalidate: () => {
+      throw { secret: "token" };
+    },
+  });
+  assert.deepEqual(logged, [
+    "[revalidation] tag photo-facets was not revalidated: Unknown error",
+  ]);
 });
 
 test("every content collection maps to at least one existing route", () => {
