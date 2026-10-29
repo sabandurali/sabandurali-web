@@ -513,7 +513,7 @@ export interface Article {
     checkedAt?: string | null;
   };
   /**
-   * İlk yayında otomatik atanır; gerekirse elle düzenlenebilir. Gelecek tarih planlı yayın anlamına gelir.
+   * İlk yayında otomatik atanır; yayındaki bir kayıtta boşaltılırsa önceki tarih korunur; gerekirse elle düzenlenebilir. Gelecek tarih planlı yayın anlamına gelir.
    */
   publishedAt?: string | null;
   seo?: {
@@ -751,7 +751,7 @@ export interface Page {
       )[]
     | null;
   /**
-   * İlk yayında otomatik atanır. Gelecek tarih planlı yayın anlamına gelir.
+   * İlk yayında otomatik atanır; yayındaki bir kayıtta boşaltılırsa önceki tarih korunur. Gelecek tarih planlı yayın anlamına gelir.
    */
   publishedAt?: string | null;
   seo?: {
@@ -1038,7 +1038,7 @@ export interface Photo {
     iso?: string | null;
   };
   /**
-   * İlk yayında otomatik atanır; gelecek tarih planlı yayın anlamına gelir.
+   * İlk yayında otomatik atanır; yayındaki bir kayıtta boşaltılırsa önceki tarih korunur; gelecek tarih planlı yayın anlamına gelir.
    */
   publishedAt?: string | null;
   seo?: {
