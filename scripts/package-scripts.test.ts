@@ -49,13 +49,13 @@ test("ARC-9: test scripts run without a server, browser or prepared database", (
   }
   assert.equal(
     scripts.test,
-    "npm run test:unit && npm run test:districts:content && npm run test:migrations",
+    "npm run test:unit && npm run test:districts:content",
   );
 });
 
 test("ARC-9: the browser and migration replay tools are exact devDependencies", () => {
   // scripts/districts/acceptance.mjs and check-cms.ts load playwright;
-  // scripts/districts/check-postgres.mjs (npm test) loads PGlite.
+  // src/collections/schema-migration.test.ts (npm test) loads PGlite.
   for (const name of ["playwright", "@electric-sql/pglite"]) {
     assert.match(devDependencies[name] ?? "", /^\d+\.\d+\.\d+$/, name);
   }
@@ -66,4 +66,12 @@ test("SEC-24: archived Production importers have no npm script", () => {
     assert.ok(!command.includes("scripts/districts/archive/"), name);
     assert.ok(!name.startsWith("district:import:production"), name);
   }
+});
+
+test("migrations are replayed once: by the schema-migration unit test", () => {
+  assert.equal(scripts["test:migrations"], undefined);
+  for (const [name, command] of Object.entries(scripts))
+    assert.ok(!command.includes("check-postgres"), name);
+  assert.ok(existsSync("src/collections/schema-migration.test.ts"));
+  assert.ok(existsSync("scripts/migration-additive.test.ts"));
 });
