@@ -80,13 +80,16 @@ test("TESTS-INFRA-6: a non-2xx response or a network error is a general error", 
 });
 
 test("TESTS-INFRA-6: a second submit while sending is ignored", async () => {
-  let release: (value: { ok: boolean }) => void = () => {};
+  // Every pending response is released before anything is awaited, so a
+  // broken guard fails the assertions below instead of hanging the run.
+  const pending: Array<(value: { ok: boolean }) => void> = [];
   const { calls, submit } = harness({
-    respond: () => new Promise((resolve) => (release = resolve)),
+    respond: () => new Promise((resolve) => pending.push(resolve)),
   });
   const first = submit();
-  assert.deepEqual(await submit(), { kind: "ignored" });
-  release({ ok: true });
+  const second = submit();
+  for (const release of pending) release({ ok: true });
+  assert.deepEqual(await second, { kind: "ignored" });
   assert.deepEqual(await first, result("success"));
   assert.equal(calls.fetch.length, 1);
   assert.equal(calls.loading, 1);
