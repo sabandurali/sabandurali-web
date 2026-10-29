@@ -1,19 +1,14 @@
 import type { MetadataRoute } from "next";
 import { getAllPublishedArticles } from "@/content/articles/article-data-source";
 import { getAllPublishedBookReviews } from "@/content/books/book-data-source";
-import { getDistrictGuide } from "@/content/districts/district-guide-data-source";
-import { districts } from "@/content/districts/district-registry";
+import { getPublishedDistrictGuides } from "@/content/districts/district-guide-data-source";
 import {
   getAllPublishedTurkishStandardPages,
   getEnglishHomePageData,
   getTurkishHomePageData,
 } from "@/content/pages/page-data-source";
 import { getAllPublishedPhotos } from "@/content/photos/photo-data-source";
-import {
-  buildSitemap,
-  loadSitemapSource,
-  loadSitemapSourcesByKey,
-} from "@/lib/sitemap-entries";
+import { buildSitemap, loadSitemapSource } from "@/lib/sitemap-entries";
 
 // Regenerated at most hourly (and on demand when CMS content changes), so
 // scheduled publications appear without a request-time scan per crawl.
@@ -71,10 +66,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       () => getEnglishHomePageData(),
       null,
     ),
-    loadSitemapSourcesByKey(
+    loadSitemapSource(
       "district guides",
-      districts.map((district) => district.slug),
-      (slug) => getDistrictGuide(slug),
+      () => getPublishedDistrictGuides(),
+      new Map(),
     ),
   ]);
 

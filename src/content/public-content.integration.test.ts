@@ -64,8 +64,11 @@ const { getPublishedArticlePageData } =
   await import("./articles/article-data-source");
 const { PayloadPublicPhotoRepository } =
   await import("./photos/payload-photo-repository");
-const { getDistrictGuide, getDistrictGuideSummaries } =
-  await import("./districts/district-guide-data-source");
+const {
+  getDistrictGuide,
+  getDistrictGuideSummaries,
+  getPublishedDistrictGuides,
+} = await import("./districts/district-guide-data-source");
 const { getDistrictPageData } = await import("./districts/district-page-data");
 
 const articles = new PayloadPublicArticleRepository();
@@ -502,6 +505,12 @@ test("district guides: one summary query, allowlisted fields, isolated sections"
   assert.equal(guide?.life, null, "reviewed but not supported by a source");
   assert.equal(JSON.stringify(guide).includes("ÖZEL-ARAŞTIRMA-NOTU"), false);
   assert.equal(await getDistrictGuide("besiktas"), null);
+
+  const published = await getPublishedDistrictGuides();
+  assert.deepEqual([...published.keys()], ["kadikoy"]);
+  assert.equal(published.get("kadikoy")?.summary, "Kadıköy özeti");
+  assert.equal(published.get("kadikoy")?.life, null);
+  assert.equal(JSON.stringify([...published]).includes("ÖZEL"), false);
 
   const page = await getDistrictPageData("kadikoy");
   assert.equal(page.guide?.summary, "Kadıköy özeti");
