@@ -21,7 +21,11 @@ import {
   validateNewsSourceName,
   validateNewsSourceUrl,
 } from "./Articles";
-import { Books, normalizeAndValidateBook } from "./Books";
+import {
+  Books,
+  normalizeAndValidateBook,
+  validateBookPublication,
+} from "./Books";
 import { Categories } from "./Categories";
 import {
   DistrictGuides,
@@ -345,6 +349,28 @@ test("book translations and related books cannot expand recursively", () => {
   assert.deepEqual(Books.indexes, [
     { fields: ["language", "slug"], unique: true },
   ]);
+});
+
+test("a database failure while publishing a book is not reported as a missing cover", async () => {
+  const failure = new Error("connection terminated unexpectedly");
+
+  await assert.rejects(
+    validateBookPublication({
+      collection: {},
+      context: {},
+      data: { _status: "published", coverImage: "media-1" },
+      operation: "update",
+      originalDoc: { id: "book-1", title: "Kitap" },
+      req: {
+        payload: {
+          findByID: async () => {
+            throw failure;
+          },
+        },
+      },
+    } as unknown as Parameters<CollectionBeforeValidateHook>[0]),
+    (error: unknown) => error === failure,
+  );
 });
 
 type FakeBook = { id: string; language: string; translation?: string | null };

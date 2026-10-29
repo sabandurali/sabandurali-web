@@ -334,16 +334,14 @@ export const validateBookPublication: CollectionBeforeValidateHook = async ({
   const coverMedia =
     coverID === null
       ? null
-      : await req.payload
-          .findByID({
-            collection: "media",
-            depth: 0,
-            disableErrors: true,
-            id: coverID,
-            overrideAccess: true,
-            req,
-          })
-          .catch(() => null);
+      : await req.payload.findByID({
+          collection: "media",
+          depth: 0,
+          disableErrors: true,
+          id: coverID,
+          overrideAccess: true,
+          req,
+        });
   const issues = getBookPublicationIssues(merged, coverMedia);
 
   if (issues.length > 0) {
