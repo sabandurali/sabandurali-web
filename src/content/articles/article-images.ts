@@ -4,12 +4,6 @@ import {
   getSafePayloadMediaPath,
 } from "@/content/media-paths";
 
-/**
- * Kept for importers outside the content layer that still name this module;
- * new code imports it from `@/content/media-paths`.
- */
-export { getSafePayloadMediaPath } from "@/content/media-paths";
-
 export function getAvailableLocalArticleImage(
   src: string | undefined,
 ): string | null {

@@ -33,6 +33,9 @@ test("the hero is the page's only h1 and uses the display type", () => {
   assert.match(html, /href="\/gayrimenkul-ve-istanbul"/);
   assert.match(html, /aria-label="Platform özeti"/);
   assert.match(html, /<dd[^>]*>39<\/dd>/);
+  // FRONTEND-4: the panel label is Turkish on the Turkish page (WCAG 3.1.2).
+  assert.match(html, /<p [^>]*>Platform özeti<\/p>/);
+  assert.doesNotMatch(html, /Intelligence/);
   assert.doesNotMatch(html, /text-signal\b/, "no orange text on paper");
 });
 
@@ -75,8 +78,28 @@ test("the English atlas features the guide, marks the Turkish summary and links 
   assert.match(html, /Featured guide: Esenler/);
   assert.match(html, /<h4[^>]*><a[^>]*href="\/istanbul\/ilceler\/esenler"/);
   assert.match(html, /<p lang="tr"[^>]*>Esenler, İstanbul/);
-  assert.match(html, /hrefLang="tr"|hreflang="tr"/);
   assert.match(html, /District guides are published in Turkish\./);
+
+  // COMPLETENESS-3: every link to a Turkish guide (the featured card, the
+  // tile map and "all districts") names the target language.
+  const guideLinks = [
+    ...html.matchAll(/<a\b[^>]*href="\/istanbul\/ilceler[^"]*"[^>]*>/g),
+  ].map(([tag]) => tag);
+  assert.ok(guideLinks.length >= 40, `${guideLinks.length} guide links`);
+  for (const tag of guideLinks) assert.match(tag, /hrefLang="tr"/i, tag);
+  const featuredLink = /<h4[^>]*>(<a\b[^>]*>)/.exec(html)?.[1] ?? "";
+  assert.match(featuredLink, /href="\/istanbul\/ilceler\/esenler"/);
+  assert.match(featuredLink, /hrefLang="tr"/i);
+});
+
+test("the Turkish atlas does not mark its own-language links", () => {
+  const html = renderToStaticMarkup(
+    h(HomeAtlas, {
+      locale: "tr",
+      featured: { slug: "esenler", summary: "Esenler.", image: null },
+    }),
+  );
+  assert.doesNotMatch(html, /hrefLang=/i);
 });
 
 test("CRT-5: the English district photo credit is the English one", () => {

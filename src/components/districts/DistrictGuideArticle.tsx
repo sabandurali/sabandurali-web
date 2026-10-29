@@ -41,6 +41,7 @@ import {
   districtPhotoCaption,
   districtPhotoCredit,
   extractLineCodes,
+  getDistrictListSections,
   getVisibleDistrictSections,
   parseNeighbourSlugs,
   planningStatusLabel,
@@ -252,10 +253,9 @@ export default function DistrictGuideArticle({
     guide?.summary ??
     "Bu ilçe için doğrulanmış rehber içeriği henüz yayımlanmadı.";
 
-  const visible = getVisibleDistrictSections({
-    research: research.length > 0 || unavailable.has("research"),
-    news: news.length > 0 || unavailable.has("news"),
-  });
+  const visible = getVisibleDistrictSections(
+    getDistrictListSections({ research, news, unavailableSections }),
+  );
   const total = visible.length;
   const section = (id: DistrictGuideSectionId) =>
     visible.find((item) => item.id === id);

@@ -1,9 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import {
-  getAvailablePublicArticleImage,
-  getSafePayloadMediaPath,
-} from "./article-images";
+import { getSafePayloadMediaPath } from "@/content/media-paths";
+import { getAvailablePublicArticleImage } from "./article-images";
 import { getSafeArticleHref } from "./article-links";
 
 const store = "abc.public.blob.vercel-storage.com";

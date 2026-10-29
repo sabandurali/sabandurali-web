@@ -30,6 +30,9 @@ type DistrictTileMapProps = {
   highlightSlugs?: readonly string[];
   /** Link of a district; defaults to its Turkish guide path. */
   getHref?: (slug: string) => string;
+  /** Language of the linked guides when it differs from the page's, e.g.
+   * "tr" on English pages (the guides are published in Turkish). */
+  hrefLang?: string;
   /** Level of the two side headings in the phone layout. */
   groupHeadingLevel?: 2 | 3 | 4;
   /** Extra caption sentence after the standard schematic note. */
@@ -119,12 +122,14 @@ function Tile({
   tile,
   state,
   href,
+  hrefLang,
   layout,
   locale,
 }: {
   tile: DistrictTile;
   state: TileState;
   href: string;
+  hrefLang?: string;
   layout: TileLayout;
   locale: UiLocale;
 }) {
@@ -144,11 +149,12 @@ function Tile({
   return (
     <UiLink
       href={href}
+      hrefLang={hrefLang}
       prefetch={false}
       className={cx(
         className,
         "no-underline hover:border-ink hover:underline",
-        state !== "featured" && "hover:bg-paper",
+        state !== "featured" && "hover:bg-band",
       )}
     >
       {content}
@@ -179,6 +185,7 @@ export default function DistrictTileMap(props: DistrictTileMapProps) {
     getHref = getDistrictPath,
     groupHeadingLevel = 3,
     caption,
+    hrefLang,
     locale = "tr",
     className,
   } = props;
@@ -293,6 +300,7 @@ export default function DistrictTileMap(props: DistrictTileMapProps) {
                   tile={tile}
                   state={tileState(tile, props)}
                   href={getHref(tile.slug)}
+                  hrefLang={hrefLang}
                   layout="grid"
                   locale={locale}
                 />
@@ -372,6 +380,7 @@ export default function DistrictTileMap(props: DistrictTileMapProps) {
                         tile={tile}
                         state={tileState(tile, props)}
                         href={getHref(tile.slug)}
+                        hrefLang={hrefLang}
                         layout="list"
                         locale={locale}
                       />

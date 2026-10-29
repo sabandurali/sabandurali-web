@@ -32,8 +32,8 @@ test("CI starts the production build locally and runs the e2e checks after it", 
   }))
     assert.ok(index >= 0, `${name} is missing from ci.yml`);
   assert.ok(build < start, "the server starts after the build");
-  // Content trust runs first so the legacy redirects are checked on their
-  // first, uncached response.
+  // Content trust runs first so the legacy redirects are checked on the
+  // first response of a fresh server.
   assert.ok(start < contentTrust && contentTrust < headers);
   assert.ok(headers < routes);
 });

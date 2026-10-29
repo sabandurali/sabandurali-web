@@ -2,6 +2,7 @@ import { withPayload } from "@payloadcms/next/withPayload";
 import type { NextConfig } from "next";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { getWorkspaceSectionRedirects } from "./src/content/workspace-redirects";
 import {
   assertProductionPayloadInfrastructure,
   getPayloadStorageProvider,
@@ -55,6 +56,9 @@ const nextConfig: NextConfig = {
         destination: "/",
         permanent: true,
       },
+      // Workspace sections that live on another page. Served here, before
+      // the filesystem, not by the ISR `[section]` route (see the module).
+      ...getWorkspaceSectionRedirects(),
     ];
   },
   experimental: {

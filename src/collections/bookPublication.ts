@@ -4,7 +4,7 @@ import {
   READING_STATUSES,
   REVIEW_STATUSES,
 } from "@/content/books/constants";
-import { getSafePayloadMediaPath } from "@/content/articles/article-images";
+import { getSafePayloadMediaPath } from "@/content/media-paths";
 import { validateBookReview } from "@/content/books/schema";
 import type {
   BookCategory,

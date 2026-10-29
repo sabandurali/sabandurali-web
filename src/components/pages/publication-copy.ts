@@ -1,4 +1,5 @@
 import { getUiStrings } from "@/components/ui/strings";
+import type { SiteLocale } from "@/content/locales";
 
 /**
  * Built-in texts of the publication pages that the content layer does not
@@ -134,4 +135,4 @@ export const publicationCopy = {
       notFound: "Photograph not found | Şaban Durali",
     },
   },
-} as const satisfies Record<"tr" | "en", PublicationCopy>;
+} as const satisfies Record<SiteLocale, PublicationCopy>;

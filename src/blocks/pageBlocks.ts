@@ -1,30 +1,5 @@
 import type { Block, Field } from "payload";
-import { imageMediaFilter } from "@/collections/validation";
-
-function isSafeLink(value: unknown): true | string {
-  if (typeof value !== "string" || value.trim().length === 0) {
-    return "Bağlantı boş olamaz.";
-  }
-
-  const link = value.trim();
-
-  if (/^#[a-z][a-z0-9-]*$/.test(link)) {
-    return true;
-  }
-
-  if (link.startsWith("/") && !link.startsWith("//")) {
-    return true;
-  }
-
-  try {
-    const url = new URL(link);
-    return url.protocol === "http:" || url.protocol === "https:"
-      ? true
-      : "Yalnız site içi, http veya https bağlantıları kullanılabilir.";
-  } catch {
-    return "Geçerli bir site içi, http veya https bağlantısı girin.";
-  }
-}
+import { imageMediaFilter, validatePageLink } from "@/collections/validation";
 
 function isValidAnchor(value: unknown): true | string {
   if (value === null || value === undefined || value === "") return true;
@@ -67,7 +42,7 @@ const linkFields: Field[] = [
     type: "text",
     label: "Bağlantı adresi",
     required: true,
-    validate: isSafeLink,
+    validate: validatePageLink,
   },
 ];
 
@@ -255,7 +230,7 @@ export const CardGroupBlock: Block = {
               validate: (value: unknown) =>
                 value === null || value === undefined || value === ""
                   ? true
-                  : isSafeLink(value),
+                  : validatePageLink(value),
             },
           ],
         },
@@ -378,7 +353,7 @@ export const HomeAboutBlock: Block = {
           validate: (value: unknown) =>
             value === null || value === undefined || value === ""
               ? true
-              : isSafeLink(value),
+              : validatePageLink(value),
         },
       ],
     },
@@ -474,7 +449,7 @@ export const HomeFocusAreasBlock: Block = {
           validate: (value: unknown) =>
             value === null || value === undefined || value === ""
               ? true
-              : isSafeLink(value),
+              : validatePageLink(value),
         },
       ],
     },

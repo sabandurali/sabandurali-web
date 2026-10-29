@@ -31,3 +31,36 @@ test("every page block image only accepts image media", () => {
     assert.equal(field.filterOptions, imageMediaFilter, name);
   }
 });
+
+function hrefFields(fields: Field[], prefix: string): Array<[string, Field]> {
+  return fields.flatMap((field): Array<[string, Field]> => {
+    const name = "name" in field ? `${prefix}.${field.name}` : prefix;
+    if ("name" in field && field.name === "href") return [[name, field]];
+    if ("fields" in field) return hrefFields(field.fields, name);
+    if (field.type === "tabs") {
+      return field.tabs.flatMap((tab) => hrefFields(tab.fields, name));
+    }
+    return [];
+  });
+}
+
+test("ARCHITECTURE-10: every page block link uses the public link rule", () => {
+  const links = pageBlocks.flatMap((block) =>
+    hrefFields(block.fields, block.slug),
+  );
+  assert.ok(links.length >= 3, `${links.length} link fields`);
+
+  for (const [name, field] of links) {
+    assert.ok("validate" in field && typeof field.validate === "function");
+    const validate = field.validate as (value: unknown) => true | string;
+    assert.equal(validate("/makaleler/ornek"), true, name);
+    assert.equal(validate("#bolum-2"), true, name);
+    // The public page mapper drops credentials, so the admin refuses them.
+    assert.equal(
+      typeof validate("https://user:pass@example.com"),
+      "string",
+      name,
+    );
+    assert.equal(typeof validate("javascript:alert(1)"), "string", name);
+  }
+});

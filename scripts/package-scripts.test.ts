@@ -75,3 +75,20 @@ test("migrations are replayed once: by the schema-migration unit test", () => {
   assert.ok(existsSync("src/collections/schema-migration.test.ts"));
   assert.ok(existsSync("scripts/migration-additive.test.ts"));
 });
+
+test(".env.example lists only e2e controls that a script reads", () => {
+  const example = readFileSync(".env.example", "utf8");
+  assert.doesNotMatch(example, /check-postgres/);
+  const block = example
+    .split("# Optional controls for the local e2e scripts")[1]
+    ?.split("\n\n")[0];
+  assert.ok(block, "the e2e controls block is missing");
+  const names = [...block.matchAll(/^# ([A-Z_]+)=$/gm)].map(([, name]) => name);
+  assert.ok(names.length > 0);
+  const sources = environmentTools
+    .concat("scripts/districts/acceptance-expectations.mjs")
+    .map((file) => readFileSync(file, "utf8"))
+    .join("\n");
+  for (const name of names)
+    assert.match(sources, new RegExp(`\\b${name}\\b`), name);
+});

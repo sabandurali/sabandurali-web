@@ -64,6 +64,9 @@ export function createWorkspaceSectionRoute(key: WorkspaceKey) {
     const { section } = await params;
     const target = resolveWorkspaceSection(key, section);
     if (target.kind === "not-found") notFound();
+    // next.config.ts redirects these entries before routing
+    // (src/content/workspace-redirects.ts, kept in sync by its test); this
+    // is only a fallback.
     if (target.kind === "redirect") permanentRedirect(target.href);
 
     const feed = await getWorkspaceEntryFeed(target.entry);

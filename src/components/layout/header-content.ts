@@ -1,8 +1,10 @@
+import type { SiteLocale } from "@/content/locales";
+
 /**
  * Texts and links of the site shell (header, footer, 404 and error pages)
  * that are not editorial content.
  */
-export type HeaderLocale = "tr" | "en";
+export type HeaderLocale = SiteLocale;
 
 export const localeHomePaths = {
   tr: "/",

@@ -10,6 +10,7 @@ import {
 import { pageBlocks } from "@/blocks/pageBlocks";
 import { imageMediaFilter } from "@/collections/validation";
 import { getText, isRecord } from "@/content/guards";
+import type { SiteLocale } from "@/content/locales";
 import { isRenderableHomeBlock } from "@/content/pages/payload-page-mapper";
 import {
   adminOnly,
@@ -83,7 +84,7 @@ function countVisibleHomeBlocks(
 /** Visible home blocks the public mapper would skip, as "hero#1" labels. */
 export function getUnrenderableHomeBlocks(
   layout: unknown,
-  language: "tr" | "en",
+  language: SiteLocale,
 ): string[] {
   if (!Array.isArray(layout)) return [];
 

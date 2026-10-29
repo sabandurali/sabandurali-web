@@ -866,3 +866,44 @@ test("the English header tab is hidden and English links may only target the Eng
     and: [{ language: { equals: "en" } }, { pageType: { equals: "home" } }],
   });
 });
+
+test("CORRECTNESS-5: publishing a district guide checks normalized sources", async () => {
+  const [protect] = DistrictGuides.hooks?.beforeChange ?? [];
+  assert.ok(protect);
+  const source = {
+    title: "Adrese Dayalı Nüfus Kayıt Sistemi",
+    publisher: "TÜİK",
+    url: "https://data.tuik.gov.tr/",
+    sourceType: "official",
+    primary: true,
+    checkedAt: "2026-09-01",
+    dataDate: "2025-12-31",
+    needsVerification: false,
+    sections: ["summary", "history", "geography"],
+  };
+  const publish = async (sources: unknown) =>
+    protect({
+      data: {
+        district: "esenler",
+        _status: "published",
+        summary: "Özet",
+        history: "Tarih",
+        geography: "Coğrafya",
+        reviewedSections: ["summary", "history", "geography"],
+        sources,
+      },
+      originalDoc: undefined,
+      operation: "create",
+    } as unknown as Parameters<NonNullable<typeof protect>>[0]);
+
+  assert.ok(await publish([source]));
+  // A null row is dropped, not dereferenced (no TypeError, no 500).
+  assert.ok(await publish([null, source]));
+  // A string is not a section list: "summary history geography" must not
+  // satisfy `sections.includes(section)`.
+  await assert.rejects(
+    publish([{ ...source, sections: "summary history geography" }]),
+    (error: unknown) =>
+      error instanceof Error && /kontrol edilmiş kaynak/.test(error.message),
+  );
+});

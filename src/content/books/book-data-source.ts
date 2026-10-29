@@ -80,10 +80,20 @@ export const getPublishedBookReviewPageData = cache(
   },
 );
 
-/** Every public review of one language, newest first. */
+/**
+ * Every public review of one language, newest first, as public types: the
+ * editorial fields are dropped here, like on the detail path.
+ */
 export const getAllPublishedBookReviews = cache(
-  async (language: BookReviewLanguage): Promise<BookReview[]> =>
-    readPublicSource("BOOK_PUBLIC_SOURCE") === "payload"
-      ? payloadBookReviewRepository.listPublished(language)
-      : listStaticPublishedBookReviews(staticBookReviews, language, new Date()),
+  async (language: BookReviewLanguage): Promise<PublicBookReview[]> => {
+    const bookReviews =
+      readPublicSource("BOOK_PUBLIC_SOURCE") === "payload"
+        ? await payloadBookReviewRepository.listPublished(language)
+        : listStaticPublishedBookReviews(
+            staticBookReviews,
+            language,
+            new Date(),
+          );
+    return bookReviews.map(toPublicBookReview);
+  },
 );

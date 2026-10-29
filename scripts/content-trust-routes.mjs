@@ -11,6 +11,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { request } from "node:http";
 import path from "node:path";
 import { districts } from "../src/content/districts/district-registry.ts";
+import { workspaceSectionRedirects } from "../src/content/workspace-redirects.ts";
 import {
   alternateLanguages,
   expectsIndexedGuides,
@@ -46,12 +47,9 @@ function locationLines(url) {
   });
 }
 
-// Legacy workspace entries redirect permanently. They run first, so the
-// first (uncached, x-nextjs-cache: MISS) response is the one checked.
-for (const [from, to] of [
-  ["/gayrimenkul-ve-istanbul/ilce-rehberi", "/istanbul/ilceler"],
-  ["/kitaplar-ve-ogrenme/kitap-incelemeleri", "/kitaplar"],
-]) {
+// Legacy workspace entries redirect permanently (next.config.ts). They run
+// first, so the first response of a fresh server is the one checked.
+for (const { source: from, destination: to } of workspaceSectionRedirects) {
   for (const attempt of ["first", "cached"]) {
     const { status, lines } = await locationLines(base + from);
     assert.equal(status, 308, `${from} (${attempt})`);
@@ -129,5 +127,5 @@ writeFileSync(
   JSON.stringify(results, null, 2),
 );
 console.log(
-  `2 legacy redirects, 39/39 district HTTP + metadata + image checks, 9 TR/EN navigation routes PASS (${path.join(output, "routes.json")})`,
+  `${workspaceSectionRedirects.length} legacy redirects, 39/39 district HTTP + metadata + image checks, 9 TR/EN navigation routes PASS (${path.join(output, "routes.json")})`,
 );
