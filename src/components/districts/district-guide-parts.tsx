@@ -21,8 +21,12 @@ export const missingText = "Bu bölüm için doğrulanmış içerik henüz eklen
 export const unavailableText = (what: string) =>
   `${what} geçici olarak yüklenemedi. Sayfayı biraz sonra yeniden açın.`;
 
-/** Class of the paragraph stack. */
-export const proseStackClassName = "max-w-measure space-y-5 type-body";
+/**
+ * Class of the paragraph stack. The gap lives on the container: a
+ * `space-y-*` rule has zero specificity in Tailwind 4 and loses to the
+ * paragraphs' own `m-0`, which ran every paragraph into the next.
+ */
+export const proseStackClassName = "grid max-w-measure gap-5 type-body";
 
 export function Prose({
   value,

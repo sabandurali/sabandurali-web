@@ -210,3 +210,19 @@ test("the guide article never branches on a district slug literal", async () => 
     assert.doesNotMatch(source, /slug\s*===\s*["']/, file);
   }
 });
+
+test("prose paragraphs are spaced by the container gap, not by margins", () => {
+  const html = render({ guide });
+  // history: "Birinci paragraf.\n\nİkinci paragraf." — two paragraphs in one
+  // stack. A `space-y-*` rule loses to the paragraphs' `m-0` in Tailwind 4,
+  // so the stack must carry the gap itself.
+  const stack =
+    /<div class="([^"]*)"><p class="m-0 whitespace-pre-line">Birinci paragraf\.<\/p><p class="m-0 whitespace-pre-line">İkinci paragraf\.<\/p><\/div>/.exec(
+      html,
+    );
+  assert.ok(stack, "history paragraphs render as one stack");
+  const classes = (stack[1] ?? "").split(/\s+/);
+  assert.ok(classes.includes("grid"), stack[1]);
+  assert.ok(classes.includes("gap-5"), stack[1]);
+  assert.ok(!classes.some((name) => name.startsWith("space-y-")), stack[1]);
+});

@@ -354,3 +354,4 @@ kipinde kalır. Klavye modeli `menu-keys.ts` içindedir ve test edilir:
 | 12 px ve üzeri | `text-[10px]`, `text-[0.6rem]` |
 | Boyut için yalnız `type-*` sınıfı ya da ölçek token'ı | Tailwind'in varsayılan `text-base`, `text-sm`, `text-lg` boyutları |
 | Hareketi `motion-safe:` ile | Zorunlu animasyon, otomatik kayan içerik |
+| Kardeşler arası boşluğu kapsayıcıda `grid gap-*` / `flex gap-*` ile | `space-y-*` / `space-x-*`: Tailwind 4'te özgüllüğü 0, çocuktaki `m-0` onu ezer (`spacing-utilities.test.ts`) |
