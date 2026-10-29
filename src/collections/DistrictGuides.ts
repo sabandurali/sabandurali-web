@@ -1,11 +1,13 @@
 import type { CollectionBeforeChangeHook, CollectionConfig } from "payload";
-import { projectPublicDistrictGuideDocument } from "@/content/districts/district-guide-projection";
+import {
+  projectPublicDistrictGuideDocument,
+  sanitizeDistrictSources,
+} from "@/content/districts/district-guide-projection";
 import { APIError } from "payload";
 import {
   districtSectionOptions,
   isPublicSourceUrl,
   sectionIsPublic,
-  type DistrictSource,
 } from "@/content/districts/district-content-policy";
 import { districtOptions } from "@/content/districts/district-registry";
 import { imageMediaFilter } from "@/collections/validation";
@@ -66,7 +68,9 @@ const protectDistrictPublication: CollectionBeforeChangeHook = ({
     throw new APIError("Merkezi registry içinden geçerli bir ilçe seçin.", 400);
   }
   if (merged._status === "published") {
-    const sources = (merged.sources ?? []) as DistrictSource[];
+    // The same normalization as the public projection: a malformed row is
+    // rejected by the policy instead of reaching it unchecked.
+    const sources = sanitizeDistrictSources(merged.sources);
     const reviewed = merged.reviewedSections ?? [];
     for (const section of ["summary", "history", "geography"] as const) {
       if (
