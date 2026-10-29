@@ -11,6 +11,7 @@ import {
   districtGuideSections,
   districtPhotoCredit,
   extractLineCodes,
+  getDistrictListSections,
   getVisibleDistrictSections,
   parseNeighbourSlugs,
   planningStatusLabel,
@@ -340,4 +341,25 @@ test("category slugs read as Turkish words", () => {
   assert.equal(categoryLabel("yeni-kategori"), "yeni kategori");
   assert.equal(categoryLabel(null), null);
   assert.equal(categoryLabel(""), null);
+});
+
+test("research and news render with items or after a failed query", () => {
+  const none = { research: [], news: [], unavailableSections: [] };
+  assert.deepEqual(getDistrictListSections(none), {
+    research: false,
+    news: false,
+  });
+  assert.deepEqual(getDistrictListSections({ ...none, research: [{}] }), {
+    research: true,
+    news: false,
+  });
+  assert.deepEqual(
+    getDistrictListSections({ ...none, unavailableSections: ["news"] }),
+    { research: false, news: true },
+  );
+  // A failed photo query does not make the list sections appear.
+  assert.deepEqual(
+    getDistrictListSections({ ...none, unavailableSections: ["photos"] }),
+    { research: false, news: false },
+  );
 });

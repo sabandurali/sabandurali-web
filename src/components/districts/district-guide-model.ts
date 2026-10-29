@@ -101,6 +101,27 @@ export function getVisibleDistrictSections({
     .map((section, index) => ({ ...section, number: index + 1 }));
 }
 
+/**
+ * Whether the research and news sections render for the page data: when
+ * they have items, or when their query failed (`unavailableSections`).
+ * The one place this rule lives; the guide passes the result to
+ * `getVisibleDistrictSections`.
+ */
+export function getDistrictListSections({
+  research,
+  news,
+  unavailableSections,
+}: {
+  research: readonly unknown[];
+  news: readonly unknown[];
+  unavailableSections: readonly string[];
+}): { research: boolean; news: boolean } {
+  return {
+    research: research.length > 0 || unavailableSections.includes("research"),
+    news: news.length > 0 || unavailableSections.includes("news"),
+  };
+}
+
 /** 1-based number of a source in the page's source list. */
 export function sourceNumbersFor(
   sources: readonly DistrictSource[],
