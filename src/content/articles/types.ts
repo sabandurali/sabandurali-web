@@ -49,6 +49,9 @@ export type ArticleContributor = {
 export type CoverImage = {
   src: string;
   alt: string;
+  /** Set only when `alt` is not in the content's language (Turkish media alt
+   * on an English page); render the image with this `lang`. */
+  altLanguage?: ArticleLanguage;
   caption?: string;
   source?: string;
   copyrightOwner?: string;

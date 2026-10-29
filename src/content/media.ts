@@ -6,6 +6,12 @@ export type MediaLocale = "tr" | "en";
 export type MappedMediaImage = {
   src: string;
   alt: string;
+  /**
+   * Language of `alt`. The media document's own alt text is written in
+   * Turkish (the CMS is Turkish); a localized alt or the fallback is in the
+   * requested locale. English pages mark a Turkish alt with lang="tr".
+   */
+  altLanguage: MediaLocale;
   width: number | null;
   height: number | null;
   /** Media "Açıklama"; Turkish content only (the CMS field is Turkish). */
@@ -31,9 +37,13 @@ export function mapMediaImage(
     return null;
   }
 
+  const localizedAlt = getText(options.alt);
+  const mediaAlt = localizedAlt === null ? getText(value.alt) : null;
+
   return {
     src,
-    alt: getText(options.alt) ?? getText(value.alt) ?? options.fallbackAlt,
+    alt: localizedAlt ?? mediaAlt ?? options.fallbackAlt,
+    altLanguage: mediaAlt === null ? options.locale : "tr",
     width: getPositiveNumber(value.width),
     height: getPositiveNumber(value.height),
     caption: options.locale === "tr" ? getText(value.description) : null,

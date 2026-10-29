@@ -14,6 +14,9 @@ export type PublicPageLink = {
 export type PublicPageImage = {
   src: string;
   alt: string;
+  /** Set only when `alt` is not in the page's language (Turkish media alt on
+   * an English page); render the image with this `lang`. */
+  altLanguage?: PublicPageLanguage;
   width?: number;
   height?: number;
   caption?: string;

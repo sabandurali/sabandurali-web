@@ -40,6 +40,9 @@ function mapCoverImage(
   return {
     src: image.src,
     alt: image.alt,
+    ...(image.altLanguage === language
+      ? {}
+      : { altLanguage: image.altLanguage }),
     ...(image.caption === null ? {} : { caption: image.caption }),
     ...(image.credit === null
       ? {}

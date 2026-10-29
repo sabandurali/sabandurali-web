@@ -126,6 +126,7 @@ function mapFeaturedImage(
     source: "payload",
     src: image.src,
     alt: image.alt,
+    ...(image.altLanguage === locale ? {} : { altLanguage: image.altLanguage }),
     ...(image.caption === null ? {} : { caption: image.caption }),
     ...(image.credit === null ? {} : { credit: image.credit }),
     ...(image.width === null ? {} : { width: image.width }),
