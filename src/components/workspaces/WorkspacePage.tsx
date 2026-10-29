@@ -3,7 +3,10 @@ import {
   ArticleCardList,
   PhotoCardList,
 } from "@/components/pages/PublicationCardLists";
-import { homeCrumb, type BreadcrumbItem } from "@/components/ui/Breadcrumb";
+import {
+  homeBreadcrumbItem,
+  type BreadcrumbItem,
+} from "@/components/ui/Breadcrumb";
 import Card from "@/components/ui/Card";
 import EmptyState from "@/components/ui/EmptyState";
 import Section from "@/components/ui/Section";
@@ -30,7 +33,7 @@ function workspaceBreadcrumb(
   entry?: WorkspaceEntry,
 ): BreadcrumbItem[] {
   const trail: BreadcrumbItem[] = [
-    homeCrumb("tr"),
+    homeBreadcrumbItem("tr"),
     { label: indexTitle, href: workspacePath },
     ...(workspace
       ? [{ label: workspace.title, href: `/${workspace.key}` }]

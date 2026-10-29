@@ -1,3 +1,4 @@
+import { cardGrids } from "@/components/pages/card-grid";
 import PageIntro from "@/components/ui/PageIntro";
 import PublicationShell from "@/components/pages/PublicationShell";
 import { publicationCopy } from "@/components/pages/publication-copy";
@@ -132,7 +133,7 @@ export default function PhotoListPage({
             {filtered ? text.emptyFiltered : text.empty}
           </EmptyState>
         ) : (
-          <ul className="m-0 grid list-none gap-5 p-0 md:grid-cols-2 xl:grid-cols-3">
+          <ul className={cardGrids[3].className}>
             {result.photos.map((photo) => (
               <li key={photo.id} className="grid">
                 <PhotoCard photo={photo} headingLevel="h3" />

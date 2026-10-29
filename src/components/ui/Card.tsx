@@ -5,7 +5,11 @@ import UiLink from "./UiLink";
 type CardProps = {
   /** The only link text: the card's accessible name stays short. */
   title: string;
-  href: string;
+  /**
+   * Target of the title link. Without it the card is not a link: the title
+   * is plain text, no focus ring is drawn and `cta` is not shown.
+   */
+  href?: string;
   headingLevel?: 2 | 3 | 4;
   /** Image or key map, shown at 3:2. Its alt text is not part of the link. */
   media?: ReactNode;
@@ -86,6 +90,7 @@ export function CardCue({
  * Card with one title link whose hit area covers the whole card. Hovering
  * underlines only the title; other links inside (credits, sources) stay
  * above the hit area. The focus ring is drawn around the whole card.
+ * Without `href` the same frame, media and body show an unlinked card.
  */
 export default function Card({
   title,
@@ -103,9 +108,13 @@ export default function Card({
   const heading = createElement(
     `h${headingLevel}`,
     { className: "m-0 type-card-title" },
-    <CardTitleLink href={href} prefetch={prefetch} hrefLang={hrefLang}>
-      {title}
-    </CardTitleLink>,
+    href === undefined ? (
+      title
+    ) : (
+      <CardTitleLink href={href} prefetch={prefetch} hrefLang={hrefLang}>
+        {title}
+      </CardTitleLink>
+    ),
   );
 
   return (
@@ -113,7 +122,7 @@ export default function Card({
       className={cx(
         cardFrameClassName,
         "overflow-hidden",
-        cardFocusClassName,
+        href !== undefined && cardFocusClassName,
         className,
       )}
     >
@@ -133,7 +142,9 @@ export default function Card({
         ) : null}
         {heading}
         {children}
-        {cta ? <CardCue className="pt-1.5">{cta}</CardCue> : null}
+        {cta && href !== undefined ? (
+          <CardCue className="pt-1.5">{cta}</CardCue>
+        ) : null}
       </div>
     </article>
   );

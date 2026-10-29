@@ -1,3 +1,4 @@
+import { cardGrids } from "@/components/pages/card-grid";
 import BookReviewCard from "@/components/books/BookReviewCard";
 import PageIntro from "@/components/ui/PageIntro";
 import PublicationShell from "@/components/pages/PublicationShell";
@@ -58,7 +59,7 @@ export default function BookReviewListPage({
         {bookReviews.length === 0 ? (
           <EmptyState size="lg">{content.emptyList}</EmptyState>
         ) : (
-          <ul className="m-0 grid list-none gap-5 p-0 md:grid-cols-2 xl:grid-cols-3">
+          <ul className={cardGrids[3].className}>
             {bookReviews.map((bookReview) => (
               <li key={bookReview.id} className="grid">
                 <BookReviewCard

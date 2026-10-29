@@ -1,3 +1,4 @@
+import { cardGrids, type CardGridColumns } from "@/components/pages/card-grid";
 import { PublicationImage } from "@/components/pages/publication-media";
 import Card from "@/components/ui/Card";
 import { getPhotoCredit } from "@/components/photos/photo-details";
@@ -8,6 +9,8 @@ import type { PublicPhoto } from "@/content/photos/types";
 type PhotoCardProps = {
   photo: PublicPhoto;
   headingLevel?: "h2" | "h3";
+  /** Columns of the grid the card sits in, for the image `sizes`. */
+  columns?: CardGridColumns;
 };
 
 /**
@@ -17,6 +20,7 @@ type PhotoCardProps = {
 export default function PhotoCard({
   photo,
   headingLevel = "h2",
+  columns = 3,
 }: PhotoCardProps) {
   const collections = photo.collections.map((item) => item.title).join(" · ");
 
@@ -30,7 +34,7 @@ export default function PhotoCard({
           src={photo.image.src}
           alt={photo.image.alt}
           layout="fill"
-          sizes="(min-width: 1280px) 420px, (min-width: 768px) 50vw, 100vw"
+          sizes={cardGrids[columns].sizes}
         />
       }
       credit={<Credit credit={getPhotoCredit(photo)} locale={photo.language} />}

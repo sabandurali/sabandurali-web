@@ -5,7 +5,7 @@ import PageShell from "@/components/workspaces/PageShell";
 import { contactPaths, privacyPaths } from "@/config/site";
 import type { Locale } from "@/content/homeContent";
 import type { PrivacyContent } from "@/content/privacyContent";
-import { homeCrumb } from "@/components/ui/Breadcrumb";
+import { homeBreadcrumbItem } from "@/components/ui/Breadcrumb";
 
 const pageTexts = {
   tr: {
@@ -40,7 +40,7 @@ export default function PrivacyNoticePage({
           <PageIntro
             locale={locale}
             size="h2-lg"
-            breadcrumb={[homeCrumb(locale), { label: texts.current }]}
+            breadcrumb={[homeBreadcrumbItem(locale), { label: texts.current }]}
             eyebrow={content.eyebrow}
             title={content.heading}
             lead={content.introduction}

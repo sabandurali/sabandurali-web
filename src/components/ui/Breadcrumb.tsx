@@ -18,7 +18,7 @@ type BreadcrumbProps = {
  * The first item of every trail, from one source so its label and target
  * never drift between pages ("Ana sayfa" → "/", "Home" → "/en").
  */
-export function homeCrumb(locale: UiLocale = "tr"): BreadcrumbItem {
+export function homeBreadcrumbItem(locale: UiLocale = "tr"): BreadcrumbItem {
   const { home, homePath } = getUiStrings(locale);
   return { label: home, href: homePath };
 }

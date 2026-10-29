@@ -5,9 +5,9 @@ import test from "node:test";
 import { fileURLToPath } from "node:url";
 import { createElement as h, type ReactElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import Breadcrumb, { homeCrumb } from "./Breadcrumb";
+import Breadcrumb, { homeBreadcrumbItem } from "./Breadcrumb";
 import { Button, ButtonLink } from "./Button";
-import Card from "./Card";
+import Card, { cardFocusClassName, cardFrameClassName } from "./Card";
 import { cx } from "./cx";
 import Disclosure from "./Disclosure";
 import DistrictKeyMap from "./DistrictKeyMap";
@@ -270,7 +270,7 @@ test("Breadcrumb marks the current page and hides separators", () => {
   const html = render(
     h(Breadcrumb, {
       items: [
-        homeCrumb("tr"),
+        homeBreadcrumbItem("tr"),
         { label: "İlçeler", href: "/istanbul/ilceler" },
         { label: "Esenler" },
       ],
@@ -286,10 +286,10 @@ test("Breadcrumb marks the current page and hides separators", () => {
 });
 
 test("FRONTEND-6: every breadcrumb starts with the same home crumb", () => {
-  assert.deepEqual(homeCrumb("tr"), { label: "Ana sayfa", href: "/" });
-  assert.deepEqual(homeCrumb("en"), { label: "Home", href: "/en" });
+  assert.deepEqual(homeBreadcrumbItem("tr"), { label: "Ana sayfa", href: "/" });
+  assert.deepEqual(homeBreadcrumbItem("en"), { label: "Home", href: "/en" });
 
-  // No page writes its own home crumb: the label comes from homeCrumb().
+  // No page writes its own home crumb: the label comes from homeBreadcrumbItem().
   assert.deepEqual(
     publicSourcesMatching(/label:\s*"(?:Ana [Ss]ayfa|Home)",\s*href:/),
     [],
@@ -445,6 +445,39 @@ test("FRONTEND-7: cards share one shell and hover only to palette tokens", () =>
   );
 });
 
+test("FRONTEND-3: a card without href keeps the Card shell and is no link", () => {
+  const linked = render(
+    h(Card, { title: "Esenler", href: "/x", cta: "Detaylı rehber" }, "Özet"),
+  );
+  const unlinked = render(
+    h(Card, { title: "Esenler", cta: "Detaylı rehber" }, "Özet"),
+  );
+  const frame = (html: string) => /^<article class="([^"]*)"/.exec(html)?.[1];
+
+  assert.doesNotMatch(unlinked, /<a\b/);
+  assert.match(unlinked, /<h3 class="m-0 type-card-title">Esenler<\/h3>/);
+  // No "go" cue and no focus ring where nothing can be followed or focused.
+  assert.doesNotMatch(unlinked, /Detaylı rehber/);
+  assert.ok(!frame(unlinked)?.includes(cardFocusClassName));
+  assert.ok(frame(linked)?.includes(cardFocusClassName));
+  // The frame and the body are the linked card's.
+  assert.equal(
+    frame(unlinked),
+    frame(linked)?.replace(` ${cardFocusClassName}`, ""),
+  );
+  assert.ok(frame(unlinked)?.startsWith(cardFrameClassName));
+  assert.equal(
+    /<div class="(flex flex-auto[^"]*)"/.exec(unlinked)?.[1],
+    /<div class="(flex flex-auto[^"]*)"/.exec(linked)?.[1],
+  );
+
+  // No other component writes the card frame by hand.
+  assert.deepEqual(
+    publicSourcesMatching(/<article className="[^"]*rounded-card border/),
+    [],
+  );
+});
+
 test("FormStatus keeps both live regions mounted and only changes their text", () => {
   const idle = render(h(FormStatus, { state: "idle" }));
   assert.match(
@@ -508,6 +541,22 @@ test("Pagination marks the current page and hides for a single page", () => {
   );
   assert.match(html, /rel="prev"/);
   assert.match(html, /rel="next"/);
+});
+
+test("FRONTEND-2: the previous and next links keep a 44 × 44 px target", () => {
+  // Below sm their text is sr-only (absolute, no flex item), so without
+  // min-w-tap the link is only the 18 px icon plus padding: 42 px wide.
+  const html = render(
+    h(Pagination, { current: 2, total: 3, getHref: () => "/" }),
+  );
+  for (const rel of ["prev", "next"]) {
+    const link = new RegExp(`<a [^>]*rel="${rel}"[^>]*>`).exec(html);
+    assert.ok(link, rel);
+    const classes = /class="([^"]*)"/.exec(link[0])?.[1]?.split(/\s+/) ?? [];
+    for (const name of ["min-h-tap", "min-w-tap", "justify-center"]) {
+      assert.ok(classes.includes(name), `${rel}: ${name}`);
+    }
+  }
 });
 
 test("Timeline exposes order and notes as text", () => {
@@ -580,7 +629,7 @@ test("ARCHITECTURE-3: one Eyebrow and one PageIntro, both primitives", () => {
       eyebrow: "İLETİŞİM",
       title: "İletişim",
       lead: "Giriş",
-      breadcrumb: [homeCrumb("tr"), { label: "İletişim" }],
+      breadcrumb: [homeBreadcrumbItem("tr"), { label: "İletişim" }],
     }),
   );
   assert.equal(count(html, /<h1\b/), 1);

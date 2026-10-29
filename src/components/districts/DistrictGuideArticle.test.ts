@@ -236,3 +236,26 @@ test("the breadcrumb names the workspace page it links to", () => {
   // (WCAG 3.2.4).
   assert.equal(crumb[1], "Gayrimenkul &amp; İstanbul");
 });
+
+test("a scheduled guide's update line shows its publication, like the JSON-LD", () => {
+  // Saved on 1 October, scheduled for 10 October: the visible line must not
+  // report a change before the page existed (getContentLastModifiedIso).
+  const scheduled = mapDistrictGuide(
+    {
+      _status: "published",
+      publishedAt: "2026-10-10T07:00:00Z",
+      reviewedSections: allSections,
+      sources,
+      summary: "Doğrulanmış özet.",
+      updatedAt: "2026-10-01T09:00:00Z",
+    },
+    Date.parse("2026-10-12T12:00:00Z"),
+  );
+  assert.ok(scheduled);
+  const html = render({ guide: scheduled });
+  assert.match(
+    html,
+    /İçerik güncellemesi: <time dateTime="2026-10-10T07:00:00.000Z">/,
+  );
+  assert.doesNotMatch(html, /dateTime="2026-10-01T09:00:00.000Z"/);
+});

@@ -1,21 +1,18 @@
-import BackToTop from "@/components/layout/BackToTop";
 import DistrictNewsCard from "@/components/districts/DistrictNewsCard";
 import { districtWorkspaceCrumb } from "@/components/districts/district-breadcrumb";
-import Footer from "@/components/layout/Footer";
-import Header from "@/components/layout/Header";
-import { homeCrumb } from "@/components/ui/Breadcrumb";
+import { homeBreadcrumbItem } from "@/components/ui/Breadcrumb";
 import Container from "@/components/ui/Container";
 import EmptyState from "@/components/ui/EmptyState";
 import PageIntro from "@/components/ui/PageIntro";
 import Pagination from "@/components/ui/Pagination";
 import TextLink from "@/components/ui/TextLink";
+import PageShell from "@/components/workspaces/PageShell";
 import type { PublicArticleSummaryPage } from "@/content/articles/public-types";
 import type { District } from "@/content/districts/district-registry";
 import {
   districtGuidePath,
   getDistrictPath,
 } from "@/content/districts/district-routes";
-import { homeContent } from "@/content/homeContent";
 import { getDistrictNewsPagePath } from "./district-news-pages";
 
 export default function DistrictNewsListPage({
@@ -26,25 +23,17 @@ export default function DistrictNewsListPage({
   /** One page of news, paginated in the database (`getDistrictNewsPage`). */
   news: PublicArticleSummaryPage;
 }) {
-  const home = homeContent.tr;
   const { items, currentPage, totalPages } = news;
   const href = (target: number) =>
     getDistrictNewsPagePath(district.slug, target);
 
   return (
-    <div id="top" lang="tr">
-      <Header
-        locale="tr"
-        anchors={home.anchors}
-        content={home.header}
-        anchorPrefix="/"
-        languageHrefs={{ tr: href(currentPage), en: "/en" }}
-      />
+    <PageShell locale="tr" languageHrefs={{ tr: href(currentPage), en: "/en" }}>
       <main id="main" className="bg-paper text-ink scheme-light">
         <PageIntro
           layout="page"
           breadcrumb={[
-            homeCrumb("tr"),
+            homeBreadcrumbItem("tr"),
             districtWorkspaceCrumb,
             { label: "İlçeler", href: districtGuidePath },
             { label: district.name, href: getDistrictPath(district.slug) },
@@ -87,8 +76,6 @@ export default function DistrictNewsListPage({
           </div>
         </Container>
       </main>
-      <Footer id={home.anchors.contact} content={home.footer} />
-      <BackToTop label={home.backToTopLabel} />
-    </div>
+    </PageShell>
   );
 }

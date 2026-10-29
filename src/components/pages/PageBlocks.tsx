@@ -5,6 +5,7 @@ import {
   PublicationImage,
 } from "@/components/pages/publication-media";
 import { ButtonLink } from "@/components/ui/Button";
+import { cardGrids } from "@/components/pages/card-grid";
 import Card from "@/components/ui/Card";
 import { cx } from "@/components/ui/cx";
 import { Credit, Figure } from "@/components/ui/Figure";
@@ -175,8 +176,7 @@ function RichTextPageBlock({ block, locale }: BlockProps<"richText">) {
 }
 
 function CardGroupPageBlock({ block, locale }: BlockProps<"cardGroup">) {
-  const imageSizes =
-    "(min-width: 1280px) 420px, (min-width: 768px) 50vw, 100vw";
+  const grid = cardGrids[3];
 
   return (
     <Section
@@ -188,14 +188,14 @@ function CardGroupPageBlock({ block, locale }: BlockProps<"cardGroup">) {
       className="scroll-mt-24"
     >
       <BlockHeading block={block} eyebrow={block.eyebrow} title={block.title} />
-      <ul className="m-0 grid list-none gap-5 p-0 md:grid-cols-2 xl:grid-cols-3">
+      <ul className={grid.className}>
         {block.cards.map((card) => {
           const media =
             card.image === null ? undefined : (
               <BlockImage
                 image={card.image}
                 locale={locale}
-                sizes={imageSizes}
+                sizes={grid.sizes}
                 fill
                 className="object-cover"
               />
@@ -208,38 +208,21 @@ function CardGroupPageBlock({ block, locale }: BlockProps<"cardGroup">) {
 
           return (
             <li key={card.id} className="grid">
-              {card.link !== null ? (
-                <Card
-                  title={card.title}
-                  href={card.link.href}
-                  media={media}
-                  credit={
-                    credit === null ? undefined : (
-                      <Credit credit={credit} locale={locale} />
-                    )
-                  }
-                  cta={card.link.label}
-                >
-                  {description}
-                </Card>
-              ) : (
-                <article className="flex min-w-0 flex-col overflow-hidden rounded-card border border-ink bg-land">
-                  {media !== undefined ? (
-                    <div className="relative aspect-[3/2] overflow-hidden bg-band">
-                      {media}
-                    </div>
-                  ) : null}
-                  {credit !== null ? (
-                    <div className="border-b border-hairline px-[18px] py-2">
-                      <Credit credit={credit} locale={locale} />
-                    </div>
-                  ) : null}
-                  <div className="flex flex-col gap-2.5 px-[18px] pt-[18px] pb-5">
-                    <h3 className="m-0 type-card-title">{card.title}</h3>
-                    {description}
-                  </div>
-                </article>
-              )}
+              {/* One Card shell: without a link it draws the same frame,
+                  media and body with a plain-text title. */}
+              <Card
+                title={card.title}
+                href={card.link?.href}
+                media={media}
+                credit={
+                  credit === null ? undefined : (
+                    <Credit credit={credit} locale={locale} />
+                  )
+                }
+                cta={card.link?.label}
+              >
+                {description}
+              </Card>
             </li>
           );
         })}
