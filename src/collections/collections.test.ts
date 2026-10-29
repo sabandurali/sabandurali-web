@@ -303,7 +303,7 @@ test("a bulk password update checks the stored email of every matching account",
       },
     },
   };
-  const run = (password: string) =>
+  const run = async (password: string) =>
     enforcePasswordPolicy({
       args: { data: { password }, where: { role: { equals: "editor" } } },
       collection: {},

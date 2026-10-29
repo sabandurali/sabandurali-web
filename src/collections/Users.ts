@@ -3,6 +3,7 @@ import {
   type CollectionBeforeChangeHook,
   type CollectionBeforeOperationHook,
   type CollectionConfig,
+  type Where,
 } from "payload";
 import { PublicRequestRefusal, isAdmin } from "@/lib/payloadAccess";
 import {
@@ -95,6 +96,21 @@ const PASSWORD_OPERATIONS: ReadonlySet<string> = new Set([
   "update",
 ]);
 
+/**
+ * A bulk operation's `where`: field conditions (records) and `and` / `or`
+ * lists of nested conditions.
+ */
+function isWhere(value: unknown): value is Where {
+  return (
+    isRecord(value) &&
+    Object.values(value).every(
+      (condition) =>
+        isRecord(condition) ||
+        (Array.isArray(condition) && condition.every(isWhere)),
+    )
+  );
+}
+
 type BeforeOperationRequest =
   Parameters<CollectionBeforeOperationHook>[0]["req"];
 
@@ -124,7 +140,7 @@ async function getAccountEmails(
     if (existing !== null && typeof existing.email === "string") {
       emails.push(existing.email);
     }
-  } else if (isRecord(args.where)) {
+  } else if (isWhere(args.where)) {
     const matching = await req.payload.find({
       collection: "users",
       depth: 0,
