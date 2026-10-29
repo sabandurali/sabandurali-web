@@ -194,6 +194,9 @@ export async function up({ db }: MigrateUpArgs): Promise<void> {
 }
 
 export async function down({ db }: MigrateDownArgs): Promise<void> {
+  // `DROP TABLE ... CASCADE` above already removes the three foreign keys
+  // of payload_locked_documents_rels; `IF EXISTS` keeps the rollback from
+  // failing on them (corrected after commit, DOWN only; UP is unchanged).
   await db.execute(sql`
    ALTER TABLE "photo_collections" DISABLE ROW LEVEL SECURITY;
   ALTER TABLE "photo_collections_locales" DISABLE ROW LEVEL SECURITY;
@@ -215,11 +218,11 @@ export async function down({ db }: MigrateDownArgs): Promise<void> {
   DROP TABLE "_photos_v" CASCADE;
   DROP TABLE "_photos_v_locales" CASCADE;
   DROP TABLE "_photos_v_rels" CASCADE;
-  ALTER TABLE "payload_locked_documents_rels" DROP CONSTRAINT "payload_locked_documents_rels_photo_collections_fk";
+  ALTER TABLE "payload_locked_documents_rels" DROP CONSTRAINT IF EXISTS "payload_locked_documents_rels_photo_collections_fk";
 
-  ALTER TABLE "payload_locked_documents_rels" DROP CONSTRAINT "payload_locked_documents_rels_tags_fk";
+  ALTER TABLE "payload_locked_documents_rels" DROP CONSTRAINT IF EXISTS "payload_locked_documents_rels_tags_fk";
 
-  ALTER TABLE "payload_locked_documents_rels" DROP CONSTRAINT "payload_locked_documents_rels_photos_fk";
+  ALTER TABLE "payload_locked_documents_rels" DROP CONSTRAINT IF EXISTS "payload_locked_documents_rels_photos_fk";
 
   DROP INDEX "payload_locked_documents_rels_photo_collections_id_idx";
   DROP INDEX "payload_locked_documents_rels_tags_id_idx";

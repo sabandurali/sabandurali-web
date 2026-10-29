@@ -147,3 +147,90 @@ test("migrations replay on PostgreSQL, keep existing rows and enforce the latest
     await db.close();
   }
 });
+
+async function downSource(name: string): Promise<string> {
+  const source = await readFile(
+    path.join(migrationsDirectory, `${name}.ts`),
+    "utf8",
+  );
+  return source.split("export async function down")[1] ?? "";
+}
+
+async function downStatements(name: string): Promise<string[]> {
+  return [...(await downSource(name)).matchAll(/sql`([\s\S]*?)`/g)].map(
+    (match) => match[1],
+  );
+}
+
+/** A DOWN that refuses on purpose to protect content (it throws first). */
+async function downRefuses(name: string): Promise<boolean> {
+  return /^\s*\([^)]*\)[^{]*\{\s*(?:\/\/[^\n]*\n\s*)*throw new Error\(/.test(
+    await downSource(name),
+  );
+}
+
+/** Tables, columns, indexes, constraints and enum types of `public`. */
+async function describeSchema(db: PGlite): Promise<unknown> {
+  const rows = async (query: string) => (await db.query(query)).rows;
+  return {
+    columns: await rows(
+      "SELECT table_name, column_name, data_type, is_nullable, column_default FROM information_schema.columns WHERE table_schema = 'public' ORDER BY table_name, column_name",
+    ),
+    constraints: await rows(
+      "SELECT conrelid::regclass::text AS table_name, conname, pg_get_constraintdef(oid) AS definition FROM pg_constraint WHERE connamespace = 'public'::regnamespace ORDER BY table_name, conname",
+    ),
+    enums: await rows(
+      "SELECT t.typname, e.enumlabel FROM pg_type t JOIN pg_enum e ON e.enumtypid = t.oid JOIN pg_namespace n ON n.oid = t.typnamespace WHERE n.nspname = 'public' ORDER BY t.typname, e.enumsortorder",
+    ),
+    indexes: await rows(
+      "SELECT tablename, indexname, indexdef FROM pg_indexes WHERE schemaname = 'public' ORDER BY tablename, indexname",
+    ),
+  };
+}
+
+test("reversible migrations roll back on PostgreSQL and replay to the same schema", async () => {
+  const names = await migrationNames();
+
+  // `payload migrate:down` / `migrate:reset` stop at the newest migration
+  // whose DOWN refuses on purpose (district content, sources, security
+  // metadata). Every migration before the first such one must roll back.
+  const firstRefusing = await (async () => {
+    for (const [index, name] of names.entries()) {
+      if (await downRefuses(name)) return index;
+    }
+    return names.length;
+  })();
+  const reversible = names.slice(0, firstRefusing);
+  assert.ok(reversible.includes("20260807_205132_day19_photography"));
+  for (const name of names.slice(firstRefusing)) {
+    assert.ok(await downRefuses(name), `${name} must roll back or refuse`);
+  }
+
+  const db = new PGlite();
+  const run = async (statements: string[]) => {
+    await db.exec("BEGIN");
+    for (const statement of statements) await db.exec(statement);
+    await db.exec("COMMIT");
+  };
+
+  try {
+    for (const name of reversible) await run(await upStatements(name));
+    const migrated = await describeSchema(db);
+
+    for (const name of [...reversible].reverse()) {
+      await assert.doesNotReject(
+        run(await downStatements(name)),
+        `${name}: DOWN fails on PostgreSQL`,
+      );
+    }
+    const tables = await db.query(
+      "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'",
+    );
+    assert.deepEqual(tables.rows, [], "the full rollback leaves no table");
+
+    for (const name of reversible) await run(await upStatements(name));
+    assert.deepEqual(await describeSchema(db), migrated);
+  } finally {
+    await db.close();
+  }
+});
