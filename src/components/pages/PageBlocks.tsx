@@ -1,301 +1,403 @@
-import Image from "next/image";
 import PayloadRichText from "@/components/articles/PayloadRichText";
-import { FocusAreaCards } from "@/components/sections/FocusAreas";
+import {
+  altLanguageAttribute,
+  creditFromText,
+  PublicationImage,
+} from "@/components/pages/publication-media";
+import { ButtonLink } from "@/components/ui/Button";
+import Card from "@/components/ui/Card";
+import { cx } from "@/components/ui/cx";
+import { Credit, Figure } from "@/components/ui/Figure";
+import Section from "@/components/ui/Section";
+import type { UiLocale } from "@/components/ui/strings";
+import { Eyebrow } from "@/components/workspaces/PageIntro";
 import type {
   PublicPageBlock,
+  PublicPageImage,
   PublicPageLink,
 } from "@/content/pages/public-types";
 
+type BlockOf<T extends PublicPageBlock["blockType"]> = Extract<
+  PublicPageBlock,
+  { blockType: T }
+>;
+
+type BlockProps<T extends PublicPageBlock["blockType"]> = {
+  block: BlockOf<T>;
+  locale: UiLocale;
+};
+
+/** Heading id of a block section, for aria-labelledby. */
+function headingId(block: PublicPageBlock): string {
+  return `block-${block.id}-heading`;
+}
+
+/** An editor's call to action; it opens in the same tab, like every link. */
 function ActionLink({
   action,
-  primary = false,
+  variant,
 }: {
   action: PublicPageLink;
-  primary?: boolean;
+  variant: "primary" | "secondary" | "on-sea";
 }) {
-  const external =
-    action.href.startsWith("http://") || action.href.startsWith("https://");
-
   return (
-    <a
-      href={action.href}
-      target={external ? "_blank" : undefined}
-      rel={external ? "noopener noreferrer" : undefined}
-      className={
-        primary
-          ? "rounded-md bg-accent px-7 py-3.5 text-center text-sm font-medium text-white transition hover:bg-accent-strong"
-          : "rounded-md border border-ivory/40 px-7 py-3.5 text-center text-sm font-medium text-ivory transition hover:border-accent hover:bg-surface"
-      }
-    >
+    <ButtonLink href={action.href} variant={variant}>
       {action.label}
-    </a>
+    </ButtonLink>
   );
 }
 
-function HeroPageBlock({
-  block,
+function BlockImage({
+  image,
+  locale,
+  sizes,
+  fill = false,
+  className,
 }: {
-  block: Extract<PublicPageBlock, { blockType: "hero" }>;
+  image: PublicPageImage;
+  locale: UiLocale;
+  sizes: string;
+  fill?: boolean;
+  className?: string;
 }) {
   return (
-    <section
-      id={block.anchor ?? undefined}
-      className="relative isolate scroll-mt-24 overflow-hidden border-b border-border"
-    >
-      <div
-        aria-hidden="true"
-        className="absolute inset-y-0 right-[8%] -z-10 hidden w-[42%] grid-cols-4 gap-px opacity-70 lg:grid"
-      >
-        <span className="border-x border-border/60 bg-white/[0.02]" />
-        <span className="border-r border-border/60 bg-surface/30" />
-        <span className="border-r border-border/60 bg-black/15" />
-        <span className="border-r border-border/60 bg-surface/20" />
-      </div>
+    <PublicationImage
+      src={image.src}
+      alt={image.alt}
+      {...altLanguageAttribute(image.altLanguage, locale)}
+      width={image.width}
+      height={image.height}
+      layout={fill ? "fill" : "intrinsic"}
+      sizes={sizes}
+      className={className}
+    />
+  );
+}
 
-      <div className="mx-auto grid min-h-[calc(100vh-94px)] max-w-7xl items-center gap-14 px-5 py-16 sm:px-6 sm:py-20 lg:grid-cols-[1.2fr_0.8fr] lg:px-10 lg:py-24">
-        <div className="min-w-0">
-          {block.eyebrow !== null && (
-            <p className="mb-6 text-xs font-medium uppercase leading-6 tracking-[0.18em] text-accent sm:text-sm sm:tracking-[0.22em]">
-              {block.eyebrow}
-            </p>
-          )}
-          <h1 className="max-w-4xl font-serif text-[2.65rem] font-medium leading-[1.08] tracking-[-0.035em] text-ivory sm:text-6xl lg:text-[72px]">
+/**
+ * Hero of a standard page. It carries the page's h1 when it opens the page
+ * (`isPageTitle`); a later hero is a section with an h2.
+ */
+function HeroPageBlock({
+  block,
+  isPageTitle,
+}: BlockProps<"hero"> & { isPageTitle: boolean }) {
+  const Heading = isPageTitle ? "h1" : "h2";
+
+  return (
+    <Section
+      id={block.anchor ?? undefined}
+      labelledBy={headingId(block)}
+      tone="paper"
+      spacing="none"
+      className="scroll-mt-24 pt-10 pb-section sm:pt-14"
+    >
+      <div className="grid gap-12 lg:grid-cols-[minmax(0,1.4fr)_minmax(16rem,0.6fr)] lg:items-end lg:gap-16">
+        <div className="flex min-w-0 flex-col gap-5">
+          {block.eyebrow !== null ? <Eyebrow>{block.eyebrow}</Eyebrow> : null}
+          <Heading
+            id={headingId(block)}
+            className="m-0 max-w-[20ch] type-display break-words"
+          >
             {block.titleLines.map((line, index) => (
-              <span
-                key={`${line.text}-${index}`}
-                className={`block ${line.accent ? "text-accent-strong" : ""}`}
-              >
-                {line.text}
+              <span key={`${line.text}-${index}`} className="block">
+                {line.accent ? (
+                  <span className="underline decoration-signal decoration-[0.12em] underline-offset-[0.14em]">
+                    {line.text}
+                  </span>
+                ) : (
+                  line.text
+                )}
                 {index < block.titleLines.length - 1 ? " " : ""}
               </span>
             ))}
-          </h1>
-          <p className="mt-8 max-w-2xl text-base leading-8 text-muted sm:text-lg">
-            {block.description}
-          </p>
-          <div className="mt-10 flex flex-col gap-4 min-[360px]:flex-row min-[360px]:flex-wrap">
-            <ActionLink action={block.primaryAction} primary />
-            <ActionLink action={block.secondaryAction} />
+          </Heading>
+          <p className="m-0 max-w-measure type-lead">{block.description}</p>
+          <div className="mt-3 flex flex-wrap gap-3">
+            <ActionLink action={block.primaryAction} variant="primary" />
+            <ActionLink action={block.secondaryAction} variant="secondary" />
           </div>
         </div>
 
-        {block.highlights.length > 0 && (
-          <aside className="rounded-2xl border border-border bg-black/25 p-7 shadow-[0_18px_50px_rgba(0,0,0,0.18)] sm:p-8">
-            {block.highlights.map((highlight, index) => (
-              <div key={`${highlight.value}-${highlight.label}`}>
-                {index > 0 && <div className="my-7 h-px bg-border" />}
-                <div>
-                  <p className="text-4xl font-semibold tracking-tight text-accent">
-                    {highlight.value}
-                  </p>
-                  <p className="mt-1 text-sm text-muted">{highlight.label}</p>
-                </div>
+        {block.highlights.length > 0 ? (
+          <dl className="m-0 grid border-t-2 border-ink">
+            {block.highlights.map((highlight) => (
+              <div
+                key={`${highlight.value}-${highlight.label}`}
+                className="flex flex-col-reverse gap-1 border-b border-hairline py-4"
+              >
+                <dt className="type-small text-ink-muted">{highlight.label}</dt>
+                <dd className="m-0 type-data-lg font-bold">
+                  {highlight.value}
+                </dd>
               </div>
             ))}
-          </aside>
-        )}
+          </dl>
+        ) : null}
       </div>
-    </section>
+    </Section>
   );
 }
 
-function RichTextPageBlock({
+function BlockHeading({
   block,
+  eyebrow,
+  title,
 }: {
-  block: Extract<PublicPageBlock, { blockType: "richText" }>;
+  block: PublicPageBlock;
+  eyebrow: string | null;
+  title: string;
 }) {
   return (
-    <section
-      id={block.anchor ?? undefined}
-      className="scroll-mt-24 bg-background text-foreground"
-    >
-      <div className="mx-auto max-w-4xl px-6 py-16 sm:py-24 lg:px-10">
-        {block.eyebrow !== null && (
-          <p className="text-sm uppercase tracking-[0.22em] text-accent">
-            {block.eyebrow}
-          </p>
-        )}
-        {block.title !== null && (
-          <h2 className="mt-5 text-4xl font-semibold tracking-tight text-ivory sm:text-5xl">
-            {block.title}
-          </h2>
-        )}
-        <div className={block.title === null ? "" : "mt-8"}>
-          <PayloadRichText data={block.content} />
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function CardGroupPageBlock({
-  block,
-}: {
-  block: Extract<PublicPageBlock, { blockType: "cardGroup" }>;
-}) {
-  const cards = block.cards.map((card) => ({
-    id: card.id,
-    icon: card.icon,
-    title: card.title,
-    description: card.description,
-    linkLabel: card.link?.label ?? null,
-    linkHref: card.link?.href ?? null,
-  }));
-
-  return (
-    <section
-      id={block.anchor ?? undefined}
-      className="scroll-mt-24 bg-ivory-soft text-ink"
-    >
-      <div className="mx-auto max-w-7xl px-6 py-20 lg:px-10 lg:py-24">
-        <div className="mb-14 max-w-3xl">
-          {block.eyebrow !== null && (
-            <p className="text-sm font-medium uppercase tracking-[0.22em] text-accent-deep">
-              {block.eyebrow}
-            </p>
-          )}
-          <h2 className="mt-5 text-4xl font-semibold tracking-tight sm:text-6xl">
-            {block.title}
-          </h2>
-        </div>
-        <FocusAreaCards
-          cards={cards}
-          renderVisual={(index, featured) => {
-            const image = block.cards[index]?.image;
-
-            if (image === null || image === undefined) return null;
-
-            const sizes = featured
-              ? "(min-width: 1024px) 40vw, (min-width: 768px) 100vw, 100vw"
-              : "(min-width: 1024px) 30vw, (min-width: 768px) 50vw, 100vw";
-
-            return image.width !== undefined && image.height !== undefined ? (
-              <Image
-                src={image.src}
-                alt={image.alt}
-                width={image.width}
-                height={image.height}
-                sizes={sizes}
-                className="aspect-video w-full rounded-md border border-[var(--accent-border-soft)] object-cover"
-              />
-            ) : (
-              <span className="relative block aspect-video overflow-hidden rounded-md border border-[var(--accent-border-soft)]">
-                <Image
-                  src={image.src}
-                  alt={image.alt}
-                  fill
-                  sizes={sizes}
-                  className="object-cover"
-                />
-              </span>
-            );
-          }}
-        />
-      </div>
-    </section>
-  );
-}
-
-function ImageTextPageBlock({
-  block,
-}: {
-  block: Extract<PublicPageBlock, { blockType: "imageText" }>;
-}) {
-  const image = (
-    <div>
-      {block.image.width !== undefined && block.image.height !== undefined ? (
-        <Image
-          src={block.image.src}
-          alt={block.image.alt}
-          width={block.image.width}
-          height={block.image.height}
-          className="h-auto w-full rounded-xl border border-border object-cover"
-        />
-      ) : (
-        <span className="relative block aspect-[4/5] overflow-hidden rounded-xl border border-border">
-          <Image
-            src={block.image.src}
-            alt={block.image.alt}
-            fill
-            sizes="(min-width: 1024px) 420px, 100vw"
-            className="object-cover"
-          />
-        </span>
-      )}
+    <div className="mb-8 flex max-w-measure flex-col gap-4">
+      {eyebrow !== null ? <Eyebrow>{eyebrow}</Eyebrow> : null}
+      <h2 id={headingId(block)} className="m-0 type-h2-lg">
+        {title}
+      </h2>
     </div>
   );
+}
 
+function RichTextPageBlock({ block, locale }: BlockProps<"richText">) {
   return (
-    <section
+    <Section
       id={block.anchor ?? undefined}
-      className="scroll-mt-24 bg-surface-soft text-foreground"
+      labelledBy={block.title === null ? undefined : headingId(block)}
+      tone="paper"
+      spacing="compact"
+      divider
+      className="scroll-mt-24"
     >
-      <div className="mx-auto grid max-w-7xl items-center gap-10 px-6 py-16 sm:py-24 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16 lg:px-10 lg:py-28">
-        {block.imagePosition === "left" && image}
-        <div className={block.imagePosition === "left" ? "" : "lg:order-first"}>
-          {block.eyebrow !== null && (
-            <p className="text-sm font-medium uppercase tracking-[0.24em] text-accent">
-              {block.eyebrow}
-            </p>
-          )}
-          <h2 className="mt-5 text-4xl font-semibold leading-tight text-ivory sm:text-5xl">
-            {block.title}
-          </h2>
-          <div className="mt-8">
-            <PayloadRichText data={block.content} />
-          </div>
-        </div>
-        {block.imagePosition === "right" && image}
+      <div className="max-w-measure">
+        {block.title !== null ? (
+          <BlockHeading
+            block={block}
+            eyebrow={block.eyebrow}
+            title={block.title}
+          />
+        ) : block.eyebrow !== null ? (
+          <Eyebrow className="mb-6">{block.eyebrow}</Eyebrow>
+        ) : null}
+        <PayloadRichText data={block.content} locale={locale} />
       </div>
-    </section>
+    </Section>
   );
 }
 
-function CtaPageBlock({
-  block,
-}: {
-  block: Extract<PublicPageBlock, { blockType: "cta" }>;
-}) {
+function CardGroupPageBlock({ block, locale }: BlockProps<"cardGroup">) {
+  const imageSizes =
+    "(min-width: 1280px) 420px, (min-width: 768px) 50vw, 100vw";
+
   return (
-    <section
+    <Section
       id={block.anchor ?? undefined}
-      className="scroll-mt-24 border-y border-border bg-background"
+      labelledBy={headingId(block)}
+      tone="band"
+      spacing="compact"
+      divider
+      className="scroll-mt-24"
     >
-      <div className="mx-auto flex max-w-5xl flex-col items-start gap-7 px-6 py-16 sm:py-20 lg:flex-row lg:items-center lg:justify-between lg:px-10">
-        <div className="max-w-2xl">
-          <h2 className="text-3xl font-semibold text-ivory sm:text-4xl">
+      <BlockHeading block={block} eyebrow={block.eyebrow} title={block.title} />
+      <ul className="m-0 grid list-none gap-5 p-0 md:grid-cols-2 xl:grid-cols-3">
+        {block.cards.map((card) => {
+          const media =
+            card.image === null ? undefined : (
+              <BlockImage
+                image={card.image}
+                locale={locale}
+                sizes={imageSizes}
+                fill
+                className="object-cover"
+              />
+            );
+          const credit =
+            card.image === null ? null : creditFromText(card.image.credit);
+          const description = (
+            <p className="m-0 type-small text-ink-muted">{card.description}</p>
+          );
+
+          return (
+            <li key={card.id} className="grid">
+              {card.link !== null ? (
+                <Card
+                  title={card.title}
+                  href={card.link.href}
+                  media={media}
+                  credit={
+                    credit === null ? undefined : (
+                      <Credit credit={credit} locale={locale} />
+                    )
+                  }
+                  cta={card.link.label}
+                >
+                  {description}
+                </Card>
+              ) : (
+                <article className="flex min-w-0 flex-col overflow-hidden rounded-card border border-ink bg-land">
+                  {media !== undefined ? (
+                    <div className="relative aspect-[3/2] overflow-hidden bg-band">
+                      {media}
+                    </div>
+                  ) : null}
+                  {credit !== null ? (
+                    <div className="border-b border-hairline px-[18px] py-2">
+                      <Credit credit={credit} locale={locale} />
+                    </div>
+                  ) : null}
+                  <div className="flex flex-col gap-2.5 px-[18px] pt-[18px] pb-5">
+                    <h3 className="m-0 type-card-title">{card.title}</h3>
+                    {description}
+                  </div>
+                </article>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </Section>
+  );
+}
+
+function ImageTextPageBlock({ block, locale }: BlockProps<"imageText">) {
+  const figure = (
+    <Figure
+      caption={block.image.caption}
+      credit={creditFromText(block.image.credit)}
+      locale={locale}
+    >
+      <BlockImage
+        image={block.image}
+        locale={locale}
+        sizes="(min-width: 1024px) 40vw, 100vw"
+        className="rounded-card border border-ink"
+      />
+    </Figure>
+  );
+
+  return (
+    <Section
+      id={block.anchor ?? undefined}
+      labelledBy={headingId(block)}
+      tone="paper"
+      spacing="compact"
+      divider
+      className="scroll-mt-24"
+    >
+      <div className="grid gap-10 lg:grid-cols-2 lg:items-start lg:gap-16">
+        <div
+          className={cx(
+            "min-w-0",
+            block.imagePosition === "left" && "lg:order-2",
+          )}
+        >
+          <BlockHeading
+            block={block}
+            eyebrow={block.eyebrow}
+            title={block.title}
+          />
+          <PayloadRichText data={block.content} locale={locale} />
+        </div>
+        <div
+          className={cx(
+            "min-w-0",
+            block.imagePosition === "left" && "lg:order-1",
+          )}
+        >
+          {figure}
+        </div>
+      </div>
+    </Section>
+  );
+}
+
+function CtaPageBlock({ block }: BlockProps<"cta">) {
+  return (
+    <Section
+      id={block.anchor ?? undefined}
+      labelledBy={headingId(block)}
+      tone="sea"
+      spacing="compact"
+      className="scroll-mt-24"
+    >
+      <div className="flex flex-col items-start gap-7 lg:flex-row lg:items-center lg:justify-between">
+        <div className="max-w-measure">
+          <h2 id={headingId(block)} className="m-0 type-h2">
             {block.title}
           </h2>
-          {block.description !== null && (
-            <p className="mt-4 text-base leading-7 text-muted">
+          {block.description !== null ? (
+            <p className="mt-4 mb-0 type-body text-on-sea-soft">
               {block.description}
             </p>
-          )}
+          ) : null}
         </div>
-        <ActionLink action={block.action} primary />
+        <ActionLink action={block.action} variant="on-sea" />
       </div>
-    </section>
+    </Section>
   );
 }
 
-export default function PageBlocks({ blocks }: { blocks: PublicPageBlock[] }) {
-  return blocks
-    .filter((block) => block.visible)
-    .map((block) => {
-      switch (block.blockType) {
-        case "hero":
-          return <HeroPageBlock key={block.id} block={block} />;
-        case "richText":
-          return <RichTextPageBlock key={block.id} block={block} />;
-        case "cardGroup":
-          return <CardGroupPageBlock key={block.id} block={block} />;
-        case "imageText":
-          return <ImageTextPageBlock key={block.id} block={block} />;
-        case "homeAbout":
-        case "homeFocusAreas":
-          return null;
-        case "cta":
-          return <CtaPageBlock key={block.id} block={block} />;
-      }
-    });
+/** Visible blocks of a standard page, in order. */
+export function getVisibleBlocks(
+  blocks: readonly PublicPageBlock[],
+): PublicPageBlock[] {
+  return blocks.filter(
+    (block) =>
+      block.visible &&
+      block.blockType !== "homeAbout" &&
+      block.blockType !== "homeFocusAreas",
+  );
+}
+
+/**
+ * True when the page opens with a hero block, which then carries the
+ * page's h1; otherwise the page renders its own title first.
+ */
+export function opensWithHero(blocks: readonly PublicPageBlock[]): boolean {
+  return getVisibleBlocks(blocks)[0]?.blockType === "hero";
+}
+
+/**
+ * The blocks of a standard page in the atlas design. Home-only blocks
+ * (homeAbout, homeFocusAreas) have no place on a standard page and are
+ * skipped.
+ */
+export default function PageBlocks({
+  blocks,
+  locale = "tr",
+}: {
+  blocks: readonly PublicPageBlock[];
+  locale?: UiLocale;
+}) {
+  const visible = getVisibleBlocks(blocks);
+
+  return visible.map((block, index) => {
+    switch (block.blockType) {
+      case "hero":
+        return (
+          <HeroPageBlock
+            key={block.id}
+            block={block}
+            locale={locale}
+            isPageTitle={index === 0}
+          />
+        );
+      case "richText":
+        return (
+          <RichTextPageBlock key={block.id} block={block} locale={locale} />
+        );
+      case "cardGroup":
+        return (
+          <CardGroupPageBlock key={block.id} block={block} locale={locale} />
+        );
+      case "imageText":
+        return (
+          <ImageTextPageBlock key={block.id} block={block} locale={locale} />
+        );
+      case "cta":
+        return <CtaPageBlock key={block.id} block={block} locale={locale} />;
+      case "homeAbout":
+      case "homeFocusAreas":
+        return null;
+    }
+  });
 }
