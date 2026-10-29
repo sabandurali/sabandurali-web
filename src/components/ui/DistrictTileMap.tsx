@@ -154,7 +154,7 @@ function Tile({
       className={cx(
         className,
         "no-underline hover:border-ink hover:underline",
-        state !== "featured" && "hover:bg-paper",
+        state !== "featured" && "hover:bg-band",
       )}
     >
       {content}

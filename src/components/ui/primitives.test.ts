@@ -605,6 +605,15 @@ test("DistrictTileMap: 39 named links per layout, featured and current states", 
     "the Bosphorus column has no letter",
   );
   assert.match(html, /Kuzey/);
+  // FRONTEND-7: a hovered tile changes ground. The grid sits on paper and
+  // tiles are land, so the hover ground is band, never paper (or white).
+  const kadikoyTile = [...html.matchAll(/<a [^>]*>/g)]
+    .map(([tag]) => tag)
+    .find((tag) => tag.includes('href="/istanbul/ilceler/kadikoy"'));
+  assert.ok(kadikoyTile);
+  assert.match(kadikoyTile, /\bbg-land\b/);
+  assert.match(kadikoyTile, /\bhover:bg-band\b/);
+  assert.doesNotMatch(kadikoyTile, /\bhover:bg-(?:paper|white)\b/);
   assert.match(html, /Gazi\u00adosman\u00adpaşa/);
 
   const current = render(
