@@ -21,7 +21,7 @@ import {
   getPublishedPhotos,
   hasPublishedPhotos,
 } from "@/content/photos/photo-data-source";
-import { createPhotoListMetadata } from "@/content/photos/photo-list-seo";
+import { loadPhotoListMetadata } from "@/content/photos/photo-list-seo";
 import type { SiteLocale } from "@/lib/metadata";
 import { publicationListSeo } from "./publication-list-seo";
 
@@ -77,19 +77,20 @@ type PhotoListRouteProps = {
 
 /**
  * The photo list reads its filters and page from the query string, so it
- * renders per request; one database query serves each page and the
- * metadata shares it (photo-data-source).
+ * renders per request. The page and its metadata share one list query
+ * (list find + count, plus the cached facets); only the unfiltered first
+ * page also checks, through a cached one-row read, whether the other
+ * language has photos for its hreflang pair (photo-list-seo).
  */
 export function createPhotoListRoute(locale: SiteLocale) {
   async function generateMetadata({
     searchParams,
   }: PhotoListRouteProps): Promise<Metadata> {
     const filters = parsePhotoListParams(await searchParams);
-    const [list, content] = await Promise.all([
-      getPublishedPhotos(locale, filters),
-      loadListContent(hasPublishedPhotos),
-    ]);
-    return createPhotoListMetadata(locale, filters, list, content);
+    return loadPhotoListMetadata(locale, filters, {
+      list: () => getPublishedPhotos(locale, filters),
+      hasPhotos: hasPublishedPhotos,
+    });
   }
 
   async function PhotoListRoutePage({ searchParams }: PhotoListRouteProps) {

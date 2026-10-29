@@ -134,11 +134,23 @@ export const getHomePagePhotos = cache(
       : [],
 );
 
-/** Whether a language has any public photo (one-row read). */
+/*
+ * Whether a language has a public photo only pairs the photo lists in
+ * hreflang. It is one one-row read of the newest public photo (not the
+ * Istanbul-first home selection), cached like the facets: photo writes
+ * invalidate the tag, the hour covers scheduled publishing.
+ */
+const getCachedHasPublishedPhotos = unstable_cache(
+  (locale: PhotoLanguage) => payloadPhotoRepository.hasPublished(locale),
+  ["photo-has-published"],
+  { tags: [PHOTO_FACETS_CACHE_TAG], revalidate: 3600 },
+);
+
+/** Whether a language has any public photo. */
 export async function hasPublishedPhotos(
   locale: PhotoLanguage,
 ): Promise<boolean> {
-  return (await getHomePagePhotos(locale, 1)).length > 0;
+  return isPayloadSource() ? getCachedHasPublishedPhotos(locale) : false;
 }
 
 /** Photos of one district, filtered in the database. */

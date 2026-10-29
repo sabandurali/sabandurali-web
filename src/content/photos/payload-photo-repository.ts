@@ -240,6 +240,24 @@ export class PayloadPublicPhotoRepository {
     return [...istanbul, ...others];
   }
 
+  /**
+   * Whether a language has a public photo: the newest public document,
+   * one one-row query unless the mapper rejects it.
+   */
+  async hasPublished(
+    locale: PhotoLanguage,
+    now: Date = new Date(),
+  ): Promise<boolean> {
+    const photos = await this.collectUpTo(
+      locale,
+      createPublicPhotoConditions(now),
+      1,
+      1,
+      now,
+    );
+    return photos.length > 0;
+  }
+
   async listByDistrict(
     district: string,
     locale: PhotoLanguage,
