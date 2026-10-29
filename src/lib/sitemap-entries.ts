@@ -18,6 +18,7 @@
  */
 import type { MetadataRoute } from "next";
 import { contactPaths, privacyPaths } from "@/config/site";
+import { describeError, reportContentIssue } from "@/content/content-log";
 import {
   articleListPaths,
   getArticlePath,
@@ -571,16 +572,23 @@ export function buildSitemap(content: SitemapContent): MetadataRoute.Sitemap {
 
 export type SitemapErrorReporter = (source: string, error: unknown) => void;
 
-function describeError(error: unknown): string {
-  return error instanceof Error ? error.message : String(error);
-}
-
+/**
+ * One structured `[content]` line per failing source, like every other
+ * content skip: the source name and the error class and message, never the
+ * stringified error object.
+ */
 export const reportSitemapSourceError: SitemapErrorReporter = (
   source,
   error,
 ) => {
-  console.error(
-    `[sitemap] ${source} could not be loaded; the sitemap is served without it: ${describeError(error)}`,
+  reportContentIssue(
+    {
+      scope: "sitemap",
+      reason: "source-unavailable",
+      id: source,
+      detail: describeError(error),
+    },
+    "error",
   );
 };
 

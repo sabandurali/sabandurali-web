@@ -15,7 +15,8 @@ export type ContentScope =
   | "navigation"
   | "pages"
   | "photos"
-  | "rich-text";
+  | "rich-text"
+  | "sitemap";
 
 export type ContentIssue = {
   scope: ContentScope;

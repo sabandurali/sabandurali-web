@@ -16,6 +16,7 @@ import {
   loadSitemapSource,
   loadSitemapSourcesByKey,
   mergeSitemapEntries,
+  reportSitemapSourceError,
   type SitemapContent,
   type SitemapEntry,
 } from "./sitemap-entries";
@@ -727,6 +728,36 @@ test("a failing source falls back and is reported", async () => {
     "ok",
   );
   assert.equal(reports.length, 1);
+});
+
+test("a failing source is logged as one structured content line", (t) => {
+  const error = t.mock.method(console, "error", () => undefined);
+
+  reportSitemapSourceError("articles", { secret: "PRIVATE-OBJECT-VALUE" });
+  reportSitemapSourceError("pages", new TypeError("db down"));
+
+  assert.equal(error.mock.callCount(), 2);
+  const lines = error.mock.calls.map((call) => String(call.arguments[0]));
+  for (const line of lines) assert.ok(line.startsWith("[content] "), line);
+  assert.deepEqual(
+    lines.map((line) => JSON.parse(line.slice("[content] ".length))),
+    [
+      {
+        severity: "error",
+        scope: "sitemap",
+        reason: "source-unavailable",
+        id: "articles",
+        detail: "Unknown error",
+      },
+      {
+        severity: "error",
+        scope: "sitemap",
+        reason: "source-unavailable",
+        id: "pages",
+        detail: "TypeError: db down",
+      },
+    ],
+  );
 });
 
 test("one failing district does not hide the others", async () => {
