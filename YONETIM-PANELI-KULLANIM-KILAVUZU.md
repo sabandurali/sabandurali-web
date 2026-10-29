@@ -195,7 +195,7 @@ Bir makaleyi önce güvenli taslak olarak hazırlamak, sonra doğru dilde görü
 - Makaleye özel `featuredImageAlt` boşsa Media kaydındaki `Alternatif metin`, o da yoksa makale başlığı kullanılır. Erişilebilirlik için makale bağlamına uygun özel alt metin girmek daha doğrudur.
 - Makale silme yetkisi yalnız `Admin` rolündedir. Yayından kaldırmak için silmek yerine kaydı taslağa alın.
 - Aynı slug aynı locale içinde ikinci kez kullanılamaz.
-- `İçerik türü` `İlçeden haber` olan kayıt kısa özet ve orijinal kaynağa bağlantıdır; görünür gövde metni zorunlu değildir. Yayınlanırken `Orijinal kaynak` grubunda `Kaynak adı` ve `https://` ile başlayan `Orijinal haber URL'si` zorunludur.
+- `İçerik türü ve ilçe ilişkisi` bölümünde türü `İlçeden haber` seçilen kayıt kısa özet ve orijinal kaynağa bağlantıdır; görünür gövde metni zorunlu değildir. Yayınlanırken `Orijinal kaynak` grubunda `Kaynak adı` ve `https://` ile başlayan `Orijinal haber URL'si` zorunludur.
 - `Canonical adresi` boşsa makalenin kendi adresi kullanılır. Yalnız `/` ile başlayan site içi yol (ör. `/makaleler/[slug]` biçiminde) veya `https://www.sabandurali.com` adresi kabul edilir.
 - Zengin metinde başlıklar `H2`–`H4` aralığındadır; `H1` sayfa başlığına ayrılmıştır. Site içi bağlantı yalnız `Articles`, `Sayfalar`, `Kitap İncelemeleri`, `Fotoğraflar` ve `İlçe Rehberleri` kayıtlarına verilebilir. İlişki (relationship) bloğu kaldırılmıştır; başka bir kayda bağlantı vermek için bağlantı özelliğini kullanın.
 
