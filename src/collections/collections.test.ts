@@ -1146,3 +1146,24 @@ test("CORRECTNESS-5: publishing a district guide checks normalized sources", asy
       error instanceof Error && /kontrol edilmiş kaynak/.test(error.message),
   );
 });
+
+test("ARCHITECTURE-3: book collections use the shared content guards, not local copies", () => {
+  const read = (file: string) =>
+    readFileSync(
+      path.join(path.dirname(fileURLToPath(import.meta.url)), file),
+      "utf8",
+    );
+  const books = read("Books.ts");
+  assert.doesNotMatch(books, /function getRelationshipID\b/);
+  assert.match(books, /\bgetRelationshipID\b[\s\S]*?from "@\/content\/guards"/);
+
+  const publication = read("bookPublication.ts");
+  assert.doesNotMatch(
+    publication,
+    /function (?:getNumber|getPositiveNumber)\b/,
+  );
+  assert.match(
+    publication,
+    /\bgetFiniteNumber\b[\s\S]*?from "@\/content\/guards"/,
+  );
+});
