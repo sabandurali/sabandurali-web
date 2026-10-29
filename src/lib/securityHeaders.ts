@@ -107,6 +107,55 @@ export const contentSecurityPolicyReportOnlyDirectives: Readonly<
   "manifest-src": ["'self'"],
 };
 
+/** Where the Payload admin loads Monaco (JSON and code fields) from. */
+export const MONACO_CDN_ORIGIN = "https://cdn.jsdelivr.net";
+
+/**
+ * Candidate report-only policy for the Payload admin (`docs/SECURITY.md` §2,
+ * step 5). It is not sent yet: `scripts/security-headers-check.mjs` expects
+ * no report-only header on `/admin`, so wiring it up in `next.config.ts`
+ * and updating that check belong in one change.
+ *
+ * Measured on 2026-10-29 against a local production build with Chrome
+ * (login, dashboard, collection lists, create views with Lexical typing,
+ * the district guide JSON field in Monaco, media upload view, the
+ * Navigation global, the account view): no violation once the admin avatar
+ * stopped loading Gravatar (`admin.avatar: "default"`). The admin needs the
+ * same inline scripts and styles as the public site, so this candidate does
+ * not stop an XSS either; it only fences the origins the admin may reach.
+ */
+export const adminContentSecurityPolicyReportOnlyDirectives: Readonly<
+  Record<string, readonly string[]>
+> = {
+  ...contentSecurityPolicyReportOnlyDirectives,
+  "script-src": [
+    "'self'",
+    "'unsafe-inline'",
+    MONACO_CDN_ORIGIN,
+    VERCEL_TOOLBAR_ORIGIN,
+  ],
+  "style-src": [
+    "'self'",
+    "'unsafe-inline'",
+    MONACO_CDN_ORIGIN,
+    VERCEL_TOOLBAR_ORIGIN,
+  ],
+  "font-src": [
+    "'self'",
+    "data:",
+    MONACO_CDN_ORIGIN,
+    VERCEL_TOOLBAR_ORIGIN,
+    "https://assets.vercel.com",
+  ],
+  "connect-src": [
+    "'self'",
+    MONACO_CDN_ORIGIN,
+    VERCEL_TOOLBAR_ORIGIN,
+    "wss://ws-us3.pusher.com",
+  ],
+  "media-src": ["'self'", "blob:", VERCEL_BLOB_SOURCE],
+};
+
 /**
  * Every route except the Payload admin, the API and the image optimizer
  * (which sends its own sandbox policy). The admin needs Monaco from

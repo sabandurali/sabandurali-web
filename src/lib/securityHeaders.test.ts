@@ -12,7 +12,9 @@ import { getFormspreeEndpoint } from "@/components/forms/contact-submission";
 import { contactContent } from "@/content/contactContent";
 import {
   FORMSPREE_ORIGIN,
+  MONACO_CDN_ORIGIN,
   PUBLIC_ROUTES_SOURCE,
+  adminContentSecurityPolicyReportOnlyDirectives,
   contentSecurityPolicyDirectives,
   contentSecurityPolicyReportOnlyDirectives,
   publicRouteSecurityHeaders,
@@ -328,4 +330,47 @@ test("next.config sends the report-only CSP on public routes only", async () => 
   ]) {
     assert.equal(matches(pathname), false, pathname);
   }
+});
+
+test("the admin candidate policy keeps the public one and adds only Monaco, data: fonts and blob: media", async () => {
+  const admin = adminContentSecurityPolicyReportOnlyDirectives;
+  const publicPolicy = contentSecurityPolicyReportOnlyDirectives;
+
+  assert.deepEqual(Object.keys(admin).sort(), Object.keys(publicPolicy).sort());
+  for (const [name, sources] of Object.entries(
+    contentSecurityPolicyDirectives,
+  )) {
+    assert.deepEqual(admin[name], sources, name);
+  }
+  for (const [name, sources] of Object.entries(admin)) {
+    const added = sources.filter(
+      (source) => !(publicPolicy[name] ?? []).includes(source),
+    );
+    for (const source of added) {
+      assert.ok(
+        source === MONACO_CDN_ORIGIN ||
+          (name === "font-src" && source === "data:") ||
+          (name === "media-src" && source === "blob:"),
+        `${name} adds ${source}`,
+      );
+    }
+    for (const source of sources) {
+      assert.notEqual(source, "*", name);
+      assert.notEqual(source, "'unsafe-eval'", name);
+      assert.ok(!source.startsWith("http:"), `${name}: ${source}`);
+    }
+  }
+  // Gravatar stays out: the admin avatar is Payload's built-in default.
+  const value = serializeContentSecurityPolicy(admin);
+  assert.ok(!value.includes("gravatar"), "no Gravatar origin");
+
+  // Not sent yet (see the module comment): no route carries it.
+  assert.ok(nextConfig.headers);
+  const routes = await nextConfig.headers();
+  assert.equal(
+    routes.some(({ headers }) =>
+      headers.some((header) => header.value === value),
+    ),
+    false,
+  );
 });
