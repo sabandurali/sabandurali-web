@@ -5,8 +5,7 @@
 !*.md
 !.gitignore
 
-# Inputs that a test or a pending, not yet applied CMS change still reads.
-!istanbul-39/editorial-review.json
+# An input that a pending, not yet applied CMS change still reads.
 !content-trust-20261018/cms-home-about.json
 
 # Private release evidence stays out of Git entirely (see the root .gitignore);

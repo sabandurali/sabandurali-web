@@ -20,7 +20,7 @@ const { values: options } = parseArgs({
 });
 // Reviewed official neighbourhood lists; this input moves to data/districts/
 // (reports/README.md).
-const editorialReviewPath = "reports/istanbul-39/editorial-review.json";
+const editorialReviewPath = "data/districts/editorial-review.json";
 
 const research = JSON.parse(
   readFileSync("data/districts/research.json", "utf8"),
