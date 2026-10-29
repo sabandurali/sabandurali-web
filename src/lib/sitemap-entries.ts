@@ -64,9 +64,11 @@ import {
 export type SitemapEntry = MetadataRoute.Sitemap[number];
 type ChangeFrequency = NonNullable<SitemapEntry["changeFrequency"]>;
 
-/** Home page data as the page data source returns it; `null` if it failed. */
+/**
+ * The served home page of one locale (`getHomeContent`): its CMS record, or
+ * `page: null` when the static home is served; `null` if loading failed.
+ */
 export type SitemapHomePage = {
-  source: "static" | "payload";
   page: PublicPage | null;
 } | null;
 

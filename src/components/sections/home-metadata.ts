@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import {
   createPublicPageMetadata,
   homePagePaths,
+  isHomePageIndexable,
 } from "@/content/pages/page-seo";
 import type { PublicPage } from "@/content/pages/public-types";
 import { createPageMetadata, type SiteLocale } from "@/lib/metadata";
@@ -26,24 +27,34 @@ function otherLocale(locale: SiteLocale): SiteLocale {
 
 /**
  * Metadata of a home page ('/' or '/en'). Both home pages always exist (a
- * missing CMS home falls back to the static one), so each lists the other
- * as its translation: canonical, hreflang pair with x-default, Open Graph
- * and Twitter tags come from the shared builder. A CMS home served for the
- * same locale supplies its own SEO title, description, social image and
- * robots values.
+ * missing CMS home falls back to the static one): canonical, Open Graph and
+ * Twitter tags come from the shared builder. A CMS home served for the same
+ * locale supplies its own SEO title, description, social image and robots
+ * values.
+ *
+ * `otherPage` is the home served for the other locale (`getHomeContent`).
+ * It is named as the hreflang alternate only while it is indexable, the rule
+ * the sitemap applies (`isHomePageIndexable`), so the tags and the sitemap
+ * declare the same cluster.
  */
 export function createHomeMetadata(
   locale: SiteLocale,
   page: PublicPage | null,
+  otherPage: PublicPage | null,
 ): Metadata {
+  const translationIndexable = isHomePageIndexable(otherPage);
+
   if (page !== null && page.language === locale && page.pageType === "home") {
-    return createPublicPageMetadata(page);
+    return createPublicPageMetadata(page, { translationIndexable });
   }
 
+  const other = otherLocale(locale);
   return createPageMetadata({
     ...staticHomeSeo[locale],
     locale,
     path: homePagePaths[locale],
-    translations: { [otherLocale(locale)]: homePagePaths[otherLocale(locale)] },
+    translations: translationIndexable
+      ? { [other]: homePagePaths[other] }
+      : undefined,
   });
 }

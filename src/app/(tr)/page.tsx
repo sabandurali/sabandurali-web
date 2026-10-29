@@ -9,9 +9,13 @@ export const revalidate = 300;
 
 export async function generateMetadata(): Promise<Metadata> {
   // A missing or incomplete CMS home page falls back to the static content.
-  const { page } = await getHomeContent("tr");
+  // The other locale's served home decides the hreflang pair (SEO-PERF-4).
+  const [{ page }, { page: otherPage }] = await Promise.all([
+    getHomeContent("tr"),
+    getHomeContent("en"),
+  ]);
 
-  return createHomeMetadata("tr", page);
+  return createHomeMetadata("tr", page, otherPage);
 }
 
 export default async function Home() {
