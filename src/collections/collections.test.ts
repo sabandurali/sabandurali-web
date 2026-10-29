@@ -32,6 +32,9 @@ import { MEDIA_MAX_IMAGE_EDGE, Media } from "./Media";
 import {
   LEGACY_TURKISH_HOME_SLUG,
   Pages,
+  getHomeBreakingChanges,
+  getUnrenderableHomeBlocks,
+  protectPublishedHomePage,
   RESERVED_TURKISH_SLUGS,
   validatePageIdentity,
 } from "./Pages";
@@ -462,10 +465,116 @@ async function validatePage(
 }
 
 const homeLayout = [
-  { blockType: "hero" },
-  { blockType: "homeAbout" },
-  { blockType: "homeFocusAreas" },
+  {
+    blockType: "hero",
+    titleLines: [{ text: "Şaban Durali" }],
+    description: "İstanbul üzerine araştırmalar",
+    primaryAction: { label: "Makaleler", href: "/makaleler" },
+    secondaryAction: { label: "İletişim", href: "/iletisim" },
+  },
+  {
+    blockType: "homeAbout",
+    eyebrow: "Hakkımda",
+    titleLines: [{ text: "Kısa biyografi" }],
+    paragraphs: [{ text: "Paragraf" }],
+    imageAlt: "Portre",
+    image: "media-id",
+  },
+  {
+    blockType: "homeFocusAreas",
+    eyebrow: "Alanlar",
+    title: "Çalışma alanları",
+    cards: [
+      {
+        icon: "city",
+        title: "İstanbul",
+        description: "İlçe rehberleri",
+        linkLabel: "Rehberler",
+        linkHref: "/istanbul/ilceler",
+      },
+    ],
+  },
 ];
+
+test("a published home refuses blocks the public mapper would skip", async () => {
+  assert.deepEqual(getUnrenderableHomeBlocks(homeLayout, "tr"), []);
+
+  const [hero, about, focus] = homeLayout;
+  const broken = [
+    { ...hero, primaryAction: { label: "Makaleler", href: "javascript:x" } },
+    { ...about, link: { label: "Devamı" } },
+    { ...focus, cards: [{ title: "Eksik" }] },
+    { blockType: "hero", visible: false },
+    { blockType: "hero" },
+  ];
+  assert.deepEqual(getUnrenderableHomeBlocks(broken, "tr"), [
+    "hero#1",
+    "homeAbout#2",
+    "homeFocusAreas#3",
+    "hero#5",
+  ]);
+
+  await assert.rejects(
+    validatePage({
+      _status: "published",
+      language: "tr",
+      layout: [hero, { ...about, paragraphs: [] }, focus],
+      pageType: "home",
+      slug: "ana-sayfa",
+      title: "Ana sayfa",
+    }),
+    (error: unknown) =>
+      validationErrors(error).some((entry) =>
+        /homeAbout#2/.test(entry.message),
+      ),
+  );
+  await assert.doesNotReject(
+    validatePage({
+      _status: "draft",
+      language: "tr",
+      layout: [{ blockType: "hero" }],
+      pageType: "home",
+      slug: "ana-sayfa",
+      title: "Ana sayfa",
+    }),
+    "drafts may be incomplete",
+  );
+});
+
+test("the published home cannot be unpublished, scheduled or moved", () => {
+  const now = new Date("2026-10-29T12:00:00Z");
+  const home = { language: "tr" };
+  const changes = (
+    data: unknown,
+    options: Partial<{ draft: boolean; unpublishAllLocales: boolean }> = {},
+  ) =>
+    getHomeBreakingChanges(data, home, {
+      draft: false,
+      unpublishAllLocales: false,
+      now,
+      ...options,
+    });
+
+  assert.deepEqual(changes({ _status: "published", title: "Yeni" }), []);
+  assert.deepEqual(changes({ publishedAt: "2026-10-01T00:00:00Z" }), []);
+  assert.deepEqual(
+    changes({ _status: "draft", title: "Taslak" }, { draft: true }),
+    [],
+  );
+  assert.deepEqual(changes({ _status: "draft" }), ["unpublish"]);
+  assert.deepEqual(changes({}, { unpublishAllLocales: true }), ["unpublish"]);
+  assert.deepEqual(changes({ publishedAt: "2026-11-01T00:00:00Z" }), [
+    "schedule",
+  ]);
+  assert.deepEqual(changes({ publishedAt: null }), ["schedule"]);
+  assert.deepEqual(
+    changes({ pageType: "standard", language: "en" }, { draft: true }),
+    ["pageType", "language"],
+    "a draft that would break the home on publish is refused too",
+  );
+  assert.deepEqual(changes({ pageType: "home", language: "tr" }), []);
+  assert.deepEqual(Pages.hooks?.beforeOperation, [protectPublishedHomePage]);
+});
 
 test("English standard pages can be drafted but not published", async () => {
   await assert.doesNotReject(
