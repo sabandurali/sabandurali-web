@@ -86,6 +86,74 @@ export function configureRichTextFeatures(
   });
 }
 
+/** The canonical public origin; the bare domain redirects here. */
+export const PRODUCTION_SITE_ORIGIN = "https://www.sabandurali.com";
+
+const LOCAL_DEFAULT_PORT = 3000;
+
+function httpsOriginFromHost(host: string | undefined): string | null {
+  const value = host?.trim().toLowerCase();
+  if (!value) return null;
+  try {
+    const url = new URL(`https://${value}`);
+    // A bare host name only: no path, credentials, query or port tricks.
+    return url.host === value ? url.origin : null;
+  } catch {
+    return null;
+  }
+}
+
+function localPort(port: string | undefined): number {
+  const value = Number(port?.trim());
+  return Number.isInteger(value) && value > 0 && value < 65536
+    ? value
+    : LOCAL_DEFAULT_PORT;
+}
+
+/**
+ * Origins whose requests may use the admin session cookie (Payload `csrf`).
+ * With an allowlist, Payload ignores the cookie on a request whose `Origin`
+ * is not listed, and on a request without `Origin` unless `Sec-Fetch-Site` is
+ * `same-origin`, `same-site` or `none`. This is a second layer behind the
+ * `SameSite=Lax` cookie (see `Users`), which alone admits every subdomain.
+ *
+ * `serverURL` is deliberately not set: one fixed URL would break Preview
+ * deployments and local development. The list is derived from the
+ * environment instead (Vercel system variables, read at runtime):
+ *
+ * - every environment: the canonical production origin;
+ * - Production (`VERCEL_ENV=production`): also `VERCEL_PROJECT_PRODUCTION_URL`;
+ * - Preview: the branch URL and the deployment URL of this deployment only;
+ * - anywhere else (`next dev`, local `next start`, CI): `localhost`,
+ *   `127.0.0.1` and `[::1]` on `PORT` (default 3000), over plain HTTP.
+ *
+ * The admin of a Production deployment opened through its `*.vercel.app`
+ * deployment URL therefore cannot save; use the canonical domain.
+ */
+export function getCsrfAllowedOrigins(
+  env: Readonly<Record<string, string | undefined>> = process.env,
+): string[] {
+  const origins = new Set<string>([PRODUCTION_SITE_ORIGIN]);
+  const addHost = (host: string | undefined) => {
+    const origin = httpsOriginFromHost(host);
+    if (origin) origins.add(origin);
+  };
+
+  if (env.VERCEL_ENV === "production") {
+    addHost(env.VERCEL_PROJECT_PRODUCTION_URL);
+  } else if (env.VERCEL_ENV === "preview") {
+    addHost(env.VERCEL_BRANCH_URL);
+    addHost(env.VERCEL_URL);
+  } else {
+    const port = localPort(env.PORT);
+    for (const host of ["localhost", "127.0.0.1", "[::1]"]) {
+      origins.add(`http://${host}:${port}`);
+    }
+  }
+
+  return [...origins];
+}
+
 const database =
   databaseProvider === "postgres"
     ? postgresAdapter({
@@ -165,6 +233,7 @@ export default buildConfig({
     Tags,
     Photos,
   ].map(withAnonymousRestLimits),
+  csrf: getCsrfAllowedOrigins(),
   globals: [Navigation],
   db: database,
   editor: lexicalEditor({

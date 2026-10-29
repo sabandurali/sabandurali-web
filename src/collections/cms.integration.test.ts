@@ -27,8 +27,12 @@ Object.assign(process.env, {
   PAYLOAD_STORAGE: "local",
 });
 
-const { default: configPromise, MAX_UPLOAD_BYTES } =
-  await import("../payload.config");
+const {
+  default: configPromise,
+  getCsrfAllowedOrigins,
+  MAX_UPLOAD_BYTES,
+  PRODUCTION_SITE_ORIGIN,
+} = await import("../payload.config");
 const { sqliteAdapter } = await import("@payloadcms/db-sqlite");
 const { getPayload } = await import("payload");
 const { limitAnonymousRestQueries } = await import("../lib/payloadAccess");
@@ -331,6 +335,123 @@ test("users: only admins unlock a locked account, and editors learn nothing abou
   for (const user of [lockedAdmin, unlockingAdmin, unlockingEditor]) {
     await payload.delete({ collection: "users", id: user.id });
   }
+});
+
+test("csrf: the allowlist covers production, this Preview deployment and local development only", () => {
+  assert.deepEqual(config.csrf, getCsrfAllowedOrigins(process.env));
+  assert.ok(config.csrf.includes(PRODUCTION_SITE_ORIGIN));
+  assert.equal(config.serverURL, "", "serverURL would pin one origin");
+
+  assert.deepEqual(getCsrfAllowedOrigins({}), [
+    "https://www.sabandurali.com",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://[::1]:3000",
+  ]);
+  assert.deepEqual(getCsrfAllowedOrigins({ PORT: "4123" }).slice(1), [
+    "http://localhost:4123",
+    "http://127.0.0.1:4123",
+    "http://[::1]:4123",
+  ]);
+  assert.ok(
+    getCsrfAllowedOrigins({ PORT: "nope" }).includes("http://localhost:3000"),
+  );
+
+  // Production: canonical domains only, never localhost or *.vercel.app.
+  assert.deepEqual(
+    getCsrfAllowedOrigins({
+      PORT: "3000",
+      VERCEL_BRANCH_URL: "site-git-main-team.vercel.app",
+      VERCEL_ENV: "production",
+      VERCEL_PROJECT_PRODUCTION_URL: "www.sabandurali.com",
+      VERCEL_URL: "site-abc123-team.vercel.app",
+    }),
+    ["https://www.sabandurali.com"],
+  );
+
+  // Preview: this deployment's branch and deployment URLs, over HTTPS.
+  assert.deepEqual(
+    getCsrfAllowedOrigins({
+      VERCEL_BRANCH_URL: "site-git-fix-team.vercel.app",
+      VERCEL_ENV: "preview",
+      VERCEL_URL: "SITE-abc123-team.vercel.app",
+    }),
+    [
+      "https://www.sabandurali.com",
+      "https://site-git-fix-team.vercel.app",
+      "https://site-abc123-team.vercel.app",
+    ],
+  );
+
+  // Malformed system values are ignored instead of widening the list.
+  assert.deepEqual(
+    getCsrfAllowedOrigins({
+      VERCEL_BRANCH_URL: "evil.example/path",
+      VERCEL_ENV: "preview",
+      VERCEL_URL: "user@evil.example",
+    }),
+    ["https://www.sabandurali.com"],
+  );
+});
+
+test("csrf: a session cookie is ignored on cross-origin and unmarked requests", async () => {
+  const email = "csrf-admin@example.com";
+  const password = "Correct-Horse-6";
+  const account = await payload.create({
+    collection: "users",
+    data: { email, password, role: "admin" },
+  });
+  const { token } = await payload.login({
+    collection: "users",
+    data: { email, password },
+  });
+  assert.ok(token);
+
+  const userFor = async (headers: Record<string, string>) =>
+    (
+      await payload.auth({
+        headers: new Headers({
+          Cookie: `${config.cookiePrefix}-token=${token}`,
+          ...headers,
+        }),
+      })
+    ).user?.email ?? null;
+
+  // Listed origins and browser-marked same-origin or direct requests.
+  assert.equal(await userFor({ Origin: PRODUCTION_SITE_ORIGIN }), email);
+  for (const origin of config.csrf) {
+    assert.equal(await userFor({ Origin: origin }), email, origin);
+  }
+  assert.equal(await userFor({ "Sec-Fetch-Site": "same-origin" }), email);
+  assert.equal(await userFor({ "Sec-Fetch-Site": "none" }), email);
+
+  // A foreign page, a sibling subdomain or a non-browser client with only
+  // the cookie gets no session.
+  for (const headers of [
+    { Origin: "https://evil.example" },
+    { Origin: "https://evil.sabandurali.com" },
+    { Origin: "http://www.sabandurali.com" },
+    { Origin: "null" },
+    { "Sec-Fetch-Site": "cross-site" },
+    {},
+  ]) {
+    assert.equal(await userFor(headers), null, JSON.stringify(headers));
+  }
+
+  // A bearer token is not a cookie: CSRF does not apply to it.
+  assert.equal(
+    (
+      await payload.auth({
+        headers: new Headers({
+          Authorization: `JWT ${token}`,
+          Origin: "https://evil.example",
+        }),
+      })
+    ).user?.email,
+    email,
+  );
+
+  await payload.delete({ collection: "users", id: account.id });
 });
 
 test("media: uploads lose EXIF and GPS data and are capped at 3200 px", async () => {
