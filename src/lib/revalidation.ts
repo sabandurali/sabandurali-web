@@ -23,20 +23,30 @@
  *   and the related-content lists on sibling pages.
  * - Media, Pages and the Navigation global can appear on every page (header
  *   and footer links, shared images), so they revalidate the root layout.
+ * - Rich text links to articles, photos and book reviews resolve only while
+ *   the target is public (`getInternalDocumentPath`). A change to one of
+ *   those therefore also revalidates every route that renders rich text:
+ *   article details, CMS pages (`/(tr)/[slug]`) and the homes. Otherwise a
+ *   link to an unpublished, renamed or deleted target kept pointing to a 404
+ *   until the hourly safety net.
  *
  * Scheduled publishing: a future `publishedAt` makes a document public later
  * without any write, so no hook can fire at that moment. Every route that
- * reads Payload and is prerendered must therefore also export a time-based
- * `revalidate` (for example `export const revalidate = 300`):
- * `/`, `/en`, `/[slug]`, `/makaleler`, `/makaleler/[slug]`, `/en/articles`,
- * `/en/articles/[slug]`, `/kitaplar`, `/kitaplar/[slug]`, `/en/books` and
- * `/en/books/[slug]`. Photo, district and workspace-section routes and the
- * sitemap render dynamically today; a route that becomes static must add the
- * export as well. The header and footer read Payload too: a navigation link
- * to a scheduled page appears only once the page is due, which no write
- * announces. Exporting the value from the `(tr)` and `(en)` root layouts
- * covers every route below them, because a route revalidates at the lowest
- * `revalidate` of its layouts and page.
+ * reads Payload is therefore refreshed on a time basis as well:
+ *
+ * - the `(tr)` and `(en)` root layouts export `revalidate = 3600`. A route
+ *   revalidates at the lowest `revalidate` of its layouts and page, so this
+ *   covers every page below them, the header and footer navigation included
+ *   (a navigation link to a scheduled page appears once the page is due);
+ * - the homes (`/`, `/en`) export `revalidate = 300`;
+ * - detail, list, district, workspace-section pages and `sitemap.ts` export
+ *   `revalidate = 3600` themselves;
+ * - photo lists (`/fotograflar`, `/en/photography`) and district news lists
+ *   read `searchParams` and render per request.
+ *
+ * A page must not opt out with `dynamic = "force-dynamic"` to stay fresh:
+ * the hooks below already revalidate it. `revalidation.test.ts` checks both
+ * rules.
  */
 import { getText, isRecord } from "@/content/guards";
 import { revalidatePath } from "next/cache";
@@ -160,6 +170,20 @@ function workspaceFeedTargets(
   );
 }
 
+/**
+ * Routes that render rich text, whose internal links resolve only to public
+ * targets (see the header comment).
+ */
+function richTextLinkSourceTargets(): RevalidationTarget[] {
+  return [
+    ...homeTargets(),
+    ...LANGUAGES.map((language) =>
+      patternTarget(language, getArticlePath("[slug]", language)),
+    ),
+    patternTarget("tr", "/[slug]"),
+  ];
+}
+
 function districtPageTargets(
   districts: readonly string[],
   { news }: { news: boolean },
@@ -194,6 +218,7 @@ function articleTargets(
     ),
     ...workspaceFeedTargets("articleCategory"),
     ...districtPageTargets(getDistricts(docs), { news: true }),
+    ...richTextLinkSourceTargets(),
     pathTarget(SITEMAP_PATH),
   ];
 }
@@ -216,6 +241,7 @@ function bookTargets(docs: readonly unknown[]): RevalidationTarget[] {
     ...LANGUAGES.map((language) =>
       patternTarget(language, getBookReviewPath("[slug]", language)),
     ),
+    ...richTextLinkSourceTargets(),
     pathTarget(SITEMAP_PATH),
   ];
 }
@@ -262,6 +288,7 @@ function photoTargets(
     ),
     ...workspaceFeedTargets("photoCategory"),
     ...districtPageTargets(getDistricts(docs), { news: false }),
+    ...richTextLinkSourceTargets(),
     pathTarget(SITEMAP_PATH),
   ];
 }

@@ -7,9 +7,16 @@ import {
 } from "@/content/photos/photo-data-source";
 import { createPhotoMetadata } from "@/content/photos/photo-seo";
 
-// Rendered per request on purpose (e68b0c4, "prevent stale photography
-// detail"): the related photographs change with other photo documents.
-export const dynamic = "force-dynamic";
+// Rendered on first visit, then cached and refreshed at most hourly. Every
+// photo, photo collection and tag write revalidates all photo detail pages by
+// route pattern (src/lib/revalidation.ts), which keeps the related
+// photographs current; the hour is the safety net for scheduled publishing.
+export const revalidate = 3600;
+
+// No photo is prerendered at build time: pages are generated on demand.
+export async function generateStaticParams(): Promise<Array<{ slug: string }>> {
+  return [];
+}
 
 export async function generateMetadata({
   params,

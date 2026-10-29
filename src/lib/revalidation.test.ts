@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { existsSync, readdirSync, statSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
@@ -551,5 +551,69 @@ test("every content collection maps to at least one existing route", () => {
       `${collection} changes can change /sitemap.xml`,
     );
     assertTargetsAreRoutes(targets);
+  }
+});
+
+test("a target that rich text can link to refreshes every page rendering rich text", () => {
+  for (const [collection, doc] of [
+    ["articles", { _status: "published", slug: "eski-makale" }],
+    ["photos", { _status: "published", slug: "galata" }],
+    ["books", { language: "tr", slug: "derin-calisma" }],
+  ] as const) {
+    const listed = paths(getCollectionRevalidationTargets(collection, [doc]));
+
+    for (const expected of [
+      "/",
+      "/en",
+      "/(tr)/[slug]#page",
+      "/(tr)/makaleler/[slug]#page",
+      "/(en)/en/articles/[slug]#page",
+    ]) {
+      assert.ok(
+        listed.includes(expected),
+        `${collection}: missing ${expected}`,
+      );
+    }
+  }
+});
+
+function listRouteFiles(directory: string): string[] {
+  return readdirSync(directory).flatMap((entry) => {
+    const candidate = path.join(directory, entry);
+    if (isDirectory(candidate)) return listRouteFiles(candidate);
+    return /^(page|layout)\.tsx$/.test(entry) ? [candidate] : [];
+  });
+}
+
+function readRevalidate(file: string): number | null {
+  const match = /export const revalidate = (\d+);/.exec(
+    readFileSync(file, "utf8"),
+  );
+  return match === null ? null : Number(match[1]);
+}
+
+test("the time-based safety net covers every public route", () => {
+  for (const file of [
+    path.join(appDirectory, "(tr)/layout.tsx"),
+    path.join(appDirectory, "(en)/layout.tsx"),
+    path.join(appDirectory, "sitemap.ts"),
+  ]) {
+    const seconds = readRevalidate(file);
+    assert.ok(
+      seconds !== null && seconds <= 3600,
+      `${path.relative(appDirectory, file)} must export revalidate <= 3600`,
+    );
+  }
+
+  const publicRoutes = ["(tr)", "(en)"].flatMap((group) =>
+    listRouteFiles(path.join(appDirectory, group)),
+  );
+  assert.ok(publicRoutes.length > 10);
+  for (const file of publicRoutes) {
+    assert.doesNotMatch(
+      readFileSync(file, "utf8"),
+      /export const dynamic = "force-dynamic"/,
+      `${path.relative(appDirectory, file)}: on-demand revalidation keeps it fresh`,
+    );
   }
 });
