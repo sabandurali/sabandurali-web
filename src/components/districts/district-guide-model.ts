@@ -18,6 +18,7 @@ import { formatDistrictNumber } from "@/content/districts/district-presentation"
 import { formatDate, toDateTimeAttribute } from "@/lib/format-date";
 import type { Fact } from "@/components/ui/FactTable";
 import type { CreditInfo } from "@/components/ui/Figure";
+import { foldSearchText } from "./district-directory-filter";
 
 /**
  * The fixed section contract of docs/PROJECT-STATE.md §H: id, wayfinding
@@ -161,15 +162,6 @@ export function extractLineCodes(text: string | null | undefined): string[] {
   return codes;
 }
 
-function foldName(value: string): string {
-  return value
-    .normalize("NFC")
-    .toLocaleLowerCase("tr-TR")
-    .replace(/ı/g, "i")
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "");
-}
-
 /**
  * Registry slugs of the neighbours a guide names in its facts
  * ("Bağcılar, Güngören … ve Gaziosmanpaşa"), in the order named. Unknown
@@ -182,10 +174,10 @@ export function parseNeighbourSlugs(
   if (!value) return [];
   const slugs: string[] = [];
   for (const part of value.split(/,|\s+ve\s+|;/u)) {
-    const name = foldName(part.replace(/[.()]/g, "").trim());
+    const name = foldSearchText(part.replace(/[.()]/g, "").trim());
     if (!name) continue;
     const match = districts.find(
-      (district) => foldName(district.name) === name,
+      (district) => foldSearchText(district.name) === name,
     );
     if (match && match.slug !== self && !slugs.includes(match.slug)) {
       slugs.push(match.slug);
@@ -274,6 +266,30 @@ export function buildDistrictFacts(
     kind: "text",
   });
 
+  return rows;
+}
+
+/**
+ * Rows of the "Piyasa göstergeleri" table: only the indicators the
+ * projection publishes, formatted like every other district number and
+ * dated with the market data's own data date.
+ */
+export function buildMarketFacts(
+  marketData: DistrictGuide["marketData"],
+  sources: readonly number[],
+): Fact[] {
+  if (!marketData) return [];
+  const date = formatDate(marketData.dataDate) ?? "";
+  const indicators = [
+    ["sale", "Ortalama m² satış fiyatı", marketData.salePricePerM2],
+    ["rent", "Ortalama kira", marketData.averageRent],
+  ] as const;
+  const rows: Fact[] = [];
+  for (const [id, label, raw] of indicators) {
+    const value = formatDistrictNumber(raw);
+    if (value === null) continue;
+    rows.push({ id, label, value, unit: "TL", date, sources: [...sources] });
+  }
   return rows;
 }
 

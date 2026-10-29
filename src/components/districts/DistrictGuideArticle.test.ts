@@ -201,9 +201,12 @@ test("the Kadıköy page shows no figure the guide projection does not carry", (
 
 test("the guide article never branches on a district slug literal", async () => {
   const { readFile } = await import("node:fs/promises");
-  const source = await readFile(
-    new URL("./DistrictGuideArticle.tsx", import.meta.url),
-    "utf8",
-  );
-  assert.doesNotMatch(source, /slug\s*===\s*["']/);
+  for (const file of [
+    "./DistrictGuideArticle.tsx",
+    "./district-guide-sections.tsx",
+    "./district-guide-parts.tsx",
+  ]) {
+    const source = await readFile(new URL(file, import.meta.url), "utf8");
+    assert.doesNotMatch(source, /slug\s*===\s*["']/, file);
+  }
 });
