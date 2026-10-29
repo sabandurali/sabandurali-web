@@ -20,6 +20,7 @@ import {
   reducedMotionProblems,
   routePlan,
   sameTabStop,
+  skipLinkHydrated,
   skipLinkProblem,
   skippedDetailsProblems,
   viewportWidths,
@@ -484,4 +485,15 @@ test("contentProblems reports a missing fixture text and a private text", () => 
     ],
   );
   assert.deepEqual(contentProblems({}, {}, "anything"), []);
+});
+
+test("the keyboard checks wait for the hydrated skip link", () => {
+  const root = (link) => ({ querySelector: () => link });
+  // Server markup only: no React props yet, so the check keeps waiting.
+  assert.equal(skipLinkHydrated(root({ href: "#main" })), false);
+  assert.equal(skipLinkHydrated(root(null)), false);
+  assert.equal(
+    skipLinkHydrated(root({ href: "#main", __reactProps$abc: {} })),
+    true,
+  );
 });

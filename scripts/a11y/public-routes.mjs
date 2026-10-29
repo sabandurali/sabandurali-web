@@ -38,6 +38,7 @@ import {
   reducedMotionProblems,
   routePlan,
   sameTabStop,
+  skipLinkHydrated,
   skipLinkProblem,
   skippedDetailsProblems,
   viewportWidths,
@@ -54,6 +55,7 @@ const requireDetails =
   plan.requireDetails || process.env.A11Y_REQUIRE_DETAILS === "1";
 await mkdir(output, { recursive: true });
 const maxTabStops = 30;
+const hydrationTimeoutMs = 20_000;
 
 const browser = await chromium.launch({
   headless: true,
@@ -136,6 +138,17 @@ async function open(page, path, expectedStatus) {
   });
   assert.equal(response?.status(), expectedStatus, `${path} status`);
   await page.evaluate(() => document.fonts.ready);
+  // Keyboard checks test the hydrated page. A page that never hydrates its
+  // skip link is not excused: the wait ends and the skip-link check fails.
+  await page
+    .waitForFunction(
+      skipLinkHydrated,
+      await page.evaluateHandle(() => document.body),
+      {
+        timeout: hydrationTimeoutMs,
+      },
+    )
+    .catch(() => {});
 }
 
 async function checkSkipLink(page, path, status) {

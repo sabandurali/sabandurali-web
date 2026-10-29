@@ -235,6 +235,22 @@ export function axeProblems(violations) {
 const skipLabel = /İçeriğe geç|Skip to content/;
 
 /**
+ * Whether React has hydrated the skip link (the first `#` link of the
+ * body): React keeps its props on the DOM node under a `__reactProps$`
+ * key. The skip link moves focus with a click handler, so the keyboard
+ * checks wait for it; `next dev` (the fixture run) hydrates a large page
+ * such as the filled district guide well after the load event. Evaluated
+ * in the page, so it stays self-contained.
+ */
+export function skipLinkHydrated(root) {
+  const link = root.querySelector('a[href^="#"]');
+  return (
+    link !== null &&
+    Object.keys(link).some((key) => key.startsWith("__reactProps$"))
+  );
+}
+
+/**
  * The first Tab stop is the visible skip link to the main content, and
  * activating it moves focus into <main>.
  */
