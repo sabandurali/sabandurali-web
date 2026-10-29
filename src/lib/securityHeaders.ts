@@ -239,3 +239,61 @@ export const securityHeaders: readonly SecurityHeader[] = [
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "X-Frame-Options", value: "DENY" },
 ];
+
+/**
+ * Response headers `withPayload` adds on `/:path*` so the Payload admin can
+ * pick its light or dark theme on the server. Only the admin reads the hint.
+ */
+export const PAYLOAD_CLIENT_HINT_HEADER_KEYS: readonly string[] = [
+  "accept-ch",
+  "critical-ch",
+  "vary",
+];
+
+export const PAYLOAD_CLIENT_HINT = "Sec-CH-Prefers-Color-Scheme";
+
+type HeaderRule = {
+  source: string;
+  headers: Array<{ key: string; value: string }>;
+};
+
+function isPayloadClientHintHeader({
+  key,
+  value,
+}: {
+  key: string;
+  value: string;
+}): boolean {
+  return (
+    PAYLOAD_CLIENT_HINT_HEADER_KEYS.includes(key.toLowerCase()) &&
+    value.trim().toLowerCase() === PAYLOAD_CLIENT_HINT.toLowerCase()
+  );
+}
+
+/**
+ * Moves the color-scheme client hint headers that `withPayload` sends on
+ * every route to the admin routes only (`ADMIN_ROUTES_SOURCE`).
+ *
+ * On public pages `Critical-CH` makes Chromium restart the first navigation
+ * of every new visitor to resend the hint (an extra round trip before the
+ * HTML, so a slower LCP), and `Vary` splits shared caches by a hint that no
+ * public page reads. Every other header of a rule is kept where it was.
+ */
+export function scopePayloadClientHintHeaders<Rule extends HeaderRule>(
+  rules: readonly Rule[],
+): Rule[] {
+  return rules.flatMap((rule): Rule[] => {
+    const hints = rule.headers.filter(isPayloadClientHintHeader);
+    if (hints.length === 0 || rule.source === ADMIN_ROUTES_SOURCE) {
+      return [rule];
+    }
+
+    const others = rule.headers.filter(
+      (header) => !isPayloadClientHintHeader(header),
+    );
+    return [
+      ...(others.length > 0 ? [{ ...rule, headers: others }] : []),
+      { ...rule, headers: hints, source: ADMIN_ROUTES_SOURCE },
+    ];
+  });
+}

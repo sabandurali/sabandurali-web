@@ -19,7 +19,9 @@ import {
   adminRouteSecurityHeaders,
   contentSecurityPolicyDirectives,
   contentSecurityPolicyReportOnlyDirectives,
+  PAYLOAD_CLIENT_HINT,
   publicRouteSecurityHeaders,
+  scopePayloadClientHintHeaders,
   securityHeaders,
   serializeContentSecurityPolicy,
 } from "./securityHeaders";
@@ -402,5 +404,73 @@ test("the admin candidate policy keeps the public one and adds only Monaco, data
       .filter(({ headers }) => headers.some((header) => header.value === value))
       .map(({ source }) => source),
     [ADMIN_ROUTES_SOURCE],
+  );
+});
+
+test("the Payload admin's color-scheme client hint stays on the admin routes", async () => {
+  assert.ok(nextConfig.headers);
+  const routes = await nextConfig.headers();
+  const isHint = ({ key, value }: { key: string; value: string }) =>
+    ["accept-ch", "critical-ch"].includes(key.toLowerCase()) ||
+    (key.toLowerCase() === "vary" &&
+      /sec-ch-prefers-color-scheme/i.test(value));
+  const sentOn = (pathname: string) =>
+    routes
+      .filter(
+        ({ source }) =>
+          getPathMatch(source, { strict: true })(pathname) !== false,
+      )
+      .flatMap(({ headers }) => headers);
+
+  // Compiled the way Next.js compiles a headers() source: on a public path
+  // no rule may send Critical-CH, Accept-CH or the Vary on the hint.
+  for (const pathname of [
+    "/",
+    "/en",
+    "/sitemap.xml",
+    "/istanbul/ilceler/kadikoy",
+    "/brand/site-og.jpg",
+    "/api/articles",
+    "/_next/image",
+  ]) {
+    assert.deepEqual(sentOn(pathname).filter(isHint), [], pathname);
+  }
+  // The admin keeps all three, so its theme still follows the system.
+  for (const pathname of ["/admin", "/admin/login"]) {
+    assert.deepEqual(
+      sentOn(pathname)
+        .filter(isHint)
+        .map(({ key }) => key.toLowerCase())
+        .sort(),
+      ["accept-ch", "critical-ch", "vary"],
+      pathname,
+    );
+  }
+
+  // Other headers of a rewritten rule stay on their own source.
+  assert.deepEqual(
+    scopePayloadClientHintHeaders([
+      {
+        source: "/:path*",
+        headers: [
+          { key: "Accept-CH", value: PAYLOAD_CLIENT_HINT },
+          { key: "X-Other", value: "1" },
+          { key: "Vary", value: "Accept-Encoding" },
+        ],
+      },
+    ]),
+    [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "X-Other", value: "1" },
+          { key: "Vary", value: "Accept-Encoding" },
+        ],
+      },
+      {
+        source: ADMIN_ROUTES_SOURCE,
+        headers: [{ key: "Accept-CH", value: PAYLOAD_CLIENT_HINT }],
+      },
+    ],
   );
 });
