@@ -6,7 +6,9 @@ import {
   isHttpsUrl,
   isSiteCanonicalUrl,
   validateOptionalSiteCanonical,
+  validatePageLink,
 } from "./validation";
+import { getSafeHref } from "@/content/links";
 
 test("external source links must be plain https URLs", () => {
   for (const url of [
@@ -93,4 +95,34 @@ test("rich text needs visible text or an upload", () => {
 
 test("image fields only offer image media", () => {
   assert.deepEqual(imageMediaFilter, { mimeType: { contains: "image/" } });
+});
+
+test("ARCHITECTURE-10: page block links follow the public link rule", () => {
+  for (const link of [
+    "#bolum-2",
+    "/makaleler/ornek",
+    "https://example.com/a?b=c",
+    "http://example.com",
+  ]) {
+    assert.equal(validatePageLink(link), true, link);
+    assert.notEqual(
+      getSafeHref(link, { allowAnchor: true, allowRelative: true }),
+      null,
+      link,
+    );
+  }
+
+  for (const link of [
+    "",
+    "   ",
+    "https://user:pass@example.com",
+    "http://user@example.com/",
+    "//example.com/path",
+    "javascript:alert(1)",
+    "mailto:someone@example.com",
+    "#Bolum",
+    42,
+  ]) {
+    assert.equal(typeof validatePageLink(link), "string", String(link));
+  }
 });

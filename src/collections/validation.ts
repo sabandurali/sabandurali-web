@@ -1,6 +1,7 @@
 import type { Where } from "payload";
 import { siteUrl } from "@/config/site";
 import { getText, isRecord } from "@/content/guards";
+import { getSafeHref } from "@/content/links";
 
 /**
  * Shared validation rules for Payload collections. Everything here is pure so
@@ -14,24 +15,36 @@ export const imageMediaFilter: Where = {
   },
 };
 
-/** An absolute `https://` URL with a host and without embedded credentials. */
+/**
+ * An absolute `https://` URL without embedded credentials: the public rule
+ * (`getSafeHref`), and stored exactly as typed (no surrounding or inner
+ * whitespace), so the admin and the public site accept the same links.
+ */
 export function isHttpsUrl(value: unknown): boolean {
   const text = getText(value);
 
-  if (text === null || text !== value || /\s/.test(text)) return false;
+  return (
+    text !== null &&
+    text === value &&
+    !/\s/.test(text) &&
+    getSafeHref(text, { httpsOnly: true }) !== null
+  );
+}
 
-  try {
-    const url = new URL(text);
-
-    return (
-      url.protocol === "https:" &&
-      url.hostname.length > 0 &&
-      url.username === "" &&
-      url.password === ""
-    );
-  } catch {
-    return false;
+/**
+ * A link in a page block: an in-page anchor, a site path or an absolute
+ * http(s) URL without credentials. It is the rule the page mapper applies
+ * (`getSafeHref` with anchors and site paths), so a link the admin accepts
+ * is never dropped from the public page.
+ */
+export function validatePageLink(value: unknown): true | string {
+  if (typeof value !== "string" || value.trim().length === 0) {
+    return "Bağlantı boş olamaz.";
   }
+
+  return getSafeHref(value, { allowAnchor: true, allowRelative: true }) === null
+    ? "Geçerli bir site içi, #çapa, http veya https bağlantısı girin (kullanıcı adı ve parola içermeden)."
+    : true;
 }
 
 /**
