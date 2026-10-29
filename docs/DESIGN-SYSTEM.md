@@ -3,7 +3,8 @@
 Sitenin görsel dili: İstanbul bir atlas gibi okunur. Serin harita kâğıdı zemin, Boğaz mavisi mürekkep, tek
 bir sinyal turuncusu; Archivo'nun genişlik ekseni başlıkları ve harita etiketlerini, Martian Mono verileri
 taşır. Ana fikir 39 ilçenin Boğaz şeridiyle 25'e 14 bölünmüş şematik kare haritası, ilçe rehberinin yön
-levhası başlıkları, veri tablosu ve hat şemalarıdır.
+levhası başlıkları ve veri tablosudur. Hat şeması bileşeni (`StationDiagram`) hiçbir sayfada kullanılmadığı
+için kaldırıldı; tarihli ve kaynaklı istasyon verisi geldiğinde, o veriyle birlikte yeniden eklenir.
 
 Kaynaklar (tek doğru kaynak bunlardır, bu belge onları açıklar):
 
@@ -19,7 +20,7 @@ Kaynaklar (tek doğru kaynak bunlardır, bu belge onları açıklar):
 
 1. **Önce veri, sonra süs.** Sayı, birim, veri tarihi ve kaynak birlikte görünür. Eksik veri için açık bir
    boş durum (`EmptyState`) gösterilir; dolgu metin, uydurma sayı ya da süs görseli kullanılmaz.
-2. **Şematik olduğunu söyle.** Kare harita, anahtar harita ve hat şemaları gerçek coğrafya değildir; her
+2. **Şematik olduğunu söyle.** Kare harita ve anahtar harita gerçek coğrafya değildir; her
    biri "Şematik, ölçeksiz" etiketini ya da eşdeğer notunu taşır.
 3. **Tek vurgu.** Sinyal turuncusu yalnızca bir şeyi öne çıkarır: öne çıkan ilçe karesi, levha numarası,
    ilçeye hizmet eden durak, yeni etiketi, geçerli bölüm çizgisi. Açık zeminde turuncu yazı yoktur.
@@ -258,7 +259,6 @@ yalnızca etkileşim gerektirenlerdir: `SkipLink`, `Disclosure`, `NavMenu`, `For
 | `Pagination` | Önceki/sonraki ve sayfa numaraları; geçerli sayfa `aria-current`; tek sayfada hiçbir şey çizmez. |
 | `Field` + `Input` / `Textarea` / `Select` | Üç kontrol aynı kenar, hover, odak ve hata (`aria-invalid`) stillerini paylaşır; sayfada elle stillenmiş `<select>` yazılmaz. Görünen `label`, `hint` ve `error` kontrolün `aria-describedby` listesine bağlanır, hata `aria-invalid` ve "Hata:" önekiyle gelir, zorunlu alanlar "(zorunlu)" yazar. |
 | `FormStatus` | İki kalıcı canlı bölge: ilerleme/başarı `role="status"`, hata `role="alert"`; yalnızca metin değişir, yeni bir sonuçta odak mesaja taşınır (ilk çizimde ve mesajsız sonuçta taşınmaz) (FE-21). `aria-busy` kapsayıcısının dışında durur. |
-| `StationDiagram` | Hat şeması: yalnızca metinde adı geçen duraklar; ilçeye hizmet eden duraklar turuncu ve aralarında düz çizgi, ilçe dışı kesim noktalı. Turuncu dolgu tek başına bilgi taşımaz: hizmet eden durak ekran okuyucuya "…, ilçeye hizmet eder" der (`stationServes`), hizmet etmeyen durak `land` dolguludur. Dar kapsayıcıda dikey liste (390 px'te etiketler sıkışmaz), 36 rem'den itibaren yatay. Yanına `Legend` ile "yalnız metinde adı geçen istasyonlar" notunu koyun. **Henüz hiçbir sayfada kullanılmıyor:** ilçe rehberinin ulaşım bölümü için ayrılmıştır ve yalnız tarihli, kaynaklı istasyon verisiyle kullanılabilir; o veri gelene kadar testleri sözleşmeyi korur. |
 | `Legend` | Harita ve şema sembollerinin anahtarı; her sembol metinle adlandırılır. Sembol dolguları da yalnız Atlas token'larıdır (`bg-white` yok, test eder). |
 | `DistrictTileMap` | 39 ilçelik atlas. Bir sonraki bölüme bakın. |
 | `DistrictKeyMap` | Küçük anahtar harita (kartlar, rehber başlığı); `title` verilmezse dekoratiftir. |

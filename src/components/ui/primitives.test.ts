@@ -38,7 +38,6 @@ import {
   formatSourceCode,
   sourceAnchorId,
 } from "./SourceRef";
-import StationDiagram from "./StationDiagram";
 import Timeline from "./Timeline";
 import TitleLines from "./TitleLines";
 import { isInternalPath } from "./UiLink";
@@ -519,7 +518,7 @@ test("Pagination marks the current page and hides for a single page", () => {
   assert.match(html, /rel="next"/);
 });
 
-test("Timeline and StationDiagram expose order and notes as text", () => {
+test("Timeline exposes order and notes as text", () => {
   const timeline = render(
     h(Timeline, {
       label: "Tarih çizelgesi",
@@ -551,38 +550,6 @@ test("Timeline and StationDiagram expose order and notes as text", () => {
     /<a href="#kaynak-2" class="[^"]*\btext-on-sea[ "]/,
     "source links stay readable on sea",
   );
-
-  const diagram = render(
-    h(StationDiagram, {
-      code: "M7",
-      name: "Yıldız–Mahmutbey",
-      label: "M7, metinde adı geçen istasyonlar",
-      stations: [
-        { name: "Mahmutbey", note: "hat ucu" },
-        { name: "Giyimkent–Tekstilkent", note: "kuzey kesim", serves: true },
-      ],
-    }),
-  );
-  assert.match(diagram, /<ol aria-label="M7, metinde adı geçen istasyonlar"/);
-  assert.match(diagram, /Giyimkent–<wbr\/>Tekstilkent/);
-  assert.match(textOf(diagram), /Mahmutbeyhat ucu/);
-  assert.match(diagram, /border-dotted/);
-  // FRONTEND-5: serving is said in text, not only with the orange fill.
-  assert.match(
-    textOf(diagram),
-    /Giyimkent–Tekstilkent, ilçeye hizmet ederkuzey kesim/,
-  );
-  assert.doesNotMatch(textOf(diagram), /Mahmutbey, ilçeye/);
-  const englishDiagram = render(
-    h(StationDiagram, {
-      code: "M7",
-      name: "Yıldız–Mahmutbey",
-      label: "M7 stations named in the text",
-      locale: "en",
-      stations: [{ name: "Giyimkent", serves: true }],
-    }),
-  );
-  assert.match(textOf(englishDiagram), /Giyimkent, serves the district/);
 });
 
 test("FRONTEND-5: primitives draw fills from Atlas tokens, never raw white", () => {
