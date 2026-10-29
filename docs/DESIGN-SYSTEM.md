@@ -355,4 +355,5 @@ kipinde kalır. Klavye modeli `menu-keys.ts` içindedir ve test edilir:
 | Boyut için yalnız `type-*` sınıfı ya da ölçek token'ı | Tailwind'in varsayılan `text-base`, `text-sm`, `text-lg` boyutları |
 | Hareketi `motion-safe:` ile | Zorunlu animasyon, otomatik kayan içerik |
 | Kardeşler arası boşluğu kapsayıcıda `grid gap-*` / `flex gap-*` ile | `space-y-*` / `space-x-*`: Tailwind 4'te özgüllüğü 0, çocuktaki `m-0` onu ezer (`spacing-utilities.test.ts`) |
+| Tek başına duran bağlantıya `inline-flex min-h-tap items-center` ya da `TextLink variant="standalone"` | Başlıktaki ya da listedeki gezinme bağlantısını 44 px'in altında bırakmak |
 | Kırıntı etiketini hedef sayfanın adıyla (`districtWorkspaceCrumb`) | Aynı hedefe iki farklı adla bağlanmak (WCAG 3.2.4) |
