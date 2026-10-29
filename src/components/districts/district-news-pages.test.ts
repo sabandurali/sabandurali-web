@@ -57,6 +57,17 @@ test("SEO-PERF-3: news page robots and canonical follow the sitemap rule", () =>
   assert.doesNotMatch(canonical(1), /sayfa/);
 });
 
+test("SEO-PERF-3: later news pages name their page number", () => {
+  const district = { slug: "kadikoy", name: "Kadıköy" };
+  const metadata = (currentPage: number) =>
+    createDistrictNewsMetadata(district, { currentPage, totalItems: 30 });
+
+  assert.equal(metadata(1).title, "Kadıköy Haberleri | Şaban Durali");
+  assert.equal(metadata(2).title, "Kadıköy Haberleri — Sayfa 2 | Şaban Durali");
+  assert.match(String(metadata(2).description), /Sayfa 2\.$/);
+  assert.notEqual(metadata(1).description, metadata(2).description);
+});
+
 test("SEO-PERF-2: the news route reads one database page, not the history", () => {
   const source = readFileSync(
     path.join(

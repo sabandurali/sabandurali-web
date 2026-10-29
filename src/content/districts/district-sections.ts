@@ -1,6 +1,7 @@
 import type { PublicArticleSummary } from "@/content/articles/public-types";
-import { describeError, reportContentIssue } from "@/content/content-log";
+import { refuseDegradedCachedRender } from "@/content/degraded-render";
 import type { PublicPhoto } from "@/content/photos/types";
+import { settleSection } from "@/content/settle-section";
 
 /**
  * District pages combine the guide (their main content) with photos,
@@ -9,6 +10,11 @@ import type { PublicPhoto } from "@/content/photos/types";
  * the section renders empty, is reported as unavailable (so the page can
  * say "temporarily unavailable" instead of "nothing published") and the
  * error is logged. The guide query itself stays fail-closed.
+ *
+ * The district route is ISR: `loadDistrictSectionsForCache` refuses to let
+ * such a degraded render replace the cached page on a production server
+ * (see src/content/degraded-render.ts), so a one-second outage does not
+ * hide photos, research or news for an hour.
  */
 export type DistrictSectionName = "photos" | "research" | "news";
 
@@ -28,29 +34,6 @@ const SECTION_ORDER: ReadonlyArray<DistrictSectionName> = [
   "news",
 ];
 
-async function settle<T>(
-  district: string,
-  name: DistrictSectionName,
-  load: () => Promise<T[]>,
-  unavailable: Set<DistrictSectionName>,
-): Promise<T[]> {
-  try {
-    return await load();
-  } catch (error) {
-    unavailable.add(name);
-    reportContentIssue(
-      {
-        scope: "districts",
-        id: district,
-        reason: `${name} could not be loaded; the section is shown as unavailable`,
-        detail: describeError(error),
-      },
-      "error",
-    );
-    return [];
-  }
-}
-
 export async function settleDistrictSections(
   district: string,
   loaders: DistrictSectionLoaders,
@@ -59,14 +42,45 @@ export async function settleDistrictSections(
   unavailableSections: DistrictSectionName[];
 }> {
   const unavailable = new Set<DistrictSectionName>();
+  const common = { scope: "districts", id: district, unavailable } as const;
   const [photos, research, news] = await Promise.all([
-    settle(district, "photos", loaders.photos, unavailable),
-    settle(district, "research", loaders.research, unavailable),
-    settle(district, "news", loaders.news, unavailable),
+    settleSection({
+      ...common,
+      name: "photos",
+      load: loaders.photos,
+      fallback: [],
+    }),
+    settleSection({
+      ...common,
+      name: "research",
+      load: loaders.research,
+      fallback: [],
+    }),
+    settleSection({
+      ...common,
+      name: "news",
+      load: loaders.news,
+      fallback: [],
+    }),
   ]);
 
   return {
     sections: { photos, research, news },
     unavailableSections: SECTION_ORDER.filter((name) => unavailable.has(name)),
   };
+}
+
+/** `settleDistrictSections` for the ISR district route. */
+export async function loadDistrictSectionsForCache(
+  district: string,
+  loaders: DistrictSectionLoaders,
+  env?: Readonly<Record<string, string | undefined>>,
+): ReturnType<typeof settleDistrictSections> {
+  const settled = await settleDistrictSections(district, loaders);
+  refuseDegradedCachedRender(
+    `district ${district}`,
+    settled.unavailableSections,
+    env,
+  );
+  return settled;
 }

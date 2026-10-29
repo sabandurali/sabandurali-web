@@ -1,11 +1,10 @@
 import type { SiteLocale } from "@/content/locales";
-import type { ComponentProps } from "react";
-import type { RichText } from "@payloadcms/richtext-lexical/react";
+import type { PublicRichText } from "@/content/rich-text/public-rich-text";
 import type { FocusAreaIcon } from "@/content/homeContent";
 
 export type PublicPageLanguage = SiteLocale;
 export type PublicPageType = "home" | "standard";
-export type PublicRichText = ComponentProps<typeof RichText>["data"];
+export type { PublicRichText };
 
 export type PublicPageLink = {
   label: string;

@@ -369,20 +369,6 @@ export default function DistrictGuideArticle({
                     {guide?.facts?.populationYear ?? "belirtilmemiş"}. Kaynağın
                     veri/gözlem tarihi, son kontrol tarihi ve rehberin içerik
                     güncellemesi farklı tarihlerdir.
-                    {district.slug === "kadikoy" ? (
-                      <>
-                        {" "}
-                        2025 ADNKS nüfusu: 458.573.{" "}
-                        <TextLink
-                          href="https://www.kadikoyakademi.org/kadikoyun-demografik-donusumu-devam-ediyor/"
-                          external
-                        >
-                          Kadıköy Belediyesi Akademi
-                        </TextLink>{" "}
-                        aktarımı 18 Ekim 2026’da kontrol edildi; yayın tarihi
-                        doğrulanamadı.
-                      </>
-                    ) : null}
                   </>
                 }
               />

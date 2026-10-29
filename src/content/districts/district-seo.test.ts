@@ -33,6 +33,7 @@ function guide(overrides: Partial<DistrictGuide> = {}): DistrictGuide {
     marketData: null,
     planningDevelopments: [],
     sources: [],
+    publishedAt: null,
     updatedAt: "2026-10-01T09:00:00.000Z",
     ...overrides,
   };
@@ -192,4 +193,31 @@ test("FRONTEND-6: the JSON-LD breadcrumb names home like the visible one", () =>
   const home = breadcrumb.itemListElement?.[0];
   assert.equal(home?.name, getUiStrings("tr").home);
   assert.equal(home?.name, "Ana sayfa");
+});
+
+test("CORRECTNESS-4: JSON-LD dateModified of a scheduled guide is its publication", () => {
+  const district = districts[0];
+  assert.ok(district);
+  const webPage = (value: DistrictGuide | null) =>
+    districtJsonLd(district, value)["@graph"].find(
+      (node) => "@type" in node && node["@type"] === "WebPage",
+    );
+  const scheduled = webPage(
+    guide({
+      summary: "Özet.",
+      updatedAt: "2026-09-01T09:00:00.000Z",
+      publishedAt: "2026-09-15T06:00:00.000Z",
+    }),
+  );
+  assert.ok(scheduled && "dateModified" in scheduled);
+  assert.equal(scheduled.dateModified, "2026-09-15T06:00:00.000Z");
+  const edited = webPage(
+    guide({
+      summary: "Özet.",
+      updatedAt: "2026-09-20T09:00:00.000Z",
+      publishedAt: "2026-09-15T06:00:00.000Z",
+    }),
+  );
+  assert.ok(edited && "dateModified" in edited);
+  assert.equal(edited.dateModified, "2026-09-20T09:00:00.000Z");
 });

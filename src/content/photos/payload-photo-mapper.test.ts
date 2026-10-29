@@ -74,7 +74,32 @@ test("a published photo maps with collections, tags and defaults", (t) => {
   ]);
   assert.equal(mapped.photographer, "Şaban Durali");
   assert.equal(mapped.creditLicense, "Tüm hakları saklıdır");
-  assert.equal(mapped.seo.title, "Galata akşamüstü");
+  assert.equal(mapped.seo.title, "Galata akşamüstü | Şaban Durali");
+});
+
+test("SEO-PERF-1: a photo without caption or SEO description still has a meta description", (t) => {
+  silence(t);
+  const bare = mapPayloadPhoto(photo(), "tr", now);
+  assert.ok(bare);
+  assert.equal(bare.seo.description, "Galata Kulesi akşam ışığında");
+
+  const long = "Galata Kulesi akşam ışığında, Haliç üzerinden bakış. ".repeat(
+    6,
+  );
+  const captioned = mapPayloadPhoto(photo({ description: long }), "tr", now);
+  assert.ok(captioned);
+  assert.ok(captioned.seo.description.length <= 160);
+  // The page itself still shows the full caption.
+  assert.equal(captioned.description, long.trim());
+
+  const explicit = mapPayloadPhoto(
+    photo({ seo: { metaTitle: "Galata", metaDescription: "Elle yazıldı." } }),
+    "tr",
+    now,
+  );
+  assert.ok(explicit);
+  assert.equal(explicit.seo.title, "Galata");
+  assert.equal(explicit.seo.description, "Elle yazıldı.");
 });
 
 test("a translation link carries only identity, title and slug", (t) => {

@@ -17,6 +17,7 @@
  * - Every URL appears once; image URLs are absolute.
  */
 import type { MetadataRoute } from "next";
+import { getContentLastModified, getLatestDate } from "@/lib/content-dates";
 import { contactPaths, privacyPaths } from "@/config/site";
 import { describeError, reportContentIssue } from "@/content/content-log";
 import {
@@ -94,37 +95,6 @@ type EntryOptions = {
   lastModified?: Date;
   images?: readonly string[];
 };
-
-function toDate(value: string | null | undefined): Date | undefined {
-  if (value === null || value === undefined) return undefined;
-  const date = new Date(value);
-  return Number.isFinite(date.getTime()) ? date : undefined;
-}
-
-export function getLatestDate(
-  dates: Iterable<Date | undefined>,
-): Date | undefined {
-  let latest: Date | undefined;
-  for (const date of dates) {
-    if (date !== undefined && (latest === undefined || date > latest)) {
-      latest = date;
-    }
-  }
-  return latest;
-}
-
-/**
- * When a content item last changed on the site: the later of `updatedAt` and
- * `publishedAt`. A scheduled item is saved before it goes live, so its
- * `updatedAt` predates the day it appears; its URL (and its list page) change
- * at `publishedAt`.
- */
-export function getContentLastModified(item: {
-  updatedAt: string | null;
-  publishedAt: string | null;
-}): Date | undefined {
-  return getLatestDate([toDate(item.updatedAt), toDate(item.publishedAt)]);
-}
 
 function createEntry(
   path: string,
@@ -445,14 +415,14 @@ export function buildDistrictEntries(
       changeFrequency: "monthly",
       priority: 0.7,
       lastModified: getLatestDate(
-        indexable.map(({ guide }) => toDate(guide.updatedAt)),
+        indexable.map(({ guide }) => getContentLastModified(guide)),
       ),
     }),
     ...indexable.map(({ district, guide }) =>
       createEntry(getDistrictPath(district.slug), {
         changeFrequency: "monthly",
         priority: 0.6,
-        lastModified: toDate(guide.updatedAt),
+        lastModified: getContentLastModified(guide),
       }),
     ),
   ];
@@ -587,6 +557,8 @@ export function buildSitemap(content: SitemapContent): MetadataRoute.Sitemap {
   ]);
 }
 
+export { getContentLastModified, getLatestDate };
+
 export type SitemapErrorReporter = (source: string, error: unknown) => void;
 
 /**
@@ -608,6 +580,23 @@ export const reportSitemapSourceError: SitemapErrorReporter = (
     "error",
   );
 };
+
+/**
+ * A reporter that also remembers which sources failed, so the sitemap route
+ * can refuse to cache an incomplete result (src/content/degraded-render.ts).
+ */
+export function createSitemapFailureCollector(
+  report: SitemapErrorReporter = reportSitemapSourceError,
+): { report: SitemapErrorReporter; failed: string[] } {
+  const failed: string[] = [];
+  return {
+    failed,
+    report: (source, error) => {
+      failed.push(source);
+      report(source, error);
+    },
+  };
+}
 
 /** Resolves to `fallback` (and reports the error) when `load` fails. */
 export async function loadSitemapSource<T>(

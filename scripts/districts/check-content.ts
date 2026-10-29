@@ -19,6 +19,7 @@ import {
   batch1PopulationPlan,
 } from "./editorial";
 import { validateBundle } from "./import-core";
+import { sourceKindFitsSection } from "../../src/content/districts/district-content-policy";
 
 const { values: options } = parseArgs({
   options: { report: { type: "string" } },
@@ -150,6 +151,19 @@ for (const district of nonEsenler) {
     ),
     `${district.district}/researchTopics: research artifact`,
   );
+}
+// A source may only claim sections its kind can support: a population
+// register release never backs history, life or places copy. Adopted
+// records keep the fingerprint the owner approved; their extra claims are
+// withheld by the same policy at projection time until a re-adoption.
+for (const district of editorial.districts) {
+  if (district.adoption) continue;
+  for (const source of district.sources)
+    for (const section of source.sections ?? [])
+      assert.ok(
+        sourceKindFitsSection(source, section),
+        `${district.district}: ${source.title} cannot support ${section}`,
+      );
 }
 for (const field of completedFields) {
   // Presence per district is asserted above with the district name.

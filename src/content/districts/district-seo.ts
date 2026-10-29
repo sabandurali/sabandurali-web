@@ -1,7 +1,8 @@
 import { verifiedDistrictImages } from "@/content/photos/verified-district-images";
 import type { Metadata } from "next";
 import { getAbsoluteUrl } from "@/config/site";
-import { getUiStrings } from "@/components/ui/strings";
+import { getContentLastModified } from "@/lib/content-dates";
+import { homeCrumb } from "@/content/home-crumb";
 import {
   createOptimizedSocialImage,
   createPageMetadata,
@@ -110,7 +111,7 @@ export function districtJsonLd(
         "@id": `${url}#breadcrumb`,
         // The visible breadcrumb's trail (DistrictGuideArticle, homeCrumb).
         itemListElement: [
-          [getUiStrings("tr").home, getUiStrings("tr").homePath],
+          [homeCrumb.tr.name, homeCrumb.tr.path],
           ["İstanbul", "/gayrimenkul-ve-istanbul"],
           ["İlçeler", districtGuidePath],
           [district.name, getDistrictPath(district.slug)],
@@ -128,7 +129,9 @@ export function districtJsonLd(
         name: `${district.name} İlçe Rehberi`,
         inLanguage: "tr-TR",
         description: metaDescription(district, guide),
-        dateModified: guide?.updatedAt ?? undefined,
+        dateModified: guide
+          ? getContentLastModified(guide)?.toISOString()
+          : undefined,
         breadcrumb: { "@id": `${url}#breadcrumb` },
         about: { "@type": "Place", name: `${district.name}, İstanbul` },
       },

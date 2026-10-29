@@ -11,6 +11,7 @@ import {
   buildBookReviewEntries,
   buildSitemap,
   buildStandardPageEntries,
+  createSitemapFailureCollector,
   findBookReviewTranslation,
   getContentLastModified,
   loadSitemapSource,
@@ -184,6 +185,7 @@ function guide(overrides: Partial<DistrictGuide> = {}): DistrictGuide {
     marketData: null,
     planningDevelopments: [],
     sources: [],
+    publishedAt: null,
     updatedAt: "2026-09-10T09:00:00.000Z",
     ...overrides,
   };
@@ -610,6 +612,31 @@ test("district pages are listed only with an indexable guide", () => {
   );
 });
 
+test("CORRECTNESS-4: a scheduled district guide is dated by its publication", () => {
+  const sitemap = buildSitemap({
+    ...emptyContent,
+    districtGuides: new Map([
+      [
+        "kadikoy",
+        guide({
+          summary: "Kadıköy özeti.",
+          updatedAt: "2026-09-01T09:00:00.000Z",
+          publishedAt: "2026-09-15T06:00:00.000Z",
+        }),
+      ],
+    ]),
+  });
+  const published = new Date("2026-09-15T06:00:00.000Z");
+  assert.deepEqual(
+    byUrl(sitemap, "/istanbul/ilceler/kadikoy")?.lastModified,
+    published,
+  );
+  assert.deepEqual(
+    byUrl(sitemap, "/istanbul/ilceler")?.lastModified,
+    published,
+  );
+});
+
 test("district news lists with news are listed like the news page indexes them", () => {
   const sitemap = buildSitemap(fullContent);
   const kadikoy = byUrl(sitemap, "/istanbul/ilceler/kadikoy/haberler");
@@ -752,6 +779,24 @@ test("a failing source falls back and is reported", async () => {
     "ok",
   );
   assert.equal(reports.length, 1);
+});
+
+test("the failure collector names every failed source and still reports it", async () => {
+  const reports: string[] = [];
+  const failures = createSitemapFailureCollector((source) =>
+    reports.push(source),
+  );
+  await loadSitemapSource(
+    "district guides",
+    async () => {
+      throw new Error("timeout");
+    },
+    new Map(),
+    failures.report,
+  );
+  await loadSitemapSource("pages", async () => [], [], failures.report);
+  assert.deepEqual(failures.failed, ["district guides"]);
+  assert.deepEqual(reports, ["district guides"]);
 });
 
 test("a failing source is logged as one structured content line", (t) => {

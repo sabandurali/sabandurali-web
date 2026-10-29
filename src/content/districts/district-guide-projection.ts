@@ -1,4 +1,4 @@
-import { isRecord } from "@/content/guards";
+import { getText, isRecord } from "@/content/guards";
 import {
   districtSectionOptions,
   sectionIsPublic,
@@ -55,12 +55,15 @@ export type DistrictGuide = {
     needsVerification?: boolean | null;
   }>;
   sources: DistrictSource[];
+  /**
+   * When the guide went live. A scheduled guide is saved before that day,
+   * so its `updatedAt` predates the day the page first shows it.
+   */
+  publishedAt: string | null;
   updatedAt: string | null;
 };
 
-function text(value: unknown): string | null {
-  return typeof value === "string" && value.trim() ? value.trim() : null;
-}
+const text = getText;
 
 /*
  * Allowlist copies. Every public object is built key by key, so a field that
@@ -330,6 +333,7 @@ export function mapDistrictGuide(
         );
       return sections.length > 0 ? [{ ...source, sections }] : [];
     }),
+    publishedAt: text(item.publishedAt),
     updatedAt: text(item.updatedAt),
   };
 }
@@ -403,7 +407,6 @@ export function projectPublicDistrictGuideDocument(
     id: value.id,
     district: value.district,
     _status: value._status,
-    publishedAt: value.publishedAt,
     createdAt: value.createdAt,
     reviewedSections: districtSectionOptions
       .map(({ value: section }) => section)

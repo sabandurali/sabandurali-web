@@ -191,6 +191,59 @@ export function truncateMetaDescription(
   return `${words.replace(/[\s,;:–—-]+$/u, "")}…`;
 }
 
+/**
+ * The document title of a CMS item whose editor left the SEO title empty:
+ * the content title with the brand suffix every static page carries, or the
+ * bare title when the suffix would push it past 60 characters. A title that
+ * already names the site is kept as it is. An SEO title the editor wrote is
+ * never passed through here.
+ */
+export function createFallbackMetaTitle(title: string): string {
+  const value = title.replace(/\s+/g, " ").trim();
+  if (value.includes(siteName)) return value;
+  const branded = `${value} | ${siteName}`;
+  return branded.length <= metaTitleMaxLength ? branded : value;
+}
+
+/**
+ * The meta description of a CMS item whose editor left the SEO description
+ * empty: the first non-empty candidate (an excerpt, a caption, alt text),
+ * shortened to 160 characters. Null when every candidate is empty.
+ */
+export function createFallbackMetaDescription(
+  ...candidates: ReadonlyArray<string | null | undefined>
+): string | null {
+  for (const candidate of candidates) {
+    const value = candidate?.trim();
+    if (value) return truncateMetaDescription(value);
+  }
+  return null;
+}
+
+const pageLabel = {
+  tr: (page: number) => `Sayfa ${page}`,
+  en: (page: number) => `Page ${page}`,
+} as const satisfies Record<SiteLocale, (page: number) => string>;
+
+/**
+ * Title and description of page `page` of a paginated list. Every later
+ * page is its own indexable, self-canonical URL, so it names its number:
+ * "Fotoğraflar — Sayfa 2 | Şaban Durali". Page 1 is returned unchanged.
+ */
+export function createPaginatedCopy(
+  copy: { title: string; description: string },
+  page: number,
+  locale: SiteLocale,
+): { title: string; description: string } {
+  if (!Number.isSafeInteger(page) || page <= 1) return copy;
+  const label = pageLabel[locale](page);
+  const suffix = ` | ${siteName}`;
+  const title = copy.title.endsWith(suffix)
+    ? `${copy.title.slice(0, -suffix.length)} — ${label}${suffix}`
+    : `${copy.title} — ${label}`;
+  return { title, description: `${copy.description} ${label}.` };
+}
+
 export type ArticleOpenGraph = {
   publishedTime?: string | null;
   modifiedTime?: string | null;

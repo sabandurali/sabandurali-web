@@ -1,7 +1,12 @@
 import { reportContentIssue } from "@/content/content-log";
 import { getText, isPublishedBy, isRecord } from "@/content/guards";
+import {
+  createFallbackMetaDescription,
+  createFallbackMetaTitle,
+} from "@/lib/metadata";
 import { getSafeHref } from "@/content/links";
 import { mapMediaImage } from "@/content/media";
+import { isPublicRichText } from "@/content/rich-text/public-rich-text";
 import {
   prepareRichText,
   type RichTextLinkContext,
@@ -76,14 +81,6 @@ function mapImage(
   };
 }
 
-function isRichText(value: unknown): value is PublicRichTextBlock["content"] {
-  return (
-    isRecord(value) &&
-    isRecord(value.root) &&
-    Array.isArray(value.root.children)
-  );
-}
-
 type PayloadBlock = NonNullable<PayloadPage["layout"]>[number];
 type MappingContext = {
   language: PublicPageLanguage;
@@ -102,7 +99,7 @@ function mapRichText(
     context.now,
     context.links,
   );
-  return isRichText(prepared) ? prepared : null;
+  return isPublicRichText(prepared) ? prepared : null;
 }
 
 function isText(value: string | null): value is string {
@@ -454,8 +451,11 @@ export function mapPayloadPage(
     createdAt: value.createdAt,
     updatedAt: value.updatedAt,
     seo: {
-      title: getText(value.seo?.title) ?? title,
-      description: getText(value.seo?.description) ?? summary,
+      title: getText(value.seo?.title) ?? createFallbackMetaTitle(title),
+      description:
+        getText(value.seo?.description) ??
+        createFallbackMetaDescription(summary) ??
+        summary,
       index: value.seo?.index !== false,
       follow: value.seo?.follow !== false,
       socialImage: mapImage(

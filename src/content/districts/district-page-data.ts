@@ -9,7 +9,7 @@ import {
   type DistrictGuide,
 } from "@/content/districts/district-guide-data-source";
 import {
-  settleDistrictSections,
+  loadDistrictSectionsForCache,
   type DistrictSectionName,
   type DistrictSections,
 } from "@/content/districts/district-sections";
@@ -30,13 +30,14 @@ export type DistrictPageData = DistrictSections & {
 /**
  * Everything a district page shows, with per-section failure isolation:
  * the guide query is fail-closed (an error reaches the error boundary),
- * photos, research and news fall back to an unavailable empty section.
+ * photos, research and news fall back to an unavailable empty section,
+ * which a production server never writes over the cached page.
  */
 export const getDistrictPageData = cache(
   async (district: string): Promise<DistrictPageData> => {
     const [guide, settled] = await Promise.all([
       getDistrictGuide(district),
-      settleDistrictSections(district, {
+      loadDistrictSectionsForCache(district, {
         photos: () => getDistrictPhotos(district, "tr"),
         research: () => getDistrictResearch(district, "tr"),
         news: () =>
