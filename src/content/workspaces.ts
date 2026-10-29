@@ -13,9 +13,29 @@ export type WorkspaceEntry = {
   title: string;
   description: string;
   href: string;
+  /**
+   * Slug of the CMS category whose published articles this section lists.
+   * It must satisfy the slug contract (`isSlug` in `shared/slug.ts`), since
+   * category slugs are normalised with `createSlug` and nothing else can be
+   * saved. Each section has its own category so two indexable sections never
+   * show the same list; the one documented exception is
+   * {@link SHARED_WORKSPACE_FEEDS}. A category the CMS does not have yet
+   * leaves the section in its explicit empty state (noindex, out of the
+   * sitemap) until an editor creates it with exactly this slug.
+   */
   articleCategory?: string;
+  /** Slug of the photo collection or tag listed here (same contract). */
   photoCategory?: string;
 };
+
+/**
+ * Feeds deliberately listed by more than one section. `sehir` predates the
+ * one-category-per-section rule and already feeds both city sections; moving
+ * one of them to its own category is an editorial decision (it would empty
+ * that section until articles are re-categorised), so it stays shared until
+ * the owner decides.
+ */
+export const SHARED_WORKSPACE_FEEDS: ReadonlySet<string> = new Set(["sehir"]);
 
 export type Workspace = {
   key: WorkspaceKey;
@@ -86,42 +106,42 @@ export const workspaces: readonly Workspace[] = [
         title: "Satış",
         description: "Satış pratiğine ilişkin yayınlar.",
         href: "/satis-ve-muzakere/satis",
-        articleCategory: "sales_and_negotiation",
+        articleCategory: "satis",
       },
       {
         slug: "muzakere",
         title: "Müzakere",
         description: "Müzakere yöntemleri ve notları.",
         href: "/satis-ve-muzakere/muzakere",
-        articleCategory: "sales_and_negotiation",
+        articleCategory: "muzakere",
       },
       {
         slug: "iletisim",
         title: "İletişim",
         description: "Açık ve güvene dayalı iletişim üzerine içerikler.",
         href: "/satis-ve-muzakere/iletisim",
-        articleCategory: "sales_and_negotiation",
+        articleCategory: "iletisim",
       },
       {
         slug: "ikna",
         title: "İkna",
         description: "Etik ikna ve karar süreçlerine ilişkin yayınlar.",
         href: "/satis-ve-muzakere/ikna",
-        articleCategory: "sales_and_negotiation",
+        articleCategory: "ikna",
       },
       {
         slug: "musteri-iliskileri",
         title: "Müşteri İlişkileri",
         description: "Müşteri ilişkileri ve uzun vadeli güven üzerine notlar.",
         href: "/satis-ve-muzakere/musteri-iliskileri",
-        articleCategory: "sales_and_negotiation",
+        articleCategory: "musteri-iliskileri",
       },
       {
         slug: "rehberler",
         title: "Rehberler",
         description: "Uygulanabilir satış ve müzakere rehberleri.",
         href: "/satis-ve-muzakere/rehberler",
-        articleCategory: "sales_and_negotiation",
+        articleCategory: "satis-rehberleri",
       },
     ],
   },
