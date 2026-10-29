@@ -141,10 +141,15 @@ async function getAccountEmails(
       emails.push(existing.email);
     }
   } else if (isWhere(args.where)) {
+    // Same access as the operation: a Local API call that overrides access
+    // (a script, no user) reads every match; a REST or admin call reads only
+    // what the caller may see. A caller without read access gets no rows here
+    // (not an error), and the update itself then refuses it.
     const matching = await req.payload.find({
       collection: "users",
       depth: 0,
-      overrideAccess: false,
+      disableErrors: true,
+      overrideAccess: args.overrideAccess === true,
       pagination: false,
       req,
       where: args.where,

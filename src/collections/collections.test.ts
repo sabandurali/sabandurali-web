@@ -333,6 +333,7 @@ test("a bulk password update checks the stored email of every matching account",
     {
       collection: "users",
       depth: 0,
+      disableErrors: true,
       overrideAccess: false,
       pagination: false,
       req: undefined,
