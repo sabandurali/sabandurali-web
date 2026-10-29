@@ -112,7 +112,8 @@ export type ResolvedHomeContent = {
  * The home page never 404s. When the CMS home record is missing, unpublished,
  * scheduled or has incomplete blocks, the static home content is served and
  * the problem is logged as an error, because "/" is the most important URL of
- * the site and is prerendered at build time.
+ * the site and is prerendered at build time. The English home has no CMS
+ * record by design until one is written, so its absence is only info.
  */
 export function resolveHomeContent(
   data: HomePageData,
@@ -127,7 +128,7 @@ export function resolveHomeContent(
         locale: fallback.locale,
         reason: "no public CMS home page; static home content served",
       },
-      "error",
+      fallback.locale === "en" ? "info" : "error",
     );
     return { content: fallback, page: null };
   }
