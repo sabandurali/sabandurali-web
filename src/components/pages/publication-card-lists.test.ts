@@ -22,6 +22,7 @@ import { bookPageContent } from "@/content/books/book-page-content";
 import { exampleEnglishBookReview } from "@/content/books/examples";
 import { toPublicBookReview } from "@/content/books/public-types";
 import type { PublicPhoto } from "@/content/photos/types";
+import { cardGrids } from "./card-grid";
 import { PublicationImage } from "./publication-media";
 import {
   ArticleCardList,
@@ -144,6 +145,90 @@ test("book and photo lists use the canonical cards", () => {
   assert.equal(photoCards.length, 1);
   assert.equal(photoCards[0]?.props.headingLevel, "h3");
   assert.match(String(photos.props.className), /xl:grid-cols-4/);
+});
+
+const breakpoints: Record<string, number> = { sm: 640, md: 768, xl: 1280 };
+
+/** The min-width breakpoints where a grid class changes the column count. */
+function gridBreakpoints(className: string): number[] {
+  return [...className.matchAll(/\b(sm|md|lg|xl):grid-cols-\d/g)]
+    .map((match) => breakpoints[match[1] ?? ""] ?? Number.NaN)
+    .sort((a, b) => a - b);
+}
+
+/** The min-width conditions of a `sizes` attribute, ascending. */
+function sizesBreakpoints(sizes: string): number[] {
+  return [...sizes.matchAll(/\(min-width: (\d+)px\)/g)]
+    .map((match) => Number(match[1]))
+    .sort((a, b) => a - b);
+}
+
+test("SEO-PERF-2: every card grid's image sizes follow its column breakpoints", () => {
+  for (const [columns, grid] of Object.entries(cardGrids)) {
+    assert.deepEqual(
+      sizesBreakpoints(grid.sizes),
+      gridBreakpoints(grid.className),
+      `${columns} columns`,
+    );
+    assert.match(grid.className, new RegExp(`xl:grid-cols-${columns}\\b`));
+  }
+});
+
+function mediaSizes(card: ReactElement<Record<string, unknown>>) {
+  const media = card.props.media;
+  assert.ok(isValidElement<Record<string, unknown>>(media));
+  return media.props.sizes;
+}
+
+test("SEO-PERF-2: the cards announce the sizes of the grid they sit in", () => {
+  const withCover: PublicArticleSummary = article("tr");
+  assert.equal(
+    mediaSizes(
+      ArticleCard({
+        article: withCover,
+        content: articlePageContent.tr,
+        headingLevel: "h3",
+      }),
+    ),
+    cardGrids[3].sizes,
+  );
+  assert.equal(mediaSizes(PhotoCard({ photo: photo() })), cardGrids[3].sizes);
+  assert.equal(
+    mediaSizes(PhotoCard({ photo: photo(), columns: 4 })),
+    cardGrids[4].sizes,
+  );
+
+  const strip = PhotoCardList({ photos: [photo()], columns: 4 });
+  assert.equal(strip.props.className, cardGrids[4].className);
+  assert.equal(ofType(strip, PhotoCard)[0]?.props.columns, 4);
+  const list = PhotoCardList({ photos: [photo()] });
+  assert.equal(list.props.className, cardGrids[3].className);
+});
+
+// The list pages and the photo page load server-only modules, so their grids
+// are checked in the source: the card grids come from cardGrids only.
+for (const file of [
+  "src/components/articles/ArticleListPage.tsx",
+  "src/components/books/BookReviewListPage.tsx",
+  "src/components/photos/PhotoListPage.tsx",
+  "src/components/photos/PhotoDetailContent.tsx",
+  "src/components/pages/PublicationCardLists.tsx",
+]) {
+  test(`SEO-PERF-2: ${file} takes its card grid from cardGrids`, () => {
+    const source = readFileSync(path.join(process.cwd(), file), "utf8");
+    assert.doesNotMatch(source, /<ul\s+className="[^"]*grid-cols-/);
+  });
+}
+
+test("SEO-PERF-2: no card hard-codes its image sizes", () => {
+  for (const file of [
+    "src/components/articles/ArticleCard.tsx",
+    "src/components/books/BookReviewCard.tsx",
+    "src/components/photos/PhotoCard.tsx",
+  ]) {
+    const source = readFileSync(path.join(process.cwd(), file), "utf8");
+    assert.match(source, /sizes=\{cardGrids\[/, file);
+  }
 });
 
 // HomePage and WorkspacePage load server-only data modules, so their use of

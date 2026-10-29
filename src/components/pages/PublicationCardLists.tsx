@@ -1,7 +1,7 @@
 import ArticleCard from "@/components/articles/ArticleCard";
 import BookReviewCard from "@/components/books/BookReviewCard";
 import PhotoCard from "@/components/photos/PhotoCard";
-import { cx } from "@/components/ui/cx";
+import { cardGrids, type CardGridColumns } from "@/components/pages/card-grid";
 import { articlePageContent } from "@/content/articles/article-page-content";
 import type { PublicArticleSummary } from "@/content/articles/public-types";
 import { bookPageContent } from "@/content/books/book-page-content";
@@ -14,8 +14,8 @@ import type { SiteLocale } from "@/lib/metadata";
  * page, the workspace section pages). They use the list pages' cards, so
  * image checks, alt-text `lang`, credits, date style and cue are the same
  * everywhere. A section heading (`h2`) sits above them: card titles are `h3`.
+ * The grids and image `sizes` come from `cardGrids`.
  */
-const gridClassName = "m-0 grid list-none gap-5 p-0 md:grid-cols-2";
 
 export function ArticleCardList({
   articles,
@@ -25,7 +25,7 @@ export function ArticleCardList({
   locale: SiteLocale;
 }) {
   return (
-    <ul className={cx(gridClassName, "xl:grid-cols-3")}>
+    <ul className={cardGrids[3].className}>
       {articles.map((article) => (
         <li key={article.id} className="grid min-w-0">
           <ArticleCard
@@ -48,7 +48,7 @@ export function BookReviewCardList({
   locale: SiteLocale;
 }) {
   return (
-    <ul className={cx(gridClassName, "xl:grid-cols-3")}>
+    <ul className={cardGrids[3].className}>
       {books.map((book) => (
         <li key={book.id} className="grid min-w-0">
           <BookReviewCard
@@ -67,19 +67,17 @@ export function PhotoCardList({
   columns = 3,
 }: {
   photos: readonly PublicPhoto[];
-  /** Columns from 1280 px up: 4 on the home page's photo strip. */
-  columns?: 3 | 4;
+  /**
+   * Columns from 1280 px up: 4 on the home page's photo strip and the
+   * related photographs of a photo page.
+   */
+  columns?: CardGridColumns;
 }) {
   return (
-    <ul
-      className={cx(
-        gridClassName,
-        columns === 4 ? "sm:grid-cols-2 xl:grid-cols-4" : "xl:grid-cols-3",
-      )}
-    >
+    <ul className={cardGrids[columns].className}>
       {photos.map((photo) => (
         <li key={photo.id} className="grid min-w-0">
-          <PhotoCard photo={photo} headingLevel="h3" />
+          <PhotoCard photo={photo} headingLevel="h3" columns={columns} />
         </li>
       ))}
     </ul>

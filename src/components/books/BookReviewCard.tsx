@@ -1,3 +1,4 @@
+import { cardGrids } from "@/components/pages/card-grid";
 import MetaList, { type MetaItem } from "@/components/pages/MetaList";
 import {
   altLanguageAttribute,
@@ -84,7 +85,7 @@ export default function BookReviewCard({
             {...altLanguageAttribute(cover.altLanguage, bookReview.language)}
             layout="fill"
             fit="contain"
-            sizes="(min-width: 1280px) 420px, (min-width: 768px) 50vw, 100vw"
+            sizes={cardGrids[3].sizes}
             className="p-4"
           />
         ) : undefined

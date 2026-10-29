@@ -1,3 +1,4 @@
+import { cardGrids } from "@/components/pages/card-grid";
 import {
   altLanguageAttribute,
   creditFromText,
@@ -53,7 +54,7 @@ export default function ArticleCard({
               article.language,
             )}
             layout="fill"
-            sizes="(min-width: 1024px) 460px, (min-width: 640px) 50vw, 100vw"
+            sizes={cardGrids[3].sizes}
           />
         ) : undefined
       }

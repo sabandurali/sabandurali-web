@@ -3,7 +3,7 @@ import PageIntro from "@/components/ui/PageIntro";
 import { publicationCopy } from "@/components/pages/publication-copy";
 import { PublicationImage } from "@/components/pages/publication-media";
 import TranslationLink from "@/components/pages/TranslationLink";
-import PhotoCard from "@/components/photos/PhotoCard";
+import { PhotoCardList } from "@/components/pages/PublicationCardLists";
 import {
   getPhotoCredit,
   getPhotoExif,
@@ -150,13 +150,7 @@ export default function PhotoDetailContent({
           <h2 id="related-photos-heading" className="m-0 mb-6 type-h2">
             {text.related}
           </h2>
-          <ul className="m-0 grid list-none gap-5 p-0 md:grid-cols-2 xl:grid-cols-4">
-            {related.map((item) => (
-              <li key={item.id} className="grid">
-                <PhotoCard photo={item} headingLevel="h3" />
-              </li>
-            ))}
-          </ul>
+          <PhotoCardList photos={related} columns={4} />
         </Section>
       ) : null}
     </>
