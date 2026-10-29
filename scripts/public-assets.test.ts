@@ -8,8 +8,11 @@ import test from "node:test";
 // brand-assets/. public/media holds local CMS uploads and is not tracked.
 const publicRoot = "public";
 const ignoredPublicDirectories = new Set(["media"]);
-// Application code, its configuration and the static content data.
+// Application code, its configuration and the static content data. Tests
+// are not the application: a path named only in a test is not published
+// by anything, so it does not keep a file in public/.
 const sourceRoots = ["src", "next.config.ts", "data"];
+const isTestFile = (file: string) => /\.test\.[cm]?[jt]sx?$/.test(file);
 // Migration snapshots describe the database, not the application.
 const ignoredSourceDirectories = new Set(["migrations"]);
 // Public files that are only referenced through a computed path. Prefer a
@@ -32,6 +35,7 @@ test("every file in public/ is referenced by the application", () => {
   const sources = sourceRoots
     .flatMap((root) => listFiles(root, ignoredSourceDirectories))
     .filter((file) => /\.(?:[cm]?[jt]sx?|css|json)$/.test(file))
+    .filter((file) => !isTestFile(file))
     .map((file) => readFileSync(file, "utf8"))
     .join("\n");
   const published = listFiles(publicRoot, ignoredPublicDirectories).map(
@@ -46,4 +50,24 @@ test("every file in public/ is referenced by the application", () => {
     [],
     "Reference these files from the application or move them to brand-assets/.",
   );
+});
+
+test("the retired home photos stay out of public/", () => {
+  for (const name of [
+    "arastirma-analiz.jpg",
+    "kitaplar-ogrenme.jpg",
+    "yapay-zeka-teknoloji.jpg",
+  ]) {
+    assert.equal(
+      listFiles(publicRoot, ignoredPublicDirectories).some(
+        (file) => path.basename(file) === name,
+      ),
+      false,
+      name,
+    );
+    assert.ok(
+      statSync(path.join("brand-assets", "retired-home-images", name)).isFile(),
+      name,
+    );
+  }
 });
