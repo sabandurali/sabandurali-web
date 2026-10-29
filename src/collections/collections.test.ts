@@ -576,6 +576,39 @@ test("the published home cannot be unpublished, scheduled or moved", () => {
   assert.deepEqual(Pages.hooks?.beforeOperation, [protectPublishedHomePage]);
 });
 
+test("the home guard never runs an anonymous REST where with overrideAccess", async () => {
+  const args = {
+    data: { _status: "draft" },
+    where: { title: { like: "Ana" } },
+  };
+  let queried = false;
+  const req = {
+    payloadAPI: "REST",
+    user: null,
+    payload: {
+      find: async () => {
+        queried = true;
+        return { docs: [] };
+      },
+    },
+  };
+  const hook = protectPublishedHomePage as unknown as (input: {
+    args: unknown;
+    operation: string;
+    req: unknown;
+  }) => Promise<unknown>;
+
+  assert.equal(await hook({ args, operation: "update", req }), args);
+  assert.equal(queried, false, "access control refuses the update instead");
+
+  await hook({
+    args,
+    operation: "update",
+    req: { ...req, user: { role: "editor" } },
+  });
+  assert.equal(queried, true, "an editor's bulk update is still checked");
+});
+
 test("English standard pages can be drafted but not published", async () => {
   await assert.doesNotReject(
     validatePage({

@@ -14,6 +14,7 @@ import { isRenderableHomeBlock } from "@/content/pages/payload-page-mapper";
 import {
   adminOnly,
   adminOrEditor,
+  isAdminOrEditor,
   publishedPageOrAdminOrEditor,
 } from "@/lib/payloadAccess";
 import { normalizeSlug } from "@/lib/localizedSlug";
@@ -350,6 +351,11 @@ export const protectPublishedHomePage: CollectionBeforeOperationHook = async ({
   req,
 }) => {
   if (operation !== "update") return args;
+  // This hook runs before access control. A REST or GraphQL request that
+  // may not update pages is refused by access control anyway, so its
+  // user-supplied `where` never reaches the overrideAccess query below
+  // (which would otherwise answer whether the home matches it).
+  if (req.payloadAPI !== "local" && !isAdminOrEditor(req.user)) return args;
 
   // Operation argument types differ per operation; read them as unknowns.
   const values = new Map<string, unknown>(Object.entries(args));
