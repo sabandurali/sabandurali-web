@@ -16,6 +16,13 @@ type DisclosureProps = {
   summary: ReactNode;
   children: ReactNode;
   defaultOpen?: boolean;
+  /** Controlled state; pair it with `onOpenChange` (e.g. to close a mobile
+   * drawer after a link inside it was followed). */
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  /** The button spans its container (accordion rows). Turn it off for a
+   * button that sits in a row, such as the header's menu button. */
+  fullWidth?: boolean;
   /** Wraps the button in a heading (accordion sections). */
   headingLevel?: 2 | 3 | 4 | 5 | 6;
   id?: string;
@@ -23,6 +30,19 @@ type DisclosureProps = {
   buttonClassName?: string;
   panelClassName?: string;
 };
+
+/**
+ * Whether an Escape keypress inside an open disclosure closes it. A nested
+ * widget that already handled Escape (an open NavMenu panel calls
+ * preventDefault) keeps it, so Escape closes one layer at a time.
+ */
+export function shouldCloseOnEscape(
+  key: string,
+  isOpen: boolean,
+  defaultPrevented: boolean,
+): boolean {
+  return key === "Escape" && isOpen && !defaultPrevented;
+}
 
 /**
  * Show/hide button (WAI-ARIA disclosure). The panel follows its button in
@@ -34,6 +54,9 @@ export default function Disclosure({
   summary,
   children,
   defaultOpen = false,
+  open,
+  onOpenChange,
+  fullWidth = true,
   headingLevel,
   id,
   className,
@@ -43,13 +66,21 @@ export default function Disclosure({
   const generatedId = useId();
   const baseId = id ?? generatedId;
   const panelId = `${baseId}-panel`;
-  const [isOpen, setIsOpen] = useState(defaultOpen);
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
+  const isOpen = open ?? uncontrolledOpen;
   const buttonRef = useRef<HTMLButtonElement>(null);
 
+  function setOpen(next: boolean) {
+    if (open === undefined) setUncontrolledOpen(next);
+    onOpenChange?.(next);
+  }
+
   function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
-    if (event.key !== "Escape" || !isOpen) return;
+    if (!shouldCloseOnEscape(event.key, isOpen, event.defaultPrevented)) {
+      return;
+    }
     event.stopPropagation();
-    setIsOpen(false);
+    setOpen(false);
     buttonRef.current?.focus();
   }
 
@@ -60,9 +91,10 @@ export default function Disclosure({
       type="button"
       aria-expanded={isOpen}
       aria-controls={panelId}
-      onClick={() => setIsOpen((open) => !open)}
+      onClick={() => setOpen(!isOpen)}
       className={cx(
-        "group flex min-h-tap w-full items-center justify-between gap-3 text-left font-bold",
+        "group flex min-h-tap items-center gap-3 text-left font-bold",
+        fullWidth && "w-full justify-between",
         buttonClassName,
       )}
     >

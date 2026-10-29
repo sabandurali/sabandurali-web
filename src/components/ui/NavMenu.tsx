@@ -27,6 +27,12 @@ export type NavMenuItem = {
   href?: string | null;
   /** The current page: aria-current="page". */
   current?: boolean;
+  /**
+   * The current page lies inside this entry (an article under its section)
+   * without being one of its links: bold text and the signal bar, but no
+   * aria-current, which belongs to the one link of the current page.
+   */
+  active?: boolean;
   newTab?: boolean;
   /**
    * Second level. A child with children of its own renders as a labelled
@@ -54,11 +60,15 @@ function hasChildren(item: NavMenuItem) {
 }
 
 function containsCurrent(item: NavMenuItem): boolean {
-  return item.current === true || (item.children ?? []).some(containsCurrent);
+  return (
+    item.current === true ||
+    item.active === true ||
+    (item.children ?? []).some(containsCurrent)
+  );
 }
 
 const topLinkClassName =
-  "relative flex min-h-tap items-center gap-1.5 px-1 text-small text-ink no-underline hover:underline hover:decoration-2 hover:underline-offset-[0.3em]";
+  "relative flex min-h-tap items-center gap-1.5 text-small text-ink no-underline hover:underline hover:decoration-2 hover:underline-offset-[0.3em]";
 
 /** Signal bar under the entry of the current section (not colour alone:
  * the link itself also turns bold through aria-current). */
@@ -102,7 +112,9 @@ export default function NavMenu({
         className={cx(
           "m-0 flex list-none p-0",
           layout === "bar"
-            ? "flex-wrap items-stretch gap-x-[clamp(1rem,2.2vw,2.25rem)]"
+            ? // Tight from 1280 px so the eight Turkish sections fit one row
+              // even beside a 17 px scrollbar; airier from 1440 px.
+              "flex-wrap items-stretch gap-x-3 min-[90rem]:gap-x-8"
             : "flex-col gap-y-1",
         )}
       >
@@ -130,8 +142,11 @@ export default function NavMenu({
                 onClick={onNavigate}
                 className={cx(
                   topLinkClassName,
-                  item.current ? "font-bold" : "font-medium",
-                  item.current && layout === "bar" && currentBarClassName,
+                  layout === "bar" ? "px-0.5" : "px-1",
+                  containsCurrent(item) ? "font-bold" : "font-medium",
+                  containsCurrent(item) &&
+                    layout === "bar" &&
+                    currentBarClassName,
                 )}
               >
                 {item.label}
@@ -273,6 +288,7 @@ function DropdownItem({
         onKeyDown={handleButtonKeyDown}
         className={cx(
           topLinkClassName,
+          layout === "bar" ? "px-0.5" : "px-1",
           "group cursor-pointer",
           isCurrentSection ? "font-bold" : "font-medium",
           isCurrentSection && layout === "bar" && currentBarClassName,
@@ -389,7 +405,9 @@ function PanelGroup({
       ) : null}
       <ul
         aria-labelledby={groupId}
-        className="m-0 grid list-none grid-cols-2 gap-x-2 p-0 lg:grid-cols-3"
+        // Two columns sized to their longest name: three squeezed columns
+        // ran "Gaziosmanpaşa" into "Güngören" inside the 44 rem panel.
+        className="m-0 grid list-none grid-cols-2 gap-x-2 p-0"
       >
         {(group.children ?? []).map((link) => (
           <li key={link.id}>

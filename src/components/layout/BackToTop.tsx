@@ -1,9 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { ArrowUpIcon } from "@/components/ui/icons";
+import { cx } from "@/components/ui/cx";
 
 const VISIBILITY_THRESHOLD = 550;
 
+/**
+ * Floating "back to top" link to the page's `#top` wrapper. Hidden (and out
+ * of the tab order and the accessibility tree) until the page has been
+ * scrolled; a land square with a 2 px ink edge, so it stays visible on
+ * paper, on photos and on the sea footer. No shadow: the atlas keeps
+ * shadows for open panels.
+ */
 export default function BackToTop({ label }: { label: string }) {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -22,26 +31,15 @@ export default function BackToTop({ label }: { label: string }) {
     <a
       href="#top"
       aria-label={label}
-      aria-hidden={!isVisible}
-      tabIndex={isVisible ? 0 : -1}
-      className={`fixed right-4 bottom-4 z-40 flex size-11 items-center justify-center rounded-full border border-border bg-background/95 text-accent-soft shadow-lg shadow-black/30 transition-[opacity,transform,background-color,border-color] duration-200 hover:border-accent hover:bg-surface motion-reduce:transition-none sm:right-6 sm:bottom-6 ${
+      tabIndex={isVisible ? undefined : -1}
+      className={cx(
+        "fixed right-4 bottom-4 z-30 flex size-tap items-center justify-center rounded-control border-2 border-ink bg-land text-ink transition-[opacity,translate] duration-150 ease-atlas hover:bg-band sm:right-6 sm:bottom-6",
         isVisible
           ? "visible translate-y-0 opacity-100"
-          : "invisible pointer-events-none translate-y-2 opacity-0"
-      }`}
+          : "pointer-events-none invisible translate-y-2 opacity-0",
+      )}
     >
-      <svg
-        aria-hidden="true"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="size-5"
-      >
-        <path d="m6 10 6-6 6 6M12 4v16" />
-      </svg>
+      <ArrowUpIcon size={20} />
     </a>
   );
 }
