@@ -1,4 +1,6 @@
 import Image from "next/image";
+import { cardFrameClassName } from "@/components/ui/Card";
+import { cx } from "@/components/ui/cx";
 import { Figure } from "@/components/ui/Figure";
 import TextLink from "@/components/ui/TextLink";
 import type { PublicArticleSummary } from "@/content/articles/public-types";
@@ -24,7 +26,7 @@ export default function DistrictNewsCard({
   const dateTime = toDateTimeAttribute(news.publishedAt);
 
   return (
-    <article className="flex min-w-0 flex-col overflow-hidden rounded-card border border-ink bg-land text-ink">
+    <article className={cx(cardFrameClassName, "overflow-hidden")}>
       {news.featuredImage !== null ? (
         <Figure
           credit={

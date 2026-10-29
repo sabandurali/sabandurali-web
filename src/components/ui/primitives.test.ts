@@ -7,7 +7,7 @@ import { createElement as h, type ReactElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import Breadcrumb, { homeBreadcrumbItem } from "./Breadcrumb";
 import { Button, ButtonLink } from "./Button";
-import Card from "./Card";
+import Card, { cardFocusClassName, cardFrameClassName } from "./Card";
 import { cx } from "./cx";
 import Disclosure from "./Disclosure";
 import DistrictKeyMap from "./DistrictKeyMap";
@@ -442,6 +442,39 @@ test("FRONTEND-7: cards share one shell and hover only to palette tokens", () =>
   assert.match(
     render(h(EmptyState, null, "Henüz eklenmedi.")),
     /class="[^"]*type-body font-semibold/,
+  );
+});
+
+test("FRONTEND-3: a card without href keeps the Card shell and is no link", () => {
+  const linked = render(
+    h(Card, { title: "Esenler", href: "/x", cta: "Detaylı rehber" }, "Özet"),
+  );
+  const unlinked = render(
+    h(Card, { title: "Esenler", cta: "Detaylı rehber" }, "Özet"),
+  );
+  const frame = (html: string) => /^<article class="([^"]*)"/.exec(html)?.[1];
+
+  assert.doesNotMatch(unlinked, /<a\b/);
+  assert.match(unlinked, /<h3 class="m-0 type-card-title">Esenler<\/h3>/);
+  // No "go" cue and no focus ring where nothing can be followed or focused.
+  assert.doesNotMatch(unlinked, /Detaylı rehber/);
+  assert.ok(!frame(unlinked)?.includes(cardFocusClassName));
+  assert.ok(frame(linked)?.includes(cardFocusClassName));
+  // The frame and the body are the linked card's.
+  assert.equal(
+    frame(unlinked),
+    frame(linked)?.replace(` ${cardFocusClassName}`, ""),
+  );
+  assert.ok(frame(unlinked)?.startsWith(cardFrameClassName));
+  assert.equal(
+    /<div class="(flex flex-auto[^"]*)"/.exec(unlinked)?.[1],
+    /<div class="(flex flex-auto[^"]*)"/.exec(linked)?.[1],
+  );
+
+  // No other component writes the card frame by hand.
+  assert.deepEqual(
+    publicSourcesMatching(/<article className="[^"]*rounded-card border/),
+    [],
   );
 });
 
