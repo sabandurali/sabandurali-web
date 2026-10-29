@@ -14,7 +14,12 @@ import type {
   ReadingStatus,
   ReviewStatus,
 } from "@/content/books/types";
-import { getText, isRecord } from "@/content/guards";
+import {
+  getFiniteNumber,
+  getPositiveNumber,
+  getText,
+  isRecord,
+} from "@/content/guards";
 
 /**
  * Publication gate for book reviews.
@@ -39,15 +44,6 @@ const PUBLISHABLE_REVIEW_STATUSES: ReadonlySet<string> = new Set([
   "archived",
   "published",
 ]);
-
-function getNumber(value: unknown): number | null {
-  return typeof value === "number" && Number.isFinite(value) ? value : null;
-}
-
-function getPositiveNumber(value: unknown): number | null {
-  const number = getNumber(value);
-  return number !== null && number > 0 ? number : null;
-}
 
 function oneOf<TValue extends string>(
   values: readonly TValue[],
@@ -143,12 +139,12 @@ export function toBookReviewCandidate(
     translator: getText(book.translator),
     publisher: getText(book.publisher),
     originalPublisher: getText(book.originalPublisher),
-    publicationYear: getNumber(book.publicationYear),
-    originalPublicationYear: getNumber(book.originalPublicationYear),
+    publicationYear: getFiniteNumber(book.publicationYear),
+    originalPublicationYear: getFiniteNumber(book.originalPublicationYear),
     edition: getText(book.edition),
     isbn10: getText(book.isbn10),
     isbn13: getText(book.isbn13),
-    pageCount: getNumber(book.pageCount),
+    pageCount: getFiniteNumber(book.pageCount),
     coverImage: cover,
     category: getCategory(book.category),
     tags: [],
@@ -169,7 +165,7 @@ export function toBookReviewCandidate(
       id: getText(idea.id) ?? `${id}-idea-${index + 1}`,
       title: getText(idea.title) ?? "",
       description: getText(idea.description) ?? "",
-      order: getNumber(idea.order) ?? index,
+      order: getFiniteNumber(idea.order) ?? index,
     })),
     strengths: textRows(book.strengths),
     weaknesses: textRows(book.weaknesses),
@@ -180,14 +176,14 @@ export function toBookReviewCandidate(
       title: getText(note.title) ?? "",
       description: getText(note.description) ?? "",
       action: getText(note.action) ?? "",
-      order: getNumber(note.order) ?? index,
+      order: getFiniteNumber(note.order) ?? index,
     })),
     personalEvaluation: getText(book.personalEvaluation) ?? "",
-    rating: getNumber(book.rating),
+    rating: getFiniteNumber(book.rating),
     quotes: rows(book.quotes).map((quote, index) => ({
       id: getText(quote.id) ?? `${id}-quote-${index + 1}`,
       text: getText(quote.text) ?? "",
-      order: getNumber(quote.order) ?? index,
+      order: getFiniteNumber(quote.order) ?? index,
     })),
     relatedBookIds: [],
     authorId: null,
