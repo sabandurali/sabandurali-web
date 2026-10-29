@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { isDistrictNewsPageIndexable } from "@/content/districts/district-seo";
 import {
+  createDistrictNewsMetadata,
   getDistrictNewsPagePath,
   paginateDistrictNews,
   parseNewsPage,
@@ -40,4 +42,30 @@ test("page 1 of the news list has no query, later pages carry sayfa", () => {
     getDistrictNewsPagePath("esenler", 3),
     "/istanbul/ilceler/esenler/haberler?sayfa=3",
   );
+});
+
+test("SEO-PERF-3: news page robots and canonical follow the sitemap rule", () => {
+  const district = { slug: "esenler", name: "Esenler" };
+  const robots = (news: readonly unknown[]) => {
+    const value = createDistrictNewsMetadata(district, news, 1).robots;
+    return typeof value === "object" && value !== null ? value.index : value;
+  };
+
+  assert.equal(robots([]), isDistrictNewsPageIndexable([]));
+  assert.equal(robots([]), false);
+  assert.equal(robots([{}]), isDistrictNewsPageIndexable([{}]));
+  assert.equal(robots([{}]), true);
+
+  const news = Array.from({ length: 25 }, () => ({}));
+  const canonical = (page: number) =>
+    String(
+      createDistrictNewsMetadata(district, news, page).alternates?.canonical,
+    );
+  assert.match(
+    canonical(2),
+    /\/istanbul\/ilceler\/esenler\/haberler\?sayfa=2$/,
+  );
+  // A page past the end is clamped to the last one.
+  assert.match(canonical(9), /\?sayfa=3$/);
+  assert.doesNotMatch(canonical(1), /sayfa/);
 });
