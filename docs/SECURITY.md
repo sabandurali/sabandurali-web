@@ -148,6 +148,22 @@ all three cases.
 There is no reporting endpoint yet (`report-to` / `report-uri`), so
 violations are only seen in the browser's DevTools.
 
+### Current risk (accepted until the steps below are done)
+
+No enforced directive restricts scripts or fetches, on the public site or
+on `/admin` (where the session cookie lives), and both report-only
+candidates still allow `'unsafe-inline'`. Against a cross-site scripting bug
+(in Payload's admin UI or a dependency, for example) the browser therefore
+adds no second layer today; the defences are in the code: React escaping,
+`serializeJsonLd` for JSON-LD and `getSafeHref` for every stored link. The
+report-only headers collect nothing from real visitors, so they cannot
+show yet that enforcing is safe. This is deliberate and staged: no script
+policy is enforced before a Preview deployment has been watched (step 1).
+The smallest later gain is enforcing a host allowlist for scripts on the
+admin (`script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'`), which
+blocks scripts from any other origin without nonces; it belongs after step 1
+and needs the owner's decision.
+
 ### Vercel Web Analytics
 
 `<Analytics />` from `@vercel/analytics/next` (pinned) is rendered once in
