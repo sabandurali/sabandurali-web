@@ -28,7 +28,8 @@ const checks = [
   { path: "/en", status: 200, publicRoute: true },
   { path: "/iletisim", status: 200, publicRoute: true },
   { path: "/admin/login", status: 200, admin: true },
-  { path: "/admin", status: 307, adminRedirect: true },
+  // The admin root streams its redirect, so it answers 200 as well.
+  { path: "/admin", status: 200, adminRoot: true },
   { path: "/public-missing-security-test", status: 404, publicRoute: true },
   { path: "/brand/site-og.jpg", status: 200, image: true, publicRoute: true },
   { path: optimizedImage, status: 200, image: true, optimizer: true },
@@ -41,7 +42,7 @@ for (const {
   optimizer = false,
   publicRoute = false,
   admin = false,
-  adminRedirect = false,
+  adminRoot = false,
 } of checks) {
   const response = await fetch(new URL(path, base), { redirect: "manual" });
   assert.equal(response.status, status, path);
@@ -55,7 +56,7 @@ for (const {
   // Both lists hold the same header name with different values.
   const reportOnly = publicRoute
     ? publicRouteSecurityHeaders
-    : admin || adminRedirect
+    : admin || adminRoot
       ? adminRouteSecurityHeaders
       : [];
   for (const { key } of [
