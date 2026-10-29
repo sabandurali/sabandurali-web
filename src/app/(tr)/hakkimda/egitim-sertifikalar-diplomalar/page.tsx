@@ -38,7 +38,7 @@ const parts = [
 export default function EducationCertificatesDiplomasPage() {
   return (
     <PageShell locale="tr" languageHrefs={{ tr: path, en: "/en" }}>
-      <main id="main" className="bg-paper text-ink">
+      <main id="main" className="scheme-light bg-paper text-ink">
         <Section>
           <PageIntro
             breadcrumb={[

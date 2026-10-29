@@ -36,7 +36,7 @@ export default function ContactPage({ content }: ContactPageProps) {
 
   return (
     <PageShell locale={locale} languageHrefs={contactPaths}>
-      <main id="main" className="bg-paper py-section text-ink">
+      <main id="main" className="scheme-light bg-paper py-section text-ink">
         <Container className="grid gap-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
           <PageIntro
             locale={locale}

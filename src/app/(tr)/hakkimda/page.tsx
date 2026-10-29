@@ -42,7 +42,7 @@ export default function AboutPage() {
 
   return (
     <PageShell locale="tr" languageHrefs={{ tr: "/hakkimda", en: "/en" }}>
-      <main id="main" className="bg-paper text-ink">
+      <main id="main" className="scheme-light bg-paper text-ink">
         <Section id="hakkimda" className="scroll-mt-24">
           <div className="grid gap-10 md:grid-cols-[15rem_minmax(0,1fr)] md:items-end lg:grid-cols-[19rem_minmax(0,1fr)] lg:gap-16">
             <Figure credit={null} className="w-48 sm:w-56 md:w-full">

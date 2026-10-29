@@ -36,7 +36,7 @@ export default function PrivacyNoticePage({
 
   return (
     <PageShell locale={locale} languageHrefs={privacyPaths}>
-      <main id="main" className="bg-paper py-section text-ink">
+      <main id="main" className="scheme-light bg-paper py-section text-ink">
         <Container>
           <PageIntro
             locale={locale}

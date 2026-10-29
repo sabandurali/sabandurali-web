@@ -24,7 +24,7 @@ export const metadata: Metadata = createPageMetadata({
 export default function BiographyPage() {
   return (
     <PageShell locale="tr" languageHrefs={{ tr: path, en: "/en" }}>
-      <main id="main" className="bg-paper text-ink">
+      <main id="main" className="scheme-light bg-paper text-ink">
         <Section>
           <PageIntro
             breadcrumb={[
