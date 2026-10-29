@@ -6,6 +6,7 @@ import { writeFileSync } from "node:fs";
 import { parseArgs } from "node:util";
 import {
   checkDistrictRecord,
+  contentReferenceTime,
   isEditorialBundle,
   isHistoricalPhotoBundle,
   isNeighbourhoodEvidence,
@@ -46,10 +47,19 @@ const expectedCounts = [
   38, 10, 22, 11, 15, 10, 11, 23, 10, 45, 24, 39, 19, 43, 29, 57, 16, 11, 19,
   21, 38, 35, 15, 25, 13, 5, 17, 45, 21, 21, 20, 18, 36, 19, 15, 62, 17, 35, 33,
 ];
+// Deterministic: the content policy is evaluated at the latest recorded
+// review, not at the wall clock, so the result of a commit never changes with
+// the date (TESTS-INFRA-1). A review dated in the future is still rejected;
+// that comparison can only turn from failing to passing as time goes by.
+const referenceTime = contentReferenceTime(editorial);
+assert.ok(
+  referenceTime <= Date.now(),
+  "editorial.json: a checkedAt lies in the future",
+);
 validateBundle(research);
-attachEditorial(research, editorial);
+attachEditorial(research, editorial, referenceTime);
 const rows = research.districts.map((r, i) =>
-  checkDistrictRecord(r, evidence, expectedCounts[i]),
+  checkDistrictRecord(r, evidence, expectedCounts[i], referenceTime),
 );
 
 const completedFields = [
@@ -253,10 +263,14 @@ const invalid = structuredClone(editorial);
 invalid.districts[0].sources.forEach((s) => {
   s.needsVerification = true;
 });
-assert.throws(() => attachEditorial(structuredClone(research), invalid));
+assert.throws(() =>
+  attachEditorial(structuredClone(research), invalid, referenceTime),
+);
 const mismatch = structuredClone(editorial);
 mismatch.districts[0].pdfSha256 = "0".repeat(64);
-assert.throws(() => attachEditorial(structuredClone(research), mismatch));
+assert.throws(() =>
+  attachEditorial(structuredClone(research), mismatch, referenceTime),
+);
 const invalidPopulation = structuredClone(editorial);
 const invalidPopulationFacts = requireDistrictRow(
   invalidPopulation.districts,
@@ -266,7 +280,7 @@ const invalidPopulationFacts = requireDistrictRow(
 assert.ok(invalidPopulationFacts, "bahcelievler: facts required");
 invalidPopulationFacts.population = "539036";
 assert.throws(() =>
-  attachEditorial(structuredClone(research), invalidPopulation),
+  attachEditorial(structuredClone(research), invalidPopulation, referenceTime),
 );
 const invalidPopulationSource = structuredClone(editorial);
 const populationSource = requireDistrictRow(
@@ -277,7 +291,11 @@ const populationSource = requireDistrictRow(
 assert.ok(populationSource, "bahcelievler: facts source required");
 populationSource.needsVerification = true;
 assert.throws(() =>
-  attachEditorial(structuredClone(research), invalidPopulationSource),
+  attachEditorial(
+    structuredClone(research),
+    invalidPopulationSource,
+    referenceTime,
+  ),
 );
 const invalidAdoption = structuredClone(editorial);
 const adoption = requireDistrictRow(
@@ -288,7 +306,7 @@ const adoption = requireDistrictRow(
 assert.ok(adoption, "esenler: adoption required");
 adoption.contentFingerprint = "0".repeat(64);
 assert.throws(() =>
-  attachEditorial(structuredClone(research), invalidAdoption),
+  attachEditorial(structuredClone(research), invalidAdoption, referenceTime),
 );
 assertBatch1PopulationImportPlan({ ...batch1PopulationPlan });
 const populationPlanActions = [
@@ -311,6 +329,7 @@ for (const action of populationPlanActions) {
 }
 const result = {
   checkedAt: new Date().toISOString(),
+  referenceTime: new Date(referenceTime).toISOString(),
   result: "39/39 PASS",
   scope:
     "Kaynak incelemesine bağlı sınırlı yayın içeriği; tüm PDF iddialarının veya bütün bölümlerin doğrulandığı anlamına gelmez.",

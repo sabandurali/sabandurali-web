@@ -135,3 +135,27 @@ test("CI pushes the Payload schema to its SQLite file before the server starts",
   // e2e:headers checks /admin/login, which needs the users table.
   assert.ok(schema < start && start < headers);
 });
+
+test("TESTS-INFRA-1: content freshness runs on a schedule, never on a pull request", () => {
+  const freshness = readFileSync(
+    ".github/workflows/content-freshness.yml",
+    "utf8",
+  );
+  const triggers = /\non:\n([\s\S]*?)\n\S/.exec(freshness)?.[1] ?? "";
+  assert.match(triggers, /^\s{2}schedule:/m);
+  assert.match(triggers, /^\s{2}workflow_dispatch:/m);
+  assert.doesNotMatch(triggers, /pull_request|push/);
+  assert.match(freshness, /run: npm run report:districts:freshness/);
+  assert.match(freshness, /permissions:\n\s+contents: read/);
+  assert.doesNotMatch(freshness, /\$\{\{\s*secrets\./);
+  for (const [, ref] of freshness.matchAll(/uses:\s*\S+@(\S+)/g))
+    assert.match(ref, /^[0-9a-f]{40}$/);
+  // The wall-clock report is never part of the blocking pull request checks.
+  assert.ok(!workflow.includes("report:districts:freshness"));
+  const { scripts } = JSON.parse(readFileSync("package.json", "utf8")) as {
+    scripts: Record<string, string>;
+  };
+  for (const [name, command] of Object.entries(scripts))
+    if (name === "test" || name.startsWith("test:") || name === "check")
+      assert.ok(!command.includes("report-freshness"), name);
+});

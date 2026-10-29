@@ -219,18 +219,37 @@ export type DistrictAcceptanceRow = {
 };
 
 /**
+ * The fixed time the content gate is evaluated at: the latest editorial
+ * review (`checkedAt`) recorded in data/districts/editorial.json. The gate
+ * proves that the reviewed content was publishable when it was reviewed, so
+ * `npm test` and CI give the same answer on every day for the same commit.
+ * Whether the content is still fresh today is a separate, non-blocking
+ * question answered by `npm run report:districts:freshness`.
+ */
+export function contentReferenceTime(editorial: EditorialBundle): number {
+  const times = editorial.districts.map((row) => Date.parse(row.checkedAt));
+  assert.ok(
+    times.length > 0 && times.every(Number.isFinite),
+    "editorial.json: every district needs a valid checkedAt",
+  );
+  return Math.max(...times);
+}
+
+/**
  * The public projection of one research record with its attached editorial
- * review, checked against the reviewed official neighbourhood list.
+ * review, checked against the reviewed official neighbourhood list at the
+ * given reference time (never the wall clock, see `contentReferenceTime`).
  */
 export function checkDistrictRecord(
   r: ResearchRecord,
   evidence: readonly NeighbourhoodEvidence[],
   expectedNeighbourhoodCount: number | undefined,
+  referenceTime: number,
 ): DistrictAcceptanceRow {
   const review = r.editorial;
   assert.ok(review, `${r.district}: editorial review not attached`);
   const draft = makeDraft(r);
-  const projected = mapDistrictGuide(draft);
+  const projected = mapDistrictGuide(draft, referenceTime);
   assert.ok(projected, `${r.district}: the draft does not project`);
   const proof = requireDistrictRow(evidence, r.district, "editorial-review");
   assert.equal(
@@ -329,7 +348,7 @@ export function checkDistrictRecord(
     `${r.district}: unverified source`,
   );
   assert.ok(
-    review.methodology && Date.parse(review.checkedAt) <= Date.now(),
+    review.methodology && Date.parse(review.checkedAt) <= referenceTime,
     `${r.district}: methodology and check date`,
   );
   return {

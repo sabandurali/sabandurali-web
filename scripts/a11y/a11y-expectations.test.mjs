@@ -4,6 +4,8 @@ import test from "node:test";
 import {
   axeProblems,
   axeTags,
+  contactFormFields,
+  contactFormProblems,
   contentProblems,
   detailRoutes,
   fixtureRoutes,
@@ -495,5 +497,128 @@ test("the keyboard checks wait for the hydrated skip link", () => {
   assert.equal(
     skipLinkHydrated(root({ href: "#main", __reactProps$abc: {} })),
     true,
+  );
+});
+
+/** A form snapshot where the given fields show the given messages. */
+function formState(focused, messages) {
+  return {
+    focused,
+    fields: Object.fromEntries(
+      contactFormFields.map((field) => {
+        const text = messages[field];
+        return [
+          field,
+          { invalid: text !== undefined, messages: text ? [text] : [] },
+        ];
+      }),
+    ),
+  };
+}
+
+const allMissing = {
+  name: "Hata: Adınızı yazın.",
+  email: "Hata: E-posta adresinizi yazın.",
+  subject: "Hata: Bir konu seçin.",
+  message: "Hata: Mesajınızı yazın.",
+  privacyAcknowledgement: "Hata: Aydınlatma metnini onaylayın.",
+};
+const withoutName = { ...allMissing, name: undefined };
+const goodContactForm = {
+  submitted: formState("name", allMissing),
+  nameFixed: formState("name", withoutName),
+  messageShort: formState("message", {
+    ...withoutName,
+    message: "Hata: Mesajınız en az 10 karakter olmalı.",
+  }),
+  externalRequests: [],
+};
+
+test("TESTS-INFRA-4: the contact form check runs on both contact pages", () => {
+  assert.deepEqual(
+    publicRoutes
+      .filter((route) => route.contactForm)
+      .map(({ path, contactForm }) => [path, contactForm]),
+    [
+      ["/iletisim", "tr"],
+      ["/en/contact", "en"],
+    ],
+  );
+  // Every field ContactForm.tsx renders, in its visual order.
+  const form = readFileSync("src/components/forms/ContactForm.tsx", "utf8");
+  const names = [...form.matchAll(/\bname="(\w+)"/g)]
+    .map(([, name]) => name)
+    .filter((name) => !["language", "formType"].includes(name));
+  const acknowledgement = readFileSync(
+    "src/components/forms/PrivacyAcknowledgement.tsx",
+    "utf8",
+  );
+  assert.match(acknowledgement, /name="privacyAcknowledgement"/);
+  assert.deepEqual([...names, "privacyAcknowledgement"], contactFormFields);
+});
+
+test("TESTS-INFRA-4: correct error handling passes", () => {
+  assert.deepEqual(contactFormProblems(goodContactForm, "tr"), []);
+  const english = formState("name", {
+    ...allMissing,
+    name: "Error: Enter your name.",
+  });
+  assert.ok(
+    contactFormProblems({ ...goodContactForm, submitted: english }, "en").some(
+      (problem) =>
+        problem.includes('email has no aria-invalid with a visible "Error:"'),
+    ),
+  );
+});
+
+test("TESTS-INFRA-4: lost focus, missing or stale messages and requests fail", () => {
+  const problems = (change) =>
+    contactFormProblems({ ...goodContactForm, ...change }, "tr");
+  // The focus effect was removed: focus stays on the submit button.
+  assert.match(
+    problems({ submitted: { ...goodContactForm.submitted, focused: null } })[0],
+    /focus is on nothing, not the first invalid field/,
+  );
+  // aria-describedby no longer reaches the message.
+  const unlinked = formState("name", allMissing);
+  unlinked.fields.email.messages = [];
+  assert.match(
+    problems({ submitted: unlinked })[0],
+    /email has no aria-invalid/,
+  );
+  // A message without the spoken prefix is not enough.
+  assert.match(
+    problems({
+      submitted: formState("name", {
+        ...allMissing,
+        subject: "Bir konu seçin.",
+      }),
+    })[0],
+    /subject has no aria-invalid/,
+  );
+  // The fixed field keeps its message.
+  assert.match(
+    problems({ nameFixed: formState("name", allMissing) })[0],
+    /its message stays after the field was fixed/,
+  );
+  // Typing moved focus somewhere else.
+  assert.match(
+    problems({ nameFixed: formState("email", withoutName) })[0],
+    /typing moved focus to email/,
+  );
+  // Fixing one field dropped another field's message.
+  const withoutNameAndEmail = { ...withoutName, email: undefined };
+  assert.match(
+    problems({ nameFixed: formState("name", withoutNameAndEmail) })[0],
+    /the email message disappeared/,
+  );
+  // The changed message field keeps the old text.
+  assert.match(
+    problems({ messageShort: formState("message", withoutName) })[0],
+    /the message text was not updated/,
+  );
+  assert.match(
+    problems({ externalRequests: ["https://formspree.io/f/x"] })[0],
+    /an invalid form sent requests: https:\/\/formspree\.io\/f\/x/,
   );
 });
