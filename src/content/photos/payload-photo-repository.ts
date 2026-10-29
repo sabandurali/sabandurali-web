@@ -1,6 +1,7 @@
 import "server-only";
 import { getPayload, type Where } from "payload";
 import config from "@payload-config";
+import { collectMappedPages } from "@/content/shared/pagination";
 import { hasPublicDocument } from "@/content/photos/has-public-document";
 import { mapPayloadPhoto } from "@/content/photos/payload-photo-mapper";
 import {
@@ -71,11 +72,7 @@ export class PayloadPublicPhotoRepository {
     conditions: Where[],
     now: Date,
   ): Promise<PublicPhoto[]> {
-    const photos: PublicPhoto[] = [];
-    let page = 1;
-    let totalPages = 1;
-
-    while (page <= totalPages) {
+    return collectMappedPages(async (page) => {
       const result = await this.findPage(
         locale,
         conditions,
@@ -83,12 +80,8 @@ export class PayloadPublicPhotoRepository {
         PAYLOAD_PAGE_SIZE,
         now,
       );
-      photos.push(...result.photos);
-      totalPages = result.totalPages;
-      page += 1;
-    }
-
-    return photos;
+      return { items: result.photos, totalPages: result.totalPages };
+    });
   }
 
   /**
@@ -187,11 +180,7 @@ export class PayloadPublicPhotoRepository {
     now: Date,
     exclude: ReadonlySet<string> = new Set(),
   ): Promise<PublicPhoto[]> {
-    const photos: PublicPhoto[] = [];
-    let page = 1;
-    let totalPages = 1;
-
-    while (photos.length < wanted && page <= totalPages) {
+    return collectMappedPages(async (page) => {
       const result = await this.findPage(
         locale,
         conditions,
@@ -199,12 +188,11 @@ export class PayloadPublicPhotoRepository {
         pageSize,
         now,
       );
-      photos.push(...result.photos.filter(({ id }) => !exclude.has(id)));
-      totalPages = result.totalPages;
-      page += 1;
-    }
-
-    return photos.slice(0, wanted);
+      return {
+        items: result.photos.filter(({ id }) => !exclude.has(id)),
+        totalPages: result.totalPages,
+      };
+    }, wanted);
   }
 
   /**

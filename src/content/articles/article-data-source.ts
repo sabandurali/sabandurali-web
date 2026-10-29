@@ -35,6 +35,10 @@ const staticArticleFixtures: ReadonlyArray<Article> =
 
 const payloadArticleRepository = new PayloadPublicArticleRepository();
 
+function isPayloadSource(): boolean {
+  return readPublicSource("ARTICLE_PUBLIC_SOURCE") === "payload";
+}
+
 export type PublishedArticlePageData = {
   article: PublicArticle | null;
   translation: PublicArticleTranslation | null;
@@ -121,7 +125,7 @@ export const getPublishedArticlePageData = cache(
     slug: string,
     language: ArticleLanguage,
   ): Promise<PublishedArticlePageData> =>
-    readPublicSource("ARTICLE_PUBLIC_SOURCE") === "payload"
+    isPayloadSource()
       ? getPayloadPublishedArticlePageData(slug, language)
       : getStaticPublishedArticlePageData(slug, language),
 );
@@ -139,7 +143,7 @@ function getAllStaticPublishedArticles(
 /** Every public standalone article (district news excluded), newest first. */
 export const getAllPublishedArticles = cache(
   async (language: ArticleLanguage): Promise<PublicArticleSummary[]> =>
-    readPublicSource("ARTICLE_PUBLIC_SOURCE") === "payload"
+    isPayloadSource()
       ? payloadArticleRepository.listPublished(language)
       : getAllStaticPublishedArticles(language),
 );
@@ -154,7 +158,7 @@ export const getLatestPublishedArticles = cache(
     language: ArticleLanguage,
     limit: number,
   ): Promise<PublicArticleSummary[]> =>
-    readPublicSource("ARTICLE_PUBLIC_SOURCE") === "payload"
+    isPayloadSource()
       ? payloadArticleRepository.listPublished(language, new Date(), limit)
       : getAllStaticPublishedArticles(language).slice(0, Math.max(0, limit)),
 );
@@ -175,7 +179,7 @@ export const getPublishedArticlesByCategory = cache(
     categorySlug: string,
     language: ArticleLanguage,
   ): Promise<PublicArticleSummary[]> =>
-    readPublicSource("ARTICLE_PUBLIC_SOURCE") === "payload"
+    isPayloadSource()
       ? payloadArticleRepository.listByCategory(categorySlug, language)
       : getAllStaticPublishedArticles(language).filter((article) =>
           article.categories.some((category) => category.slug === categorySlug),
@@ -193,7 +197,7 @@ export const getDistrictNewsPage = cache(
     page: number,
     pageSize: number,
   ): Promise<PublicArticleSummaryPage> =>
-    readPublicSource("ARTICLE_PUBLIC_SOURCE") === "payload"
+    isPayloadSource()
       ? payloadArticleRepository.listDistrictNewsPage(district, page, pageSize)
       : { items: [], currentPage: 1, totalPages: 1, totalItems: 0 },
 );
@@ -201,7 +205,7 @@ export const getDistrictNewsPage = cache(
 /** The news of every district in one query (the sitemap groups them). */
 export const getAllDistrictNews = cache(
   async (language: ArticleLanguage): Promise<PublicArticleSummary[]> =>
-    readPublicSource("ARTICLE_PUBLIC_SOURCE") === "payload"
+    isPayloadSource()
       ? payloadArticleRepository.listAllDistrictNews(language)
       : [],
 );
@@ -216,7 +220,7 @@ export const getLatestDistrictNews = cache(
     language: ArticleLanguage,
     limit: number,
   ): Promise<PublicArticleSummary[]> =>
-    readPublicSource("ARTICLE_PUBLIC_SOURCE") === "payload"
+    isPayloadSource()
       ? payloadArticleRepository.listDistrictArticles(
           "district-news",
           district,
@@ -233,7 +237,7 @@ export const getDistrictResearch = cache(
     district: string,
     language: ArticleLanguage,
   ): Promise<PublicArticleSummary[]> =>
-    readPublicSource("ARTICLE_PUBLIC_SOURCE") === "payload"
+    isPayloadSource()
       ? payloadArticleRepository.listDistrictArticles(
           "district-research",
           district,

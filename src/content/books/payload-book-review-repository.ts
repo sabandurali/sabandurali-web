@@ -1,6 +1,10 @@
 import "server-only";
 import { getPayload, type Where } from "payload";
 import config from "@payload-config";
+import {
+  collectMappedPages,
+  getReadBatchSize,
+} from "@/content/shared/pagination";
 import { createPublicBookReviewConditions } from "@/content/books/book-query-conditions";
 import {
   mapPayloadBookReview,
@@ -84,19 +88,13 @@ export class PayloadPublicBookReviewRepository {
     limit?: number,
   ): Promise<PublicBookReviewSummary[]> {
     const payload = await getPayload({ config });
-    const bookReviews: PublicBookReviewSummary[] = [];
-    let page = 1;
-    let totalPages = 1;
 
-    while (
-      page <= totalPages &&
-      (limit === undefined || bookReviews.length < limit)
-    ) {
+    return collectMappedPages(async (page) => {
       const result = await payload.find({
         collection: "books",
         depth: 1,
         draft: false,
-        limit: limit ?? PAYLOAD_BOOK_PAGE_SIZE,
+        limit: getReadBatchSize(limit, PAYLOAD_BOOK_PAGE_SIZE),
         overrideAccess: false,
         page,
         populate: BOOK_RELATION_POPULATE,
@@ -110,16 +108,14 @@ export class PayloadPublicBookReviewRepository {
         },
       });
 
-      for (const document of result.docs) {
-        const bookReview = mapPayloadBookReviewSummary(document, now);
-        if (bookReview !== null) bookReviews.push(bookReview);
-      }
-
-      totalPages = result.totalPages;
-      page += 1;
-    }
-
-    return limit === undefined ? bookReviews : bookReviews.slice(0, limit);
+      return {
+        items: result.docs.flatMap((document): PublicBookReviewSummary[] => {
+          const bookReview = mapPayloadBookReviewSummary(document, now);
+          return bookReview === null ? [] : [bookReview];
+        }),
+        totalPages: result.totalPages,
+      };
+    }, limit);
   }
 
   async findPublishedBySlug(

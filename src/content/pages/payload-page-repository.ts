@@ -1,6 +1,7 @@
 import "server-only";
 import { getPayload, type Where } from "payload";
 import config from "@payload-config";
+import { collectMappedPages } from "@/content/shared/pagination";
 import { getEnglishRichTextLinkContext } from "@/content/rich-text/offered-article-links";
 import { mapPayloadPage } from "@/content/pages/payload-page-mapper";
 import type { SiteLocale } from "@/content/locales";
@@ -94,11 +95,8 @@ export class PayloadPublicPageRepository {
   async listStandards(language: SiteLocale): Promise<PublicPage[]> {
     const payload = await getPayload({ config });
     const now = new Date();
-    const pages: PublicPage[] = [];
-    let page = 1;
-    let totalPages = 1;
 
-    while (page <= totalPages) {
+    return collectMappedPages(async (page) => {
       const result = await payload.find({
         collection: "pages",
         depth: 1,
@@ -123,15 +121,13 @@ export class PayloadPublicPageRepository {
           ? await getEnglishRichTextLinkContext(result.docs)
           : undefined;
 
-      for (const document of result.docs) {
-        const mapped = mapPayloadPage(document, language, now, links);
-        if (mapped !== null) pages.push(mapped);
-      }
-
-      totalPages = result.totalPages;
-      page += 1;
-    }
-
-    return pages;
+      return {
+        items: result.docs.flatMap((document): PublicPage[] => {
+          const mapped = mapPayloadPage(document, language, now, links);
+          return mapped === null ? [] : [mapped];
+        }),
+        totalPages: result.totalPages,
+      };
+    });
   }
 }

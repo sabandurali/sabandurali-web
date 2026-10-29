@@ -1,6 +1,12 @@
 import "server-only";
 import { getPayload, type Where } from "payload";
 import config from "@payload-config";
+import {
+  clampPage,
+  collectMappedPages,
+  getReadBatchSize,
+  normalizeRequestedPage,
+} from "@/content/shared/pagination";
 import { createPublicArticleConditions } from "@/content/articles/article-query-conditions";
 import { isOfferedArticleContent } from "@/content/articles/article-translation";
 import { getEnglishRichTextLinkContext } from "@/content/rich-text/offered-article-links";
@@ -41,25 +47,16 @@ export class PayloadPublicArticleRepository {
     limit?: number,
   ): Promise<PublicArticleSummary[]> {
     const payload = await getPayload({ config });
-    const articles: PublicArticleSummary[] = [];
-    let page = 1;
-    let totalPages = 1;
 
-    while (
-      page <= totalPages &&
-      (limit === undefined || articles.length < limit)
-    ) {
+    return collectMappedPages(async (page) => {
       const result = await payload.find({
         collection: "articles",
         depth: 1,
         draft: false,
         fallbackLocale: false,
-        // A small limit still reads a few rows per query, so skipped
-        // records (incomplete English translations) cost few round trips.
-        limit:
-          limit === undefined
-            ? PAYLOAD_ARTICLE_PAGE_SIZE
-            : Math.min(PAYLOAD_ARTICLE_PAGE_SIZE, Math.max(limit, 10)),
+        // Skipped records (incomplete English translations) cost few
+        // round trips.
+        limit: getReadBatchSize(limit, PAYLOAD_ARTICLE_PAGE_SIZE),
         locale,
         overrideAccess: false,
         page,
@@ -73,16 +70,14 @@ export class PayloadPublicArticleRepository {
         return article === null ? [] : [article];
       });
 
-      articles.push(
-        ...(locale === "en"
-          ? await this.withoutIncompleteTranslations(mapped)
-          : mapped),
-      );
-      totalPages = result.totalPages;
-      page += 1;
-    }
-
-    return limit === undefined ? articles : articles.slice(0, limit);
+      return {
+        items:
+          locale === "en"
+            ? await this.withoutIncompleteTranslations(mapped)
+            : mapped,
+        totalPages: result.totalPages,
+      };
+    }, limit);
   }
 
   /**
@@ -113,14 +108,14 @@ export class PayloadPublicArticleRepository {
         sort: PUBLIC_ARTICLE_SORT,
         where: { and: [...conditions, HAS_BODY] },
       });
-    const requested = Math.max(1, Math.floor(requestedPage));
+    const requested = normalizeRequestedPage(requestedPage);
     let result = await read(requested);
     // Past the end Payload returns no documents and, when the query joins
     // other tables, no total either: page 1 supplies the real total, then
     // the last page is read.
     if (result.docs.length === 0 && requested > 1) {
       const first = await read(1);
-      const lastPage = Math.max(1, Math.ceil(first.totalDocs / pageSize));
+      const lastPage = clampPage(requested, first.totalDocs, pageSize).page;
       result = lastPage === 1 ? first : await read(lastPage);
     }
     const totalItems = result.totalDocs;
