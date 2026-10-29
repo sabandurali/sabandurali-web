@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { isValidElement, type ReactElement } from "react";
+import { Figure } from "@/components/ui/Figure";
 import PageIntro from "@/components/ui/PageIntro";
 import { homeContent, type HomeContent } from "@/content/homeContent";
 import { homeEditorialContent } from "@/content/homeEditorialContent";
@@ -83,6 +84,56 @@ test("ARCHITECTURE-1: the static content keeps the site's own portrait", () => {
   assert.equal(portrait?.props.src, "/brand/saban-durali-profile.jpg");
   const intro = all.find((element) => element.type === PageIntro);
   assert.equal(intro?.props.lead, homeContent.tr.about.paragraphs[0]);
+});
+
+test("ARCHITECTURE-1: the CMS portrait keeps its media credit on /hakkimda", () => {
+  // Test fixture only: the credit text is a placeholder, not a real source.
+  const page: PublicPage = {
+    id: "1",
+    title: "Ana sayfa",
+    slug: "ana-sayfa",
+    language: "tr",
+    pageType: "home",
+    summary: "",
+    publishedAt: "2026-10-01T00:00:00.000Z",
+    createdAt: "2026-10-01T00:00:00.000Z",
+    updatedAt: "2026-10-01T00:00:00.000Z",
+    seo: {
+      title: "t",
+      description: "d",
+      index: true,
+      follow: true,
+      socialImage: null,
+    },
+    layout: [
+      {
+        id: "a",
+        visible: true,
+        anchor: null,
+        blockType: "homeAbout",
+        eyebrow: "Hakkımda",
+        titleLines: ["Başlık"],
+        paragraphs: ["CMS-LEAD"],
+        link: null,
+        imageAlt: "CMS-ALT",
+        image: {
+          src: "/api/media/file/cms-portrait.jpg",
+          alt: "CMS-ALT",
+          credit: "CMS-CREDIT",
+        },
+      },
+    ],
+  };
+  const figure = elements(AboutPageContent({ content: cms, page })).find(
+    (element) => element.type === Figure,
+  );
+  assert.deepEqual(figure?.props.credit, { collection: "CMS-CREDIT" });
+
+  // The built-in portrait has no recorded source: no credit is invented.
+  const staticFigure = elements(
+    AboutPageContent({ content: homeContent.tr, page: null }),
+  ).find((element) => element.type === Figure);
+  assert.equal(staticFigure?.props.credit, null);
 });
 
 test("a CMS introduction of one paragraph leaves no empty biography paragraph", () => {
