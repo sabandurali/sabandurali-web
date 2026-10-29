@@ -986,10 +986,12 @@ test("the English header tab is hidden and English links may only target the Eng
 test("CORRECTNESS-5: publishing a district guide checks normalized sources", async () => {
   const [protect] = DistrictGuides.hooks?.beforeChange ?? [];
   assert.ok(protect);
+  // A narrative source: a population register release (TÜİK) can no longer
+  // support history or geography (district-content-policy.ts).
   const source = {
-    title: "Adrese Dayalı Nüfus Kayıt Sistemi",
-    publisher: "TÜİK",
-    url: "https://data.tuik.gov.tr/",
+    title: "Esenler — Tarihçe",
+    publisher: "T.C. Esenler Kaymakamlığı",
+    url: "https://www.esenler.gov.tr/tarihce",
     sourceType: "official",
     primary: true,
     checkedAt: "2026-09-01",
