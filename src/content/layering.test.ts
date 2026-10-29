@@ -33,6 +33,22 @@ test("ARCHITECTURE-7: the content layer never imports from components", async ()
   assert.deepEqual(offenders, []);
 });
 
+test("ARCHITECTURE-6: the content layer takes the site locale from content/locales", async () => {
+  const offenders: string[] = [];
+  for (const file of await sourceFiles(contentDir)) {
+    const source = await readFile(file, "utf8");
+    // `import { ..., SiteLocale, ... } from "@/lib/metadata"` closes the
+    // content → lib/metadata → content/locales cycle.
+    if (
+      /import[^;]*\b(?:SiteLocale|siteLocales)\b[^;]*from\s+["']@\/lib\/metadata["']/.test(
+        source,
+      )
+    )
+      offenders.push(path.relative(contentDir, file));
+  }
+  assert.deepEqual(offenders, []);
+});
+
 test("ARCHITECTURE-7: the home crumb matches the UI breadcrumb", () => {
   for (const locale of siteLocales) {
     assert.equal(homeCrumb[locale].name, getUiStrings(locale).home);

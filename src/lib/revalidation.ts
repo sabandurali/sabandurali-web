@@ -93,18 +93,16 @@ export type RevalidatedCollection =
   | "photos"
   | "tags";
 
-type Language = SiteLocale;
-
 type Revalidate = (path: string, type?: "layout" | "page") => void;
 
 type RevalidateTag = (tag: string, profile: { expire: number }) => void;
 
 type RevalidationLogger = Readonly<{ warn: (message: string) => void }>;
 
-const LANGUAGES: readonly Language[] = siteLocales;
+const LANGUAGES: readonly SiteLocale[] = siteLocales;
 
 /** Route groups that own the Turkish and English trees in `src/app`. */
-const ROUTE_GROUPS: Readonly<Record<Language, string>> = {
+const ROUTE_GROUPS: Readonly<Record<SiteLocale, string>> = {
   tr: "/(tr)",
   en: "/(en)",
 };
@@ -114,7 +112,7 @@ export const ALL_PAGES: RevalidationTarget = { path: "/", type: "layout" };
 
 export const SITEMAP_PATH = "/sitemap.xml";
 
-const HOME_PATHS: Readonly<Record<Language, string>> = {
+const HOME_PATHS: Readonly<Record<SiteLocale, string>> = {
   tr: new URL(homeUrls["tr-TR"]).pathname,
   en: new URL(homeUrls.en).pathname,
 };
@@ -122,7 +120,7 @@ const HOME_PATHS: Readonly<Record<Language, string>> = {
 /** Slugs produced by `normalizeSlug`; anything else is covered by patterns. */
 const SAFE_SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
-function getLanguage(value: unknown): Language | null {
+function getLanguage(value: unknown): SiteLocale | null {
   return isSiteLocale(value) ? value : null;
 }
 
@@ -137,8 +135,8 @@ function getSafeSlug(value: unknown): string | null {
  */
 function getLocalizedSlugs(
   value: unknown,
-  requestLanguage: Language,
-): Array<{ language: Language; slug: string }> {
+  requestLanguage: SiteLocale,
+): Array<{ language: SiteLocale; slug: string }> {
   const slug = getSafeSlug(value);
 
   if (slug !== null) return [{ language: requestLanguage, slug }];
@@ -161,7 +159,7 @@ function pathTarget(path: string): RevalidationTarget {
   return { path };
 }
 
-function patternTarget(language: Language, path: string): RevalidationTarget {
+function patternTarget(language: SiteLocale, path: string): RevalidationTarget {
   return { path: `${ROUTE_GROUPS[language]}${path}`, type: "page" };
 }
 
@@ -210,7 +208,7 @@ function districtPageTargets(
 
 function articleTargets(
   docs: readonly unknown[],
-  requestLanguage: Language,
+  requestLanguage: SiteLocale,
 ): RevalidationTarget[] {
   return [
     ...homeTargets(),
@@ -280,7 +278,7 @@ function pageTargets(docs: readonly unknown[]): RevalidationTarget[] {
 
 function photoTargets(
   docs: readonly unknown[],
-  requestLanguage: Language,
+  requestLanguage: SiteLocale,
 ): RevalidationTarget[] {
   return [
     ...homeTargets(),
@@ -335,7 +333,7 @@ function uniqueTargets(
 export function getCollectionRevalidationTargets(
   collection: RevalidatedCollection,
   docs: readonly unknown[],
-  requestLanguage: Language = "tr",
+  requestLanguage: SiteLocale = "tr",
 ): RevalidationTarget[] {
   switch (collection) {
     case "articles":
@@ -483,7 +481,7 @@ export function revalidateTags(
   }
 }
 
-function getRequestLanguage(req: PayloadRequest): Language {
+function getRequestLanguage(req: PayloadRequest): SiteLocale {
   return req.locale === "en" ? "en" : "tr";
 }
 

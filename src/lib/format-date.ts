@@ -7,8 +7,6 @@
 import type { SiteLocale } from "@/content/locales";
 export const SITE_TIME_ZONE = "Europe/Istanbul";
 
-export type DateLanguage = SiteLocale;
-
 /** "tr" and "en" map to the site's date locales; full BCP 47 tags pass through. */
 function resolveDateLocale(locale: string): string {
   if (locale === "tr") return "tr-TR";
@@ -46,7 +44,7 @@ function toDate(value: string | number | Date): Date | null {
  */
 export function formatDate(
   value: string | number | Date | null | undefined,
-  locale: DateLanguage | (string & {}) = "tr",
+  locale: SiteLocale | (string & {}) = "tr",
   dateStyle: DateStyle = "long",
 ): string | null {
   if (value === null || value === undefined || value === "") return null;

@@ -22,9 +22,9 @@ import type {
   PublicPageBlock,
   PublicPageImage,
   PublicPageLink,
-  PublicPageLanguage,
   PublicRichTextBlock,
 } from "@/content/pages/public-types";
+import type { SiteLocale } from "@/content/locales";
 import type { Page as PayloadPage } from "@/payload-types";
 
 /** Block links: an anchor, a site path or an http(s) URL. */
@@ -58,7 +58,7 @@ function mapImage(
   value: unknown,
   altValue: unknown,
   fallbackAlt: string,
-  language: PublicPageLanguage,
+  language: SiteLocale,
 ): PublicPageImage | null {
   const image = mapMediaImage(value, {
     alt: altValue,
@@ -83,7 +83,7 @@ function mapImage(
 
 type PayloadBlock = NonNullable<PayloadPage["layout"]>[number];
 type MappingContext = {
-  language: PublicPageLanguage;
+  language: SiteLocale;
   now: Date;
   links?: RichTextLinkContext;
 };
@@ -381,7 +381,7 @@ function mapBlock(
 
 function reportInvalidPage(
   pageID: string,
-  language: PublicPageLanguage,
+  language: SiteLocale,
   reason: string,
   detail?: string,
 ): void {
@@ -396,7 +396,7 @@ function reportInvalidPage(
 
 export function mapPayloadPage(
   value: PayloadPage,
-  language: PublicPageLanguage,
+  language: SiteLocale,
   now: Date = new Date(),
   links: RichTextLinkContext = {},
 ): PublicPage | null {
@@ -519,7 +519,7 @@ function isHomeBlockShape(value: unknown): value is HomeBlock {
  */
 export function isRenderableHomeBlock(
   value: unknown,
-  language: PublicPageLanguage,
+  language: SiteLocale,
 ): boolean {
   if (!isHomeBlockShape(value)) return false;
 

@@ -2,7 +2,6 @@ import type { SiteLocale } from "@/content/locales";
 import type { PublicRichText } from "@/content/rich-text/public-rich-text";
 import type { FocusAreaIcon } from "@/content/homeContent";
 
-export type PublicPageLanguage = SiteLocale;
 export type PublicPageType = "home" | "standard";
 export type { PublicRichText };
 
@@ -16,7 +15,7 @@ export type PublicPageImage = {
   alt: string;
   /** Set only when `alt` is not in the page's language (Turkish media alt on
    * an English page); render the image with this `lang`. */
-  altLanguage?: PublicPageLanguage;
+  altLanguage?: SiteLocale;
   width?: number;
   height?: number;
   caption?: string;
@@ -121,7 +120,7 @@ export type PublicPage = {
   id: string;
   title: string;
   slug: string;
-  language: PublicPageLanguage;
+  language: SiteLocale;
   pageType: PublicPageType;
   summary: string;
   layout: PublicPageBlock[];

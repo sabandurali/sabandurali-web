@@ -1,7 +1,8 @@
 /**
  * The site's languages, in hreflang order: Turkish (the default, served
  * without a URL prefix) first, then English. Every per-module language type
- * (`ArticleLanguage`, `PhotoLanguage`, `MediaLocale`, …) is this type.
+ * (`ArticleLanguage`, `PhotoLanguage`, …) is this type; new code imports
+ * `SiteLocale` from here directly.
  *
  * Kept free of imports so any layer, the Payload config included, can use it.
  */
