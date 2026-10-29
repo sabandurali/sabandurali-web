@@ -12,8 +12,6 @@ type FooterProps = {
   /** Anchor of the footer (home pages link to it as the contact section). */
   id?: string;
   content: FooterContent;
-  /** @deprecated The atlas footer has one size; kept so pages compile. */
-  compact?: boolean;
 };
 
 const footerLinkClassName =

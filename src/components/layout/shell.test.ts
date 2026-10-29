@@ -237,5 +237,11 @@ test("shell sources: atlas layouts, retry, English 404 catch-all, global 404", (
       /\b(bg-background|text-foreground|text-ivory|accent|gold|text-muted\b)/,
       file,
     );
+    // FRONTEND-8: the pre-atlas shell API (ignored homeHref / compact) is gone.
+    assert.doesNotMatch(
+      read(file),
+      /@deprecated|\bhomeHref\b|\bcompact\?:/,
+      file,
+    );
   }
 });

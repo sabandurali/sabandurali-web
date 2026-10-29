@@ -23,13 +23,6 @@ type HeaderProps = {
   anchorPrefix?: string;
   /** This page in each language; the home pages otherwise. */
   languageHrefs?: Partial<Record<Locale, string>>;
-  /**
-   * @deprecated The wordmark always links to the locale's home page;
-   * kept so existing pages compile.
-   */
-  homeHref?: string;
-  /** @deprecated The atlas header has one size; kept so pages compile. */
-  compact?: boolean;
 };
 
 /**

@@ -32,7 +32,6 @@ export default function PageShell({
         locale={locale}
         anchors={home.anchors}
         content={home.header}
-        homeHref={homePath}
         anchorPrefix={homePath}
         languageHrefs={languageHrefs}
       />

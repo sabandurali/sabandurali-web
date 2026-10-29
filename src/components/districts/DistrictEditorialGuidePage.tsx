@@ -20,7 +20,6 @@ export default function DistrictEditorialGuidePage({
         locale="tr"
         anchors={home.anchors}
         content={home.header}
-        homeHref="/"
         anchorPrefix="/"
         languageHrefs={{ tr: getDistrictPath(district.slug), en: "/en" }}
       />

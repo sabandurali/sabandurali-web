@@ -56,7 +56,6 @@ export default async function DistrictIndexPage() {
         locale="tr"
         anchors={home.anchors}
         content={home.header}
-        homeHref="/"
         anchorPrefix="/"
         languageHrefs={{ tr: districtGuidePath, en: "/en" }}
       />

@@ -39,7 +39,6 @@ export default function DistrictNewsListPage({
         locale="tr"
         anchors={home.anchors}
         content={home.header}
-        homeHref="/"
         anchorPrefix="/"
         languageHrefs={{ tr: href(currentPage), en: "/en" }}
       />
