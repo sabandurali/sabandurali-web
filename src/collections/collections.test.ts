@@ -68,6 +68,7 @@ import {
   denyAnonymousRestReads,
   editorialFieldRead,
 } from "../lib/payloadAccess";
+import { ensurePublishedAt } from "../lib/publishedAt";
 import {
   preventDeletingLastAdmin,
   preventDemotingLastAdmin,
@@ -165,6 +166,8 @@ test("session cookies and login lockout are explicit", () => {
   );
   assert.equal(Users.auth.maxLoginAttempts, MAX_LOGIN_ATTEMPTS);
   assert.equal(Users.auth.lockTime, LOGIN_LOCK_TIME_MS);
+  // The JWT stays in the HttpOnly cookie and never appears in a response body.
+  assert.equal(Users.auth.removeTokenFromResponses, true);
 
   // Payload's default unlock access admits every signed-in user, which would
   // let an editor reset an admin's lockout between password guesses.
@@ -1366,5 +1369,16 @@ test("ARCHITECTURE-4: book validation errors are built in one place", () => {
     "assertValidTranslation",
   ]) {
     assert.match(source, new RegExp(`await ${rule}\\(`), rule);
+  }
+});
+
+test("articles, pages and photos run the shared publishedAt hook", () => {
+  // Every public read filters on `publishedAt <= now`, so a published record
+  // without a date silently leaves the site (CORRECTNESS-4).
+  for (const collection of [Articles, Pages, Photos]) {
+    assert.ok(
+      collection.hooks?.beforeChange?.includes(ensurePublishedAt),
+      collection.slug,
+    );
   }
 });

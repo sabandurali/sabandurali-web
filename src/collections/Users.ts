@@ -350,6 +350,12 @@ export const Users: CollectionConfig = {
     },
     lockTime: LOGIN_LOCK_TIME_MS,
     maxLoginAttempts: MAX_LOGIN_ATTEMPTS,
+    // The session lives only in the HttpOnly cookie. Without this flag login,
+    // `/me`, refresh and reset return the JWT in the JSON body, where any
+    // same-origin script could read it and replay it as an
+    // `Authorization: JWT` header that SameSite and the CSRF allowlist do not
+    // cover. The admin panel works from the cookie alone.
+    removeTokenFromResponses: true,
   },
   fields: [
     {

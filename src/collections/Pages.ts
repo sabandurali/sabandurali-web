@@ -1,7 +1,6 @@
 import {
   APIError,
   ValidationError,
-  type CollectionBeforeChangeHook,
   type CollectionBeforeOperationHook,
   type CollectionBeforeValidateHook,
   type CollectionConfig,
@@ -25,6 +24,7 @@ import {
 import { SLUG_RULE_MESSAGE } from "@/content/shared/slug";
 import { normalizeSlug } from "@/lib/localizedSlug";
 import { preventDeletingHomePage } from "@/lib/payloadDeleteGuards";
+import { ensurePublishedAt } from "@/lib/publishedAt";
 import { createRevalidationHooks } from "@/lib/revalidation";
 
 const revalidation = createRevalidationHooks("pages");
@@ -367,7 +367,8 @@ export const protectPublishedHomePage: CollectionBeforeOperationHook = async ({
   const values = new Map<string, unknown>(Object.entries(args));
   const data = values.get("data");
   const id = values.get("id");
-  const where = values.get("where");
+  // A bulk update's `where`, already parsed and typed by Payload.
+  const where = "where" in args ? args.where : undefined;
   const unpublishAllLocales = values.get("unpublishAllLocales");
   const options = {
     draft: values.get("draft") === true,
@@ -387,8 +388,7 @@ export const protectPublishedHomePage: CollectionBeforeOperationHook = async ({
     typeof id === "string" || typeof id === "number"
       ? { id: { equals: id } }
       : isRecord(where)
-        ? // A bulk update's `where`, already parsed by Payload.
-          (where as Where)
+        ? where
         : null;
 
   if (target === null) return args;
@@ -421,23 +421,6 @@ export const protectPublishedHomePage: CollectionBeforeOperationHook = async ({
   }
 
   return args;
-};
-
-const setPublishedAtOnFirstPublish: CollectionBeforeChangeHook = ({
-  data,
-  originalDoc,
-}) => {
-  const wasPublished = originalDoc?._status === "published";
-  const willBePublished = data._status === "published";
-
-  if (!wasPublished && willBePublished && !data.publishedAt) {
-    return {
-      ...data,
-      publishedAt: new Date().toISOString(),
-    };
-  }
-
-  return data;
 };
 
 export const Pages: CollectionConfig = {
@@ -554,7 +537,7 @@ export const Pages: CollectionConfig = {
               label: "Yayın tarihi",
               admin: {
                 description:
-                  "İlk yayında otomatik atanır. Gelecek tarih planlı yayın anlamına gelir.",
+                  "İlk yayında otomatik atanır; yayındaki bir kayıtta boşaltılırsa önceki tarih korunur. Gelecek tarih planlı yayın anlamına gelir.",
               },
             },
           ],
@@ -608,7 +591,7 @@ export const Pages: CollectionConfig = {
   hooks: {
     afterChange: [revalidation.afterChange],
     afterDelete: [revalidation.afterDelete],
-    beforeChange: [setPublishedAtOnFirstPublish],
+    beforeChange: [ensurePublishedAt],
     beforeDelete: [preventDeletingHomePage],
     beforeOperation: [protectPublishedHomePage],
     beforeValidate: [validatePageIdentity],
