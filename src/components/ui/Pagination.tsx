@@ -1,6 +1,9 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "./icons";
 import { cx } from "./cx";
-import { clampPaginationPage, getPaginationEntries } from "./pagination-entries";
+import {
+  clampPaginationPage,
+  getPaginationEntries,
+} from "./pagination-entries";
 import { getUiStrings, type UiLocale } from "./strings";
 import UiLink from "./UiLink";
 import VisuallyHidden from "./VisuallyHidden";
@@ -19,7 +22,7 @@ const cellClassName =
   "inline-flex min-h-tap min-w-tap items-center justify-center rounded-control px-2 font-mono text-small font-semibold [font-stretch:var(--stretch-mono)]";
 
 const stepClassName =
-  "inline-flex min-h-tap items-center gap-1.5 rounded-control px-3 font-bold text-ink no-underline hover:underline";
+  "inline-flex min-h-tap min-w-tap items-center justify-center gap-1.5 rounded-control px-3 font-bold text-ink no-underline hover:underline";
 
 /** Page links for long lists; renders nothing for a single page. */
 export default function Pagination({

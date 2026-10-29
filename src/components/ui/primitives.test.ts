@@ -510,6 +510,22 @@ test("Pagination marks the current page and hides for a single page", () => {
   assert.match(html, /rel="next"/);
 });
 
+test("FRONTEND-2: the previous and next links keep a 44 × 44 px target", () => {
+  // Below sm their text is sr-only (absolute, no flex item), so without
+  // min-w-tap the link is only the 18 px icon plus padding: 42 px wide.
+  const html = render(
+    h(Pagination, { current: 2, total: 3, getHref: () => "/" }),
+  );
+  for (const rel of ["prev", "next"]) {
+    const link = new RegExp(`<a [^>]*rel="${rel}"[^>]*>`).exec(html);
+    assert.ok(link, rel);
+    const classes = /class="([^"]*)"/.exec(link[0])?.[1]?.split(/\s+/) ?? [];
+    for (const name of ["min-h-tap", "min-w-tap", "justify-center"]) {
+      assert.ok(classes.includes(name), `${rel}: ${name}`);
+    }
+  }
+});
+
 test("Timeline exposes order and notes as text", () => {
   const timeline = render(
     h(Timeline, {
