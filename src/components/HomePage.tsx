@@ -1,4 +1,9 @@
 import Footer from "@/components/layout/Footer";
+import {
+  ArticleCardList,
+  BookReviewCardList,
+  PhotoCardList,
+} from "@/components/pages/PublicationCardLists";
 import Header from "@/components/layout/Header";
 import About from "@/components/sections/About";
 import ContactCallToAction from "@/components/sections/ContactCallToAction";
@@ -7,11 +12,6 @@ import Hero from "@/components/sections/Hero";
 import HomeAtlas, {
   type HomeFeaturedGuide,
 } from "@/components/sections/HomeAtlas";
-import {
-  HomeArticleList,
-  HomeBookList,
-  HomePhotoList,
-} from "@/components/sections/HomeCollections";
 import HomeListingSection from "@/components/sections/HomeListingSection";
 import HomeSectionHeading from "@/components/sections/HomeSectionHeading";
 import { homeCopy } from "@/components/sections/home-copy";
@@ -116,7 +116,7 @@ export default async function HomePage({
           emptyMessage={copy.articles.empty}
           itemCount={latestArticles.length}
         >
-          <HomeArticleList articles={latestArticles} locale={locale} />
+          <ArticleCardList articles={latestArticles} locale={locale} />
         </HomeListingSection>
 
         <HomeListingSection
@@ -131,7 +131,7 @@ export default async function HomePage({
           emptyMessage={copy.books.empty}
           itemCount={latestBooks.length}
         >
-          <HomeBookList books={latestBooks} locale={locale} />
+          <BookReviewCardList books={latestBooks} locale={locale} />
         </HomeListingSection>
 
         <HomeListingSection
@@ -145,7 +145,7 @@ export default async function HomePage({
           emptyMessage={copy.photos.empty}
           itemCount={latestPhotos.length}
         >
-          <HomePhotoList photos={latestPhotos} locale={locale} />
+          <PhotoCardList photos={latestPhotos} columns={4} />
         </HomeListingSection>
 
         {focusAreas.cards.length > 0 ? (

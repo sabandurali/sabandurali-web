@@ -1,19 +1,17 @@
-import Image from "next/image";
 import type { ReactNode } from "react";
+import {
+  ArticleCardList,
+  PhotoCardList,
+} from "@/components/pages/PublicationCardLists";
 import { homeCrumb, type BreadcrumbItem } from "@/components/ui/Breadcrumb";
 import Card from "@/components/ui/Card";
 import EmptyState from "@/components/ui/EmptyState";
-import { Credit } from "@/components/ui/Figure";
 import Section from "@/components/ui/Section";
 import TextLink from "@/components/ui/TextLink";
-import { getArticlePath } from "@/content/articles/article-routes";
-import type { PublicArticleSummary } from "@/content/articles/public-types";
 import { articleListPaths } from "@/content/articles/article-routes";
-import { getPhotoPath, photoListPaths } from "@/content/photos/photo-routes";
-import type { PublicPhoto } from "@/content/photos/types";
+import { photoListPaths } from "@/content/photos/photo-routes";
 import type { Workspace, WorkspaceEntry } from "@/content/workspaces";
 import { workspacePath, workspaces } from "@/content/workspaces";
-import { formatDate, toDateTimeAttribute } from "@/lib/format-date";
 import PageIntro, { Eyebrow } from "./PageIntro";
 import PageShell from "./PageShell";
 import type { WorkspaceEntryFeed } from "./workspace-section-route";
@@ -25,8 +23,6 @@ export {
 } from "./workspace-routes";
 
 const indexTitle = "Çalışma Alanları";
-const cardImageSizes =
-  "(min-width: 1280px) 30vw, (min-width: 768px) 45vw, calc(100vw - 2rem)";
 
 function workspaceBreadcrumb(
   workspace?: Workspace,
@@ -163,89 +159,6 @@ export function WorkspaceLandingPage({
   );
 }
 
-function ArticleCard({ article }: { article: PublicArticleSummary }) {
-  const image = article.featuredImage;
-  const date = formatDate(article.publishedAt, "tr");
-  const dateTime = toDateTimeAttribute(article.publishedAt);
-  const category = article.categories[0]?.name;
-
-  return (
-    <Card
-      title={article.title}
-      href={getArticlePath(article.slug, article.language)}
-      headingLevel={3}
-      media={
-        image ? (
-          <Image
-            src={image.src}
-            alt={image.alt}
-            fill
-            sizes={cardImageSizes}
-            className="object-cover"
-          />
-        ) : undefined
-      }
-      credit={
-        image?.credit ? (
-          <span className="type-caption text-ink-muted">{image.credit}</span>
-        ) : undefined
-      }
-      eyebrow={
-        date || category ? (
-          <>
-            {date && dateTime ? (
-              <time dateTime={dateTime} className="type-data">
-                {date}
-              </time>
-            ) : null}
-            {category ? <span>{category}</span> : null}
-          </>
-        ) : undefined
-      }
-      className="w-full"
-    >
-      {article.summary ? (
-        <p className="m-0 type-small text-ink-muted">{article.summary}</p>
-      ) : null}
-    </Card>
-  );
-}
-
-function PhotoCard({ photo }: { photo: PublicPhoto }) {
-  const photographer = photo.photographer.trim();
-  const licence = photo.creditLicense?.trim() ?? "";
-  const collections = photo.collections.map((item) => item.title).join(" · ");
-
-  return (
-    <Card
-      title={photo.title}
-      href={getPhotoPath(photo.slug, photo.language)}
-      headingLevel={3}
-      media={
-        <Image
-          src={photo.image.src}
-          alt={photo.image.alt}
-          fill
-          sizes={cardImageSizes}
-          className="object-cover"
-        />
-      }
-      credit={
-        photographer || licence ? (
-          <Credit
-            credit={{
-              ...(photographer ? { author: photographer } : {}),
-              ...(licence ? { licence } : {}),
-            }}
-          />
-        ) : undefined
-      }
-      eyebrow={collections ? <span>{collections}</span> : undefined}
-      className="w-full"
-    />
-  );
-}
-
 /** `/<workspace>/<section>`: the section's published articles and photos. */
 export function WorkspaceEntryPage({
   workspace,
@@ -299,13 +212,7 @@ export function WorkspaceEntryPage({
               <h2 id="section-articles" className="m-0 mb-8 type-h2">
                 Makaleler
               </h2>
-              <ul className="m-0 grid list-none gap-5 p-0 md:grid-cols-2 xl:grid-cols-3">
-                {articles.map((article) => (
-                  <li key={article.id} className="flex min-w-0">
-                    <ArticleCard article={article} />
-                  </li>
-                ))}
-              </ul>
+              <ArticleCardList articles={articles} locale="tr" />
             </Section>
           ) : null}
           {photos.length > 0 ? (
@@ -313,13 +220,7 @@ export function WorkspaceEntryPage({
               <h2 id="section-photos" className="m-0 mb-8 type-h2">
                 Fotoğraflar
               </h2>
-              <ul className="m-0 grid list-none gap-5 p-0 md:grid-cols-2 xl:grid-cols-3">
-                {photos.map((photo) => (
-                  <li key={photo.id} className="flex min-w-0">
-                    <PhotoCard photo={photo} />
-                  </li>
-                ))}
-              </ul>
+              <PhotoCardList photos={photos} />
             </Section>
           ) : null}
         </>
