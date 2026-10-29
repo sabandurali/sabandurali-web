@@ -98,7 +98,12 @@ const PASSWORD_OPERATIONS: ReadonlySet<string> = new Set([
 type BeforeOperationRequest =
   Parameters<CollectionBeforeOperationHook>[0]["req"];
 
-/** The addresses a new password must not repeat: the submitted and the stored one. */
+/**
+ * The addresses a new password must not repeat: the submitted one and the
+ * stored one of every account the operation changes. A bulk update (`where`,
+ * no `id`) reads the matching accounts with the caller's own access, so the
+ * check cannot reveal an account the caller could not update anyway.
+ */
 async function getAccountEmails(
   args: Record<string, unknown>,
   data: Record<string, unknown>,
@@ -118,6 +123,18 @@ async function getAccountEmails(
     });
     if (existing !== null && typeof existing.email === "string") {
       emails.push(existing.email);
+    }
+  } else if (isRecord(args.where)) {
+    const matching = await req.payload.find({
+      collection: "users",
+      depth: 0,
+      overrideAccess: false,
+      pagination: false,
+      req,
+      where: args.where,
+    });
+    for (const account of matching.docs) {
+      if (typeof account.email === "string") emails.push(account.email);
     }
   }
 
