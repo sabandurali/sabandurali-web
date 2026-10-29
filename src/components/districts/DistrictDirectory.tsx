@@ -103,8 +103,8 @@ export default function DistrictDirectory({
                 "inline-flex min-h-tap min-w-tap items-center justify-center rounded-control px-3 font-mono text-small font-semibold [font-stretch:var(--stretch-mono)]",
                 pressed
                   ? "bg-sea text-on-sea"
-                  : "border border-tile-edge bg-land text-ink hover:border-ink hover:underline",
-                "disabled:cursor-not-allowed disabled:no-underline",
+                  : "border border-tile-edge bg-land text-ink hover:border-ink hover:underline disabled:border-hairline disabled:text-ink-muted disabled:no-underline",
+                "disabled:cursor-not-allowed",
               )}
             >
               {value || "Tümü"}
