@@ -25,7 +25,7 @@ import {
 import { Credit, Figure } from "./Figure";
 import FormStatus, { resultFocusTarget } from "./FormStatus";
 import GridRef from "./GridRef";
-import { LineChip, StationMarker } from "./LineChip";
+import { LineChip } from "./LineChip";
 import NavMenu from "./NavMenu";
 import PageIntro from "./PageIntro";
 import Pagination from "./Pagination";
@@ -187,7 +187,7 @@ test("Figure requires an explicit credit decision and renders licence and source
   assert.doesNotMatch(bare, /figcaption/);
 });
 
-test("GridRef, LineChip and StationMarker are three distinct shapes", () => {
+test("GridRef and LineChip are two distinct shapes", () => {
   const grid = render(h(GridRef, { value: "F2" }));
   assert.match(grid, /<span class="sr-only">Harita karesi <\/span>F2/);
   assert.doesNotMatch(
@@ -203,14 +203,6 @@ test("GridRef, LineChip and StationMarker are three distinct shapes", () => {
     render(h(LineChip, { code: "M3", variant: "other" })),
     /border-ink-muted/,
   );
-
-  const station = render(h(StationMarker, { name: "Davutpaşa–YTÜ" }));
-  assert.doesNotMatch(station, /rounded-chip/);
-  assert.match(
-    station,
-    /<span aria-hidden="true" class="size-4 shrink-0 rounded-full/,
-  );
-  assert.equal(textOf(station), "Davutpaşa–YTÜ");
 });
 
 test("SourceRef is a bracketed citation link with a spoken name", () => {

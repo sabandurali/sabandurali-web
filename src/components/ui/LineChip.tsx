@@ -43,35 +43,3 @@ export function LineChip({
     </span>
   );
 }
-
-type StationMarkerProps = {
-  /** Station or institution name, e.g. "Davutpaşa–YTÜ". */
-  name: string;
-  /** Filled signal ring: the station serves the district. */
-  serves?: boolean;
-  className?: string;
-};
-
-/**
- * A station or an institution beside the line (YTÜ, a terminal): the ring
- * glyph of the station diagrams plus the name, never a chip, so it cannot be
- * mistaken for a line code.
- */
-export function StationMarker({
-  name,
-  serves = false,
-  className,
-}: StationMarkerProps) {
-  return (
-    <span className={cx("inline-flex items-center gap-2", className)}>
-      <span
-        aria-hidden="true"
-        className={cx(
-          "size-4 shrink-0 rounded-full border-[3px] border-ink",
-          serves ? "bg-signal" : "bg-land",
-        )}
-      />
-      <span className="font-semibold">{name}</span>
-    </span>
-  );
-}

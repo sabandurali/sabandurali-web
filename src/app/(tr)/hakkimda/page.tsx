@@ -17,6 +17,7 @@ import {
   softwareExperience,
 } from "@/content/biography";
 import { homeContent } from "@/content/homeContent";
+import { homeEditorialContent } from "@/content/homeEditorialContent";
 import { workspaces } from "@/content/workspaces";
 import { createPageMetadata } from "@/lib/metadata";
 import { homeCrumb } from "@/components/ui/Breadcrumb";
@@ -28,12 +29,6 @@ export const metadata: Metadata = createPageMetadata({
   locale: "tr",
   path: "/hakkimda",
 });
-
-const manifesto = [
-  "Bilgi, paylaşıldığında büyür.",
-  "Analiz, doğru sorularla başlar.",
-  "Değer, tutarlılıkla oluşur.",
-] as const;
 
 export default function AboutPage() {
   const home = homeContent.tr;
@@ -202,7 +197,7 @@ export default function AboutPage() {
               <p className="m-0 type-body">{home.footer.description}</p>
             </div>
             <blockquote className="m-0 border-l-4 border-signal bg-paper px-6 py-7 sm:px-8 sm:py-9">
-              {manifesto.map((line) => (
+              {homeEditorialContent.tr.manifestoLines.map((line) => (
                 <p key={line} className="m-0 type-h3">
                   {line}
                 </p>

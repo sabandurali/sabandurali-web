@@ -100,3 +100,40 @@ test("FE-20: the exception list is empty and holds only real offenders", () => {
   }
   assert.equal(legacyFiles.size, 0, "the exception list only shrinks");
 });
+
+/**
+ * Tailwind's default font-size utilities (text-xs … text-9xl) found in a
+ * source text. The Atlas theme keeps them only because Tailwind ships them;
+ * they are not part of the type scale.
+ */
+function findDefaultSizeUtilities(source: string): string[] {
+  return [
+    ...source.matchAll(
+      /(?<![\w-])(?:[\w-]+:)*text-(?:xs|sm|base|lg|xl|[2-9]xl)(?![\w-])/g,
+    ),
+  ].map((match) => match[0]);
+}
+
+test("the default-size scanner ignores scale tokens and colours", () => {
+  assert.deepEqual(
+    findDefaultSizeUtilities(
+      'className="text-base md:text-lg text-2xl text-small text-body text-ink type-control text-base-x"',
+    ),
+    ["text-base", "md:text-lg", "text-2xl"],
+  );
+});
+
+test("FRONTEND-4: public sources size text with the type scale only", () => {
+  const offenders: string[] = [];
+  for (const absolute of sourceFiles(path.join(root, "src"))) {
+    const relative = path.relative(root, absolute).split(path.sep).join("/");
+    if (excluded.some((pattern) => pattern.test(relative))) continue;
+    const found = findDefaultSizeUtilities(readFileSync(absolute, "utf8"));
+    if (found.length > 0) offenders.push(`${relative}: ${found.join(", ")}`);
+  }
+  assert.deepEqual(
+    offenders,
+    [],
+    "use a type-* class (type-control for form controls and buttons)",
+  );
+});

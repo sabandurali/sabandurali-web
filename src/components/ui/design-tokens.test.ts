@@ -474,3 +474,17 @@ test("FRONTEND-4: region labels are capitals whatever case the content uses", as
   assert.match(rule, /text-transform:\s*uppercase/);
   assert.match(rule, /letter-spacing:\s*0\.16em/);
 });
+
+test("FRONTEND-4: form controls and the md button share the 16 px type-control role", async () => {
+  const output = await buildCss(["type-control"]);
+  const rule = /\.type-control \{([^}]*)\}/.exec(output)?.[1] ?? "";
+  assert.match(rule, /font-size:\s*var\(--text-control\)/);
+  assert.match(rule, /line-height:\s*var\(--text-control--line-height\)/);
+  assert.match(read("src/app/globals.css"), /--text-control:\s*1rem;/);
+  assert.match(read("src/components/ui/Field.tsx"), /\btype-control\b/);
+  assert.match(
+    read("src/components/ui/Button.tsx"),
+    /md: "[^"]*\btype-control\b/,
+  );
+  assert.match(read("docs/DESIGN-SYSTEM.md"), /\| `type-control` \|/);
+});

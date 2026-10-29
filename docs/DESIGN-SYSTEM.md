@@ -3,8 +3,10 @@
 Sitenin görsel dili: İstanbul bir atlas gibi okunur. Serin harita kâğıdı zemin, Boğaz mavisi mürekkep, tek
 bir sinyal turuncusu; Archivo'nun genişlik ekseni başlıkları ve harita etiketlerini, Martian Mono verileri
 taşır. Ana fikir 39 ilçenin Boğaz şeridiyle 25'e 14 bölünmüş şematik kare haritası, ilçe rehberinin yön
-levhası başlıkları ve veri tablosudur. Hat şeması bileşeni (`StationDiagram`) hiçbir sayfada kullanılmadığı
-için kaldırıldı; tarihli ve kaynaklı istasyon verisi geldiğinde, o veriyle birlikte yeniden eklenir.
+levhası başlıkları ve veri tablosudur. Hat şeması (`StationDiagram`) ve durak işareti (`StationMarker`)
+hiçbir sayfada kullanılmadığı için kaldırıldı; tarihli ve kaynaklı istasyon verisi geldiğinde, o veriyle
+birlikte yeniden eklenir. `src/components/ui/ui-usage-guard.test.ts` hiçbir kaynağın kullanmadığı bir
+bileşenin burada kalmasına izin vermez.
 
 Kaynaklar (tek doğru kaynak bunlardır, bu belge onları açıklar):
 
@@ -157,6 +159,7 @@ sınıfla ezebilirsiniz (`type-data font-bold`). Aynı özelliği iki tek özell
 | `type-h4` | 18 px, 700 | Liste başlıkları, akordeon |
 | `type-lead` | 19 → 24 px, 500 | Giriş paragrafı |
 | `type-body` | 17 px / 1.65 | Gövde metni |
+| `type-control` | 16 px / 1.5 | Form kontrolleri (`Input`, `Textarea`, `Select`) ve `md` buton; 16 px iOS'ta odakta yakınlaştırmayı önler |
 | `type-small` | 15 px | İkincil metin, navigasyon |
 | `type-caption` | 13 px | Altyazı, lejant, kredi |
 | `type-label` | 12 px, 600 | Kısa UI etiketleri |
@@ -240,14 +243,13 @@ yalnızca etkileşim gerektirenlerdir: `SkipLink`, `Disclosure`, `NavMenu`, `For
 | `Chip` | Çerçeveli mono etiket ("Eylül 2026 itibarıyla"). Etkileşimsiz. |
 | `GridRef` | Kare adresi (F2): harf + rakam, çerçeveli mono. Harfler I, O ve K kullanmaz. |
 | `LineChip` | Yalnızca hat kodları (M1B, M7): dolu yuvarlak köşeli çip; `other` bağlantı hattı, `on-sea` deniz zemini. |
-| `StationMarker` | Durak ya da kurum (Davutpaşa–YTÜ): durak halkası + ad; asla çip değil. |
 | `Badge` | Kısa durum: `signal` (2026), `neutral`, `soon` ("Yakında"). Anlamı metin taşır. |
 | `Figure` + `Credit` | Görsel + altyazı + kredi (yazar/koleksiyon · tarih · lisans bağlantısı · kaynak bağlantısı). `credit` prop'u zorunludur: kredi gerektirmeyen görsel için açıkça `null`. |
 | `SourceRef` / `SourceRefList` | Kaynak atfı köşeli parantezli numaradır: [3]. Kaynak tablosu satırı `id="kaynak-3"` (`sourceAnchorId`). 44 × 44 px dokunma alanı. Deniz zemininde `tone="on-sea"` (`Timeline tone="sea"` bunu kendisi verir). |
 | `FactTable` | `dl` tabanlı veri tablosu: etiket, mono değer + birim, veri tarihi, kaynak atıfları; değeri çip olan satırlar (raylı sistem) için `extra`. Dar kapsayıcıda bloklar ("Veri tarihi:" etiketiyle), 42 rem'den itibaren dört sütun ve görsel başlık satırı. Eksik tarih/kaynak ızgarada "—" ve ekran okuyucuya "yok"; dar düzende hiç gösterilmez. |
 | `Breadcrumb` | "Konum" izi; son öğe `aria-current="page"`, ayraçlar gizli. |
 | `Eyebrow` | Başlık üstü kısa etiket: turuncu çizgi (dolgu, asla turuncu metin), isteğe bağlı mono bölüm numarası ("02") ve `type-label` metin. `tone="on-sea"` deniz zemini. |
-| `PageIntro` | Her sayfanın açılışı: `Breadcrumb`, `Eyebrow`, sayfanın tek `h1`'i (`break-words hyphens-auto`), giriş paragrafı ve altındaki meta. `layout="section"` (varsayılan) bir `Section` içinde durur (çalışma alanı, Hakkımda, iletişim, KVKK); `layout="page"` yayın sayfalarında kendi `Container`'ını ve boşluğunu kurar, `aside` (kitap kapağı) geniş ekranda yanına gelir. Sayfaya özel ikinci bir açılış bileşeni yazılmaz. |
+| `PageIntro` | Her sayfanın açılışı: `Breadcrumb`, `Eyebrow`, sayfanın tek `h1`'i (`break-words hyphens-auto`), giriş paragrafı ve altındaki meta. `layout="section"` (varsayılan) bir `Section` içinde durur (çalışma alanı, Hakkımda, iletişim, KVKK); `layout="page"` yayın sayfalarında kendi `Container`'ını ve boşluğunu kurar, `aside` (kitap kapağı) geniş ekranda yanına gelir; ilçe dizini ve ilçe haberleri de `layout="page"` kullanır, istatistik ya da meta `children` olarak gelir. Sayfaya özel ikinci bir açılış bileşeni yazılmaz: kendi `h1`'ini yalnızca ana sayfa hero'su ve `StatusMessage` yazar (`page-intro-guard.test.ts`). |
 | `TitleLines` | Büyük başlığın satırları (ana sayfa hero'su, CMS hero bloğu). Vurgulu satır turuncu dolgu üstünde mürekkep metindir (`box-decoration-clone bg-signal`); alt çizgi kullanılmaz, çünkü altı çizili metin bağlantı sanılır (§6). |
 | `SkipLink` | Her sayfanın ilk odaklanılabilir öğesi; odaklanınca görünür, içeriğe klavye odağını taşır. Ana içerik `<main id="main">` olmalı (yoksa ilk `<main>` bulunur). |
 | `VisuallyHidden` | Yalnızca yardımcı teknolojiye metin. |
@@ -257,7 +259,7 @@ yalnızca etkileşim gerektirenlerdir: `SkipLink`, `Disclosure`, `NavMenu`, `For
 | `Card` | Tek başlık bağlantısı; tıklama alanı tüm kartı kaplar, üzerine gelince yalnızca başlığın altı çizilir, odak halkası kartın çevresine çizilir. Kart içindeki başka bağlantılar (kredi, kaynak) tıklanabilir kalır. `cta` yalnızca görsel ipucudur. Başka bir kart (ör. çalışma alanı kartları) aynı kabuğu `cardFrameClassName`, `cardFocusClassName`, `CardTitleLink` ve `CardCue` ile kurar; hover zemini yalnızca palet token'ıdır (`hover:bg-paper`), `bg-white` kullanılmaz. |
 | `EmptyState` | Veri yoksa taramalı panel ve düz cümle ("… henüz eklenmedi."). |
 | `Pagination` | Önceki/sonraki ve sayfa numaraları; geçerli sayfa `aria-current`; tek sayfada hiçbir şey çizmez. |
-| `Field` + `Input` / `Textarea` / `Select` | Üç kontrol aynı kenar, hover, odak ve hata (`aria-invalid`) stillerini paylaşır; sayfada elle stillenmiş `<select>` yazılmaz. Görünen `label`, `hint` ve `error` kontrolün `aria-describedby` listesine bağlanır, hata `aria-invalid` ve "Hata:" önekiyle gelir, zorunlu alanlar "(zorunlu)" yazar. |
+| `Field` + `Input` / `Textarea` / `Select` | Üç kontrol aynı kenar, hover, odak ve hata (`aria-invalid`) stillerini paylaşır; sayfada elle stillenmiş `<select>` yazılmaz. Görünen `label`, `hint` ve `error` kontrolün `aria-describedby` listesine bağlanır, hata `aria-invalid` ve "Hata:" önekiyle gelir, zorunlu alanlar "(zorunlu)" yazar. `Field` içine giremeyen bir kontrol (KVKK onay kutusu) aynı mesajı `FieldError` ile gösterir. Formlar tarayıcı baloncuklarına bırakılmaz: betik çalışınca form `noValidate` olur, gönderimde her geçersiz alan sayfa dilinde kalıcı bir `error` alır, odak ilk hatalı alana taşınır, birden fazla hatada `FormStatus` alanları listeler (`contact-validation.ts`). Betik yoksa tarayıcının doğrulaması devrede kalır. |
 | `FormStatus` | İki kalıcı canlı bölge: ilerleme/başarı `role="status"`, hata `role="alert"`; yalnızca metin değişir, yeni bir sonuçta odak mesaja taşınır (ilk çizimde ve mesajsız sonuçta taşınmaz) (FE-21). `aria-busy` kapsayıcısının dışında durur. |
 | `Legend` | Harita ve şema sembollerinin anahtarı; her sembol metinle adlandırılır. Sembol dolguları da yalnız Atlas token'larıdır (`bg-white` yok, test eder). |
 | `DistrictTileMap` | 39 ilçelik atlas. Bir sonraki bölüme bakın. |
@@ -332,8 +334,9 @@ kipinde kalır. Klavye modeli `menu-keys.ts` içindedir ve test edilir:
 - Dokunma alanı en az 44 × 44 px (yoğun listelerde en az 36 px yükseklik, 24 px'in üzerinde).
 - Dekoratif SVG `aria-hidden="true"` ve `focusable="false"`; anlamlı görselde `alt` ya da `title`.
 - Kart başına tek bağlantı; erişilebilir ad başlıktır.
-- Form: görünen etiket, ipucu ve hata `aria-describedby` ile; durum duyurusu `FormStatus` ile; gönderim
-  sırasında buton odakta kalır.
+- Form: görünen etiket, ipucu ve hata `aria-describedby` ile; hata mesajı sayfa dilinde ve kalıcıdır (tarayıcı
+  baloncuğu değil), odak ilk hatalı alana gider; durum duyurusu `FormStatus` ile; gönderim sırasında buton
+  odakta kalır.
 - 390, 820 ve 1440 px'te yatay kaydırma yok; geniş tablolar kendi kutusunda kayar ve odak halkası
   kırpılmaz.
 
@@ -345,8 +348,9 @@ kipinde kalır. Klavye modeli `menu-keys.ts` içindedir ve test edilir:
 | Açık zeminde turuncuyu dolgu olarak, üstünde mürekkep | Açık zeminde turuncu metin |
 | Eksik veri için `EmptyState` | "Yakında", örnek sayı ya da stok görselle doldurmak |
 | Kaynak atfı `[3]`, kare adresi `F2`, hat `M1B` | Kaynağı `K03` gibi harf+rakamla yazmak |
-| Kurum/durak için `StationMarker` | YTÜ'yü hat çipiyle göstermek |
+| Hat çipi yalnızca hat kodu için (`LineChip`); durak ve kurum adı düz metin | YTÜ'yü hat çipiyle göstermek |
 | Görselde `credit` ya da bilinçli `null` | Lisans gerektiren görselde krediyi atlamak |
 | `Section tone="sea"` ile koyu bölüm | `bg-sea` verip odak ve metin renklerini unutmak |
 | 12 px ve üzeri | `text-[10px]`, `text-[0.6rem]` |
+| Boyut için yalnız `type-*` sınıfı ya da ölçek token'ı | Tailwind'in varsayılan `text-base`, `text-sm`, `text-lg` boyutları |
 | Hareketi `motion-safe:` ile | Zorunlu animasyon, otomatik kayan içerik |

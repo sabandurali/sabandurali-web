@@ -10,6 +10,10 @@ import {
   honeypotFieldName,
   toFormStatusState,
 } from "./contact-submission";
+import {
+  getValidationSummary,
+  privacyAcknowledgementLabel,
+} from "./contact-validation";
 import PrivacyAcknowledgement from "./PrivacyAcknowledgement";
 import { useFormspreeSubmission } from "./useFormspreeSubmission";
 
@@ -21,13 +25,25 @@ type ContactFormProps = {
   formId?: string;
 };
 
-/* Same boundary, ground and focus treatment as <Input>; the native arrow
-   stays (it is the affordance people know). */
 const firstFieldId = "contact-name";
 
 /**
- * Contact form (FE-21, SEC-14). Visible labels with "(zorunlu)", native
- * validation, one FormStatus outside the form for progress and results, and
+ * Turns the browser's validation bubbles off once the script runs: from
+ * then on the form shows its own messages (FRONTEND-3). Without JavaScript
+ * the attribute is never set and the browser still checks the fields
+ * before posting to Formspree.
+ */
+function takeOverValidation(form: HTMLFormElement | null) {
+  if (form) form.noValidate = true;
+}
+
+/**
+ * Contact form (FE-21, SEC-14, FRONTEND-3). Visible labels with
+ * "(zorunlu)"; on an invalid submit every invalid field shows a lasting
+ * message in the page's language ("Hata:" prefix, aria-invalid,
+ * aria-describedby), focus moves to the first one and, with more than one,
+ * FormStatus lists them. One FormStatus outside the form for progress,
+ * results and that summary, and
  * a submit button that stays focusable while sending (aria-disabled). The
  * honeypot is off-screen, `inert` and hidden from assistive technology, and
  * a filled one is rejected before anything is sent.
@@ -37,10 +53,27 @@ export default function ContactForm({
   labelledBy,
   formId = process.env.NEXT_PUBLIC_FORMSPREE_CONTACT_FORM_ID,
 }: ContactFormProps) {
-  const { errorKind, handleSubmit, resetStatus, status } =
-    useFormspreeSubmission({ formId });
-  const isSending = status === "loading";
   const locale = content.locale;
+  const {
+    errorKind,
+    fieldErrors,
+    handleFieldChange,
+    handleSubmit,
+    resetStatus,
+    status,
+  } = useFormspreeSubmission({ formId, locale });
+  const isSending = status === "loading";
+  const validationSummary = getValidationSummary(
+    fieldErrors,
+    {
+      name: content.fields.name,
+      email: content.fields.email,
+      subject: content.fields.subject,
+      message: content.fields.message,
+      privacyAcknowledgement: privacyAcknowledgementLabel[locale],
+    },
+    locale,
+  );
 
   function startAnotherMessage() {
     resetStatus();
@@ -55,9 +88,11 @@ export default function ContactForm({
           to Formspree, never to this page: the personal data only goes where
           the privacy notice says it goes. */}
       <form
+        ref={takeOverValidation}
         method="post"
         action={getFormspreeEndpoint(formId) ?? undefined}
         onSubmit={handleSubmit}
+        onChange={handleFieldChange}
         aria-labelledby={labelledBy}
         className="relative flex flex-col gap-6"
       >
@@ -65,6 +100,7 @@ export default function ContactForm({
           <Field
             id={firstFieldId}
             label={content.fields.name}
+            error={fieldErrors.name}
             required
             locale={locale}
           >
@@ -78,7 +114,12 @@ export default function ContactForm({
               />
             )}
           </Field>
-          <Field label={content.fields.email} required locale={locale}>
+          <Field
+            label={content.fields.email}
+            error={fieldErrors.email}
+            required
+            locale={locale}
+          >
             {(control) => (
               <Input
                 {...control}
@@ -92,7 +133,12 @@ export default function ContactForm({
           </Field>
         </div>
 
-        <Field label={content.fields.subject} required locale={locale}>
+        <Field
+          label={content.fields.subject}
+          error={fieldErrors.subject}
+          required
+          locale={locale}
+        >
           {(control) => (
             <Select {...control} name="subject" defaultValue="">
               <option value="" disabled>
@@ -107,7 +153,12 @@ export default function ContactForm({
           )}
         </Field>
 
-        <Field label={content.fields.message} required locale={locale}>
+        <Field
+          label={content.fields.message}
+          error={fieldErrors.message}
+          required
+          locale={locale}
+        >
           {(control) => (
             <Textarea
               {...control}
@@ -144,6 +195,7 @@ export default function ContactForm({
           id="contact-privacy-acknowledgement"
           locale={locale}
           content={content.privacyAcknowledgement}
+          error={fieldErrors.privacyAcknowledgement}
         />
 
         <div>
@@ -159,9 +211,15 @@ export default function ContactForm({
         </div>
       </form>
 
+      {/* A validation summary is announced, but focus goes to the first
+          invalid field instead of the message. */}
       <FormStatus
-        state={toFormStatusState(status)}
-        message={getSubmissionMessage(status, errorKind, content.submission)}
+        state={validationSummary ? "error" : toFormStatusState(status)}
+        message={
+          validationSummary ??
+          getSubmissionMessage(status, errorKind, content.submission)
+        }
+        focusResult={validationSummary === undefined}
         successActions={
           <Button variant="secondary" size="sm" onClick={startAnotherMessage}>
             {content.submission.submitAnother}
