@@ -6,6 +6,7 @@
 // The expected values come from src/lib/securityHeaders.ts (Node 24 strips the
 // types), so this script and the unit test cannot drift apart.
 import assert from "node:assert/strict";
+import { isReadyAdminLogin } from "./security-headers-expectations.mjs";
 import {
   publicRouteSecurityHeaders,
   securityHeaders,
@@ -24,7 +25,7 @@ const checks = [
   { path: "/", status: 200, publicRoute: true },
   { path: "/en", status: 200, publicRoute: true },
   { path: "/iletisim", status: 200, publicRoute: true },
-  { path: "/admin/login", status: 200 },
+  { path: "/admin/login", status: 200, admin: true },
   { path: "/public-missing-security-test", status: 404, publicRoute: true },
   { path: "/brand/site-og.jpg", status: 200, image: true, publicRoute: true },
   { path: optimizedImage, status: 200, image: true, optimizer: true },
@@ -36,6 +37,7 @@ for (const {
   image = false,
   optimizer = false,
   publicRoute = false,
+  admin = false,
 } of checks) {
   const response = await fetch(new URL(path, base), { redirect: "manual" });
   assert.equal(response.status, status, path);
@@ -61,7 +63,13 @@ for (const {
     assert.ok(csp?.includes("sandbox"), path);
   }
 
-  if (image) {
+  if (admin) {
+    // Payload answers 200 with its error page too, for example when the
+    // database has no schema ("no such table: users"). A ready admin either
+    // sends the visitor to create the first user or shows the login form.
+    const html = await response.text();
+    assert.ok(isReadyAdminLogin(html), `${path} renders Payload's error page`);
+  } else if (image) {
     assert.match(response.headers.get("content-type") ?? "", /^image\//, path);
     assert.ok((await response.arrayBuffer()).byteLength > 0, path);
   } else {
