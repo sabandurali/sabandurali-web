@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { existsSync, readdirSync, statSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
@@ -162,6 +162,36 @@ test("session cookies and login lockout are explicit", () => {
   assert.equal(runAccess(Users.access?.unlock, admin), true);
   assert.equal(runAccess(Users.access?.unlock, editor), false);
   assert.equal(runAccess(Users.access?.unlock, null), false);
+});
+
+test("the security runbook matches the lockout and names every sign-in endpoint", () => {
+  const runbook = readFileSync(
+    path.resolve(appDirectory, "../../docs/SECURITY.md"),
+    "utf8",
+  );
+
+  assert.match(
+    runbook,
+    new RegExp(`\\(${MAX_LOGIN_ATTEMPTS}\\) failed logins`),
+  );
+  assert.match(
+    runbook,
+    new RegExp(`\\(${LOGIN_LOCK_TIME_MS / 60_000} minutes\\)`),
+  );
+  // Payload's unauthenticated auth endpoints the firewall rule must cover.
+  for (const endpoint of [
+    "login",
+    "first-register",
+    "forgot-password",
+    "reset-password",
+    "unlock",
+  ]) {
+    assert.match(
+      runbook,
+      new RegExp(`"value":"/api/users/${endpoint}"`),
+      `the CLI rule covers /api/users/${endpoint}`,
+    );
+  }
 });
 
 test("password reset is refused while no email adapter exists", () => {
