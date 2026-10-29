@@ -11,6 +11,7 @@ import {
   buildBookReviewEntries,
   buildSitemap,
   buildStandardPageEntries,
+  createSitemapFailureCollector,
   findBookReviewTranslation,
   getContentLastModified,
   loadSitemapSource,
@@ -752,6 +753,24 @@ test("a failing source falls back and is reported", async () => {
     "ok",
   );
   assert.equal(reports.length, 1);
+});
+
+test("the failure collector names every failed source and still reports it", async () => {
+  const reports: string[] = [];
+  const failures = createSitemapFailureCollector((source) =>
+    reports.push(source),
+  );
+  await loadSitemapSource(
+    "district guides",
+    async () => {
+      throw new Error("timeout");
+    },
+    new Map(),
+    failures.report,
+  );
+  await loadSitemapSource("pages", async () => [], [], failures.report);
+  assert.deepEqual(failures.failed, ["district guides"]);
+  assert.deepEqual(reports, ["district guides"]);
 });
 
 test("a failing source is logged as one structured content line", (t) => {

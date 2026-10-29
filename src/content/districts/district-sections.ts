@@ -1,5 +1,6 @@
 import type { PublicArticleSummary } from "@/content/articles/public-types";
 import { describeError, reportContentIssue } from "@/content/content-log";
+import { refuseDegradedCachedRender } from "@/content/degraded-render";
 import type { PublicPhoto } from "@/content/photos/types";
 
 /**
@@ -9,6 +10,11 @@ import type { PublicPhoto } from "@/content/photos/types";
  * the section renders empty, is reported as unavailable (so the page can
  * say "temporarily unavailable" instead of "nothing published") and the
  * error is logged. The guide query itself stays fail-closed.
+ *
+ * The district route is ISR: `loadDistrictSectionsForCache` refuses to let
+ * such a degraded render replace the cached page on a production server
+ * (see src/content/degraded-render.ts), so a one-second outage does not
+ * hide photos, research or news for an hour.
  */
 export type DistrictSectionName = "photos" | "research" | "news";
 
@@ -69,4 +75,19 @@ export async function settleDistrictSections(
     sections: { photos, research, news },
     unavailableSections: SECTION_ORDER.filter((name) => unavailable.has(name)),
   };
+}
+
+/** `settleDistrictSections` for the ISR district route. */
+export async function loadDistrictSectionsForCache(
+  district: string,
+  loaders: DistrictSectionLoaders,
+  env?: Readonly<Record<string, string | undefined>>,
+): ReturnType<typeof settleDistrictSections> {
+  const settled = await settleDistrictSections(district, loaders);
+  refuseDegradedCachedRender(
+    `district ${district}`,
+    settled.unavailableSections,
+    env,
+  );
+  return settled;
 }

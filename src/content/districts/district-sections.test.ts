@@ -2,7 +2,10 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import type { PublicArticleSummary } from "../articles/public-types";
 import type { PublicPhoto } from "../photos/types";
-import { settleDistrictSections } from "./district-sections";
+import {
+  loadDistrictSectionsForCache,
+  settleDistrictSections,
+} from "./district-sections";
 
 const photo = { id: "p1" } as PublicPhoto;
 const article = { id: "a1" } as PublicArticleSummary;
@@ -46,4 +49,35 @@ test("one failing query empties only its own section and is logged", async (t) =
   assert.ok(
     lines.every((line) => line.includes('"scope":"districts","id":"kadikoy"')),
   );
+});
+
+test("CORRECTNESS-3: a production server keeps the cached page instead of a degraded one", async (t) => {
+  t.mock.method(console, "error", () => {});
+  const loaders = {
+    photos: async (): Promise<PublicPhoto[]> => {
+      throw new Error("connection reset");
+    },
+    research: async () => [article],
+    news: async () => [],
+  };
+
+  await assert.rejects(
+    loadDistrictSectionsForCache("kadikoy", loaders, {
+      NODE_ENV: "production",
+    }),
+    { name: "DegradedRenderError" },
+  );
+  // The build and dev still render the page with the unavailable section.
+  const built = await loadDistrictSectionsForCache("kadikoy", loaders, {
+    NODE_ENV: "production",
+    NEXT_PHASE: "phase-production-build",
+  });
+  assert.deepEqual(built.unavailableSections, ["photos"]);
+  // A complete render is never refused.
+  const complete = await loadDistrictSectionsForCache(
+    "kadikoy",
+    { ...loaders, photos: async () => [photo] },
+    { NODE_ENV: "production" },
+  );
+  assert.deepEqual(complete.unavailableSections, []);
 });

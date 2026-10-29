@@ -609,6 +609,23 @@ export const reportSitemapSourceError: SitemapErrorReporter = (
   );
 };
 
+/**
+ * A reporter that also remembers which sources failed, so the sitemap route
+ * can refuse to cache an incomplete result (src/content/degraded-render.ts).
+ */
+export function createSitemapFailureCollector(
+  report: SitemapErrorReporter = reportSitemapSourceError,
+): { report: SitemapErrorReporter; failed: string[] } {
+  const failed: string[] = [];
+  return {
+    failed,
+    report: (source, error) => {
+      failed.push(source);
+      report(source, error);
+    },
+  };
+}
+
 /** Resolves to `fallback` (and reports the error) when `load` fails. */
 export async function loadSitemapSource<T>(
   source: string,
