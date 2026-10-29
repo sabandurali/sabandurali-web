@@ -657,7 +657,33 @@ test("limited reads stop at the limit and news pages paginate in the database", 
   });
 });
 
-test("home photos put Istanbul photos first with two limited reads", async () => {
+test("a limited list stops reading once the limit is filled", async (t) => {
+  // More standalone articles than one internal page (10 rows for a small
+  // limit): a limit of 1 must not read the remaining pages.
+  const extra = [];
+  for (let index = 0; index < 11; index += 1) {
+    extra.push(
+      await createArticle({
+        title: `Sayfa dolgusu ${index}`,
+        slug: `sayfa-dolgusu-${index}`,
+        publishedAt: minutesAgo(1 + index / 10),
+      }),
+    );
+  }
+  const find = t.mock.method(payload, "find");
+  const latest = await articles.listPublished("tr", new Date(), 1);
+  const reads = find.mock.calls.filter(
+    (call) => call.arguments[0]?.collection === "articles",
+  );
+  find.mock.restore();
+  assert.deepEqual(slugs(latest), ["sayfa-dolgusu-0"]);
+  assert.equal(reads.length, 1);
+  for (const article of extra) {
+    await payload.delete({ collection: "articles", id: article.id });
+  }
+});
+
+test("home photos put Istanbul photos first with two limited reads", async (t) => {
   const nature = await payload.create({
     collection: "photo-collections",
     data: { title: "Doğa", slug: "doga", _status: "published" } as never,
@@ -695,13 +721,17 @@ test("home photos put Istanbul photos first with two limited reads", async () =>
     } as never,
   });
 
-  // 27 Turkish Istanbul photos: the newer lighthouse does not make it.
-  assert.deepEqual(slugs(await photos.listHomePhotos("tr", 4)), [
-    "kare-0",
-    "kare-1",
-    "kare-2",
-    "kare-3",
-  ]);
+  // 27 Turkish Istanbul photos: the newer lighthouse does not make it, and
+  // one limited read is enough.
+  const find = t.mock.method(payload, "find");
+  const turkish = await photos.listHomePhotos("tr", 4);
+  const photoReads = find.mock.calls.filter(
+    (call) => call.arguments[0]?.collection === "photos",
+  );
+  find.mock.restore();
+  assert.deepEqual(slugs(turkish), ["kare-0", "kare-1", "kare-2", "kare-3"]);
+  assert.equal(photoReads.length, 1);
+  assert.equal(photoReads[0]?.arguments[0]?.limit, 4);
   // Two English Istanbul photos, then the newest other one.
   assert.deepEqual(slugs(await photos.listHomePhotos("en", 4)), [
     "frame-100",
@@ -827,6 +857,7 @@ test("book reviews: public rules, both translation directions, limits and narrow
     assert.equal(await bookReviews.findPublishedBySlug(slug, "tr"), null, slug);
   }
 
+  const detailFind = t.mock.method(payload, "find");
   const turkishReview = await bookReviews.findPublishedBySlug(
     "derin-calisma",
     "tr",
@@ -845,6 +876,17 @@ test("book reviews: public rules, both translation directions, limits and narrow
     (await bookReviews.findPublishedTranslation(englishReview, "tr"))?.slug,
     "derin-calisma",
   );
+  // Detail and translation reads populate related books narrowly as well.
+  const detailReads = detailFind.mock.calls.filter(
+    (call) => call.arguments[0]?.collection === "books",
+  );
+  detailFind.mock.restore();
+  assert.ok(detailReads.length >= 4);
+  for (const call of detailReads) {
+    assert.deepEqual(call.arguments[0]?.populate, {
+      books: { updatedAt: true },
+    });
+  }
 });
 
 async function createPage(data: Record<string, unknown>) {
