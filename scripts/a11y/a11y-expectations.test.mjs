@@ -242,10 +242,27 @@ test("a focus stop needs its own or a close ancestor's indicator", () => {
       label: "a",
       visible: true,
       style: none,
-      ancestors: [
-        none,
-        { ...none, boxShadow: "rgb(255, 255, 255) 0px 0px 0px 3px" },
-      ],
+      ancestors: [none, ring],
+    }),
+    null,
+  );
+  // An ancestor's shadow alone may be permanent (a shadowed card): it is
+  // no focus indicator for a link inside it.
+  assert.match(
+    focusIndicatorProblem({
+      label: "a",
+      visible: true,
+      style: none,
+      ancestors: [none, { ...none, boxShadow: "rgb(0, 0, 0) 0px 2px 8px 0px" }],
+    }),
+    /no visible focus indicator/,
+  );
+  // The element's own shadow (the focus halo) does count.
+  assert.equal(
+    focusIndicatorProblem({
+      label: "a",
+      visible: true,
+      style: { ...none, boxShadow: "rgb(255, 255, 255) 0px 0px 0px 3px" },
     }),
     null,
   );
@@ -333,6 +350,14 @@ test("reduced motion allows only the 0.01 ms override", () => {
       ],
     }).length,
     3,
+  );
+  // A duration without an animation name animates nothing: no problem.
+  assert.deepEqual(
+    reducedMotionProblems({
+      scrollBehavior: "auto",
+      elements: [{ ...still, animationDuration: "2s" }],
+    }),
+    [],
   );
 });
 

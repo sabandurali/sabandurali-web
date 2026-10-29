@@ -167,15 +167,19 @@ function pixels(value) {
 
 /**
  * A focused element shows an indicator: its own outline or box shadow, or
- * that of a close ancestor (a card that shows the focus of its title link
- * through the `focus-ring` utility).
+ * the outline of a close ancestor (a card that shows the focus of its title
+ * link through the `focus-ring` utility, which always draws an outline). An
+ * ancestor's box shadow alone does not count: a card may carry a permanent
+ * shadow, which says nothing about focus.
  */
 export function focusIndicatorProblem(stop) {
-  const visible = (style) =>
-    (style.outlineStyle !== "none" && pixels(style.outlineWidth) >= 2) ||
-    (style.boxShadow && style.boxShadow !== "none");
+  const outlined = (style) =>
+    style.outlineStyle !== "none" && pixels(style.outlineWidth) >= 2;
+  const ownIndicator = (style) =>
+    outlined(style) || (style.boxShadow && style.boxShadow !== "none");
   if (!stop.visible) return `focused element is not visible: ${stop.label}`;
-  if ([stop.style, ...(stop.ancestors ?? [])].some(visible)) return null;
+  if (ownIndicator(stop.style) || (stop.ancestors ?? []).some(outlined))
+    return null;
   return `no visible focus indicator: ${stop.label}`;
 }
 
