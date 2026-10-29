@@ -296,7 +296,7 @@ function mapHomeFocusAreasBlock(
     const description = getText(card.description);
     const linkLabel = getText(card.linkLabel);
     const linkHref =
-      getText(card.linkHref) === null ? null : getSafeHref(card.linkHref);
+      getText(card.linkHref) === null ? null : getSafeBlockHref(card.linkHref);
 
     if (
       cardTitle === null ||
