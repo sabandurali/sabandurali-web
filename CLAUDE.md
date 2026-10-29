@@ -22,9 +22,18 @@ identifiers and commit messages in English.
 | `npm run dev` | Local dev server (SQLite + local media) |
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run lint` | ESLint over the tracked sources |
-| `npm test` | All `node:test` suites (`tsx --test`) |
-| `npm run check` | typecheck + lint + test + build — must pass before every commit you hand over |
-| `npm run format` / `format:check` | Prettier |
+| `npm test` | `node:test` suites (`scripts/**` and `src/**`, `*.test.ts` via tsx and `*.test.mjs` via node), the district content acceptance check and a PGlite replay of every migration |
+| `npm run check` | typecheck + lint + format:check + test + build — must pass before every commit you hand over |
+| `npm run format` / `format:check` | Prettier write / verify |
+| `npm run generate:admin-guide` | Regenerate `YONETIM-PANELI-KULLANIM-KILAVUZU.md` after editing `admin-help-guide.ts` (a test fails when they differ) |
+| `npm run generate:types` / `generate:importmap` | Regenerate `src/payload-types.ts` / the admin import map after a schema or admin component change |
+| `npm run e2e:headers -- <url>` | Security header check against a local production server |
+| `npm run e2e:districts:cms` | District guide CMS rules on a temporary SQLite database |
+| `npm run e2e:districts:routes` / `e2e:content-trust` | Playwright checks against a local server at `DISTRICT_TEST_URL` (output in `DISTRICT_TEST_OUTPUT`) |
+
+The CI environment for local builds and tests (no `.env.local` needed) is the one in
+`.github/workflows/ci.yml`: `PAYLOAD_DATABASE=sqlite PAYLOAD_STORAGE=local DATABASE_URL=file:./.data/ci.db`,
+a dummy `PAYLOAD_SECRET` and every `*_PUBLIC_SOURCE=static`.
 
 Never run a script whose name contains `production`, `:apply` or `migrate` unless the owner asked for that
 exact operation in the current conversation. `*:dry-run` and `*:verify` scripts read production — they also
@@ -85,7 +94,7 @@ need the owner's request.
 ## Further reading
 
 - `docs/PROJECT-STATE.md` — durable handoff, district contract, production rules
-- `docs/LOCAL_DEVELOPMENT.md` — local setup
+- `docs/LOCAL-DEVELOPMENT.md` — local setup
 - `docs/DESIGN-SYSTEM.md` — "İstanbul Atlası" design system
 - `YONETIM-PANELI-KULLANIM-KILAVUZU.md` — admin guide (its source of truth is
   `src/components/admin/help/admin-help-guide.ts`)

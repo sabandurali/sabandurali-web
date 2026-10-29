@@ -2,7 +2,7 @@
 
 ## Gerekli yerel ortam
 
-- Node.js 24, en az 24.22.1. Sürüm `package.json` içindeki `engines` alanında ve `.nvmrc` dosyasında tanımlıdır; nvm kullanıyorsanız `nvm use` yeterlidir. Payload 3.92 bu güvenlik sürümünü şart koşar.
+- Node.js 24, en az 24.22.1 (Payload 3.92 bu güvenlik sürümünü şart koşar). Sürüm `package.json` içindeki `engines` alanında ve `.nvmrc` dosyasında tanımlıdır. nvm kullanıyorsanız `nvm install` çalıştırın: `.nvmrc` dosyasını okur, en güncel Node 24 sürümünü gerekirse kurar ve etkinleştirir. Yalnız `nvm use`, makinede kurulu eski bir 24.x sürümünü seçebilir.
 - npm 11 (Node.js 24 ile gelir) ve Git gereklidir.
 
 ## İlk kurulum

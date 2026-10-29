@@ -26,13 +26,14 @@ storage. Tools write their output to `/tmp` or another ignored path:
 
 ## Tracked inputs
 
-Two JSON files stay tracked because something still reads them:
+One JSON file stays tracked because something still reads it:
 
-- `istanbul-39/editorial-review.json` — the reviewed official neighbourhood
-  lists that `npm run test:districts:content` compares with the public
-  projection. It belongs in `data/districts/` and moves there together with the
-  path in `scripts/districts/check-content.ts`.
 - `content-trust-20261018/cms-home-about.json` — the reviewed homeAbout text
   for the TR and EN home pages in Payload, referenced by that report's README.
   It is a review artefact for a separately approved manual CMS change, not an
   import.
+
+The reviewed official neighbourhood lists that `npm run test:districts:content`
+compares with the public projection moved to
+`data/districts/editorial-review.json` (ARC-12); `reports/istanbul-39/*.md`
+still refers to it by its file name.

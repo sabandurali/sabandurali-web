@@ -34,6 +34,8 @@ const mustBeIgnored = [
   "reports/production-release-20261018/rollback.md",
   "reports/istanbul-39/route-log.txt",
   "reports/istanbul-39/screenshots/esenler.png",
+  // ARC-12: the reviewed neighbourhood lists moved to data/districts/.
+  "reports/istanbul-39/editorial-review.json",
   "server.pem",
   "signing.key",
   "export.sql",
@@ -52,6 +54,7 @@ const mustBeTracked = [
   "reports/README.md",
   "reports/istanbul-39/README.md",
   "data/districts/editorial.json",
+  "data/districts/editorial-review.json",
 ];
 
 test("secrets, local data and private evidence are ignored by Git", () => {
