@@ -56,8 +56,8 @@ including how to generate the secret, is
 | `npm run generate:admin-guide`       | Regenerate `YONETIM-PANELI-KULLANIM-KILAVUZU.md` from `src/components/admin/help/admin-help-guide.ts`                          |
 | `npm run e2e:headers -- <local-url>` | Security header check against a local production server                                                                      |
 | `npm run e2e:districts:cms`          | District guide CMS rules on a temporary SQLite database it imports and removes itself (or pass an isolated `/tmp/istanbul-39-*` database) |
-| `npm run e2e:districts:routes`       | Playwright acceptance of the 39 district pages with the local Chrome against a local server at `DISTRICT_TEST_URL`            |
-| `npm run e2e:content-trust`          | Metadata, share image and route regression check against a local server at `DISTRICT_TEST_URL`; JSON to `DISTRICT_TEST_OUTPUT` |
+| `npm run e2e:districts:routes`       | Playwright acceptance of the 39 district pages against a local server at `DISTRICT_TEST_URL` (`BROWSER_CHANNEL`, default the local Chrome; CI uses `chromium`) |
+| `npm run e2e:content-trust`          | Legacy redirects, metadata, share image and route regression check against a local server at `DISTRICT_TEST_URL`; JSON to `DISTRICT_TEST_OUTPUT` |
 | `npm run report:districts:content`   | Run the content acceptance check and write its JSON result to the ignored `reports/istanbul-39/content-acceptance.json`        |
 
 Scripts whose names contain `production`, `migrate`, `:apply`, `:dry-run` or
