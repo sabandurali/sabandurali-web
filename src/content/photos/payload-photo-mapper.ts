@@ -8,12 +8,13 @@ import {
 import { mapMediaImage } from "@/content/media";
 import type { Photo } from "@/payload-types";
 import type {
-  PhotoLanguage,
   PublicPhoto,
   PublicPhotoCollection,
   PublicPhotoImage,
   PublicPhotoTag,
-} from "@/content/photos/types";
+  PublicPhotoTranslation,
+} from "@/content/photos/public-types";
+import type { PhotoLanguage } from "@/content/photos/types";
 
 function mapImage(
   value: unknown,
@@ -148,5 +149,20 @@ export function mapPayloadPhoto(
       description: getText(value.seo?.metaDescription) ?? fallbackDescription,
       openGraphImage: ogImage,
     },
+  };
+}
+
+/**
+ * The other-language version of a photo as the photo page links it: only
+ * its identity, title and slug, never the rest of the public photo.
+ */
+export function toPublicPhotoTranslation(
+  photo: PublicPhoto,
+): PublicPhotoTranslation {
+  return {
+    id: photo.id,
+    language: photo.language,
+    title: photo.title,
+    slug: photo.slug,
   };
 }

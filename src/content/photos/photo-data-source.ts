@@ -3,13 +3,13 @@ import { unstable_cache } from "next/cache";
 import { cache } from "react";
 import { PayloadPublicPhotoRepository } from "@/content/photos/payload-photo-repository";
 import { PHOTO_FACETS_CACHE_TAG } from "@/content/photos/photo-cache-tags";
+import { toPublicPhotoTranslation } from "@/content/photos/payload-photo-mapper";
 import type {
-  PhotoLanguage,
-  PhotoListFilters,
   PublicPhoto,
   PublicPhotoTranslation,
   PublishedPhotoList,
-} from "@/content/photos/types";
+} from "@/content/photos/public-types";
+import type { PhotoLanguage, PhotoListFilters } from "@/content/photos/types";
 import { readPublicSource } from "@/content/public-source";
 
 const payloadPhotoRepository = new PayloadPublicPhotoRepository();
@@ -80,14 +80,7 @@ export const getPublishedPhotoPageData = cache(
     return {
       photo,
       translation:
-        translated === null
-          ? null
-          : {
-              id: translated.id,
-              language: translated.language,
-              title: translated.title,
-              slug: translated.slug,
-            },
+        translated === null ? null : toPublicPhotoTranslation(translated),
     };
   },
 );
@@ -104,6 +97,25 @@ export const getAllPublishedPhotos = cache(
   async (locale: PhotoLanguage): Promise<PublicPhoto[]> =>
     isPayloadSource() ? payloadPhotoRepository.listAllPublished(locale) : [],
 );
+
+/**
+ * The home page photos (Istanbul photos first, then the newest others),
+ * read with database limits. Use this instead of selecting from
+ * getAllPublishedPhotos().
+ */
+export const getHomePagePhotos = cache(
+  async (locale: PhotoLanguage, limit: number): Promise<PublicPhoto[]> =>
+    isPayloadSource()
+      ? payloadPhotoRepository.listHomePhotos(locale, limit)
+      : [],
+);
+
+/** Whether a language has any public photo (one-row read). */
+export async function hasPublishedPhotos(
+  locale: PhotoLanguage,
+): Promise<boolean> {
+  return (await getHomePagePhotos(locale, 1)).length > 0;
+}
 
 /** Photos of one district, filtered in the database. */
 export const getDistrictPhotos = cache(
