@@ -52,6 +52,23 @@ export const MAX_UPLOAD_BYTES = 4 * 1024 * 1024;
 /** Heading levels editors may use: the page title is the only `h1`. */
 export const RICH_TEXT_HEADING_SIZES = ["h2", "h3", "h4"] as const;
 
+/**
+ * Default Lexical features the public renderer has no design for; removed
+ * from the editor by `configureRichTextFeatures`.
+ */
+export const RICH_TEXT_REMOVED_FEATURES = [
+  "relationship",
+  "checklist",
+  "underline",
+  "strikethrough",
+  "align",
+  "indent",
+] as const;
+
+const removedRichTextFeatures: ReadonlySet<string> = new Set(
+  RICH_TEXT_REMOVED_FEATURES,
+);
+
 type RichTextFeatures = Exclude<
   NonNullable<LexicalEditorProps["features"]>,
   (...args: never[]) => unknown
@@ -63,7 +80,12 @@ type RichTextFeatures = Exclude<
  * - headings: `h2`–`h4` only;
  * - links: custom URLs, plus internal links to the collections the public
  *   renderer resolves to a page (`INTERNAL_LINK_COLLECTIONS`);
- * - relationship blocks: removed, the public site cannot render them.
+ * - relationship blocks: removed, the public site cannot render them;
+ * - checklists, underline, strikethrough, alignment and indentation:
+ *   removed (`RICH_TEXT_REMOVED_FEATURES`). A checklist renders as nested
+ *   interactive controls, underlined text reads as a link (DESIGN-SYSTEM §6)
+ *   and the rest are inline styles outside the design system or are dropped
+ *   by the public renderer, so the editor would show what readers never see.
  */
 export function configureRichTextFeatures(
   defaultFeatures: RichTextFeatures,
@@ -78,10 +100,8 @@ export function configureRichTextFeatures(
         return [
           LinkFeature({ enabledCollections: [...INTERNAL_LINK_COLLECTIONS] }),
         ];
-      case "relationship":
-        return [];
       default:
-        return [feature];
+        return removedRichTextFeatures.has(feature.key) ? [] : [feature];
     }
   });
 }

@@ -1,4 +1,4 @@
-import type { ComponentProps, ReactElement } from "react";
+import type { ComponentProps, ReactElement, ReactNode } from "react";
 import {
   RichText,
   type JSXConverter,
@@ -7,6 +7,9 @@ import {
 import type {
   SerializedAutoLinkNode,
   SerializedLinkNode,
+  SerializedListItemNode,
+  SerializedListNode,
+  SerializedTextNode,
   SerializedUploadNode,
 } from "@payloadcms/richtext-lexical";
 import DownloadLink from "@/components/articles/DownloadLink";
@@ -211,12 +214,112 @@ export function renderRichTextUpload(
   );
 }
 
+/**
+ * Lexical text format bits (`NodeFormat` in @payloadcms/richtext-lexical,
+ * locked by PayloadRichText.test.ts). Kept local so this server component
+ * does not load the editor package at runtime.
+ */
+export const TEXT_FORMAT = {
+  bold: 1,
+  italic: 1 << 1,
+  strikethrough: 1 << 2,
+  underline: 1 << 3,
+  code: 1 << 4,
+  subscript: 1 << 5,
+  superscript: 1 << 6,
+} as const;
+
+/**
+ * Text with its inline formats as semantic elements. Payload's default
+ * converter draws underline and strikethrough with inline styles: underline
+ * is dropped (on this site underlined text means a link, DESIGN-SYSTEM §6)
+ * and strikethrough becomes `<s>`. The editor no longer offers either
+ * (`configureRichTextFeatures`); this covers content written before that.
+ */
+const textConverter: JSXConverter<SerializedTextNode> = ({ node }) => {
+  const format = typeof node.format === "number" ? node.format : 0;
+  let content: ReactNode = node.text;
+
+  if (format & TEXT_FORMAT.bold) content = <strong>{content}</strong>;
+  if (format & TEXT_FORMAT.italic) content = <em>{content}</em>;
+  if (format & TEXT_FORMAT.strikethrough) content = <s>{content}</s>;
+  if (format & TEXT_FORMAT.code) content = <code>{content}</code>;
+  if (format & TEXT_FORMAT.subscript) content = <sub>{content}</sub>;
+  if (format & TEXT_FORMAT.superscript) content = <sup>{content}</sup>;
+
+  return content;
+};
+
+function isChecklist(node: unknown): boolean {
+  return isRecord(node) && node.listType === "check";
+}
+
+/**
+ * Lists. A checklist (no longer offered by the editor) renders as a plain
+ * list whose items carry a disabled checkbox inside their label: Payload's
+ * default puts a checkbox input inside an `li role="checkbox"`, a nested
+ * interactive control that screen readers announce twice.
+ */
+const listConverter: JSXConverter<SerializedListNode> = ({
+  node,
+  nodesToJSX,
+}) => {
+  const children = nodesToJSX({ nodes: node.children });
+  const Tag = node.tag === "ol" ? "ol" : "ul";
+
+  return (
+    <Tag className={isChecklist(node) ? "list-none! pl-0!" : undefined}>
+      {children}
+    </Tag>
+  );
+};
+
+const listItemConverter: JSXConverter<SerializedListItemNode> = ({
+  node,
+  nodesToJSX,
+  parent,
+}) => {
+  const hasSubLists = node.children.some((child) => child.type === "list");
+  const children = nodesToJSX({ nodes: node.children });
+  const value = typeof node.value === "number" ? node.value : undefined;
+
+  if (hasSubLists) {
+    return (
+      <li value={value} className="list-none">
+        {children}
+      </li>
+    );
+  }
+
+  if (isChecklist(parent)) {
+    return (
+      <li className="list-none pl-0!">
+        <label className="inline-flex items-baseline gap-2">
+          <input
+            type="checkbox"
+            checked={node.checked === true}
+            disabled
+            readOnly
+            className="size-4 shrink-0 accent-ink"
+          />
+          <span>{children}</span>
+        </label>
+      </li>
+    );
+  }
+
+  return <li value={value}>{children}</li>;
+};
+
 function createConverters(locale: UiLocale): JSXConvertersFunction {
   const uploadConverter: JSXConverter<SerializedUploadNode> = ({ node }) =>
     renderRichTextUpload(node, locale);
 
   return ({ defaultConverters }) => ({
     ...defaultConverters,
+    text: textConverter,
+    list: listConverter,
+    listitem: listItemConverter,
     autolink: createAutoLinkConverter(locale),
     link: createLinkConverter(locale),
     upload: uploadConverter,
