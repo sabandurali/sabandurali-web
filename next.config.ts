@@ -8,7 +8,11 @@ import {
   getPayloadStorageProvider,
   getVercelBlobStoreHostname,
 } from "./src/lib/payloadInfrastructure";
-import { securityHeaders } from "./src/lib/securityHeaders";
+import {
+  PUBLIC_ROUTES_SOURCE,
+  publicRouteSecurityHeaders,
+  securityHeaders,
+} from "./src/lib/securityHeaders";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -34,6 +38,11 @@ const nextConfig: NextConfig = {
       {
         source: "/:path*",
         headers: [...securityHeaders],
+      },
+      {
+        // Report-only: blocks nothing on the public site (docs/SECURITY.md).
+        source: PUBLIC_ROUTES_SOURCE,
+        headers: [...publicRouteSecurityHeaders],
       },
     ];
   },

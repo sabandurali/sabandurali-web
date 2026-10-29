@@ -6,7 +6,10 @@
 // The expected values come from src/lib/securityHeaders.ts (Node 24 strips the
 // types), so this script and the unit test cannot drift apart.
 import assert from "node:assert/strict";
-import { securityHeaders } from "../src/lib/securityHeaders.ts";
+import {
+  publicRouteSecurityHeaders,
+  securityHeaders,
+} from "../src/lib/securityHeaders.ts";
 
 const base = new URL(process.argv[2] || "http://127.0.0.1:3101");
 assert.ok(
@@ -15,17 +18,25 @@ assert.ok(
 );
 
 const optimizedImage = "/_next/image?url=%2Fbrand%2Fsite-og.jpg&w=640&q=75";
+// `publicRoute`: the report-only CSP is expected (never on the admin, the
+// API or the image optimizer).
 const checks = [
-  { path: "/", status: 200 },
-  { path: "/en", status: 200 },
-  { path: "/iletisim", status: 200 },
+  { path: "/", status: 200, publicRoute: true },
+  { path: "/en", status: 200, publicRoute: true },
+  { path: "/iletisim", status: 200, publicRoute: true },
   { path: "/admin/login", status: 200 },
-  { path: "/public-missing-security-test", status: 404 },
-  { path: "/brand/site-og.jpg", status: 200, image: true },
+  { path: "/public-missing-security-test", status: 404, publicRoute: true },
+  { path: "/brand/site-og.jpg", status: 200, image: true, publicRoute: true },
   { path: optimizedImage, status: 200, image: true, optimizer: true },
 ];
 
-for (const { path, status, image = false, optimizer = false } of checks) {
+for (const {
+  path,
+  status,
+  image = false,
+  optimizer = false,
+  publicRoute = false,
+} of checks) {
   const response = await fetch(new URL(path, base), { redirect: "manual" });
   assert.equal(response.status, status, path);
   assert.equal(response.headers.get("x-powered-by"), null, path);
@@ -33,6 +44,14 @@ for (const { path, status, image = false, optimizer = false } of checks) {
   for (const { key, value } of securityHeaders) {
     if (optimizer && key === "Content-Security-Policy") continue;
     assert.equal(response.headers.get(key), value, `${key} on ${path}`);
+  }
+
+  for (const { key, value } of publicRouteSecurityHeaders) {
+    assert.equal(
+      response.headers.get(key),
+      publicRoute ? value : null,
+      `${key} on ${path}`,
+    );
   }
 
   if (optimizer) {
@@ -67,5 +86,8 @@ console.log("PASS optimizer refuses query strings on local images");
 const users = await fetch(new URL("/api/users", base));
 assert.equal(users.status, 403, "Anonymous users must not list accounts.");
 assert.equal(users.headers.get("x-content-type-options"), "nosniff");
+for (const { key } of publicRouteSecurityHeaders) {
+  assert.equal(users.headers.get(key), null, `${key} on /api/users`);
+}
 await users.body?.cancel();
 console.log("PASS anonymous users API denied");

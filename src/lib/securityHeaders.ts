@@ -28,8 +28,10 @@
  *   frame, image and connect requests).
  * - Media is served from `/api/media/file/**` and Vercel Blob.
  *
- * A script policy must therefore start as `Content-Security-Policy-Report-Only`
- * and be verified against the admin and a Preview deployment first.
+ * A script policy therefore starts as `Content-Security-Policy-Report-Only`
+ * on the public routes (see `contentSecurityPolicyReportOnlyDirectives` and
+ * `docs/SECURITY.md`). The browser only reports violations of it in the
+ * console; it blocks nothing, so it cannot break the site.
  *
  * `upgrade-insecure-requests` is left out: every asset is already served over
  * HTTPS, and the directive breaks `next start` over plain HTTP on localhost in
@@ -55,6 +57,73 @@ export const contentSecurityPolicyDirectives: Readonly<
   "frame-ancestors": ["'none'"],
   "object-src": ["'none'"],
 };
+
+/**
+ * The Vercel toolbar (Preview deployments, comments). Its other sources
+ * below follow Vercel's "Managing the toolbar" documentation.
+ */
+export const VERCEL_TOOLBAR_ORIGIN = "https://vercel.live";
+
+/** Public Vercel Blob stores, where production media may be read from. */
+export const VERCEL_BLOB_SOURCE = "https://*.public.blob.vercel-storage.com";
+
+/**
+ * Candidate full policy for the public routes, sent as
+ * `Content-Security-Policy-Report-Only` so violations show up without
+ * blocking anything. It keeps every enforced directive and adds the fetch
+ * directives the public site was checked against: Next.js hydration needs
+ * inline scripts and styles (no nonces, because pages are statically
+ * rendered), fonts are self-hosted by `next/font`, images come from this
+ * origin or Vercel Blob, and the contact form posts to Formspree.
+ *
+ * The next steps (nonce or SRI based `script-src`, a reporting endpoint,
+ * enforcing) are in `docs/SECURITY.md`.
+ */
+export const contentSecurityPolicyReportOnlyDirectives: Readonly<
+  Record<string, readonly string[]>
+> = {
+  ...contentSecurityPolicyDirectives,
+  "default-src": ["'self'"],
+  "script-src": ["'self'", "'unsafe-inline'", VERCEL_TOOLBAR_ORIGIN],
+  "style-src": ["'self'", "'unsafe-inline'", VERCEL_TOOLBAR_ORIGIN],
+  "img-src": [
+    "'self'",
+    "data:",
+    "blob:",
+    VERCEL_BLOB_SOURCE,
+    VERCEL_TOOLBAR_ORIGIN,
+    "https://vercel.com",
+  ],
+  "font-src": ["'self'", VERCEL_TOOLBAR_ORIGIN, "https://assets.vercel.com"],
+  "connect-src": [
+    "'self'",
+    FORMSPREE_ORIGIN,
+    VERCEL_TOOLBAR_ORIGIN,
+    "wss://ws-us3.pusher.com",
+  ],
+  "media-src": ["'self'", VERCEL_BLOB_SOURCE],
+  "frame-src": [VERCEL_TOOLBAR_ORIGIN],
+  "worker-src": ["'self'", "blob:"],
+  "manifest-src": ["'self'"],
+};
+
+/**
+ * Every route except the Payload admin, the API and the image optimizer
+ * (which sends its own sandbox policy). The admin needs Monaco from
+ * cdn.jsdelivr.net and workers and gets its own policy later.
+ * `path-to-regexp` syntax as used by `next.config.ts` `headers()`.
+ */
+export const PUBLIC_ROUTES_SOURCE =
+  "/:path((?!admin(?:/|$)|api(?:/|$)|_next/image(?:/|$)).*)";
+
+export const publicRouteSecurityHeaders: readonly SecurityHeader[] = [
+  {
+    key: "Content-Security-Policy-Report-Only",
+    value: serializeContentSecurityPolicy(
+      contentSecurityPolicyReportOnlyDirectives,
+    ),
+  },
+];
 
 /** Powerful browser features the site never uses; all are denied. */
 export const deniedBrowserFeatures: readonly string[] = [
