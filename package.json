@@ -42,6 +42,7 @@
     "@payloadcms/richtext-lexical": "3.92.1",
     "@payloadcms/storage-vercel-blob": "3.92.1",
     "@payloadcms/ui": "3.92.1",
+    "@vercel/analytics": "2.0.1",
     "next": "16.4.2",
     "payload": "3.92.1",
     "pg": "8.20.0",
