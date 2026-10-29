@@ -12,6 +12,8 @@ export type PublicationCopy = {
   articleCount: (count: number) => string;
   bookCount: (count: number) => string;
   photoCount: (count: number) => string;
+  /** Name of a scrollable data table region that has no caption. */
+  table: string;
   photos: {
     eyebrow: string;
     title: string;
@@ -54,6 +56,7 @@ export const publicationCopy = {
     articleCount: (count) => `${count} makale`,
     bookCount: (count) => `${count} kitap incelemesi`,
     photoCount: (count) => `${count} fotoğraf`,
+    table: "Tablo",
     photos: {
       eyebrow: "FOTOĞRAFÇILIK",
       title: "Fotoğraf Hikâyeleri",
@@ -97,6 +100,7 @@ export const publicationCopy = {
       `${count} ${count === 1 ? "book review" : "book reviews"}`,
     photoCount: (count) =>
       `${count} ${count === 1 ? "photograph" : "photographs"}`,
+    table: "Table",
     photos: {
       eyebrow: "PHOTOGRAPHY",
       title: "Photo Stories",

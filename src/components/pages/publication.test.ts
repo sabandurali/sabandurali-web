@@ -268,3 +268,43 @@ test("English counts are plural-aware, Turkish ones are not", () => {
   assert.equal(publicationCopy.en.photoCount(2), "2 photographs");
   assert.equal(publicationCopy.tr.bookCount(3), "3 kitap incelemesi");
 });
+
+test("static article tables are named regions and source marks are underlined links", async () => {
+  const { default: ArticleContent } =
+    await import("../articles/ArticleContent");
+  const { articlePageContent } =
+    await import("../../content/articles/article-page-content");
+  const sourceId = exampleEnglishArticle.sources[0]?.id ?? "";
+  const article = mapStaticArticle({
+    ...exampleEnglishArticle,
+    content: [
+      {
+        id: "table-1",
+        type: "table",
+        headers: ["District", "Value"],
+        rows: [["Kadıköy", "1"]],
+      },
+      {
+        id: "stat-1",
+        type: "statistic",
+        value: "39",
+        label: "districts",
+        sourceId,
+      },
+    ],
+  });
+  const html = renderToStaticMarkup(
+    createElement(ArticleContent, {
+      article,
+      content: articlePageContent.en,
+    }),
+  );
+
+  // A caption-less table still gets a name for its focusable scroll region.
+  assert.match(html, /role="region" aria-label="Table" tabindex="0"/);
+  // The [1] source mark is not told apart by colour alone (WCAG 1.4.1).
+  assert.match(
+    html,
+    /<a href="#source-[^"]+" class="[^"]*\bunderline\b[^"]*">\[1\]<\/a>/,
+  );
+});

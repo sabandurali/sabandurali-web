@@ -7,6 +7,7 @@ import {
   creditFromImage,
   PublicationImage,
 } from "@/components/pages/publication-media";
+import { publicationCopy } from "@/components/pages/publication-copy";
 import { ButtonLink } from "@/components/ui/Button";
 import { cx } from "@/components/ui/cx";
 import { Figure } from "@/components/ui/Figure";
@@ -253,7 +254,7 @@ function ArticleBlock({
       return (
         <div
           role="region"
-          aria-label={block.caption ?? undefined}
+          aria-label={block.caption ?? publicationCopy[locale].table}
           tabIndex={0}
           className="max-w-full overflow-x-auto rounded-card border border-ink bg-land"
         >
@@ -322,7 +323,7 @@ function ArticleBlock({
                 {" "}
                 <a
                   href={`#${articleSourceAnchorId(block.sourceId ?? "")}`}
-                  className="type-data text-ink"
+                  className="type-data text-ink underline decoration-1 underline-offset-[0.2em] hover:decoration-2"
                 >
                   [{sourceIndex + 1}]
                 </a>
