@@ -45,7 +45,7 @@ test("LanguageSwitcher: visible code in the name, lang and hreflang per link", (
   );
   assert.match(
     html,
-    /lang="en" aria-current="page"[^>]*>EN<span class="sr-only"> English/,
+    /lang="en" aria-current="true"[^>]*>EN<span class="sr-only"> English/,
   );
   assert.equal([...html.matchAll(/aria-current/g)].length, 1);
 });
@@ -167,6 +167,19 @@ test("NavMenu: an active section is bold with the bar but not aria-current", () 
   assert.doesNotMatch(html, /aria-current/);
   assert.match(html, /font-bold/);
   assert.match(html, /after:bg-signal/);
+});
+
+test("NavMenu bar: tight gaps below 1440 px so eight sections keep one row", () => {
+  const html = renderToStaticMarkup(
+    h(NavMenu, {
+      label: "Ana navigasyon",
+      layout: "bar",
+      items: [{ id: "a", label: "Makaleler", href: "/makaleler" }],
+    }),
+  );
+  assert.match(html, /gap-x-3 min-\[90rem\]:gap-x-8/);
+  assert.match(html, /px-0\.5/);
+  assert.doesNotMatch(html, /2\.2vw/);
 });
 
 test("shell sources: atlas layouts, retry, English 404 catch-all, global 404", () => {

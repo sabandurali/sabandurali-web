@@ -68,7 +68,7 @@ function containsCurrent(item: NavMenuItem): boolean {
 }
 
 const topLinkClassName =
-  "relative flex min-h-tap items-center gap-1.5 px-1 text-small text-ink no-underline hover:underline hover:decoration-2 hover:underline-offset-[0.3em]";
+  "relative flex min-h-tap items-center gap-1.5 text-small text-ink no-underline hover:underline hover:decoration-2 hover:underline-offset-[0.3em]";
 
 /** Signal bar under the entry of the current section (not colour alone:
  * the link itself also turns bold through aria-current). */
@@ -112,7 +112,9 @@ export default function NavMenu({
         className={cx(
           "m-0 flex list-none p-0",
           layout === "bar"
-            ? "flex-wrap items-stretch gap-x-[clamp(1rem,2.2vw,2.25rem)]"
+            ? // Tight from 1280 px so the eight Turkish sections fit one row
+              // even beside a 17 px scrollbar; airier from 1440 px.
+              "flex-wrap items-stretch gap-x-3 min-[90rem]:gap-x-8"
             : "flex-col gap-y-1",
         )}
       >
@@ -140,6 +142,7 @@ export default function NavMenu({
                 onClick={onNavigate}
                 className={cx(
                   topLinkClassName,
+                  layout === "bar" ? "px-0.5" : "px-1",
                   containsCurrent(item) ? "font-bold" : "font-medium",
                   containsCurrent(item) &&
                     layout === "bar" &&
@@ -285,6 +288,7 @@ function DropdownItem({
         onKeyDown={handleButtonKeyDown}
         className={cx(
           topLinkClassName,
+          layout === "bar" ? "px-0.5" : "px-1",
           "group cursor-pointer",
           isCurrentSection ? "font-bold" : "font-medium",
           isCurrentSection && layout === "bar" && currentBarClassName,
