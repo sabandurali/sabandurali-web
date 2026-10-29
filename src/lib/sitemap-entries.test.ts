@@ -185,6 +185,7 @@ function guide(overrides: Partial<DistrictGuide> = {}): DistrictGuide {
     marketData: null,
     planningDevelopments: [],
     sources: [],
+    publishedAt: null,
     updatedAt: "2026-09-10T09:00:00.000Z",
     ...overrides,
   };
@@ -608,6 +609,31 @@ test("district pages are listed only with an indexable guide", () => {
     urls(all).filter((url) => url.startsWith(`${site}/istanbul/ilceler/`))
       .length,
     39,
+  );
+});
+
+test("CORRECTNESS-4: a scheduled district guide is dated by its publication", () => {
+  const sitemap = buildSitemap({
+    ...emptyContent,
+    districtGuides: new Map([
+      [
+        "kadikoy",
+        guide({
+          summary: "Kadıköy özeti.",
+          updatedAt: "2026-09-01T09:00:00.000Z",
+          publishedAt: "2026-09-15T06:00:00.000Z",
+        }),
+      ],
+    ]),
+  });
+  const published = new Date("2026-09-15T06:00:00.000Z");
+  assert.deepEqual(
+    byUrl(sitemap, "/istanbul/ilceler/kadikoy")?.lastModified,
+    published,
+  );
+  assert.deepEqual(
+    byUrl(sitemap, "/istanbul/ilceler")?.lastModified,
+    published,
   );
 });
 

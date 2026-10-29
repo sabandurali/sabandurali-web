@@ -55,6 +55,11 @@ export type DistrictGuide = {
     needsVerification?: boolean | null;
   }>;
   sources: DistrictSource[];
+  /**
+   * When the guide went live. A scheduled guide is saved before that day,
+   * so its `updatedAt` predates the day the page first shows it.
+   */
+  publishedAt: string | null;
   updatedAt: string | null;
 };
 
@@ -330,6 +335,7 @@ export function mapDistrictGuide(
         );
       return sections.length > 0 ? [{ ...source, sections }] : [];
     }),
+    publishedAt: text(item.publishedAt),
     updatedAt: text(item.updatedAt),
   };
 }
@@ -403,7 +409,6 @@ export function projectPublicDistrictGuideDocument(
     id: value.id,
     district: value.district,
     _status: value._status,
-    publishedAt: value.publishedAt,
     createdAt: value.createdAt,
     reviewedSections: districtSectionOptions
       .map(({ value: section }) => section)

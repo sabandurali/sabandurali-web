@@ -54,6 +54,7 @@ function guide(overrides: Partial<DistrictGuide> = {}): DistrictGuide {
     marketData: null,
     planningDevelopments: [],
     sources: [],
+    publishedAt: null,
     updatedAt: null,
     ...overrides,
   };
