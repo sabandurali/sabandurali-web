@@ -1,5 +1,4 @@
 import type {
-  CollectionBeforeChangeHook,
   CollectionConfig,
   RichTextField,
   TextFieldSingleValidation,
@@ -15,6 +14,7 @@ import {
   createLocalizedSlugField,
   createLocalizedSlugHook,
 } from "@/lib/localizedSlug";
+import { ensurePublishedAt } from "@/lib/publishedAt";
 import { createRevalidationHooks } from "@/lib/revalidation";
 import { districtOptions } from "@/content/districts/district-registry";
 import {
@@ -35,23 +35,6 @@ const revalidation = createRevalidationHooks("articles");
 function isDistrictNews(data: unknown): boolean {
   return isRecord(data) && data.articleType === "district-news";
 }
-
-const setPublishedAtOnFirstPublish: CollectionBeforeChangeHook = ({
-  data,
-  originalDoc,
-}) => {
-  const wasPublished = originalDoc?._status === "published";
-  const willBePublished = data._status === "published";
-
-  if (!wasPublished && willBePublished && !data.publishedAt) {
-    return {
-      ...data,
-      publishedAt: new Date().toISOString(),
-    };
-  }
-
-  return data;
-};
 
 /**
  * The public site hides an article without visible body text, so publishing
@@ -285,7 +268,7 @@ export const Articles: CollectionConfig = {
       label: "Yayın tarihi",
       admin: {
         description:
-          "İlk yayında otomatik atanır; gerekirse elle düzenlenebilir. Gelecek tarih planlı yayın anlamına gelir.",
+          "İlk yayında otomatik atanır; yayındaki bir kayıtta boşaltılırsa önceki tarih korunur; gerekirse elle düzenlenebilir. Gelecek tarih planlı yayın anlamına gelir.",
         position: "sidebar",
       },
     },
@@ -335,7 +318,7 @@ export const Articles: CollectionConfig = {
   hooks: {
     afterChange: [revalidation.afterChange],
     afterDelete: [revalidation.afterDelete],
-    beforeChange: [setPublishedAtOnFirstPublish],
+    beforeChange: [ensurePublishedAt],
     beforeValidate: [
       createLocalizedSlugHook({
         collection: "articles",

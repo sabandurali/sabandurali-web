@@ -1,4 +1,4 @@
-import type { CollectionBeforeChangeHook, CollectionConfig } from "payload";
+import type { CollectionConfig } from "payload";
 import {
   SEO_DESCRIPTION_MAX_LENGTH,
   SEO_TITLE_MAX_LENGTH,
@@ -13,24 +13,11 @@ import {
   createLocalizedSlugField,
   createLocalizedSlugHook,
 } from "@/lib/localizedSlug";
+import { ensurePublishedAt } from "@/lib/publishedAt";
 import { createRevalidationHooks } from "@/lib/revalidation";
 import { districtOptions } from "@/content/districts/district-registry";
 
 const revalidation = createRevalidationHooks("photos");
-
-const setPublishedAtOnFirstPublish: CollectionBeforeChangeHook = ({
-  data,
-  originalDoc,
-}) => {
-  const wasPublished = originalDoc?._status === "published";
-  const willBePublished = data._status === "published";
-
-  if (!wasPublished && willBePublished && !data.publishedAt) {
-    return { ...data, publishedAt: new Date().toISOString() };
-  }
-
-  return data;
-};
 
 export const Photos: CollectionConfig = {
   slug: "photos",
@@ -224,7 +211,7 @@ export const Photos: CollectionConfig = {
               label: "Yayın tarihi",
               admin: {
                 description:
-                  "İlk yayında otomatik atanır; gelecek tarih planlı yayın anlamına gelir.",
+                  "İlk yayında otomatik atanır; yayındaki bir kayıtta boşaltılırsa önceki tarih korunur; gelecek tarih planlı yayın anlamına gelir.",
               },
             },
             {
@@ -259,7 +246,7 @@ export const Photos: CollectionConfig = {
   hooks: {
     afterChange: [revalidation.afterChange],
     afterDelete: [revalidation.afterDelete],
-    beforeChange: [setPublishedAtOnFirstPublish],
+    beforeChange: [ensurePublishedAt],
     beforeValidate: [
       createLocalizedSlugHook({ collection: "photos", sourceField: "title" }),
     ],

@@ -1074,6 +1074,68 @@ test("articles: district news need an https source, other articles need body tex
   await payload.delete({ collection: "articles", id: draft.id });
 });
 
+test("articles and pages: a published record never loses its publication date", async () => {
+  const category = await payload.create({
+    collection: "categories",
+    data: { name: "Yayın tarihi", slug: "yayin-tarihi" },
+  });
+
+  const article = await payload.create({
+    collection: "articles",
+    data: {
+      _status: "published",
+      articleType: "article",
+      categories: [category.id],
+      content: paragraph("Yayın tarihi korunur."),
+      excerpt: "Yayın tarihi",
+      slug: "yayin-tarihi-korunur",
+      title: "Yayın tarihi korunur",
+    },
+  });
+  const page = await payload.create({
+    collection: "pages",
+    data: {
+      _status: "published",
+      language: "tr",
+      pageType: "standard",
+      slug: "yayin-tarihi-sayfasi",
+      summary: "Yayın tarihi",
+      title: "Yayın tarihi sayfası",
+    },
+  });
+
+  for (const [collection, record] of [
+    ["articles", article],
+    ["pages", page],
+  ] as const) {
+    assert.ok(record.publishedAt, `${collection}: set on first publish`);
+
+    // Emptying the field of a published record keeps its original date
+    // instead of silently taking the record off the site.
+    for (const publishedAt of [null, ""]) {
+      const updated = await payload.update({
+        collection,
+        data: { publishedAt },
+        id: record.id,
+      });
+      assert.equal(updated._status, "published");
+      assert.equal(updated.publishedAt, record.publishedAt, collection);
+    }
+
+    // An explicit date is still the editor's to choose.
+    const chosen = "2026-01-15T09:00:00.000Z";
+    const rescheduled = await payload.update({
+      collection,
+      data: { publishedAt: chosen },
+      id: record.id,
+    });
+    assert.equal(rescheduled.publishedAt, chosen, collection);
+
+    await payload.delete({ collection, id: record.id });
+  }
+  await payload.delete({ collection: "categories", id: category.id });
+});
+
 test("books: publishing runs the public rules and the database enforces one slug per language", async () => {
   const base = {
     language: "tr" as const,
