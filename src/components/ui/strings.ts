@@ -30,6 +30,8 @@ export type UiStrings = {
   originalSource: string;
   overview: (label: string) => string;
   fact: { indicator: string; value: string; date: string; source: string };
+  /** Document titles of publication detail pages whose slug is unknown. */
+  notFound: { article: string; bookReview: string; photo: string };
   map: {
     label: string;
     schematic: string;
@@ -73,6 +75,11 @@ const tr: UiStrings = {
   licence: "Lisans",
   originalSource: "Kaynak",
   overview: (label) => `${label}: tümü`,
+  notFound: {
+    article: "Makale bulunamadı",
+    bookReview: "Kitap incelemesi bulunamadı",
+    photo: "Fotoğraf bulunamadı",
+  },
   fact: {
     indicator: "Gösterge",
     value: "Değer",
@@ -123,6 +130,11 @@ const en: UiStrings = {
   licence: "Licence",
   originalSource: "Source",
   overview: (label) => `${label}: overview`,
+  notFound: {
+    article: "Article not found",
+    bookReview: "Book review not found",
+    photo: "Photography not found",
+  },
   fact: {
     indicator: "Indicator",
     value: "Value",
