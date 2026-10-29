@@ -18,11 +18,33 @@ export const districtSectionOptions = [
   { value: "researchTopics", label: "İleri araştırma konuları" },
 ] as const;
 export type DistrictSection = (typeof districtSectionOptions)[number]["value"];
+/**
+ * The source types, shared like {@link districtSectionOptions} by the CMS
+ * select, the importer and the public projection, so a type added here is
+ * known everywhere instead of being projected as "unclassified".
+ */
+export const districtSourceTypeOptions = [
+  { value: "official", label: "Resmî" },
+  { value: "academic", label: "Akademik / kurumsal" },
+  { value: "secondary", label: "İkincil" },
+  { value: "market", label: "Piyasa platformu" },
+  { value: "unclassified", label: "Sınıflandırılmadı" },
+] as const;
+export type DistrictSourceType =
+  (typeof districtSourceTypeOptions)[number]["value"];
+const districtSourceTypeValues: ReadonlySet<string> = new Set(
+  districtSourceTypeOptions.map(({ value }) => value),
+);
+export function isDistrictSourceType(
+  value: unknown,
+): value is DistrictSourceType {
+  return typeof value === "string" && districtSourceTypeValues.has(value);
+}
 export type DistrictSource = {
   title: string;
   publisher: string;
   url: string;
-  sourceType: "official" | "academic" | "secondary" | "market" | "unclassified";
+  sourceType: DistrictSourceType;
   primary?: boolean | null;
   dataDate?: string | null;
   checkedAt?: string | null;

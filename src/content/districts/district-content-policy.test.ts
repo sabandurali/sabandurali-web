@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { DistrictGuides } from "@/collections/DistrictGuides";
 import {
+  districtSourceTypeOptions,
+  isDistrictSourceType,
   isStatisticalRelease,
   sectionIsPublic,
   sourceSupportsSection,
@@ -184,5 +187,59 @@ test("CORRECTNESS-3: transportation needs a source checked within the window", (
       now,
     ),
     false,
+  );
+});
+
+/** Every field named `name` in a (nested) Payload field list. */
+function findFields(fields: unknown, name: string): unknown[] {
+  if (!Array.isArray(fields)) return [];
+  return fields.flatMap((field: unknown): unknown[] => {
+    if (typeof field !== "object" || field === null) return [];
+    const own = "name" in field && field.name === name ? [field] : [];
+    const nested = [
+      "fields" in field ? field.fields : undefined,
+      ...("tabs" in field && Array.isArray(field.tabs)
+        ? field.tabs.map((tab: unknown) =>
+            typeof tab === "object" && tab !== null && "fields" in tab
+              ? tab.fields
+              : undefined,
+          )
+        : []),
+    ];
+    return [...own, ...nested.flatMap((list) => findFields(list, name))];
+  });
+}
+
+test("ARCHITECTURE-4: the CMS select offers exactly the shared source types", () => {
+  const [field, ...others] = findFields(DistrictGuides.fields, "sourceType");
+  assert.equal(others.length, 0);
+  assert.ok(typeof field === "object" && field !== null && "options" in field);
+  assert.deepEqual(field.options, [...districtSourceTypeOptions]);
+});
+
+test("ARCHITECTURE-4: every shared source type survives the projection", () => {
+  for (const { value } of districtSourceTypeOptions) {
+    assert.equal(isDistrictSourceType(value), true, value);
+    const [projected] = sanitizeDistrictSources([
+      {
+        title: "Kaynak",
+        publisher: "Yayıncı",
+        url: "https://example.org/kaynak",
+        sourceType: value,
+      },
+    ]);
+    assert.equal(projected?.sourceType, value);
+  }
+  assert.equal(isDistrictSourceType("press"), false);
+  assert.equal(
+    sanitizeDistrictSources([
+      {
+        title: "Kaynak",
+        publisher: "Yayıncı",
+        url: "https://example.org/kaynak",
+        sourceType: "press",
+      },
+    ])[0]?.sourceType,
+    "unclassified",
   );
 });

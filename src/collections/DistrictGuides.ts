@@ -6,6 +6,7 @@ import {
 import { APIError } from "payload";
 import {
   districtSectionOptions,
+  districtSourceTypeOptions,
   isPublicSourceUrl,
   sectionIsPublic,
 } from "@/content/districts/district-content-policy";
@@ -331,13 +332,7 @@ export const DistrictGuides: CollectionConfig = {
                   type: "select",
                   required: true,
                   defaultValue: "unclassified",
-                  options: [
-                    { label: "Resmî", value: "official" },
-                    { label: "Akademik / kurumsal", value: "academic" },
-                    { label: "İkincil", value: "secondary" },
-                    { label: "Piyasa platformu", value: "market" },
-                    { label: "Sınıflandırılmadı", value: "unclassified" },
-                  ],
+                  options: [...districtSourceTypeOptions],
                 },
                 {
                   name: "primary",
