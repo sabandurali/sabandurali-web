@@ -1,68 +1,74 @@
 import BookReviewCard from "@/components/books/BookReviewCard";
-import BackToTop from "@/components/layout/BackToTop";
-import Footer from "@/components/layout/Footer";
-import Header from "@/components/layout/Header";
+import PageIntro from "@/components/pages/PageIntro";
+import PublicationShell from "@/components/pages/PublicationShell";
+import { publicationCopy } from "@/components/pages/publication-copy";
+import EmptyState from "@/components/ui/EmptyState";
+import Section from "@/components/ui/Section";
 import { bookPageContent } from "@/content/books/book-page-content";
 import { bookListPaths } from "@/content/books/book-routes";
 import type { BookReview, BookReviewLanguage } from "@/content/books/types";
-import { homeContent } from "@/content/homeContent";
 
 type BookReviewListPageProps = {
   bookReviews: ReadonlyArray<BookReview>;
   locale: BookReviewLanguage;
 };
 
+/**
+ * Book review list: intro with the review count, then every published
+ * review as a card grid on the band ground. Prerendered whole, like the
+ * article list.
+ */
 export default function BookReviewListPage({
   bookReviews,
   locale,
 }: BookReviewListPageProps) {
   const content = bookPageContent[locale];
-  const home = homeContent[locale];
-  const homePath = locale === "tr" ? "/" : "/en";
+  const copy = publicationCopy[locale];
 
   return (
-    <div id="top" lang={locale}>
-      <Header
+    <PublicationShell locale={locale} languageHrefs={bookListPaths}>
+      <PageIntro
         locale={locale}
-        anchors={home.anchors}
-        content={home.header}
-        homeHref={homePath}
-        anchorPrefix={homePath}
-        languageHrefs={bookListPaths}
-      />
-      <main className="px-4 py-10 sm:px-6 sm:py-14 lg:py-18">
-        <div className="mx-auto max-w-5xl">
-          <header className="mb-8 border-b border-border pb-8 sm:mb-10 sm:pb-10">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent-soft">
-              {content.listEyebrow}
-            </p>
-            <h1 className="mt-4 text-4xl leading-[1.05] text-ivory sm:text-5xl">
-              {content.listTitle}
-            </h1>
-            <p className="mt-5 max-w-3xl text-base leading-7 text-muted sm:text-lg sm:leading-8">
-              {content.listDescription}
-            </p>
-          </header>
+        breadcrumb={[
+          { label: copy.home, href: copy.homePath },
+          { label: content.listTitle },
+        ]}
+        eyebrow={content.listEyebrow}
+        title={content.listTitle}
+        lead={content.listDescription}
+      >
+        {bookReviews.length > 0 ? (
+          <p className="m-0 type-data-md text-ink-muted">
+            {copy.bookCount(bookReviews.length)}
+          </p>
+        ) : null}
+      </PageIntro>
 
-          {bookReviews.length === 0 ? (
-            <p className="rounded-sm border border-border bg-surface p-6 text-muted">
-              {content.emptyList}
-            </p>
-          ) : (
-            <div className="grid gap-6 lg:grid-cols-2">
-              {bookReviews.map((bookReview) => (
+      <Section
+        tone="band"
+        spacing="compact"
+        divider
+        labelledBy="book-list-heading"
+      >
+        <h2 id="book-list-heading" className="m-0 mb-6 type-h2">
+          {copy.allBooks}
+        </h2>
+        {bookReviews.length === 0 ? (
+          <EmptyState size="lg">{content.emptyList}</EmptyState>
+        ) : (
+          <ul className="m-0 grid list-none gap-5 p-0 md:grid-cols-2 xl:grid-cols-3">
+            {bookReviews.map((bookReview) => (
+              <li key={bookReview.id} className="grid">
                 <BookReviewCard
-                  key={bookReview.id}
                   bookReview={bookReview}
                   content={content}
+                  headingLevel="h3"
                 />
-              ))}
-            </div>
-          )}
-        </div>
-      </main>
-      <Footer id={home.anchors.contact} content={home.footer} />
-      <BackToTop label={home.backToTopLabel} />
-    </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </Section>
+    </PublicationShell>
   );
 }
