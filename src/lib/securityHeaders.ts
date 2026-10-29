@@ -10,9 +10,12 @@
  *   iframes for nothing else.
  * - `object-src 'none'`: no `<object>` or `<embed>` is rendered.
  * - `base-uri 'self'`: blocks `<base>` injection.
- * - `form-action 'self'`: native form submissions stay on this origin. The
- *   contact form posts to Formspree with `fetch()`, which `form-action` does
- *   not govern.
+ * - `form-action 'self' https://formspree.io`: native form submissions go to
+ *   this origin or to Formspree only. The contact form normally sends with
+ *   `fetch()` (which `form-action` does not govern), but before hydration or
+ *   without JavaScript the browser submits the `<form>` natively to
+ *   `https://formspree.io/f/<id>` (`getFormspreeEndpoint`). Without the
+ *   Formspree origin here that fallback would be blocked silently.
  *
  * It deliberately sets no `default-src`, `script-src`, `style-src`, `img-src`,
  * `connect-src`, `worker-src` or `frame-src`:
@@ -41,11 +44,14 @@ export type SecurityHeader = {
   readonly value: string;
 };
 
+/** Origin of the contact form's native submission target. */
+export const FORMSPREE_ORIGIN = "https://formspree.io";
+
 export const contentSecurityPolicyDirectives: Readonly<
   Record<string, readonly string[]>
 > = {
   "base-uri": ["'self'"],
-  "form-action": ["'self'"],
+  "form-action": ["'self'", FORMSPREE_ORIGIN],
   "frame-ancestors": ["'none'"],
   "object-src": ["'none'"],
 };

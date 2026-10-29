@@ -3,8 +3,14 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
+import { createElement as h } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 import nextConfig from "../../next.config";
+import ContactForm from "@/components/forms/ContactForm";
+import { getFormspreeEndpoint } from "@/components/forms/contact-submission";
+import { contactContent } from "@/content/contactContent";
 import {
+  FORMSPREE_ORIGIN,
   contentSecurityPolicyDirectives,
   securityHeaders,
   serializeContentSecurityPolicy,
@@ -37,7 +43,66 @@ test("CSP blocks framing, plugins, <base> injection and foreign form targets", (
   assert.deepEqual(directives.get("frame-ancestors"), ["'none'"]);
   assert.deepEqual(directives.get("object-src"), ["'none'"]);
   assert.deepEqual(directives.get("base-uri"), ["'self'"]);
-  assert.deepEqual(directives.get("form-action"), ["'self'"]);
+  // This origin and the contact form's Formspree target, nothing else.
+  assert.deepEqual(directives.get("form-action"), [
+    "'self'",
+    "https://formspree.io",
+  ]);
+  assert.equal(FORMSPREE_ORIGIN, "https://formspree.io");
+});
+
+/** Whether `form-action` admits a native submission to `target`. */
+function formActionAllows(
+  sources: readonly string[],
+  target: URL,
+  pageOrigin: string,
+): boolean {
+  return sources.some((source) =>
+    source === "'self'"
+      ? target.origin === pageOrigin
+      : source === target.origin ||
+        (source.endsWith("/") && target.href.startsWith(source)),
+  );
+}
+
+test("CSP form-action admits the contact form's native (pre-hydration) target", () => {
+  const sources = parseDirectives(headerValue("Content-Security-Policy")).get(
+    "form-action",
+  );
+  assert.ok(sources);
+
+  const endpoint = getFormspreeEndpoint("xyzAB_12");
+  assert.ok(endpoint);
+  // The endpoint helper and the CSP name the same origin.
+  assert.equal(new URL(endpoint).origin, FORMSPREE_ORIGIN);
+
+  // What the browser would submit to before hydration or without JavaScript.
+  const markup = renderToStaticMarkup(
+    h(ContactForm, { content: contactContent.tr, formId: "xyzAB_12" }),
+  );
+  const action = /<form[^>]*\saction="([^"]+)"/.exec(markup)?.[1];
+  assert.ok(action, "the contact form keeps a native submission target");
+  assert.ok(
+    formActionAllows(sources, new URL(action), "https://www.sabandurali.com"),
+    `form-action ${sources.join(" ")} must allow ${action}`,
+  );
+
+  // Other foreign targets stay blocked.
+  for (const foreign of [
+    "https://evil.example/f/xyzAB_12",
+    "https://formspree.io.evil.example/f/xyzAB_12",
+    "http://formspree.io/f/xyzAB_12",
+  ]) {
+    assert.equal(
+      formActionAllows(
+        sources,
+        new URL(foreign),
+        "https://www.sabandurali.com",
+      ),
+      false,
+      foreign,
+    );
+  }
 });
 
 test("CSP serialization keeps every directive and source", () => {
