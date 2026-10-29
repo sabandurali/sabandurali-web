@@ -8,11 +8,14 @@
 // /tmp/content-trust-routes), never into the repository.
 import assert from "node:assert/strict";
 import { mkdirSync, writeFileSync } from "node:fs";
+import { request } from "node:http";
 import path from "node:path";
 import { districts } from "../src/content/districts/district-registry.ts";
 import {
+  alternateLanguages,
   expectsIndexedGuides,
   localImageUrl,
+  redirectLocationProblem,
   robotsProblem,
 } from "./districts/acceptance-expectations.mjs";
 
@@ -26,6 +29,37 @@ assert.equal(districts.length, 39);
 // expectation applies only with DISTRICT_EXPECT_EDITORIAL=1.
 const indexed = expectsIndexedGuides();
 const results = [];
+
+/** The raw Location header lines of a response, without following it. */
+function locationLines(url) {
+  return new Promise((resolve, reject) => {
+    request(url, (response) => {
+      response.resume();
+      const lines = [];
+      for (let i = 0; i < response.rawHeaders.length; i += 2)
+        if (response.rawHeaders[i].toLowerCase() === "location")
+          lines.push(response.rawHeaders[i + 1]);
+      resolve({ status: response.statusCode, lines });
+    })
+      .on("error", reject)
+      .end();
+  });
+}
+
+// Legacy workspace entries redirect permanently. They run first, so the
+// first (uncached, x-nextjs-cache: MISS) response is the one checked.
+for (const [from, to] of [
+  ["/gayrimenkul-ve-istanbul/ilce-rehberi", "/istanbul/ilceler"],
+  ["/kitaplar-ve-ogrenme/kitap-incelemeleri", "/kitaplar"],
+]) {
+  for (const attempt of ["first", "cached"]) {
+    const { status, lines } = await locationLines(base + from);
+    assert.equal(status, 308, `${from} (${attempt})`);
+    const problem = redirectLocationProblem(lines, to);
+    assert.equal(problem, null, `${from} (${attempt}): ${problem}`);
+  }
+  results.push({ path: from, status: 308, location: to });
+}
 for (const { slug } of districts) {
   const response = await fetch(`${base}/istanbul/ilceler/${slug}`, {
     headers: { "user-agent": "Twitterbot" },
@@ -40,7 +74,9 @@ for (const { slug } of districts) {
   assert.match(html, /name="twitter:card" content="summary_large_image"/);
   assert.match(html, /property="og:title"/);
   assert.match(html, /property="og:description"/);
-  assert.ok(!html.includes('hrefLang="en"'));
+  // District guides are Turkish only: no English language alternate. The
+  // header's language switch (<a hrefLang="en">) is not an alternate.
+  assert.deepEqual(alternateLanguages(html), ["tr-TR"], slug);
   assert.ok(
     !html.includes('href="#arastirmalar"') &&
       !html.includes('href="#haberler"'),
@@ -93,5 +129,5 @@ writeFileSync(
   JSON.stringify(results, null, 2),
 );
 console.log(
-  `39/39 district HTTP + metadata + image checks, 9 TR/EN navigation routes PASS (${path.join(output, "routes.json")})`,
+  `2 legacy redirects, 39/39 district HTTP + metadata + image checks, 9 TR/EN navigation routes PASS (${path.join(output, "routes.json")})`,
 );

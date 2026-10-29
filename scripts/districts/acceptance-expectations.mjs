@@ -87,3 +87,35 @@ export function localImageUrl(base, ogImage) {
 export function withoutSoftHyphens(text) {
   return String(text).replaceAll("­", "");
 }
+
+/**
+ * The hreflang values of the `<link rel="alternate">` tags in an HTML
+ * document. Other elements with an hreflang attribute (the header's
+ * language switch links) are not language alternates and are ignored.
+ */
+export function alternateLanguages(html) {
+  const languages = [];
+  for (const [tag] of String(html).matchAll(/<link\b[^>]*>/gi)) {
+    const attribute = (name) =>
+      tag.match(new RegExp(`\\s${name}\\s*=\\s*["']([^"']*)["']`, "i"))?.[1];
+    const rel = (attribute("rel") ?? "").toLowerCase().split(/\s+/);
+    const hreflang = attribute("hreflang");
+    if (rel.includes("alternate") && hreflang) languages.push(hreflang);
+  }
+  return languages;
+}
+
+/**
+ * Checks the Location header lines of a redirect response; returns an error
+ * or null. Every redirect must carry exactly one Location header with the
+ * expected target: a duplicated header (even with the same value) is an
+ * error, because a cached and an uncached response would then differ.
+ */
+export function redirectLocationProblem(locations, expected) {
+  if (locations.length === 0) return "missing Location header";
+  if (locations.length > 1)
+    return `expected one Location header, got ${locations.length}: ${locations.join(", ")}`;
+  if (locations[0] !== expected)
+    return `expected Location ${expected}, got ${locations[0]}`;
+  return null;
+}
