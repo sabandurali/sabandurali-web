@@ -243,3 +243,58 @@ test("ARCHITECTURE-4: every shared source type survives the projection", () => {
     "unclassified",
   );
 });
+
+/*
+ * TESTS-INFRA-3: an "official" source must come from a public authority
+ * host: *.gov.tr, *.bel.tr or one of the listed Istanbul agencies (and its
+ * subdomains). Look-alike hosts are not official.
+ */
+test("TESTS-INFRA-3: only allowlisted hosts count as official sources", () => {
+  const official = (url: string): DistrictSource => ({
+    title: "Resmî kaynak",
+    publisher: "Kurum",
+    url,
+    sourceType: "official",
+    primary: true,
+    dataDate: "2026-09-01T00:00:00Z",
+    checkedAt: "2026-09-10T00:00:00Z",
+    needsVerification: false,
+    sections: ["history"],
+  });
+  const accepted = [
+    "https://www.esenler.gov.tr/tarihce",
+    "https://www.esenler.bel.tr/tarihce",
+    "https://metro.istanbul/hatlar",
+    "https://www.metro.istanbul/hatlar",
+    "https://iett.istanbul/x",
+    "https://ibb.istanbul/x",
+    "https://data.ibb.istanbul/x",
+    "https://sehirhatlari.istanbul/x",
+    "https://bahcelievler.istanbul/x",
+  ];
+  const rejected = [
+    "https://example.com/x",
+    "https://gov.tr.example.com/x",
+    "https://evil-ibb.istanbul.attacker.net/x",
+    "https://notmetro.istanbul/x",
+    "https://metro.istanbul.example.org/x",
+    "https://istanbul/x",
+    "https://examplegov.tr/x",
+    "https://belediye.bel.tr.evil.com/x",
+  ];
+
+  for (const url of accepted) {
+    assert.equal(
+      sourceSupportsSection(official(url), "history", now),
+      true,
+      url,
+    );
+  }
+  for (const url of rejected) {
+    assert.equal(
+      sourceSupportsSection(official(url), "history", now),
+      false,
+      url,
+    );
+  }
+});

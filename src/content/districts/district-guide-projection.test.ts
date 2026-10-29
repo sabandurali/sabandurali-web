@@ -323,3 +323,61 @@ test("CORRECTNESS-4: only a completed planning row outlives the 90-day window", 
   assert.deepEqual(guide("uygulama")?.planningDevelopments, []);
   assert.deepEqual(guide("insaat")?.planningDevelopments, []);
 });
+
+/*
+ * TESTS-INFRA-2: every policy-gated section is published only when it is
+ * reviewed and backed by a source that passes the content policy. Each
+ * section is checked alone, so dropping one gate fails its own case.
+ */
+const gatedSections = [
+  { section: "summary", hidden: null },
+  { section: "history", hidden: null },
+  { section: "facts", hidden: null },
+  { section: "neighborhoods", hidden: [] },
+] as const;
+
+for (const { section, hidden } of gatedSections) {
+  const project = (
+    reviewedSections: readonly string[],
+    sources: ReadonlyArray<DistrictSource & Record<string, unknown>>,
+  ) =>
+    mapDistrictGuide({ ...stored, reviewedSections, sources }, now)?.[section];
+
+  test(`TESTS-INFRA-2: ${section} follows the content policy gate`, () => {
+    assert.notDeepEqual(project([section], [source]), hidden, "public case");
+    assert.deepEqual(project([], [source]), hidden, "not reviewed");
+    assert.deepEqual(
+      project([section], [{ ...source, needsVerification: true }]),
+      hidden,
+      "source still needs verification",
+    );
+    assert.deepEqual(
+      project([section], [{ ...source, sections: [] }]),
+      hidden,
+      "source does not list the section",
+    );
+    assert.deepEqual(
+      project([section], [{ ...source, sourceType: "unclassified" }]),
+      hidden,
+      "unclassified source",
+    );
+  });
+}
+
+test("TESTS-INFRA-2: facts and neighborhoods need a primary official source", () => {
+  for (const section of ["facts", "neighborhoods"] as const) {
+    const guide = mapDistrictGuide(
+      {
+        ...stored,
+        reviewedSections: [section],
+        sources: [{ ...source, primary: false }],
+      },
+      now,
+    );
+    assert.deepEqual(
+      guide?.[section],
+      section === "facts" ? null : [],
+      section,
+    );
+  }
+});
