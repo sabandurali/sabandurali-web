@@ -304,34 +304,29 @@ export type DistrictSourceRow = {
 export function buildSourceRows(
   sources: readonly DistrictSource[],
 ): DistrictSourceRow[] {
-  return sources.map((source, index) => {
-    // This municipal page republishes a 2017 count; its recorded date is
-    // the observation, not the data year (content trust package).
-    const isLegacyCount = source.url.includes("ilcemizin-nufusu-son-1-yilda");
-    return {
-      number: index + 1,
-      title: source.title,
-      publisher: source.publisher,
-      url: source.url,
-      kind: sourceTypeLabels[source.sourceType],
-      role: source.primary ? "Birincil kaynak" : "İkincil aktarım",
-      dataDate: isLegacyCount
-        ? "2017 nüfus verisi; kayıtlı tarih kaynak gözlemidir"
-        : (formatDate(source.dataDate) ?? "Belirtilmemiş"),
-      dataDateTime: isLegacyCount ? null : toDateTimeAttribute(source.dataDate),
-      checkedAt: formatDate(source.checkedAt) ?? "Belirtilmemiş",
-      checkedAtDateTime: toDateTimeAttribute(source.checkedAt),
-      sections:
-        source.sections
-          ?.map(
-            (section) =>
-              districtSectionOptions.find(({ value }) => value === section)
-                ?.label,
-          )
-          .filter(Boolean)
-          .join(", ") || "Belirtilmemiş",
-    };
-  });
+  // Every date comes from the source record itself; the presentation layer
+  // never rewrites a recorded date (CLAUDE.md rule 3).
+  return sources.map((source, index) => ({
+    number: index + 1,
+    title: source.title,
+    publisher: source.publisher,
+    url: source.url,
+    kind: sourceTypeLabels[source.sourceType],
+    role: source.primary ? "Birincil kaynak" : "İkincil aktarım",
+    dataDate: formatDate(source.dataDate) ?? "Belirtilmemiş",
+    dataDateTime: toDateTimeAttribute(source.dataDate),
+    checkedAt: formatDate(source.checkedAt) ?? "Belirtilmemiş",
+    checkedAtDateTime: toDateTimeAttribute(source.checkedAt),
+    sections:
+      source.sections
+        ?.map(
+          (section) =>
+            districtSectionOptions.find(({ value }) => value === section)
+              ?.label,
+        )
+        .filter(Boolean)
+        .join(", ") || "Belirtilmemiş",
+  }));
 }
 
 /**
