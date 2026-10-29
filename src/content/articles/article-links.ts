@@ -1,23 +1,11 @@
+import { getSafeHref } from "@/content/links";
+
+/** A rich text or article link: a site path or an http(s) URL. */
 export function getSafeArticleHref(
   value: string | undefined,
   allowRelative = true,
 ): string | null {
-  if (value === undefined) {
-    return null;
-  }
-
-  if (allowRelative && value.startsWith("/") && !value.startsWith("//")) {
-    return value;
-  }
-
-  try {
-    const url = new URL(value);
-    return url.protocol === "http:" || url.protocol === "https:"
-      ? url.toString()
-      : null;
-  } catch {
-    return null;
-  }
+  return getSafeHref(value, { allowRelative });
 }
 
 export function isExternalArticleHref(href: string): boolean {

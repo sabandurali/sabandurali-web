@@ -1,3 +1,5 @@
+import { getSafeHref } from "@/content/links";
+
 /** Shared by CMS validation, import validation and public projection. */
 export const districtSectionOptions = [
   { value: "summary", label: "Genel bakış" },
@@ -28,17 +30,7 @@ export type DistrictSource = {
   sections?: DistrictSection[] | null;
 };
 export function isPublicSourceUrl(value: unknown): value is string {
-  if (typeof value !== "string") return false;
-  try {
-    const url = new URL(value);
-    return (
-      ["https:", "http:"].includes(url.protocol) &&
-      !url.username &&
-      !url.password
-    );
-  } catch {
-    return false;
-  }
+  return typeof value === "string" && getSafeHref(value) !== null;
 }
 /** The timestamp of a valid date string that is not in the future. */
 function parsePastDate(value: unknown, now: number): number | null {
