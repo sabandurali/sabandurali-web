@@ -2,6 +2,7 @@ import { getArticlePath } from "@/content/articles/article-routes";
 import { getBookReviewPath } from "@/content/books/book-routes";
 import { getDistrict } from "@/content/districts/district-registry";
 import { getDistrictPath } from "@/content/districts/district-routes";
+import { reportContentIssue } from "@/content/content-log";
 import { getText, isPublishedBy, isRecord } from "@/content/guards";
 import { getPhotoPath } from "@/content/photos/photo-routes";
 
@@ -113,6 +114,23 @@ function projectUploadValue(
   };
 }
 
+/**
+ * Relationship nodes (legacy content from before the editor stopped
+ * offering them) have no public rendering. They are dropped, and each one
+ * is logged so an editor can replace it with an internal link.
+ */
+function isRelationshipNode(node: unknown): boolean {
+  if (!isRecord(node) || node.type !== "relationship") return false;
+
+  const relationTo = getText(node.relationTo);
+  reportContentIssue({
+    scope: "rich-text",
+    reason: "relationship node dropped: it has no public rendering",
+    ...(relationTo === null ? {} : { detail: relationTo }),
+  });
+  return true;
+}
+
 function prepareNode(
   node: unknown,
   locale: RichTextLocale,
@@ -121,7 +139,9 @@ function prepareNode(
   if (!isRecord(node)) return node;
 
   const children = Array.isArray(node.children)
-    ? node.children.map((child) => prepareNode(child, locale, now))
+    ? node.children.flatMap((child) =>
+        isRelationshipNode(child) ? [] : [prepareNode(child, locale, now)],
+      )
     : node.children;
   const withChildren =
     children === node.children ? node : { ...node, children };
@@ -132,11 +152,9 @@ function prepareNode(
       : withChildren;
   }
 
-  if (node.type === "relationship") {
-    // Rendered as explicitly unsupported; never pass the populated document.
-    return isRecord(node.value)
-      ? { ...withChildren, value: node.value.id ?? null }
-      : withChildren;
+  // The page title is the only h1; a legacy h1 in the body becomes an h2.
+  if (node.type === "heading" && node.tag === "h1") {
+    return { ...withChildren, tag: "h2" };
   }
 
   if (
@@ -162,8 +180,8 @@ function prepareNode(
 /**
  * Prepares a Lexical document for public rendering while the locale is
  * known: internal links become public paths (or stay unresolved "internal"
- * links that render as plain text), uploads keep only their public fields
- * and relationship nodes lose their populated document.
+ * links that render as plain text), uploads keep only their public fields,
+ * relationship nodes are dropped and logged, and a legacy h1 becomes an h2.
  */
 export function prepareRichText(
   content: unknown,
