@@ -138,3 +138,17 @@ test("SEC-14: the honeypot is hidden from people, keyboards and assistive techno
   assert.doesNotMatch(input, /required/);
   assert.doesNotMatch(html, /name="website"/);
 });
+
+test("without JavaScript the form posts to Formspree, never to the page itself", () => {
+  const configured = renderToStaticMarkup(
+    h(ContactForm, { content: contactContent.tr, formId: "xyzAB_12" }),
+  );
+  const form = configured.match(/<form[^>]*>/)?.[0] ?? "";
+  assert.match(form, /action="https:\/\/formspree\.io\/f\/xyzAB_12"/);
+  assert.match(form, /method="post"/);
+
+  const unconfigured = renderToStaticMarkup(
+    h(ContactForm, { content: contactContent.tr, formId: "bad/id" }),
+  );
+  assert.doesNotMatch(unconfigured.match(/<form[^>]*>/)?.[0] ?? "", /action=/);
+});

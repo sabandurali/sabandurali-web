@@ -5,6 +5,7 @@ import { Field, Input, Textarea } from "@/components/ui/Field";
 import FormStatus from "@/components/ui/FormStatus";
 import type { ContactContent } from "@/content/contactContent";
 import {
+  getFormspreeEndpoint,
   getSubmissionMessage,
   honeypotFieldName,
   toFormStatusState,
@@ -53,8 +54,12 @@ export default function ContactForm({
 
   return (
     <div className="flex flex-col gap-6">
+      {/* Before hydration (or without JavaScript) the browser posts straight
+          to Formspree, never to this page: the personal data only goes where
+          the privacy notice says it goes. */}
       <form
         method="post"
+        action={getFormspreeEndpoint(formId) ?? undefined}
         onSubmit={handleSubmit}
         aria-labelledby={labelledBy}
         className="relative flex flex-col gap-6"
