@@ -9,22 +9,3 @@ export function formatDistrictNumber(
     ? number.toLocaleString("tr-TR", { maximumFractionDigits: 10 })
     : String(value);
 }
-export function visibleDistrictSection(
-  index: number,
-  researchCount: number,
-  newsCount: number,
-) {
-  return (index !== 10 || researchCount > 0) && (index !== 11 || newsCount > 0);
-}
-export function districtSectionNumber(
-  index: number,
-  researchCount: number,
-  newsCount: number,
-) {
-  return String(
-    index +
-      1 -
-      (index > 10 && !researchCount ? 1 : 0) -
-      (index > 11 && !newsCount ? 1 : 0),
-  ).padStart(2, "0");
-}
