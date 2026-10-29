@@ -8,6 +8,7 @@ import {
   relationship,
   upload,
 } from "./lexical-fixtures";
+import { INTERNAL_LINK_COLLECTIONS } from "./internal-link-collections";
 import { getInternalDocumentPath, prepareRichText } from "./prepare-rich-text";
 
 const now = new Date("2026-10-28T12:00:00Z");
@@ -256,4 +257,41 @@ test("relationship nodes lose their populated document", () => {
 test("non-Lexical values pass through unchanged", () => {
   assert.equal(prepareRichText(null, "tr", now), null);
   assert.deepEqual(prepareRichText({ root: "x" }, "tr", now), { root: "x" });
+});
+
+test("every collection the editor can link to resolves to a public page", () => {
+  const published = { _status: "published", publishedAt: past };
+  const fixtures: Record<(typeof INTERNAL_LINK_COLLECTIONS)[number], unknown> =
+    {
+      articles: { ...published, id: "a", slug: "yazi" },
+      pages: {
+        ...published,
+        id: "p",
+        slug: "sayfa",
+        language: "tr",
+        pageType: "standard",
+      },
+      books: {
+        ...published,
+        id: "b",
+        slug: "kitap",
+        language: "tr",
+        reviewStatus: "published",
+        seo: { index: true },
+      },
+      photos: { ...published, id: "f", slug: "galata" },
+      "district-guides": { id: "d", district: "esenler" },
+    };
+
+  for (const collection of INTERNAL_LINK_COLLECTIONS) {
+    assert.notEqual(
+      getInternalDocumentPath(
+        internal(collection, fixtures[collection]),
+        "tr",
+        now,
+      ),
+      null,
+      collection,
+    );
+  }
 });

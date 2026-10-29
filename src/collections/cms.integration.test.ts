@@ -12,6 +12,7 @@ import { after, test } from "node:test";
 import type { Payload, PayloadRequest, SanitizedConfig } from "payload";
 import sharp from "sharp";
 import type { Article } from "../payload-types";
+import { INTERNAL_LINK_COLLECTIONS } from "@/content/rich-text/internal-link-collections";
 
 const temporaryDirectory = await mkdtemp(
   path.join(os.tmpdir(), "cms-integration-"),
@@ -153,7 +154,7 @@ test("configuration: depth cap, anonymous REST limits and a rich text editor the
   );
   assert.deepEqual(
     features.get("link")?.sanitizedServerFeatureProps?.enabledCollections,
-    [],
+    [...INTERNAL_LINK_COLLECTIONS],
   );
   assert.ok(features.has("upload") && features.has("paragraph"));
 });

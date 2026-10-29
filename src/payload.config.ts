@@ -21,6 +21,7 @@ import { PhotoCollections } from "@/collections/PhotoCollections";
 import { Photos } from "@/collections/Photos";
 import { Tags } from "@/collections/Tags";
 import { Users } from "@/collections/Users";
+import { INTERNAL_LINK_COLLECTIONS } from "@/content/rich-text/internal-link-collections";
 import { Navigation } from "@/globals/Navigation";
 import { withAnonymousRestLimits } from "@/lib/payloadAccess";
 import {
@@ -60,8 +61,8 @@ type RichTextFeatures = Exclude<
  * The default Lexical features, adjusted to what the public renderer shows:
  *
  * - headings: `h2`–`h4` only;
- * - links: custom URLs only. Internal document links have no public URL
- *   resolver, so they would render as plain text;
+ * - links: custom URLs, plus internal links to the collections the public
+ *   renderer resolves to a page (`INTERNAL_LINK_COLLECTIONS`);
  * - relationship blocks: removed, the public site cannot render them.
  */
 export function configureRichTextFeatures(
@@ -74,7 +75,9 @@ export function configureRichTextFeatures(
           HeadingFeature({ enabledHeadingSizes: [...RICH_TEXT_HEADING_SIZES] }),
         ];
       case "link":
-        return [LinkFeature({ enabledCollections: [] })];
+        return [
+          LinkFeature({ enabledCollections: [...INTERNAL_LINK_COLLECTIONS] }),
+        ];
       case "relationship":
         return [];
       default:
