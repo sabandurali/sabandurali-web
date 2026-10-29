@@ -1,8 +1,8 @@
+import { siteLocales } from "@/content/locales";
 import {
-  ARTICLE_LANGUAGES,
   SEO_DESCRIPTION_RECOMMENDED_LENGTH,
   TRANSLATION_STATUSES,
-} from "@/content/articles/constants";
+} from "@/content/shared/content-types";
 import type {
   BookCategory,
   BookReviewLanguage,
@@ -12,7 +12,7 @@ import type {
 } from "@/content/books/types";
 
 export const BOOK_REVIEW_LANGUAGES =
-  ARTICLE_LANGUAGES satisfies ReadonlyArray<BookReviewLanguage>;
+  siteLocales satisfies ReadonlyArray<BookReviewLanguage>;
 
 export const BOOK_REVIEW_TRANSLATION_STATUSES =
   TRANSLATION_STATUSES satisfies ReadonlyArray<BookReviewTranslationStatus>;

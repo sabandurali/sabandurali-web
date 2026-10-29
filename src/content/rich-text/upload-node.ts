@@ -1,4 +1,4 @@
-import { getSafePayloadMediaPath } from "@/content/articles/article-images";
+import { getSafePayloadMediaPath } from "@/content/media-paths";
 import { getPositiveNumber, getText, isRecord } from "@/content/guards";
 
 export type RichTextUpload =

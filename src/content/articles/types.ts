@@ -1,9 +1,18 @@
 import type { SiteLocale } from "@/content/locales";
+import type {
+  ContentSeo,
+  CoverImage,
+  TranslationStatus,
+} from "@/content/shared/content-types";
 
 export type ArticleLanguage = SiteLocale;
+export type ArticleSeo = ContentSeo;
 
-export type TranslationStatus =
-  "none" | "pending" | "in_progress" | "completed" | "outdated";
+export type {
+  CoverImage,
+  TranslationStatus,
+  ValidationIssue,
+} from "@/content/shared/content-types";
 
 export type ArticleStatus =
   "draft" | "in_review" | "scheduled" | "published" | "archived";
@@ -46,33 +55,6 @@ export type ArticleContributor = {
   id: string;
   name: string;
   role?: string;
-};
-
-export type CoverImage = {
-  src: string;
-  alt: string;
-  /** Set only when `alt` is not in the content's language (Turkish media alt
-   * on an English page); render the image with this `lang`. */
-  altLanguage?: ArticleLanguage;
-  caption?: string;
-  source?: string;
-  copyrightOwner?: string;
-  license?: string;
-  /** Display credit; see getImageCredit() in src/content/media.ts. */
-  credit?: string;
-  width: number;
-  height: number;
-};
-
-export type ArticleSeo = {
-  title: string;
-  description: string;
-  canonical?: string;
-  index: boolean;
-  follow: boolean;
-  openGraphTitle?: string;
-  openGraphDescription?: string;
-  openGraphImage?: string;
 };
 
 export type ArticleSource = {
@@ -269,10 +251,4 @@ export type Article = {
   relatedArticles: ReadonlyArray<RelatedArticle>;
   legalNotice: LegalNotice | null;
   versionHistory: ReadonlyArray<ArticleVersionSummary>;
-};
-
-export type ValidationIssue = {
-  code: string;
-  path: string;
-  message: string;
 };

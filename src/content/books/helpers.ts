@@ -1,6 +1,6 @@
-import { createArticleSlug } from "@/content/articles/helpers";
+import { createSlug } from "@/content/shared/slug";
 
-export const createBookReviewSlug = createArticleSlug;
+export const createBookReviewSlug = createSlug;
 
 export function normalizeIsbn(value: string): string {
   return value.replace(/[\s-]+/g, "").toUpperCase();
