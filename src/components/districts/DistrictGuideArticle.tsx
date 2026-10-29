@@ -373,12 +373,12 @@ export default function DistrictGuideArticle({
                       <>
                         {" "}
                         2025 ADNKS nüfusu: 458.573.{" "}
-                        <a
-                          className="underline"
+                        <TextLink
                           href="https://www.kadikoyakademi.org/kadikoyun-demografik-donusumu-devam-ediyor/"
+                          external
                         >
                           Kadıköy Belediyesi Akademi
-                        </a>{" "}
+                        </TextLink>{" "}
                         aktarımı 18 Ekim 2026’da kontrol edildi; yayın tarihi
                         doğrulanamadı. Kaymakamlığın 451.453 kişilik kaydı 2017
                         verisidir ve 2025 nüfusunun yerine kullanılmaz.
