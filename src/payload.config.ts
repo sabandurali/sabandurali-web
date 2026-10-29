@@ -22,6 +22,7 @@ import { Photos } from "@/collections/Photos";
 import { Tags } from "@/collections/Tags";
 import { Users } from "@/collections/Users";
 import { INTERNAL_LINK_COLLECTIONS } from "@/content/rich-text/internal-link-collections";
+import { siteUrl } from "@/config/site";
 import { Navigation } from "@/globals/Navigation";
 import { withAnonymousRestLimits } from "@/lib/payloadAccess";
 import {
@@ -106,8 +107,11 @@ export function configureRichTextFeatures(
   });
 }
 
-/** The canonical public origin; the bare domain redirects here. */
-export const PRODUCTION_SITE_ORIGIN = "https://www.sabandurali.com";
+/**
+ * The canonical public origin (the bare domain redirects here), derived
+ * from the one site URL in src/config/site.ts.
+ */
+export const PRODUCTION_SITE_ORIGIN = new URL(siteUrl).origin;
 
 const LOCAL_DEFAULT_PORT = 3000;
 

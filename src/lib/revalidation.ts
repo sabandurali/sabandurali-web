@@ -48,6 +48,7 @@
  * the hooks below already revalidate it. `revalidation.test.ts` checks both
  * rules.
  */
+import { describeError } from "@/content/content-log";
 import { getText, isRecord } from "@/content/guards";
 import { isSiteLocale, siteLocales, type SiteLocale } from "@/content/locales";
 import { revalidatePath, revalidateTag } from "next/cache";
@@ -438,9 +439,7 @@ export function revalidateTargets(
       if (isOutsideNextRequest(error)) return;
 
       logger?.warn(
-        `[revalidation] ${describeTarget(target)} was not revalidated: ${
-          error instanceof Error ? error.message : String(error)
-        }`,
+        `[revalidation] ${describeTarget(target)} was not revalidated: ${describeError(error)}`,
       );
     }
   }
@@ -465,9 +464,7 @@ export function revalidateTags(
       if (isOutsideNextRequest(error)) return;
 
       logger?.warn(
-        `[revalidation] tag ${tag} was not revalidated: ${
-          error instanceof Error ? error.message : String(error)
-        }`,
+        `[revalidation] tag ${tag} was not revalidated: ${describeError(error)}`,
       );
     }
   }

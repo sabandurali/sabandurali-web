@@ -33,6 +33,7 @@ const {
   MAX_UPLOAD_BYTES,
   PRODUCTION_SITE_ORIGIN,
 } = await import("../payload.config");
+const { siteUrl } = await import("../config/site");
 const { sqliteAdapter } = await import("@payloadcms/db-sqlite");
 const { getPayload } = await import("payload");
 const { limitAnonymousRestQueries } = await import("../lib/payloadAccess");
@@ -341,6 +342,9 @@ test("users: only admins unlock a locked account, and editors learn nothing abou
 test("csrf: the allowlist covers production, this Preview deployment and local development only", () => {
   assert.deepEqual(config.csrf, getCsrfAllowedOrigins(process.env));
   assert.ok(config.csrf.includes(PRODUCTION_SITE_ORIGIN));
+  // One source for the canonical origin: src/config/site.ts.
+  assert.equal(PRODUCTION_SITE_ORIGIN, "https://www.sabandurali.com");
+  assert.equal(PRODUCTION_SITE_ORIGIN, new URL(siteUrl).origin);
   assert.equal(config.serverURL, "", "serverURL would pin one origin");
 
   assert.deepEqual(getCsrfAllowedOrigins({}), [
