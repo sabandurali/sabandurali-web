@@ -159,6 +159,7 @@ sınıfla ezebilirsiniz (`type-data font-bold`). Aynı özelliği iki tek özell
 | `type-h4` | 18 px, 700 | Liste başlıkları, akordeon |
 | `type-lead` | 19 → 24 px, 500 | Giriş paragrafı |
 | `type-body` | 17 px / 1.65 | Gövde metni |
+| `type-control` | 16 px / 1.5 | Form kontrolleri (`Input`, `Textarea`, `Select`) ve `md` buton; 16 px iOS'ta odakta yakınlaştırmayı önler |
 | `type-small` | 15 px | İkincil metin, navigasyon |
 | `type-caption` | 13 px | Altyazı, lejant, kredi |
 | `type-label` | 12 px, 600 | Kısa UI etiketleri |
@@ -350,4 +351,5 @@ kipinde kalır. Klavye modeli `menu-keys.ts` içindedir ve test edilir:
 | Görselde `credit` ya da bilinçli `null` | Lisans gerektiren görselde krediyi atlamak |
 | `Section tone="sea"` ile koyu bölüm | `bg-sea` verip odak ve metin renklerini unutmak |
 | 12 px ve üzeri | `text-[10px]`, `text-[0.6rem]` |
+| Boyut için yalnız `type-*` sınıfı ya da ölçek token'ı | Tailwind'in varsayılan `text-base`, `text-sm`, `text-lg` boyutları |
 | Hareketi `motion-safe:` ile | Zorunlu animasyon, otomatik kayan içerik |

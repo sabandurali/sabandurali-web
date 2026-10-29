@@ -105,7 +105,7 @@ export function Field({
 }
 
 const controlClassName =
-  "block w-full rounded-control border border-tile-edge bg-land px-3.5 py-2.5 text-base text-ink placeholder:text-ink-muted hover:border-ink focus-visible:border-ink aria-invalid:border-2 aria-invalid:border-danger disabled:cursor-not-allowed disabled:bg-band";
+  "block w-full rounded-control border border-tile-edge bg-land px-3.5 py-2.5 type-control text-ink placeholder:text-ink-muted hover:border-ink focus-visible:border-ink aria-invalid:border-2 aria-invalid:border-danger disabled:cursor-not-allowed disabled:bg-band";
 
 /** Text input: 16 px text (no iOS zoom), 3.47:1 boundary on paper. */
 export function Input({

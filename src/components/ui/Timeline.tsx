@@ -157,9 +157,7 @@ export default function Timeline({
                 />
               ))}
             </p>
-            <div className="mt-1 text-base leading-[1.55]">
-              {entry.children}
-            </div>
+            <div className="mt-1 type-body">{entry.children}</div>
           </li>
         );
       })}

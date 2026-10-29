@@ -67,6 +67,10 @@
   --text-small--line-height: 1.55;
   --text-body: 1.0625rem;
   --text-body--line-height: 1.65;
+  /* Form controls and the md button: 16 px, so iOS never zooms a focused
+     field. */
+  --text-control: 1rem;
+  --text-control--line-height: 1.5;
   --text-lead: clamp(1.1875rem, 1.05rem + 0.55vw, 1.5rem);
   --text-lead--line-height: 1.4;
   --text-tile: 0.875rem;
@@ -324,6 +328,12 @@
   font-size: var(--text-body);
   line-height: var(--text-body--line-height);
   font-weight: 400;
+  font-stretch: 100%;
+}
+
+@utility type-control {
+  font-size: var(--text-control);
+  line-height: var(--text-control--line-height);
   font-stretch: 100%;
 }
 
