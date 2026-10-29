@@ -14,6 +14,7 @@ import {
 import type {
   PublicArticle,
   PublicArticleSummary,
+  PublicArticleSummaryPage,
   PublicArticleTranslation,
 } from "@/content/articles/public-types";
 import {
@@ -144,6 +145,28 @@ export const getAllPublishedArticles = cache(
 );
 
 /**
+ * The newest `limit` public standalone articles, read with a database limit
+ * for surfaces that show only a few (the home page). Use this instead of
+ * slicing getAllPublishedArticles().
+ */
+export const getLatestPublishedArticles = cache(
+  async (
+    language: ArticleLanguage,
+    limit: number,
+  ): Promise<PublicArticleSummary[]> =>
+    readPublicSource("ARTICLE_PUBLIC_SOURCE") === "payload"
+      ? payloadArticleRepository.listPublished(language, new Date(), limit)
+      : getAllStaticPublishedArticles(language).slice(0, Math.max(0, limit)),
+);
+
+/** Whether a language has any public standalone article (one-row read). */
+export async function hasPublishedArticles(
+  language: ArticleLanguage,
+): Promise<boolean> {
+  return (await getLatestPublishedArticles(language, 1)).length > 0;
+}
+
+/**
  * Public articles in one category, filtered in the database. Use this
  * instead of filtering getAllPublishedArticles() in a page.
  */
@@ -172,6 +195,21 @@ export const getDistrictNews = cache(
           language,
         )
       : [],
+);
+
+/**
+ * One page of a district's news, paginated in the database: a request reads
+ * `pageSize` items and the totals instead of the district's whole history.
+ */
+export const getDistrictNewsPage = cache(
+  async (
+    district: string,
+    page: number,
+    pageSize: number,
+  ): Promise<PublicArticleSummaryPage> =>
+    readPublicSource("ARTICLE_PUBLIC_SOURCE") === "payload"
+      ? payloadArticleRepository.listDistrictNewsPage(district, page, pageSize)
+      : { items: [], currentPage: 1, totalPages: 1, totalItems: 0 },
 );
 
 /** The news of every district in one query (the sitemap groups them). */

@@ -65,6 +65,16 @@ export type PublicArticleSummary = {
   seo: PublicArticleSeo;
 };
 
+/** One page of a list paginated in the database. */
+export type PublicArticleSummaryPage = {
+  items: PublicArticleSummary[];
+  /** The page served: the requested one, clamped to 1…totalPages. */
+  currentPage: number;
+  /** At least 1, also for an empty list. */
+  totalPages: number;
+  totalItems: number;
+};
+
 /**
  * The other-language version of an article. Its SEO controls decide whether
  * it may appear as an hreflang alternate (`isArticleHreflangEligible`).

@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import ArticleListPage from "@/components/articles/ArticleListPage";
-import { getAllPublishedArticles } from "@/content/articles/article-data-source";
+import {
+  getAllPublishedArticles,
+  hasPublishedArticles,
+} from "@/content/articles/article-data-source";
 import { articleListPaths } from "@/content/articles/article-routes";
-import { createPageMetadata } from "@/lib/metadata";
+import { loadListContent, createListPageMetadata } from "@/content/list-seo";
 
 const locale = "en" as const;
 
@@ -11,14 +14,18 @@ const locale = "en" as const;
 // for scheduled publishing, which no write announces.
 export const revalidate = 3600;
 
-export const metadata: Metadata = createPageMetadata({
-  title: "Articles | Şaban Durali",
-  description:
-    "Articles on real estate, artificial intelligence, sales, negotiation, books and research.",
-  locale,
-  path: articleListPaths[locale],
-  translations: articleListPaths,
-});
+// An empty list is noindex and outside the hreflang cluster, like the
+// sitemap, which leaves it out (src/content/list-seo.ts).
+export async function generateMetadata(): Promise<Metadata> {
+  return createListPageMetadata({
+    title: "Articles | Şaban Durali",
+    description:
+      "Articles on real estate, artificial intelligence, sales, negotiation, books and research.",
+    locale,
+    paths: articleListPaths,
+    content: await loadListContent(hasPublishedArticles),
+  });
+}
 
 export default async function EnglishArticlesPage() {
   const articles = await getAllPublishedArticles(locale);

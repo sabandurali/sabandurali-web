@@ -9,6 +9,7 @@ import {
 import {
   clampPhotoPage,
   createDistrictPhotoConditions,
+  createIstanbulPhotoConditions,
   createPhotoCategoryConditions,
   createPhotoListConditions,
   createPublicPhotoConditions,
@@ -17,11 +18,10 @@ import {
   PHOTO_LIST_PAGE_SIZE,
 } from "@/content/photos/photo-query-conditions";
 import type {
-  PhotoLanguage,
-  PhotoListFilters,
   PublicPhoto,
   PublishedPhotoList,
-} from "@/content/photos/types";
+} from "@/content/photos/public-types";
+import type { PhotoLanguage, PhotoListFilters } from "@/content/photos/types";
 
 const PAYLOAD_PAGE_SIZE = 100;
 const PUBLIC_PHOTO_SORT = ["-publishedAt", "id"];
@@ -170,6 +170,42 @@ export class PayloadPublicPhotoRepository {
     now: Date = new Date(),
   ): Promise<PublicPhoto[]> {
     return this.findAll(locale, createPublicPhotoConditions(now), now);
+  }
+
+  /**
+   * The home selection with database limits: up to `limit` Istanbul photos,
+   * newest first, then the newest other photos until `limit` is reached. At
+   * most two queries of `limit` documents, whatever the collection size.
+   */
+  async listHomePhotos(
+    locale: PhotoLanguage,
+    limit: number,
+    now: Date = new Date(),
+  ): Promise<PublicPhoto[]> {
+    if (limit <= 0) return [];
+    const istanbul = await this.findPage(
+      locale,
+      createIstanbulPhotoConditions(now),
+      1,
+      limit,
+      now,
+    );
+    if (istanbul.photos.length >= limit) return istanbul.photos;
+
+    // Fewer Istanbul photos than `limit` means all of them are listed, so
+    // the newest `limit` photos hold enough of the others.
+    const listed = new Set(istanbul.photos.map(({ id }) => id));
+    const newest = await this.findPage(
+      locale,
+      createPublicPhotoConditions(now),
+      1,
+      limit,
+      now,
+    );
+    return [
+      ...istanbul.photos,
+      ...newest.photos.filter(({ id }) => !listed.has(id)),
+    ].slice(0, limit);
   }
 
   async listByDistrict(

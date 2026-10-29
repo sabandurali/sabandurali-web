@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import BookReviewListPage from "@/components/books/BookReviewListPage";
-import { getAllPublishedBookReviews } from "@/content/books/book-data-source";
+import {
+  getAllPublishedBookReviews,
+  hasPublishedBookReviews,
+} from "@/content/books/book-data-source";
 import { bookListPaths } from "@/content/books/book-routes";
-import { createPageMetadata } from "@/lib/metadata";
+import { loadListContent, createListPageMetadata } from "@/content/list-seo";
 
 const locale = "tr" as const;
 
@@ -11,14 +14,18 @@ const locale = "tr" as const;
 // for scheduled publishing, which no write announces.
 export const revalidate = 3600;
 
-export const metadata: Metadata = createPageMetadata({
-  title: "Kitaplar | Şaban Durali",
-  description:
-    "İş, psikoloji, öğrenme, yapay zekâ, satış, gayrimenkul ve kişisel gelişim alanlarında kitap incelemeleri.",
-  locale,
-  path: bookListPaths[locale],
-  translations: bookListPaths,
-});
+// An empty list is noindex and outside the hreflang cluster, like the
+// sitemap, which leaves it out (src/content/list-seo.ts).
+export async function generateMetadata(): Promise<Metadata> {
+  return createListPageMetadata({
+    title: "Kitaplar | Şaban Durali",
+    description:
+      "İş, psikoloji, öğrenme, yapay zekâ, satış, gayrimenkul ve kişisel gelişim alanlarında kitap incelemeleri.",
+    locale,
+    paths: bookListPaths,
+    content: await loadListContent(hasPublishedBookReviews),
+  });
+}
 
 export default async function TurkishBooksPage() {
   const bookReviews = await getAllPublishedBookReviews(locale);

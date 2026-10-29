@@ -1,7 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { homeUrls, siteSocialImage } from "@/config/site";
-import { createPublicPageMetadata, getPublicPagePath } from "./page-seo";
+import {
+  createPublicPageMetadata,
+  getPublicPagePath,
+  isHomePageIndexable,
+} from "./page-seo";
 import type { PublicPage } from "./public-types";
 
 const site = "https://www.sabandurali.com";
@@ -41,6 +45,29 @@ test("home pages pair both languages exactly like the home routes", () => {
       language === "tr" ? homeUrls["tr-TR"] : homeUrls.en,
     );
   }
+});
+
+test("a noindex home page is neither in a hreflang pair nor a target of one", () => {
+  const home = page({ language: "tr", pageType: "home", slug: "home" });
+  const noindexHome = page({
+    language: "en",
+    pageType: "home",
+    slug: "home",
+    seo: { ...home.seo, index: false },
+  });
+
+  assert.equal(isHomePageIndexable(null), true, "static home");
+  assert.equal(isHomePageIndexable(home), true);
+  assert.equal(isHomePageIndexable(noindexHome), false);
+  assert.deepEqual(createPublicPageMetadata(noindexHome).alternates, {
+    canonical: homeUrls.en,
+  });
+  assert.deepEqual(
+    createPublicPageMetadata(home, {
+      translationIndexable: isHomePageIndexable(noindexHome),
+    }).alternates,
+    { canonical: homeUrls["tr-TR"], languages: { "tr-TR": homeUrls["tr-TR"] } },
+  );
 });
 
 test("standard pages are Turkish-only and get the default social image", () => {

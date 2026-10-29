@@ -156,3 +156,137 @@ test("malformed values are dropped instead of crashing the projection", () => {
   );
   assert.deepEqual(projectPublicDistrictGuideDocument(null, now), {});
 });
+
+/*
+ * Market data is published only when both the source record and the row
+ * pass the content policy. Each case below breaks exactly one of them. The
+ * first case keeps the section public through another fresh source, so only
+ * the separate check of the row's own source record (`marketSource`) rejects
+ * it: `freshRow` replaces the source dates with the row dates.
+ */
+const staleMarketSource = {
+  ...source,
+  url: "https://www.esenler.gov.tr/eski-piyasa",
+  dataDate: "2026-01-01T00:00:00Z",
+  checkedAt: "2026-01-02T00:00:00Z",
+};
+const rejectedMarketCases: ReadonlyArray<{
+  name: string;
+  sources: Array<DistrictSource & Record<string, unknown>>;
+  marketData?: Record<string, unknown>;
+}> = [
+  {
+    name: "the row's own source record is stale while the row is fresh",
+    sources: [source, staleMarketSource],
+    marketData: { ...stored.marketData, sourceUrl: staleMarketSource.url },
+  },
+  {
+    name: "the source's own data date is stale while the row is fresh",
+    sources: [{ ...source, dataDate: "2026-01-01T00:00:00Z" }],
+  },
+  {
+    name: "the source's own check date is stale while the row is fresh",
+    sources: [{ ...source, checkedAt: "2026-01-01T00:00:00Z" }],
+  },
+  {
+    name: "the source still needs verification",
+    sources: [{ ...source, needsVerification: true }],
+  },
+  {
+    name: "the source does not list marketData",
+    sources: [{ ...source, sections: ["summary", "history", "facts"] }],
+  },
+  {
+    name: "the row's sourceUrl matches no source",
+    sources: [source],
+    marketData: {
+      ...stored.marketData,
+      sourceUrl: "https://www.esenler.gov.tr/baska-sayfa",
+    },
+  },
+  {
+    name: "the row still needs verification",
+    sources: [source],
+    marketData: { ...stored.marketData, needsVerification: true },
+  },
+  {
+    name: "the row's own data date is stale",
+    sources: [source],
+    marketData: { ...stored.marketData, dataDate: "2026-01-01T00:00:00Z" },
+  },
+];
+
+for (const { name, sources, marketData } of rejectedMarketCases) {
+  test(`market data is rejected when ${name}`, () => {
+    const document = {
+      ...stored,
+      sources,
+      marketData: marketData ?? stored.marketData,
+    };
+
+    assert.equal(mapDistrictGuide(document, now)?.marketData, null);
+    const projected = projectPublicDistrictGuideDocument(document, now);
+    assert.equal(projected.marketData, null);
+    assert.equal(JSON.stringify(projected).includes("salePricePerM2"), false);
+    assert.equal(
+      Array.isArray(projected.reviewedSections) &&
+        projected.reviewedSections.includes("marketData"),
+      false,
+      "no public section claims market data",
+    );
+    assert.equal(
+      JSON.stringify(projected.sources).includes("marketData"),
+      false,
+      "no public source claims to back rejected market data",
+    );
+  });
+}
+
+test("a source lists planning only for a published planning row", () => {
+  const planningSource = {
+    ...source,
+    url: "https://www.esenler.bel.tr/imar",
+    sections: ["planningDevelopments" as const],
+  };
+  const row = {
+    title: "Tamamlanan düzenleme",
+    status: "tamamlandi",
+    date: "2026-09-01T00:00:00Z",
+    checkedAt: "2026-09-13T00:00:00Z",
+    officialSource: planningSource.url,
+    needsVerification: false,
+  };
+  const document = {
+    ...stored,
+    reviewedSections: [...stored.reviewedSections, "planningDevelopments"],
+    sources: [source, planningSource],
+  };
+
+  const published = mapDistrictGuide(
+    { ...document, planningDevelopments: [row] },
+    now,
+  );
+  assert.equal(published?.planningDevelopments.length, 1);
+  assert.deepEqual(
+    published?.sources.find(({ url }) => url === planningSource.url)?.sections,
+    ["planningDevelopments"],
+  );
+
+  const rejected = projectPublicDistrictGuideDocument(
+    {
+      ...document,
+      planningDevelopments: [{ ...row, needsVerification: true }],
+    },
+    now,
+  );
+  assert.deepEqual(rejected.planningDevelopments, []);
+  assert.equal(
+    JSON.stringify(rejected.sources).includes(planningSource.url),
+    false,
+  );
+  assert.equal(
+    Array.isArray(rejected.reviewedSections) &&
+      rejected.reviewedSections.includes("planningDevelopments"),
+    false,
+  );
+});

@@ -1,8 +1,8 @@
-import { getAbsoluteUrl } from "@/config/site";
 import type {
   PublicPhoto,
   PublicPhotoTranslation,
   PhotoLanguage,
+  PhotoListFilters,
 } from "@/content/photos/types";
 
 export const photoListPaths = {
@@ -14,8 +14,21 @@ export function getPhotoPath(slug: string, language: PhotoLanguage): string {
   return `${photoListPaths[language]}/${slug}`;
 }
 
-export function getPhotoUrl(slug: string, language: PhotoLanguage): string {
-  return getAbsoluteUrl(getPhotoPath(slug, language));
+/**
+ * Path of one photograph list page with its filters, in a fixed parameter
+ * order (collection, tag, page); page 1 has no number.
+ */
+export function getPhotoListPath(
+  language: PhotoLanguage,
+  filters: Pick<PhotoListFilters, "collection" | "tag">,
+  page: number,
+): string {
+  const params = new URLSearchParams();
+  if (filters.collection) params.set("collection", filters.collection);
+  if (filters.tag) params.set("tag", filters.tag);
+  if (page > 1) params.set("page", String(page));
+  const query = params.toString();
+  return `${photoListPaths[language]}${query ? `?${query}` : ""}`;
 }
 
 export function getPhotoLanguagePaths(

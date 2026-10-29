@@ -14,43 +14,33 @@ import {
   type PublicContentSource,
 } from "@/content/public-source";
 
-export type PublicPageSource = PublicContentSource;
-
 const payloadPageRepository = new PayloadPublicPageRepository();
 
-export function getPublicPageSource(): PublicPageSource {
+export function getPublicPageSource(): PublicContentSource {
   return readPublicSource("PAGE_PUBLIC_SOURCE");
 }
 
-export type TurkishHomePageData = HomePageData;
+export const getTurkishHomePageData = cache(async (): Promise<HomePageData> => {
+  if (getPublicPageSource() === "static") {
+    return { source: "static", page: null };
+  }
 
-export type EnglishHomePageData = TurkishHomePageData;
+  return {
+    source: "payload",
+    page: await payloadPageRepository.findHome("tr"),
+  };
+});
 
-export const getTurkishHomePageData = cache(
-  async (): Promise<TurkishHomePageData> => {
-    if (getPublicPageSource() === "static") {
-      return { source: "static", page: null };
-    }
+export const getEnglishHomePageData = cache(async (): Promise<HomePageData> => {
+  if (getPublicPageSource() === "static") {
+    return { source: "static", page: null };
+  }
 
-    return {
-      source: "payload",
-      page: await payloadPageRepository.findHome("tr"),
-    };
-  },
-);
-
-export const getEnglishHomePageData = cache(
-  async (): Promise<EnglishHomePageData> => {
-    if (getPublicPageSource() === "static") {
-      return { source: "static", page: null };
-    }
-
-    return {
-      source: "payload",
-      page: await payloadPageRepository.findHome("en"),
-    };
-  },
-);
+  return {
+    source: "payload",
+    page: await payloadPageRepository.findHome("en"),
+  };
+});
 
 /**
  * Home content for one locale: the CMS home page when it is public and

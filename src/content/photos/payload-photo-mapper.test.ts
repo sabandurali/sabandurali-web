@@ -2,7 +2,10 @@ import assert from "node:assert/strict";
 import test, { type TestContext } from "node:test";
 import type { Photo } from "../../payload-types";
 import { mediaDocument } from "../rich-text/lexical-fixtures";
-import { mapPayloadPhoto } from "./payload-photo-mapper";
+import {
+  mapPayloadPhoto,
+  toPublicPhotoTranslation,
+} from "./payload-photo-mapper";
 
 const now = new Date("2026-10-28T12:00:00Z");
 
@@ -72,6 +75,19 @@ test("a published photo maps with collections, tags and defaults", (t) => {
   assert.equal(mapped.photographer, "Şaban Durali");
   assert.equal(mapped.creditLicense, "Tüm hakları saklıdır");
   assert.equal(mapped.seo.title, "Galata akşamüstü");
+});
+
+test("a translation link carries only identity, title and slug", (t) => {
+  silence(t);
+  const mapped = mapPayloadPhoto(photo(), "en", now);
+
+  assert.ok(mapped);
+  assert.deepEqual(toPublicPhotoTranslation(mapped), {
+    id: "photo-1",
+    language: "en",
+    title: "Galata akşamüstü",
+    slug: "galata-aksamustu",
+  });
 });
 
 test("photos that cannot be shown publicly are skipped and logged", (t) => {

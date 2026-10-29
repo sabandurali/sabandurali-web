@@ -601,3 +601,343 @@ test("district guides: one summary query, allowlisted fields, isolated sections"
   assert.deepEqual(slugs(page.photos), ["kare-100", "kare-101"]);
   assert.deepEqual(page.unavailableSections, []);
 });
+
+test("limited reads stop at the limit and news pages paginate in the database", async (t) => {
+  t.mock.method(console, "warn", () => {});
+  // Newest first; the English half translation is skipped and the limit is
+  // filled from the next page instead of returning fewer items.
+  assert.deepEqual(slugs(await articles.listPublished("tr", new Date(), 2)), [
+    "kaynak",
+    "hedef",
+  ]);
+  assert.deepEqual(slugs(await articles.listPublished("en", new Date(), 1)), [
+    "target",
+  ]);
+
+  for (const index of [1, 2, 3, 4]) {
+    await createArticle({
+      title: `Kadıköy haberi ${index}`,
+      slug: `kadikoy-haberi-${index}`,
+      articleType: "district-news",
+      district: "kadikoy",
+      content: null,
+      publishedAt: minutesAgo(10 * index),
+      externalSource: {
+        name: "Kadıköy Belediyesi",
+        url: `https://www.kadikoy.bel.tr/haber-${index}`,
+      },
+    });
+  }
+  const find = t.mock.method(payload, "find");
+  const second = await articles.listDistrictNewsPage("kadikoy", 2, 2);
+  // One page of `pageSize` documents is read, not the district's history.
+  const newsReads = find.mock.calls.filter(
+    (call) => call.arguments[0]?.collection === "articles",
+  );
+  assert.equal(newsReads.length, 1);
+  assert.equal(newsReads[0]?.arguments[0]?.limit, 2);
+  find.mock.restore();
+  assert.deepEqual(slugs(second.items), [
+    "kadikoy-haberi-3",
+    "kadikoy-haberi-4",
+  ]);
+  assert.deepEqual(
+    { ...second, items: undefined },
+    { items: undefined, currentPage: 2, totalPages: 3, totalItems: 5 },
+  );
+  // A page past the end is the last page; an empty district is one page.
+  const last = await articles.listDistrictNewsPage("kadikoy", 99, 2);
+  assert.equal(last.currentPage, 3);
+  assert.deepEqual(slugs(last.items), ["kadikoy-haberi"]);
+  assert.deepEqual(await articles.listDistrictNewsPage("besiktas", 4, 2), {
+    items: [],
+    currentPage: 1,
+    totalPages: 1,
+    totalItems: 0,
+  });
+});
+
+test("a limited list stops reading once the limit is filled", async (t) => {
+  // More standalone articles than one internal page (10 rows for a small
+  // limit): a limit of 1 must not read the remaining pages.
+  const extra = [];
+  for (let index = 0; index < 11; index += 1) {
+    extra.push(
+      await createArticle({
+        title: `Sayfa dolgusu ${index}`,
+        slug: `sayfa-dolgusu-${index}`,
+        publishedAt: minutesAgo(1 + index / 10),
+      }),
+    );
+  }
+  const find = t.mock.method(payload, "find");
+  const latest = await articles.listPublished("tr", new Date(), 1);
+  const reads = find.mock.calls.filter(
+    (call) => call.arguments[0]?.collection === "articles",
+  );
+  find.mock.restore();
+  assert.deepEqual(slugs(latest), ["sayfa-dolgusu-0"]);
+  assert.equal(reads.length, 1);
+  for (const article of extra) {
+    await payload.delete({ collection: "articles", id: article.id });
+  }
+});
+
+test("home photos put Istanbul photos first with two limited reads", async (t) => {
+  const nature = await payload.create({
+    collection: "photo-collections",
+    data: { title: "Doğa", slug: "doga", _status: "published" } as never,
+    locale: "tr",
+  });
+  await payload.update({
+    collection: "photo-collections",
+    id: nature.id,
+    locale: "en",
+    data: { title: "Nature", slug: "nature", _status: "published" } as never,
+  });
+  const other = await payload.create({
+    collection: "photos",
+    locale: "tr",
+    data: {
+      title: "Deniz feneri",
+      slug: "deniz-feneri",
+      altText: "Deniz feneri",
+      image: media.id,
+      collections: [nature.id],
+      photographer: "Şaban Durali",
+      publishedAt: minutesAgo(0.5),
+      _status: "published",
+    } as never,
+  });
+  await payload.update({
+    collection: "photos",
+    id: other.id,
+    locale: "en",
+    data: {
+      title: "Lighthouse",
+      slug: "lighthouse",
+      altText: "Lighthouse",
+      _status: "published",
+    } as never,
+  });
+
+  // 27 Turkish Istanbul photos: the newer lighthouse does not make it, and
+  // one limited read is enough.
+  const find = t.mock.method(payload, "find");
+  const turkish = await photos.listHomePhotos("tr", 4);
+  const photoReads = find.mock.calls.filter(
+    (call) => call.arguments[0]?.collection === "photos",
+  );
+  find.mock.restore();
+  assert.deepEqual(slugs(turkish), ["kare-0", "kare-1", "kare-2", "kare-3"]);
+  assert.equal(photoReads.length, 1);
+  assert.equal(photoReads[0]?.arguments[0]?.limit, 4);
+  // Two English Istanbul photos, then the newest other one.
+  assert.deepEqual(slugs(await photos.listHomePhotos("en", 4)), [
+    "frame-100",
+    "frame-101",
+    "lighthouse",
+  ]);
+  await payload.delete({ collection: "photos", id: other.id });
+  await payload.delete({ collection: "photo-collections", id: nature.id });
+});
+
+const { PayloadPublicBookReviewRepository } =
+  await import("./books/payload-book-review-repository");
+const { PayloadPublicPageRepository } =
+  await import("./pages/payload-page-repository");
+
+const bookReviews = new PayloadPublicBookReviewRepository();
+const pages = new PayloadPublicPageRepository();
+
+// Books and pages are created at the adapter level: the publication hooks
+// are covered in cms.integration.test.ts, the read rules are checked here.
+async function createBook(data: Record<string, unknown>) {
+  return payload.db.create({
+    collection: "books",
+    req: {},
+    data: {
+      _status: "published",
+      language: "tr",
+      // Array rows need their own IDs below the Local API.
+      authors: [
+        { id: crypto.randomUUID(), name: "Cal Newport", slug: "cal-newport" },
+      ],
+      category: "business_and_management",
+      coverImage: media.id,
+      coverImageAlt: "Kitap kapağı",
+      personalEvaluation: "Kişisel değerlendirme",
+      rating: 4,
+      readingStatus: "planned",
+      reviewStatus: "published",
+      summary: "Kitap özeti",
+      translationStatus: "none",
+      publishedAt: minutesAgo(60),
+      seo: {
+        title: "Kitap | Şaban Durali",
+        description: "Kitap incelemesi",
+        index: true,
+        follow: true,
+      },
+      ...data,
+    },
+  });
+}
+
+test("book reviews: public rules, both translation directions, limits and narrow population", async (t) => {
+  t.mock.method(console, "warn", () => {});
+  const english = await createBook({
+    title: "Deep Work",
+    slug: "deep-work",
+    language: "en",
+    publishedAt: minutesAgo(50),
+  });
+  // The Turkish review points to the English one; the English one does not
+  // point back.
+  await createBook({
+    title: "Derin Çalışma",
+    slug: "derin-calisma",
+    translation: english.id,
+    relatedBooks: [english.id],
+    publishedAt: minutesAgo(40),
+  });
+  await createBook({
+    title: "Eski inceleme",
+    slug: "eski-inceleme",
+    publishedAt: minutesAgo(400),
+  });
+  await createBook({
+    title: "İndekssiz",
+    slug: "indekssiz",
+    publishedAt: minutesAgo(10),
+    seo: {
+      title: "İndekssiz",
+      description: "İndekssiz",
+      index: false,
+      follow: true,
+    },
+  });
+  await createBook({
+    title: "Arşivlenmiş",
+    slug: "arsivlenmis",
+    reviewStatus: "archived",
+    publishedAt: minutesAgo(5),
+  });
+  await createBook({
+    title: "Zamanlanmış",
+    slug: "zamanlanmis",
+    publishedAt: new Date(Date.now() + 60 * 60_000).toISOString(),
+  });
+
+  const find = t.mock.method(payload, "find");
+  const turkish = await bookReviews.listPublished("tr");
+  // Related books are populated with their ID and update date only.
+  const bookReads = find.mock.calls.filter(
+    (call) => call.arguments[0]?.collection === "books",
+  );
+  assert.ok(bookReads.length > 0);
+  for (const call of bookReads) {
+    assert.deepEqual(call.arguments[0]?.populate, {
+      books: { updatedAt: true },
+    });
+  }
+  find.mock.restore();
+  assert.deepEqual(slugs(turkish), ["derin-calisma", "eski-inceleme"]);
+  // The repository returns public types: no editorial field leaves it.
+  for (const review of turkish) {
+    for (const field of ["reviewStatus", "relatedBookIds", "showOnHomepage"]) {
+      assert.equal(field in review, false, field);
+    }
+  }
+  assert.deepEqual(
+    slugs(await bookReviews.listPublished("tr", new Date(), 1)),
+    ["derin-calisma"],
+  );
+  for (const slug of ["indekssiz", "arsivlenmis", "zamanlanmis"]) {
+    assert.equal(await bookReviews.findPublishedBySlug(slug, "tr"), null, slug);
+  }
+
+  const detailFind = t.mock.method(payload, "find");
+  const turkishReview = await bookReviews.findPublishedBySlug(
+    "derin-calisma",
+    "tr",
+  );
+  const englishReview = await bookReviews.findPublishedBySlug(
+    "deep-work",
+    "en",
+  );
+  assert.ok(turkishReview && englishReview);
+  assert.equal(
+    (await bookReviews.findPublishedTranslation(turkishReview, "en"))?.slug,
+    "deep-work",
+  );
+  // The back link is found by querying the other side's `translation`.
+  assert.equal(
+    (await bookReviews.findPublishedTranslation(englishReview, "tr"))?.slug,
+    "derin-calisma",
+  );
+  // Detail and translation reads populate related books narrowly as well.
+  const detailReads = detailFind.mock.calls.filter(
+    (call) => call.arguments[0]?.collection === "books",
+  );
+  detailFind.mock.restore();
+  assert.ok(detailReads.length >= 4);
+  for (const call of detailReads) {
+    assert.deepEqual(call.arguments[0]?.populate, {
+      books: { updatedAt: true },
+    });
+  }
+});
+
+async function createPage(data: Record<string, unknown>) {
+  return payload.db.create({
+    collection: "pages",
+    req: {},
+    data: {
+      _status: "published",
+      language: "tr",
+      pageType: "standard",
+      summary: "Sayfa özeti",
+      publishedAt: minutesAgo(60),
+      seo: { index: true, follow: true },
+      ...data,
+    },
+  });
+}
+
+test("pages: the home falls back to the legacy record and never to another language", async (t) => {
+  t.mock.method(console, "warn", () => {});
+  const legacy = await createPage({ title: "Ana sayfa", slug: "ana-sayfa" });
+  await createPage({ title: "Projeler", slug: "projeler" });
+  await createPage({
+    title: "Taslak sayfa",
+    slug: "taslak-sayfa",
+    _status: "draft",
+  });
+
+  // Without a home record the legacy "ana-sayfa" page is served as home.
+  const fallback = await pages.findHome("tr");
+  assert.equal(fallback?.id, legacy.id);
+  assert.equal(fallback?.pageType, "home");
+  // The English home never falls back to Turkish content.
+  assert.equal(await pages.findHome("en"), null);
+
+  const home = await createPage({
+    title: "Ana sayfa kaydı",
+    slug: "anasayfa-kaydi",
+    pageType: "home",
+  });
+  assert.equal((await pages.findHome("tr"))?.id, home.id);
+  assert.equal(await pages.findHome("en"), null);
+
+  assert.equal(
+    (await pages.findStandardBySlug("projeler", "tr"))?.slug,
+    "projeler",
+  );
+  assert.equal(await pages.findStandardBySlug("taslak-sayfa", "tr"), null);
+  assert.equal(await pages.findStandardBySlug("projeler", "en"), null);
+  assert.deepEqual(slugs(await pages.listStandards("tr")), [
+    "ana-sayfa",
+    "projeler",
+  ]);
+});

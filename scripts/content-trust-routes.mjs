@@ -73,8 +73,9 @@ for (const { slug } of districts) {
   assert.match(html, /property="og:title"/);
   assert.match(html, /property="og:description"/);
   // District guides are Turkish only: no English language alternate. The
-  // header's language switch (<a hrefLang="en">) is not an alternate.
-  assert.deepEqual(alternateLanguages(html), ["tr-TR"], slug);
+  // header's language switch (<a hrefLang="en">) is not an alternate. A
+  // noindex placeholder announces no hreflang at all (SEO-PERF-4).
+  assert.deepEqual(alternateLanguages(html), indexed ? ["tr-TR"] : [], slug);
   assert.ok(
     !html.includes('href="#arastirmalar"') &&
       !html.includes('href="#haberler"'),

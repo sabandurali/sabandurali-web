@@ -54,6 +54,27 @@ export function createPhotoCategoryConditions(
   ];
 }
 
+/**
+ * Istanbul photos, which the home page shows first: a district, the
+ * "tarih" district category, or a collection whose slug names Istanbul or
+ * architecture (`like` matches a substring, case-insensitively, like the
+ * home selection rule `isIstanbulPhoto`).
+ */
+export function createIstanbulPhotoConditions(now: Date): Where[] {
+  return [
+    ...createPublicPhotoConditions(now),
+    {
+      or: [
+        { district: { exists: true } },
+        { districtPhotoCategory: { equals: "tarih" } },
+        ...["istanbul", "mimari", "architecture"].map((slug) => ({
+          "collections.slug": { like: slug },
+        })),
+      ],
+    },
+  ];
+}
+
 export function createDistrictPhotoConditions(
   now: Date,
   district: string,

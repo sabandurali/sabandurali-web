@@ -16,6 +16,7 @@ import {
   loadSitemapSource,
   loadSitemapSourcesByKey,
   mergeSitemapEntries,
+  reportSitemapSourceError,
   type SitemapContent,
   type SitemapEntry,
 } from "./sitemap-entries";
@@ -392,12 +393,38 @@ test("static pages carry no invented lastModified", () => {
     "/calisma-alanlari",
     "/gayrimenkul-ve-istanbul",
     "/istanbul/ilceler",
-    "/makaleler",
   ]) {
     const entry = byUrl(sitemap, path);
     assert.ok(entry, `${path} is listed`);
     assert.equal(entry.lastModified, undefined, `${path} has no lastModified`);
   }
+});
+
+test("empty content lists are not listed and not paired", () => {
+  const empty = buildSitemap(emptyContent);
+  for (const path of [
+    "/makaleler",
+    "/en/articles",
+    "/kitaplar",
+    "/en/books",
+    "/fotograflar",
+    "/en/photography",
+  ]) {
+    assert.equal(byUrl(empty, path), undefined, `${path} is empty`);
+  }
+
+  // Turkish articles only: /makaleler is listed alone, without /en/articles.
+  const turkishOnly = buildSitemap({
+    ...emptyContent,
+    articles: [article({ id: "a1", slug: "tek", language: "tr" })],
+  });
+  assert.equal(byUrl(turkishOnly, "/en/articles"), undefined);
+  const turkishList = byUrl(turkishOnly, "/makaleler");
+  assert.ok(turkishList);
+  assert.equal(
+    JSON.stringify(turkishList.alternates ?? {}).includes("/en/articles"),
+    false,
+  );
 });
 
 test("dates come from content: items, newest list item, guide, CMS home", () => {
@@ -727,6 +754,36 @@ test("a failing source falls back and is reported", async () => {
     "ok",
   );
   assert.equal(reports.length, 1);
+});
+
+test("a failing source is logged as one structured content line", (t) => {
+  const error = t.mock.method(console, "error", () => undefined);
+
+  reportSitemapSourceError("articles", { secret: "PRIVATE-OBJECT-VALUE" });
+  reportSitemapSourceError("pages", new TypeError("db down"));
+
+  assert.equal(error.mock.callCount(), 2);
+  const lines = error.mock.calls.map((call) => String(call.arguments[0]));
+  for (const line of lines) assert.ok(line.startsWith("[content] "), line);
+  assert.deepEqual(
+    lines.map((line) => JSON.parse(line.slice("[content] ".length))),
+    [
+      {
+        severity: "error",
+        scope: "sitemap",
+        reason: "source-unavailable",
+        id: "articles",
+        detail: "Unknown error",
+      },
+      {
+        severity: "error",
+        scope: "sitemap",
+        reason: "source-unavailable",
+        id: "pages",
+        detail: "TypeError: db down",
+      },
+    ],
+  );
 });
 
 test("one failing district does not hide the others", async () => {

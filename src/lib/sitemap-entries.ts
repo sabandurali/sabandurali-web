@@ -18,6 +18,7 @@
  */
 import type { MetadataRoute } from "next";
 import { contactPaths, privacyPaths } from "@/config/site";
+import { describeError, reportContentIssue } from "@/content/content-log";
 import {
   articleListPaths,
   getArticlePath,
@@ -38,7 +39,12 @@ import {
   isDistrictGuideIndexable,
   isDistrictNewsPageIndexable,
 } from "@/content/districts/district-seo";
-import { getPublicPagePath, homePagePaths } from "@/content/pages/page-seo";
+import { getFilledListPaths, listContentOf } from "@/content/list-seo";
+import {
+  getPublicPagePath,
+  homePagePaths,
+  isHomePageIndexable,
+} from "@/content/pages/page-seo";
 import type { PublicPage } from "@/content/pages/public-types";
 import { getPhotoPath, photoListPaths } from "@/content/photos/photo-routes";
 import type { PublicPhoto } from "@/content/photos/types";
@@ -303,13 +309,9 @@ export function buildPhotoEntries(
   });
 }
 
-/**
- * Both home pages always render (a missing or invalid CMS home falls back to
- * the static one), so each is listed unless a loaded CMS home page explicitly
- * opts out of indexing.
- */
+/** The home page metadata uses the same rule for its hreflang pair. */
 function isHomePageListed(home: SitemapHomePage): boolean {
-  return home?.page?.seo.index !== false;
+  return isHomePageIndexable(home?.page ?? null);
 }
 
 export function buildHomeEntries(
@@ -398,19 +400,33 @@ export function buildListEntries(
 ): SitemapEntry[] {
   const options = { changeFrequency: "weekly", priority: 0.8 } as const;
 
+  // Empty lists are noindex (src/content/list-seo.ts): only the languages
+  // with items are listed and paired.
   return [
-    ...createLocalizedEntries(articleListPaths, {
-      ...options,
-      lastModified: latestByLocale(content.articles, getContentLastModified),
-    }),
-    ...createLocalizedEntries(bookListPaths, {
-      ...options,
-      lastModified: latestByLocale(content.bookReviews, getContentLastModified),
-    }),
-    ...createLocalizedEntries(photoListPaths, {
-      ...options,
-      lastModified: latestByLocale(content.photos, getContentLastModified),
-    }),
+    ...createLocalizedEntries(
+      getFilledListPaths(articleListPaths, listContentOf(content.articles)),
+      {
+        ...options,
+        lastModified: latestByLocale(content.articles, getContentLastModified),
+      },
+    ),
+    ...createLocalizedEntries(
+      getFilledListPaths(bookListPaths, listContentOf(content.bookReviews)),
+      {
+        ...options,
+        lastModified: latestByLocale(
+          content.bookReviews,
+          getContentLastModified,
+        ),
+      },
+    ),
+    ...createLocalizedEntries(
+      getFilledListPaths(photoListPaths, listContentOf(content.photos)),
+      {
+        ...options,
+        lastModified: latestByLocale(content.photos, getContentLastModified),
+      },
+    ),
   ];
 }
 
@@ -571,16 +587,23 @@ export function buildSitemap(content: SitemapContent): MetadataRoute.Sitemap {
 
 export type SitemapErrorReporter = (source: string, error: unknown) => void;
 
-function describeError(error: unknown): string {
-  return error instanceof Error ? error.message : String(error);
-}
-
+/**
+ * One structured `[content]` line per failing source, like every other
+ * content skip: the source name and the error class and message, never the
+ * stringified error object.
+ */
 export const reportSitemapSourceError: SitemapErrorReporter = (
   source,
   error,
 ) => {
-  console.error(
-    `[sitemap] ${source} could not be loaded; the sitemap is served without it: ${describeError(error)}`,
+  reportContentIssue(
+    {
+      scope: "sitemap",
+      reason: "source-unavailable",
+      id: source,
+      detail: describeError(error),
+    },
+    "error",
   );
 };
 

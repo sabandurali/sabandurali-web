@@ -15,7 +15,29 @@ export function getPublicPagePath(page: PublicPage): string {
     : `${localePrefix}/${page.slug}`;
 }
 
-export function createPublicPageMetadata(page: PublicPage): Metadata {
+/**
+ * Whether a served home page is indexable. Both home pages always render (a
+ * missing or invalid CMS home falls back to the static one), so a home page
+ * is indexable unless its CMS record opts out. The sitemap and the hreflang
+ * pair of the other home page follow this same rule.
+ */
+export function isHomePageIndexable(page: PublicPage | null): boolean {
+  return page?.seo.index !== false;
+}
+
+export type PublicPageMetadataOptions = {
+  /**
+   * Home pages only: whether the other language's home page is indexable.
+   * A noindex home page is never named as a hreflang alternate. Defaults to
+   * true.
+   */
+  translationIndexable?: boolean;
+};
+
+export function createPublicPageMetadata(
+  page: PublicPage,
+  { translationIndexable = true }: PublicPageMetadataOptions = {},
+): Metadata {
   const socialImage = page.seo.socialImage;
   // Both home pages always exist (a CMS home falls back to the static one);
   // standard CMS pages are published in Turkish only.
@@ -27,7 +49,7 @@ export function createPublicPageMetadata(page: PublicPage): Metadata {
     locale: page.language,
     path: getPublicPagePath(page),
     translations:
-      page.pageType === "home"
+      page.pageType === "home" && translationIndexable
         ? { [otherLanguage]: homePagePaths[otherLanguage] }
         : undefined,
     images:

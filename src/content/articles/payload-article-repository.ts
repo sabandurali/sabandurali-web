@@ -11,6 +11,7 @@ import {
 import type {
   PublicArticle,
   PublicArticleSummary,
+  PublicArticleSummaryPage,
 } from "@/content/articles/public-types";
 import type { ArticleLanguage } from "@/content/articles/types";
 
@@ -29,8 +30,9 @@ export class PayloadPublicArticleRepository {
   /**
    * List reads: every field but the rich text, which lists never show. The
    * mapper cannot check the body then, so the query requires it to exist
-   * (publishing requires it to be meaningful). `limit` reads only the
-   * newest matches instead of every page.
+   * (publishing requires it to be meaningful). With `limit`, pages of that
+   * size are read only until `limit` items survive the mapper and the
+   * English completeness rule, instead of every page.
    */
   private async findSummaries(
     locale: ArticleLanguage,
@@ -43,13 +45,21 @@ export class PayloadPublicArticleRepository {
     let page = 1;
     let totalPages = 1;
 
-    while (page <= totalPages) {
+    while (
+      page <= totalPages &&
+      (limit === undefined || articles.length < limit)
+    ) {
       const result = await payload.find({
         collection: "articles",
         depth: 1,
         draft: false,
         fallbackLocale: false,
-        limit: limit ?? PAYLOAD_ARTICLE_PAGE_SIZE,
+        // A small limit still reads a few rows per query, so skipped
+        // records (incomplete English translations) cost few round trips.
+        limit:
+          limit === undefined
+            ? PAYLOAD_ARTICLE_PAGE_SIZE
+            : Math.min(PAYLOAD_ARTICLE_PAGE_SIZE, Math.max(limit, 10)),
         locale,
         overrideAccess: false,
         page,
@@ -58,18 +68,72 @@ export class PayloadPublicArticleRepository {
         where: { and: [...conditions, HAS_BODY] },
       });
 
-      for (const document of result.docs) {
+      const mapped = result.docs.flatMap((document) => {
         const article = mapPayloadArticleSummary(document, locale, now);
-        if (article !== null) articles.push(article);
-      }
+        return article === null ? [] : [article];
+      });
 
-      totalPages = limit === undefined ? result.totalPages : 1;
+      articles.push(
+        ...(locale === "en"
+          ? await this.withoutIncompleteTranslations(mapped)
+          : mapped),
+      );
+      totalPages = result.totalPages;
       page += 1;
     }
 
-    return locale === "en"
-      ? this.withoutIncompleteTranslations(articles)
-      : articles;
+    return limit === undefined ? articles : articles.slice(0, limit);
+  }
+
+  /**
+   * One page of a Turkish list, paginated in the database: only `pageSize`
+   * documents are read and the totals come from the query. A page past the
+   * end is clamped to the last page. English lists cannot use this: their
+   * completeness rule runs after the query, so database totals would be
+   * wrong.
+   */
+  private async findTurkishSummaryPage(
+    conditions: Where[],
+    requestedPage: number,
+    pageSize: number,
+    now: Date,
+  ): Promise<PublicArticleSummaryPage> {
+    const payload = await getPayload({ config });
+    const read = (page: number) =>
+      payload.find({
+        collection: "articles",
+        depth: 1,
+        draft: false,
+        fallbackLocale: false,
+        limit: pageSize,
+        locale: "tr",
+        overrideAccess: false,
+        page,
+        select: { content: false },
+        sort: PUBLIC_ARTICLE_SORT,
+        where: { and: [...conditions, HAS_BODY] },
+      });
+    const requested = Math.max(1, Math.floor(requestedPage));
+    let result = await read(requested);
+    // Past the end Payload returns no documents and, when the query joins
+    // other tables, no total either: page 1 supplies the real total, then
+    // the last page is read.
+    if (result.docs.length === 0 && requested > 1) {
+      const first = await read(1);
+      const lastPage = Math.max(1, Math.ceil(first.totalDocs / pageSize));
+      result = lastPage === 1 ? first : await read(lastPage);
+    }
+    const totalItems = result.totalDocs;
+
+    return {
+      items: result.docs.flatMap((document) => {
+        const article = mapPayloadArticleSummary(document, "tr", now);
+        return article === null ? [] : [article];
+      }),
+      currentPage: Math.max(1, Math.min(result.page ?? 1, result.totalPages)),
+      totalPages: Math.max(1, Math.ceil(totalItems / pageSize)),
+      totalItems,
+    };
   }
 
   private async findOne(
@@ -160,14 +224,17 @@ export class PayloadPublicArticleRepository {
     return offered;
   }
 
+  /** Every public standalone article, or only the newest `limit`. */
   async listPublished(
     locale: ArticleLanguage,
     now: Date = new Date(),
+    limit?: number,
   ): Promise<PublicArticleSummary[]> {
     return this.findSummaries(
       locale,
       createPublicArticleConditions(now, { kind: "standalone" }),
       now,
+      limit,
     );
   }
 
@@ -199,6 +266,25 @@ export class PayloadPublicArticleRepository {
       }),
       now,
       limit,
+    );
+  }
+
+  /** One page of a district's Turkish news, paginated in the database. */
+  async listDistrictNewsPage(
+    district: string,
+    page: number,
+    pageSize: number,
+    now: Date = new Date(),
+  ): Promise<PublicArticleSummaryPage> {
+    return this.findTurkishSummaryPage(
+      createPublicArticleConditions(now, {
+        kind: "district",
+        articleType: "district-news",
+        district,
+      }),
+      page,
+      pageSize,
+      now,
     );
   }
 

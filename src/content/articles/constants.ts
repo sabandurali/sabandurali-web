@@ -3,11 +3,6 @@ import type {
   ArticleLanguage,
 } from "@/content/articles/types";
 
-export const ARTICLE_LANGUAGES = [
-  "tr",
-  "en",
-] as const satisfies ReadonlyArray<ArticleLanguage>;
-
 export const ARTICLE_CATEGORY_LABELS = {
   real_estate: {
     tr: "Gayrimenkul",
@@ -34,8 +29,3 @@ export const ARTICLE_CATEGORY_LABELS = {
     en: "Consulting",
   },
 } as const satisfies Record<ArticleCategory, Record<ArticleLanguage, string>>;
-
-export {
-  SEO_DESCRIPTION_RECOMMENDED_LENGTH,
-  TRANSLATION_STATUSES,
-} from "@/content/shared/content-types";

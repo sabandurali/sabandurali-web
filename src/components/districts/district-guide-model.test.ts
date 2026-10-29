@@ -220,14 +220,18 @@ test("fact rows carry only published values with section-level sources", () => {
 });
 
 test("source rows format dates in Istanbul time and name the sections", () => {
-  const [row, legacy, undated] = buildSourceRows([
+  const [row, recorded, undated] = buildSourceRows([
     source({
       title: "TÜİK",
       sections: ["facts", "summary"],
       dataDate: "2025-12-31T22:30:00.000Z",
       primary: false,
     }),
-    source({ url: "https://esenler.bel.tr/ilcemizin-nufusu-son-1-yilda" }),
+    // No URL may rewrite a recorded date: the row shows the source record.
+    source({
+      url: "https://www.kadikoy.gov.tr/ilcemizin-nufusu-son-1-yilda-849-kisi-azalarak-451453-oldu",
+      dataDate: "2026-09-27T09:00:00.000Z",
+    }),
     source({ dataDate: null, checkedAt: null, sections: null }),
   ]);
   assert.equal(row?.number, 1);
@@ -237,8 +241,8 @@ test("source rows format dates in Istanbul time and name the sections", () => {
   assert.equal(row?.dataDate, "1 Ocak 2026");
   assert.equal(row?.dataDateTime, "2025-12-31T22:30:00.000Z");
   assert.equal(row?.sections, "Temel veriler, Genel bakış");
-  assert.match(legacy?.dataDate ?? "", /^2017 nüfus verisi/);
-  assert.equal(legacy?.dataDateTime, null);
+  assert.equal(recorded?.dataDate, "27 Eylül 2026");
+  assert.equal(recorded?.dataDateTime, "2026-09-27T09:00:00.000Z");
   assert.equal(undated?.dataDate, "Belirtilmemiş");
   assert.equal(undated?.checkedAt, "Belirtilmemiş");
   assert.equal(undated?.sections, "Belirtilmemiş");

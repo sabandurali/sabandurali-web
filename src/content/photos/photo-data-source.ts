@@ -3,13 +3,13 @@ import { unstable_cache } from "next/cache";
 import { cache } from "react";
 import { PayloadPublicPhotoRepository } from "@/content/photos/payload-photo-repository";
 import { PHOTO_FACETS_CACHE_TAG } from "@/content/photos/photo-cache-tags";
+import { toPublicPhotoTranslation } from "@/content/photos/payload-photo-mapper";
 import type {
-  PhotoLanguage,
-  PhotoListFilters,
   PublicPhoto,
   PublicPhotoTranslation,
   PublishedPhotoList,
-} from "@/content/photos/types";
+} from "@/content/photos/public-types";
+import type { PhotoLanguage, PhotoListFilters } from "@/content/photos/types";
 import { readPublicSource } from "@/content/public-source";
 
 const payloadPhotoRepository = new PayloadPublicPhotoRepository();
@@ -43,18 +43,42 @@ const getCachedPhotoFacets = unstable_cache(
 );
 
 /** One list page; collection and tag filters run in the database. */
+/*
+ * Keyed by primitives: the route's metadata and page parse the query string
+ * separately, so their filter objects differ, but they read the same list
+ * once per request.
+ */
+const getPublishedPhotoPage = cache(
+  async (
+    locale: PhotoLanguage,
+    collection: string | undefined,
+    tag: string | undefined,
+    page: number | undefined,
+  ): Promise<PublishedPhotoList> =>
+    isPayloadSource()
+      ? payloadPhotoRepository.listPublished(
+          locale,
+          {
+            ...(collection === undefined ? {} : { collection }),
+            ...(tag === undefined ? {} : { tag }),
+            ...(page === undefined ? {} : { page }),
+          },
+          new Date(),
+          getCachedPhotoFacets,
+        )
+      : emptyList(),
+);
+
 export async function getPublishedPhotos(
   locale: PhotoLanguage,
   filters: PhotoListFilters = {},
 ): Promise<PublishedPhotoList> {
-  return isPayloadSource()
-    ? payloadPhotoRepository.listPublished(
-        locale,
-        filters,
-        new Date(),
-        getCachedPhotoFacets,
-      )
-    : emptyList();
+  return getPublishedPhotoPage(
+    locale,
+    filters.collection,
+    filters.tag,
+    filters.page,
+  );
 }
 
 export const getPublishedPhotoPageData = cache(
@@ -80,14 +104,7 @@ export const getPublishedPhotoPageData = cache(
     return {
       photo,
       translation:
-        translated === null
-          ? null
-          : {
-              id: translated.id,
-              language: translated.language,
-              title: translated.title,
-              slug: translated.slug,
-            },
+        translated === null ? null : toPublicPhotoTranslation(translated),
     };
   },
 );
@@ -104,6 +121,25 @@ export const getAllPublishedPhotos = cache(
   async (locale: PhotoLanguage): Promise<PublicPhoto[]> =>
     isPayloadSource() ? payloadPhotoRepository.listAllPublished(locale) : [],
 );
+
+/**
+ * The home page photos (Istanbul photos first, then the newest others),
+ * read with database limits. Use this instead of selecting from
+ * getAllPublishedPhotos().
+ */
+export const getHomePagePhotos = cache(
+  async (locale: PhotoLanguage, limit: number): Promise<PublicPhoto[]> =>
+    isPayloadSource()
+      ? payloadPhotoRepository.listHomePhotos(locale, limit)
+      : [],
+);
+
+/** Whether a language has any public photo (one-row read). */
+export async function hasPublishedPhotos(
+  locale: PhotoLanguage,
+): Promise<boolean> {
+  return (await getHomePagePhotos(locale, 1)).length > 0;
+}
 
 /** Photos of one district, filtered in the database. */
 export const getDistrictPhotos = cache(

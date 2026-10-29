@@ -231,6 +231,67 @@ export function mapDistrictGuide(
     const date = Date.parse(text(row.date) ?? "");
     return checkedAt >= threshold && date >= threshold;
   };
+  const marketData: DistrictMarketData | null =
+    can("marketData") &&
+    market &&
+    marketSource &&
+    freshRow(market, "marketData", market.sourceUrl)
+      ? copyMarketData(market)
+      : null;
+  const planningDevelopments: DistrictGuide["planningDevelopments"] = can(
+    "planningDevelopments",
+  )
+    ? rows(item.planningDevelopments, (row) => {
+        const title = text(row.title);
+        return title &&
+          (completedPlanningRow(row) ||
+            (currentPlanningRow(row) &&
+              freshRow(row, "planningDevelopments", row.officialSource))) &&
+          row.needsVerification === false &&
+          sources.some(
+            (source) =>
+              source.url === row.officialSource &&
+              sourceSupportsSection(
+                {
+                  ...source,
+                  dataDate: text(row.date),
+                  checkedAt: text(row.checkedAt),
+                },
+                "planningDevelopments",
+                now,
+              ),
+          )
+          ? {
+              title,
+              id: text(row.id),
+              summary: text(row.summary),
+              neighborhood: text(row.neighborhood),
+              date: text(row.date),
+              status: text(row.status),
+              officialSource: text(row.officialSource),
+              checkedAt: text(row.checkedAt),
+              needsVerification: false,
+            }
+          : null;
+      })
+    : [];
+  /*
+   * A source lists a row-backed section only when a row it backs is
+   * actually published: a rejected market or planning row must not leave a
+   * public source that claims to support it.
+   */
+  const backsPublishedRows = (
+    source: DistrictSource,
+    section: DistrictSection,
+  ) => {
+    if (section === "marketData")
+      return marketData !== null && marketData.sourceUrl === source.url;
+    if (section === "planningDevelopments")
+      return planningDevelopments.some(
+        (row) => row.officialSource === source.url,
+      );
+    return true;
+  };
   return {
     summary: field("summary"),
     history: field("history"),
@@ -256,55 +317,16 @@ export function mapDistrictGuide(
       : [],
     housingTexture: field("housingTexture"),
     regionalAssessment: field("regionalAssessment"),
-    marketData:
-      can("marketData") &&
-      market &&
-      marketSource &&
-      freshRow(market, "marketData", market.sourceUrl)
-        ? copyMarketData(market)
-        : null,
-    planningDevelopments: can("planningDevelopments")
-      ? rows(item.planningDevelopments, (row) => {
-          const title = text(row.title);
-          return title &&
-            (completedPlanningRow(row) ||
-              (currentPlanningRow(row) &&
-                freshRow(row, "planningDevelopments", row.officialSource))) &&
-            row.needsVerification === false &&
-            sources.some(
-              (source) =>
-                source.url === row.officialSource &&
-                sourceSupportsSection(
-                  {
-                    ...source,
-                    dataDate: text(row.date),
-                    checkedAt: text(row.checkedAt),
-                  },
-                  "planningDevelopments",
-                  now,
-                ),
-            )
-            ? {
-                title,
-                id: text(row.id),
-                summary: text(row.summary),
-                neighborhood: text(row.neighborhood),
-                date: text(row.date),
-                status: text(row.status),
-                officialSource: text(row.officialSource),
-                checkedAt: text(row.checkedAt),
-                needsVerification: false,
-              }
-            : null;
-        })
-      : [],
+    marketData,
+    planningDevelopments,
     sources: sources.flatMap((source) => {
       const sections = districtSectionOptions
         .map(({ value }) => value)
         .filter(
           (section) =>
             reviewed.includes(section) &&
-            sourceSupportsSection(source, section, now),
+            sourceSupportsSection(source, section, now) &&
+            backsPublishedRows(source, section),
         );
       return sections.length > 0 ? [{ ...source, sections }] : [];
     }),
