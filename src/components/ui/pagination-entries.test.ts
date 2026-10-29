@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
-  clampPage,
+  clampPaginationPage,
   getPaginationEntries,
   type PaginationEntry,
 } from "./pagination-entries";
@@ -36,9 +36,9 @@ test("out-of-range input is clamped and gap keys are unique", () => {
   assert.equal(render(getPaginationEntries(99, 3)), "1 2 3");
   assert.equal(render(getPaginationEntries(-4, 3)), "1 2 3");
   assert.deepEqual(getPaginationEntries(1, 0), []);
-  assert.equal(clampPage(7, 3), 3);
-  assert.equal(clampPage(0, 3), 1);
-  assert.equal(clampPage(2, 0), 0);
+  assert.equal(clampPaginationPage(7, 3), 3);
+  assert.equal(clampPaginationPage(0, 3), 1);
+  assert.equal(clampPaginationPage(2, 0), 0);
   const keys = getPaginationEntries(10, 20)
     .filter((entry) => entry.type === "gap")
     .map((entry) => entry.key);

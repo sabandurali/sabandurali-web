@@ -5,7 +5,7 @@ import test from "node:test";
 import { fileURLToPath } from "node:url";
 import { createElement as h, type ReactElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import Breadcrumb, { homeCrumb } from "./Breadcrumb";
+import Breadcrumb, { homeBreadcrumbItem } from "./Breadcrumb";
 import { Button, ButtonLink } from "./Button";
 import Card from "./Card";
 import { cx } from "./cx";
@@ -270,7 +270,7 @@ test("Breadcrumb marks the current page and hides separators", () => {
   const html = render(
     h(Breadcrumb, {
       items: [
-        homeCrumb("tr"),
+        homeBreadcrumbItem("tr"),
         { label: "İlçeler", href: "/istanbul/ilceler" },
         { label: "Esenler" },
       ],
@@ -286,10 +286,10 @@ test("Breadcrumb marks the current page and hides separators", () => {
 });
 
 test("FRONTEND-6: every breadcrumb starts with the same home crumb", () => {
-  assert.deepEqual(homeCrumb("tr"), { label: "Ana sayfa", href: "/" });
-  assert.deepEqual(homeCrumb("en"), { label: "Home", href: "/en" });
+  assert.deepEqual(homeBreadcrumbItem("tr"), { label: "Ana sayfa", href: "/" });
+  assert.deepEqual(homeBreadcrumbItem("en"), { label: "Home", href: "/en" });
 
-  // No page writes its own home crumb: the label comes from homeCrumb().
+  // No page writes its own home crumb: the label comes from homeBreadcrumbItem().
   assert.deepEqual(
     publicSourcesMatching(/label:\s*"(?:Ana [Ss]ayfa|Home)",\s*href:/),
     [],
@@ -580,7 +580,7 @@ test("ARCHITECTURE-3: one Eyebrow and one PageIntro, both primitives", () => {
       eyebrow: "İLETİŞİM",
       title: "İletişim",
       lead: "Giriş",
-      breadcrumb: [homeCrumb("tr"), { label: "İletişim" }],
+      breadcrumb: [homeBreadcrumbItem("tr"), { label: "İletişim" }],
     }),
   );
   assert.equal(count(html, /<h1\b/), 1);

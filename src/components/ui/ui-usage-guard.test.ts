@@ -69,3 +69,47 @@ test("FRONTEND-5: the design system document names no removed component", () => 
   assert.doesNotMatch(doc, /\|\s*`StationMarker`/);
   assert.doesNotMatch(doc, /için `StationMarker`/);
 });
+
+/** Exported value names (functions, constants, classes) of a source text. */
+function exportedValues(source: string): string[] {
+  return [
+    ...source.matchAll(
+      /^export (?:async )?(?:function\*?|const|let|class) ([A-Za-z_$][\w$]*)/gm,
+    ),
+  ].flatMap((match) => (match[1] ? [match[1]] : []));
+}
+
+test("the value export reader finds functions, constants and classes", () => {
+  assert.deepEqual(
+    exportedValues(
+      "export function a() {}\nexport const b = 1;\nexport async function c() {}\nexport class D {}\nexport default function E() {}\nexport type F = 1;",
+    ),
+    ["a", "b", "c", "D"],
+  );
+});
+
+test("ARCHITECTURE-7: no component helper shares an exported name with a content helper", () => {
+  // Two exports with one name but different shapes (homeCrumb as a function
+  // and as a record, clampPage returning 0 or 1 for an empty list) let an
+  // auto-import pick the wrong module without a type error.
+  const owners = new Map<string, string[]>();
+  for (const [file, source] of sources) {
+    const layer = /^src\/components\//.test(file)
+      ? "components"
+      : /^src\/(?:content|lib)\//.test(file)
+        ? "content"
+        : null;
+    if (layer === null) continue;
+    for (const name of exportedValues(source)) {
+      owners.set(name, [...(owners.get(name) ?? []), `${layer}:${file}`]);
+    }
+  }
+  const shared = [...owners]
+    .filter(
+      ([, files]) =>
+        files.some((file) => file.startsWith("components:")) &&
+        files.some((file) => file.startsWith("content:")),
+    )
+    .map(([name, files]) => `${name}: ${files.join(", ")}`);
+  assert.deepEqual(shared, [], "give one of the two exports a distinct name");
+});

@@ -3,7 +3,7 @@ import DistrictNewsCard from "@/components/districts/DistrictNewsCard";
 import { districtWorkspaceCrumb } from "@/components/districts/district-breadcrumb";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
-import { homeCrumb } from "@/components/ui/Breadcrumb";
+import { homeBreadcrumbItem } from "@/components/ui/Breadcrumb";
 import Container from "@/components/ui/Container";
 import EmptyState from "@/components/ui/EmptyState";
 import PageIntro from "@/components/ui/PageIntro";
@@ -44,7 +44,7 @@ export default function DistrictNewsListPage({
         <PageIntro
           layout="page"
           breadcrumb={[
-            homeCrumb("tr"),
+            homeBreadcrumbItem("tr"),
             districtWorkspaceCrumb,
             { label: "İlçeler", href: districtGuidePath },
             { label: district.name, href: getDistrictPath(district.slug) },

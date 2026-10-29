@@ -1,5 +1,5 @@
 import { Fragment, type ReactNode } from "react";
-import Breadcrumb, { homeCrumb } from "@/components/ui/Breadcrumb";
+import Breadcrumb, { homeBreadcrumbItem } from "@/components/ui/Breadcrumb";
 import Chip from "@/components/ui/Chip";
 import Container from "@/components/ui/Container";
 import DistrictKeyMap from "@/components/ui/DistrictKeyMap";
@@ -135,7 +135,7 @@ export default function DistrictGuideArticle({
       <Container as="header" className="pt-6 pb-10 sm:pb-14">
         <Breadcrumb
           items={[
-            homeCrumb("tr"),
+            homeBreadcrumbItem("tr"),
             districtWorkspaceCrumb,
             { label: "İlçeler", href: districtGuidePath },
             { label: district.name },

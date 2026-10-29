@@ -2,7 +2,7 @@ export type PaginationEntry =
   { type: "page"; page: number } | { type: "gap"; key: string };
 
 /** Current page clamped to 1…total (0 when there are no pages). */
-export function clampPage(current: number, total: number): number {
+export function clampPaginationPage(current: number, total: number): number {
   const pageCount = Math.max(0, Math.floor(total));
   if (pageCount === 0) return 0;
   return Math.min(Math.max(1, Math.floor(current)), pageCount);
@@ -20,7 +20,7 @@ export function getPaginationEntries(
 ): PaginationEntry[] {
   const pageCount = Math.max(0, Math.floor(total));
   if (pageCount === 0) return [];
-  const page = clampPage(current, total);
+  const page = clampPaginationPage(current, total);
   const reach = Math.max(0, Math.floor(siblings));
 
   const shown = new Set<number>([1, pageCount]);

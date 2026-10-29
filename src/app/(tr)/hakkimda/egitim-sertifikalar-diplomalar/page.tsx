@@ -5,7 +5,7 @@ import TextLink from "@/components/ui/TextLink";
 import PageIntro from "@/components/ui/PageIntro";
 import PageShell from "@/components/workspaces/PageShell";
 import { createPageMetadata } from "@/lib/metadata";
-import { homeCrumb } from "@/components/ui/Breadcrumb";
+import { homeBreadcrumbItem } from "@/components/ui/Breadcrumb";
 
 const path = "/hakkimda/egitim-sertifikalar-diplomalar";
 
@@ -43,7 +43,7 @@ export default function EducationCertificatesDiplomasPage() {
         <Section>
           <PageIntro
             breadcrumb={[
-              homeCrumb("tr"),
+              homeBreadcrumbItem("tr"),
               { label: "Hakkımda", href: "/hakkimda" },
               { label: "Eğitim, Sertifikalar & Diplomalar" },
             ]}

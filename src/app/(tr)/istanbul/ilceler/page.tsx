@@ -4,7 +4,7 @@ import { districtWorkspaceCrumb } from "@/components/districts/district-breadcru
 import BackToTop from "@/components/layout/BackToTop";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
-import { homeCrumb } from "@/components/ui/Breadcrumb";
+import { homeBreadcrumbItem } from "@/components/ui/Breadcrumb";
 import DistrictTileMap from "@/components/ui/DistrictTileMap";
 import PageIntro from "@/components/ui/PageIntro";
 import Section from "@/components/ui/Section";
@@ -64,7 +64,7 @@ export default async function DistrictIndexPage() {
         <PageIntro
           layout="page"
           breadcrumb={[
-            homeCrumb("tr"),
+            homeBreadcrumbItem("tr"),
             districtWorkspaceCrumb,
             { label: "İlçeler" },
           ]}

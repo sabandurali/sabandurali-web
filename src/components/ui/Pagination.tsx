@@ -1,6 +1,6 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "./icons";
 import { cx } from "./cx";
-import { clampPage, getPaginationEntries } from "./pagination-entries";
+import { clampPaginationPage, getPaginationEntries } from "./pagination-entries";
 import { getUiStrings, type UiLocale } from "./strings";
 import UiLink from "./UiLink";
 import VisuallyHidden from "./VisuallyHidden";
@@ -33,7 +33,7 @@ export default function Pagination({
   const entries = getPaginationEntries(current, total, siblings);
   if (entries.length <= 1) return null;
   const strings = getUiStrings(locale);
-  const page = clampPage(current, total);
+  const page = clampPaginationPage(current, total);
   const pageCount = Math.floor(total);
 
   return (
