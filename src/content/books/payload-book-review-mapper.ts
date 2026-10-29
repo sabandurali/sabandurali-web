@@ -18,6 +18,11 @@ import {
   isRecord,
 } from "@/content/guards";
 import { mapMediaImage } from "@/content/media";
+import {
+  toPublicBookReviewSummary,
+  type BOOK_REVIEW_DETAIL_FIELDS,
+  type PublicBookReviewSummary,
+} from "@/content/books/public-types";
 import type { Book as PayloadBook } from "@/payload-types";
 
 function mapCoverImage(
@@ -372,4 +377,39 @@ export function mapPayloadBookReview(
   }
 
   return bookReview;
+}
+
+/**
+ * A review document read for a list, without the long-form detail fields
+ * (`BOOK_LIST_SELECT`).
+ */
+export type PayloadBookListDocument = Omit<
+  PayloadBook,
+  (typeof BOOK_REVIEW_DETAIL_FIELDS)[number]
+>;
+
+/**
+ * Maps a list document with the same rules as the review page: the detail
+ * fields only hold optional entries (blank rows are dropped, never
+ * rejected), so leaving them out of the query cannot change which reviews
+ * are public. A review is listed exactly when its page is served.
+ */
+export function mapPayloadBookReviewSummary(
+  value: PayloadBookListDocument,
+  now: Date = new Date(),
+): PublicBookReviewSummary | null {
+  const bookReview = mapPayloadBookReview(
+    {
+      ...value,
+      keyIdeas: [],
+      strengths: [],
+      weaknesses: [],
+      whoShouldRead: [],
+      whoShouldNotRead: [],
+      applicationNotes: [],
+      quotes: [],
+    },
+    now,
+  );
+  return bookReview === null ? null : toPublicBookReviewSummary(bookReview);
 }

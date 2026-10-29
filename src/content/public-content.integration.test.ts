@@ -778,8 +778,9 @@ test("home photos still fill the limit when the mapper rejects a document", asyn
   );
 });
 
-const { PayloadPublicBookReviewRepository } =
+const { BOOK_LIST_SELECT, PayloadPublicBookReviewRepository } =
   await import("./books/payload-book-review-repository");
+const { BOOK_REVIEW_DETAIL_FIELDS } = await import("./books/public-types");
 const { PayloadPublicPageRepository } =
   await import("./pages/payload-page-repository");
 
@@ -877,11 +878,26 @@ test("book reviews: public rules, both translation directions, limits and narrow
       books: { updatedAt: true },
     });
   }
+  // The list queries (sorted; relationship population reads are not) leave
+  // the long-form detail fields out.
+  const listReads = bookReads.filter(
+    (call) => call.arguments[0]?.sort !== undefined,
+  );
+  assert.ok(listReads.length > 0);
+  for (const call of listReads) {
+    assert.deepEqual(call.arguments[0]?.select, BOOK_LIST_SELECT);
+  }
   find.mock.restore();
   assert.deepEqual(slugs(turkish), ["derin-calisma", "eski-inceleme"]);
-  // The repository returns public types: no editorial field leaves it.
+  // The repository returns public list summaries: no editorial or detail
+  // field leaves it.
   for (const review of turkish) {
-    for (const field of ["reviewStatus", "relatedBookIds", "showOnHomepage"]) {
+    for (const field of [
+      "reviewStatus",
+      "relatedBookIds",
+      "showOnHomepage",
+      ...BOOK_REVIEW_DETAIL_FIELDS,
+    ]) {
       assert.equal(field in review, false, field);
     }
   }
@@ -903,6 +919,9 @@ test("book reviews: public rules, both translation directions, limits and narrow
     "en",
   );
   assert.ok(turkishReview && englishReview);
+  // The review page still receives the detail fields.
+  assert.deepEqual(turkishReview.keyIdeas, []);
+  assert.ok(Array.isArray(turkishReview.quotes));
   assert.equal(
     (await bookReviews.findPublishedTranslation(turkishReview, "en"))?.slug,
     "deep-work",

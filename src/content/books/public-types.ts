@@ -76,3 +76,73 @@ export function toPublicBookReview(bookReview: BookReview): PublicBookReview {
         }),
   };
 }
+
+/**
+ * Long-form fields only the review page shows. Lists (cards, the home page,
+ * the sitemap, static params) never read them: the list query leaves them
+ * out (`BOOK_LIST_SELECT`) and the summary type does not carry them.
+ */
+export const BOOK_REVIEW_DETAIL_FIELDS = [
+  "keyIdeas",
+  "strengths",
+  "weaknesses",
+  "whoShouldRead",
+  "whoShouldNotRead",
+  "applicationNotes",
+  "quotes",
+] as const satisfies ReadonlyArray<keyof PublicBookReview>;
+
+type BookReviewDetailField = (typeof BOOK_REVIEW_DETAIL_FIELDS)[number];
+
+/** What a list of reviews (card, home page, sitemap) receives. */
+export type PublicBookReviewSummary = Omit<
+  PublicBookReview,
+  BookReviewDetailField
+>;
+
+/**
+ * The list projection of a review, again an allowlist: the public fields
+ * without the long-form detail fields.
+ */
+export function toPublicBookReviewSummary(
+  bookReview: BookReview | PublicBookReview,
+): PublicBookReviewSummary {
+  return {
+    id: bookReview.id,
+    title: bookReview.title,
+    slug: bookReview.slug,
+    language: bookReview.language,
+    translationGroupId: bookReview.translationGroupId,
+    originalTitle: bookReview.originalTitle,
+    authors: bookReview.authors,
+    translator: bookReview.translator,
+    publisher: bookReview.publisher,
+    originalPublisher: bookReview.originalPublisher,
+    publicationYear: bookReview.publicationYear,
+    originalPublicationYear: bookReview.originalPublicationYear,
+    edition: bookReview.edition,
+    isbn10: bookReview.isbn10,
+    isbn13: bookReview.isbn13,
+    pageCount: bookReview.pageCount,
+    coverImage: bookReview.coverImage,
+    category: bookReview.category,
+    tags: bookReview.tags,
+    readingStatus: bookReview.readingStatus,
+    startedAt: bookReview.startedAt,
+    completedAt: bookReview.completedAt,
+    summary: bookReview.summary,
+    personalEvaluation: bookReview.personalEvaluation,
+    rating: bookReview.rating,
+    featured: bookReview.featured,
+    seo: bookReview.seo,
+    createdAt: bookReview.createdAt,
+    updatedAt: bookReview.updatedAt,
+    publishedAt: bookReview.publishedAt,
+    ...(bookReview.translationSourceBookReviewId === undefined
+      ? {}
+      : {
+          translationSourceBookReviewId:
+            bookReview.translationSourceBookReviewId,
+        }),
+  };
+}

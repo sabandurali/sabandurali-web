@@ -6,11 +6,11 @@ import EmptyState from "@/components/ui/EmptyState";
 import Section from "@/components/ui/Section";
 import { bookPageContent } from "@/content/books/book-page-content";
 import { bookListPaths } from "@/content/books/book-routes";
-import type { PublicBookReview } from "@/content/books/public-types";
+import type { PublicBookReviewSummary } from "@/content/books/public-types";
 import type { BookReviewLanguage } from "@/content/books/types";
 
 type BookReviewListPageProps = {
-  bookReviews: ReadonlyArray<PublicBookReview>;
+  bookReviews: ReadonlyArray<PublicBookReviewSummary>;
   locale: BookReviewLanguage;
 };
 

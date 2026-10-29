@@ -2,7 +2,14 @@ import assert from "node:assert/strict";
 import test, { type TestContext } from "node:test";
 import type { Book as PayloadBook } from "../../payload-types";
 import { mediaDocument } from "../rich-text/lexical-fixtures";
-import { mapPayloadBookReview } from "./payload-book-review-mapper";
+import {
+  mapPayloadBookReview,
+  mapPayloadBookReviewSummary,
+} from "./payload-book-review-mapper";
+import {
+  BOOK_REVIEW_DETAIL_FIELDS,
+  toPublicBookReviewSummary,
+} from "./public-types";
 
 const now = new Date("2026-10-28T12:00:00Z");
 
@@ -139,4 +146,39 @@ test("translations share one group id from either side of the relation", (t) => 
   assert.equal(turkish?.translationSourceBookReviewId, "book-2");
   assert.ok(turkish?.translationGroupId);
   assert.equal(english?.translationGroupId, turkish?.translationGroupId);
+});
+
+function withoutDetailFields(document: PayloadBook) {
+  const listed: Record<string, unknown> = { ...document };
+  for (const field of BOOK_REVIEW_DETAIL_FIELDS) delete listed[field];
+  return listed as Omit<
+    PayloadBook,
+    (typeof BOOK_REVIEW_DETAIL_FIELDS)[number]
+  >;
+}
+
+test("SEO-PERF-6: a list document is listed exactly when its page is served", (t) => {
+  t.mock.method(console, "warn", () => {});
+  const cases: Array<Record<string, unknown>> = [
+    {},
+    // Blank detail rows are dropped on the page, never rejected.
+    { quotes: [{ id: "q1", text: "   ", order: 1 }], keyIdeas: [{}] },
+    { summary: "" },
+    { seo: { title: "T", description: "D", index: false, follow: true } },
+    { publishedAt: "2027-01-01T00:00:00Z" },
+    { reviewStatus: "archived" },
+  ];
+  for (const overrides of cases) {
+    const document = book(overrides);
+    const page = mapPayloadBookReview(document, now);
+    const summary = mapPayloadBookReviewSummary(
+      withoutDetailFields(document),
+      now,
+    );
+    assert.deepEqual(
+      summary,
+      page === null ? null : toPublicBookReviewSummary(page),
+      JSON.stringify(overrides),
+    );
+  }
 });

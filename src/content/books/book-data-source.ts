@@ -9,7 +9,9 @@ import {
 } from "@/content/books/static-book-reviews";
 import {
   toPublicBookReview,
+  toPublicBookReviewSummary,
   type PublicBookReview,
+  type PublicBookReviewSummary,
 } from "@/content/books/public-types";
 import type { BookReviewLanguage } from "@/content/books/types";
 import { readPublicSource } from "@/content/public-source";
@@ -84,17 +86,17 @@ export const getPublishedBookReviewPageData = cache(
   },
 );
 
-function listStatic(language: BookReviewLanguage): PublicBookReview[] {
+function listStatic(language: BookReviewLanguage): PublicBookReviewSummary[] {
   return listStaticPublishedBookReviews(
     staticBookReviews,
     language,
     new Date(),
-  ).map(toPublicBookReview);
+  ).map(toPublicBookReviewSummary);
 }
 
-/** Every public review of one language, newest first. */
+/** Every public review of one language, newest first, as list summaries. */
 export const getAllPublishedBookReviews = cache(
-  async (language: BookReviewLanguage): Promise<PublicBookReview[]> =>
+  async (language: BookReviewLanguage): Promise<PublicBookReviewSummary[]> =>
     isPayloadSource()
       ? payloadBookReviewRepository.listPublished(language)
       : listStatic(language),
@@ -109,7 +111,7 @@ export const getLatestPublishedBookReviews = cache(
   async (
     language: BookReviewLanguage,
     limit: number,
-  ): Promise<PublicBookReview[]> =>
+  ): Promise<PublicBookReviewSummary[]> =>
     isPayloadSource()
       ? payloadBookReviewRepository.listPublished(language, new Date(), limit)
       : listStatic(language).slice(0, Math.max(0, limit)),
