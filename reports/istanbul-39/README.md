@@ -49,10 +49,10 @@ Slug bazlı import: olmayan kaydı draft oluşturur; yönetilmeyen veya elle de�
 
 Yeni additive PostgreSQL migration: `20260909_181042_istanbul_district_sources`. Altı yeni tablo, altı yeni enum, mevcut iki status enum'una üçer değer, 22 yeni kolon, altı foreign key ve 12 index. Nullable/default alanlar mevcut kayıtları silmez. `down` veri silmeden hata verir. PostgreSQL schema push kapalı kalır. Production migration **çalıştırılmadı**.
 
-İzole PGlite kontrolü `@electric-sql/pglite` devDependency'sini kullanır ve `npm test` içinde çalışır; canlı Postgres veya Neon'a bağlanmaz (`PGLITE_MODULE` ile başka bir PGlite derlemesi denenebilir). CMS kontrolü argümansız çalıştırıldığında geçici bir SQLite veritabanı oluşturur, 39 taslağı `district:import` ile aktarır ve sonunda siler; hazır bir `/tmp/istanbul-39-*` veritabanı da verilebilir:
+İzole PGlite kontrolü `@electric-sql/pglite` devDependency'sini kullanır ve `npm test` içinde çalışır; canlı Postgres veya Neon'a bağlanmaz. (Güncelleme 2026-10-29: ayrı `test:migrations` / `check-postgres.mjs` kopyası kaldırıldı; replay artık yalnızca `src/collections/schema-migration.test.ts` içinde, "son UP additive" kuralı `scripts/migration-additive.test.ts` içinde çalışır.) CMS kontrolü argümansız çalıştırıldığında geçici bir SQLite veritabanı oluşturur, 39 taslağı `district:import` ile aktarır ve sonunda siler; hazır bir `/tmp/istanbul-39-*` veritabanı da verilebilir:
 
 ```sh
-npm run test:migrations
+npm test
 npm run e2e:districts:cms
 npm run e2e:districts:cms -- /tmp/istanbul-39-audit/payload-test.db
 ```

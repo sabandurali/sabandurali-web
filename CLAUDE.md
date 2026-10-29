@@ -29,7 +29,11 @@ identifiers and commit messages in English.
 | `npm run generate:types` / `generate:importmap` | Regenerate `src/payload-types.ts` / the admin import map after a schema or admin component change |
 | `npm run e2e:headers -- <url>` | Security header check against a local production server |
 | `npm run e2e:districts:cms` | District guide CMS rules on a temporary SQLite database |
-| `npm run e2e:districts:routes` / `e2e:content-trust` | Playwright checks against a local server at `DISTRICT_TEST_URL` (output in `DISTRICT_TEST_OUTPUT`) |
+| `npm run e2e:districts:routes` / `e2e:content-trust` | Playwright (routes) and fetch (content trust) checks against a local server at `DISTRICT_TEST_URL` (output in `DISTRICT_TEST_OUTPUT`) |
+
+CI runs `e2e:content-trust`, `e2e:headers` and `e2e:districts:routes` after the build against `next start` on
+`127.0.0.1:3101`. Locally: `npm run build && npm run start -- --hostname 127.0.0.1 --port 3101`, then the same
+scripts with `DISTRICT_TEST_URL=http://127.0.0.1:3101` (content trust first: it checks the uncached redirects).
 
 The CI environment for local builds and tests (no `.env.local` needed) is the one in
 `.github/workflows/ci.yml`: `PAYLOAD_DATABASE=sqlite PAYLOAD_STORAGE=local DATABASE_URL=file:./.data/ci.db`,

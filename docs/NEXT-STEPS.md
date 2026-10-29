@@ -22,7 +22,7 @@ Do not build a new feature directly in production. Define the problem, verify th
 
 In priority order, choose one bounded outcome rather than opening all tracks at once:
 
-1. Review the homepage and overall visual system for a concrete refinement brief; preserve the SD navy/copper/paper identity.
+1. Review the homepage and overall visual system for a concrete refinement brief within the İstanbul Atlası design system (`docs/DESIGN-SYSTEM.md`, tokens in `src/app/globals.css`); the old navy/copper palette is retired.
 2. Improve article-to-district relationships, district-news presentation, and relevant internal links without weakening publication filters.
 3. Audit SEO entities, structured data, canonical links, and internal linking against current live output.
 4. Plan any remaining static-to-Payload public-source migration independently for pages, navigation, articles, books, or photos. Source modes are environment-controlled; verify Vercel before deciding that a migration is pending.

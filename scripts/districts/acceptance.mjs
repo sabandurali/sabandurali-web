@@ -10,6 +10,7 @@ import { districts as registeredDistricts } from "../../src/content/districts/di
 import {
   expectedSectionIds,
   expectsIndexedGuides,
+  redirectLocationProblem,
   robotsProblem,
   sitemapListsDistrict,
   withoutSoftHyphens,
@@ -128,8 +129,9 @@ try {
         4,
       );
       // The fixed section contract in order (docs/PROJECT-STATE.md §H).
-      // Research and news appear only with published content (content trust
-      // package, 2026-10-18); the other twelve always render.
+      // Research and news appear with published content, or with a
+      // "temporarily unavailable" note when their query failed; the other
+      // twelve always render.
       const sectionIds = await page
         .locator("main section[id]")
         .evaluateAll((nodes) => nodes.map((node) => node.id));
@@ -273,7 +275,14 @@ try {
       { maxRedirects: 0 },
     );
     assert.equal(response.status(), 308);
-    assert.equal(response.headers().location, "/istanbul/ilceler");
+    // headers() joins repeated lines; headersArray() keeps each one, so a
+    // duplicated Location header is caught.
+    const locations = response
+      .headersArray()
+      .filter(({ name }) => name.toLowerCase() === "location")
+      .map(({ value }) => value);
+    const problem = redirectLocationProblem(locations, "/istanbul/ilceler");
+    assert.equal(problem, null, problem ?? "");
   });
   const regressions = [];
   for (const path of [

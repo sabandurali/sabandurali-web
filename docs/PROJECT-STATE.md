@@ -10,7 +10,7 @@ Last verified handoff: 2026-10-04
 - Canonical production URL: `https://www.sabandurali.com`
 - Positioning: Gayrimenkul • Danışmanlık • Araştırma • Teknoloji
 - Monogram: SD
-- Design character: dark navy/near-black foundations, copper/bronze accents, and light paper tones. The implementation uses a navy/ink base (`#101D32`, `#07101C`, `#081220`) and a copper/gold accent family led by `#C9A24A`.
+- Design system: "İstanbul Atlası" (`docs/DESIGN-SYSTEM.md`): cool map-paper grounds, Boğaz-blue ink and sea, a single signal-orange accent, Archivo and Martian Mono. The tokens live only in `src/app/globals.css` (`@theme`); read them there instead of copying values into documents. The earlier navy/copper palette (`#101D32`, `#C9A24A` …) is retired and must not be reintroduced.
 
 Do not put account identifiers, credentials, tokens, or other secret values in repository documentation.
 
@@ -110,7 +110,7 @@ No district rewrite is required by default. The district layer is in maintenance
 
 ## H. District content contract
 
-The public district page has an exact 14-section presentation. Sections 11 and 12 render only when published research articles or news for the district exist; the other twelve always render, in this order (`npm run e2e:districts:routes` checks the section ids):
+The public district page has an exact 14-section presentation, rendered by `DistrictGuideArticle.tsx` with the order and numbering from `getVisibleDistrictSections` (`src/components/districts/district-guide-model.ts`). Sections 11 and 12 render when published research articles or news for the district exist, and also when their query failed: the section then shows a "temporarily unavailable" empty state instead of disappearing. With nothing published and no failure they are left out and the remaining sections are renumbered consecutively. The other twelve always render, in this order (`npm test` checks every published/empty/unavailable combination on the render path in `scripts/content-trust.test.ts`; `npm run e2e:districts:routes` checks the section ids of the built pages):
 
 1. Bir bakışta
 2. İlçenin hikâyesi
@@ -140,19 +140,13 @@ Content rules:
 
 Editorial goal: **“İlçeyi geziyor hissi; rapor okuyor hissi değil.”**
 
-The district experience combines Sini Kadıköy readability, Apple-like whitespace and restraint, and the SD identity. Preserve hierarchy, breathing room, source clarity, and a grounded local sense of place.
+The district experience combines Sini Kadıköy readability, Apple-like whitespace and restraint, and the İstanbul Atlası identity (wayfinding section signs, data tables, schematic maps). Preserve hierarchy, breathing room, source clarity, and a grounded local sense of place.
 
-## I. Paper tones and design
+## I. Grounds and design
 
-`DistrictEditorialGuidePage.tsx` maintains a district-specific light paper-tone map. These backgrounds sit inside the broader navy/copper/ink brand system rather than replacing it.
+District pages use the shared İstanbul Atlası tokens; there is no district-specific colour map. `DistrictEditorialGuidePage.tsx` sets the page ground to the `paper` token (`bg-paper`), and `DistrictGuideArticle.tsx` varies section grounds only through the `Section` tones of `src/components/ui/Section.tsx` (`paper`, `land`, `band`, `sea`). Every district, Esenler included, gets the same grounds.
 
-Esenler's paper tone is fixed at:
-
-```text
-#F4F0E8
-```
-
-Preserve it unless a deliberate, approved design-system change covers all district tones.
+The earlier per-district paper-tone map (Esenler `#F4F0E8`) was retired with the İstanbul Atlası rebuild. A district-specific ground would be a design-system change: record it in `docs/DESIGN-SYSTEM.md`, add it as a token in `src/app/globals.css` and keep the contrast tests in `src/components/ui/design-tokens.test.ts` passing.
 
 ## J. Esenler special history
 

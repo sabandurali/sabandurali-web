@@ -1,11 +1,13 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  alternateLanguages,
   decodeAttribute,
   expectedSectionIds,
   expectsIndexedGuides,
   guideSections,
   localImageUrl,
+  redirectLocationProblem,
   robotsProblem,
   sitemapListsDistrict,
   withoutSoftHyphens,
@@ -54,4 +56,45 @@ test("sitemap and title helpers", () => {
   assert.equal(sitemapListsDistrict(xml, "esenler"), true);
   assert.equal(sitemapListsDistrict(xml, "esen"), false);
   assert.equal(withoutSoftHyphens("Gazi­osman­paşa"), "Gaziosmanpaşa");
+});
+
+test("only <link rel=alternate> tags count as language alternates", () => {
+  // The Atlas header renders its language switch as <a hrefLang="en">: that
+  // is a link to /en, not an English alternate of the district guide.
+  const guide =
+    '<link rel="alternate" hrefLang="tr-TR" href="https://www.sabandurali.com/istanbul/ilceler/esenler"/>' +
+    '<a hrefLang="tr-TR" lang="tr" href="/istanbul/ilceler/esenler">TR</a>' +
+    '<a hrefLang="en" lang="en" href="/en">EN</a>';
+  assert.deepEqual(alternateLanguages(guide), ["tr-TR"]);
+  assert.equal(guide.includes('hrefLang="en"'), true);
+  const bilingual =
+    '<link rel="alternate" hrefLang="tr-TR" href="/makaleler"/>' +
+    "<link href='/en/articles' hreflang='en' rel='alternate'>" +
+    '<link rel="alternate" type="application/rss+xml" href="/feed.xml"/>' +
+    '<link rel="canonical" hrefLang="en" href="/x"/>';
+  assert.deepEqual(alternateLanguages(bilingual), ["tr-TR", "en"]);
+  assert.deepEqual(alternateLanguages(""), []);
+});
+
+test("a redirect carries exactly one Location header with the target", () => {
+  assert.equal(
+    redirectLocationProblem(["/istanbul/ilceler"], "/istanbul/ilceler"),
+    null,
+  );
+  // The first uncached prerendered 308 used to repeat the header.
+  assert.match(
+    redirectLocationProblem(
+      ["/istanbul/ilceler", "/istanbul/ilceler"],
+      "/istanbul/ilceler",
+    ),
+    /expected one Location header, got 2/,
+  );
+  assert.match(
+    redirectLocationProblem([], "/istanbul/ilceler"),
+    /missing Location/,
+  );
+  assert.match(
+    redirectLocationProblem(["/kitaplar"], "/istanbul/ilceler"),
+    /expected Location \/istanbul\/ilceler, got \/kitaplar/,
+  );
 });

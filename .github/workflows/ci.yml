@@ -15,9 +15,9 @@ concurrency:
 
 jobs:
   check:
-    name: Typecheck, lint, format, test and build
+    name: Typecheck, lint, format, test, build and e2e
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     env:
       # CI-only local environment: SQLite, local media and static public
       # sources. No secret, no production service and no network database.
@@ -66,6 +66,44 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      # The e2e checks run against the production build served locally on
+      # 127.0.0.1 with the same CI-only environment: no secret, no network
+      # database and no deployed origin. The scripts refuse non-local URLs.
+      - name: Start the production server
+        run: |
+          npm run start -- --hostname 127.0.0.1 --port 3101 > "$RUNNER_TEMP/next-start.log" 2>&1 &
+          for _ in $(seq 1 60); do
+            if curl --silent --output /dev/null http://127.0.0.1:3101/; then exit 0; fi
+            sleep 1
+          done
+          cat "$RUNNER_TEMP/next-start.log"
+          exit 1
+
+      # First, so the legacy redirects are checked on their first, uncached
+      # response (x-nextjs-cache: MISS).
+      - name: E2E content trust (39 districts, redirects, TR/EN routes)
+        run: npm run e2e:content-trust
+        env:
+          DISTRICT_TEST_URL: http://127.0.0.1:3101
+          DISTRICT_TEST_OUTPUT: ${{ runner.temp }}/content-trust-routes
+
+      - name: E2E security headers
+        run: npm run e2e:headers -- http://127.0.0.1:3101
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: E2E district routes (Playwright)
+        run: npm run e2e:districts:routes
+        env:
+          DISTRICT_TEST_URL: http://127.0.0.1:3101
+          DISTRICT_TEST_OUTPUT: ${{ runner.temp }}/istanbul-39-acceptance
+          BROWSER_CHANNEL: chromium
+
+      - name: Server log
+        if: failure()
+        run: cat "$RUNNER_TEMP/next-start.log" || true
 
   audit:
     name: Audit production dependencies
