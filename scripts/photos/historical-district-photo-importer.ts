@@ -38,6 +38,15 @@ type HistoricalImporterOptions = {
   downloadDirectory: string;
 };
 
+/**
+ * A Payload document as the engine reads it: every field by name. Spreading
+ * copies the fields into a plain record, so no cast hides a schema change.
+ */
+export function toHistoricalDocument(doc: { id: string }): HistoricalDocument {
+  const fields: Record<string, unknown> = { ...doc };
+  return { ...fields, id: doc.id };
+}
+
 function payloadRepository(payload: Payload): HistoricalRepository {
   return {
     async readSnapshot(): Promise<HistoricalSnapshot> {
@@ -70,19 +79,21 @@ function payloadRepository(payload: Payload): HistoricalRepository {
         }),
       ]);
       return {
-        collections: collections.docs as unknown as HistoricalDocument[],
-        media: media.docs as unknown as HistoricalDocument[],
-        photos: photos.docs as unknown as HistoricalDocument[],
+        collections: collections.docs.map(toHistoricalDocument),
+        media: media.docs.map(toHistoricalDocument),
+        photos: photos.docs.map(toHistoricalDocument),
       };
     },
     async createCollection(data) {
-      return (await payload.create({
-        collection: "photo-collections",
-        data: data as never,
-        draft: false,
-        locale: "tr",
-        overrideAccess: true,
-      })) as unknown as HistoricalDocument;
+      return toHistoricalDocument(
+        await payload.create({
+          collection: "photo-collections",
+          data,
+          draft: false,
+          locale: "tr",
+          overrideAccess: true,
+        }),
+      );
     },
     async updateCollectionEnglish(id, data) {
       await payload.update({
@@ -94,25 +105,29 @@ function payloadRepository(payload: Payload): HistoricalRepository {
       });
     },
     async createMedia(item, filePath) {
-      return (await payload.create({
-        collection: "media",
-        data: {
-          alt: historicalAlt(item),
-          description: historicalDescription(item),
-          sourceCopyright: item.requiredAttribution,
-        },
-        filePath,
-        overrideAccess: true,
-      })) as unknown as HistoricalDocument;
+      return toHistoricalDocument(
+        await payload.create({
+          collection: "media",
+          data: {
+            alt: historicalAlt(item),
+            description: historicalDescription(item),
+            sourceCopyright: item.requiredAttribution,
+          },
+          filePath,
+          overrideAccess: true,
+        }),
+      );
     },
     async createPhoto(data) {
-      return (await payload.create({
-        collection: "photos",
-        data: data as never,
-        draft: false,
-        locale: "tr",
-        overrideAccess: true,
-      })) as unknown as HistoricalDocument;
+      return toHistoricalDocument(
+        await payload.create({
+          collection: "photos",
+          data,
+          draft: false,
+          locale: "tr",
+          overrideAccess: true,
+        }),
+      );
     },
     async deletePhoto(id) {
       await payload.delete({ collection: "photos", id, overrideAccess: true });
@@ -215,7 +230,14 @@ export async function runHistoricalImporter({
   }
   const mode = values.apply ? "apply" : values.verify ? "verify" : "dry-run";
   assertHistoricalEnvironment(process.env, mode, batchConfig);
-  describeProductionDatabase(process.env.DATABASE_URL!);
+  const databaseUrl = process.env.DATABASE_URL;
+  if (!databaseUrl) {
+    throw new HistoricalPhotoImportError(
+      "configuration_failed",
+      "DATABASE_URL is required.",
+    );
+  }
+  describeProductionDatabase(databaseUrl);
 
   const migrationState = await readProductionMigrationState(process.env);
   if (
@@ -229,7 +251,7 @@ export async function runHistoricalImporter({
   }
 
   const manifest = JSON.parse(
-    await readFile(values.manifest!, "utf8"),
+    await readFile(values.manifest, "utf8"),
   ) as HistoricalPhotoManifest;
   validateHistoricalManifest(manifest, batchConfig);
 

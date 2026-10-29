@@ -15,6 +15,7 @@ import {
   fingerprint,
   importVersion,
   researchFingerprint,
+  toFieldRecord,
   type ResearchBundle,
 } from "./import-core";
 const { values } = parseArgs({
@@ -31,7 +32,7 @@ const { values } = parseArgs({
 if (values.apply && values["dry-run"])
   throw new Error("Choose --apply or --dry-run.");
 const bundle = JSON.parse(
-  await readFile(values.input!, "utf8"),
+  await readFile(values.input, "utf8"),
 ) as ResearchBundle;
 validateBundle(bundle);
 if (values.editorial)
@@ -123,7 +124,7 @@ if (values["offline-empty"]) {
         (item) => item.district === row.district,
       );
       const decision = decideImport(
-        existing as unknown as Record<string, unknown> | undefined,
+        existing === undefined ? undefined : toFieldRecord(existing),
         row,
       );
       const action =
@@ -138,10 +139,11 @@ if (values["offline-empty"]) {
     for (const planned of rows) {
       if (!apply || planned.action === "skip" || planned.action === "conflict")
         continue;
-      const { row, existing, decision } = planned;
+      const { row, existing } = planned;
       const data = makeDraft(row);
+      // decideImport plans "create" exactly when no document exists.
       const saved =
-        decision.action === "create"
+        existing === undefined
           ? await payload.create({
               collection: "district-guides",
               locale: "tr",
@@ -151,7 +153,7 @@ if (values["offline-empty"]) {
             })
           : await payload.update({
               collection: "district-guides",
-              id: existing!.id,
+              id: existing.id,
               locale: "tr",
               draft: true,
               overrideAccess: true,
@@ -169,9 +171,7 @@ if (values["offline-empty"]) {
             version: importVersion,
             sourceFingerprint: researchFingerprint(row),
             ...row.document,
-            fingerprint: fingerprint(
-              saved as unknown as Record<string, unknown>,
-            ),
+            fingerprint: fingerprint(toFieldRecord(saved)),
           },
         },
       });

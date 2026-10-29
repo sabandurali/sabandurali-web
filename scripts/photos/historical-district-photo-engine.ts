@@ -5,7 +5,19 @@
  * `historical-district-batch<N>-config.ts`; the engine never defaults to one.
  */
 import { createHash } from "node:crypto";
+import type { RequiredDataFromCollectionSlug } from "payload";
 import { districts } from "../../src/content/districts/district-registry";
+import { normalizeSlug } from "../../src/lib/localizedSlug";
+
+/** What `payload.create` accepts for each collection the importer writes. */
+export type HistoricalPhotoData = RequiredDataFromCollectionSlug<"photos">;
+export type HistoricalCollectionData =
+  RequiredDataFromCollectionSlug<"photo-collections">;
+type PhotoDistrict = NonNullable<HistoricalPhotoData["district"]>;
+
+function isPhotoDistrict(value: string): value is PhotoDistrict {
+  return districts.some((district) => district.slug === value);
+}
 
 export const historicalCollection = {
   tr: {
@@ -68,7 +80,7 @@ export type HistoricalPhotoManifest = {
 };
 
 export type HistoricalDocument = Record<string, unknown> & {
-  id: number | string;
+  id: string;
 };
 
 export type HistoricalSnapshot = {
@@ -101,19 +113,19 @@ export type HistoricalPlan = {
 
 export type HistoricalRepository = {
   readSnapshot(): Promise<HistoricalSnapshot>;
-  createCollection(data: Record<string, unknown>): Promise<HistoricalDocument>;
+  createCollection(data: HistoricalCollectionData): Promise<HistoricalDocument>;
   updateCollectionEnglish(
-    id: number | string,
-    data: Record<string, unknown>,
+    id: string,
+    data: HistoricalCollectionData,
   ): Promise<void>;
   createMedia(
     item: HistoricalPhotoItem,
     filePath: string,
   ): Promise<HistoricalDocument>;
-  createPhoto(data: Record<string, unknown>): Promise<HistoricalDocument>;
-  deletePhoto(id: number | string): Promise<void>;
-  deleteMedia(id: number | string): Promise<void>;
-  deleteCollection(id: number | string): Promise<void>;
+  createPhoto(data: HistoricalPhotoData): Promise<HistoricalDocument>;
+  deletePhoto(id: string): Promise<void>;
+  deleteMedia(id: string): Promise<void>;
+  deleteCollection(id: string): Promise<void>;
 };
 
 export class HistoricalPhotoImportError extends Error {
@@ -453,11 +465,20 @@ export function buildHistoricalPlan(
 
 export function makeHistoricalPhotoData(
   item: HistoricalPhotoItem,
-  mediaId: number | string,
-  collectionId: number | string,
-): Record<string, unknown> {
+  mediaId: string,
+  collectionId: string,
+): HistoricalPhotoData {
+  if (!isPhotoDistrict(item.district)) {
+    throw new HistoricalPhotoImportError(
+      "input_failed",
+      "Historical photo district is not a registered Istanbul district.",
+    );
+  }
   return {
     title: item.title,
+    // The value the slug hook derives from the title; explicit because the
+    // create type requires it.
+    slug: normalizeSlug(item.title),
     description: historicalDescription(item),
     altText: historicalAlt(item),
     image: mediaId,
@@ -645,8 +666,8 @@ export async function applyHistoricalPlan(
       `${batchConfig.label} plan contains a conflict.`,
     );
   }
-  const createdPhotos: Array<string | number> = [];
-  const createdMedia: Array<string | number> = [];
+  const createdPhotos: string[] = [];
+  const createdMedia: string[] = [];
   let createdCollection: HistoricalDocument | undefined;
   try {
     const collection =
