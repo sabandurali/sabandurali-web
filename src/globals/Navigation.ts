@@ -255,6 +255,8 @@ export const Navigation: GlobalConfig = {
               name: "footerGroups",
               type: "array",
               label: "Bağlantı grupları",
+              // The footer always carries the KVKK and contact links.
+              minRows: 1,
               fields: [
                 {
                   name: "title",
@@ -286,6 +288,7 @@ export const Navigation: GlobalConfig = {
               name: "enFooter",
               type: "array",
               label: "Link groups",
+              minRows: 1,
               fields: [
                 {
                   name: "title",

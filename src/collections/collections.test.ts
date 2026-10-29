@@ -814,6 +814,12 @@ test("the English header tab is hidden and English links may only target the Eng
   assert.ok(enHeader.type === "array");
   assert.equal(enHeader.admin?.hidden, true);
 
+  for (const name of ["footerGroups", "enFooter"]) {
+    const footer = findField(Navigation, name);
+    assert.ok(footer.type === "array", name);
+    assert.equal(footer.minRows, 1, `${name} keeps the KVKK/contact links`);
+  }
+
   assert.deepEqual(getNavigationPageFilter("tr"), {
     language: { equals: "tr" },
   });
