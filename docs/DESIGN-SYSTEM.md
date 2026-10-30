@@ -330,6 +330,9 @@ kipinde kalır. Klavye modeli `menu-keys.ts` içindedir ve test edilir:
   tam header ve footer'la gelir; `/en/*` altındaki eşleşmeyen adresler `[...missing]` ile İngilizce 404'e
   düşer. `global-not-found` CMS okumaz, fontları ve stilleri kendisi yükler, Türkçe + `lang="en"` blokla iki
   dillidir. Hata ekranı `retry` kullanır, yalnızca sunucu `digest` değerini gösterir ve odağı başlığa taşır.
+  Kök layout'un kendisi hata verirse `src/app/global-error.tsx` devreye girer: aynı `ErrorScreen`, kendi
+  `<html lang="tr">`'si, fontları, stilleri ve iki dilli skip link'iyle; `lang="en"` blokta İngilizce metin,
+  "Try again" ve İngilizce ana sayfa bağlantısı vardır. CMS okumaz, `noindex`'tir.
 - `BackToTop`: kaydırınca görünen, 2 px mürekkep kenarlı `land` kare; görünmezken sekme sırasında değildir.
 
 ## 6. Erişilebilirlik kuralları

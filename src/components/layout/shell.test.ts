@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { createElement as h } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { istanbulYear, withCurrentYear } from "./copyright";
-import { getErrorDigest } from "./ErrorScreen";
+import ErrorScreen, { getErrorDigest, getErrorTexts } from "./ErrorScreen";
 import { getFooterLinkGroups } from "./footer-links";
 import { getLanguageOptions } from "./header-content";
 import LanguageSwitcher from "./LanguageSwitcher";
@@ -309,6 +309,38 @@ test("shell sources: atlas layouts, retry, English 404 catch-all, global 404", (
       file,
     );
   }
+});
+
+test("GLOBAL-ERROR: a branded, bilingual root error screen without CMS reads", () => {
+  const source = read("src/app/global-error.tsx");
+  assert.match(source, /^"use client";/);
+  assert.match(source, /export default function GlobalError\(/);
+  assert.match(source, /<html lang="tr"[^>]*className=\{fontVariables\}/);
+  assert.match(source, /import "\.\/globals\.css";/);
+  assert.match(
+    source,
+    /<body>\s*<title>[^<]+<\/title>\s*<meta name="robots" content="noindex" \/>\s*<SkipLink>\s*İçeriğe geç · <span lang="en">Skip to content<\/span>\s*<\/SkipLink>/,
+  );
+  assert.match(
+    source,
+    /<ErrorScreen\s+locale="tr"\s+error=\{error\}\s+retry=\{retry\}/,
+  );
+  assert.match(source, /<section\s+lang="en"/);
+  // No data layer: the screen must render when the CMS or the root layout fails.
+  assert.doesNotMatch(source, /@\/content\/|payload|server-only|async /);
+
+  const html = renderToStaticMarkup(
+    h(ErrorScreen, {
+      locale: "tr",
+      error: { digest: "abc123" },
+      retry: () => undefined,
+      aside: h("section", { lang: "en" }, "English block"),
+    }),
+  );
+  assert.match(html, /Sayfa şu anda gösterilemiyor\./);
+  assert.match(html, /Hata kodu: abc123/);
+  assert.match(html, /<section lang="en">English block<\/section>/);
+  assert.equal(getErrorTexts("en").retry, "Try again");
 });
 
 test("FRONTEND-6: every long page shell, the home page included, has BackToTop", () => {
