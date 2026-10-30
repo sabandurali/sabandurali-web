@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import path from "node:path";
 import test from "node:test";
+import { brandLogo, brandLogoOnDark } from "@/config/brand";
 import { districts } from "@/content/districts/district-registry";
 import {
   getDistrictDirectoryShareCard,
@@ -13,6 +14,7 @@ import {
   OgCard,
   createOgCard,
   defaultOgCardBrand,
+  getOgBrandImageSource,
   getOgTitleSize,
   ogCardSize,
 } from "./og-card";
@@ -42,7 +44,7 @@ test("DISTRICT-OG: every district card text is in the card font", () => {
     ...districts.map(getDistrictShareCard),
   ];
   for (const card of cards) {
-    const text = `${card.eyebrow}${card.title}${card.subtitle}${defaultOgCardBrand.name}${defaultOgCardBrand.domain}`;
+    const text = `${card.eyebrow}${card.title}${card.subtitle}${defaultOgCardBrand.domain}`;
     for (const letter of text.replace(/\s/g, "")) {
       assert.ok(
         codePoints.has(letter.codePointAt(0) ?? 0),
@@ -76,18 +78,63 @@ test("DISTRICT-OG: the card renders a 1200×630 PNG", async () => {
   assert.equal(view.getUint32(20), ogCardSize.height);
 });
 
+function dataUriBytes(source: string, type: string): Buffer {
+  const prefix = `data:${type};base64,`;
+  assert.ok(source.startsWith(prefix), source.slice(0, 40));
+  return Buffer.from(source.slice(prefix.length), "base64");
+}
+
+test("BRAND-OG: the card shows the identity v1 logo file for the sea ground, not live text", () => {
+  assert.equal(defaultOgCardBrand.logo, brandLogoOnDark);
+  assert.equal(
+    defaultOgCardBrand.logo.src,
+    "/brand/saban-durali-logo-color-ondark.svg",
+  );
+  // The embedded image is the package file, byte for byte.
+  const embedded = dataUriBytes(
+    getOgBrandImageSource(defaultOgCardBrand.logo),
+    "image/svg+xml",
+  );
+  assert.deepEqual(
+    embedded,
+    readFileSync(
+      "brand/saban-durali-kimlik-v1/logo/saban-durali-logo-color-ondark.svg",
+    ),
+  );
+
+  const first = districts[0];
+  assert.ok(first);
+  const markup = JSON.stringify(OgCard(getDistrictShareCard(first)));
+  assert.ok(markup.includes(getOgBrandImageSource(brandLogoOnDark)));
+  // The name is never set in the card font next to the logo.
+  assert.doesNotMatch(markup, /Şaban Durali/);
+  assert.match(markup, /sabandurali\.com/);
+});
+
+test("BRAND-OG: only files of public/brand/ can be embedded", () => {
+  for (const src of [
+    "/icon.png",
+    "/brand/../../.env.local",
+    "/brand/logo.jpg",
+    "brand/saban-durali-logo-color.svg",
+  ]) {
+    assert.throws(
+      () => getOgBrandImageSource({ src, width: 1, height: 1 }),
+      /Not a brand file/,
+      src,
+    );
+  }
+});
+
 test("DISTRICT-OG: the brand mark is one swappable input", () => {
   const first = districts[0];
   assert.ok(first);
   const card = getDistrictShareCard(first);
   const branded = JSON.stringify(
-    OgCard({ ...card, brand: { name: "Yeni Marka", domain: "ornek.test" } }),
+    OgCard({ ...card, brand: { logo: brandLogo, domain: "ornek.test" } }),
   );
-  assert.match(branded, /Yeni Marka/);
+  assert.ok(branded.includes(getOgBrandImageSource(brandLogo)));
   assert.match(branded, /ornek\.test/);
-  assert.doesNotMatch(branded, /Şaban Durali|sabandurali\.com/);
-
-  const standard = JSON.stringify(OgCard(card));
-  assert.match(standard, new RegExp(defaultOgCardBrand.name));
-  assert.match(standard, new RegExp(defaultOgCardBrand.domain));
+  assert.ok(!branded.includes(getOgBrandImageSource(brandLogoOnDark)));
+  assert.doesNotMatch(branded, /sabandurali\.com/);
 });
