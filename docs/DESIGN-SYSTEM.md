@@ -18,6 +18,7 @@ Kaynaklar (tek doğru kaynak bunlardır, bu belge onları açıklar):
 | `src/components/ui/` | Erişilebilir temel bileşenler |
 | `src/components/ui/design-tokens.test.ts` | Kontrast tablosu, 12 px tabanı, katman kuralı, odak halkası, font ayarları |
 | `src/components/ui/typography-guard.test.ts` | Sitede 12 px altı yazı boyutu yasağı |
+| `brand/saban-durali-kimlik-v1/` | Marka kimliği paketi v1: logo, işaret, ikonlar, kılavuz (§8) |
 
 ## 1. İlkeler
 
@@ -173,7 +174,7 @@ sınıfla ezebilirsiniz (`type-data font-bold`). Aynı özelliği iki tek özell
 | `type-sign` | 17 px, 700 | Yön levhası adı |
 | `type-tile` | 14 px, 600, 76 % | Harita karesi etiketi |
 | `type-region` | 13 px, 700, 125 %, 0.16 em, büyük harf | AVRUPA YAKASI gibi bölge etiketleri ve ana sayfa bölüm etiketleri |
-| `type-wordmark` / `type-tagline` | 17 / 12 px | ŞABAN DURALİ ve alt satırı |
+| `type-wordmark` / `type-tagline` | 17 / 12 px | Eski metin wordmark'ı; logo artık SVG dosyasıdır (§8), şu an kullanılmıyor |
 | `type-data` / `type-data-md` / `type-data-lg` | 12 / 13 / 17 → 22 px, mono | Veri etiketleri, tarihler, tablo değerleri |
 
 **Taban 12 px'tir.** Daha küçük bir token, sınıf ya da `text-[…]` değeri yoktur;
@@ -316,8 +317,8 @@ kipinde kalır. Klavye modeli `menu-keys.ts` içindedir ve test edilir:
   büyük Twitter kartı; canonical, hreflang ve `og:url` yok) verir. `export const revalidate = 3600` altındaki
   her prerender rotaya bir saatlik güvenlik ağı olur (rota, layout ve sayfa değerlerinin en küçüğüyle
   yenilenir); dinamik rotalar dinamik kalır. Header ve footer'ı sayfa çizer; `<main id="main">` sayfanındır.
-- **Header:** `paper` zemin, 2 px mürekkep alt çizgi. İlk satır `Wordmark` (ŞABAN DURALİ, ana sayfa
-  bağlantısı; adı "ŞABAN DURALİ, ana sayfa") ve dil seçici; 1280 px'ten itibaren altta `NavMenu
+- **Header:** `paper` zemin, 2 px mürekkep alt çizgi. İlk satır `Wordmark` (kimlik logosu, ana sayfa
+  bağlantısı; adı "Şaban Durali, Araştırma ve Bilgi Platformu, ana sayfa", §8) ve dil seçici; 1280 px'ten itibaren altta `NavMenu
   layout="bar"` (ana sayfa öğesi yok: wordmark onun yerine geçer). Daha dar ekranda "Menü" `Disclosure`'ı:
   panel tam genişlik, içinde `NavMenu layout="stack"` ve dil seçici; bir bağlantı izlenince kapanır.
   `toNavMenuItems` (test edilir) mevcut sayfayı ve bölümü işaretler, bir paneldeki yinelenen bağlantıları
@@ -331,7 +332,7 @@ kipinde kalır. Klavye modeli `menu-keys.ts` içindedir ve test edilir:
   o dilin ana ya da liste sayfasına gider ve yanında o dilde görünür bir not durur ("Only in Turkish" /
   "Yalnızca İngilizce"), bağlantı bu nota `aria-describedby` ile bağlıdır. Yeni bir sayfa rotası
   manifestoya ya karşılığıyla ya da gerekçeli `tr-only` olarak eklenir (test eder).
-- **Footer:** `sea` zemin (odak halkası beyaz), wordmark, platform cümlesi, mini site haritası, footer
+- **Footer:** `sea` zemin (odak halkası beyaz), koyu zemin logosu (`-color-ondark`), platform cümlesi, mini site haritası, footer
   bağlantıları (KVKK ve iletişim her zaman vardır), telif satırı. Site haritası kodda tanımlıdır
   (`getFooterSitemapGroups`): Türkçede çalışma alanları, ilçe rehberi ve yayın listeleri; iki dilde de
   hakkımda, arama (`/ara`, `/en/search`), RSS (`/feed.xml`, `/en/feed.xml`) ve diğer dil (kendi dilinde
@@ -380,3 +381,33 @@ kipinde kalır. Klavye modeli `menu-keys.ts` içindedir ve test edilir:
 | Kardeşler arası boşluğu kapsayıcıda `grid gap-*` / `flex gap-*` ile | `space-y-*` / `space-x-*`: Tailwind 4'te özgüllüğü 0, çocuktaki `m-0` onu ezer (`spacing-utilities.test.ts`) |
 | Tek başına duran bağlantıya `inline-flex min-h-tap items-center` ya da `TextLink variant="standalone"` | Başlıktaki ya da listedeki gezinme bağlantısını 44 px'in altında bırakmak |
 | Kırıntı etiketini hedef sayfanın adıyla (`districtWorkspaceCrumb`) | Aynı hedefe iki farklı adla bağlanmak (WCAG 3.2.4) |
+
+## 8. Marka kimliği / Brand identity
+
+Tek doğru kaynak `brand/saban-durali-kimlik-v1/`: sahibinin kesin kimlik paketi, teslim edildiği gibi
+(Prettier dışında, yayımlanmaz). Önce `README.md`, ayrıntı `SABAN_DURALI_BRAND_SYSTEM.md`, tam kılavuz
+`SABAN_DURALI_MARKA_KILAVUZU.pdf`. Renk, köşe ve yazı değişkenleri §2–3'tekilerle birebir aynıdır.
+
+- **Dosyalar.** `logo/`, `wordmark/`, `symbol/` ve `graphic/` SVG'leri `public/brand/` altında aynı adlarla
+  yayımlanır (`src/config/brand.ts` → `publishedBrandFiles`; `brand.test.ts` paketle bayt bayt aynı
+  olduklarını denetler). E-posta imzasının logosu `public/eposta/saban-durali-eposta-logo@2x.png`.
+- **Sitede.** `Wordmark` logoyu SVG dosyasından gösterir; ad hiçbir zaman metinle ya da CSS ile yeniden
+  çizilmez. Header (kâğıt): 640 px'ten itibaren yatay logo `saban-durali-logo-color.svg` 36 px yüksek
+  (285 px); daha dar ekranda yalnız ad `saban-durali-wordmark-name-color.svg` 18 px (174 px). Footer
+  (deniz): `saban-durali-logo-color-ondark.svg` 36 px. `alt` sayfanın dilindedir: "Şaban Durali, Araştırma
+  ve Bilgi Platformu" / "Şaban Durali, Research and Knowledge Platform" (logodaki alt satır Türkçedir).
+- **İkonlar.** `src/app/favicon.ico`, `icon.svg`, `icon.png`, `apple-icon.png` (Next.js dosya kuralları),
+  `public/site.webmanifest` ve onun `icon-192.png`, `icon-512.png`, `icon-maskable-512.png` dosyaları
+  paketin `web/` klasöründendir; manifest kök metadata'dan bağlanır (`createRootLayoutMetadata`).
+  Varsayılan paylaşım görseli `public/brand/site-og.jpg` paketin `web/opengraph-image.png`'sinin
+  1200 × 630 JPEG'idir. **Eski siyah zeminli, altın serif SD ikonu emekliye ayrıldı**; hiçbir yerde
+  kullanılmaz (`brand-assets/` içindeki eski kopyalar yalnız arşivdir).
+- **En küçük boylar (ekran).** Yatay logo 200 px, dikey logo 150 px, yalnız ad 110 px, işaret 24 px;
+  16–32 px için işaretin küçük boy kesimi (`symbol-small`).
+- **Koruma alanı.** Logonun her yanında en az x (ŞABAN DURALİ'nin harf yüksekliği; yatay logoda
+  yüksekliğin ~%42'si); işaret tek başına durduğunda her yanda işaret yüksekliğinin yarısı.
+- **Renk sürümleri.** `-color` açık zemin (birincil), `-color-ondark` deniz zemin, `-navy` / `-black` /
+  `-white` tek renk.
+- **Yapma.** Rengi değiştirmek, turuncu kesişimi kaldırmak ya da tek renge boyamak (tek renk dosyalar
+  dışında), Ş'nin çengelini silmek, adı başka yazı tipiyle yazmak, esnetmek, döndürmek, gölge ya da
+  parlama eklemek, logoyu turuncu zemine koymak, koyu zemin sürümünü açık zeminde kullanmak.
