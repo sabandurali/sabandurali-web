@@ -31,13 +31,37 @@ test("hreflang pairs list both versions and default to Turkish", () => {
   );
 });
 
-test("a single language version gets a self hreflang and no x-default", () => {
-  assert.deepEqual(createLanguageAlternates({ tr: "/hakkimda" }), {
-    "tr-TR": `${site}/hakkimda`,
+test("HREFLANG-SYMMETRY: a single language version is in no hreflang cluster", () => {
+  assert.deepEqual(createLanguageAlternates({ tr: "/hakkimda" }), {});
+  assert.deepEqual(createLanguageAlternates({ en: "/en/articles/a" }), {});
+  assert.deepEqual(createLanguageAlternates({}), {});
+});
+
+test("HREFLANG-SYMMETRY: every cluster has x-default and is symmetric", () => {
+  const paths = { tr: "/iletisim", en: "/en/contact" };
+  const fromTr = createPageMetadata({
+    title: "İletişim | Şaban Durali",
+    description: "İletişim.",
+    locale: "tr",
+    path: paths.tr,
+    translations: { en: paths.en },
   });
-  assert.deepEqual(createLanguageAlternates({ en: "/en/articles/a" }), {
-    en: `${site}/en/articles/a`,
+  const fromEn = createPageMetadata({
+    title: "Contact | Şaban Durali",
+    description: "Contact.",
+    locale: "en",
+    path: paths.en,
+    translations: { tr: paths.tr },
   });
+  assert.deepEqual(fromTr.alternates?.languages, fromEn.alternates?.languages);
+  assert.deepEqual(
+    fromTr.alternates?.languages,
+    createLanguageAlternates(paths),
+  );
+  assert.equal(
+    (fromTr.alternates?.languages as Record<string, string>)["x-default"],
+    `${site}/iletisim`,
+  );
 });
 
 test("page metadata always has canonical, hreflang, robots, OG and Twitter", () => {
@@ -106,9 +130,7 @@ test("single-language pages have no alternate OG locale", () => {
     path: "/hakkimda",
   });
 
-  assert.deepEqual(metadata.alternates?.languages, {
-    "tr-TR": `${site}/hakkimda`,
-  });
+  assert.deepEqual(metadata.alternates, { canonical: `${site}/hakkimda` });
   assert.equal(
     metadata.openGraph !== null &&
       metadata.openGraph !== undefined &&

@@ -163,9 +163,7 @@ test("hreflang pairs only indexable, self-canonical reviews", () => {
     { ...english.seo, canonical: "/en/books/another-review" },
   ]) {
     const metadata = createBookReviewMetadata(review(), { ...english, seo });
-    assert.deepEqual(metadata.alternates?.languages, {
-      "tr-TR": `${site}/kitaplar/ultra-ogrenme`,
-    });
+    assert.equal(metadata.alternates?.languages, undefined);
   }
 
   const noindex = createBookReviewMetadata(

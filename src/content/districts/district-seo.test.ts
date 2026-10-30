@@ -169,9 +169,8 @@ test("district metadata keeps canonical, Turkish-only hreflang and a large card"
     metadata.alternates?.canonical,
     "https://www.sabandurali.com/istanbul/ilceler/kadikoy",
   );
-  assert.deepEqual(metadata.alternates?.languages, {
-    "tr-TR": "https://www.sabandurali.com/istanbul/ilceler/kadikoy",
-  });
+  // A Turkish-only page is in no hreflang cluster.
+  assert.equal(metadata.alternates?.languages, undefined);
   assert.equal(
     metadata.twitter !== null &&
       metadata.twitter !== undefined &&

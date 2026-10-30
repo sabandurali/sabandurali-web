@@ -177,9 +177,7 @@ test("a CMS featured image is shared through the image optimizer", () => {
     expected,
   );
   assert.deepEqual(metadata.twitter?.images, expected);
-  assert.deepEqual(metadata.alternates?.languages, {
-    "tr-TR": `${site}/makaleler/istanbulda-konut`,
-  });
+  assert.equal(metadata.alternates?.languages, undefined);
 });
 
 test("noindex and a custom canonical are respected", () => {
@@ -228,9 +226,7 @@ test("a noindex or foreign-canonical translation is not an hreflang alternate", 
       seo,
     });
 
-    assert.deepEqual(metadata.alternates?.languages, {
-      "tr-TR": `${site}/makaleler/istanbulda-konut`,
-    });
+    assert.equal(metadata.alternates?.languages, undefined);
     assert.equal(isArticleHreflangEligible({ ...english, seo }), false);
   }
   // A canonical that names its own URL keeps the pair.

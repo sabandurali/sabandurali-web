@@ -125,9 +125,7 @@ test("an explicit share image is used as uploaded", () => {
       height: 630,
     },
   ]);
-  assert.deepEqual(metadata.alternates?.languages, {
-    "tr-TR": `${site}/fotograflar/galata`,
-  });
+  assert.equal(metadata.alternates?.languages, undefined);
 });
 
 test("a scheduled photo never reports a modification before publication", () => {

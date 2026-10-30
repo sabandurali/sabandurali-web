@@ -38,7 +38,6 @@ test("a list with items in both languages is indexed and paired", () => {
 test("an empty other-language list is not a hreflang alternate", () => {
   assert.deepEqual(articles({ tr: true, en: false }).alternates, {
     canonical: `${site}/makaleler`,
-    languages: { "tr-TR": `${site}/makaleler` },
   });
 });
 

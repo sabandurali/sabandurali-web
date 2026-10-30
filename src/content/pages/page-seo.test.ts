@@ -66,7 +66,7 @@ test("a noindex home page is neither in a hreflang pair nor a target of one", ()
     createPublicPageMetadata(home, {
       translationIndexable: isHomePageIndexable(noindexHome),
     }).alternates,
-    { canonical: homeUrls["tr-TR"], languages: { "tr-TR": homeUrls["tr-TR"] } },
+    { canonical: homeUrls["tr-TR"] },
   );
 });
 
@@ -76,7 +76,6 @@ test("standard pages are Turkish-only and get the default social image", () => {
   assert.equal(getPublicPagePath(page()), "/projeler");
   assert.deepEqual(metadata.alternates, {
     canonical: `${site}/projeler`,
-    languages: { "tr-TR": `${site}/projeler` },
   });
   assert.deepEqual(metadata.openGraph, {
     title: "Projeler | Şaban Durali",
