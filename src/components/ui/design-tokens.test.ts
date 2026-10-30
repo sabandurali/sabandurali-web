@@ -488,3 +488,43 @@ test("FRONTEND-4: form controls and the md button share the 16 px type-control r
   );
   assert.match(read("docs/DESIGN-SYSTEM.md"), /\| `type-control` \|/);
 });
+
+test("FEAT-10: print leaves out the site chrome and prints external URLs", async () => {
+  const print = blockAfter(baseBody, "@media print");
+  // Header, footer and navigation outside <main>: the page intro (a
+  // <header> inside <main>) and in-page navigation stay.
+  assert.match(
+    print,
+    /header:not\(main header\),\s*footer:not\(main footer\),\s*nav:not\(main nav\)\s*\{\s*display:\s*none !important;/,
+  );
+  // <main> clips overflow on screen; printed, it must flow over pages.
+  assert.match(print, /main\s*\{\s*overflow:\s*visible !important;/);
+  // External link targets are printed; the site's own links are not.
+  assert.match(
+    print,
+    /main a\[href\^="http"\]:not\(\[href\^="https:\/\/www\.sabandurali\.com"\]\)::after\s*\{\s*content:\s*" \(" attr\(href\) "\)";/,
+  );
+  const unbroken = /([^{}]+)\{\s*break-inside:\s*avoid;/.exec(print)?.[1] ?? "";
+  for (const element of ["figure", "li", "blockquote", "tr", "img"]) {
+    assert.ok(
+      unbroken.split(",").some((selector) => selector.trim() === element),
+      `${element} must not break across pages`,
+    );
+  }
+  assert.match(
+    print,
+    /details::details-content\s*\{\s*content-visibility:\s*visible;/,
+  );
+
+  // The compiled stylesheet keeps the print rules in the base layer, and
+  // the print:hidden variant exists for in-page opt-outs.
+  const output = await buildCss(["print:hidden"]);
+  assert.match(
+    output,
+    /@layer base\s*\{[\s\S]*@media print\s*\{[\s\S]*header:not\(main header\)/,
+  );
+  assert.match(
+    output,
+    /@media print\s*\{\s*\.print\\:hidden\s*\{\s*display:\s*none;/,
+  );
+});

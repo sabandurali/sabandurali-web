@@ -246,6 +246,57 @@
       scroll-behavior: auto !important;
     }
   }
+
+  /* Print (FEAT-10): a printed guide or article is the page content only.
+     The site header, footer and navigation outside <main> are left out (the
+     40 district links of the menu are not printed); an in-page element can
+     opt out with the print:hidden variant. External link targets are
+     printed after the link text, and figures, list items, quotes and table
+     rows are not split across pages. !important: these base rules must
+     win over display and overflow utilities on the same elements. */
+  @media print {
+    body {
+      background-color: #ffffff;
+    }
+
+    header:not(main header),
+    footer:not(main footer),
+    nav:not(main nav) {
+      display: none !important;
+    }
+
+    main {
+      overflow: visible !important;
+    }
+
+    main a[href^="http"]:not([href^="https://www.sabandurali.com"])::after {
+      content: " (" attr(href) ")";
+      font-weight: 400;
+      overflow-wrap: anywhere;
+    }
+
+    figure,
+    li,
+    blockquote,
+    pre,
+    tr,
+    img {
+      break-inside: avoid;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      break-after: avoid;
+    }
+
+    /* Folded content (a closed <details>) prints open. */
+    details::details-content {
+      content-visibility: visible;
+      block-size: auto;
+    }
+  }
 }
 
 /* ----------------------------------------------------------- Type styles */
