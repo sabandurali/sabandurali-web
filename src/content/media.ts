@@ -50,6 +50,49 @@ export function mapMediaImage(
   };
 }
 
+/** How an imported archive photo appends its record link to the credit. */
+export const creditRecordSeparator = " · Kaynak kaydı: ";
+
+export type CreditRecord = {
+  /** The credit / licence text without the record link. */
+  text: string | null;
+  /** The archive record (http or https only), or null. */
+  recordUrl: string | null;
+};
+
+/**
+ * Splits a credit line of the form "<credit> · Kaynak kaydı: <url>" (how
+ * historical archive photos store their record) into the readable credit
+ * and the record link, so pages show "Kaynak kaydı" as a link instead of a
+ * raw, URL-encoded address. A record that is not an http(s) URL is dropped;
+ * a line without a record is returned unchanged.
+ */
+export function splitCreditRecord(
+  value: string | null | undefined,
+): CreditRecord {
+  const raw = getText(value);
+  if (raw === null) return { text: null, recordUrl: null };
+
+  const index = raw.lastIndexOf(creditRecordSeparator);
+  if (index === -1) return { text: raw, recordUrl: null };
+
+  const text = getText(raw.slice(0, index));
+  const candidate = raw.slice(index + creditRecordSeparator.length).trim();
+  return { text, recordUrl: getHttpUrl(candidate) };
+}
+
+function getHttpUrl(value: string): string | null {
+  if (!/^https?:\/\//i.test(value)) return null;
+  try {
+    const url = new URL(value);
+    return url.protocol === "http:" || url.protocol === "https:"
+      ? url.href
+      : null;
+  } catch {
+    return null;
+  }
+}
+
 /** Credit line for a cover image: explicit credit, else owner/source + licence. */
 export function getImageCredit(image: {
   credit?: string;

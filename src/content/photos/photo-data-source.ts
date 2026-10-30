@@ -15,6 +15,9 @@ import type {
 } from "@/content/photos/public-types";
 import type { PhotoLanguage, PhotoListFilters } from "@/content/photos/types";
 import { readPublicSource } from "@/content/public-source";
+import { getDistrict } from "@/content/districts/district-registry";
+import { selectSameDistrictPhotos } from "@/content/photos/district-photo-selection";
+import { settleSection } from "@/content/settle-section";
 
 const payloadPhotoRepository = new PayloadPublicPhotoRepository();
 
@@ -195,3 +198,26 @@ export const getPublishedPhotosByCollectionOrTag = cache(
       ? payloadPhotoRepository.listByCollectionOrTag(slug, locale)
       : [],
 );
+
+/**
+ * Up to four other photographs of a photo's district for its page, read
+ * with the district page's own query (deduplicated per request). Only a
+ * district the registry knows is read. A failing query leaves the strip
+ * out and is logged; it never takes the photograph page down.
+ */
+export async function getSameDistrictPhotos(
+  photo: PublicPhoto,
+  shown: readonly PublicPhoto[],
+): Promise<PublicPhoto[]> {
+  const district = photo.district;
+  if (district === null || getDistrict(district) === null) return [];
+  const candidates = await settleSection({
+    scope: "photos",
+    id: photo.slug,
+    name: "same-district",
+    load: () => getDistrictPhotos(district, photo.language),
+    fallback: [],
+    unavailable: new Set<string>(),
+  });
+  return selectSameDistrictPhotos(photo, candidates, shown);
+}
