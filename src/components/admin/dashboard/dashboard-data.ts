@@ -6,6 +6,7 @@ import { mapDistrictGuide } from "@/content/districts/district-guide-projection"
 import { getDistrict } from "@/content/districts/district-registry";
 import { getText, isRecord } from "@/content/guards";
 import type { SiteLocale } from "@/content/locales";
+import { hasCompleteEnglishBody } from "../public-links/public-record";
 
 const dayMs = 24 * 60 * 60 * 1000;
 
@@ -25,8 +26,9 @@ function localized(value: unknown, locale: SiteLocale): string | null {
 
 /**
  * Published articles and photos (read with `locale: "all"`) whose English
- * version is missing a field the English pages need, so they never appear
- * under `/en`. District news are Turkish only and are skipped.
+ * version is missing a field the English pages need, or (articles) whose
+ * English body does not cover the Turkish one, so they never appear under
+ * `/en`. District news are Turkish only and are skipped.
  */
 export function findMissingEnglish(
   collection: "articles" | "photos",
@@ -45,9 +47,10 @@ export function findMissingEnglish(
     const id = getID(doc);
     const title = localized(doc.title, "tr") ?? localized(doc.title, "en");
     if (id === null || title === null) return [];
-    return required.some((field) => localized(doc[field], "en") === null)
-      ? [{ id, title }]
-      : [];
+    const incomplete =
+      required.some((field) => localized(doc[field], "en") === null) ||
+      (collection === "articles" && !hasCompleteEnglishBody(doc));
+    return incomplete ? [{ id, title }] : [];
   });
 }
 

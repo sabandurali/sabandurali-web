@@ -7,6 +7,7 @@
  * never invents a URL the site does not serve.
  */
 import { getArticlePath } from "@/content/articles/article-routes";
+import { isCompleteTranslation } from "@/content/articles/article-translation";
 import { getBookReviewPath } from "@/content/books/book-routes";
 import {
   getDistrictNewsPath,
@@ -112,15 +113,27 @@ function getArticleLinks(doc: Record<string, unknown>): PublicRecordLink[] {
       ? [{ locale: "tr", path: getDistrictNewsPath(district) }]
       : [];
   }
-  // The public lists need the title, slug and excerpt in a locale.
+  // The public lists need the title, slug and excerpt in a locale, and the
+  // English version a body that covers the Turkish one.
   return siteLocales.flatMap((locale): PublicRecordLink[] => {
     const slug = localizedText(doc.slug, locale);
     return slug !== null &&
       localizedText(doc.title, locale) !== null &&
-      localizedText(doc.excerpt, locale) !== null
+      localizedText(doc.excerpt, locale) !== null &&
+      (locale === "tr" || hasCompleteEnglishBody(doc))
       ? [{ locale, path: getArticlePath(slug, locale) }]
       : [];
   });
+}
+
+/**
+ * Whether the English rich text of an article (read with `locale: "all"`)
+ * covers the Turkish one: the rule the public English pages apply
+ * (`isOfferedArticleContent`) before they show or link a translation.
+ */
+export function hasCompleteEnglishBody(doc: Record<string, unknown>): boolean {
+  const content = isRecord(doc.content) ? doc.content : {};
+  return isCompleteTranslation(content.tr, content.en);
 }
 
 function getPhotoLinks(doc: Record<string, unknown>): PublicRecordLink[] {

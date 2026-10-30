@@ -23,7 +23,7 @@ Yalnız yetkili hesapla güvenli biçimde panele girmek ve yanlışlıkla canlı
 
 1. Sitenin alan adının sonuna `/admin` ekleyin.
 2. Kendi e-posta adresiniz ve parolanızla giriş yapın.
-3. `Anasayfa` en üstte `Editör özeti`ni gösterir: `Taslaklar`, `Planlanan yayınlar`, `İngilizce eksikleri`, `Eksik medya bilgisi` ve `Süresi dolacak ilçe verileri`. Her satır ilgili kaydın düzenleme sayfasına gider; listeler yalnız sizin görebildiğiniz kayıtları sayar.
+3. `Anasayfa` en üstte `Editör özeti`ni gösterir: `Taslaklar`, `Planlanan yayınlar`, `İngilizce eksikleri`, `Eksik medya bilgisi` ve `Süresi dolacak ilçe verileri`. `İngilizce eksikleri`, İngilizce metni Türkçe metnin yanında eksik kalan (başlık sayısı az veya metin %60'tan kısa) makaleleri de gösterir; bunlar `/en` sayfalarında yayımlanmaz. Her satır ilgili kaydın düzenleme sayfasına gider; listeler yalnız sizin görebildiğiniz kayıtları sayar.
 4. Sol menüde `İçerik` grubundaki `Makaleler & Araştırmalar`, `Kategoriler`, `Medya`, `Kitap İncelemeleri`, `Sayfalar`, `İlçe Rehberleri` ve `Navigasyon` ile `Fotoğrafçılık` grubundaki `Fotoğraf Koleksiyonları`, `Etiketler` ve `Fotoğraflar` bölümlerini kullanın.
 5. Yeni içeriği önce taslak olarak kaydedin.
 6. İçerik ve bağlantı kontrolünden sonra yayın durumunu `published` yapın.

@@ -52,6 +52,36 @@ test("ADM-DASHBOARD: published records without their English fields are listed",
   );
 });
 
+test("ADM-DASHBOARD: articles whose English body does not cover the Turkish one are listed", () => {
+  const body = (text: string) => ({
+    root: {
+      children: [{ children: [{ text, type: "text" }], type: "paragraph" }],
+      type: "root",
+    },
+  });
+  const fields = {
+    excerpt: { en: "Summary", tr: "Özet" },
+    slug: { en: "lines", tr: "hatlar" },
+    title: { en: "Lines", tr: "Hatlar" },
+  };
+  const turkish = body("Uzun bir Türkçe metin. ".repeat(10));
+  assert.deepEqual(
+    findMissingEnglish("articles", [
+      { ...fields, content: { en: body("Kısa."), tr: turkish }, id: "short" },
+      { ...fields, content: { tr: turkish }, id: "none" },
+      {
+        ...fields,
+        content: { en: body("A long English text. ".repeat(10)), tr: turkish },
+        id: "done",
+      },
+    ]),
+    [
+      { id: "short", title: "Hatlar" },
+      { id: "none", title: "Hatlar" },
+    ],
+  );
+});
+
 test("ADM-DASHBOARD: media without alt text or credit are listed with what is missing", () => {
   assert.deepEqual(
     findMediaGaps([

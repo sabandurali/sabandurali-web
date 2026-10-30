@@ -158,3 +158,44 @@ test("ADM-PUBLIC-LINKS: dates are shown in Istanbul time and collections are che
   assert.ok(isPublicRecordCollection("articles"));
   assert.ok(!isPublicRecordCollection("media"));
 });
+
+function lexical(text: string) {
+  return {
+    root: {
+      children: [{ children: [{ text, type: "text" }], type: "paragraph" }],
+      type: "root",
+    },
+  };
+}
+
+test("ADM-PUBLIC-LINKS: an English article body that does not cover the Turkish one gets no English link", () => {
+  const base = {
+    excerpt: { en: "Summary", tr: "Özet" },
+    slug: { en: "metro-lines", tr: "metro-hatlari" },
+    title: { en: "Metro lines", tr: "Metro hatları" },
+  };
+  const turkish = lexical("Metro hatları uzun bir Türkçe metin. ".repeat(10));
+  // English body missing or a short summary: /en/articles/… is not served.
+  for (const en of [undefined, lexical("Short.")]) {
+    assert.deepEqual(
+      getPublicRecordLinks("articles", {
+        ...base,
+        content: { en, tr: turkish },
+      }),
+      [{ locale: "tr", path: "/makaleler/metro-hatlari" }],
+    );
+  }
+  assert.deepEqual(
+    getPublicRecordLinks("articles", {
+      ...base,
+      content: {
+        en: lexical("Metro lines, a long English text here. ".repeat(10)),
+        tr: turkish,
+      },
+    }),
+    [
+      { locale: "tr", path: "/makaleler/metro-hatlari" },
+      { locale: "en", path: "/en/articles/metro-lines" },
+    ],
+  );
+});

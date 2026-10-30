@@ -110,7 +110,7 @@ export async function EditorDashboard({ payload, user }: ServerProps) {
           {list}
         </Card>
         <Card
-          description="Yayındaki makale ve fotoğraflardan İngilizce başlığı, slug’ı, özeti veya alternatif metni eksik olanlar; bunlar /en sayfalarında görünmez."
+          description="Yayındaki makale ve fotoğraflardan İngilizce başlığı, slug’ı, özeti veya alternatif metni eksik olanlar ile İngilizce metni Türkçe metni karşılamayan makaleler; bunlar /en sayfalarında görünmez."
           empty="İngilizce alanı eksik yayında kayıt yok."
           id="missing-english"
           section={data.missingEnglish}
