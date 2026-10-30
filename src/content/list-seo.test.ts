@@ -8,8 +8,17 @@ import {
   loadListContent,
 } from "./list-seo";
 import { createPhotoListMetadata } from "./photos/photo-list-seo";
+import { feedLinks } from "@/lib/metadata";
 
 const site = "https://www.sabandurali.com";
+// Page 1 of a publication list announces the Atom feed of its language.
+const feed = {
+  types: {
+    "application/atom+xml": [
+      { url: `${site}/feed.xml`, title: feedLinks.tr.title },
+    ],
+  },
+};
 
 function articles(content: { tr: boolean; en: boolean }) {
   return createListPageMetadata({
@@ -32,13 +41,14 @@ test("a list with items in both languages is indexed and paired", () => {
       en: `${site}/en/articles`,
       "x-default": `${site}/makaleler`,
     },
+    ...feed,
   });
 });
 
 test("an empty other-language list is not a hreflang alternate", () => {
   assert.deepEqual(articles({ tr: true, en: false }).alternates, {
     canonical: `${site}/makaleler`,
-    languages: { "tr-TR": `${site}/makaleler` },
+    ...feed,
   });
 });
 
@@ -46,7 +56,10 @@ test("an empty list is noindex and outside the hreflang cluster", () => {
   const metadata = articles({ tr: false, en: true });
 
   assert.deepEqual(metadata.robots, { index: false, follow: true });
-  assert.deepEqual(metadata.alternates, { canonical: `${site}/makaleler` });
+  assert.deepEqual(metadata.alternates, {
+    canonical: `${site}/makaleler`,
+    ...feed,
+  });
 });
 
 test("list content comes from the items or from one read per language", async () => {

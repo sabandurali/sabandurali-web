@@ -875,3 +875,60 @@ test("TESTS-INFRA-5: home and photo entries keep their crawl signals", () => {
     assert.equal(byUrl(sitemap, path)?.priority, 0.65, path);
   }
 });
+
+test("ROBOTS-SITEMAP: workspace hubs are dated by the newest item they link to", () => {
+  const sitemap = buildSitemap(fullContent);
+
+  assert.deepEqual(
+    byUrl(sitemap, "/gayrimenkul-ve-istanbul")?.lastModified,
+    new Date("2026-07-10T09:00:00.000Z"),
+  );
+  assert.deepEqual(
+    byUrl(sitemap, "/fotograf")?.lastModified,
+    new Date("2026-08-01T09:00:00.000Z"),
+  );
+  // The index of every workspace: the newest of all of them.
+  assert.deepEqual(
+    byUrl(sitemap, "/calisma-alanlari")?.lastModified,
+    new Date("2026-08-01T09:00:00.000Z"),
+  );
+  // A hub without dated items claims no date.
+  assert.equal(byUrl(sitemap, "/satis-ve-muzakere")?.lastModified, undefined);
+});
+
+test("ROBOTS-SITEMAP: district entries list the verified image and the district photos", () => {
+  const districtPhoto = photo({
+    id: "p-kadikoy",
+    slug: "moda",
+    language: "tr",
+    district: "kadikoy",
+  });
+  const sitemap = buildSitemap({
+    ...fullContent,
+    photos: [
+      ...fullContent.photos,
+      districtPhoto,
+      photo({
+        id: "p-kadikoy",
+        slug: "moda-en",
+        language: "en",
+        district: "kadikoy",
+        image: { src: "/api/media/file/moda-en.jpg", alt: "Moda" },
+      }),
+    ],
+  });
+
+  assert.deepEqual(byUrl(sitemap, "/istanbul/ilceler/kadikoy")?.images, [
+    `${site}/workspaces/districts/kadikoy.jpg`,
+    `${site}/api/media/file/moda.jpg`,
+  ]);
+  assert.deepEqual(byUrl(sitemap, "/istanbul/ilceler/esenler")?.images, [
+    `${site}/workspaces/districts/esenler.jpg`,
+  ]);
+  // A district without any image lists none.
+  const all = buildSitemap({
+    ...emptyContent,
+    districtGuides: new Map([["fatih", guide({ summary: "Fatih özeti." })]]),
+  });
+  assert.equal(byUrl(all, "/istanbul/ilceler/fatih")?.images, undefined);
+});

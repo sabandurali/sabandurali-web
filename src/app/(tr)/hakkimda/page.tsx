@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import AboutPage from "@/components/about/AboutPage";
+import { createAboutPageJsonLd, serializeJsonLd } from "@/content/entity-seo";
 import { getHomeContent } from "@/content/pages/page-data-source";
 import { createPageMetadata } from "@/lib/metadata";
 
@@ -20,5 +21,15 @@ export const metadata: Metadata = createPageMetadata({
 export default async function AboutRoute() {
   const { content, page } = await getHomeContent("tr");
 
-  return <AboutPage content={content} page={page} />;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: serializeJsonLd(createAboutPageJsonLd()),
+        }}
+      />
+      <AboutPage content={content} page={page} />
+    </>
+  );
 }

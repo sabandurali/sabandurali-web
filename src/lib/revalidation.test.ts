@@ -12,6 +12,7 @@ import type {
 import { workspaces } from "../content/workspaces";
 import {
   ALL_PAGES,
+  FEED_PATHS,
   SITEMAP_PATH,
   createNavigationRevalidationHook,
   createRevalidationHooks,
@@ -777,4 +778,35 @@ test("hooks revalidate the URL of the locale the editor saved in", () => {
   const deletedPaths = deleted.calls.map((call) => call.path);
   assert.ok(deletedPaths.includes("/en/photography/galata-at-night"));
   assert.ok(!deletedPaths.includes("/fotograflar/galata-at-night"));
+});
+
+test("FEEDS: article, book review and photo changes refresh both feeds", () => {
+  for (const collection of [
+    "articles",
+    "categories",
+    "books",
+    "photos",
+    "photo-collections",
+    "tags",
+  ] as const) {
+    const targets = getCollectionRevalidationTargets(collection, [
+      { _status: "published", slug: "ornek", language: "tr" },
+    ]);
+    for (const feed of Object.values(FEED_PATHS)) {
+      assert.ok(
+        targets.some((target) => target.path === feed),
+        `${collection}: ${feed}`,
+      );
+    }
+    assertTargetsAreRoutes(targets);
+  }
+  // Pages and district guides are not feed entries.
+  for (const collection of ["pages", "district-guides"] as const) {
+    const targets = getCollectionRevalidationTargets(collection, []);
+    assert.equal(
+      targets.some((target) => Object.values(FEED_PATHS).includes(target.path)),
+      false,
+      collection,
+    );
+  }
 });

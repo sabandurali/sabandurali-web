@@ -90,10 +90,8 @@ test("SEO-PERF-4: a noindex home of the other locale leaves the hreflang pair", 
   for (const page of [null, cmsHome("tr")]) {
     const metadata = createHomeMetadata("tr", page, noindex(cmsHome("en")));
     assert.equal(metadata.alternates?.canonical, `${site}/`);
-    // Only itself, like its sitemap entry: no '/en' alternate.
-    assert.deepEqual(metadata.alternates?.languages, {
-      "tr-TR": `${site}/`,
-    });
+    // No cluster, like its sitemap entry: not even a lone self-reference.
+    assert.equal(metadata.alternates?.languages, undefined);
     assert.deepEqual(metadata.robots, { index: true, follow: true });
   }
   // An indexable CMS home of the other locale keeps the pair.

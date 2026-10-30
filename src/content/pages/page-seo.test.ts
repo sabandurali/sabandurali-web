@@ -1,8 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { staticHomeSeo } from "@/components/sections/home-metadata";
 import { homeUrls, siteSocialImage } from "@/config/site";
 import {
   createPublicPageMetadata,
+  homeFallbackTitles,
   getPublicPagePath,
   isHomePageIndexable,
 } from "./page-seo";
@@ -59,15 +61,19 @@ test("a noindex home page is neither in a hreflang pair nor a target of one", ()
   assert.equal(isHomePageIndexable(null), true, "static home");
   assert.equal(isHomePageIndexable(home), true);
   assert.equal(isHomePageIndexable(noindexHome), false);
-  assert.deepEqual(createPublicPageMetadata(noindexHome).alternates, {
-    canonical: homeUrls.en,
-  });
-  assert.deepEqual(
-    createPublicPageMetadata(home, {
-      translationIndexable: isHomePageIndexable(noindexHome),
-    }).alternates,
-    { canonical: homeUrls["tr-TR"], languages: { "tr-TR": homeUrls["tr-TR"] } },
+  assert.equal(
+    createPublicPageMetadata(noindexHome).alternates?.canonical,
+    homeUrls.en,
   );
+  assert.equal(
+    createPublicPageMetadata(noindexHome).alternates?.languages,
+    undefined,
+  );
+  const indexed = createPublicPageMetadata(home, {
+    translationIndexable: isHomePageIndexable(noindexHome),
+  }).alternates;
+  assert.equal(indexed?.canonical, homeUrls["tr-TR"]);
+  assert.equal(indexed?.languages, undefined);
 });
 
 test("standard pages are Turkish-only and get the default social image", () => {
@@ -76,7 +82,6 @@ test("standard pages are Turkish-only and get the default social image", () => {
   assert.equal(getPublicPagePath(page()), "/projeler");
   assert.deepEqual(metadata.alternates, {
     canonical: `${site}/projeler`,
-    languages: { "tr-TR": `${site}/projeler` },
   });
   assert.deepEqual(metadata.openGraph, {
     title: "Projeler | Şaban Durali",
@@ -125,4 +130,34 @@ test("CORRECTNESS-2: the legacy ana-sayfa record always lives at /", () => {
     getPublicPagePath(page({ slug: "ana-sayfa", pageType: "home" })),
     "/",
   );
+});
+
+test("ENTITY-SEO-CODE: a CMS home titled only with the site name gets the full title", () => {
+  for (const [locale, expected] of [
+    ["tr", staticHomeSeo.tr.title],
+    ["en", staticHomeSeo.en.title],
+  ] as const) {
+    assert.equal(homeFallbackTitles[locale], expected);
+    for (const title of ["Şaban Durali", "  Şaban   Durali ", ""]) {
+      const home = page({
+        pageType: "home",
+        language: locale,
+        slug: "home",
+        seo: { ...page().seo, title },
+      });
+      assert.equal(createPublicPageMetadata(home).title, expected);
+    }
+  }
+  // A real title is kept, on the home page and elsewhere.
+  const titled = page({
+    pageType: "home",
+    slug: "home",
+    seo: { ...page().seo, title: "Şaban Durali | İstanbul araştırmaları" },
+  });
+  assert.equal(
+    createPublicPageMetadata(titled).title,
+    "Şaban Durali | İstanbul araştırmaları",
+  );
+  const standard = page({ seo: { ...page().seo, title: "Şaban Durali" } });
+  assert.equal(createPublicPageMetadata(standard).title, "Şaban Durali");
 });

@@ -40,9 +40,11 @@ const revalidation = createRevalidationHooks("pages");
 export const RESERVED_TURKISH_SLUGS: ReadonlySet<string> = new Set([
   "admin",
   "api",
+  "ara",
   "arastirma-ve-analiz",
   "calisma-alanlari",
   "en",
+  "feed.xml",
   "fotograf",
   "fotograflar",
   "gayrimenkul-ve-istanbul",
