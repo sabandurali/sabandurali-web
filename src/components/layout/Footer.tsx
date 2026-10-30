@@ -19,7 +19,7 @@ const footerLinkClassName =
   "inline-flex min-h-tap items-center gap-1 text-on-sea underline decoration-signal decoration-2 underline-offset-[5px] hover:decoration-[3px]";
 
 /**
- * Sea-ground footer: wordmark, the platform line, the footer navigation and
+ * Sea-ground footer: the on-dark logo, the platform line, the footer navigation and
  * the copyright. The privacy notice (KVKK) and contact links are always
  * present: getFooterNavigation adds them when the CMS footer lacks them.
  * On sea the focus indicator flips to a white ring on a sea halo.
@@ -35,13 +35,7 @@ export default async function Footer({ id, content }: FooterProps) {
     >
       <Container className="grid gap-10 py-12 md:py-16 xl:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] xl:gap-12">
         <div>
-          <Wordmark
-            locale={content.locale}
-            name={content.brandName}
-            tagline={content.brandTagline}
-            tone="on-sea"
-            asLink={false}
-          />
+          <Wordmark locale={content.locale} tone="on-sea" asLink={false} />
           <p className="mt-5 mb-0 max-w-[44ch] type-small text-on-sea-soft">
             {content.description}
           </p>

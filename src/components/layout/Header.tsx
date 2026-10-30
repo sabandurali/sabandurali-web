@@ -27,7 +27,7 @@ type HeaderProps = {
 };
 
 /**
- * Atlas header: the ŞABAN DURALİ wordmark (home link), the search link and
+ * Atlas header: the identity logo (home link), the search link and
  * the language switcher on the first row, the navigation bar below it from 1280 px, and
  * a "Menü" disclosure with the same links on narrower screens. The page,
  * not the header, owns `<main id="main">`; the root layout's SkipLink is
@@ -50,11 +50,7 @@ export default async function Header({
   return (
     <header className="relative border-b-2 border-ink bg-paper text-ink">
       <Container className="flex min-h-18 items-center justify-between gap-4 py-2.5">
-        <Wordmark
-          locale={locale}
-          name={content.brandName}
-          tagline={content.brandTagline}
-        />
+        <Wordmark locale={locale} />
         <div className="flex items-center gap-2 sm:gap-3">
           <SearchLink locale={locale} />
           <DesktopLanguageSwitcher

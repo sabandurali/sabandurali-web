@@ -121,20 +121,36 @@ test("LANG-SWITCH-FALLBACK: a page without translation says so next to the other
   assert.doesNotMatch(translated, /Yalnızca|aria-describedby/);
 });
 
-test("Wordmark: home link named by its visible text, Turkish name marked", () => {
+test("Wordmark: the identity logo, a home link named by its visible text", () => {
   const html = renderToStaticMarkup(h(Wordmark, { locale: "en" }));
   assert.match(html, /^<a [^>]*href="\/en"/);
+  // Below 640 px the name-only wordmark, from 640 px the horizontal logo.
   assert.match(
     html,
-    /<span lang="tr" class="block type-wordmark">ŞABAN DURALİ<\/span>/,
+    /<source media="\(min-width: 40rem\)" srcSet="\/brand\/saban-durali-logo-color\.svg" width="2027" height="256"\/>/,
   );
-  assert.match(html, /RESEARCH AND KNOWLEDGE PLATFORM/);
+  assert.match(
+    html,
+    /<img src="\/brand\/saban-durali-wordmark-name-color\.svg" alt="Şaban Durali, Research and Knowledge Platform" width="2470" height="256" fetchPriority="high" decoding="async" class="block h-4\.5 w-auto sm:h-9"\/>/,
+  );
+  // The accessible name: the alt (visible name first), then the suffix.
   assert.match(html, /<span class="sr-only">, home page<\/span>/);
+  assert.doesNotMatch(html, /type-wordmark|ŞABAN DURALİ/);
+
+  const turkish = renderToStaticMarkup(h(Wordmark, { locale: "tr" }));
+  assert.match(turkish, /^<a [^>]*href="\/"/);
+  assert.match(turkish, /alt="Şaban Durali, Araştırma ve Bilgi Platformu"/);
+  assert.match(turkish, /<span class="sr-only">, ana sayfa<\/span>/);
+
   const plain = renderToStaticMarkup(
     h(Wordmark, { locale: "tr", asLink: false, tone: "on-sea" }),
   );
   assert.match(plain, /^<p /);
-  assert.doesNotMatch(plain, /<a /);
+  assert.doesNotMatch(plain, /<a |<source/);
+  assert.match(
+    plain,
+    /<img src="\/brand\/saban-durali-logo-color-ondark\.svg" alt="Şaban Durali, Araştırma ve Bilgi Platformu" width="2027" height="256" loading="lazy" decoding="async" class="block h-9 w-auto"\/>/,
+  );
 });
 
 test("footer groups: flat real links, no empty group, DOM-safe ids", () => {
@@ -346,6 +362,7 @@ test("FE-7: root metadata has Open Graph and Twitter, never a canonical or og:ur
     assert.equal(og.locale, locale === "tr" ? "tr_TR" : "en_US");
     assert.equal("type" in og ? og.type : undefined, "website");
     assert.ok(Array.isArray(og.images) && og.images.length === 1);
+    assert.equal(metadata.manifest, "/site.webmanifest");
     const twitter = metadata.twitter;
     assert.ok(twitter);
     assert.equal(
