@@ -415,41 +415,28 @@ test("motion: reduced motion stops animation and smooth scrolling is opt-in", ()
   assert.match(motionSafe, /scroll-behavior:\s*smooth/);
 });
 
-test("FE-17: fonts.ts loads only Archivo and Martian Mono with Turkish subsets", () => {
+test("FE-17: fonts.ts loads only the trimmed Archivo and Martian Mono files", () => {
   const fonts = read("src/app/fonts.ts");
-  assert.match(
-    fonts,
-    /import \{ Archivo, Martian_Mono \} from "next\/font\/google";/,
-  );
-  const calls = [
-    ...fonts.matchAll(/= (Archivo|Martian_Mono)\(\{([\s\S]*?)\}\);/g),
-  ];
+  assert.match(fonts, /import localFont from "next\/font\/local";/);
+  assert.doesNotMatch(fonts, /next\/font\/google/);
+  const calls = [...fonts.matchAll(/= localFont\(\{([\s\S]*?)\}\);/g)];
   assert.deepEqual(
-    calls.map(([, name]) => name),
-    ["Archivo", "Martian_Mono"],
+    calls.map(([, options]) => /src: "([^"]+)"/.exec(options ?? "")?.[1]),
+    ["./fonts/archivo-latin-tr.woff2", "./fonts/martian-mono-latin-tr.woff2"],
   );
-  for (const [, name, options] of calls) {
-    assert.ok(options, name);
-    assert.match(
-      options,
-      /subsets: \["latin", "latin-ext"\]/,
-      `${name} subsets`,
-    );
-    assert.match(options, /axes: \["wdth"\]/, `${name} width axis`);
-    assert.match(options, /display: "swap"/, `${name} display`);
-    assert.doesNotMatch(
-      options,
-      /weight:|style:/,
-      `${name} must stay variable`,
-    );
+  for (const [, options] of calls) {
+    assert.ok(options);
+    assert.match(options, /display: "swap"/);
+    assert.match(options, /weight: "\d{3} \d{3}"/, "a variable weight range");
+    assert.match(options, /prop: "font-stretch"/);
   }
   assert.match(
-    calls[1]?.[2] ?? "",
+    calls[1]?.[1] ?? "",
     /preload: false/,
     "Martian Mono is not preloaded",
   );
   assert.doesNotMatch(
-    calls[0]?.[2] ?? "",
+    calls[0]?.[1] ?? "",
     /preload: false/,
     "Archivo is preloaded",
   );

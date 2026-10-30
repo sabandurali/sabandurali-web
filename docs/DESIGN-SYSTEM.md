@@ -13,7 +13,8 @@ Kaynaklar (tek doğru kaynak bunlardır, bu belge onları açıklar):
 | Dosya | İçerik |
 |---|---|
 | `src/app/globals.css` | Token'lar (`@theme`), taban stiller (`@layer base`), tipografi sınıfları (`@utility type-*`) |
-| `src/app/fonts.ts` | Archivo ve Martian Mono (`next/font/google`) |
+| `src/app/fonts.ts` | Archivo ve Martian Mono (`next/font/local`, `src/app/fonts/*.woff2`) |
+| `scripts/fonts/subset-fonts.mjs` | Font dosyalarını üretir (eksen aralığı, Latin + Türkçe alt küme); testi bütçeyi ve glifleri denetler |
 | `src/components/ui/` | Erişilebilir temel bileşenler |
 | `src/components/ui/design-tokens.test.ts` | Kontrast tablosu, 12 px tabanı, katman kuralı, odak halkası, font ayarları |
 | `src/components/ui/typography-guard.test.ts` | Sitede 12 px altı yazı boyutu yasağı |
@@ -128,18 +129,24 @@ Diğer her ölçü Tailwind'in 4 px tabanlı ölçeğinden gelir.
 
 ### Yazı aileleri
 
-- **Archivo** (değişken; ağırlık ve genişlik `wdth` 62–125): tüm metin ve başlıklar. Genişlik ekseni bir
+- **Archivo** (değişken; ağırlık 400–800, genişlik `wdth` 76–125): tüm metin ve başlıklar. Genişlik ekseni bir
   sistemdir: `--stretch-wide` 125 % (ŞABAN DURALİ, levha başlığı, bölge etiketleri), `--stretch-title`
   112 % (kart başlıkları), `--stretch-heading` 92 % (h2), `--stretch-display` 88 % (ana sayfa h1, durak
   adları), `--stretch-compact` 82 % ve `--stretch-tile` 76 % (harita kareleri), gövde 100 %.
-- **Martian Mono** (değişken, `wdth` 75–112.5, `--stretch-mono` 87.5 %): yalnızca veri — değerler, birimler,
-  tarihler, kare adresleri, hat kodları, kaynak numaraları.
+- **Martian Mono** (değişken ağırlık 500–700; genişlik dosyada `--stretch-mono` 87.5 %'e sabitlenmiştir):
+  yalnızca veri — değerler, birimler, tarihler, kare adresleri, hat kodları, kaynak numaraları.
 
-`fonts.ts` ikisini de `latin` + `latin-ext` alt kümeleri ve `display: "swap"` ile yükler; ğ Ğ ı İ ş Ş
-`latin-ext` içindedir. Archivo önyüklenir (her sayfa onunla açılır). Martian Mono önyüklenmez: yalnızca
-küçük veri etiketlerinde kullanılır ve ilk kullanıldığı sayfada iner. İtalik ya da başka bir statik kesim
-istenmez. Kök layout'lar fontları yalnızca `fontVariables` sınıflarıyla `<html>` üzerine bağlar; başka
-`next/font` çağrısı yapılmaz (test eder).
+Fontlar kendi sunucumuzdan gelir (`next/font/local`): `scripts/fonts/subset-fonts.mjs` google/fonts'taki
+sabit bir commit'ten kaynakları SHA-256 doğrulamasıyla indirir, eksenleri yukarıdaki aralıklara indirir ve
+her aileyi tek bir Latin + Türkçe woff2 dosyasına (Latin-1, ğ Ğ ı İ ş Ş, Œ œ, tipografik noktalama, € ₺)
+böler. Archivo yaklaşık 77 KiB, Martian Mono 15 KiB'tır; `subset-fonts.test.mjs` bütçeyi (Archivo ≤ 80 KiB,
+toplam ≤ 100 KiB), Türkçe glifleri, eksen aralıklarını ve `globals.css`'teki her ağırlık ve genişliğin
+dosyada olduğunu denetler. Yeni bir ağırlık, genişlik ya da karakter gerekirse betikteki ayarı değiştirip
+betiği çalıştırın (`FONTTOOLS_PYTHON` fontTools + brotli kurulu bir Python gösterir), sonra `npm test`.
+Lisanslar (`*-OFL.txt`) dosyaların yanındadır. İkisi de `display: "swap"` ile yüklenir; Archivo önyüklenir
+(her sayfa onunla açılır), Martian Mono önyüklenmez: yalnızca küçük veri etiketlerinde kullanılır ve ilk
+kullanıldığı sayfada iner. İtalik ya da başka bir statik kesim istenmez. Kök layout'lar fontları yalnızca
+`fontVariables` sınıflarıyla `<html>` üzerine bağlar; başka `next/font` çağrısı yapılmaz (test eder).
 
 ### Tip ölçeği
 
