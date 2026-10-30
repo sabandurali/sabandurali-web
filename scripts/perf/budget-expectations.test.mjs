@@ -12,7 +12,9 @@ import {
   budgetRoutes,
   bytesByKind,
   cumulativeLayoutShift,
+  maxAttempts,
   resourceKind,
+  shouldRemeasure,
 } from "./budget-expectations.mjs";
 
 const workflow = readFileSync(".github/workflows/ci.yml", "utf8");
@@ -96,6 +98,32 @@ test("budget problems name each exceeded limit", () => {
   assert.deepEqual(budgetProblems({ ...ok, lcpMs: null }), [
     "no largest contentful paint",
   ]);
+});
+
+test("PERF-CI-BUDGET: only timing problems are measured again, a bounded number of times", () => {
+  const ok = {
+    fontBytes: 92 * 1024,
+    scriptBytes: 170 * 1024,
+    lcpMs: 800,
+    cls: 0.02,
+  };
+  assert.equal(maxAttempts, 3);
+  assert.equal(shouldRemeasure(ok, 1), false);
+  // A slow LCP or a late font swap on a busy runner: load the page again.
+  assert.equal(shouldRemeasure({ ...ok, lcpMs: 4000 }, 1), true);
+  assert.equal(shouldRemeasure({ ...ok, cls: 0.3 }, 2), true);
+  assert.equal(shouldRemeasure({ ...ok, lcpMs: null }, 1), true);
+  // Every load over budget: the page fails.
+  assert.equal(shouldRemeasure({ ...ok, cls: 0.3 }, maxAttempts), false);
+  // Bytes are the same on every load: no second chance.
+  assert.equal(
+    shouldRemeasure({ ...ok, fontBytes: 234 * 1024, lcpMs: 4000 }, 1),
+    false,
+  );
+  assert.equal(
+    shouldRemeasure({ ...ok, scriptBytes: 300 * 1024, cls: 0.3 }, 1),
+    false,
+  );
 });
 
 test("PERF-CI-BUDGET: CI runs the budget on the local server after the a11y check", () => {

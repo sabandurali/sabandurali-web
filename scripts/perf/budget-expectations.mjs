@@ -103,3 +103,22 @@ export function budgetProblems(metrics, limits = budget) {
     problems.push(`CLS ${metrics.cls.toFixed(3)} > ${limits.cls}`);
   return problems;
 }
+
+/**
+ * Loads per page at most. Bytes and the HTTP status are the same on every
+ * load, so they fail at once; LCP and CLS depend on when the fonts and
+ * scripts arrive on a shared CI runner, so a page over those limits is
+ * measured again and fails only when every load is over budget.
+ */
+export const maxAttempts = 3;
+
+/** Whether a page's problems may be noise that a fresh load can clear. */
+export function shouldRemeasure(metrics, attempt, limits = budget) {
+  const problems = budgetProblems(metrics, limits);
+  return (
+    problems.length > 0 &&
+    attempt < maxAttempts &&
+    metrics.fontBytes <= limits.fontBytes &&
+    metrics.scriptBytes <= limits.scriptBytes
+  );
+}
