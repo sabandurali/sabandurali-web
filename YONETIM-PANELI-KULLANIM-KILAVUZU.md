@@ -23,10 +23,11 @@ Yalnız yetkili hesapla güvenli biçimde panele girmek ve yanlışlıkla canlı
 
 1. Sitenin alan adının sonuna `/admin` ekleyin.
 2. Kendi e-posta adresiniz ve parolanızla giriş yapın.
-3. Sol menüde `İçerik` grubundaki `Makaleler & Araştırmalar`, `Kategoriler`, `Medya`, `Kitap İncelemeleri`, `Sayfalar`, `İlçe Rehberleri` ve `Navigasyon` ile `Fotoğrafçılık` grubundaki `Fotoğraf Koleksiyonları`, `Etiketler` ve `Fotoğraflar` bölümlerini kullanın.
-4. Yeni içeriği önce taslak olarak kaydedin.
-5. İçerik ve bağlantı kontrolünden sonra yayın durumunu `published` yapın.
-6. İşiniz bitince ortak veya başkasının erişebildiği cihazda oturumu kapatın.
+3. `Anasayfa` en üstte `Editör özeti`ni gösterir: `Taslaklar`, `Planlanan yayınlar`, `İngilizce eksikleri`, `Eksik medya bilgisi` ve `Süresi dolacak ilçe verileri`. Her satır ilgili kaydın düzenleme sayfasına gider; listeler yalnız sizin görebildiğiniz kayıtları sayar.
+4. Sol menüde `İçerik` grubundaki `Makaleler & Araştırmalar`, `Kategoriler`, `Medya`, `Kitap İncelemeleri`, `Sayfalar`, `İlçe Rehberleri` ve `Navigasyon` ile `Fotoğrafçılık` grubundaki `Fotoğraf Koleksiyonları`, `Etiketler` ve `Fotoğraflar` bölümlerini kullanın.
+5. Yeni içeriği önce taslak olarak kaydedin.
+6. İçerik ve bağlantı kontrolünden sonra yayın durumunu `published` yapın.
+7. İşiniz bitince ortak veya başkasının erişebildiği cihazda oturumu kapatın.
 
 ### Dikkat
 
@@ -191,7 +192,7 @@ Bir makaleyi önce güvenli taslak olarak hazırlamak, sonra doğru dilde görü
 6. `SEO` grubunda `SEO başlığı` (`metaTitle`) ve `SEO açıklaması` (`metaDescription`) girin. Bunlar boşsa public tarafta sırasıyla makale başlığı ve özet kullanılır. `Arama motorları indeksleyebilir` ve `Arama motorları bağlantıları takip edebilir` varsayılan olarak açıktır; `Canonical adresi`ni yalnız gerçekten gerekiyorsa doldurun.
 7. Kaydı `Taslağı kaydet` ile `draft` olarak saklayın ve içerik, başlık hiyerarşisi, bağlantılar, görsel ve alt metni kontrol edin.
 8. `Değişiklikleri yayınla` ile durumun `published` olmasını sağlayın. `publishedAt` ilk yayında boşsa otomatik atanır; elle gelecekte bir tarih girilirse o tarihe kadar içerik görünmez.
-9. Canlıda TR makale için `/makaleler/[slug]`, EN makale için `/en/articles/[slug]` rotasını kontrol edin.
+9. Canlıda TR makale için `/makaleler/[slug]`, EN makale için `/en/articles/[slug]` rotasını kontrol edin. Sağ kenardaki `Sitede` kutusu kaydın durumunu (`Yayında`, `Planlandı`, `Taslak` veya `Yayında, sitede gizli`) ve site adreslerini gösterir; kayıt yayındayken `Sitede aç` bağlantısı sayfayı yeni sekmede açar.
 
 ### Dikkat
 
@@ -406,8 +407,9 @@ Arama sonucu metinlerini ve erişilebilir görsel açıklamalarını doğru girm
 | Fotoğraf | `SEO başlığı` (en fazla 60), `SEO açıklaması` (en fazla 160), sosyal paylaşım görseli ve yerelleştirilmiş `altText` | Canonical rota otomatik üretilir; aynı kaydın diğer locale’i public ise hreflang üretilir. |
 | Sayfa | `SEO başlığı` (en fazla 60), `SEO açıklaması` (en fazla 160), `index`, `follow`, sosyal paylaşım görseli | Canonical, dil ve sayfa slug’ından otomatik üretilir. Standart sayfa şemasında kullanıcıya ait hreflang alanı yoktur. |
 
-5. Sosyal paylaşım görseli seçiyorsanız önce Media alternatif metnini kontrol edin.
-6. Taslak önizlemede başlık ve açıklamanın içerikle aynı vaadi verdiğini doğrulayın.
+5. Makale, fotoğraf ve sayfaların SEO grubunun başındaki `Arama ve paylaşım önizlemesi`, arama sonucunu ve sosyal paylaşım kartını siz yazdıkça gösterir. SEO alanları boşsa sitenin kullanacağı başlık ve açıklama görünür; sayaç 60 / 160 karakter sınırını aşan metni işaretler.
+6. Sosyal paylaşım görseli seçiyorsanız önce Medya alternatif metnini kontrol edin.
+7. Önizlemede başlık ve açıklamanın içerikle aynı vaadi verdiğini doğrulayın.
 
 ### Dikkat
 

@@ -104,3 +104,21 @@ test("Phase B: superseded statements do not come back", () => {
     assert.ok(!ADMIN_HELP_GUIDE.includes(stale), stale);
   }
 });
+
+test("ADM: the guide names the Turkish buttons and the new admin aids", () => {
+  for (const statement of [
+    "`Taslağı kaydet`",
+    "`Değişiklikleri yayınla`",
+    "`Yayından Kaldır`",
+    "`Editör özeti`",
+    "`Süresi dolacak ilçe verileri`",
+    "`Sitede aç`",
+    "`Arama ve paylaşım önizlemesi`",
+  ]) {
+    assert.ok(ADMIN_HELP_GUIDE.includes(statement), statement);
+  }
+  // Collections are named as the Turkish admin shows them.
+  for (const stale of ["`Categories`", "`Articles`", "`Media`"]) {
+    assert.ok(!ADMIN_HELP_GUIDE.includes(stale), stale);
+  }
+});
