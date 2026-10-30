@@ -62,6 +62,12 @@ next-env.d.ts
 *.db-wal
 *.db-shm
 
+# Dated private notes (backups, restores, security reviews) belong in
+# /.private-backups/, never in docs/: the repository is public.
+/docs/*BACKUP*-20*.md
+/docs/*SECURITY-REVIEW*-20*.md
+/docs/LIVE-BACKUP-*.md
+
 # Claude Code agent worktrees and local state
 /.claude/worktrees/
 /.claude/settings.local.json

@@ -104,7 +104,17 @@ Verification after publishing (read-only, from one IP):
    rule matching.
 3. Record the date of the check in this file.
 
-Status: **not configured yet** (no rule is recorded in this repository).
+Status: **configured and verified on 2026-10-30.** The live rule uses one
+condition instead of the five above: path matches the regular expression
+`^/api/users/(login|first-register|forgot-password|reset-password|unlock)$`,
+with the same rate limit (10 requests per 60 seconds per IP, fixed window,
+HTTP 429). Check after every edit that the expression has no trailing line
+break: a value pasted with a newline (`…unlock)$\n`) matches nothing, which
+is how the first published version failed silently. `vercel firewall rules
+inspect "Admin auth rate limit" --json` shows the exact stored value.
+Verification: 10 wrong logins for an address without an account answered
+401, the 11th to 15th answered 429, and the home page and `/api/books` kept
+answering 200.
 
 ### Owner: keep a second admin
 

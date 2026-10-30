@@ -31,6 +31,11 @@ const mustBeIgnored = [
   // Private backup and security notes live here, never in docs/.
   ".private-backups/docs/SECURITY-REVIEW-2026-10-21.md",
   ".private-backups/docs/BACKUP-RESTORE-2026-10-21.md",
+  // A dated private note saved into docs/ by mistake stays out of Git.
+  "docs/BACKUP-RESTORE-2026-10-21.md",
+  "docs/BACKUP-COMPLETION-2026-10-21.md",
+  "docs/LIVE-BACKUP-2026-10-21.md",
+  "docs/SECURITY-REVIEW-2026-10-21.md",
   "ml-env/bin/python",
   "public/media/upload.jpg",
   "reports/production-release-20261018/README.md",
@@ -58,6 +63,14 @@ const mustBeTracked = [
   "reports/istanbul-39/README.md",
   "data/districts/editorial.json",
   "data/districts/editorial-review.json",
+  // The tracked docs next to the ignored dated notes above.
+  "docs/SECURITY.md",
+  "docs/PROJECT-STATE.md",
+  "docs/DESIGN-SYSTEM.md",
+  "docs/LOCAL-DEVELOPMENT.md",
+  "docs/NEXT-STEPS.md",
+  "docs/releases/2026-10-30-quality-atlas.md",
+  "docs/releases/2026-11-15-example-release.md",
 ];
 
 test("secrets, local data and private evidence are ignored by Git", () => {
@@ -83,5 +96,16 @@ test("no backup, restore or security-review note is tracked", () => {
 
 test("templates, placeholders and reviewed summaries stay trackable", () => {
   const hidden = mustBeTracked.filter((file) => isIgnored(file));
+  assert.deepEqual(hidden, [], `ignored by mistake: ${hidden.join(", ")}`);
+});
+
+test("the dated-note rules hide no tracked document in docs/", () => {
+  const result = spawnSync("git", ["ls-files", "-z", "--", "docs"], {
+    encoding: "utf8",
+  });
+  assert.equal(result.status, 0, result.stderr);
+  const tracked = result.stdout.split("\0").filter(Boolean);
+  assert.ok(tracked.length > 0);
+  const hidden = tracked.filter((file) => isIgnored(file));
   assert.deepEqual(hidden, [], `ignored by mistake: ${hidden.join(", ")}`);
 });
