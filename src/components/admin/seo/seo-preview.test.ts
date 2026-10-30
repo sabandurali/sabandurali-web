@@ -99,3 +99,25 @@ test("ADM-SEO-PREVIEW: pages use their own language and type for the address", (
   assert.ok(isSeoPreviewKind("pages"));
   assert.ok(!isSeoPreviewKind("books"));
 });
+
+test("ADM-SEO-PREVIEW: a canonical outside the site is ignored like on the public page", () => {
+  for (const canonical of [
+    "https://example.com/elsewhere",
+    "//example.com/elsewhere",
+    "/makaleler/x?utm=1",
+  ]) {
+    const preview = buildSeoPreview("articles", {
+      ...base,
+      canonical,
+      fallbackDescriptions: ["Özet"],
+      locale: "tr",
+      slug: "kendi-adresi",
+      title: "Başlık",
+    });
+    assert.equal(
+      preview.url,
+      "https://www.sabandurali.com/makaleler/kendi-adresi",
+      canonical,
+    );
+  }
+});

@@ -5,6 +5,7 @@
  * (`createFallbackMetaTitle`, `createFallbackMetaDescription`) produce the
  * text, so the preview matches the published page.
  */
+import { isSiteCanonicalUrl } from "@/collections/validation";
 import { getAbsoluteUrl } from "@/config/site";
 import { getArticlePath } from "@/content/articles/article-routes";
 import { getText } from "@/content/guards";
@@ -155,7 +156,13 @@ export function buildSeoPreview(
     fallbacks.find((value) => value !== null) ??
     null;
 
-  const canonical = getText(input.canonical);
+  // Same rule as the article mapper: a canonical outside this site is
+  // ignored (and rejected on save), so the record's own address applies.
+  const canonicalText = getText(input.canonical);
+  const canonical =
+    canonicalText !== null && isSiteCanonicalUrl(canonicalText)
+      ? canonicalText
+      : null;
   const path = getPath(kind, input);
 
   return {
