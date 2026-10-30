@@ -4,9 +4,18 @@ import { createRequire } from "node:module";
 import path from "node:path";
 import test from "node:test";
 import { districts } from "@/content/districts/district-registry";
-import { getDistrictShareCard } from "@/content/districts/district-seo";
+import {
+  getDistrictDirectoryShareCard,
+  getDistrictShareCard,
+} from "@/content/districts/district-seo";
 import { readFontCodePoints } from "./font-cmap";
-import { createOgCard, getOgTitleSize, ogCardSize } from "./og-card";
+import {
+  OgCard,
+  createOgCard,
+  defaultOgCardBrand,
+  getOgTitleSize,
+  ogCardSize,
+} from "./og-card";
 
 const require = createRequire(import.meta.url);
 
@@ -28,13 +37,16 @@ test("DISTRICT-OG: the card font draws every Turkish letter", () => {
 
 test("DISTRICT-OG: every district card text is in the card font", () => {
   const codePoints = readFontCodePoints(bundledCardFont());
-  for (const district of districts) {
-    const card = getDistrictShareCard(district);
-    const text = `${card.eyebrow}${card.title}${card.subtitle}Şaban Durali sabandurali.com`;
+  const cards = [
+    getDistrictDirectoryShareCard(),
+    ...districts.map(getDistrictShareCard),
+  ];
+  for (const card of cards) {
+    const text = `${card.eyebrow}${card.title}${card.subtitle}${defaultOgCardBrand.name}${defaultOgCardBrand.domain}`;
     for (const letter of text.replace(/\s/g, "")) {
       assert.ok(
         codePoints.has(letter.codePointAt(0) ?? 0),
-        `${district.slug}: "${letter}" is not in the card font`,
+        `${card.title}: "${letter}" is not in the card font`,
       );
     }
   }
@@ -62,4 +74,20 @@ test("DISTRICT-OG: the card renders a 1200×630 PNG", async () => {
   const view = new DataView(png.buffer, png.byteOffset, png.byteLength);
   assert.equal(view.getUint32(16), ogCardSize.width);
   assert.equal(view.getUint32(20), ogCardSize.height);
+});
+
+test("DISTRICT-OG: the brand mark is one swappable input", () => {
+  const first = districts[0];
+  assert.ok(first);
+  const card = getDistrictShareCard(first);
+  const branded = JSON.stringify(
+    OgCard({ ...card, brand: { name: "Yeni Marka", domain: "ornek.test" } }),
+  );
+  assert.match(branded, /Yeni Marka/);
+  assert.match(branded, /ornek\.test/);
+  assert.doesNotMatch(branded, /Şaban Durali|sabandurali\.com/);
+
+  const standard = JSON.stringify(OgCard(card));
+  assert.match(standard, new RegExp(defaultOgCardBrand.name));
+  assert.match(standard, new RegExp(defaultOgCardBrand.domain));
 });

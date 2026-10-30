@@ -13,6 +13,7 @@ import {
   getDistrictsBySide,
 } from "@/content/districts/district-registry";
 import { districtGuidePath } from "@/content/districts/district-routes";
+import { districtDirectorySocialImage } from "@/content/districts/district-seo";
 import { createPageMetadata } from "@/lib/metadata";
 
 // Prerendered and refreshed at most hourly; CMS writes to a district guide
@@ -28,6 +29,7 @@ export const metadata: Metadata = createPageMetadata({
   description,
   locale: "tr",
   path: districtGuidePath,
+  images: [districtDirectorySocialImage()],
 });
 
 export default async function DistrictIndexPage() {

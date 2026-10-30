@@ -12,8 +12,10 @@ import { districts, type District } from "./district-registry";
 import { districtWorkspaceCrumb } from "@/components/districts/district-breadcrumb";
 import type { PublicPhoto } from "@/content/photos/types";
 import {
+  districtDirectorySocialImage,
   districtJsonLd,
   districtMetadata,
+  getDistrictDirectoryShareCard,
   getDistrictShareCard,
   getDistrictTitle,
   isDistrictGuideIndexable,
@@ -319,6 +321,29 @@ test("DISTRICT-OG: the generated card names only the registry's side and name", 
   );
 });
 
+test("DISTRICT-OG: the directory is shared with its own generated card", () => {
+  assert.deepEqual(getDistrictDirectoryShareCard(), {
+    eyebrow: "İSTANBUL",
+    title: "İlçe Rehberi",
+    subtitle: `${districts.length} ilçe için kaynak temelli rehberler`,
+  });
+  assert.equal(districts.length, 39);
+  assert.deepEqual(districtDirectorySocialImage(), {
+    url: "https://www.sabandurali.com/istanbul/ilceler/og.png",
+    alt: "İstanbul ilçe rehberi, Şaban Durali",
+    width: 1200,
+    height: 630,
+  });
+  const route = readFileSync(
+    path.join(
+      path.dirname(fileURLToPath(import.meta.url)),
+      "../../app/(tr)/istanbul/ilceler/page.tsx",
+    ),
+    "utf8",
+  );
+  assert.match(route, /images: \[districtDirectorySocialImage\(\)\]/);
+});
+
 test("BREADCRUMB-JSONLD: the district trail uses the visible breadcrumb's names", () => {
   const breadcrumb = graphNode(
     districtJsonLd(district("kadikoy"), null),
@@ -409,6 +434,14 @@ test("DISTRICT-JSONLD: a placeholder page claims no Article and no image it lack
   assert.equal(graphNode(jsonLd, "Article"), undefined);
   assert.equal(graphNode(jsonLd, "WebPage")?.primaryImageOfPage, undefined);
   assert.ok(graphNode(jsonLd, "AdministrativeArea"));
+
+  // A published guide whose every narrative section the content policy
+  // withheld is still a placeholder: no Article either.
+  const withheld = districtJsonLd(
+    district("fatih"),
+    guide({ publishedAt: "2026-09-01T09:00:00.000Z" }),
+  );
+  assert.equal(graphNode(withheld, "Article"), undefined);
 });
 
 test("DISTRICT-JSONLD: fields outside the public projection never reach the JSON-LD", () => {

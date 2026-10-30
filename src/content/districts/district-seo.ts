@@ -23,12 +23,13 @@ import {
   type SocialImage,
 } from "@/lib/metadata";
 import {
+  districtDirectoryShareCardPath,
   districtGuidePath,
   getDistrictPath,
   getDistrictShareCardPath,
   getDistrictUrl,
 } from "./district-routes";
-import type { District } from "./district-registry";
+import { districts, type District } from "./district-registry";
 import type { DistrictGuide } from "./district-guide-projection";
 
 /** Narrative sections; a guide without any of them is only a placeholder. */
@@ -97,6 +98,27 @@ export function getDistrictShareCard(district: District) {
     title: district.name,
     subtitle: "İlçe Rehberi",
   };
+}
+
+/**
+ * The text of the district directory's generated share card: what the
+ * directory itself states (the registry's district count), nothing else.
+ */
+export function getDistrictDirectoryShareCard() {
+  return {
+    eyebrow: "İSTANBUL",
+    title: "İlçe Rehberi",
+    subtitle: `${districts.length} ilçe için kaynak temelli rehberler`,
+  };
+}
+
+/** The district directory's share image: its generated card. */
+export function districtDirectorySocialImage(): SocialImage {
+  return createSocialImage({
+    src: districtDirectoryShareCardPath,
+    alt: "İstanbul ilçe rehberi, Şaban Durali",
+    ...districtShareCardSize,
+  });
 }
 
 /**

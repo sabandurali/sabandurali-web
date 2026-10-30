@@ -19,6 +19,24 @@ export type OgCardInput = {
 
 export const ogCardSize = { width: 1200, height: 630 } as const;
 
+/**
+ * The brand mark of the card's footer: plain text today. It is the one
+ * place the site's identity enters the card, so a later brand package
+ * replaces this (or passes its own `brand`) without touching the layout or
+ * the routes that use the card.
+ */
+export type OgCardBrand = {
+  /** Left of the footer: the owner's name or a wordmark. */
+  name: string;
+  /** Right of the footer: the site address. */
+  domain: string;
+};
+
+export const defaultOgCardBrand: OgCardBrand = {
+  name: "Şaban Durali",
+  domain: "sabandurali.com",
+};
+
 /** Tokens of src/app/globals.css (`--color-sea`, `--color-signal`, …). */
 const colors = {
   sea: "#0a3352",
@@ -38,7 +56,12 @@ export function getOgTitleSize(title: string): number {
   return 64;
 }
 
-export function OgCard({ eyebrow, title, subtitle }: OgCardInput) {
+export function OgCard({
+  eyebrow,
+  title,
+  subtitle,
+  brand = defaultOgCardBrand,
+}: OgCardInput & { brand?: OgCardBrand }) {
   return (
     <div
       style={{
@@ -95,16 +118,19 @@ export function OgCard({ eyebrow, title, subtitle }: OgCardInput) {
           color: colors.onSeaSoft,
         }}
       >
-        <span>Şaban Durali</span>
-        <span>sabandurali.com</span>
+        <span>{brand.name}</span>
+        <span>{brand.domain}</span>
       </div>
     </div>
   );
 }
 
 /** The card as a PNG response, cached like a static asset. */
-export function createOgCard(input: OgCardInput): ImageResponse {
-  return new ImageResponse(<OgCard {...input} />, {
+export function createOgCard(
+  input: OgCardInput,
+  brand: OgCardBrand = defaultOgCardBrand,
+): ImageResponse {
+  return new ImageResponse(<OgCard {...input} brand={brand} />, {
     ...ogCardSize,
     headers: {
       "Cache-Control": "public, max-age=86400, stale-while-revalidate=604800",

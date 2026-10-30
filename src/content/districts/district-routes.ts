@@ -21,3 +21,6 @@ export function getDistrictUrl(slug: string): string {
 export function getDistrictShareCardPath(slug: string): string {
   return `${getDistrictPath(slug)}/og.png`;
 }
+
+/** The generated share card of the district directory (`og.png` route). */
+export const districtDirectoryShareCardPath = `${districtGuidePath}/og.png`;
