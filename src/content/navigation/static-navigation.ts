@@ -56,7 +56,6 @@ function englishHomeAnchorLink(
   id: string,
   label: string,
   hash: string,
-  children: PublicNavigationLink[] = [],
 ): PublicNavigationLink {
   return {
     id,
@@ -64,7 +63,7 @@ function englishHomeAnchorLink(
     label,
     external: false,
     newTab: false,
-    children,
+    children: [],
   };
 }
 
@@ -158,59 +157,30 @@ export function withTurkishHeaderShortcuts(
   ];
 }
 
+/**
+ * The English header (NAV-EN-ANCHORS). Every in-page link targets a section
+ * the English home page renders (`#istanbul` is the district atlas,
+ * `#about` the about section); header-navigation.test.ts checks them
+ * against the home page source. An area without English content (AI &
+ * Technology) is left out instead of pointing at nothing, and no entry has
+ * a one-link panel: a single child repeating its parent is a plain link.
+ */
 export function getEnglishHeaderNavigationItems(): PublicNavigationLink[] {
   return [
     internalLink("home", "Home", "/en"),
     englishHomeAnchorLink(
       "real-estate-istanbul",
       "Real Estate & Istanbul",
-      "gayrimenkul-intelligence",
-      [
-        englishHomeAnchorLink(
-          "real-estate-intelligence",
-          "Real Estate Analysis",
-          "gayrimenkul-intelligence",
-        ),
-      ],
+      "istanbul",
     ),
     internalLink(
       "research-analysis",
       "Research & Analysis",
       articleListPaths.en,
-      [
-        internalLink("latest-research", "Latest Research", articleListPaths.en),
-        internalLink("all-articles", "All Articles", articleListPaths.en),
-      ],
     ),
-    englishHomeAnchorLink(
-      "ai-technology",
-      "AI & Technology",
-      "bilgi-kutuphanesi",
-      [
-        englishHomeAnchorLink(
-          "ai-technology-library",
-          "AI & Technology Library",
-          "bilgi-kutuphanesi",
-        ),
-      ],
-    ),
-    internalLink("books-learning", "Books & Learning", bookListPaths.en, [
-      internalLink("book-reviews", "Book Reviews", bookListPaths.en),
-    ]),
-    internalLink("photography", "Photography", photoListPaths.en, [
-      internalLink(
-        "photography-archive",
-        "Photography Archive",
-        photoListPaths.en,
-      ),
-    ]),
-    englishHomeAnchorLink("about", "About", "about", [
-      englishHomeAnchorLink(
-        "about-saban-durali",
-        "About Şaban Durali",
-        "about",
-      ),
-    ]),
+    internalLink("books-learning", "Books & Learning", bookListPaths.en),
+    internalLink("photography", "Photography", photoListPaths.en),
+    englishHomeAnchorLink("about", "About", "about"),
     internalLink("contact", "Contact", contactPaths.en),
   ];
 }
