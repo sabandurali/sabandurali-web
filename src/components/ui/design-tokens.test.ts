@@ -422,7 +422,7 @@ test("FE-17: fonts.ts loads only the trimmed Archivo and Martian Mono files", ()
   const calls = [...fonts.matchAll(/= localFont\(\{([\s\S]*?)\}\);/g)];
   assert.deepEqual(
     calls.map(([, options]) => /src: "([^"]+)"/.exec(options ?? "")?.[1]),
-    ["./fonts/archivo-latin-tr.woff2", "./fonts/martian-mono-latin-tr.woff2"],
+    ["./_fonts/archivo-latin-tr.woff2", "./_fonts/martian-mono-latin-tr.woff2"],
   );
   for (const [, options] of calls) {
     assert.ok(options);

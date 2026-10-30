@@ -118,7 +118,7 @@ test("PERF-FONTS: fonts.ts declares the same ranges; the licences ship with the 
   const source = read("src/app/fonts.ts");
   assert.doesNotMatch(source, /next\/font\/google/);
   for (const font of fonts) {
-    const call = source.slice(source.indexOf(`./fonts/${font.file}`));
+    const call = source.slice(source.indexOf(`./_fonts/${font.file}`));
     const block = call.slice(0, call.indexOf("});"));
     assert.match(block, new RegExp(`weight: "${font.axes.wght.join(" ")}"`));
     const stretch = Array.isArray(font.axes.wdth)

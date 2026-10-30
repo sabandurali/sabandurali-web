@@ -18,10 +18,12 @@ import localFont from "next/font/local";
  * ı İ ş Ş ğ Ğ are in the same file as Latin, so Turkish text never waits
  * for a second, late file (scripts/fonts/subset-fonts.test.mjs checks the
  * glyphs, the axes and the size budget). The `font-stretch` descriptor
- * tells the browser the width range Archivo covers.
+ * tells the browser the width range Archivo covers. The files live in the
+ * private folder `_fonts` so the App Router never treats it as a route
+ * segment (CMS page slugs reserve every top-level segment).
  */
 export const archivo = localFont({
-  src: "./fonts/archivo-latin-tr.woff2",
+  src: "./_fonts/archivo-latin-tr.woff2",
   weight: "400 800",
   style: "normal",
   display: "swap",
@@ -31,7 +33,7 @@ export const archivo = localFont({
 });
 
 export const martianMono = localFont({
-  src: "./fonts/martian-mono-latin-tr.woff2",
+  src: "./_fonts/martian-mono-latin-tr.woff2",
   weight: "500 700",
   style: "normal",
   display: "swap",

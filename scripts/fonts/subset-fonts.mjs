@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
- * Builds the self-hosted fonts in src/app/fonts/ (PERF-FONTS).
+ * Builds the self-hosted fonts in src/app/_fonts/ (PERF-FONTS).
  *
  *   FONTTOOLS_PYTHON=/path/to/python node scripts/fonts/subset-fonts.mjs
  *
@@ -27,7 +27,7 @@ import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const root = fileURLToPath(new URL("../../", import.meta.url));
-export const fontsDir = path.join(root, "src/app/fonts");
+export const fontsDir = path.join(root, "src/app/_fonts");
 
 /** google/fonts commit the sources are read from (2026-03-03). */
 const commit = "95f4904fc8bcf26d3420fe315560c96417c6dec7";
@@ -183,7 +183,7 @@ async function main() {
         { stdio: "inherit" },
       );
       copyFileSync(`${source}.woff2`, path.join(fontsDir, font.file));
-      console.log(`wrote src/app/fonts/${font.file}`);
+      console.log(`wrote src/app/_fonts/${font.file}`);
     }
   } finally {
     rmSync(work, { recursive: true, force: true });

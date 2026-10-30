@@ -13,7 +13,7 @@ Kaynaklar (tek doğru kaynak bunlardır, bu belge onları açıklar):
 | Dosya | İçerik |
 |---|---|
 | `src/app/globals.css` | Token'lar (`@theme`), taban stiller (`@layer base`), tipografi sınıfları (`@utility type-*`) |
-| `src/app/fonts.ts` | Archivo ve Martian Mono (`next/font/local`, `src/app/fonts/*.woff2`) |
+| `src/app/fonts.ts` | Archivo ve Martian Mono (`next/font/local`, `src/app/_fonts/*.woff2`) |
 | `scripts/fonts/subset-fonts.mjs` | Font dosyalarını üretir (eksen aralığı, Latin + Türkçe alt küme); testi bütçeyi ve glifleri denetler |
 | `src/components/ui/` | Erişilebilir temel bileşenler |
 | `src/components/ui/design-tokens.test.ts` | Kontrast tablosu, 12 px tabanı, katman kuralı, odak halkası, font ayarları |
