@@ -165,7 +165,7 @@ export default function DistrictGuideArticle({
             <DistrictKeyMap
               featuredSlug={district.slug}
               highlightSlugs={neighbours}
-              title={`${district.name}, İstanbul'un şematik ilçe haritasında${tile ? ` (${tile.ref})` : ""}`}
+              title={`${district.name}, İstanbul’un şematik ilçe haritasında${tile ? ` (${tile.ref})` : ""}`}
             />
             <figcaption className="mt-2 type-caption text-ink-muted">
               Şematik, ölçeksiz. Turuncu kare {district.name}

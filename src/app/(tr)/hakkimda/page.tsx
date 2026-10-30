@@ -13,7 +13,7 @@ export const revalidate = 300;
 export const metadata: Metadata = createPageMetadata({
   title: "Hakkımda | Şaban Durali",
   description:
-    "Şaban Durali'nin çalışma alanları, platform yaklaşımı ve profesyonel profili.",
+    "Şaban Durali’nin çalışma alanları, platform yaklaşımı ve profesyonel profili.",
   locale: "tr",
   path: "/hakkimda",
 });
