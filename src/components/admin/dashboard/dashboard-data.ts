@@ -5,6 +5,7 @@
 import { mapDistrictGuide } from "@/content/districts/district-guide-projection";
 import { getDistrict } from "@/content/districts/district-registry";
 import { getText, isRecord } from "@/content/guards";
+import type { SiteLocale } from "@/content/locales";
 
 const dayMs = 24 * 60 * 60 * 1000;
 
@@ -18,7 +19,7 @@ function getID(doc: Record<string, unknown>): string | null {
   return typeof id === "string" || typeof id === "number" ? String(id) : null;
 }
 
-function localized(value: unknown, locale: "en" | "tr"): string | null {
+function localized(value: unknown, locale: SiteLocale): string | null {
   return isRecord(value) ? getText(value[locale]) : getText(value);
 }
 
