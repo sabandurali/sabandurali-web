@@ -44,6 +44,7 @@ export const publicRoutes = Object.freeze([
   { path: "/fotograf", status: 200, type: "photo workspace hub" },
   { path: "/istanbul/ilceler", status: 200, type: "district directory" },
   { path: "/ara", status: 200, type: "search" },
+  { path: "/ara?q=istanbul", status: 200, type: "search results" },
   { path: "/istanbul/ilceler/esenler", status: 200, type: "district guide" },
   {
     path: "/istanbul/ilceler/esenler/haberler",
@@ -64,6 +65,7 @@ export const publicRoutes = Object.freeze([
   },
   { path: "/en/privacy-notice", status: 200, type: "EN privacy notice" },
   { path: "/en/search", status: 200, type: "EN search" },
+  { path: "/en/search?q=qqzz", status: 200, type: "EN search, no result" },
   { path: "/en/missing-page", status: 404, type: "EN not found" },
 ]);
 

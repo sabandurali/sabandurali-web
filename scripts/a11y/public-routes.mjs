@@ -455,7 +455,8 @@ async function checkRoute(route) {
     if (response.url().startsWith(base) && response.status() >= 500)
       serverErrors.push({ url: response.url(), status: response.status() });
   });
-  const name = path === "/" ? "home" : path.slice(1).replace(/\//g, "_");
+  // Screenshot names: no "/", "?" or "=" (artifact uploads refuse "?").
+  const name = path === "/" ? "home" : path.slice(1).replace(/[/?=&]/g, "_");
   const problems = [];
   const steps = [
     () => checkContent(page, route),
