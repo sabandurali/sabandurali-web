@@ -1,0 +1,62 @@
+/* Şaban Durali renk, köşe ve yazı değişkenleri (v1.0, 31 Ekim 2026). */
+/* Değerler sabandurali.com'daki değişkenlerle birebir aynıdır; adları değiştirmeyin. */
+:root {
+  --color-sea: #0a3352;
+  --color-ink: #0a3352;
+  --color-paper: #eef2f1;
+  --color-land: #f8faf9;
+  --color-band: #e4ebea;
+  --color-mist: #dce7ec;
+  --color-keymap: #c3d1d8;
+  --color-hairline: #b8c7cd;
+  --color-tile-edge: #6b8496;
+  --color-ink-muted: #4a6377;
+  --color-sea-line: #2c5577;
+  --color-sea-track: #6f93ae;
+  --color-on-sea: #fff;
+  --color-on-sea-muted: #b9d0df;
+  --color-on-sea-soft: #dce7ec;
+  --color-signal: #f47a2e;
+  --color-signal-ink: #a8410e;
+  --color-danger: #a3261b;
+  --radius-tile: 2px;
+  --radius-card: 3px;
+  --radius-control: 4px;
+  --radius-chip: 6px;
+  --font-sans: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "Martian Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* Tailwind CSS v4: aynı değerler @theme içinde (bg-sea, text-ink-muted, rounded-card ...) */
+@theme {
+  --color-sea: #0a3352;
+  --color-ink: #0a3352;
+  --color-paper: #eef2f1;
+  --color-land: #f8faf9;
+  --color-band: #e4ebea;
+  --color-mist: #dce7ec;
+  --color-keymap: #c3d1d8;
+  --color-hairline: #b8c7cd;
+  --color-tile-edge: #6b8496;
+  --color-ink-muted: #4a6377;
+  --color-sea-line: #2c5577;
+  --color-sea-track: #6f93ae;
+  --color-on-sea: #fff;
+  --color-on-sea-muted: #b9d0df;
+  --color-on-sea-soft: #dce7ec;
+  --color-signal: #f47a2e;
+  --color-signal-ink: #a8410e;
+  --color-danger: #a3261b;
+  --radius-tile: 2px;
+  --radius-card: 3px;
+  --radius-control: 4px;
+  --radius-chip: 6px;
+  --font-sans: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "Martian Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* Sitenin imzaları */
+.sd-highlight { background: var(--color-signal); color: var(--color-ink); padding: 0 .12em; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.sd-chip { display: inline-flex; align-items: center; justify-content: center; min-width: 2.25rem; padding: .25rem .375rem; border-radius: var(--radius-tile); background: var(--color-signal); color: var(--color-ink); font-family: var(--font-mono); font-stretch: 87.5%; font-weight: 700; font-size: .75rem; }
+.sd-region { font-family: var(--font-sans); font-weight: 700; font-stretch: 125%; text-transform: uppercase; letter-spacing: .16em; font-size: .8125rem; color: var(--color-ink-muted); }
+.sd-hatch { background-image: repeating-linear-gradient(135deg, var(--color-hairline) 0 1px, transparent 1px 8px); }

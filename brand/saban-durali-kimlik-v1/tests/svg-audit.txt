@@ -1,0 +1,312 @@
+
+=== saban-durali-app-icon-maskable-paper.svg  (3418 bytes)
+viewBox 0 0 1024 1024 · aspect 1.0 (square)
+colours 3: #eef2f1 #0a3352 #f47a2e · gradients 0 · anchors 136
+margins L0.0 R0.0 T0.0 B0.0 · bbox fill 1.0
+· INFO [complexity] 136 anchor points (library median 53.0, p75 95.5). Check every point earns its place.
+production-readiness score: 99/100 (heuristic)
+
+=== saban-durali-app-icon-maskable.svg  (3396 bytes)
+viewBox 0 0 1024 1024 · aspect 1.0 (square)
+colours 3: #0a3352 #ffffff #f47a2e · gradients 0 · anchors 136
+margins L0.0 R0.0 T0.0 B0.0 · bbox fill 1.0
+· INFO [on-tile] White artwork on a full-canvas tile/container — fine for app icons and avatars; make sure a version without the tile exists for other uses.
+· INFO [complexity] 136 anchor points (library median 53.0, p75 95.5). Check every point earns its place.
+production-readiness score: 98/100 (heuristic)
+
+=== saban-durali-app-icon-rounded-paper.svg  (3437 bytes)
+viewBox 0 0 1024 1024 · aspect 1.0 (square)
+colours 3: #eef2f1 #0a3352 #f47a2e · gradients 0 · anchors 140
+margins L0.0 R0.0 T0.0 B0.0 · bbox fill 1.0
+· INFO [complexity] 140 anchor points (library median 53.0, p75 95.5). Check every point earns its place.
+production-readiness score: 99/100 (heuristic)
+
+=== saban-durali-app-icon-rounded.svg  (3415 bytes)
+viewBox 0 0 1024 1024 · aspect 1.0 (square)
+colours 3: #0a3352 #ffffff #f47a2e · gradients 0 · anchors 140
+margins L0.0 R0.0 T0.0 B0.0 · bbox fill 1.0
+· INFO [on-tile] White artwork on a full-canvas tile/container — fine for app icons and avatars; make sure a version without the tile exists for other uses.
+· INFO [complexity] 140 anchor points (library median 53.0, p75 95.5). Check every point earns its place.
+production-readiness score: 98/100 (heuristic)
+
+=== saban-durali-app-icon-square-paper.svg  (3425 bytes)
+viewBox 0 0 1024 1024 · aspect 1.0 (square)
+colours 3: #eef2f1 #0a3352 #f47a2e · gradients 0 · anchors 136
+margins L0.0 R0.0 T0.0 B0.0 · bbox fill 1.0
+· INFO [complexity] 136 anchor points (library median 53.0, p75 95.5). Check every point earns its place.
+production-readiness score: 99/100 (heuristic)
+
+=== saban-durali-app-icon-square.svg  (3403 bytes)
+viewBox 0 0 1024 1024 · aspect 1.0 (square)
+colours 3: #0a3352 #ffffff #f47a2e · gradients 0 · anchors 136
+margins L0.0 R0.0 T0.0 B0.0 · bbox fill 1.0
+· INFO [on-tile] White artwork on a full-canvas tile/container — fine for app icons and avatars; make sure a version without the tile exists for other uses.
+· INFO [complexity] 136 anchor points (library median 53.0, p75 95.5). Check every point earns its place.
+production-readiness score: 98/100 (heuristic)
+
+=== saban-durali-atlas-dark.svg  (3042 bytes)
+viewBox 0 0 372 140 · aspect 2.657 (horizontal)
+colours 4: #2c5577 #b9d0df #ffffff #f47a2e · gradients 0 · anchors 406
+margins L0.0 R0.0 T0.0 B-0.0 · bbox fill 1.0
+▲ WARN [complex] 406 anchor points — more than 95% of comparable reference logos (median 75.0). Simplify: fewer points, merged shapes, less detail.
+production-readiness score: 92/100 (heuristic)
+
+=== saban-durali-atlas-light.svg  (3042 bytes)
+viewBox 0 0 372 140 · aspect 2.657 (horizontal)
+colours 3: #c3d1d8 #0a3352 #f47a2e · gradients 0 · anchors 406
+margins L0.0 R0.0 T0.0 B-0.0 · bbox fill 1.0
+▲ WARN [complex] 406 anchor points — more than 95% of comparable reference logos (median 75.0). Simplify: fewer points, merged shapes, less detail.
+production-readiness score: 92/100 (heuristic)
+
+=== saban-durali-logo-black.svg  (19459 bytes)
+viewBox 0 0 2027 256 · aspect 7.918 (extra-wide)
+colours 1: #000000 · gradients 0 · anchors 930
+margins L0.0 R0.0 T0.0 B0.0 · bbox fill 1.0
+▲ WARN [complex] 930 anchor points — more than 95% of comparable reference logos (median 75.0). Simplify: fewer points, merged shapes, less detail.
+· INFO [extra-wide] Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol.
+production-readiness score: 91/100 (heuristic)
+
+=== saban-durali-logo-color-ondark.svg  (19619 bytes)
+viewBox 0 0 2027 256 · aspect 7.918 (extra-wide)
+colours 3: #ffffff #f47a2e #b9d0df · gradients 0 · anchors 939
+margins L0.0 R0.0 T0.0 B0.0 · bbox fill 1.0
+▲ WARN [complex] 939 anchor points — more than 95% of comparable reference logos (median 75.0). Simplify: fewer points, merged shapes, less detail.
+· INFO [extra-wide] Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol.
+production-readiness score: 91/100 (heuristic)
+
+=== saban-durali-logo-color.svg  (19619 bytes)
+viewBox 0 0 2027 256 · aspect 7.918 (extra-wide)
+colours 3: #0a3352 #f47a2e #4a6377 · gradients 0 · anchors 939
+margins L0.0 R0.0 T0.0 B0.0 · bbox fill 1.0
+▲ WARN [complex] 939 anchor points — more than 95% of comparable reference logos (median 75.0). Simplify: fewer points, merged shapes, less detail.
+· INFO [extra-wide] Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol.
+production-readiness score: 91/100 (heuristic)
+
+=== saban-durali-logo-navy.svg  (19459 bytes)
+viewBox 0 0 2027 256 · aspect 7.918 (extra-wide)
+colours 1: #0a3352 · gradients 0 · anchors 930
+margins L0.0 R0.0 T0.0 B0.0 · bbox fill 1.0
+▲ WARN [complex] 930 anchor points — more than 95% of comparable reference logos (median 75.0). Simplify: fewer points, merged shapes, less detail.
+· INFO [extra-wide] Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol.
+production-readiness score: 91/100 (heuristic)
+
+=== saban-durali-logo-vertical-black.svg  (18708 bytes)
+viewBox 0 0 685 256 · aspect 2.676 (horizontal)
+colours 1: #000000 · gradients 0 · anchors 930
+margins L0.3 R0.3 T0.0 B0.0 · bbox fill 0.999
+▲ WARN [complex] 930 anchor points — more than 95% of comparable reference logos (median 75.0). Simplify: fewer points, merged shapes, less detail.
+▲ WARN [near-miss-angle] 2 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 42.0° (→45°) len 31.3 at (271,162); 42.1° (→45°) len 30.7 at (301,207). (Expected — and fine — for type set on a curve or deliberately rotated elements.)
+▲ WARN [tiny-detail] 7 sub-shape(s) smaller than 1/32 of the lockup height (≈1 px at 32 px tall): 7.0×7.6 at (8,236); 7.0×7.6 at (65,236); 7.2×6.0 at (93,250); 7.0×7.6 at (222,236) …. They vanish when small — enlarge, merge or remove them, or provide a small-size version.
+production-readiness score: 76/100 (heuristic)
+
+=== saban-durali-logo-vertical-color-ondark.svg  (18836 bytes)
+viewBox 0 0 685 256 · aspect 2.676 (horizontal)
+colours 3: #ffffff #f47a2e #b9d0df · gradients 0 · anchors 939
+margins L0.3 R0.3 T0.0 B0.0 · bbox fill 0.999
+▲ WARN [complex] 939 anchor points — more than 95% of comparable reference logos (median 75.0). Simplify: fewer points, merged shapes, less detail.
+▲ WARN [near-miss-angle] 2 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 42.0° (→45°) len 31.3 at (271,162); 42.1° (→45°) len 30.7 at (301,207). (Expected — and fine — for type set on a curve or deliberately rotated elements.)
+▲ WARN [tiny-detail] 7 sub-shape(s) smaller than 1/32 of the lockup height (≈1 px at 32 px tall): 7.0×7.6 at (8,236); 7.0×7.6 at (65,236); 7.2×6.0 at (93,250); 7.0×7.6 at (222,236) …. They vanish when small — enlarge, merge or remove them, or provide a small-size version.
+production-readiness score: 76/100 (heuristic)
+
+=== saban-durali-logo-vertical-color.svg  (18836 bytes)
+viewBox 0 0 685 256 · aspect 2.676 (horizontal)
+colours 3: #0a3352 #f47a2e #4a6377 · gradients 0 · anchors 939
+margins L0.3 R0.3 T0.0 B0.0 · bbox fill 0.999
+▲ WARN [complex] 939 anchor points — more than 95% of comparable reference logos (median 75.0). Simplify: fewer points, merged shapes, less detail.
+▲ WARN [near-miss-angle] 2 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 42.0° (→45°) len 31.3 at (271,162); 42.1° (→45°) len 30.7 at (301,207). (Expected — and fine — for type set on a curve or deliberately rotated elements.)
+▲ WARN [tiny-detail] 7 sub-shape(s) smaller than 1/32 of the lockup height (≈1 px at 32 px tall): 7.0×7.6 at (8,236); 7.0×7.6 at (65,236); 7.2×6.0 at (93,250); 7.0×7.6 at (222,236) …. They vanish when small — enlarge, merge or remove them, or provide a small-size version.
+production-readiness score: 76/100 (heuristic)
+
+=== saban-durali-logo-vertical-navy.svg  (18708 bytes)
+viewBox 0 0 685 256 · aspect 2.676 (horizontal)
+colours 1: #0a3352 · gradients 0 · anchors 930
+margins L0.3 R0.3 T0.0 B0.0 · bbox fill 0.999
+▲ WARN [complex] 930 anchor points — more than 95% of comparable reference logos (median 75.0). Simplify: fewer points, merged shapes, less detail.
+▲ WARN [near-miss-angle] 2 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 42.0° (→45°) len 31.3 at (271,162); 42.1° (→45°) len 30.7 at (301,207). (Expected — and fine — for type set on a curve or deliberately rotated elements.)
+▲ WARN [tiny-detail] 7 sub-shape(s) smaller than 1/32 of the lockup height (≈1 px at 32 px tall): 7.0×7.6 at (8,236); 7.0×7.6 at (65,236); 7.2×6.0 at (93,250); 7.0×7.6 at (222,236) …. They vanish when small — enlarge, merge or remove them, or provide a small-size version.
+production-readiness score: 76/100 (heuristic)
+
+=== saban-durali-logo-vertical-white.svg  (18708 bytes)
+viewBox 0 0 685 256 · aspect 2.676 (horizontal)
+colours 1: #ffffff · gradients 0 · anchors 930
+margins L0.3 R0.3 T0.0 B0.0 · bbox fill 0.999
+▲ WARN [complex] 930 anchor points — more than 95% of comparable reference logos (median 75.0). Simplify: fewer points, merged shapes, less detail.
+▲ WARN [near-miss-angle] 2 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 42.0° (→45°) len 31.3 at (271,162); 42.1° (→45°) len 30.7 at (301,207). (Expected — and fine — for type set on a curve or deliberately rotated elements.)
+▲ WARN [tiny-detail] 7 sub-shape(s) smaller than 1/32 of the lockup height (≈1 px at 32 px tall): 7.0×7.6 at (8,236); 7.0×7.6 at (65,236); 7.2×6.0 at (93,250); 7.0×7.6 at (222,236) …. They vanish when small — enlarge, merge or remove them, or provide a small-size version.
+production-readiness score: 76/100 (heuristic)
+
+=== saban-durali-logo-white.svg  (19459 bytes)
+viewBox 0 0 2027 256 · aspect 7.918 (extra-wide)
+colours 1: #ffffff · gradients 0 · anchors 930
+margins L0.0 R0.0 T0.0 B0.0 · bbox fill 1.0
+▲ WARN [complex] 930 anchor points — more than 95% of comparable reference logos (median 75.0). Simplify: fewer points, merged shapes, less detail.
+· INFO [extra-wide] Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol.
+production-readiness score: 91/100 (heuristic)
+
+=== saban-durali-symbol-black.svg  (2973 bytes)
+viewBox 0 0 367 256 · aspect 1.434 (wide)
+colours 1: #000000 · gradients 0 · anchors 122
+margins L0.1 R0.1 T0.0 B0.0 · bbox fill 1.0
+✔ no issues found
+production-readiness score: 100/100 (heuristic)
+
+=== saban-durali-symbol-color-ondark.svg  (3109 bytes)
+viewBox 0 0 367 256 · aspect 1.434 (wide)
+colours 2: #ffffff #f47a2e · gradients 0 · anchors 131
+margins L0.1 R0.1 T0.0 B0.0 · bbox fill 1.0
+✔ no issues found
+production-readiness score: 100/100 (heuristic)
+
+=== saban-durali-symbol-color.svg  (3109 bytes)
+viewBox 0 0 367 256 · aspect 1.434 (wide)
+colours 2: #0a3352 #f47a2e · gradients 0 · anchors 131
+margins L0.1 R0.1 T0.0 B0.0 · bbox fill 1.0
+✔ no issues found
+production-readiness score: 100/100 (heuristic)
+
+=== saban-durali-symbol-navy.svg  (2973 bytes)
+viewBox 0 0 367 256 · aspect 1.434 (wide)
+colours 1: #0a3352 · gradients 0 · anchors 122
+margins L0.1 R0.1 T0.0 B0.0 · bbox fill 1.0
+✔ no issues found
+production-readiness score: 100/100 (heuristic)
+
+=== saban-durali-symbol-small-black.svg  (3001 bytes)
+viewBox 0 0 346 256 · aspect 1.352 (wide)
+colours 1: #000000 · gradients 0 · anchors 122
+margins L0.1 R0.1 T0.0 B0.0 · bbox fill 0.999
+✔ no issues found
+production-readiness score: 100/100 (heuristic)
+
+=== saban-durali-symbol-small-color-ondark.svg  (3151 bytes)
+viewBox 0 0 346 256 · aspect 1.352 (wide)
+colours 2: #ffffff #f47a2e · gradients 0 · anchors 131
+margins L0.1 R0.1 T0.0 B0.0 · bbox fill 0.999
+✔ no issues found
+production-readiness score: 100/100 (heuristic)
+
+=== saban-durali-symbol-small-color.svg  (3151 bytes)
+viewBox 0 0 346 256 · aspect 1.352 (wide)
+colours 2: #0a3352 #f47a2e · gradients 0 · anchors 131
+margins L0.1 R0.1 T0.0 B0.0 · bbox fill 0.999
+✔ no issues found
+production-readiness score: 100/100 (heuristic)
+
+=== saban-durali-symbol-small-navy.svg  (3001 bytes)
+viewBox 0 0 346 256 · aspect 1.352 (wide)
+colours 1: #0a3352 · gradients 0 · anchors 122
+margins L0.1 R0.1 T0.0 B0.0 · bbox fill 0.999
+✔ no issues found
+production-readiness score: 100/100 (heuristic)
+
+=== saban-durali-symbol-small-white.svg  (3001 bytes)
+viewBox 0 0 346 256 · aspect 1.352 (wide)
+colours 1: #ffffff · gradients 0 · anchors 122
+margins L0.1 R0.1 T0.0 B0.0 · bbox fill 0.999
+✔ no issues found
+production-readiness score: 100/100 (heuristic)
+
+=== saban-durali-symbol-white.svg  (2973 bytes)
+viewBox 0 0 367 256 · aspect 1.434 (wide)
+colours 1: #ffffff · gradients 0 · anchors 122
+margins L0.1 R0.1 T0.0 B0.0 · bbox fill 1.0
+✔ no issues found
+production-readiness score: 100/100 (heuristic)
+
+=== icon.svg  (3352 bytes)
+viewBox 0 0 512 512 · aspect 1.0 (square)
+colours 3: #0a3352 #ffffff #f47a2e · gradients 0 · anchors 140
+margins L0.0 R0.0 T0.0 B0.0 · bbox fill 1.0
+· INFO [on-tile] White artwork on a full-canvas tile/container — fine for app icons and avatars; make sure a version without the tile exists for other uses.
+· INFO [complexity] 140 anchor points (library median 53.0, p75 95.5). Check every point earns its place.
+production-readiness score: 98/100 (heuristic)
+
+=== saban-durali-wordmark-black.svg  (16231 bytes)
+viewBox 0 0 1637 256 · aspect 6.395 (extra-wide)
+colours 1: #000000 · gradients 0 · anchors 808
+margins L0.1 R0.1 T0.0 B0.0 · bbox fill 1.0
+▲ WARN [complex] 808 anchor points — more than 95% of comparable reference logos (median 75.0). Simplify: fewer points, merged shapes, less detail.
+▲ WARN [near-miss-angle] 2 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 42.0° (→45°) len 75.0 at (648,30); 42.1° (→45°) len 73.3 at (720,138). (Expected — and fine — for type set on a curve or deliberately rotated elements.)
+· INFO [extra-wide] Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol.
+production-readiness score: 83/100 (heuristic)
+
+=== saban-durali-wordmark-color-ondark.svg  (16231 bytes)
+viewBox 0 0 1637 256 · aspect 6.395 (extra-wide)
+colours 2: #ffffff #b9d0df · gradients 0 · anchors 808
+margins L0.1 R0.1 T0.0 B0.0 · bbox fill 1.0
+▲ WARN [complex] 808 anchor points — more than 95% of comparable reference logos (median 75.0). Simplify: fewer points, merged shapes, less detail.
+▲ WARN [near-miss-angle] 2 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 42.0° (→45°) len 75.0 at (648,30); 42.1° (→45°) len 73.3 at (720,138). (Expected — and fine — for type set on a curve or deliberately rotated elements.)
+· INFO [extra-wide] Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol.
+production-readiness score: 83/100 (heuristic)
+
+=== saban-durali-wordmark-color.svg  (16231 bytes)
+viewBox 0 0 1637 256 · aspect 6.395 (extra-wide)
+colours 2: #0a3352 #4a6377 · gradients 0 · anchors 808
+margins L0.1 R0.1 T0.0 B0.0 · bbox fill 1.0
+▲ WARN [complex] 808 anchor points — more than 95% of comparable reference logos (median 75.0). Simplify: fewer points, merged shapes, less detail.
+▲ WARN [near-miss-angle] 2 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 42.0° (→45°) len 75.0 at (648,30); 42.1° (→45°) len 73.3 at (720,138). (Expected — and fine — for type set on a curve or deliberately rotated elements.)
+· INFO [extra-wide] Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol.
+production-readiness score: 83/100 (heuristic)
+
+=== saban-durali-wordmark-name-black.svg  (5645 bytes)
+viewBox 0 0 2470 256 · aspect 9.648 (extra-wide)
+colours 1: #000000 · gradients 0 · anchors 274
+margins L0.2 R0.2 T0.0 B0.0 · bbox fill 1.0
+▲ WARN [near-miss-angle] 2 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 42.0° (→45°) len 113.1 at (978,46); 42.1° (→45°) len 110.6 at (1086,208). (Expected — and fine — for type set on a curve or deliberately rotated elements.)
+· INFO [complexity] 274 anchor points (library median 75.0, p75 155.0). Check every point earns its place.
+· INFO [extra-wide] Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol.
+production-readiness score: 90/100 (heuristic)
+
+=== saban-durali-wordmark-name-color-ondark.svg  (5645 bytes)
+viewBox 0 0 2470 256 · aspect 9.648 (extra-wide)
+colours 1: #ffffff · gradients 0 · anchors 274
+margins L0.2 R0.2 T0.0 B0.0 · bbox fill 1.0
+▲ WARN [near-miss-angle] 2 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 42.0° (→45°) len 113.1 at (978,46); 42.1° (→45°) len 110.6 at (1086,208). (Expected — and fine — for type set on a curve or deliberately rotated elements.)
+· INFO [complexity] 274 anchor points (library median 75.0, p75 155.0). Check every point earns its place.
+· INFO [extra-wide] Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol.
+production-readiness score: 90/100 (heuristic)
+
+=== saban-durali-wordmark-name-color.svg  (5645 bytes)
+viewBox 0 0 2470 256 · aspect 9.648 (extra-wide)
+colours 1: #0a3352 · gradients 0 · anchors 274
+margins L0.2 R0.2 T0.0 B0.0 · bbox fill 1.0
+▲ WARN [near-miss-angle] 2 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 42.0° (→45°) len 113.1 at (978,46); 42.1° (→45°) len 110.6 at (1086,208). (Expected — and fine — for type set on a curve or deliberately rotated elements.)
+· INFO [complexity] 274 anchor points (library median 75.0, p75 155.0). Check every point earns its place.
+· INFO [extra-wide] Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol.
+production-readiness score: 90/100 (heuristic)
+
+=== saban-durali-wordmark-name-navy.svg  (5645 bytes)
+viewBox 0 0 2470 256 · aspect 9.648 (extra-wide)
+colours 1: #0a3352 · gradients 0 · anchors 274
+margins L0.2 R0.2 T0.0 B0.0 · bbox fill 1.0
+▲ WARN [near-miss-angle] 2 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 42.0° (→45°) len 113.1 at (978,46); 42.1° (→45°) len 110.6 at (1086,208). (Expected — and fine — for type set on a curve or deliberately rotated elements.)
+· INFO [complexity] 274 anchor points (library median 75.0, p75 155.0). Check every point earns its place.
+· INFO [extra-wide] Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol.
+production-readiness score: 90/100 (heuristic)
+
+=== saban-durali-wordmark-name-white.svg  (5645 bytes)
+viewBox 0 0 2470 256 · aspect 9.648 (extra-wide)
+colours 1: #ffffff · gradients 0 · anchors 274
+margins L0.2 R0.2 T0.0 B0.0 · bbox fill 1.0
+▲ WARN [near-miss-angle] 2 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 42.0° (→45°) len 113.1 at (978,46); 42.1° (→45°) len 110.6 at (1086,208). (Expected — and fine — for type set on a curve or deliberately rotated elements.)
+· INFO [complexity] 274 anchor points (library median 75.0, p75 155.0). Check every point earns its place.
+· INFO [extra-wide] Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol.
+production-readiness score: 90/100 (heuristic)
+
+=== saban-durali-wordmark-navy.svg  (16231 bytes)
+viewBox 0 0 1637 256 · aspect 6.395 (extra-wide)
+colours 1: #0a3352 · gradients 0 · anchors 808
+margins L0.1 R0.1 T0.0 B0.0 · bbox fill 1.0
+▲ WARN [complex] 808 anchor points — more than 95% of comparable reference logos (median 75.0). Simplify: fewer points, merged shapes, less detail.
+▲ WARN [near-miss-angle] 2 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 42.0° (→45°) len 75.0 at (648,30); 42.1° (→45°) len 73.3 at (720,138). (Expected — and fine — for type set on a curve or deliberately rotated elements.)
+· INFO [extra-wide] Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol.
+production-readiness score: 83/100 (heuristic)
+
+=== saban-durali-wordmark-white.svg  (16231 bytes)
+viewBox 0 0 1637 256 · aspect 6.395 (extra-wide)
+colours 1: #ffffff · gradients 0 · anchors 808
+margins L0.1 R0.1 T0.0 B0.0 · bbox fill 1.0
+▲ WARN [complex] 808 anchor points — more than 95% of comparable reference logos (median 75.0). Simplify: fewer points, merged shapes, less detail.
+▲ WARN [near-miss-angle] 2 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 42.0° (→45°) len 75.0 at (648,30); 42.1° (→45°) len 73.3 at (720,138). (Expected — and fine — for type set on a curve or deliberately rotated elements.)
+· INFO [extra-wide] Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol.
+production-readiness score: 83/100 (heuristic)

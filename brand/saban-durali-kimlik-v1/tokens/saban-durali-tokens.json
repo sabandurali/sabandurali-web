@@ -1,0 +1,410 @@
+{
+  "name": "Şaban Durali",
+  "version": "1.0",
+  "date": "2026-10-31",
+  "source": "sabandurali.com (CSS değişkenleri)",
+  "colors": {
+    "sea": {
+      "hex": "#0A3352",
+      "rgb": [
+        10,
+        51,
+        82
+      ],
+      "cmyk": [
+        88,
+        38,
+        0,
+        68
+      ],
+      "role": "deniz / mürekkep: logo, başlık, metin, koyu zemin",
+      "contrast": {
+        "paper": 11.57,
+        "white": 13.06,
+        "sea": 1.0
+      },
+      "pantone_nearest": "540 C",
+      "pantone_delta_e": 2.4
+    },
+    "ink": {
+      "hex": "#0A3352",
+      "rgb": [
+        10,
+        51,
+        82
+      ],
+      "cmyk": [
+        88,
+        38,
+        0,
+        68
+      ],
+      "role": "deniz / mürekkep: logo, başlık, metin, koyu zemin",
+      "contrast": {
+        "paper": 11.57,
+        "white": 13.06,
+        "sea": 1.0
+      },
+      "pantone_nearest": "540 C",
+      "pantone_delta_e": 2.4
+    },
+    "paper": {
+      "hex": "#EEF2F1",
+      "rgb": [
+        238,
+        242,
+        241
+      ],
+      "cmyk": [
+        2,
+        0,
+        0,
+        5
+      ],
+      "role": "kâğıt: sayfa zemini",
+      "contrast": {
+        "paper": 1.0,
+        "white": 1.13,
+        "sea": 11.57
+      }
+    },
+    "land": {
+      "hex": "#F8FAF9",
+      "rgb": [
+        248,
+        250,
+        249
+      ],
+      "cmyk": [
+        1,
+        0,
+        0,
+        2
+      ],
+      "role": "kara: kart ve kutu zemini",
+      "contrast": {
+        "paper": 1.08,
+        "white": 1.05,
+        "sea": 12.46
+      }
+    },
+    "band": {
+      "hex": "#E4EBEA",
+      "rgb": [
+        228,
+        235,
+        234
+      ],
+      "cmyk": [
+        3,
+        0,
+        0,
+        8
+      ],
+      "role": "bant: bölüm zemini",
+      "contrast": {
+        "paper": 1.07,
+        "white": 1.21,
+        "sea": 10.8
+      }
+    },
+    "mist": {
+      "hex": "#DCE7EC",
+      "rgb": [
+        220,
+        231,
+        236
+      ],
+      "cmyk": [
+        7,
+        2,
+        0,
+        7
+      ],
+      "role": "sis: yumuşak zemin",
+      "contrast": {
+        "paper": 1.12,
+        "white": 1.26,
+        "sea": 10.37
+      }
+    },
+    "keymap": {
+      "hex": "#C3D1D8",
+      "rgb": [
+        195,
+        209,
+        216
+      ],
+      "cmyk": [
+        10,
+        3,
+        0,
+        15
+      ],
+      "role": "pafta: atlas kareleri",
+      "contrast": {
+        "paper": 1.39,
+        "white": 1.56,
+        "sea": 8.35
+      },
+      "pantone_nearest": "5455 C",
+      "pantone_delta_e": 0.9
+    },
+    "hairline": {
+      "hex": "#B8C7CD",
+      "rgb": [
+        184,
+        199,
+        205
+      ],
+      "cmyk": [
+        10,
+        3,
+        0,
+        20
+      ],
+      "role": "ince çizgi",
+      "contrast": {
+        "paper": 1.54,
+        "white": 1.74,
+        "sea": 7.52
+      }
+    },
+    "tile-edge": {
+      "hex": "#6B8496",
+      "rgb": [
+        107,
+        132,
+        150
+      ],
+      "cmyk": [
+        29,
+        12,
+        0,
+        41
+      ],
+      "role": "kare kenarı",
+      "contrast": {
+        "paper": 3.47,
+        "white": 3.91,
+        "sea": 3.34
+      }
+    },
+    "ink-muted": {
+      "hex": "#4A6377",
+      "rgb": [
+        74,
+        99,
+        119
+      ],
+      "cmyk": [
+        38,
+        17,
+        0,
+        53
+      ],
+      "role": "soluk mürekkep: ikincil metin, alt satır",
+      "contrast": {
+        "paper": 5.57,
+        "white": 6.28,
+        "sea": 2.08
+      },
+      "pantone_nearest": "7699 C",
+      "pantone_delta_e": 4.8
+    },
+    "sea-line": {
+      "hex": "#2C5577",
+      "rgb": [
+        44,
+        85,
+        119
+      ],
+      "cmyk": [
+        63,
+        29,
+        0,
+        53
+      ],
+      "role": "deniz çizgisi (koyu zeminde çizgi)",
+      "contrast": {
+        "paper": 6.96,
+        "white": 7.86,
+        "sea": 1.66
+      }
+    },
+    "sea-track": {
+      "hex": "#6F93AE",
+      "rgb": [
+        111,
+        147,
+        174
+      ],
+      "cmyk": [
+        36,
+        16,
+        0,
+        32
+      ],
+      "role": "deniz izi (koyu zeminde ikincil)",
+      "contrast": {
+        "paper": 2.88,
+        "white": 3.25,
+        "sea": 4.02
+      }
+    },
+    "on-sea": {
+      "hex": "#FFFFFF",
+      "rgb": [
+        255,
+        255,
+        255
+      ],
+      "cmyk": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "role": "denizde yazı",
+      "contrast": {
+        "paper": 1.13,
+        "white": 1.0,
+        "sea": 13.06
+      }
+    },
+    "on-sea-muted": {
+      "hex": "#B9D0DF",
+      "rgb": [
+        185,
+        208,
+        223
+      ],
+      "cmyk": [
+        17,
+        7,
+        0,
+        13
+      ],
+      "role": "denizde soluk yazı",
+      "contrast": {
+        "paper": 1.41,
+        "white": 1.6,
+        "sea": 8.18
+      }
+    },
+    "on-sea-soft": {
+      "hex": "#DCE7EC",
+      "rgb": [
+        220,
+        231,
+        236
+      ],
+      "cmyk": [
+        7,
+        2,
+        0,
+        7
+      ],
+      "role": "sis: yumuşak zemin",
+      "contrast": {
+        "paper": 1.12,
+        "white": 1.26,
+        "sea": 10.37
+      }
+    },
+    "signal": {
+      "hex": "#F47A2E",
+      "rgb": [
+        244,
+        122,
+        46
+      ],
+      "cmyk": [
+        0,
+        50,
+        81,
+        4
+      ],
+      "role": "sinyal: logodaki kesişim, vurgu, bölüm çipi",
+      "contrast": {
+        "paper": 2.43,
+        "white": 2.74,
+        "sea": 4.77
+      },
+      "pantone_nearest": "1575 C",
+      "pantone_delta_e": 2.2
+    },
+    "signal-ink": {
+      "hex": "#A8410E",
+      "rgb": [
+        168,
+        65,
+        14
+      ],
+      "cmyk": [
+        0,
+        61,
+        92,
+        34
+      ],
+      "role": "sinyal yazısı: açık zeminde turuncu yazı",
+      "contrast": {
+        "paper": 5.43,
+        "white": 6.13,
+        "sea": 2.13
+      },
+      "pantone_nearest": "1675 C",
+      "pantone_delta_e": 2.8
+    },
+    "danger": {
+      "hex": "#A3261B",
+      "rgb": [
+        163,
+        38,
+        27
+      ],
+      "cmyk": [
+        0,
+        77,
+        83,
+        36
+      ],
+      "role": "hata",
+      "contrast": {
+        "paper": 6.53,
+        "white": 7.37,
+        "sea": 1.77
+      }
+    }
+  },
+  "radius": {
+    "tile": "2px",
+    "card": "3px",
+    "control": "4px",
+    "chip": "6px"
+  },
+  "font": {
+    "sans": {
+      "family": "Archivo",
+      "axes": "wght 100–900, wdth 62–125",
+      "license": "SIL OFL 1.1"
+    },
+    "mono": {
+      "family": "Martian Mono",
+      "axes": "wght 100–800, wdth 75–112.5",
+      "license": "SIL OFL 1.1"
+    }
+  },
+  "type": {
+    "wordmark": "Archivo 800, wdth 125, letter-spacing .07em",
+    "region_label": "Archivo 700, wdth 125, uppercase, .16em",
+    "heading": "Archivo 800, wdth 88–95, letter-spacing -.012/-.018em",
+    "body": "Archivo 400–600",
+    "data": "Martian Mono 600–700, wdth 87.5"
+  },
+  "mark": {
+    "overlap": "S overlaps the stem of D by 26 % of the S width; the overlap is --color-signal",
+    "cedilla": "Archivo's own cedilla, 1.25x (1.55x in the 16-32 px cut)"
+  },
+  "pantone_note": "En yakın Pantone C değerleri; baskıdan önce fiziksel rehberle doğrulanmalı."
+}
