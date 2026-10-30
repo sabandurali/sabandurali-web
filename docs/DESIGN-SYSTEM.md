@@ -314,9 +314,16 @@ kipinde kalır. Klavye modeli `menu-keys.ts` içindedir ve test edilir:
   layout="bar"` (ana sayfa öğesi yok: wordmark onun yerine geçer). Daha dar ekranda "Menü" `Disclosure`'ı:
   panel tam genişlik, içinde `NavMenu layout="stack"` ve dil seçici; bir bağlantı izlenince kapanır.
   `toNavMenuItems` (test edilir) mevcut sayfayı ve bölümü işaretler, bir paneldeki yinelenen bağlantıları
-  atar ve ilçe rehberinin 25 + 14 ilçesini iki etiketli grup olarak taşır.
-- **Dil seçici:** TR · EN; her bağlantının adı "TR Türkçe" / "EN English", `lang` ve `hrefLang` taşır;
-  geçerli dil `aria-current`, kalın yazı ve turuncu çizgiyle.
+  atar ve ilçe rehberinin 25 + 14 ilçesini iki etiketli grup olarak taşır. Yayımlanmış içeriği olmayan
+  çalışma alanı alt başlıkları (noindex boş durum sayfaları) menüde gösterilmez (`sectionHasContent`);
+  ilk içerik yayımlanınca geri gelir. İngilizce menüdeki her `/en#…` bağlantısı ana sayfada var olan bir
+  bölüme gider; tek bağlantılı panel yoktur.
+- **Dil seçici:** TR · EN; her bağlantının adı "TR Türkçe" / "EN English", `lang` ve `hrefLang` taşır
+  (`hrefLang` sayfaların `<html lang>` değeriyle aynıdır: `tr`, `en`); geçerli dil `aria-current`, kalın
+  yazı ve turuncu çizgiyle. Sayfanın diğer dilde karşılığı yoksa (`src/content/route-parity.ts`) bağlantı
+  o dilin ana ya da liste sayfasına gider ve yanında o dilde görünür bir not durur ("Only in Turkish" /
+  "Yalnızca İngilizce"), bağlantı bu nota `aria-describedby` ile bağlıdır. Yeni bir sayfa rotası
+  manifestoya ya karşılığıyla ya da gerekçeli `tr-only` olarak eklenir (test eder).
 - **Footer:** `sea` zemin (odak halkası beyaz), wordmark, platform cümlesi, footer bağlantıları (KVKK ve
   iletişim her zaman vardır), telif satırı.
 - **404 ve hata:** `StatusMessage` (turuncu kod etiketi, tek `h1`, açıklama, çıkış yolları). Grup 404'leri

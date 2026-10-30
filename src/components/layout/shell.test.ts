@@ -27,28 +27,92 @@ test("language options fall back to the home pages and mark the current one", ()
       o.code,
       o.href,
       o.current,
+      o.translated,
     ]),
     [
-      ["TR", "/iletisim", true],
-      ["EN", "/en", false],
+      ["TR", "/iletisim", true, true],
+      // The contact page has an English counterpart; "/en" is not it.
+      ["EN", "/en", false, false],
     ],
   );
+  assert.deepEqual(
+    getLanguageOptions("tr", contactPaths).map((o) => o.translated),
+    [true, true],
+  );
+  // The home pages are each other's translation.
+  assert.deepEqual(
+    getLanguageOptions("en").map((o) => o.translated),
+    [true, true],
+  );
+});
+
+test("LANG-SWITCH-FALLBACK: hreflang of the language links equals <html lang>", () => {
+  for (const option of getLanguageOptions("tr")) {
+    assert.equal(option.hrefLang, option.locale);
+  }
+  for (const layout of ["src/app/(tr)/layout.tsx", "src/app/(en)/layout.tsx"]) {
+    const lang = /<html lang="(\w+)"/.exec(read(layout))?.[1];
+    assert.ok(
+      getLanguageOptions("tr").some((option) => option.hrefLang === lang),
+      layout,
+    );
+  }
 });
 
 test("LanguageSwitcher: visible code in the name, lang and hreflang per link", () => {
   const html = renderToStaticMarkup(
     h(LanguageSwitcher, { locale: "en", label: "Language selection" }),
   );
-  assert.match(html, /^<ul aria-label="Language selection"/);
+  assert.match(html, /<ul aria-label="Language selection"/);
   assert.match(
     html,
-    /hrefLang="tr-TR" lang="tr"[^>]*>TR<span class="sr-only"> Türkçe/,
+    /hrefLang="tr" lang="tr"[^>]*>TR<span class="sr-only"> Türkçe/,
   );
   assert.match(
     html,
     /lang="en" aria-current="true"[^>]*>EN<span class="sr-only"> English/,
   );
   assert.equal([...html.matchAll(/aria-current/g)].length, 1);
+  // The English home has its Turkish translation: no note.
+  assert.doesNotMatch(html, /aria-describedby|Yalnızca/);
+});
+
+test("LANG-SWITCH-FALLBACK: a page without translation says so next to the other language", () => {
+  const html = renderToStaticMarkup(
+    h(LanguageSwitcher, {
+      locale: "tr",
+      label: "Dil seçimi",
+      hrefs: { tr: "/hakkimda", en: "/en" },
+    }),
+  );
+  const describedBy =
+    /<a hrefLang="en"[^>]*aria-describedby="([^"]+)"[^>]*href="\/en"/.exec(
+      html,
+    )?.[1];
+  assert.ok(describedBy, html);
+  assert.match(
+    html,
+    new RegExp(`<p id="${describedBy}" lang="en"[^>]*>Only in Turkish</p>`),
+  );
+  assert.equal([...html.matchAll(/aria-describedby/g)].length, 1);
+
+  const english = renderToStaticMarkup(
+    h(LanguageSwitcher, {
+      locale: "en",
+      label: "Language selection",
+      hrefs: { tr: "/kitaplar", en: "/en/books/a-review" },
+    }),
+  );
+  assert.match(english, /<p id="[^"]+" lang="tr"[^>]*>Yalnızca İngilizce<\/p>/);
+  // A translated detail page shows no note.
+  const translated = renderToStaticMarkup(
+    h(LanguageSwitcher, {
+      locale: "en",
+      label: "Language selection",
+      hrefs: { tr: "/kitaplar/bir-inceleme", en: "/en/books/a-review" },
+    }),
+  );
+  assert.doesNotMatch(translated, /Yalnızca|aria-describedby/);
 });
 
 test("Wordmark: home link named by its visible text, Turkish name marked", () => {
