@@ -1,14 +1,4 @@
-import {
-  getArticleAuthorName,
-  getArticleCanonicalUrl,
-} from "@/content/articles/article-seo";
-import type { PublicArticle } from "@/content/articles/public-types";
-import type { DistrictGuide } from "@/content/districts/district-guide-projection";
-import type { District } from "@/content/districts/district-registry";
-import { getDistrictUrl } from "@/content/districts/district-routes";
-import { personalBrandName } from "@/content/entity-seo";
 import type { SiteLocale } from "@/content/locales";
-import { getContentLastModifiedIso } from "@/lib/content-dates";
 import { SITE_TIME_ZONE } from "@/lib/format-date";
 
 /**
@@ -194,54 +184,29 @@ export function bibtexCitation(input: CitationInput): string {
 
 /**
  * Highwire `citation_*` meta tags (Google Scholar, Zotero), shaped for the
- * Next.js Metadata `other` field. The publication date is the Istanbul
- * calendar day in the "YYYY/MM/DD" form Scholar expects.
+ * Next.js Metadata `other` field. Only values the page states go in: an
+ * empty title or author is left out, and without a valid publication date
+ * there is no `citation_publication_date` / `citation_online_date`. The
+ * date is the Istanbul calendar day in the "YYYY/MM/DD" form Scholar
+ * expects; a web page is published online, so both dates are that day.
  */
 export function citationMetaTags(
   input: CitationInput,
 ): Record<string, string | string[]> {
+  const tags: Record<string, string | string[]> = {};
+  const title = input.title.trim();
+  if (title) tags.citation_title = title;
+  const authors = input.authors
+    .map((name) => name.trim())
+    .filter((name) => name.length > 0);
+  if (authors.length > 0) tags.citation_author = authors;
   const published = istanbulDateParts(input.publishedAt);
-  const tags: Record<string, string | string[]> = {
-    citation_title: input.title.trim(),
-    citation_author: [...input.authors],
-    citation_language: input.language,
-    citation_public_url: input.url,
-  };
   if (published) {
-    tags.citation_publication_date = `${published.year}/${published.month}/${published.day}`;
+    const day = `${published.year}/${published.month}/${published.day}`;
+    tags.citation_publication_date = day;
+    tags.citation_online_date = day;
   }
+  tags.citation_language = input.language;
+  if (input.url.trim()) tags.citation_public_url = input.url;
   return tags;
-}
-
-/** Citation of an article: its author line, canonical URL and dates. */
-export function articleCitationInput(article: PublicArticle): CitationInput {
-  return {
-    title: article.title,
-    authors: [getArticleAuthorName(article)],
-    siteName: personalBrandName,
-    url: getArticleCanonicalUrl(article),
-    language: article.language,
-    publishedAt: article.publishedAt,
-    modifiedAt: getContentLastModifiedIso(article) ?? null,
-  };
-}
-
-/**
- * Citation of a published district guide, named like its JSON-LD WebPage
- * ("<İlçe> İlçe Rehberi"). The site owner is the author, as the page title
- * says; the dates are the guide's publication and last change.
- */
-export function districtCitationInput(
-  district: Pick<District, "name" | "slug">,
-  guide: Pick<DistrictGuide, "publishedAt" | "updatedAt">,
-): CitationInput {
-  return {
-    title: `${district.name} İlçe Rehberi`,
-    authors: [personalBrandName],
-    siteName: personalBrandName,
-    url: getDistrictUrl(district.slug),
-    language: "tr",
-    publishedAt: guide.publishedAt,
-    modifiedAt: getContentLastModifiedIso(guide) ?? null,
-  };
 }

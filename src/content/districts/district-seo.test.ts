@@ -471,3 +471,32 @@ test("DISTRICT-JSONLD: fields outside the public projection never reach the JSON
   );
   assert.doesNotMatch(serialized, /PRIVATE-/);
 });
+
+test("CITE-THIS: a published guide's metadata carries the citation tags of its page", () => {
+  const metadata = districtMetadata(
+    district("esenler"),
+    guide({
+      history: "Tarih.",
+      publishedAt: "2026-09-12T22:30:00.000Z",
+      updatedAt: "2026-09-27T11:00:00.000Z",
+    }),
+  );
+  assert.deepEqual(metadata.other, {
+    citation_title: "Esenler İlçe Rehberi",
+    citation_author: ["Şaban Durali"],
+    // 22:30 UTC on 12 September is 13 September in Istanbul.
+    citation_publication_date: "2026/09/13",
+    citation_online_date: "2026/09/13",
+    citation_language: "tr",
+    citation_public_url: "https://www.sabandurali.com/istanbul/ilceler/esenler",
+  });
+});
+
+test("CITE-THIS: no guide, no citation tags; no publication date, no date tags", () => {
+  assert.equal(districtMetadata(district("esenler"), null).other, undefined);
+  const undated = districtMetadata(district("esenler"), guide()).other;
+  assert.ok(undated);
+  assert.equal(undated.citation_publication_date, undefined);
+  assert.equal(undated.citation_online_date, undefined);
+  assert.equal(undated.citation_title, "Esenler İlçe Rehberi");
+});

@@ -4,7 +4,6 @@ import {
   getTocEntries,
 } from "@/components/articles/article-outline";
 import ArticleToc from "@/components/articles/ArticleToc";
-import { articleCitationInput } from "@/components/articles/citation";
 import CiteThis from "@/components/articles/CiteThis";
 import ArticleContent, {
   articleFaqAnchorId,
@@ -36,7 +35,10 @@ import {
   getArticleLanguagePaths,
   getArticlePath,
 } from "@/content/articles/article-routes";
-import { serializeArticleJsonLd } from "@/content/articles/article-seo";
+import {
+  articleCitationInput,
+  serializeArticleJsonLd,
+} from "@/content/articles/article-seo";
 import type {
   PublicArticle,
   PublicArticleTranslation,

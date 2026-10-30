@@ -5,16 +5,16 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { exampleEnglishArticle } from "@/content/articles/examples";
 import { mapStaticArticle } from "@/content/articles/static-articles";
 import { getDistrict } from "@/content/districts/district-registry";
+import { articleCitationInput } from "@/content/articles/article-seo";
 import {
   apaAuthorName,
   apaCitation,
-  articleCitationInput,
   bibtexCitation,
   citationMetaTags,
-  districtCitationInput,
   istanbulDateParts,
   type CitationInput,
-} from "./citation";
+} from "@/content/citation";
+import { districtCitationInput } from "@/content/districts/district-seo";
 import CiteThis from "./CiteThis";
 
 const esenler = getDistrict("esenler");
@@ -70,6 +70,7 @@ test("CITE-THIS: a district guide cites the owner, its last update and its canon
     citation_language: "tr",
     citation_public_url: "https://www.sabandurali.com/istanbul/ilceler/esenler",
     citation_publication_date: "2026/09/13",
+    citation_online_date: "2026/09/13",
   });
 });
 
@@ -102,7 +103,21 @@ test("CITE-THIS: a missing date is said, not guessed", () => {
   assert.match(apaCitation(undated), /\(n\.d\.\)/);
   assert.match(apaCitation({ ...undated, language: "tr" }), /\(t\.y\.\)/);
   assert.doesNotMatch(bibtexCitation(undated), /year =|date =/);
-  assert.equal(citationMetaTags(undated).citation_publication_date, undefined);
+  const undatedTags = citationMetaTags(undated);
+  assert.equal(undatedTags.citation_publication_date, undefined);
+  assert.equal(undatedTags.citation_online_date, undefined);
+  assert.equal(
+    citationMetaTags({ ...guest, publishedAt: "not a date" })
+      .citation_publication_date,
+    undefined,
+  );
+});
+
+test("CITE-THIS: empty titles and authors are left out of the meta tags", () => {
+  const tags = citationMetaTags({ ...guest, title: "  ", authors: ["", " "] });
+  assert.equal(tags.citation_title, undefined);
+  assert.equal(tags.citation_author, undefined);
+  assert.equal(tags.citation_public_url, guest.url);
 });
 
 test("CITE-THIS: an article cites its author line and canonical URL", () => {

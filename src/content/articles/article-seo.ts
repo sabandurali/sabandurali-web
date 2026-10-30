@@ -15,6 +15,7 @@ import {
   createBreadcrumbJsonLd,
   createHomeTrail,
 } from "@/content/breadcrumb-seo";
+import { citationMetaTags, type CitationInput } from "@/content/citation";
 import type {
   PublicArticle,
   PublicArticleSummary,
@@ -80,6 +81,19 @@ export function getArticleAuthorName(article: PublicArticle): string {
   return article.author ?? personalBrandName;
 }
 
+/** Citation of an article: its author line, canonical URL and dates. */
+export function articleCitationInput(article: PublicArticle): CitationInput {
+  return {
+    title: article.title,
+    authors: [getArticleAuthorName(article)],
+    siteName: personalBrandName,
+    url: getArticleCanonicalUrl(article),
+    language: article.language,
+    publishedAt: article.publishedAt,
+    modifiedAt: getContentLastModifiedIso(article) ?? null,
+  };
+}
+
 function getArticleSocialImage(article: PublicArticle): SocialImage | null {
   const alt = article.featuredImage?.alt || article.title;
 
@@ -109,7 +123,7 @@ export function createArticleMetadata(
   const image = getArticleSocialImage(article);
   const hreflang = isArticleHreflangEligible(article);
 
-  return createPageMetadata({
+  const metadata = createPageMetadata({
     title: article.seo.title,
     description: article.seo.description,
     locale: article.language,
@@ -138,6 +152,13 @@ export function createArticleMetadata(
       authors: [getArticleAuthorName(article)],
     },
   });
+
+  // The "How to cite" block's facts as Highwire tags (Google Scholar,
+  // Zotero): the same title, author line, canonical URL and date.
+  return {
+    ...metadata,
+    other: citationMetaTags(articleCitationInput(article)),
+  };
 }
 
 /**

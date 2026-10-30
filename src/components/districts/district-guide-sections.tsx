@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Fragment, type ReactNode } from "react";
-import { districtCitationInput } from "@/components/articles/citation";
+import { districtCitationInput } from "@/content/districts/district-seo";
 import CiteThis from "@/components/articles/CiteThis";
 import Badge from "@/components/ui/Badge";
 import Card from "@/components/ui/Card";

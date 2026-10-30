@@ -1,7 +1,11 @@
 import { cx } from "@/components/ui/cx";
 import { ChevronDownIcon } from "@/components/ui/icons";
 import type { SiteLocale } from "@/content/locales";
-import { apaCitation, bibtexCitation, type CitationInput } from "./citation";
+import {
+  apaCitation,
+  bibtexCitation,
+  type CitationInput,
+} from "@/content/citation";
 
 export const citeThisCopy = {
   tr: {

@@ -141,6 +141,36 @@ test("article metadata emits canonical, hreflang pair, OG article and Twitter", 
   });
 });
 
+test("CITE-THIS: article metadata carries citation tags from the article's own data", () => {
+  const metadata = createArticleMetadata(payloadArticle(), null);
+  assert.deepEqual(metadata.other, {
+    citation_title: "İstanbul'da konut",
+    citation_author: ["Şaban Durali"],
+    citation_publication_date: "2026/05/01",
+    citation_online_date: "2026/05/01",
+    citation_language: "tr",
+    citation_public_url: `${site}/makaleler/istanbulda-konut`,
+  });
+
+  const guest = createArticleMetadata(
+    payloadArticle({
+      author: "Ayşe Yılmaz",
+      seo: {
+        title: "İstanbul'da konut | Şaban Durali",
+        description: "Açıklama",
+        index: true,
+        follow: true,
+        canonical: "/makaleler/baska-adres",
+      },
+    }),
+    null,
+  ).other;
+  assert.ok(guest);
+  assert.deepEqual(guest.citation_author, ["Ayşe Yılmaz"]);
+  // The canonical URL the page declares, not the route-derived one.
+  assert.equal(guest.citation_public_url, `${site}/makaleler/baska-adres`);
+});
+
 test("a CMS featured image is shared through the image optimizer", () => {
   const metadata = createArticleMetadata(
     payloadArticle({

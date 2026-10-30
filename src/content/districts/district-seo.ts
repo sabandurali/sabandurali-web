@@ -4,9 +4,11 @@ import {
   createBreadcrumbJsonLd,
   createHomeTrail,
 } from "@/content/breadcrumb-seo";
+import { citationMetaTags, type CitationInput } from "@/content/citation";
 import {
   createPersonReference,
   createWebsiteReference,
+  personalBrandName,
 } from "@/content/entity-seo";
 import { selectDistrictHeroPhoto } from "@/content/photos/district-photo-selection";
 import { getPhotoPath } from "@/content/photos/photo-routes";
@@ -165,12 +167,32 @@ export function districtSocialImage(
   });
 }
 
+/**
+ * Citation of a published district guide, named like its JSON-LD WebPage
+ * ("<İlçe> İlçe Rehberi"). The site owner is the author, as the page title
+ * says; the dates are the guide's publication and last change.
+ */
+export function districtCitationInput(
+  district: Pick<District, "name" | "slug">,
+  guide: Pick<DistrictGuide, "publishedAt" | "updatedAt">,
+): CitationInput {
+  return {
+    title: `${district.name} İlçe Rehberi`,
+    authors: [personalBrandName],
+    siteName: personalBrandName,
+    url: getDistrictUrl(district.slug),
+    language: "tr",
+    publishedAt: guide.publishedAt,
+    modifiedAt: getContentLastModifiedIso(guide) ?? null,
+  };
+}
+
 export function districtMetadata(
   district: District,
   guide: DistrictGuide | null,
   photos: readonly PublicPhoto[] = [],
 ): Metadata {
-  return createPageMetadata({
+  const metadata = createPageMetadata({
     title: getDistrictTitle(district),
     description: metaDescription(district, guide),
     locale: "tr",
@@ -179,6 +201,15 @@ export function districtMetadata(
     index: isDistrictGuideIndexable(guide),
     follow: true,
   });
+
+  // Only a published guide can be cited (the page shows "How to cite" under
+  // the same condition); without one there are no citation tags at all.
+  return guide === null
+    ? metadata
+    : {
+        ...metadata,
+        other: citationMetaTags(districtCitationInput(district, guide)),
+      };
 }
 
 const parentWorkspaceKey = "gayrimenkul-ve-istanbul";
