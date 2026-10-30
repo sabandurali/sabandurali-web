@@ -259,3 +259,13 @@ test("a scheduled guide's update line shows its publication, like the JSON-LD", 
   );
   assert.doesNotMatch(html, /dateTime="2026-10-01T09:00:00.000Z"/);
 });
+
+test("CITE-THIS: a published guide offers its citation, an empty one does not", () => {
+  const published = render({ guide });
+  assert.match(published, /Nasıl atıf yapılır/);
+  assert.match(
+    published,
+    /Durali, Ş\. \(2026, 27 Eylül\)\. Esenler İlçe Rehberi\. https:\/\/www\.sabandurali\.com\/istanbul\/ilceler\/esenler/,
+  );
+  assert.doesNotMatch(render({}), /Nasıl atıf yapılır/);
+});

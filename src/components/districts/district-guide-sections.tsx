@@ -1,5 +1,7 @@
 import Image from "next/image";
 import { Fragment, type ReactNode } from "react";
+import { districtCitationInput } from "@/components/articles/citation";
+import CiteThis from "@/components/articles/CiteThis";
 import Badge from "@/components/ui/Badge";
 import Card from "@/components/ui/Card";
 import DistrictTileMap from "@/components/ui/DistrictTileMap";
@@ -701,6 +703,7 @@ export function DistrictSourcesSection({
 export function DistrictUpdateSection({
   item,
   total,
+  district,
   guide,
 }: GuideSectionProps) {
   // The same date as the JSON-LD `dateModified` and the sitemap `lastmod`:
@@ -718,6 +721,13 @@ export function DistrictUpdateSection({
           "İçerik güncellemesi: Bu rehberin doğrulanmış içerik yayını henüz tamamlanmadı."
         )}
       </p>
+      {/* Only a published guide can be cited: its date and URL exist. */}
+      {guide ? (
+        <CiteThis
+          citation={districtCitationInput(district, guide)}
+          className="max-w-measure"
+        />
+      ) : null}
     </GuideSection>
   );
 }

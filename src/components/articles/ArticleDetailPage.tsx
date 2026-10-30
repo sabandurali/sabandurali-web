@@ -4,6 +4,8 @@ import {
   getTocEntries,
 } from "@/components/articles/article-outline";
 import ArticleToc from "@/components/articles/ArticleToc";
+import { articleCitationInput } from "@/components/articles/citation";
+import CiteThis from "@/components/articles/CiteThis";
 import ArticleContent, {
   articleFaqAnchorId,
   articleSourceAnchorId,
@@ -292,6 +294,11 @@ export default function ArticleDetailPage({
                 ) : null}
               </>
             ) : null}
+
+            <CiteThis
+              citation={articleCitationInput(article)}
+              className="mt-14"
+            />
 
             <TextLink
               href={articleListPaths[locale]}
