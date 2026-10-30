@@ -1,4 +1,9 @@
 import { getArticleMetaItems } from "@/components/articles/article-meta";
+import {
+  getArticleOutline,
+  getTocEntries,
+} from "@/components/articles/article-outline";
+import ArticleToc from "@/components/articles/ArticleToc";
 import ArticleContent, {
   articleFaqAnchorId,
   articleSourceAnchorId,
@@ -258,6 +263,11 @@ export default function ArticleDetailPage({
           className="pt-10 pb-section sm:pt-14"
         >
           <div className="max-w-measure">
+            <ArticleToc
+              entries={getTocEntries(getArticleOutline(article.content))}
+              locale={locale}
+              className="mb-10"
+            />
             <ArticleContent article={article} content={content} />
 
             {staticDetails !== null ? (
