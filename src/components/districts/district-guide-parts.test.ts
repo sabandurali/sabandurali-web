@@ -7,6 +7,16 @@ import test from "node:test";
 import { isValidElement, type ReactElement, type ReactNode } from "react";
 import type { PublicPhoto } from "@/content/photos/types";
 import { DistrictPhoto, districtPhotoLoading } from "./district-guide-parts";
+import { inPageTargetId } from "./DistrictSourceFold";
+
+test("DISTRICT-MOBILE-NAV: the source fold opens for in-page links only", () => {
+  assert.equal(inPageTargetId("#kaynak-7"), "kaynak-7");
+  assert.equal(inPageTargetId("#b%C3%B6l%C3%BCm"), "bölüm");
+  assert.equal(inPageTargetId("#"), null);
+  assert.equal(inPageTargetId("#%E0%A4%A"), null);
+  assert.equal(inPageTargetId("/fotograflar#x"), null);
+  assert.equal(inPageTargetId(null), null);
+});
 
 function photo(overrides: Partial<PublicPhoto> = {}): PublicPhoto {
   return {

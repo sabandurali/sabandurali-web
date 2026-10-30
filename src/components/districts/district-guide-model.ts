@@ -345,6 +345,23 @@ export function buildSourceRows(
   }));
 }
 
+/** Sources shown before the fold of the source list. */
+export const unfoldedSourceCount = 3;
+
+/**
+ * The source rows shown in full and the rows folded below them. Folding a
+ * single row saves nothing, so the list folds from two hidden rows on.
+ */
+export function splitSourceRows<T>(rows: readonly T[]): {
+  shown: T[];
+  folded: T[];
+} {
+  const folded = rows.slice(unfoldedSourceCount);
+  return folded.length < 2
+    ? { shown: [...rows], folded: [] }
+    : { shown: rows.slice(0, unfoldedSourceCount), folded };
+}
+
 /**
  * Credit of a district photo. Historical archive photos store
  * "<credit> · Kaynak kaydı: <url>" in creditLicense; the record link

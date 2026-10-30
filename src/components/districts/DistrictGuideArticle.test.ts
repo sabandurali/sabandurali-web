@@ -269,3 +269,74 @@ test("CITE-THIS: a published guide offers its citation, an empty one does not", 
   );
   assert.doesNotMatch(render({}), /Nasıl atıf yapılır/);
 });
+
+function guideWithSources(count: number) {
+  const many = mapDistrictGuide(
+    {
+      _status: "published",
+      publishedAt: "2026-09-13T10:00:00Z",
+      reviewedSections: allSections,
+      sources: Array.from({ length: count }, (_, index) => ({
+        ...sources[0],
+        title: `Esenler kaynağı ${index + 1}`,
+        url: `https://www.esenler.gov.tr/kaynak-${index + 1}`,
+      })),
+      summary: "Doğrulanmış özet.",
+      history: "Doğrulanmış tarihçe.",
+      updatedAt: "2026-09-27T11:00:00Z",
+    },
+    now,
+  );
+  assert.ok(many);
+  assert.equal(many.sources.length, count);
+  return many;
+}
+
+test("DISTRICT-MOBILE-NAV: sources after the third fold, every row keeps its anchor", () => {
+  const html = render({ guide: guideWithSources(6) });
+  const fold = /<details class="group">([\s\S]*?)<\/details>/.exec(html)?.[1];
+  assert.ok(fold, "the source list folds");
+  assert.match(fold, /<summary[^>]*><span>Diğer 3 kaynak<\/span>/);
+  for (const number of [1, 2, 3]) {
+    assert.ok(!fold.includes(`id="kaynak-${number}"`), `${number}`);
+    assert.ok(html.includes(`id="kaynak-${number}"`), `${number}`);
+  }
+  for (const number of [4, 5, 6]) {
+    assert.ok(fold.includes(`id="kaynak-${number}"`), `${number}`);
+  }
+
+  // Four sources: folding one row saves nothing.
+  assert.doesNotMatch(
+    render({ guide: guideWithSources(4) }),
+    /Diğer \d kaynak/,
+  );
+});
+
+test("DISTRICT-MOBILE-NAV: a sticky section bar below 1024 px lists the visible sections", () => {
+  const html = render({ guide });
+  const bar =
+    /<nav aria-label="Bölümlere git" class="([^"]*)">([\s\S]*?)<\/nav>/.exec(
+      html,
+    );
+  assert.ok(bar, "the bar renders as its own navigation landmark");
+  const classes = (bar[1] ?? "").split(/\s+/);
+  for (const name of ["sticky", "top-0", "lg:hidden", "print:hidden"]) {
+    assert.ok(classes.includes(name), name);
+  }
+  // The bar's height is reserved as the root's scroll padding (WCAG 2.4.11);
+  // the markup escapes the & of the arbitrary variant.
+  assert.ok(
+    classes.some((name) =>
+      name.startsWith("max-lg:[:root:has(&amp;)]:scroll-pt-"),
+    ),
+    bar[1],
+  );
+  // Closed until opened: a disclosure button and a hidden panel.
+  const content = bar[2] ?? "";
+  assert.match(content, /<button[^>]*aria-expanded="false"/);
+  assert.match(content, /id="rehber-bolumleri-cubugu-panel" hidden=""/);
+  const links = [...content.matchAll(/href="#([^"]+)"/g)].map(
+    (match) => match[1],
+  );
+  assert.deepEqual(links, sectionIds(html));
+});

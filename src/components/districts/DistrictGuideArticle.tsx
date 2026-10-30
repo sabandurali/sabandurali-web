@@ -27,6 +27,7 @@ import {
   type VisibleDistrictSection,
 } from "./district-guide-model";
 import { DistrictPhoto } from "./district-guide-parts";
+import DistrictGuideMobileNav from "./DistrictGuideMobileNav";
 import {
   DistrictGeographySection,
   DistrictHistorySection,
@@ -207,9 +208,20 @@ export default function DistrictGuideArticle({
         </Container>
       </div>
 
-      {visible.map((item) => (
-        <Fragment key={item.id}>{renderSection(item)}</Fragment>
-      ))}
+      {/* The sticky bar's containing block: it stays on screen while any
+          section scrolls past and leaves with the last one. */}
+      <div>
+        <DistrictGuideMobileNav
+          items={visible.map(({ id, number, label }) => ({
+            id,
+            number,
+            label,
+          }))}
+        />
+        {visible.map((item) => (
+          <Fragment key={item.id}>{renderSection(item)}</Fragment>
+        ))}
+      </div>
     </>
   );
 }

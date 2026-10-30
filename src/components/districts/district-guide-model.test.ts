@@ -20,7 +20,24 @@ import {
   planningStatusLabel,
   sourceNumbersFor,
   splitParagraphs,
+  splitSourceRows,
 } from "./district-guide-model";
+
+test("DISTRICT-MOBILE-NAV: the source list folds after three rows, from two hidden rows on", () => {
+  const rows = (count: number) =>
+    Array.from({ length: count }, (_, index) => index + 1);
+  assert.deepEqual(splitSourceRows(rows(3)), { shown: [1, 2, 3], folded: [] });
+  assert.deepEqual(splitSourceRows(rows(4)), {
+    shown: [1, 2, 3, 4],
+    folded: [],
+  });
+  assert.deepEqual(splitSourceRows(rows(5)), {
+    shown: [1, 2, 3],
+    folded: [4, 5],
+  });
+  assert.equal(splitSourceRows(rows(12)).folded.length, 9);
+  assert.deepEqual(splitSourceRows([]), { shown: [], folded: [] });
+});
 
 const esenler = getDistrict("esenler");
 assert.ok(esenler);
