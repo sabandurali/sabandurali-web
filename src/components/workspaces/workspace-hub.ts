@@ -1,4 +1,6 @@
+import type { PublicPhoto } from "@/content/photos/types";
 import type { WorkspaceEntry } from "@/content/workspaces";
+import type { WorkspaceEntryFeed } from "./workspace-routes";
 
 /**
  * A section card of a workspace hub with what it holds. `count` is the
@@ -52,4 +54,26 @@ export function workspaceHubCountLabel(
   return item.unit === "guide"
     ? `${item.count} ilçe rehberi`
     : `${item.count} yayın`;
+}
+
+/**
+ * Published count of a section from its own feed (the one its page and the
+ * sitemap use): null when the feed could not be read, never a guess. A
+ * section without a feed counts 0, as its page shows its empty state.
+ */
+export function workspaceHubFeedCount(
+  feed: Pick<WorkspaceEntryFeed, "items"> | null,
+): number | null {
+  if (feed === null) return null;
+  return feed.items === null ? 0 : feed.items.length;
+}
+
+/** How many photographs the photography hub features. */
+export const WORKSPACE_HUB_PHOTO_LIMIT = 4;
+
+/** The newest photographs the photography hub features (none: no slot). */
+export function selectWorkspaceHubPhotos(
+  list: { photos: readonly PublicPhoto[] } | null,
+): PublicPhoto[] {
+  return list === null ? [] : list.photos.slice(0, WORKSPACE_HUB_PHOTO_LIMIT);
 }

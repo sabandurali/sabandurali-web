@@ -11,7 +11,9 @@ import { getWorkspace, workspaces, type Workspace } from "@/content/workspaces";
 import { WorkspaceHubFeatureSlot, WorkspaceHubSections } from "./WorkspaceHub";
 import {
   orderWorkspaceHubEntries,
+  selectWorkspaceHubPhotos,
   workspaceHubCountLabel,
+  workspaceHubFeedCount,
   type WorkspaceHubEntry,
 } from "./workspace-hub";
 import { getListedWorkspaceEntries } from "./workspace-routes";
@@ -57,6 +59,13 @@ test("WORKSPACE-HUB: filled sections lead, uncounted ones follow, empty ones clo
   );
   const slugs = entries.map((item) => item.entry.slug);
   assert.deepEqual(ordered, [slugs[2], slugs[3], slugs[0], slugs[1]]);
+  // An empty section closes the list even when it comes first.
+  const emptyFirst = hubEntries(realEstate, [0, null, 4, 1]);
+  const emptySlugs = emptyFirst.map((item) => item.entry.slug);
+  assert.deepEqual(
+    orderWorkspaceHubEntries(emptyFirst).map((item) => item.entry.slug),
+    [emptySlugs[2], emptySlugs[3], emptySlugs[1], emptySlugs[0]],
+  );
   // The registry order is kept inside a group.
   const allEmpty = hubEntries(realEstate, [0, 0, 0, 0]);
   assert.deepEqual(
@@ -141,4 +150,38 @@ test("WORKSPACE-HUB: every hub route refreshes hourly like its sections", () => 
     assert.match(source, /^export const revalidate = 3600;$/m, workspace.key);
     assert.match(source, /<WorkspaceLandingPage/, workspace.key);
   }
+});
+
+test("WORKSPACE-HUB: a count comes from the section feed, never a guess", () => {
+  const photo = { id: "p1" } as PublicPhoto;
+  assert.equal(workspaceHubFeedCount({ items: [photo, photo, photo] }), 3);
+  assert.equal(workspaceHubFeedCount({ items: [] }), 0);
+  // A section without a feed shows its empty state, so it counts 0.
+  assert.equal(workspaceHubFeedCount({ items: null }), 0);
+  // A feed that could not be read is not counted.
+  assert.equal(workspaceHubFeedCount(null), null);
+});
+
+test("WORKSPACE-HUB: the photography hub features at most four photographs", () => {
+  const photos = ["p1", "p2", "p3", "p4", "p5"].map(
+    (id) => ({ id }) as PublicPhoto,
+  );
+  assert.deepEqual(
+    selectWorkspaceHubPhotos({ photos }).map((photo) => photo.id),
+    ["p1", "p2", "p3", "p4"],
+  );
+  assert.deepEqual(selectWorkspaceHubPhotos({ photos: [] }), []);
+  assert.deepEqual(selectWorkspaceHubPhotos(null), []);
+});
+
+test("WORKSPACE-HUB: the hub loader uses the shared count and photo helpers", () => {
+  // workspace-hub-data.ts loads server-only data sources, so its wiring is
+  // checked on the source, like HomePage in home-selection.test.ts.
+  const source = readFileSync(
+    fileURLToPath(new URL("./workspace-hub-data.ts", import.meta.url)),
+    "utf8",
+  );
+  assert.match(source, /count: workspaceHubFeedCount\(feed\)/);
+  assert.match(source, /load: \(\) => getWorkspaceEntryFeed\(entry\)/);
+  assert.match(source, /selectWorkspaceHubPhotos\(list\)/);
 });

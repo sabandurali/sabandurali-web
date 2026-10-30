@@ -9,6 +9,8 @@ import type { Workspace } from "@/content/workspaces";
 import { getWorkspaceEntryFeed } from "./workspace-feed";
 import {
   orderWorkspaceHubEntries,
+  selectWorkspaceHubPhotos,
+  workspaceHubFeedCount,
   type WorkspaceHubEntry,
 } from "./workspace-hub";
 import {
@@ -71,7 +73,7 @@ export async function getWorkspaceHubEntries(
         return {
           entry,
           unit: "item",
-          count: feed === null ? null : (feed.items?.length ?? 0),
+          count: workspaceHubFeedCount(feed),
         };
       },
     ),
@@ -108,7 +110,7 @@ export async function getWorkspaceHubFeature(
       fallback: null,
       unavailable: unavailable(),
     });
-    const photos = list === null ? [] : list.photos.slice(0, 4);
+    const photos = selectWorkspaceHubPhotos(list);
     return photos.length === 0 ? null : { kind: "photos", photos };
   }
   return null;
