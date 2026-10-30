@@ -1422,6 +1422,15 @@ test("pages: a published home renders all its blocks and stays on the site", asy
   assert.equal(republished.title, "Yeni");
 });
 
+test("ADM-I18N: the admin and Local API errors default to Turkish", () => {
+  assert.equal(config.i18n.fallbackLanguage, "tr");
+  assert.deepEqual(Object.keys(config.i18n.supportedLanguages).toSorted(), [
+    "en",
+    "tr",
+  ]);
+  assert.equal(config.admin.meta.titleSuffix, "– Şaban Durali Yönetim");
+});
+
 test("district guides: anonymous readers cannot filter on hidden fields", async () => {
   await assert.rejects(
     payload.find({
