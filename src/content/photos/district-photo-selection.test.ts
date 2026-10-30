@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import test from "node:test";
+import { fileURLToPath } from "node:url";
 import { selectSameDistrictPhotos } from "./district-photo-selection";
 import type { PublicPhoto } from "./types";
 
@@ -64,4 +66,21 @@ test("PHOTO-DETAIL-POLISH: same-district photos are capped and need a district",
   const many = ["b", "c", "d", "e", "f", "g"].map((id) => photo(id, "kadikoy"));
   assert.equal(selectSameDistrictPhotos(current, many).length, 4);
   assert.deepEqual(selectSameDistrictPhotos(photo("x", null), many), []);
+});
+
+test("PHOTO-DETAIL-POLISH: the photo page reads the strip through the selection", () => {
+  // photo-data-source.ts is server-only, so its wiring is checked on the
+  // source: the district query, never a guess, then the selection above.
+  const source = readFileSync(
+    fileURLToPath(new URL("./photo-data-source.ts", import.meta.url)),
+    "utf8",
+  );
+  assert.match(
+    source,
+    /load: \(\) => getDistrictPhotos\(district, photo\.language\)/,
+  );
+  assert.match(
+    source,
+    /return selectSameDistrictPhotos\(photo, candidates, shown\);/,
+  );
 });

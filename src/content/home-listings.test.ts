@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import test from "node:test";
+import { fileURLToPath } from "node:url";
 import type { PublicArticleSummary } from "./articles/public-types";
 import type { PublicBookReviewSummary } from "./books/public-types";
 import {
@@ -116,4 +118,23 @@ test("UX-04: with no list at all the workspaces follow the atlas", () => {
   const plan = planHomeSections({ articles: 0, books: 0, photos: 0 }, []);
   assert.deepEqual(plan.listings, []);
   assert.equal(plan.numbers.workspaces, "02");
+});
+
+test("UX-04: the home page renders, numbers and tones its lists from the plan", () => {
+  // HomePage.tsx loads server-only data sources, so the wiring is checked
+  // on the source (as in home-selection.test.ts).
+  const source = readFileSync(
+    fileURLToPath(new URL("../components/HomePage.tsx", import.meta.url)),
+    "utf8",
+  );
+  for (const name of ["articles", "books", "photos"]) {
+    assert.match(source, new RegExp(`\\{shows\\("${name}"\\) \\? \\(`));
+    assert.match(
+      source,
+      new RegExp(`tone=\\{sectionPlan\\.tones\\.${name}\\}`),
+    );
+    assert.match(source, new RegExp(`number=\\{numbers\\.${name} \\?\\?`));
+  }
+  assert.match(source, /number=\{numbers\.workspaces\}/);
+  assert.doesNotMatch(source, /tone="band"\s+number=\{copy\./);
 });

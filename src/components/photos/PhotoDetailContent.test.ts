@@ -6,9 +6,10 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
-import { isValidElement, type ReactElement } from "react";
+import { createElement, isValidElement, type ReactElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { PhotoCardList } from "@/components/pages/PublicationCardLists";
-import { Figure } from "@/components/ui/Figure";
+import { Credit, Figure } from "@/components/ui/Figure";
 import TextLink from "@/components/ui/TextLink";
 import type { PublicPhoto } from "@/content/photos/types";
 import PhotoDetailContent from "./PhotoDetailContent";
@@ -209,4 +210,20 @@ test("PHOTO-DETAIL-POLISH: other photographs of the district get their own strip
     ),
     false,
   );
+});
+
+test("PHOTO-DETAIL-POLISH: the record link names itself and marks it external only visually", () => {
+  const html = renderToStaticMarkup(
+    createElement(Credit, {
+      credit: getPhotoCredit(
+        photo({ photographer: "Arşiv", creditLicense: archiveCredit }),
+      ),
+    }),
+  );
+  assert.match(
+    html,
+    /<a [^>]*href="https:\/\/commons\.wikimedia\.org\/wiki\/File:Kad%C4%B1k%C3%B6y_1900\.jpg"[^>]*>Kaynak kaydı<span aria-hidden="true"> ↗<\/span><\/a>/,
+  );
+  // The raw, URL-encoded address is never printed as text.
+  assert.doesNotMatch(html, />[^<]*commons\.wikimedia/);
 });
