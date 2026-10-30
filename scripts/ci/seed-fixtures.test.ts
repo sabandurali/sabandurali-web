@@ -14,6 +14,7 @@ import type { Payload, SanitizedConfig } from "payload";
 import {
   detailRoutes,
   fixtureRoutes,
+  fixtureStructuredData,
   routePlan,
 } from "../a11y/a11y-expectations.mjs";
 import { HOME_BLOCK_TYPES } from "../../src/collections/Pages";
@@ -120,6 +121,20 @@ test("the a11y fixture run reaches every fixture path", () => {
       fixturePaths.some((fixturePath) => fixturePath.startsWith(prefix)),
       prefix,
     );
+});
+
+test("the JSON-LD check visits the photo fixture pages", () => {
+  assert.deepEqual(
+    fixtureStructuredData.map(({ path }) => path),
+    [
+      `/fotograflar/${fixtureSlugs.photoTr}`,
+      `/en/photography/${fixtureSlugs.photoEn}`,
+    ],
+  );
+  for (const { path: fixturePath } of fixtureStructuredData)
+    assert.ok(fixturePaths.includes(fixturePath), fixturePath);
+  assert.deepEqual(routePlan(true).structuredData, fixtureStructuredData);
+  assert.deepEqual(routePlan(false).structuredData, []);
 });
 
 test("the guide fixture states no district fact and passes the content policy", () => {

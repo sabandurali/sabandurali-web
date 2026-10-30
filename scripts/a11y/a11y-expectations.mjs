@@ -153,15 +153,66 @@ export function contentProblems(route, found, bodyText) {
 }
 
 /**
+ * Pages whose rendered HTML must carry a JSON-LD block of a schema.org type,
+ * checked in fixture mode only: the TR and EN pages of the photo fixture
+ * (`fixtureSlugs` in scripts/ci/fixture-content.ts; a test keeps them equal)
+ * publish an ImageObject (src/content/photos/photo-seo.ts).
+ */
+export const fixtureStructuredData = Object.freeze([
+  { path: "/fotograflar/ci-test-fotografi", jsonLdType: "ImageObject" },
+  { path: "/en/photography/ci-test-photo", jsonLdType: "ImageObject" },
+]);
+
+/**
  * The routes of one run. The static build checks every public route type;
  * the fixture run (`A11Y_FIXTURES=1`) checks the templates that only CMS
  * content reaches: the detail pages (discovered from their lists) and the
  * fixture routes above, and it fails when a detail type is not reached.
+ * It also checks the JSON-LD of `fixtureStructuredData`.
  */
 export function routePlan(fixtures) {
   return fixtures
-    ? { routes: fixtureRoutes, requireDetails: true }
-    : { routes: publicRoutes, requireDetails: false };
+    ? {
+        routes: fixtureRoutes,
+        requireDetails: true,
+        structuredData: fixtureStructuredData,
+      }
+    : { routes: publicRoutes, requireDetails: false, structuredData: [] };
+}
+
+/** The `@type` values of a JSON-LD node, its `@graph` and array members. */
+function jsonLdTypes(node) {
+  if (Array.isArray(node)) return node.flatMap(jsonLdTypes);
+  if (typeof node !== "object" || node === null) return [];
+  const own = node["@type"];
+  return [
+    ...(Array.isArray(own) ? own : [own]).filter(
+      (type) => typeof type === "string",
+    ),
+    ...jsonLdTypes(node["@graph"]),
+  ];
+}
+
+/**
+ * Problems of the `script[type="application/ld+json"]` texts of a page:
+ * every block must parse as JSON, and one must declare `expectedType`.
+ */
+export function jsonLdProblems(texts, expectedType) {
+  const problems = [];
+  const types = [];
+  texts.forEach((text, index) => {
+    try {
+      types.push(...jsonLdTypes(JSON.parse(text)));
+    } catch {
+      problems.push(`JSON-LD block ${index + 1} is not valid JSON`);
+    }
+  });
+  if (texts.length === 0) problems.push("no application/ld+json script");
+  else if (!types.includes(expectedType))
+    problems.push(
+      `no JSON-LD "@type": "${expectedType}" (found ${types.join(", ") || "none"})`,
+    );
+  return problems;
 }
 
 /**
