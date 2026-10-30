@@ -57,7 +57,7 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",
-    "@electric-sql/pglite": "0.5.9",
+    "@electric-sql/pglite": "0.5.12",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^24",
     "@types/react": "^19",
