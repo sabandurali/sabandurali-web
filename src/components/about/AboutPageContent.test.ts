@@ -82,6 +82,10 @@ test("ARCHITECTURE-1: the static content keeps the site's own portrait", () => {
     (element) => element.props.alt === homeContent.tr.about.imageAlt,
   );
   assert.equal(portrait?.props.src, "/brand/saban-durali-profile.jpg");
+  // PERF-2: the above-the-fold portrait is fetched first and never lazily.
+  assert.equal(portrait?.props.fetchPriority, "high");
+  assert.equal(portrait?.props.loading, "eager");
+  assert.equal(portrait?.props.preload, undefined);
   const intro = all.find((element) => element.type === PageIntro);
   assert.equal(intro?.props.lead, homeContent.tr.about.paragraphs[0]);
 });

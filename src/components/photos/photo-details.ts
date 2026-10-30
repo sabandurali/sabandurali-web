@@ -1,20 +1,30 @@
 import type { MetaItem } from "@/components/pages/MetaList";
 import { publicationCopy } from "@/components/pages/publication-copy";
 import type { CreditInfo } from "@/components/ui/Figure";
+import { photoCopy } from "@/components/photos/photo-copy";
+import { splitCreditRecord } from "@/content/media";
 import type { PublicPhoto } from "@/content/photos/types";
 import { formatDate, toDateTimeAttribute } from "@/lib/format-date";
 
 /**
- * Credit of a published photograph: the photographer (always set) and the
- * credit / licence line when the editor entered one.
+ * Credit of a published photograph: the photographer (always set), the
+ * credit / licence line when the editor entered one, and the archive record
+ * of an imported photo as a short "Kaynak kaydı" link instead of its raw,
+ * URL-encoded address.
  */
 export function getPhotoCredit(photo: PublicPhoto): CreditInfo {
   const photographer = photo.photographer.trim();
-  const licence = photo.creditLicense?.trim();
+  const { text: licence, recordUrl } = splitCreditRecord(photo.creditLicense);
 
   return {
     ...(photographer === "" ? {} : { author: photographer }),
-    ...(licence ? { licence } : {}),
+    ...(licence === null ? {} : { licence }),
+    ...(recordUrl === null
+      ? {}
+      : {
+          sourceUrl: recordUrl,
+          sourceLabel: photoCopy[photo.language].sourceRecord,
+        }),
   };
 }
 
@@ -36,8 +46,10 @@ export function getPhotoFacts(photo: PublicPhoto): MetaItem[] {
     });
   }
   facts.push({ label: text.photographer, value: photo.photographer });
-  if (photo.creditLicense !== null) {
-    facts.push({ label: text.licence, value: photo.creditLicense });
+  // The record link is in the credit under the photograph.
+  const { text: licence } = splitCreditRecord(photo.creditLicense);
+  if (licence !== null) {
+    facts.push({ label: text.licence, value: licence });
   }
 
   return facts;

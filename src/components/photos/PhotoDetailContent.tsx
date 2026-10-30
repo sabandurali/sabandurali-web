@@ -9,11 +9,14 @@ import {
   getPhotoExif,
   getPhotoFacts,
 } from "@/components/photos/photo-details";
+import { photoCopy } from "@/components/photos/photo-copy";
 import Chip from "@/components/ui/Chip";
 import Container from "@/components/ui/Container";
 import { Figure } from "@/components/ui/Figure";
 import Section from "@/components/ui/Section";
 import TextLink from "@/components/ui/TextLink";
+import { getDistrict } from "@/content/districts/district-registry";
+import { getDistrictPath } from "@/content/districts/district-routes";
 import {
   getPhotoLanguagePaths,
   photoListPaths,
@@ -28,6 +31,8 @@ export type PhotoDetailProps = {
   photo: PublicPhoto;
   translation: PublicPhotoTranslation | null;
   related: PublicPhoto[];
+  /** Other photographs of the photo's district (PhotoDetailPage reads them). */
+  sameDistrict?: PublicPhoto[];
 };
 
 /**
@@ -40,6 +45,7 @@ export default function PhotoDetailContent({
   photo,
   translation,
   related,
+  sameDistrict = [],
 }: PhotoDetailProps) {
   const locale = photo.language;
   const copy = publicationCopy[locale];
@@ -47,6 +53,9 @@ export default function PhotoDetailContent({
   const languagePaths = getPhotoLanguagePaths(photo, translation);
   const collections = photo.collections.map((item) => item.title).join(" · ");
   const exif = getPhotoExif(photo);
+  const extra = photoCopy[locale];
+  // Only a district the registry knows links to its guide (Turkish only).
+  const district = photo.district === null ? null : getDistrict(photo.district);
 
   return (
     <>
@@ -129,14 +138,25 @@ export default function PhotoDetailContent({
             </div>
           ) : null}
 
-          <TextLink
-            href={photoListPaths[locale]}
-            variant="standalone"
-            locale={locale}
-            className="mt-10"
-          >
-            {copy.allPhotos}
-          </TextLink>
+          <div className="mt-10 flex flex-wrap gap-x-8 gap-y-2">
+            {district !== null ? (
+              <TextLink
+                href={getDistrictPath(district.slug)}
+                hrefLang={locale === "tr" ? undefined : "tr"}
+                variant="standalone"
+                locale={locale}
+              >
+                {extra.districtGuide(district.name)}
+              </TextLink>
+            ) : null}
+            <TextLink
+              href={photoListPaths[locale]}
+              variant="standalone"
+              locale={locale}
+            >
+              {copy.allPhotos}
+            </TextLink>
+          </div>
         </Section>
       </article>
 
@@ -151,6 +171,20 @@ export default function PhotoDetailContent({
             {text.related}
           </h2>
           <PhotoCardList photos={related} columns={4} />
+        </Section>
+      ) : null}
+
+      {district !== null && sameDistrict.length > 0 ? (
+        <Section
+          tone={related.length > 0 ? "paper" : "band"}
+          spacing="compact"
+          divider
+          labelledBy="same-district-photos-heading"
+        >
+          <h2 id="same-district-photos-heading" className="m-0 mb-6 type-h2">
+            {extra.sameDistrict(district.name)}
+          </h2>
+          <PhotoCardList photos={sameDistrict} columns={4} />
         </Section>
       ) : null}
     </>

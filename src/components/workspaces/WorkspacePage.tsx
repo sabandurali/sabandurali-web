@@ -7,7 +7,6 @@ import {
   homeBreadcrumbItem,
   type BreadcrumbItem,
 } from "@/components/ui/Breadcrumb";
-import Card from "@/components/ui/Card";
 import EmptyState from "@/components/ui/EmptyState";
 import Section from "@/components/ui/Section";
 import TextLink from "@/components/ui/TextLink";
@@ -18,8 +17,12 @@ import { workspacePath } from "@/content/workspaces";
 import PageIntro from "@/components/ui/PageIntro";
 import PageShell from "./PageShell";
 import WorkspaceIndexList from "./WorkspaceIndexList";
-import type { WorkspaceEntryFeed } from "./workspace-section-route";
-import { getListedWorkspaceEntries } from "./workspace-routes";
+import { WorkspaceHubFeatureSlot, WorkspaceHubSections } from "./WorkspaceHub";
+import {
+  getWorkspaceHubEntries,
+  getWorkspaceHubFeature,
+} from "./workspace-hub-data";
+import type { WorkspaceEntryFeed } from "./workspace-routes";
 
 export {
   createWorkspaceMetadata,
@@ -86,15 +89,22 @@ export function WorkspaceIndexPage() {
   );
 }
 
-/** `/<workspace>`: one workspace and its section cards. */
-export function WorkspaceLandingPage({
+/**
+ * `/<workspace>`: one workspace hub: the intro, a featured slot when there
+ * is published content to feature, and the section cards with their
+ * published counts, filled sections first (UX-09, UX-03).
+ */
+export async function WorkspaceLandingPage({
   workspace,
   path,
 }: {
   workspace: Workspace;
   path: string;
 }) {
-  const headingId = `${workspace.key}-sections`;
+  const [entries, feature] = await Promise.all([
+    getWorkspaceHubEntries(workspace),
+    getWorkspaceHubFeature(workspace),
+  ]);
 
   return (
     <WorkspaceShell path={path}>
@@ -106,27 +116,10 @@ export function WorkspaceLandingPage({
           lead={workspace.description}
         />
       </Section>
-      <Section tone="band" labelledBy={headingId} divider>
-        <h2 id={headingId} className="m-0 mb-8 type-h2">
-          Bölümler
-        </h2>
-        <ul className="m-0 grid list-none gap-5 p-0 md:grid-cols-2 xl:grid-cols-3">
-          {getListedWorkspaceEntries(workspace).map((entry) => (
-            <li key={entry.slug} className="flex min-w-0">
-              <Card
-                title={entry.title}
-                href={entry.href}
-                cta="Bölümü aç"
-                className="w-full"
-              >
-                <p className="m-0 type-small text-ink-muted">
-                  {entry.description}
-                </p>
-              </Card>
-            </li>
-          ))}
-        </ul>
-      </Section>
+      {feature === null ? null : (
+        <WorkspaceHubFeatureSlot workspace={workspace} feature={feature} />
+      )}
+      <WorkspaceHubSections workspace={workspace} entries={entries} />
     </WorkspaceShell>
   );
 }
