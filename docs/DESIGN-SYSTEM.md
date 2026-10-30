@@ -174,7 +174,6 @@ sınıfla ezebilirsiniz (`type-data font-bold`). Aynı özelliği iki tek özell
 | `type-sign` | 17 px, 700 | Yön levhası adı |
 | `type-tile` | 14 px, 600, 76 % | Harita karesi etiketi |
 | `type-region` | 13 px, 700, 125 %, 0.16 em, büyük harf | AVRUPA YAKASI gibi bölge etiketleri ve ana sayfa bölüm etiketleri |
-| `type-wordmark` / `type-tagline` | 17 / 12 px | Eski metin wordmark'ı; logo artık SVG dosyasıdır (§8), şu an kullanılmıyor |
 | `type-data` / `type-data-md` / `type-data-lg` | 12 / 13 / 17 → 22 px, mono | Veri etiketleri, tarihler, tablo değerleri |
 
 **Taban 12 px'tir.** Daha küçük bir token, sınıf ya da `text-[…]` değeri yoktur;

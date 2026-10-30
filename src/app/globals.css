@@ -77,8 +77,6 @@
   --text-tile--line-height: 1.08;
   --text-sign: 1.0625rem;
   --text-sign--line-height: 1.2;
-  --text-wordmark: 1.0625rem;
-  --text-wordmark--line-height: 1;
   --text-data: clamp(1.0625rem, 0.9rem + 0.55vw, 1.375rem);
   --text-data--line-height: 1.2;
   --text-h4: 1.125rem;
@@ -431,22 +429,6 @@
   font-stretch: var(--stretch-wide);
   letter-spacing: 0.16em;
   text-transform: uppercase;
-}
-
-@utility type-wordmark {
-  font-size: var(--text-wordmark);
-  line-height: var(--text-wordmark--line-height);
-  font-weight: 800;
-  font-stretch: var(--stretch-wide);
-  letter-spacing: 0.07em;
-}
-
-@utility type-tagline {
-  font-size: var(--text-label);
-  line-height: 1.2;
-  font-weight: 600;
-  font-stretch: 100%;
-  letter-spacing: 0.05em;
 }
 
 /* Martian Mono: values, units, dates, grid references and codes. */
