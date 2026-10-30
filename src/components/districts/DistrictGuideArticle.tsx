@@ -180,7 +180,7 @@ export default function DistrictGuideArticle({
         <Container className="pb-10 sm:pb-14">
           <DistrictPhoto
             photo={heroPhoto}
-            preload
+            priority
             sizes="(max-width: 1440px) 100vw, 1296px"
           />
         </Container>

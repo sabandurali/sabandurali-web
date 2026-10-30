@@ -366,15 +366,23 @@ export function districtPhotoCredit(photo: PublicPhoto): CreditInfo | null {
   return Object.keys(credit).length > 0 ? credit : null;
 }
 
-/** Caption line of a district photo: place · date. */
-export function districtPhotoCaption(photo: PublicPhoto): string {
-  return [
-    photo.title,
-    photo.neighborhood ?? photo.locationName,
-    formatDate(photo.takenAt),
-  ]
-    .filter(Boolean)
-    .join(" · ");
+/**
+ * Caption of a district photo: its title (the link to its own page) and
+ * the place · date line after it. Empty values are left out.
+ */
+export function districtPhotoCaption(photo: PublicPhoto): {
+  title: string | null;
+  details: string;
+} {
+  return {
+    title: photo.title.trim() || null,
+    details: [
+      photo.neighborhood ?? photo.locationName,
+      formatDate(photo.takenAt),
+    ]
+      .filter(Boolean)
+      .join(" · "),
+  };
 }
 
 const planningStatuses: Record<string, string> = {
