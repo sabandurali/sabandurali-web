@@ -50,6 +50,43 @@ export function createPersonReference() {
   } as const;
 }
 
+/**
+ * Inline reference to the site as a WebSite, for `isPartOf` of a content
+ * page. Like the person reference it repeats the name and URL next to the
+ * shared `@id`, which the home page defines.
+ */
+export function createWebsiteReference() {
+  return {
+    "@type": "WebSite",
+    "@id": websiteEntityId,
+    name: personalBrandName,
+    url: homeUrls["tr-TR"],
+  } as const;
+}
+
+/**
+ * An ImageObject for a content image: its absolute URL and, only when the
+ * source states them, its pixel size. No size is guessed.
+ */
+export function createImageObject(image: {
+  src: string;
+  width?: number;
+  height?: number;
+}) {
+  const sized =
+    image.width !== undefined &&
+    image.height !== undefined &&
+    Number.isFinite(image.width) &&
+    Number.isFinite(image.height) &&
+    image.width > 0 &&
+    image.height > 0;
+  return {
+    "@type": "ImageObject",
+    url: getAbsoluteUrl(image.src),
+    ...(sized ? { width: image.width, height: image.height } : {}),
+  };
+}
+
 export function createPersonEntity(locale: SiteLocale = "tr") {
   return {
     ...createPersonReference(),

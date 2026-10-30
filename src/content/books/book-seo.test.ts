@@ -2,9 +2,12 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { siteSocialImage } from "@/config/site";
 import { personEntityId } from "@/content/entity-seo";
+import { bookPageContent } from "./book-page-content";
 import {
   createBookReviewJsonLd,
   createBookReviewMetadata,
+  createBookReviewStructuredData,
+  getBookReviewCanonicalUrl,
   isBookReviewHreflangEligible,
   serializeBookReviewJsonLd,
 } from "./book-seo";
@@ -209,10 +212,12 @@ test("SEO-PERF-2: the cover is the share image and the Book image", () => {
   assert.deepEqual(metadata.twitter?.images, [image]);
   assert.ok(metadata.openGraph && "images" in metadata.openGraph);
   assert.deepEqual(metadata.openGraph.images, [image]);
-  assert.equal(
-    createBookReviewJsonLd(withCover).itemReviewed.image,
-    `${site}/api/media/file/ultralearning-kapak.jpg`,
-  );
+  assert.deepEqual(createBookReviewJsonLd(withCover).itemReviewed.image, {
+    "@type": "ImageObject",
+    url: `${site}/api/media/file/ultralearning-kapak.jpg`,
+    width: withCover.coverImage?.width,
+    height: withCover.coverImage?.height,
+  });
 });
 
 test("SEO-PERF-2: a missing or unservable cover keeps the site image", () => {
@@ -224,5 +229,42 @@ test("SEO-PERF-2: a missing or unservable cover keeps the site image", () => {
   assert.equal(
     createBookReviewJsonLd(review({ coverImage: null })).itemReviewed.image,
     undefined,
+  );
+});
+
+test("ARTICLE-BOOK-JSONLD: a Review names its publisher and the site", () => {
+  const jsonLd = createBookReviewJsonLd(review());
+  assert.equal(jsonLd["@id"], `${site}/kitaplar/ultra-ogrenme#review`);
+  assert.equal(jsonLd.publisher["@id"], personEntityId);
+  assert.deepEqual(jsonLd.isPartOf, {
+    "@type": "WebSite",
+    "@id": `${site}/#website`,
+    name: "Şaban Durali",
+    url: `${site}/`,
+  });
+});
+
+test("BREADCRUMB-JSONLD: the review trail matches the visible one and ends at the canonical URL", () => {
+  for (const bookReview of [
+    review(),
+    review({ language: "en", slug: "ultralearning", title: "Ultralearning" }),
+  ]) {
+    const graph = createBookReviewStructuredData(bookReview)["@graph"];
+    const breadcrumb = graph.find((node) => node["@type"] === "BreadcrumbList");
+    assert.ok(breadcrumb && "itemListElement" in breadcrumb);
+    const items = breadcrumb.itemListElement;
+    assert.deepEqual(
+      items.map((item) => item.name),
+      [
+        bookReview.language === "tr" ? "Ana sayfa" : "Home",
+        bookPageContent[bookReview.language].listTitle,
+        bookReview.title,
+      ],
+    );
+    assert.equal(items.at(-1)?.item, getBookReviewCanonicalUrl(bookReview));
+  }
+  assert.equal(
+    JSON.parse(serializeBookReviewJsonLd(review()))["@graph"][0]["@type"],
+    "Review",
   );
 });

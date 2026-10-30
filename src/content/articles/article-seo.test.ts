@@ -2,9 +2,11 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { siteSocialImage } from "@/config/site";
 import { personEntityId } from "@/content/entity-seo";
+import { articlePageContent } from "./article-page-content";
 import {
   createArticleJsonLd,
   createArticleMetadata,
+  createArticleStructuredData,
   getArticleCanonicalUrl,
   isArticleHreflangEligible,
   serializeArticleJsonLd,
@@ -204,7 +206,7 @@ test("serialized JSON-LD cannot close the script element", () => {
 
   assert.equal(serialized.includes("<"), false);
   assert.equal(
-    JSON.parse(serialized).headline,
+    JSON.parse(serialized)["@graph"][0].headline,
     "</script><script>alert(1)</script>",
   );
 });
@@ -272,4 +274,73 @@ test("a scheduled article never reports a modification before publication", () =
   assert.equal(jsonLd.dateModified, "2026-10-10T09:00:00.000Z");
   assert.ok(openGraph && "modifiedTime" in openGraph);
   assert.equal(openGraph.modifiedTime, "2026-10-10T09:00:00.000Z");
+});
+
+test("ARTICLE-BOOK-JSONLD: a BlogPosting names its publisher, site and sized image", () => {
+  const jsonLd = createArticleJsonLd(
+    payloadArticle({
+      featuredImage: {
+        source: "payload",
+        src: "/api/media/file/konut.jpg",
+        alt: "Konut",
+        width: 2400,
+        height: 1600,
+      },
+    }),
+  );
+
+  assert.equal(jsonLd["@id"], `${site}/makaleler/istanbulda-konut#article`);
+  assert.equal(jsonLd.url, `${site}/makaleler/istanbulda-konut`);
+  assert.deepEqual(jsonLd.publisher, owner);
+  assert.deepEqual(jsonLd.isPartOf, {
+    "@type": "WebSite",
+    "@id": `${site}/#website`,
+    name: "Şaban Durali",
+    url: `${site}/`,
+  });
+  assert.deepEqual(jsonLd.image, {
+    "@type": "ImageObject",
+    url: `${site}/api/media/file/konut.jpg`,
+    width: 2400,
+    height: 1600,
+  });
+  // No size is guessed for an image without one.
+  assert.deepEqual(
+    createArticleJsonLd(
+      payloadArticle({
+        featuredImage: {
+          source: "payload",
+          src: "/api/media/file/konut.jpg",
+          alt: "Konut",
+        },
+      }),
+    ).image,
+    { "@type": "ImageObject", url: `${site}/api/media/file/konut.jpg` },
+  );
+});
+
+test("BREADCRUMB-JSONLD: the article trail matches the visible one and ends at the canonical URL", () => {
+  for (const article of [
+    payloadArticle(),
+    payloadArticle({
+      language: "en",
+      slug: "housing-in-istanbul",
+      title: "Housing in Istanbul",
+    }),
+  ]) {
+    const graph = createArticleStructuredData(article)["@graph"];
+    const breadcrumb = graph.find((node) => node["@type"] === "BreadcrumbList");
+    assert.ok(breadcrumb && "itemListElement" in breadcrumb);
+    const items = breadcrumb.itemListElement;
+    assert.deepEqual(
+      items.map((item) => item.name),
+      [
+        article.language === "tr" ? "Ana sayfa" : "Home",
+        articlePageContent[article.language].listTitle,
+        article.title,
+      ],
+    );
+    assert.equal(items.at(-1)?.item, getArticleCanonicalUrl(article));
+    assert.equal(items.at(-1)?.position, 3);
+  }
 });

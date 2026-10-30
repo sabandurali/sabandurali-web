@@ -1,9 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { publicationCopy } from "@/components/pages/publication-copy";
 import { personEntityId } from "@/content/entity-seo";
 import {
   createPhotoJsonLd,
   createPhotoMetadata,
+  photoListCrumbName,
   serializePhotoJsonLd,
 } from "./photo-seo";
 import type { PublicPhoto } from "./types";
@@ -227,5 +229,26 @@ test("SEO-PERF-3: a historical photo is credited with its attribution, not as a 
 test("SEO-PERF-3: serialized photo JSON-LD cannot close the script element", () => {
   assert.ok(
     !serializePhotoJsonLd(photo({ title: "</script><b>" })).includes("</"),
+  );
+});
+
+test("BREADCRUMB-JSONLD: the photo crumb is named like the visible breadcrumb", () => {
+  for (const locale of ["tr", "en"] as const) {
+    assert.equal(photoListCrumbName[locale], publicationCopy[locale].allPhotos);
+  }
+});
+
+test("BREADCRUMB-JSONLD: the photo page publishes its ImageObject and trail", () => {
+  const parsed = JSON.parse(serializePhotoJsonLd(photo()));
+  const [image, breadcrumb] = parsed["@graph"];
+  assert.equal(image["@type"], "ImageObject");
+  assert.equal(breadcrumb["@type"], "BreadcrumbList");
+  assert.deepEqual(
+    breadcrumb.itemListElement.map((item: { name: string }) => item.name),
+    ["Ana sayfa", "Fotoğraflar", "Galata"],
+  );
+  assert.equal(
+    breadcrumb.itemListElement.at(-1).item,
+    `${site}/fotograflar/galata`,
   );
 });

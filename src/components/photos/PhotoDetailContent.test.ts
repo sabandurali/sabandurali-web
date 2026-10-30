@@ -71,9 +71,18 @@ test("SEO-PERF-1: the photo page renders its ImageObject JSON-LD", () => {
   assert.ok(inner !== null && typeof inner === "object");
   const html: unknown = Reflect.get(inner, "__html");
   assert.equal(typeof html, "string");
-  const data: unknown = JSON.parse(String(html));
+  const parsed: unknown = JSON.parse(String(html));
+  assert.ok(parsed !== null && typeof parsed === "object");
+  // The ImageObject next to the page's BreadcrumbList.
+  const graph: unknown = Reflect.get(parsed, "@graph");
+  assert.ok(Array.isArray(graph));
+  const data: unknown = graph.find(
+    (node: unknown) =>
+      typeof node === "object" &&
+      node !== null &&
+      Reflect.get(node, "@type") === "ImageObject",
+  );
   assert.ok(data !== null && typeof data === "object");
-  assert.equal(Reflect.get(data, "@type"), "ImageObject");
   assert.equal(
     Reflect.get(data, "url"),
     "https://www.sabandurali.com/fotograflar/galata",
