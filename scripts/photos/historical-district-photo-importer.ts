@@ -9,6 +9,7 @@ import { setTimeout as delay } from "node:timers/promises";
 import { parseArgs } from "node:util";
 import { getPayload, type Payload } from "payload";
 import sharp from "sharp";
+import { isRecord } from "../../src/content/guards";
 import {
   describeProductionDatabase,
   readProductionMigrationState,
@@ -171,7 +172,7 @@ async function downloadAndVerify(
       }
       return cachedPath;
     } catch (error) {
-      if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+      if (!isRecord(error) || error.code !== "ENOENT") throw error;
     }
   }
   const response = await fetch(item.downloadUrl, {

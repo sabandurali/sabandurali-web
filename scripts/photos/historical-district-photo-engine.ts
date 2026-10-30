@@ -7,6 +7,7 @@
 import { createHash } from "node:crypto";
 import type { RequiredDataFromCollectionSlug } from "payload";
 import { districts } from "../../src/content/districts/district-registry";
+import { isRecord } from "../../src/content/guards";
 import { normalizeSlug } from "../../src/lib/localizedSlug";
 
 /** What `payload.create` accepts for each collection the importer writes. */
@@ -155,8 +156,8 @@ function text(value: unknown): string | undefined {
 
 function relationId(value: unknown): string | number | undefined {
   if (typeof value === "string" || typeof value === "number") return value;
-  if (value && typeof value === "object" && "id" in value) {
-    const id = (value as { id?: unknown }).id;
+  if (isRecord(value)) {
+    const { id } = value;
     return typeof id === "string" || typeof id === "number" ? id : undefined;
   }
   return undefined;

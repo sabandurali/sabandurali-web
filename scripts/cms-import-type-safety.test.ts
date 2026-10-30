@@ -64,8 +64,8 @@ function assertionCandidateLines(source: string) {
   return lines;
 }
 
-test("district import scripts make no type assertions at all", () => {
-  for (const file of DISTRICT_IMPORT_SCRIPTS) {
+test("CMS import scripts make no type assertions at all", () => {
+  for (const file of CMS_IMPORT_SCRIPTS) {
     for (const { line, number } of assertionCandidateLines(
       readFileSync(file, "utf8"),
     )) {
