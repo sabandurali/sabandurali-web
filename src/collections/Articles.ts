@@ -26,6 +26,7 @@ import {
   SEO_TITLE_MAX_LENGTH,
 } from "@/collections/validation";
 import { getText, isRecord } from "@/content/guards";
+import { articleNewsCategoryOptions } from "@/collections/option-labels";
 
 /** The author every article has unless an editor names someone else. */
 export const DEFAULT_ARTICLE_AUTHOR = "Şaban Durali";
@@ -94,6 +95,7 @@ export const Articles: CollectionConfig = {
       "updatedAt",
     ],
     group: "İçerik",
+    listSearchableFields: ["title", "slug", "excerpt"],
     useAsTitle: "title",
   },
   labels: {
@@ -108,10 +110,13 @@ export const Articles: CollectionConfig = {
       localized: true,
       required: true,
     },
-    createLocalizedSlugField({
-      collection: "articles",
-      sourceField: "title",
-    }),
+    {
+      ...createLocalizedSlugField({
+        collection: "articles",
+        sourceField: "title",
+      }),
+      label: "Slug",
+    },
     {
       name: "excerpt",
       type: "textarea",
@@ -155,6 +160,7 @@ export const Articles: CollectionConfig = {
     {
       name: "featuredImageAlt",
       type: "text",
+      label: "Öne çıkan görselin alternatif metni",
       admin: {
         description:
           "Görseli, bu makaledeki bağlamına göre açıklayan alternatif metin.",
@@ -164,6 +170,7 @@ export const Articles: CollectionConfig = {
     {
       name: "featured",
       type: "checkbox",
+      label: "Öne çıkar",
       admin: {
         position: "sidebar",
       },
@@ -194,6 +201,7 @@ export const Articles: CollectionConfig = {
         {
           name: "articleType",
           type: "select",
+          label: "İçerik türü",
           defaultValue: "article",
           options: [
             { label: "Makale", value: "article" },
@@ -218,17 +226,7 @@ export const Articles: CollectionConfig = {
           name: "newsCategory",
           type: "select",
           label: "Haber kategorisi",
-          options: [
-            "ulasim",
-            "sehircilik",
-            "belediye",
-            "kultur",
-            "yasam",
-            "gayrimenkul",
-            "egitim",
-            "cevre",
-            "onemli-yerel-gelismeler",
-          ],
+          options: articleNewsCategoryOptions,
           admin: {
             condition: (_, siblingData) =>
               siblingData?.articleType === "district-news",
@@ -280,12 +278,14 @@ export const Articles: CollectionConfig = {
         {
           name: "metaTitle",
           type: "text",
+          label: "SEO başlığı",
           localized: true,
           maxLength: SEO_TITLE_MAX_LENGTH,
         },
         {
           name: "metaDescription",
           type: "textarea",
+          label: "SEO açıklaması",
           localized: true,
           maxLength: SEO_DESCRIPTION_MAX_LENGTH,
         },

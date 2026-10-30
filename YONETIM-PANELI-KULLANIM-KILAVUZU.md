@@ -11,6 +11,8 @@ Panelde iki ayrı yayın kavramı vardır:
 - **Taslak (`draft`)**: Kayıt panelde saklanır, fakat public sitede görünmez.
 - **Yayında (`published`)**: Kayıt ancak kendi bölümünde açıklanan diğer görünürlük koşulları da tamamsa public sitede görünür.
 
+Panel Türkçedir: düğmeler, menüler ve hata mesajları da Türkçe gösterilir. Taslağı `Taslağı kaydet`, yayını `Değişiklikleri yayınla`, yayından kaldırmayı `Yayından Kaldır` düğmesi yapar; eski sürümler `Sürümler` sekmesindedir. Panel dilini sağ üstteki hesap menüsünden açılan `Hesap` sayfasında İngilizceye çevirebilirsiniz; bu kılavuz Türkçe arayüzün adlarını kullanır.
+
 ## 1. Admin’e giriş ve genel güvenlik
 
 ### Amaç
@@ -21,7 +23,7 @@ Yalnız yetkili hesapla güvenli biçimde panele girmek ve yanlışlıkla canlı
 
 1. Sitenin alan adının sonuna `/admin` ekleyin.
 2. Kendi e-posta adresiniz ve parolanızla giriş yapın.
-3. Sol menüde `İçerik` grubundaki `Makaleler & Araştırmalar` (`Articles`), `Categories`, `Media`, `Kitap İncelemeleri`, `Sayfalar`, `İlçe Rehberleri` ve `Navigasyon` ile `Fotoğrafçılık` grubundaki `Fotoğraf Koleksiyonları`, `Etiketler` ve `Fotoğraflar` bölümlerini kullanın.
+3. Sol menüde `İçerik` grubundaki `Makaleler & Araştırmalar`, `Kategoriler`, `Medya`, `Kitap İncelemeleri`, `Sayfalar`, `İlçe Rehberleri` ve `Navigasyon` ile `Fotoğrafçılık` grubundaki `Fotoğraf Koleksiyonları`, `Etiketler` ve `Fotoğraflar` bölümlerini kullanın.
 4. Yeni içeriği önce taslak olarak kaydedin.
 5. İçerik ve bağlantı kontrolünden sonra yayın durumunu `published` yapın.
 6. İşiniz bitince ortak veya başkasının erişebildiği cihazda oturumu kapatın.
@@ -29,7 +31,7 @@ Yalnız yetkili hesapla güvenli biçimde panele girmek ve yanlışlıkla canlı
 ### Dikkat
 
 - Parola, erişim anahtarı, gizli değer veya altyapı bağlantısı hiçbir içerik alanına yazılmaz ve paylaşılmaz.
-- `Admin` kullanıcı yeni kullanıcı oluşturabilir, kullanıcı silebilir ve rol değiştirebilir. `Editor` içerik ekler ve düzenler; içerik silme yetkisi yalnız `Media` kayıtlarındadır (bkz. bölüm 11).
+- `Admin` kullanıcı yeni kullanıcı oluşturabilir, kullanıcı silebilir ve rol değiştirebilir. `Editor` içerik ekler ve düzenler; içerik silme yetkisi yalnız `Medya` kayıtlarındadır (bkz. bölüm 11).
 - Yeni kullanıcının varsayılan rolü `Editor`dır. Yalnız sistemdeki ilk hesap otomatik olarak `Admin` olur. `Admin` rolünü yalnız başka bir `Admin` verebilir.
 - Son `Admin` hesabı silinemez ve `Editor` rolüne düşürülemez; toplu düzenleme veya toplu silme de bütün `Admin` hesaplarını kaldıramaz. Bu koruma, yönetim erişiminin tamamen kaybedilmesini önler.
 - Parola sıfırlama e-postası henüz yapılandırılmamıştır; `Parolamı unuttum` isteği reddedilir. Parolasını unutan kullanıcının parolasını başka bir `Admin` panelden yeniler. Bu nedenle her zaman en az iki `Admin` hesabı bulundurun.
@@ -146,27 +148,27 @@ Makaleleri tutarlı başlıklar altında toplamak ve gereksiz kategori çoğalma
 
 ### Adımlar
 
-1. `Categories` bölümünü açın.
-2. Yeni kayıtta `name` alanına Türkçe kategori adını yazın.
-3. `slug` değerinin addan otomatik oluşmasını kontrol edin; gerekmedikçe elle değiştirmeyin.
-4. İsteğe bağlı `description` alanını doldurun.
-5. `sortOrder` ile yönetim sırasını belirleyin. Değer `0` veya daha büyük olmalıdır.
-6. Aynı kategori kaydında locale seçicisiyle EN karşılığını girin. `name`, `slug` ve `description` yerelleştirilmiş alanlardır.
-7. Kaydı oluşturduktan sonra makalelerde `categories` ilişkisinden seçin.
+1. `Kategoriler` bölümünü açın.
+2. Yeni kayıtta `Ad` alanına Türkçe kategori adını yazın.
+3. `Slug` değerinin addan otomatik oluşmasını kontrol edin; gerekmedikçe elle değiştirmeyin.
+4. İsteğe bağlı `Açıklama` alanını doldurun.
+5. `Sıra` ile yönetim sırasını belirleyin. Değer `0` veya daha büyük olmalıdır.
+6. Aynı kategori kaydında locale seçicisiyle EN karşılığını girin. `Ad`, `Slug` ve `Açıklama` yerelleştirilmiş alanlardır.
+7. Kaydı oluşturduktan sonra makalelerde `Çalışma alanı / kategori` ilişkisinden seçin.
 
 ### Dikkat
 
-- `name` ve her kullanılan dildeki `slug` zorunludur. Slug küçük harf, sayı ve tire düzenine otomatik normalleştirilir.
+- `Ad` ve her kullanılan dildeki `Slug` zorunludur. Slug küçük harf, sayı ve tire düzenine otomatik normalleştirilir.
 - Kategori TR ve EN için iki ayrı kayıt değildir; aynı kaydın yerelleştirilmiş değerleri kullanılır.
 - En az bir makale tarafından kullanılan kategori silinemez. Önce bütün makale ilişkilerini kaldırın.
 - Kategori silme yetkisi yalnız `Admin` rolündedir. Yeniden adlandırmak veya açıklamayı düzeltmek çoğu zaman silmekten daha güvenlidir.
-- Kitap incelemesindeki `Kategori`, `Categories` koleksiyonu değildir; kitap şemasındaki hazır seçeneklerden biridir.
+- Kitap incelemesindeki `Kategori`, `Kategoriler` koleksiyonu değildir; kitap şemasındaki hazır seçeneklerden biridir.
 
 ### Kontrol
 
 - Aynı anlamda ikinci bir kategori açıyor musunuz?
-- TR ve gerekiyorsa EN `name/slug` değerleri doğru mu?
-- `sortOrder` mevcut sıralamayla uyumlu mu?
+- TR ve gerekiyorsa EN `Ad`/`Slug` değerleri doğru mu?
+- `Sıra` mevcut sıralamayla uyumlu mu?
 
 ## 5. Makale oluşturma, taslak ve yayın
 
@@ -176,19 +178,19 @@ Bir makaleyi önce güvenli taslak olarak hazırlamak, sonra doğru dilde görü
 
 ### Adımlar
 
-1. `Articles` bölümünde yeni kayıt oluşturun.
+1. `Makaleler & Araştırmalar` bölümünde yeni kayıt oluşturun.
 2. Locale seçicisinde önce `Türkçe`yi seçin.
 3. Zorunlu alanları doldurun:
-   - `title`
-   - otomatik oluşan `slug`
-   - en fazla 320 karakterlik `excerpt`
-   - anlamlı metin içeren `content`
-   - en az bir `categories` ilişkisi
-4. İsteğe bağlı `featuredImage` seçin. Görsel varsa makaleye özel, yerelleştirilmiş `featuredImageAlt` yazın.
-5. Gerekirse `featured` seçeneğini açın.
-6. `SEO` grubunda `metaTitle` ve `metaDescription` girin. Bunlar boşsa public tarafta sırasıyla makale başlığı ve özet kullanılır. `Arama motorları indeksleyebilir` ve `Arama motorları bağlantıları takip edebilir` varsayılan olarak açıktır; `Canonical adresi`ni yalnız gerçekten gerekiyorsa doldurun.
-7. Kaydı `draft` olarak saklayın ve içerik, başlık hiyerarşisi, bağlantılar, görsel ve alt metni kontrol edin.
-8. Yayın sırasında durumun `published` olmasını sağlayın. `publishedAt` ilk yayında boşsa otomatik atanır; elle gelecekte bir tarih girilirse o tarihe kadar içerik görünmez.
+   - `Başlık` (`title`)
+   - otomatik oluşan `Slug`
+   - en fazla 320 karakterlik `Kısa özet` (`excerpt`)
+   - anlamlı metin içeren `Makale içeriği` (`content`)
+   - en az bir `Çalışma alanı / kategori` ilişkisi
+4. İsteğe bağlı `Öne çıkan görsel` (`featuredImage`) seçin. Görsel varsa makaleye özel, yerelleştirilmiş `Öne çıkan görselin alternatif metni` (`featuredImageAlt`) yazın.
+5. Gerekirse sağ kenardaki `Öne çıkar` seçeneğini açın.
+6. `SEO` grubunda `SEO başlığı` (`metaTitle`) ve `SEO açıklaması` (`metaDescription`) girin. Bunlar boşsa public tarafta sırasıyla makale başlığı ve özet kullanılır. `Arama motorları indeksleyebilir` ve `Arama motorları bağlantıları takip edebilir` varsayılan olarak açıktır; `Canonical adresi`ni yalnız gerçekten gerekiyorsa doldurun.
+7. Kaydı `Taslağı kaydet` ile `draft` olarak saklayın ve içerik, başlık hiyerarşisi, bağlantılar, görsel ve alt metni kontrol edin.
+8. `Değişiklikleri yayınla` ile durumun `published` olmasını sağlayın. `publishedAt` ilk yayında boşsa otomatik atanır; elle gelecekte bir tarih girilirse o tarihe kadar içerik görünmez.
 9. Canlıda TR makale için `/makaleler/[slug]`, EN makale için `/en/articles/[slug]` rotasını kontrol edin.
 
 ### Dikkat
@@ -196,12 +198,12 @@ Bir makaleyi önce güvenli taslak olarak hazırlamak, sonra doğru dilde görü
 - Makalenin public görünmesi için `_status = published`, `publishedAt` değerinin dolu ve şu andan eski/eşit olması gerekir. İstenen locale’de `title`, `slug`, `excerpt` ve anlamlı `content` bulunmalıdır.
 - `draft`, yalnız panelde görülen çalışma sürümüdür. `published` seçilmiş olsa bile gelecek tarihli kayıt public görünmez.
 - `featuredImage` şemada zorunlu değildir. Kullanılırsa görsel dosyası gerçek bir resim olmalıdır.
-- Makaleye özel `featuredImageAlt` boşsa Media kaydındaki `Alternatif metin`, o da yoksa makale başlığı kullanılır. Erişilebilirlik için makale bağlamına uygun özel alt metin girmek daha doğrudur.
+- Makaleye özel `featuredImageAlt` boşsa Medya kaydındaki `Alternatif metin`, o da yoksa makale başlığı kullanılır. Erişilebilirlik için makale bağlamına uygun özel alt metin girmek daha doğrudur.
 - Makale silme yetkisi yalnız `Admin` rolündedir. Yayından kaldırmak için silmek yerine kaydı taslağa alın.
 - Aynı slug aynı locale içinde ikinci kez kullanılamaz.
 - `İçerik türü ve ilçe ilişkisi` bölümünde türü `İlçeden haber` seçilen kayıt kısa özet ve orijinal kaynağa bağlantıdır; görünür gövde metni zorunlu değildir. Yayınlanırken `Orijinal kaynak` grubunda `Kaynak adı` ve `https://` ile başlayan `Orijinal haber URL'si` zorunludur.
 - `Canonical adresi` boşsa makalenin kendi adresi kullanılır. Yalnız `/` ile başlayan site içi yol (ör. `/makaleler/[slug]` biçiminde) veya `https://www.sabandurali.com` adresi kabul edilir.
-- Zengin metinde başlıklar `H2`–`H4` aralığındadır; `H1` sayfa başlığına ayrılmıştır. Site içi bağlantı yalnız `Articles`, `Sayfalar`, `Kitap İncelemeleri`, `Fotoğraflar` ve `İlçe Rehberleri` kayıtlarına verilebilir. İlişki (relationship) bloğu kaldırılmıştır; başka bir kayda bağlantı vermek için bağlantı özelliğini kullanın.
+- Zengin metinde başlıklar `H2`–`H4` aralığındadır; `H1` sayfa başlığına ayrılmıştır. Site içi bağlantı yalnız `Makaleler & Araştırmalar`, `Sayfalar`, `Kitap İncelemeleri`, `Fotoğraflar` ve `İlçe Rehberleri` kayıtlarına verilebilir. İlişki (relationship) bloğu kaldırılmıştır; başka bir kayda bağlantı vermek için bağlantı özelliğini kullanın.
 - Editörde yapılacak listesi (checklist), altı çizili, üstü çizili, hizalama ve girinti seçenekleri yoktur: sitede altı çizili metin bağlantı sanılır, hizalama ve girinti tasarım sisteminin dışına çıkar. Bu biçimlerle girilmiş eski içerikte altı çizili metin düz metin, üstü çizili metin üstü çizili, yapılacak listesi işaretlenemeyen kutulu bir liste olarak gösterilir; hizalama ve girinti uygulanmaz.
 
 ### Kontrol
@@ -247,7 +249,7 @@ Kitap bilgileriyle kişisel değerlendirmeyi bir araya getiren, public görünü
 - Çeviriler bire birdir: bir inceleme yalnız bir kayda çeviri olarak bağlanabilir ve başka bir incelemenin çevirisi olarak seçilmiş kayıt ikinci kez seçilemez.
 - `Okuma durumu = completed` ise bitirme tarihi zorunludur. `planned` veya `abandoned` durumunda bitirme tarihi olmamalıdır.
 - ISBN giriliyorsa geçerli olmalı ve başka bir kitap kaydında kullanılmamalıdır.
-- `Kategori` burada hazır kitap kategorileri listesidir. Fotoğraf `Etiketler` koleksiyonu veya makale `Categories` ilişkisi değildir.
+- `Kategori` burada hazır kitap kategorileri listesidir. Fotoğraf `Etiketler` koleksiyonu veya makale `Kategoriler` ilişkisi değildir.
 - Kitap kaydını yalnız `Admin` silebilir; silme bütün sürümleri de kaldırır. Kitap ilişkileri için özel bir silme koruması yoktur. Bu nedenle önce yayından kaldırmayı tercih edin.
 
 ### Kontrol
@@ -266,20 +268,20 @@ Görsel dosyasını bir kez güvenli biçimde yüklemek; fotoğraf kaydını kol
 
 ### Adımlar
 
-1. Önce `Media` bölümünde dosyayı yükleyin.
+1. Önce `Medya` bölümünde dosyayı yükleyin.
 2. Zorunlu `Alternatif metin` alanına görseli kısa ve anlamlı biçimde tarif edin. Gerekirse `Açıklama` ve `Kaynak / telif` ekleyin.
-3. `Fotoğraf Koleksiyonları` bölümünde koleksiyonun `title`, otomatik `slug`, isteğe bağlı `description`, varsa `parent` ve `sortOrder` alanlarını girin.
-4. `Etiketler` bölümünde etiketin `title`, otomatik `slug` ve isteğe bağlı `description` alanlarını girin.
+3. `Fotoğraf Koleksiyonları` bölümünde koleksiyonun `Başlık`, otomatik `Slug`, isteğe bağlı `Açıklama`, varsa `Üst koleksiyon` ve `Sıra` alanlarını girin.
+4. `Etiketler` bölümünde etiketin `Başlık`, otomatik `Slug` ve isteğe bağlı `Açıklama` alanlarını girin.
 5. Koleksiyon ve etiketlerin TR/EN karşılıklarını aynı kaydın locale seçicisinde tamamlayın.
 6. `Fotoğraflar` bölümünde yeni kayıt açın.
 7. `Fotoğraf` sekmesinde zorunlu alanları doldurun:
-   - yerelleştirilmiş `title`
-   - otomatik, yerelleştirilmiş `slug`
-   - yerelleştirilmiş `altText`
-   - bir `image` Media ilişkisi
-   - en az bir `collections` ilişkisi
-   - `photographer`
-8. İsteğe bağlı açıklama, etiketler, çekim tarihi, konum, kredi/lisans ve `featured` alanlarını ekleyin.
+   - yerelleştirilmiş `Başlık`
+   - otomatik, yerelleştirilmiş `Slug`
+   - yerelleştirilmiş `Alternatif metin` (`altText`)
+   - bir `Medya dosyası` ilişkisi
+   - en az bir `Kategori / koleksiyon` ilişkisi
+   - `Fotoğrafçı`
+8. İsteğe bağlı açıklama, etiketler, çekim tarihi, konum, kredi/lisans ve `Öne çıkar` alanlarını ekleyin.
 9. İsterseniz `EXIF` sekmesinde kamera, lens, odak uzaklığı, diyafram, enstantane ve ISO bilgilerini girin.
 10. `Yayın ve SEO` sekmesinde yayın tarihini ve isteğe bağlı SEO alanlarını kontrol edin; önce taslak kaydedin, sonra yayınlayın.
 11. TR için `/fotograflar/[slug]`, EN için `/en/photography/[slug]` rotasını kontrol edin.
@@ -292,11 +294,11 @@ Görsel dosyasını bir kez güvenli biçimde yüklemek; fotoğraf kaydını kol
 - `Açıklama` alanı Türkçe sayfalarda görselin altında açıklama (caption) olarak gösterilir; İngilizce sayfalarda gösterilmez. `Kaynak / telif` alanı ise her dilde görselin kredi satırıdır. Atıf isteyen lisanslı görsellerde (ör. Creative Commons) yazar ve lisansı `Kaynak / telif` alanına yazın, `Açıklama`ya değil.
 - Sosyal paylaşım görseli için 1200 × 630 piksel, en fazla yaklaşık 300 KB JPEG önerilir. Daha büyük dosya paylaşım önizlemesinde geç yüklenebilir veya hiç gösterilmeyebilir.
 - `Fotoğraflar.image` ilişkisi ziyaretçiye açık tarafta gerçek bir görsel dosyası olmalıdır; PDF seçilirse fotoğraf sitede görünmez.
-- Fotoğrafın `altText` alanı public görselde Media `Alternatif metin` alanından önce kullanılır. Her locale için fotoğrafın bağlamına uygun ayrı `altText` girin.
+- Fotoğrafın `Alternatif metin` (`altText`) alanı public görselde Medya kaydının `Alternatif metin` alanından önce kullanılır. Her locale için fotoğrafın bağlamına uygun ayrı `altText` girin.
 - Fotoğraf public görünür olmak için `published`, yayın tarihi gelmiş, ilgili locale’de başlık/slug/alt metin dolu, görsel geçerli ve en az bir çözümlenebilir koleksiyona bağlı olmalıdır.
 - Etiket zorunlu değildir. Koleksiyon zorunludur ve public filtrelerde koleksiyon/etiket slug’ları kullanılır.
 - Başka bir kayıt veya geçmiş sürüm tarafından kullanılan Media, fotoğraf koleksiyonu ya da etiket silinemez. Önce ilişkileri kaldırın; gerekirse ilgili sürüm geçmişindeki ilişkiyi de temizleyin.
-- Üst koleksiyon başka bir alt koleksiyonun `parent` alanında kullanılıyorsa o ilişki de silmeyi engeller.
+- Üst koleksiyon başka bir alt koleksiyonun `Üst koleksiyon` alanında kullanılıyorsa o ilişki de silmeyi engeller.
 
 ### Kontrol
 
@@ -355,7 +357,7 @@ Her içerik türünün gerçek çeviri modelini kullanarak TR ve EN içeriği do
 
 1. Önce Türkçe içeriği tamamlayıp taslak kontrolünden geçirin.
 2. İçerik türüne göre doğru yöntemi kullanın:
-   - **Makale:** Aynı `Articles` kaydında locale seçicisinden EN’e geçin; yerelleştirilmiş `title`, `slug`, `excerpt`, `content`, `featuredImageAlt` ve SEO metinlerini girin.
+   - **Makale:** Aynı `Makaleler & Araştırmalar` kaydında locale seçicisinden EN’e geçin; yerelleştirilmiş `title`, `slug`, `excerpt`, `content`, `featuredImageAlt` ve SEO metinlerini girin.
    - **Fotoğraf:** Aynı `Fotoğraflar` kaydında EN locale’i doldurun. `title`, `slug`, `description`, `altText`, `locationName` ve SEO metinleri yerelleştirilmiştir. Media, koleksiyon ve etiket ilişkileri iki dilde ortaktır; koleksiyon/etiket adlarını kendi kayıtlarında yerelleştirin.
    - **Kategori, fotoğraf koleksiyonu ve etiket:** Aynı kayıt içinde TR/EN yerelleştirilmiş alanları doldurun.
    - **Kitap incelemesi:** EN için ayrı `Kitap İncelemesi` kaydı oluşturun, `Dil = en` seçin ve `Diğer dildeki kayıt` alanıyla TR kaydına bağlayın. Aynı kaydı kendi çevirisi olarak seçemezsiniz; iki kayıt farklı dilde olmalıdır.
@@ -399,9 +401,9 @@ Arama sonucu metinlerini ve erişilebilir görsel açıklamalarını doğru girm
 
 | İçerik | Kullanıcının girdiği SEO alanları | Sistem davranışı |
 | --- | --- | --- |
-| Makale | `metaTitle` (en fazla 60), `metaDescription` (en fazla 160), `index`, `follow`, isteğe bağlı `Canonical adresi`, makaleye özel `featuredImageAlt` | SEO metinleri boşsa başlık/özet kullanılır; canonical boşsa makale rotası kullanılır; uygun çeviri varsa hreflang sistem tarafından üretilir. |
+| Makale | `SEO başlığı` (en fazla 60), `SEO açıklaması` (en fazla 160), `index`, `follow`, isteğe bağlı `Canonical adresi`, makaleye özel `featuredImageAlt` | SEO metinleri boşsa başlık/özet kullanılır; canonical boşsa makale rotası kullanılır; uygun çeviri varsa hreflang sistem tarafından üretilir. |
 | Kitap incelemesi | Zorunlu `SEO başlığı`, `SEO açıklaması`, `index`, `follow`; isteğe bağlı canonical ve sosyal paylaşım alanları | Canonical boşsa içerik rotasından üretilir. Bağlı ve public çeviri varsa hreflang üretilir. |
-| Fotoğraf | `metaTitle` (en fazla 60), `metaDescription` (en fazla 160), sosyal paylaşım görseli ve yerelleştirilmiş `altText` | Canonical rota otomatik üretilir; aynı kaydın diğer locale’i public ise hreflang üretilir. |
+| Fotoğraf | `SEO başlığı` (en fazla 60), `SEO açıklaması` (en fazla 160), sosyal paylaşım görseli ve yerelleştirilmiş `altText` | Canonical rota otomatik üretilir; aynı kaydın diğer locale’i public ise hreflang üretilir. |
 | Sayfa | `SEO başlığı` (en fazla 60), `SEO açıklaması` (en fazla 160), `index`, `follow`, sosyal paylaşım görseli | Canonical, dil ve sayfa slug’ından otomatik üretilir. Standart sayfa şemasında kullanıcıya ait hreflang alanı yoktur. |
 
 5. Sosyal paylaşım görseli seçiyorsanız önce Media alternatif metnini kontrol edin.
@@ -435,7 +437,7 @@ Arama sonucu metinlerini ve erişilebilir görsel açıklamalarını doğru girm
 1. Bir içerik artık görünmemeli ama ileride gerekebilir diyorsanız silmeyin; belge durumunu `draft` yaparak yayından kaldırın.
 2. Kitap incelemesinde ayrıca `İnceleme durumu`nu `draft` veya `archived` yapabilirsiniz. Public görünürlüğü kapatmak için Payload belgesini de taslağa almak en açık yöntemdir.
 3. Navigasyon değişikliğini geri çekmek için global belgenin yayındaki sürümünü koruyun veya yeni düzenlemeyi taslakta bırakın.
-4. Sürüm geçmişi olan kayıtların önceki sürümlerini panelde inceleyin. `Articles`, `Kitap İncelemeleri`, `Sayfalar`, `Fotoğraflar` ve `İlçe Rehberleri` belge başına; `Navigasyon` globali de toplam en fazla 25 sürüm tutar.
+4. Sürüm geçmişi olan kayıtların önceki sürümlerini panelde inceleyin. `Makaleler & Araştırmalar`, `Kitap İncelemeleri`, `Sayfalar`, `Fotoğraflar` ve `İlçe Rehberleri` belge başına; `Navigasyon` globali de toplam en fazla 25 sürüm tutar.
 5. Silmek zorundaysanız önce bütün ilişkileri kaldırın, kaydı yeniden kontrol edin ve ancak sonra silme işlemini uygulayın.
 
 ### Dikkat
@@ -445,7 +447,7 @@ Arama sonucu metinlerini ve erişilebilir görsel açıklamalarını doğru girm
 - En az bir makalede kullanılan kategori silinemez.
 - Mevcut içerikte veya geçmiş içerik sürümünde kullanılan Media silinemez. Koruma; koleksiyon alanları, sayfa blokları, Navigasyon ve zengin metindeki medya ilişkilerini de tarar.
 - Mevcut içerikte veya geçmiş sürümde kullanılan fotoğraf koleksiyonu ve etiket silinemez.
-- `Articles`, `Categories`, `Kitap İncelemeleri`, `Sayfalar`, `Fotoğraf Koleksiyonları`, `Etiketler`, `Fotoğraflar` ve `İlçe Rehberleri` silme işlemleri yalnız `Admin` yetkisindedir; sürüm geçmişi olan kayıtta silme bütün sürümleri de kaldırır. `Media` kayıtlarını `Admin` veya `Editor` silebilir; koruma kuralları yine uygulanır. `Editor` içerik kaldırmak için kaydı taslağa alır.
+- `Makaleler & Araştırmalar`, `Kategoriler`, `Kitap İncelemeleri`, `Sayfalar`, `Fotoğraf Koleksiyonları`, `Etiketler`, `Fotoğraflar` ve `İlçe Rehberleri` silme işlemleri yalnız `Admin` yetkisindedir; sürüm geçmişi olan kayıtta silme bütün sürümleri de kaldırır. `Medya` kayıtlarını `Admin` veya `Editor` silebilir; koruma kuralları yine uygulanır. `Editor` içerik kaldırmak için kaydı taslağa alır.
 - Kodda kitap ilişkileri için özel silme koruması yoktur. Bağlı kitabı silmeden önce `Diğer dildeki kayıt` ve `İlgili kitap incelemeleri` ilişkilerini elle kontrol edin.
 - Sürüm geçmişi bir çöp kutusu değildir. Silinen kaydın geri getirilebileceğini varsaymayın.
 

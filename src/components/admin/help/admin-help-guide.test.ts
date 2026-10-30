@@ -84,7 +84,7 @@ test("Phase B: the guide states the CMS rules the code enforces", () => {
     // District news need an https source.
     "`https://` ile başlayan `Orijinal haber URL'si`",
     // Supported internal link targets (INTERNAL_LINK_COLLECTIONS).
-    "`Articles`, `Sayfalar`, `Kitap İncelemeleri`, `Fotoğraflar` ve `İlçe Rehberleri` kayıtlarına",
+    "`Makaleler & Araştırmalar`, `Sayfalar`, `Kitap İncelemeleri`, `Fotoğraflar` ve `İlçe Rehberleri` kayıtlarına",
     // Social image recommendation.
     "1200 × 630",
     // Empty district guides stay out of search.

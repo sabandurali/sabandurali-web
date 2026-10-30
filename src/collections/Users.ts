@@ -313,7 +313,7 @@ export const hideLockedAccountOnLogin: CollectionAfterErrorHook = ({
  * text, the access rules and the admin guide in agreement.
  */
 export const USER_ROLE_DESCRIPTION =
-  "Editor içerik ekler ve düzenler, kullanılmayan Media dosyalarını silebilir. Admin ayrıca kullanıcıları yönetir ve diğer içerikleri siler. Sistemde her zaman en az bir Admin kalır.";
+  "Editor içerik ekler ve düzenler, kullanılmayan Medya dosyalarını silebilir. Admin ayrıca kullanıcıları yönetir ve diğer içerikleri siler. Sistemde her zaman en az bir Admin kalır.";
 
 export const Users: CollectionConfig = {
   slug: "users",
@@ -339,6 +339,10 @@ export const Users: CollectionConfig = {
   admin: {
     useAsTitle: "email",
   },
+  labels: {
+    plural: "Kullanıcılar",
+    singular: "Kullanıcı",
+  },
   auth: {
     cookies: {
       // Lax keeps the session for a top-level navigation from another site
@@ -361,6 +365,7 @@ export const Users: CollectionConfig = {
     {
       name: "role",
       type: "select",
+      label: "Rol",
       access: {
         update: ({ req }) => isAdmin(req.user),
       },

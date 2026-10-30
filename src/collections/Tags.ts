@@ -20,6 +20,7 @@ export const Tags: CollectionConfig = {
   admin: {
     defaultColumns: ["title", "slug", "updatedAt"],
     group: "Fotoğrafçılık",
+    listSearchableFields: ["title", "slug"],
     useAsTitle: "title",
   },
   labels: {
@@ -30,16 +31,21 @@ export const Tags: CollectionConfig = {
     {
       name: "title",
       type: "text",
+      label: "Başlık",
       localized: true,
       required: true,
     },
-    createLocalizedSlugField({
-      collection: "tags",
-      sourceField: "title",
-    }),
+    {
+      ...createLocalizedSlugField({
+        collection: "tags",
+        sourceField: "title",
+      }),
+      label: "Slug",
+    },
     {
       name: "description",
       type: "textarea",
+      label: "Açıklama",
       localized: true,
     },
   ],

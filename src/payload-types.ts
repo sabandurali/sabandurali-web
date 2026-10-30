@@ -144,7 +144,7 @@ export interface UserAuthOperations {
 export interface User {
   id: string;
   /**
-   * Editor içerik ekler ve düzenler, kullanılmayan Media dosyalarını silebilir. Admin ayrıca kullanıcıları yönetir ve diğer içerikleri siler. Sistemde her zaman en az bir Admin kalır.
+   * Editor içerik ekler ve düzenler, kullanılmayan Medya dosyalarını silebilir. Admin ayrıca kullanıcıları yönetir ve diğer içerikleri siler. Sistemde her zaman en az bir Admin kalır.
    */
   role: 'admin' | 'editor';
   updatedAt: string;
