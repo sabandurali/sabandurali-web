@@ -2,7 +2,10 @@ import { createHash } from "node:crypto";
 import type { DistrictGuide } from "../../src/payload-types";
 import { districts } from "../../src/content/districts/district-registry";
 import {
+  isDistrictSourceType,
   isPublicSourceUrl,
+  districtSectionOptions,
+  type DistrictSection,
   type DistrictSource,
 } from "../../src/content/districts/district-content-policy";
 import {
@@ -119,11 +122,34 @@ export function validateBundle(bundle: ResearchBundle) {
       throw new Error(`Invalid sources: ${row.district}`);
   }
 }
+type GuideDistrict = DistrictGuide["district"];
+
+function isGuideDistrict(value: string): value is GuideDistrict {
+  return districts.some((district) => district.slug === value);
+}
+
+export function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+/**
+ * A typed Payload document (or draft) as a plain record of its fields, for
+ * the fingerprint and decision helpers. Spreading copies the fields without
+ * a cast, so a renamed field still fails the typecheck where it is written.
+ */
+export function toFieldRecord(doc: object): Record<string, unknown> {
+  const fields: Record<string, unknown> = { ...doc };
+  return fields;
+}
+
 export function makeDraft(
   row: ResearchRecord,
 ): Partial<DistrictGuide> & Pick<DistrictGuide, "district"> {
+  if (!isGuideDistrict(row.district)) {
+    throw new Error(`Unknown district: ${row.district}`);
+  }
   return {
-    district: row.district as DistrictGuide["district"],
+    district: row.district,
     _status: "draft",
     summary: "",
     history: row.editorial ? "" : row.sections.history,
@@ -179,10 +205,9 @@ export function decideImport(
   row: ResearchRecord,
 ): { action: "create" | "update" | "skip"; reason: string } {
   if (!existing) return { action: "create", reason: "new district draft" };
-  const provenance = existing.importProvenance as Record<
-    string,
-    unknown
-  > | null;
+  const provenance = isRecord(existing.importProvenance)
+    ? existing.importProvenance
+    : null;
   if (
     !provenance?.fingerprint ||
     provenance.fingerprint !== fingerprint(existing)
@@ -193,9 +218,7 @@ export function decideImport(
       adoption?.currentFingerprint === fingerprint(existing) &&
       adoption.contentFingerprint === editorialContentFingerprint(existing) &&
       adoption.contentFingerprint ===
-        editorialContentFingerprint(
-          makeDraft(row) as Record<string, unknown>,
-        )
+        editorialContentFingerprint(toFieldRecord(makeDraft(row)))
     )
       return { action: "skip", reason: "unchanged source" };
     return { action: "skip", reason: "manual/unmanaged content protected" };
@@ -212,4 +235,176 @@ export function decideImport(
     action: "update",
     reason: "unchanged imported draft; source changed",
   };
+}
+
+// ---------------------------------------------------------------------------
+// Parsing the research JSON: `unknown` in, a typed bundle or a gate error out
+
+const sectionValues: ReadonlySet<string> = new Set(
+  districtSectionOptions.map(({ value }) => value),
+);
+function isDistrictSection(value: unknown): value is DistrictSection {
+  return typeof value === "string" && sectionValues.has(value);
+}
+
+function invalidResearch(where: string, expected: string): never {
+  throw new Error(`Invalid research bundle at ${where}: expected ${expected}.`);
+}
+
+function readString(
+  record: Record<string, unknown>,
+  key: string,
+  where: string,
+): string {
+  const value = record[key];
+  return typeof value === "string"
+    ? value
+    : invalidResearch(`${where}.${key}`, "a string");
+}
+
+function readOptional<T>(
+  record: Record<string, unknown>,
+  key: string,
+  where: string,
+  guard: (value: unknown) => value is T,
+  expected: string,
+): T | null | undefined {
+  const value = record[key];
+  if (value === undefined || value === null) return value;
+  return guard(value) ? value : invalidResearch(`${where}.${key}`, expected);
+}
+
+function isBoolean(value: unknown): value is boolean {
+  return typeof value === "boolean";
+}
+
+function isString(value: unknown): value is string {
+  return typeof value === "string";
+}
+
+function isSectionList(value: unknown): value is DistrictSection[] {
+  return Array.isArray(value) && value.every(isDistrictSection);
+}
+
+function parseSource(value: unknown, where: string): DistrictSource {
+  if (!isRecord(value)) return invalidResearch(where, "a source object");
+  const sourceType = value.sourceType;
+  if (!isDistrictSourceType(sourceType)) {
+    return invalidResearch(`${where}.sourceType`, "a known source type");
+  }
+  const source: DistrictSource = {
+    title: readString(value, "title", where),
+    publisher: readString(value, "publisher", where),
+    url: readString(value, "url", where),
+    sourceType,
+  };
+  const primary = readOptional(value, "primary", where, isBoolean, "a boolean");
+  const dataDate = readOptional(value, "dataDate", where, isString, "a string");
+  const checkedAt = readOptional(
+    value,
+    "checkedAt",
+    where,
+    isString,
+    "a string",
+  );
+  const needsVerification = readOptional(
+    value,
+    "needsVerification",
+    where,
+    isBoolean,
+    "a boolean",
+  );
+  const sections = readOptional(
+    value,
+    "sections",
+    where,
+    isSectionList,
+    "a list of district sections",
+  );
+  return {
+    ...source,
+    ...(primary === undefined ? {} : { primary }),
+    ...(dataDate === undefined ? {} : { dataDate }),
+    ...(checkedAt === undefined ? {} : { checkedAt }),
+    ...(needsVerification === undefined ? {} : { needsVerification }),
+    ...(sections === undefined ? {} : { sections }),
+  };
+}
+
+function parseResearchRecord(value: unknown, where: string): ResearchRecord {
+  if (!isRecord(value)) return invalidResearch(where, "a district record");
+  const document = value.document;
+  if (!isRecord(document)) {
+    return invalidResearch(`${where}.document`, "a document object");
+  }
+  const pages = document.pages;
+  if (typeof pages !== "number" || !Number.isInteger(pages)) {
+    return invalidResearch(`${where}.document.pages`, "an integer");
+  }
+  const sections = value.sections;
+  if (!isRecord(sections)) {
+    return invalidResearch(`${where}.sections`, "a sections object");
+  }
+  const sectionTexts: Record<string, string> = {};
+  for (const [key, text] of Object.entries(sections)) {
+    sectionTexts[key] =
+      typeof text === "string"
+        ? text
+        : invalidResearch(`${where}.sections.${key}`, "a string");
+  }
+  const sources = value.sources;
+  if (!Array.isArray(sources)) {
+    return invalidResearch(`${where}.sources`, "a list");
+  }
+  const reviewedSections = value.reviewedSections;
+  if (!Array.isArray(reviewedSections) || !reviewedSections.every(isString)) {
+    return invalidResearch(`${where}.reviewedSections`, "a list of strings");
+  }
+  const needsVerification = value.needsVerification;
+  if (typeof needsVerification !== "boolean") {
+    return invalidResearch(`${where}.needsVerification`, "a boolean");
+  }
+
+  return {
+    district: readString(value, "district", where),
+    name: readString(value, "name", where),
+    document: {
+      file: readString(document, "file", `${where}.document`),
+      sha256: readString(document, "sha256", `${where}.document`),
+      pages,
+    },
+    sections: sectionTexts,
+    sources: sources.map((source, index) =>
+      parseSource(source, `${where}.sources[${index}]`),
+    ),
+    sourceAppendix: readString(value, "sourceAppendix", where),
+    reviewedSections,
+    needsVerification,
+  };
+}
+
+/**
+ * Reads `data/districts/research.json` (already `JSON.parse`d) into a typed
+ * bundle, then runs the import gates of {@link validateBundle}. A missing or
+ * mistyped field stops the import with its path instead of a TypeError
+ * further down, and no shape is assumed through a cast.
+ */
+export function parseResearchBundle(json: unknown): ResearchBundle {
+  if (!isRecord(json)) return invalidResearch("$", "an object");
+  const schemaVersion = json.schemaVersion;
+  if (typeof schemaVersion !== "number") {
+    return invalidResearch("$.schemaVersion", "a number");
+  }
+  const rows = json.districts;
+  if (!Array.isArray(rows)) return invalidResearch("$.districts", "a list");
+
+  const bundle: ResearchBundle = {
+    schemaVersion,
+    publicationStatus: readString(json, "publicationStatus", "$"),
+    districts: rows.map((row, index) =>
+      parseResearchRecord(row, `$.districts[${index}]`),
+    ),
+  };
+  validateBundle(bundle);
+  return bundle;
 }

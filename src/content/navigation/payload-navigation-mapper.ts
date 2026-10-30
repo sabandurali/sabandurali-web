@@ -1,3 +1,6 @@
+import { getText, isRecord } from "@/content/guards";
+import { isLegacyTurkishHome } from "@/content/pages/legacy-home";
+import type { SiteLocale } from "@/content/locales";
 import {
   isExternalNavigationHref,
   normalizeExternalNavigationUrl,
@@ -13,33 +16,19 @@ import type {
   Page as PayloadPage,
 } from "@/payload-types";
 
-type PayloadHeaderItem = NonNullable<
-  PayloadNavigation["headerItems"]
->[number] | NonNullable<
-  PayloadNavigation["enHeader"]
->[number];
+type PayloadHeaderItem =
+  | NonNullable<PayloadNavigation["headerItems"]>[number]
+  | NonNullable<PayloadNavigation["enHeader"]>[number];
 type PayloadChildItem = NonNullable<PayloadHeaderItem["children"]>[number];
-type PayloadFooterGroup = NonNullable<
-  PayloadNavigation["footerGroups"]
->[number] | NonNullable<
-  PayloadNavigation["enFooter"]
->[number];
+type PayloadFooterGroup =
+  | NonNullable<PayloadNavigation["footerGroups"]>[number]
+  | NonNullable<PayloadNavigation["enFooter"]>[number];
 type PayloadFooterLink = NonNullable<PayloadFooterGroup["links"]>[number];
 type PayloadLink = PayloadHeaderItem | PayloadChildItem | PayloadFooterLink;
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
-}
-
-function getText(value: unknown): string | null {
-  return typeof value === "string" && value.trim().length > 0
-    ? value.trim()
-    : null;
-}
-
 function isPublicPage(
   value: unknown,
-  language: "en" | "tr",
+  language: SiteLocale,
   now: Date,
 ): value is PayloadPage {
   if (!isRecord(value)) return false;
@@ -61,14 +50,15 @@ function isPublicPage(
 
 function resolvePageHref(
   value: unknown,
-  language: "en" | "tr",
+  language: SiteLocale,
   now: Date,
 ): string | null {
   if (!isPublicPage(value, language, now)) return null;
 
   const localePrefix = language === "en" ? "/en" : "";
 
-  return value.pageType === "home"
+  // `/ana-sayfa` redirects to `/`: link the target directly.
+  return value.pageType === "home" || isLegacyTurkishHome(value)
     ? localePrefix || "/"
     : `${localePrefix}/${value.slug}`;
 }
@@ -76,7 +66,7 @@ function resolvePageHref(
 function resolveHref(
   item: PayloadLink,
   allowContactProtocols: boolean,
-  language: "en" | "tr",
+  language: SiteLocale,
   now: Date,
 ): string | null {
   if (item.linkType === "page") {
@@ -103,7 +93,7 @@ function mapLink(
   options: {
     allowContactProtocols: boolean;
     allowChildren: boolean;
-    language: "en" | "tr";
+    language: SiteLocale;
     now: Date;
     parentID?: string;
   },
@@ -114,8 +104,7 @@ function mapLink(
   if (label === null) return null;
 
   const id =
-    getText(item.id) ??
-    `${options.parentID ?? "navigation"}-${index + 1}`;
+    getText(item.id) ?? `${options.parentID ?? "navigation"}-${index + 1}`;
   const href = resolveHref(
     item,
     options.allowContactProtocols,
@@ -127,7 +116,7 @@ function mapLink(
 
   const children =
     options.allowChildren && "children" in item
-      ? item.children?.flatMap((child, childIndex) => {
+      ? (item.children?.flatMap((child, childIndex) => {
           const mapped = mapLink(child, childIndex, {
             allowContactProtocols: false,
             allowChildren: false,
@@ -136,13 +125,12 @@ function mapLink(
             parentID: id,
           });
           return mapped === null ? [] : [mapped];
-        }) ?? []
+        }) ?? [])
       : [];
 
   if (href === null && children.length === 0) return null;
 
-  const external =
-    href !== null && isExternalNavigationHref(href);
+  const external = href !== null && isExternalNavigationHref(href);
 
   return {
     id,
@@ -150,9 +138,7 @@ function mapLink(
     href,
     external,
     newTab:
-      external &&
-      href?.startsWith("https://") === true &&
-      item.newTab === true,
+      external && href?.startsWith("https://") === true && item.newTab === true,
     ...(href !== null && !external && !href.includes("#")
       ? { activePathPrefix: href }
       : {}),
@@ -161,10 +147,8 @@ function mapLink(
 }
 
 function mapFooterGroups(
-  groups:
-    | PayloadNavigation["footerGroups"]
-    | PayloadNavigation["enFooter"],
-  language: "en" | "tr",
+  groups: PayloadNavigation["footerGroups"] | PayloadNavigation["enFooter"],
+  language: SiteLocale,
   now: Date,
 ): PublicFooterGroup[] {
   return (
@@ -173,8 +157,7 @@ function mapFooterGroups(
 
       const title = getText(group.title);
 
-      const groupID =
-        getText(group.id) ?? `footer-group-${groupIndex + 1}`;
+      const groupID = getText(group.id) ?? `footer-group-${groupIndex + 1}`;
       const links =
         group.links?.flatMap((link, linkIndex) => {
           const mapped = mapLink(link, linkIndex, {
@@ -187,24 +170,20 @@ function mapFooterGroups(
           return mapped === null ? [] : [mapped];
         }) ?? [];
 
-      return links.length === 0
-        ? []
-        : [{ id: groupID, title, links }];
+      return links.length === 0 ? [] : [{ id: groupID, title, links }];
     }) ?? []
   );
 }
 
 export function mapPayloadNavigation(
   value: PayloadNavigation,
-  language: "en" | "tr",
+  language: SiteLocale,
   now: Date = new Date(),
 ): PublicNavigation | null {
   if (value._status !== "published") return null;
 
-  const headerItems =
-    language === "en" ? value.enHeader : value.headerItems;
-  const footerGroups =
-    language === "en" ? value.enFooter : value.footerGroups;
+  const headerItems = language === "en" ? value.enHeader : value.headerItems;
+  const footerGroups = language === "en" ? value.enFooter : value.footerGroups;
 
   return {
     headerItems:

@@ -1,26 +1,14 @@
-import type { Metadata } from "next";
-import ArticleListPage from "@/components/articles/ArticleListPage";
-import { getAllPublishedArticles } from "@/content/articles/article-data-source";
-import { articleListUrls } from "@/content/articles/article-routes";
+import { createArticleListRoute } from "@/components/pages/publication-list-routes";
 
-const locale = "tr" as const;
+const route = createArticleListRoute("tr");
 
-export const metadata: Metadata = {
-  title: "Makaleler | Şaban Durali",
-  description:
-    "Gayrimenkul, yapay zekâ, satış, müzakere, kitaplar ve araştırma üzerine makaleler.",
-  alternates: {
-    canonical: articleListUrls["tr-TR"],
-    languages: articleListUrls,
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-};
+// Prerendered and refreshed at most hourly; CMS writes revalidate this path
+// on demand (src/lib/revalidation.ts), the hour is the time-based safety net
+// for scheduled publishing, which no write announces.
+export const revalidate = 3600;
 
-export default async function TurkishArticlesPage() {
-  const articles = await getAllPublishedArticles(locale);
+export const generateMetadata = route.generateMetadata;
 
-  return <ArticleListPage articles={articles} locale={locale} />;
+export default function TurkishArticlesPage() {
+  return <route.Page />;
 }

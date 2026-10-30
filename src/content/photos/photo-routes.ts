@@ -1,63 +1,29 @@
-import { getAbsoluteUrl } from "@/config/site";
-import type {
-  PublicPhoto,
-  PublicPhotoTranslation,
-  PhotoLanguage,
-} from "@/content/photos/types";
+import type { PhotoLanguage, PhotoListFilters } from "@/content/photos/types";
+import { createPublicationRoutes } from "@/content/publication-routes";
 
 export const photoListPaths = {
   tr: "/fotograflar",
   en: "/en/photography",
 } as const satisfies Record<PhotoLanguage, string>;
 
-export const photoListUrls = {
-  "tr-TR": getAbsoluteUrl(photoListPaths.tr),
-  en: getAbsoluteUrl(photoListPaths.en),
-  "x-default": getAbsoluteUrl(photoListPaths.tr),
-} as const;
+const photoRoutes = createPublicationRoutes(photoListPaths);
 
-export function getPhotoPath(slug: string, language: PhotoLanguage): string {
-  return `${photoListPaths[language]}/${slug}`;
-}
+export const getPhotoPath = photoRoutes.getPath;
+export const getPhotoLanguagePaths = photoRoutes.getLanguagePaths;
 
-export function getPhotoUrl(slug: string, language: PhotoLanguage): string {
-  return getAbsoluteUrl(getPhotoPath(slug, language));
-}
-
-export function getPhotoLanguagePaths(
-  photo: PublicPhoto,
-  translation: PublicPhotoTranslation | null,
-): Record<PhotoLanguage, string> {
-  const paths: Record<PhotoLanguage, string> = {
-    tr: photoListPaths.tr,
-    en: photoListPaths.en,
-  };
-  paths[photo.language] = getPhotoPath(photo.slug, photo.language);
-  if (translation !== null) {
-    paths[translation.language] = getPhotoPath(
-      translation.slug,
-      translation.language,
-    );
-  }
-  return paths;
-}
-
-export function getPhotoAlternateUrls(
-  photo: PublicPhoto,
-  translation: PublicPhotoTranslation | null,
-): Record<string, string> {
-  const urls: Record<string, string> = {
-    [photo.language === "tr" ? "tr-TR" : "en"]: getPhotoUrl(
-      photo.slug,
-      photo.language,
-    ),
-  };
-  if (translation !== null) {
-    urls[translation.language === "tr" ? "tr-TR" : "en"] = getPhotoUrl(
-      translation.slug,
-      translation.language,
-    );
-  }
-  urls["x-default"] = urls["tr-TR"] ?? getPhotoUrl(photo.slug, photo.language);
-  return urls;
+/**
+ * Path of one photograph list page with its filters, in a fixed parameter
+ * order (collection, tag, page); page 1 has no number.
+ */
+export function getPhotoListPath(
+  language: PhotoLanguage,
+  filters: Pick<PhotoListFilters, "collection" | "tag">,
+  page: number,
+): string {
+  const params = new URLSearchParams();
+  if (filters.collection) params.set("collection", filters.collection);
+  if (filters.tag) params.set("tag", filters.tag);
+  if (page > 1) params.set("page", String(page));
+  const query = params.toString();
+  return `${photoListPaths[language]}${query ? `?${query}` : ""}`;
 }

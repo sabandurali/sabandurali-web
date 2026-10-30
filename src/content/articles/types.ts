@@ -1,30 +1,27 @@
-export type ArticleLanguage = "tr" | "en";
+import type { SiteLocale } from "@/content/locales";
+import type {
+  ContentSeo,
+  CoverImage,
+  TranslationStatus,
+} from "@/content/shared/content-types";
 
-export type TranslationStatus =
-  | "none"
-  | "pending"
-  | "in_progress"
-  | "completed"
-  | "outdated";
+export type ArticleLanguage = SiteLocale;
+export type ArticleSeo = ContentSeo;
+
+export type {
+  CoverImage,
+  TranslationStatus,
+  ValidationIssue,
+} from "@/content/shared/content-types";
 
 export type ArticleStatus =
-  | "draft"
-  | "in_review"
-  | "scheduled"
-  | "published"
-  | "archived";
+  "draft" | "in_review" | "scheduled" | "published" | "archived";
 
 export type ArticleVisibility =
-  | "public"
-  | "private"
-  | "unlisted"
-  | "members_only";
+  "public" | "private" | "unlisted" | "members_only";
 
 export type FreshnessStatus =
-  | "current"
-  | "review_due"
-  | "outdated"
-  | "not_reviewed";
+  "current" | "review_due" | "outdated" | "not_reviewed";
 
 export type ArticleCategory =
   | "real_estate"
@@ -58,28 +55,6 @@ export type ArticleContributor = {
   id: string;
   name: string;
   role?: string;
-};
-
-export type CoverImage = {
-  src: string;
-  alt: string;
-  caption?: string;
-  source?: string;
-  copyrightOwner?: string;
-  license?: string;
-  width: number;
-  height: number;
-};
-
-export type ArticleSeo = {
-  title: string;
-  description: string;
-  canonical?: string;
-  index: boolean;
-  follow: boolean;
-  openGraphTitle?: string;
-  openGraphDescription?: string;
-  openGraphImage?: string;
 };
 
 export type ArticleSource = {
@@ -276,20 +251,4 @@ export type Article = {
   relatedArticles: ReadonlyArray<RelatedArticle>;
   legalNotice: LegalNotice | null;
   versionHistory: ReadonlyArray<ArticleVersionSummary>;
-};
-
-export type ValidationIssue = {
-  code: string;
-  path: string;
-  message: string;
-};
-
-export type ArticleValidationResult = {
-  valid: boolean;
-  errors: ReadonlyArray<ValidationIssue>;
-  warnings: ReadonlyArray<ValidationIssue>;
-};
-
-export type ArticleValidationOptions = {
-  forPublication?: boolean;
 };

@@ -11,19 +11,36 @@ export const biography = {
 export const experience = [
   ["2026–devam", "Finans ve Muhasebe Uzmanı", "Evka Turizm"],
   ["2021–2026", "Finans ve Muhasebe Müdürü", "MY Seyahat Turizm A.Ş."],
-  ["2021", "Muhasebeci ve Mali Müşavir Yardımcısı", "Erhan Doğan mali müşavirlik"],
+  [
+    "2021",
+    "Muhasebeci ve Mali Müşavir Yardımcısı",
+    "Erhan Doğan mali müşavirlik",
+  ],
   ["2019", "Muhasebe Müdürü", "Hamta Travel Turizm Ticaret Ltd. Şti."],
   ["2015–2018", "Kurucu Ortak", "Greeta Turkey Turizm Ticaret Ltd. Şti."],
-  ["2014–2015", "Muhasebe Müdürü", "Alharran Turizm İnşaat Gıda Tekstil San. ve Tic. Ltd. Şti."],
+  [
+    "2014–2015",
+    "Muhasebe Müdürü",
+    "Alharran Turizm İnşaat Gıda Tekstil San. ve Tic. Ltd. Şti.",
+  ],
   ["2010–2014", "Muhasebe Müdürü", "Upjet Turizm Ticaret Ltd. Şti."],
   ["2009–2010", "Muhasebe Şefi", "Adriyatik Taşımacılık Dış Tic. Ltd. Şti."],
-  ["2008–2009", "Muhasebeci", "Casio Air Servis Hizmetleri Dış Ticaret Ltd. Şti."],
+  [
+    "2008–2009",
+    "Muhasebeci",
+    "Casio Air Servis Hizmetleri Dış Ticaret Ltd. Şti.",
+  ],
   ["1998–2008", "Muhasebe Müdürü", "Nart Tur Turizm Yatırım Ltd. Şti."],
   ["1996–1998", "Muhasebe Müdürü", "İnci Fermuar San. ve Tic. A.Ş."],
 ] as const;
 export const education = [
-  { title: "Atatürk Üniversitesi AÖF", description: "Emlak Yönetimi önlisans — devam ediyor." },
+  {
+    title: "Atatürk Üniversitesi AÖF",
+    description: "Emlak Yönetimi önlisans — devam ediyor.",
+  },
   { title: "İbrahim Turhan Lisesi", description: "Fen — 1992." },
 ];
-export const softwareExperience = "Luca, Sejour, Cuba, Sedna, Abacus, 1C, Sanfinans";
-export const biographyNotice = "Mesleki deneyim ve eğitim bilgileri Şaban Durali’nin özgeçmiş beyanına dayanır; bağımsız resmî belge doğrulaması yapılmış değildir.";
+export const softwareExperience =
+  "Luca, Sejour, Cuba, Sedna, Abacus, 1C, Sanfinans";
+export const biographyNotice =
+  "Mesleki deneyim ve eğitim bilgileri Şaban Durali’nin özgeçmiş beyanına dayanır; bağımsız resmî belge doğrulaması yapılmış değildir.";

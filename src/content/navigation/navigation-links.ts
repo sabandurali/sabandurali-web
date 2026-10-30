@@ -1,38 +1,19 @@
-const INTERNAL_ORIGIN = "https://internal.sabandurali.invalid";
+import { getText } from "@/content/guards";
+import {
+  INTERNAL_ORIGIN,
+  getSafeHref,
+  hasUnsafeUrlCharacters as hasUnsafeCharacters,
+  isSameOriginPath,
+} from "@/content/links";
 
-function getText(value: unknown): string | null {
-  return typeof value === "string" && value.trim().length > 0
-    ? value.trim()
-    : null;
-}
-
-function hasUnsafeCharacters(value: string): boolean {
-  return /[\u0000-\u001F\u007F\\]/.test(value);
-}
-
-export function normalizeInternalNavigationPath(
-  value: unknown,
-): string | null {
+export function normalizeInternalNavigationPath(value: unknown): string | null {
   const path = getText(value);
 
-  if (
-    path === null ||
-    !path.startsWith("/") ||
-    path.startsWith("//") ||
-    hasUnsafeCharacters(path)
-  ) {
-    return null;
-  }
+  if (path === null || !isSameOriginPath(path)) return null;
 
-  try {
-    const url = new URL(path, INTERNAL_ORIGIN);
+  const url = new URL(path, INTERNAL_ORIGIN);
 
-    if (url.origin !== INTERNAL_ORIGIN) return null;
-
-    return `${url.pathname}${url.search}${url.hash}`;
-  } catch {
-    return null;
-  }
+  return `${url.pathname}${url.search}${url.hash}`;
 }
 
 function normalizeMailto(value: string): string | null {
@@ -41,10 +22,7 @@ function normalizeMailto(value: string): string | null {
   const match = /^mailto:([^?]+)(?:\?([^#]*))?$/i.exec(value);
   const address = match?.[1]?.trim();
 
-  if (
-    address === undefined ||
-    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address)
-  ) {
+  if (address === undefined || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address)) {
     return null;
   }
 
@@ -58,9 +36,7 @@ function normalizeTel(value: string): string | null {
 
   const number = value.slice("tel:".length).trim();
 
-  return /^\+?[0-9(). -]{5,30}$/.test(number)
-    ? `tel:${number}`
-    : null;
+  return /^\+?[0-9(). -]{5,30}$/.test(number) ? `tel:${number}` : null;
 }
 
 export function normalizeExternalNavigationUrl(
@@ -81,17 +57,7 @@ export function normalizeExternalNavigationUrl(
     return normalizeTel(href);
   }
 
-  try {
-    const url = new URL(href);
-
-    return url.protocol === "https:" &&
-      url.username === "" &&
-      url.password === ""
-      ? url.toString()
-      : null;
-  } catch {
-    return null;
-  }
+  return getSafeHref(href, { httpsOnly: true });
 }
 
 export function isExternalNavigationHref(href: string): boolean {

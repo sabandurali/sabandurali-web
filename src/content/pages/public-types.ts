@@ -1,10 +1,9 @@
-import type { ComponentProps } from "react";
-import type { RichText } from "@payloadcms/richtext-lexical/react";
+import type { SiteLocale } from "@/content/locales";
+import type { PublicRichText } from "@/content/rich-text/public-rich-text";
 import type { FocusAreaIcon } from "@/content/homeContent";
 
-export type PublicPageLanguage = "tr" | "en";
 export type PublicPageType = "home" | "standard";
-export type PublicRichText = ComponentProps<typeof RichText>["data"];
+export type { PublicRichText };
 
 export type PublicPageLink = {
   label: string;
@@ -14,8 +13,14 @@ export type PublicPageLink = {
 export type PublicPageImage = {
   src: string;
   alt: string;
+  /** Set only when `alt` is not in the page's language (Turkish media alt on
+   * an English page); render the image with this `lang`. */
+  altLanguage?: SiteLocale;
   width?: number;
   height?: number;
+  caption?: string;
+  /** Source / copyright line that must be shown with the image. */
+  credit?: string;
 };
 
 type PublicPageBlockBase = {
@@ -115,7 +120,7 @@ export type PublicPage = {
   id: string;
   title: string;
   slug: string;
-  language: PublicPageLanguage;
+  language: SiteLocale;
   pageType: PublicPageType;
   summary: string;
   layout: PublicPageBlock[];

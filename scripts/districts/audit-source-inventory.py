@@ -1,4 +1,9 @@
-"""Offline risk classification over cached HEAD results; never confers public approval."""
+"""Offline risk classification over cached HEAD results; never confers public approval.
+
+The cached input reports/istanbul-39/source-url-audit.json and the output
+source-inventory-audit.json are no longer tracked (reports/README.md). Restore the
+input first: git show d47df10:reports/istanbul-39/source-url-audit.json > reports/istanbul-39/source-url-audit.json
+"""
 import json,re
 from pathlib import Path
 from urllib.parse import urlparse,unquote

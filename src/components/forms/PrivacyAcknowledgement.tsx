@@ -1,50 +1,72 @@
-import Link from "next/link";
+import { FieldError } from "@/components/ui/Field";
+import TextLink from "@/components/ui/TextLink";
+import { cx } from "@/components/ui/cx";
+import { getUiStrings } from "@/components/ui/strings";
 import { privacyPaths } from "@/config/site";
+import type { PrivacyAcknowledgementContent } from "@/content/contactContent";
 import type { Locale } from "@/content/homeContent";
 
-export type PrivacyAcknowledgementContent = {
-  prefix: string;
-  linkLabel: string;
-  suffix: string;
-};
+export type { PrivacyAcknowledgementContent };
 
 type PrivacyAcknowledgementProps = {
   id: string;
   locale: Locale;
   content: PrivacyAcknowledgementContent;
-  requiredLabel: string;
+  /** Validation message; marks the checkbox invalid while present. */
+  error?: string;
 };
 
+/**
+ * Required privacy notice checkbox. The 24 px box and the whole label row
+ * are the touch target; the notice link inside stays a separate, underlined
+ * link (it opens the notice, it does not tick the box). A validation
+ * message sits under the box, tied to it like a `Field` error.
+ */
 export default function PrivacyAcknowledgement({
   id,
   locale,
   content,
-  requiredLabel,
+  error,
 }: PrivacyAcknowledgementProps) {
+  const strings = getUiStrings(locale);
+  const errorId = error ? `${id}-error` : undefined;
+
   return (
-    <div className="rounded-sm border border-border bg-[#223653] p-5 sm:p-6">
-      <label htmlFor={id} className="flex cursor-pointer items-start gap-3">
+    <div className="flex flex-col gap-1.5">
+      <div
+        className={cx(
+          "flex items-start gap-3 rounded-card bg-land px-4 py-3",
+          error ? "border-2 border-danger" : "border border-tile-edge",
+        )}
+      >
         <input
           id={id}
           type="checkbox"
           name="privacyAcknowledgement"
           required
-          className="mt-1 size-4 shrink-0 accent-[var(--accent)]"
+          aria-invalid={error ? true : undefined}
+          aria-describedby={errorId}
+          className="mt-0.5 size-6 shrink-0 cursor-pointer accent-[var(--color-ink)]"
         />
-        <span className="text-sm leading-6 text-ivory">
+        <label
+          htmlFor={id}
+          className="min-h-tap flex-1 cursor-pointer text-ink"
+        >
           {content.prefix}
-          <Link
-            href={privacyPaths[locale]}
-            className="text-accent-soft underline decoration-border underline-offset-4 transition-colors hover:text-accent-strong motion-reduce:transition-none"
-          >
+          <TextLink href={privacyPaths[locale]} locale={locale}>
             {content.linkLabel}
-          </Link>
+          </TextLink>
           {content.suffix}
-          <span className="ml-2 text-xs text-accent-soft">
-            {requiredLabel}
+          <span className="ml-2 type-caption text-ink-muted">
+            ({strings.required})
           </span>
-        </span>
-      </label>
+        </label>
+      </div>
+      {error ? (
+        <FieldError id={errorId} locale={locale}>
+          {error}
+        </FieldError>
+      ) : null}
     </div>
   );
 }

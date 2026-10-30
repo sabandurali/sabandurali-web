@@ -1,11 +1,16 @@
 import "server-only";
+import { unstable_cache } from "next/cache";
 import { cache } from "react";
 import {
   getEnglishHeaderNavigationItems,
   getStaticFooterGroups,
   getStaticHeaderNavigationItems,
   withTurkishHeaderShortcuts,
-} from "@/components/layout/navigation";
+} from "@/content/navigation/static-navigation";
+import { contactPaths, privacyPaths } from "@/config/site";
+import { reportContentIssue } from "@/content/content-log";
+import { NAVIGATION_CACHE_TAG } from "@/content/navigation/navigation-cache-tags";
+import { resolveFooterGroups } from "@/content/navigation/navigation-fallback";
 import { PayloadPublicNavigationRepository } from "@/content/navigation/payload-navigation-repository";
 import type {
   PublicFooterGroup,
@@ -18,33 +23,38 @@ import type {
   HomeAnchors,
   Locale,
 } from "@/content/homeContent";
-import { assertProductionPayloadInfrastructure } from "@/lib/payloadInfrastructure";
+import { readPublicSource } from "@/content/public-source";
 
-type PublicNavigationSource = "payload" | "static";
+const payloadNavigationRepository = new PayloadPublicNavigationRepository();
 
-const payloadNavigationRepository =
-  new PayloadPublicNavigationRepository();
-
-function getPublicNavigationSource(): PublicNavigationSource {
-  const source = process.env.NAVIGATION_PUBLIC_SOURCE;
-
-  if (source === undefined || source === "static") {
-    return "static";
-  }
-
-  if (source === "payload") {
-    assertProductionPayloadInfrastructure();
-    return "payload";
-  }
-
-  throw new Error(
-    `Invalid NAVIGATION_PUBLIC_SOURCE value "${source}". Expected "static" or "payload".`,
-  );
-}
+/*
+ * The header and footer render on every page, including the per-request
+ * ones (photo lists, district news, unmatched English URLs), so the
+ * published global is cached across requests. A Navigation save and any
+ * page write (a linked page can be published or withdrawn) invalidate the
+ * tag (`src/lib/revalidation.ts`); the hour covers scheduled pages.
+ * `unstable_cache` is used because the app does not enable Cache Components.
+ */
+const getCachedPayloadNavigation = unstable_cache(
+  (locale: Locale) => payloadNavigationRepository.findPublished(locale),
+  ["navigation"],
+  { tags: [NAVIGATION_CACHE_TAG], revalidate: 3600 },
+);
 
 const getPayloadNavigation = cache(
-  async (locale: Locale): Promise<PublicNavigation | null> =>
-    payloadNavigationRepository.findPublished(locale),
+  async (locale: Locale): Promise<PublicNavigation | null> => {
+    const navigation = await getCachedPayloadNavigation(locale);
+
+    if (navigation === null) {
+      reportContentIssue({
+        scope: "navigation",
+        locale,
+        reason: "Navigation global is not published; static navigation is used",
+      });
+    }
+
+    return navigation;
+  },
 );
 
 export async function getHeaderNavigation(
@@ -57,7 +67,7 @@ export async function getHeaderNavigation(
     return getEnglishHeaderNavigationItems();
   }
 
-  if (getPublicNavigationSource() === "static") {
+  if (readPublicSource("NAVIGATION_PUBLIC_SOURCE") === "static") {
     return getStaticHeaderNavigationItems({
       locale,
       anchors,
@@ -68,27 +78,23 @@ export async function getHeaderNavigation(
 
   const navigation = await getPayloadNavigation(locale);
 
-  const items = navigation?.headerItems ?? [];
-  return withTurkishHeaderShortcuts(items);
+  // The Turkish shortcuts always provide home, workspaces, about and contact.
+  return withTurkishHeaderShortcuts(navigation?.headerItems ?? []);
 }
 
 export async function getFooterNavigation(
   content: FooterContent,
 ): Promise<PublicFooterGroup[]> {
-  if (
-    getPublicNavigationSource() === "static"
-  ) {
-    return getStaticFooterGroups(content);
+  const staticGroups = getStaticFooterGroups(content);
+
+  if (readPublicSource("NAVIGATION_PUBLIC_SOURCE") === "static") {
+    return staticGroups;
   }
 
   const navigation = await getPayloadNavigation(content.locale);
 
-  if (
-    content.locale === "en" &&
-    (navigation?.footerGroups.length ?? 0) === 0
-  ) {
-    return getStaticFooterGroups(content);
-  }
-
-  return navigation?.footerGroups ?? [];
+  return resolveFooterGroups(navigation?.footerGroups ?? null, staticGroups, [
+    privacyPaths[content.locale],
+    contactPaths[content.locale],
+  ]);
 }

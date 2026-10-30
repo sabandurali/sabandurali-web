@@ -1,63 +1,25 @@
 import type { Metadata } from "next";
 import HomePage from "@/components/HomePage";
-import { homeUrls, siteSocialImage } from "@/config/site";
-import { homeContent } from "@/content/homeContent";
-import { getPayloadHomeContent } from "@/content/pages/home-page-content";
-import { getEnglishHomePageData } from "@/content/pages/page-data-source";
-import { createPublicPageMetadata } from "@/content/pages/page-seo";
+import { createHomeMetadata } from "@/components/sections/home-metadata";
+import { getHomeContent } from "@/content/pages/page-data-source";
 
-const homeAlternates: NonNullable<Metadata["alternates"]> = {
-  canonical: homeUrls.en,
-  languages: homeUrls,
-};
-
-const staticMetadata: Metadata = {
-  title: "Şaban Durali | Research and Knowledge Platform",
-  description:
-    "An independent platform producing reliable knowledge, actionable analysis and sustainable value across real estate, consulting, research and technology.",
-  alternates: homeAlternates,
-  openGraph: {
-    title: "Şaban Durali | Research and Knowledge Platform",
-    description:
-      "An independent platform producing reliable knowledge, actionable analysis and sustainable value across real estate, consulting, research and technology.",
-    url: homeUrls.en,
-    locale: "en_US",
-    alternateLocale: "tr_TR",
-    type: "website",
-    siteName: "Şaban Durali",
-    images: [siteSocialImage],
-  },
-  twitter: {
-    card: "summary_large_image",
-    images: [siteSocialImage],
-  },
-};
+// Safety net for scheduled CMS content (no write announces it); edits
+// revalidate on demand through src/lib/revalidation.ts.
+export const revalidate = 300;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const data = await getEnglishHomePageData();
+  // A missing or incomplete CMS home page falls back to the static content.
+  // The other locale's served home decides the hreflang pair (SEO-PERF-4).
+  const [{ page }, { page: otherPage }] = await Promise.all([
+    getHomeContent("en"),
+    getHomeContent("tr"),
+  ]);
 
-  if (
-    data.source === "static" ||
-    data.page === null ||
-    getPayloadHomeContent(data.page, homeContent.en) === null
-  ) {
-    return staticMetadata;
-  }
-
-  return {
-    ...createPublicPageMetadata(data.page),
-    alternates: homeAlternates,
-  };
+  return createHomeMetadata("en", page, otherPage);
 }
 
 export default async function EnglishHome() {
-  const data = await getEnglishHomePageData();
+  const { content, page } = await getHomeContent("en");
 
-  if (data.source === "payload" && data.page !== null) {
-    const content = getPayloadHomeContent(data.page, homeContent.en);
-
-    if (content !== null) return <HomePage content={content} />;
-  }
-
-  return <HomePage content={homeContent.en} />;
+  return <HomePage content={content} page={page} />;
 }

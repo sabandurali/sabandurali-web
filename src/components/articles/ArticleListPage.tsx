@@ -1,69 +1,78 @@
+import { cardGrids } from "@/components/pages/card-grid";
 import ArticleCard from "@/components/articles/ArticleCard";
-import BackToTop from "@/components/layout/BackToTop";
-import Footer from "@/components/layout/Footer";
-import Header from "@/components/layout/Header";
+import PageIntro from "@/components/ui/PageIntro";
+import PublicationShell from "@/components/pages/PublicationShell";
+import { publicationCopy } from "@/components/pages/publication-copy";
+import EmptyState from "@/components/ui/EmptyState";
+import Section from "@/components/ui/Section";
 import { articleListPaths } from "@/content/articles/article-routes";
 import { articlePageContent } from "@/content/articles/article-page-content";
 import type { PublicArticleSummary } from "@/content/articles/public-types";
 import type { ArticleLanguage } from "@/content/articles/types";
-import { homeContent } from "@/content/homeContent";
 
 type ArticleListPageProps = {
   articles: ReadonlyArray<PublicArticleSummary>;
   locale: ArticleLanguage;
 };
 
+/**
+ * Article list: intro with the article count, then every published
+ * article as a card grid on the band ground, newest first. The list is
+ * prerendered whole (no query string), so it stays one cached page.
+ */
 export default function ArticleListPage({
   articles,
   locale,
 }: ArticleListPageProps) {
   const content = articlePageContent[locale];
-  const home = homeContent[locale];
-  const homePath = locale === "tr" ? "/" : "/en";
+  const copy = publicationCopy[locale];
 
   return (
-    <div id="top" lang={locale}>
-      <Header
+    <PublicationShell locale={locale} languageHrefs={articleListPaths}>
+      <PageIntro
+        layout="page"
         locale={locale}
-        anchors={home.anchors}
-        content={home.header}
-        homeHref={homePath}
-        anchorPrefix={homePath}
-        languageHrefs={articleListPaths}
-      />
-      <main className="px-4 py-10 sm:px-6 sm:py-14 lg:py-18">
-        <div className="mx-auto max-w-5xl">
-          <header className="mb-8 border-b border-border pb-8 sm:mb-10 sm:pb-10">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent-soft">
-              {content.listEyebrow}
-            </p>
-            <h1 className="mt-4 text-4xl leading-[1.05] text-ivory sm:text-5xl">
-              {content.listTitle}
-            </h1>
-            <p className="mt-5 max-w-3xl text-base leading-7 text-muted sm:text-lg sm:leading-8">
-              {content.listDescription}
-            </p>
-          </header>
+        breadcrumb={[
+          { label: copy.home, href: copy.homePath },
+          { label: content.listTitle },
+        ]}
+        eyebrow={content.listEyebrow}
+        title={content.listTitle}
+        lead={content.listDescription}
+      >
+        {articles.length > 0 ? (
+          <p className="m-0 type-data-md text-ink-muted">
+            {copy.articleCount(articles.length)}
+          </p>
+        ) : null}
+      </PageIntro>
 
-          {articles.length === 0 ? (
-            <p className="rounded-sm border border-border bg-surface p-6 text-muted">
-              {content.emptyList}
-            </p>
-          ) : (
-            <div className="grid gap-6 lg:grid-cols-2">
-              {articles.map((article) => (
+      <Section
+        tone="band"
+        spacing="compact"
+        divider
+        labelledBy="article-list-heading"
+      >
+        <h2 id="article-list-heading" className="m-0 mb-6 type-h2">
+          {copy.allArticles}
+        </h2>
+        {articles.length === 0 ? (
+          <EmptyState size="lg">{content.emptyList}</EmptyState>
+        ) : (
+          <ul className={cardGrids[3].className}>
+            {articles.map((article) => (
+              <li key={article.id} className="grid">
                 <ArticleCard
-                  key={article.id}
                   article={article}
                   content={content}
+                  headingLevel="h3"
+                  compact
                 />
-              ))}
-            </div>
-          )}
-        </div>
-      </main>
-      <Footer id={home.anchors.contact} content={home.footer} />
-      <BackToTop label={home.backToTopLabel} />
-    </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </Section>
+    </PublicationShell>
   );
 }

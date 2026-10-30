@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import type { DistrictGuide } from "../../src/payload-types";
 import {
+  districtSectionOptions,
   sectionIsPublic,
   sourceSupportsSection,
   type DistrictSection,
@@ -12,6 +13,32 @@ type TextSection = Exclude<
   DistrictSection,
   "facts" | "neighborhoods" | "marketData" | "planningDevelopments"
 >;
+const nonTextSections: ReadonlySet<string> = new Set([
+  "facts",
+  "neighborhoods",
+  "marketData",
+  "planningDevelopments",
+]);
+
+function isTextSection(value: string): value is TextSection {
+  return (
+    !nonTextSections.has(value) &&
+    districtSectionOptions.some((option) => option.value === value)
+  );
+}
+
+/**
+ * The text sections an editorial review fills. The review comes from a JSON
+ * file, so its keys are checked instead of trusted: an unknown key would
+ * otherwise reach the reviewed-section list and the Payload write.
+ */
+export function editorialSectionKeys(sections: object): TextSection[] {
+  return Object.keys(sections).map((key) => {
+    if (!isTextSection(key))
+      throw new Error(`Unknown editorial section: ${key}`);
+    return key;
+  });
+}
 type EditorialFacts = {
   population: string;
   populationYear: number;
@@ -36,6 +63,8 @@ export const batch1PopulationFacts = {
   kadikoy: { population: "458573", populationYear: 2025 },
   basaksehir: { population: "536797", populationYear: 2025 },
 } as const satisfies Record<string, EditorialFacts>;
+const batch1PopulationFactsByDistrict: ReadonlyMap<string, EditorialFacts> =
+  new Map(Object.entries(batch1PopulationFacts));
 export const batch1PopulationPlan = {
   update: 8,
   skip: 31,
@@ -65,8 +94,7 @@ export type EditorialBundle = {
   schemaVersion: 1;
   districts: EditorialRecord[];
 };
-const tuikAdnks2025Title =
-  "Adrese Dayalı Nüfus Kayıt Sistemi Sonuçları, 2025";
+const tuikAdnks2025Title = "Adrese Dayalı Nüfus Kayıt Sistemi Sonuçları, 2025";
 const tuikAdnks2025DataDate = "2025-12-31T00:00:00.000Z";
 const tuikAdnks2025Url =
   "https://data.tuik.gov.tr/Bulten/Index?p=Adrese-Dayali-Nufus-Kayit-Sistemi-Sonuclari-2025-53899";
@@ -93,8 +121,9 @@ function canonical(value: unknown): unknown {
   if (value && typeof value === "object")
     return Object.fromEntries(
       Object.entries(value)
-        .filter(([key, child]) =>
-          key !== "id" && child !== undefined && child !== null
+        .filter(
+          ([key, child]) =>
+            key !== "id" && child !== undefined && child !== null,
         )
         .sort(([left], [right]) => left.localeCompare(right))
         .map(([key, child]) => [key, canonical(child)]),
@@ -120,8 +149,9 @@ export function editorialContentFingerprint(
 export function assertBatch1PopulationImportPlan(
   plan: Batch1PopulationImportPlan,
 ) {
-  const mismatch = Object.entries(batch1PopulationPlan).find(
-    ([action, expected]) => plan[action as keyof typeof plan] !== expected,
+  const actions = ["update", "skip", "create", "conflict"] as const;
+  const mismatch = actions.find(
+    (action) => plan[action] !== batch1PopulationPlan[action],
   );
   if (mismatch) {
     throw new Error(
@@ -129,9 +159,15 @@ export function assertBatch1PopulationImportPlan(
     );
   }
 }
+/**
+ * Attaches each editorial review to its research record. `now` is the time
+ * the content policy is evaluated at: the wall clock for an import, the
+ * recorded review time for the deterministic content gate (TESTS-INFRA-1).
+ */
 export function attachEditorial(
   research: ResearchBundle,
   editorial: EditorialBundle,
+  now = Date.now(),
 ) {
   if (
     editorial.schemaVersion !== 1 ||
@@ -143,7 +179,9 @@ export function attachEditorial(
     const review = editorial.districts.find((r) => r.district === row.district);
     if (!review || review.pdfSha256 !== row.document.sha256)
       throw new Error(`Editorial/PDF mismatch: ${row.district}`);
-    const derivedReviewed = Object.keys(review.sections) as DistrictSection[];
+    const derivedReviewed: DistrictSection[] = editorialSectionKeys(
+      review.sections,
+    );
     if (review.neighborhoods.length) derivedReviewed.push("neighborhoods");
     if (review.facts) derivedReviewed.push("facts");
     if (review.planningDevelopments?.length)
@@ -151,10 +189,7 @@ export function attachEditorial(
     const reviewed = review.reviewedSections ?? derivedReviewed;
     if (new Set(reviewed).size !== reviewed.length)
       throw new Error(`Duplicate reviewed section: ${row.district}`);
-    const expectedFacts =
-      batch1PopulationFacts[
-        row.district as keyof typeof batch1PopulationFacts
-      ];
+    const expectedFacts = batch1PopulationFactsByDistrict.get(row.district);
     if (expectedFacts) {
       if (
         review.facts?.population !== expectedFacts.population ||
@@ -169,23 +204,25 @@ export function attachEditorial(
             source.publisher === "Türkiye İstatistik Kurumu" &&
             source.dataDate === tuikAdnks2025DataDate &&
             source.checkedAt === review.checkedAt &&
-            sourceSupportsSection(source, "facts"),
+            sourceSupportsSection(source, "facts", now),
         )
       )
         throw new Error(`Invalid TÜİK population source: ${row.district}`);
     }
     if (review.facts && !reviewed.includes("facts"))
       throw new Error(`Facts must be reviewed: ${row.district}`);
-    for (const section of Object.keys(review.sections) as DistrictSection[])
+    for (const section of editorialSectionKeys(review.sections))
       if (!reviewed.includes(section))
-        throw new Error(`Editorial section must be reviewed: ${row.district}/${section}`);
+        throw new Error(
+          `Editorial section must be reviewed: ${row.district}/${section}`,
+        );
     if (review.neighborhoods.length && !reviewed.includes("neighborhoods"))
       throw new Error(`Neighborhoods must be reviewed: ${row.district}`);
     for (const section of ["summary", "history", "geography"] as const)
       if (!review.sections[section]?.trim())
         throw new Error(`Missing core editorial: ${row.district}/${section}`);
     for (const section of reviewed)
-      if (!sectionIsPublic(section, reviewed, review.sources))
+      if (!sectionIsPublic(section, reviewed, review.sources, now))
         throw new Error(`Unsupported editorial: ${row.district}/${section}`);
     if (
       !review.methodology ||
@@ -198,9 +235,7 @@ export function attachEditorial(
         !/^[a-f0-9]{64}$/.test(review.adoption.currentFingerprint) ||
         !/^[a-f0-9]{64}$/.test(review.adoption.contentFingerprint) ||
         review.adoption.contentFingerprint !==
-          editorialContentFingerprint(
-            editorialFields(review) as Record<string, unknown>,
-          )
+          editorialContentFingerprint({ ...editorialFields(review) })
       )
         throw new Error(`Invalid editorial adoption: ${row.district}`);
     }
@@ -211,7 +246,9 @@ export function attachEditorial(
 export function editorialFields(
   review: EditorialRecord,
 ): Partial<DistrictGuide> {
-  const derivedSections = Object.keys(review.sections) as DistrictSection[];
+  const derivedSections: DistrictSection[] = editorialSectionKeys(
+    review.sections,
+  );
   if (review.neighborhoods.length) derivedSections.push("neighborhoods");
   if (review.facts) derivedSections.push("facts");
   if (review.planningDevelopments?.length)

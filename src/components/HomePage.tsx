@@ -1,144 +1,211 @@
-import Image from "next/image";
-import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import {
+  ArticleCardList,
+  BookReviewCardList,
+  PhotoCardList,
+} from "@/components/pages/PublicationCardLists";
 import BackToTop from "@/components/layout/BackToTop";
-import ArticleCard from "@/components/articles/ArticleCard";
-import PhotoCard from "@/components/photos/PhotoCard";
-import Hero from "@/components/sections/Hero";
+import Header from "@/components/layout/Header";
 import About from "@/components/sections/About";
 import ContactCallToAction from "@/components/sections/ContactCallToAction";
+import { FocusAreaCards } from "@/components/sections/FocusAreas";
+import Hero from "@/components/sections/Hero";
+import HomeAtlas, {
+  type HomeFeaturedGuide,
+} from "@/components/sections/HomeAtlas";
 import HomeListingSection from "@/components/sections/HomeListingSection";
-import { IstanbulDiscovery, KnowledgeLibrary, RealEstateIntelligence } from "@/components/sections/HomeEditorialSections";
-import { contactPaths } from "@/config/site";
-import { getAllPublishedArticles } from "@/content/articles/article-data-source";
-import { articlePageContent } from "@/content/articles/article-page-content";
-import { articleListPaths } from "@/content/articles/article-routes";
-import type { HomeContent } from "@/content/homeContent";
-import { homeEditorialContent } from "@/content/homeEditorialContent";
+import HomeSectionHeading from "@/components/sections/HomeSectionHeading";
+import { homeCopy } from "@/components/sections/home-copy";
 import {
-  createHomeEntityJsonLd,
-  serializeJsonLd,
-} from "@/content/entity-seo";
-import { getAllPublishedPhotos } from "@/content/photos/photo-data-source";
+  homeListLimits,
+  pickFeaturedDistrict,
+} from "@/components/sections/home-selection";
+import { getPortraitCredit } from "@/components/sections/home-portrait";
+import Section from "@/components/ui/Section";
+import { contactPaths } from "@/config/site";
+import { getLatestPublishedArticles } from "@/content/articles/article-data-source";
+import { articleListPaths } from "@/content/articles/article-routes";
+import { getLatestPublishedBookReviews } from "@/content/books/book-data-source";
+import { bookListPaths } from "@/content/books/book-routes";
+import { getDistrictGuideSummaries } from "@/content/districts/district-guide-data-source";
+import { createHomeEntityJsonLd, serializeJsonLd } from "@/content/entity-seo";
+import type { HomeContent } from "@/content/homeContent";
+import {
+  homeListingUnavailableCopy,
+  loadHomeListings,
+} from "@/content/home-listings";
+import { homeEditorialContent } from "@/content/homeEditorialContent";
+import type { PublicPage } from "@/content/pages/public-types";
+import { getHomePagePhotos } from "@/content/photos/photo-data-source";
 import { photoListPaths } from "@/content/photos/photo-routes";
+import { getVerifiedDistrictImage } from "@/content/photos/verified-district-images";
 
-function newestPublicationFirst(
-  left: { publishedAt: string | null },
-  right: { publishedAt: string | null },
-): number {
-  const leftTime = left.publishedAt === null ? 0 : Date.parse(left.publishedAt);
-  const rightTime = right.publishedAt === null ? 0 : Date.parse(right.publishedAt);
+type HomePageProps = {
+  content: HomeContent;
+  /** The CMS home record behind `content`; null for the static home. */
+  page?: PublicPage | null;
+};
 
-  return (Number.isFinite(rightTime) ? rightTime : 0) -
-    (Number.isFinite(leftTime) ? leftTime : 0);
-}
-
-export default async function HomePage({ content }: { content: HomeContent }) {
+/**
+ * The home page in the İstanbul Atlası design: hero, the 39-district
+ * atlas with the featured guide, the latest articles, book reviews and
+ * photos, the workspaces, "Hakkımda" on the sea ground and the contact
+ * call to action. All content comes from the content layer; an empty list
+ * shows an explicit empty state.
+ */
+export default async function HomePage({
+  content,
+  page = null,
+}: HomePageProps) {
   const locale = content.locale;
-  const editorial = homeEditorialContent[locale];
-  const [publishedArticles, publishedPhotos] =
-    await Promise.all([
-      getAllPublishedArticles(locale),
-      getAllPublishedPhotos(locale),
-    ]);
-  const latestArticles = publishedArticles
-    .toSorted(newestPublicationFirst)
-    .slice(0, 4);
-  const photoPriority = (photo: (typeof publishedPhotos)[number]) => photo.district || photo.districtPhotoCategory === "tarih" || photo.collections.some((collection) => /istanbul|mimari|architecture/i.test(collection.slug)) ? 1 : 0;
-  const latestPhotos = publishedPhotos
-    .toSorted((a, b) => photoPriority(b) - photoPriority(a) || newestPublicationFirst(a, b))
-    .slice(0, 5);
+  const copy = homeCopy[locale];
+  // Limited reads: each list is read with a database limit (newest first;
+  // Istanbul photos lead), never the whole collection (SEO-PERF-1). A
+  // failing list query empties only that list (ARCHITECTURE-1).
+  const { listings, unavailable } = await loadHomeListings(locale, {
+    articles: () => getLatestPublishedArticles(locale, homeListLimits.articles),
+    books: () => getLatestPublishedBookReviews(locale, homeListLimits.books),
+    photos: () => getHomePagePhotos(locale, homeListLimits.photos),
+    districts: () => getDistrictGuideSummaries(),
+  });
+  const {
+    articles: latestArticles,
+    books: latestBooks,
+    photos: latestPhotos,
+    districts: guideSummaries,
+  } = listings;
+  const unavailableCopy = homeListingUnavailableCopy[locale];
+  const emptyMessage = (
+    name: "articles" | "books" | "photos",
+    empty: string,
+  ) => (unavailable.includes(name) ? unavailableCopy[name] : empty);
+
+  const featuredSlug = pickFeaturedDistrict(
+    guideSummaries,
+    (slug) => getVerifiedDistrictImage(slug, locale) !== null,
+  );
+  const featured: HomeFeaturedGuide | null =
+    featuredSlug === null
+      ? null
+      : {
+          slug: featuredSlug,
+          summary: guideSummaries.get(featuredSlug) ?? "",
+          image: getVerifiedDistrictImage(featuredSlug, locale),
+        };
+
+  const focusAreas = content.focusAreas;
+  const workspacesHeadingId = `${content.anchors.work}-baslik`;
 
   return (
-    <div id="top" lang={content.locale}>
+    <div id="top">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: serializeJsonLd(createHomeEntityJsonLd(content.locale)),
+          __html: serializeJsonLd(createHomeEntityJsonLd(locale)),
         }}
       />
       <Header
-        locale={content.locale}
+        locale={locale}
         anchors={content.anchors}
         content={content.header}
-        compact
       />
-      <main>
+      <main id="main" className="bg-paper text-ink">
         <Hero
           anchors={content.anchors}
           content={content.hero}
-          intelligence={editorial.heroIntelligence}
+          factsLabel={copy.heroFactsLabel}
+          featuredSlug={featured?.slug}
         />
-        <IstanbulDiscovery content={editorial.discovery} />
-        <RealEstateIntelligence content={editorial.realEstate} />
 
-        {latestArticles.length > 0 && (
-          <HomeListingSection
-            content={content.listingSections.articles}
-            description={locale === "tr" ? "Güncel araştırma ve analizlerden oluşan seçki." : "A selection of current research and analysis."}
-            eyebrow={editorial.researchEyebrow}
-            href={articleListPaths[locale]}
-            id="son-arastirmalar"
-          >
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-              {latestArticles.map((article) => (
-                <ArticleCard
-                  key={article.id}
-                  article={article}
-                  content={articlePageContent[locale]}
-                  headingLevel="h3"
-                  compact
-                />
-              ))}
-            </div>
-          </HomeListingSection>
-        )}
-
-        <KnowledgeLibrary content={{ ...editorial.knowledge, eyebrow: editorial.knowledge.eyebrow.replace(/^\d+/, latestArticles.length ? "04" : "03") }} />
+        <HomeAtlas
+          locale={locale}
+          featured={featured}
+          featuredUnavailable={
+            unavailable.includes("districts") ? unavailableCopy.districts : null
+          }
+        />
 
         <HomeListingSection
-          content={content.listingSections.photography}
-          description={locale === "tr" ? "İstanbul, şehir, mimari, sokak, hayvanlar ve doğa odaklı fotoğraf arşivi." : "A photography archive focused on Istanbul, city life, architecture, streets, animals and nature."}
-          eyebrow={editorial.photographyEyebrow.replace(/^\d+/, latestArticles.length ? "05" : "04")}
-          href={photoListPaths[locale]}
-          id="fotograf"
+          id={locale === "tr" ? "son-makaleler" : "latest-articles"}
+          locale={locale}
+          number={copy.articles.number}
+          eyebrow={copy.articles.eyebrow}
+          title={content.listingSections.articles.title}
+          linkLabel={content.listingSections.articles.linkLabel}
+          href={articleListPaths[locale]}
+          emptyMessage={emptyMessage("articles", copy.articles.empty)}
+          itemCount={latestArticles.length}
         >
-          {latestPhotos.length > 0 ? (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-5">
-              {latestPhotos.map((photo) => (
-                <PhotoCard
-                  key={photo.id}
-                  photo={photo}
-                  headingLevel="h3"
-                  compact
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="relative flex min-h-48 flex-col justify-end overflow-hidden border border-[var(--accent-border-soft)] bg-surface px-5 py-5 text-xs leading-5 text-muted md:min-h-56 md:px-8 md:py-6">
-              <Image src="/workspaces/fotograf.jpg" alt="" fill sizes="(min-width: 768px) 70vw, 100vw" className="object-cover object-center opacity-45" />
-              <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,12,22,0.96),rgba(5,12,22,0.35)_70%,rgba(5,12,22,0.7))]" />
-              <div className="relative max-w-xl border-l border-accent-soft pl-4">
-                <p className="font-serif text-xl leading-snug text-ivory md:text-2xl">
-                {locale === "tr"
-                  ? "İstanbul, şehir, mimari, sokak, hayvanlar ve doğa odaklı fotoğraf arşivi."
-                  : "A photography archive focused on Istanbul, city life, architecture, streets, animals and nature."}
-                </p>
-                <p className="mt-3 text-[10px] uppercase tracking-[0.16em] text-accent-soft">
-                {locale === "tr"
-                  ? "Yeni çalışmalar eklendikçe burada yer alacak."
-                  : "New work will appear here as it is published."}
-                </p>
-              </div>
-            </div>
-          )}
+          <ArticleCardList articles={latestArticles} locale={locale} />
         </HomeListingSection>
+
+        <HomeListingSection
+          id={locale === "tr" ? "kitaplar" : "books"}
+          locale={locale}
+          tone="band"
+          number={copy.books.number}
+          eyebrow={copy.books.eyebrow}
+          title={content.listingSections.books.title}
+          linkLabel={content.listingSections.books.linkLabel}
+          href={bookListPaths[locale]}
+          emptyMessage={emptyMessage("books", copy.books.empty)}
+          itemCount={latestBooks.length}
+        >
+          <BookReviewCardList books={latestBooks} locale={locale} />
+        </HomeListingSection>
+
+        <HomeListingSection
+          id={locale === "tr" ? "fotograf" : "photography"}
+          locale={locale}
+          number={copy.photos.number}
+          eyebrow={copy.photos.eyebrow}
+          title={content.listingSections.photography.title}
+          linkLabel={content.listingSections.photography.linkLabel}
+          href={photoListPaths[locale]}
+          emptyMessage={emptyMessage("photos", copy.photos.empty)}
+          itemCount={latestPhotos.length}
+        >
+          <PhotoCardList photos={latestPhotos} columns={4} />
+        </HomeListingSection>
+
+        {focusAreas.cards.length > 0 ? (
+          <Section
+            id={content.anchors.work}
+            tone="land"
+            divider
+            labelledBy={workspacesHeadingId}
+          >
+            <HomeSectionHeading
+              id={workspacesHeadingId}
+              number={copy.workspaces.number}
+              eyebrow={focusAreas.label}
+              title={focusAreas.title}
+            >
+              {focusAreas.description ? (
+                <p className="m-0">{focusAreas.description}</p>
+              ) : null}
+            </HomeSectionHeading>
+            <FocusAreaCards
+              className="mt-8"
+              cards={focusAreas.cards.map((card, index) => ({
+                id: `${index}-${card.title}`,
+                icon: card.icon,
+                title: card.title,
+                description: card.description,
+                linkLabel: card.linkLabel,
+                linkHref: card.linkHref ?? null,
+              }))}
+            />
+          </Section>
+        ) : null}
 
         <About
           id={content.anchors.about}
+          locale={locale}
           content={content.about}
-          manifestoLines={editorial.manifestoLines}
-          compact
+          manifestoLines={homeEditorialContent[locale].manifestoLines}
+          portraitCaption={copy.about.portraitCaption}
+          portraitCredit={getPortraitCredit(page, content.about)}
         />
 
         <ContactCallToAction
@@ -146,7 +213,7 @@ export default async function HomePage({ content }: { content: HomeContent }) {
           href={contactPaths[locale]}
         />
       </main>
-      <Footer id={content.anchors.contact} content={content.footer} compact />
+      <Footer id={content.anchors.contact} content={content.footer} />
       <BackToTop label={content.backToTopLabel} />
     </div>
   );

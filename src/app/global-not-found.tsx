@@ -1,34 +1,63 @@
+import type { Metadata } from "next";
+import { createRootLayoutMetadata } from "@/components/layout/root-metadata";
+import Masthead from "@/components/layout/Masthead";
+import StatusMessage from "@/components/layout/StatusMessage";
+import { ButtonLink } from "@/components/ui/Button";
+import SkipLink from "@/components/ui/SkipLink";
+import TextLink from "@/components/ui/TextLink";
+import { fontVariables } from "./fonts";
 import "./globals.css";
-import Link from "next/link";
 
-export const metadata = {
-  title: "Sayfa bulunamadı | Şaban Durali",
-  description: "İstenen sayfa bulunamadı.",
+/*
+ * Unmatched URLs outside every route (experimental.globalNotFound). This
+ * page renders without a layout, so it loads the fonts and atlas styles
+ * itself and starts with its own skip link. It cannot know the visitor's
+ * language: the page is Turkish (the default site) with an English block
+ * marked lang="en". It does not read the CMS, so it never fails. Unmatched
+ * /en/* addresses get the English 404 of the (en) layout instead.
+ */
+export const metadata: Metadata = {
+  ...createRootLayoutMetadata("tr"),
+  title: "Sayfa bulunamadı · Page not found | Şaban Durali",
+  description: "İstenen sayfa bulunamadı. The requested page was not found.",
 };
 
 export default function GlobalNotFound() {
   return (
-    <html lang="tr">
+    <html lang="tr" data-scroll-behavior="smooth" className={fontVariables}>
       <body>
-        <main className="flex min-h-screen items-center px-4 py-14 sm:px-6">
-          <section className="mx-auto max-w-xl rounded-sm border border-border bg-surface/80 p-7 sm:p-10">
-            <p className="text-xs font-semibold tracking-[0.22em] text-accent-soft">
-              404
-            </p>
-            <h1 className="mt-4 text-4xl leading-tight text-ivory sm:text-5xl">
-              Sayfa bulunamadı.
-            </h1>
-            <p className="mt-5 text-base leading-7 text-muted">
-              İstediğiniz adres bulunamadı veya artık kullanılmıyor olabilir.
-            </p>
-            <Link
-              href="/"
-              className="mt-7 inline-flex min-h-11 items-center rounded-sm border border-border px-5 py-3 text-sm font-semibold text-ivory transition-colors hover:border-accent hover:text-accent-soft motion-reduce:transition-none"
+        <SkipLink>
+          İçeriğe geç · <span lang="en">Skip to content</span>
+        </SkipLink>
+        <Masthead locale="tr" />
+        <StatusMessage
+          code="404"
+          title="Sayfa bulunamadı."
+          actions={<ButtonLink href="/">Ana sayfaya dön</ButtonLink>}
+          aside={
+            <section
+              lang="en"
+              aria-labelledby="global-not-found-en"
+              className="border-t border-hairline pt-8"
             >
-              Ana sayfaya dön
-            </Link>
-          </section>
-        </main>
+              <h2 id="global-not-found-en" className="m-0 type-h3">
+                Page not found.
+              </h2>
+              <p className="mt-3 mb-0 type-body text-ink-muted">
+                The address may be mistyped, moved or no longer in use.
+              </p>
+              <p className="mt-3 mb-0">
+                <TextLink href="/en" variant="standalone" locale="en">
+                  Go to the English home page
+                </TextLink>
+              </p>
+            </section>
+          }
+        >
+          <p className="m-0">
+            Adres yanlış yazılmış, taşınmış ya da artık kullanılmıyor olabilir.
+          </p>
+        </StatusMessage>
       </body>
     </html>
   );

@@ -3,22 +3,35 @@ import { getAbsoluteUrl } from "@/config/site";
 import {
   getAvailableLocalArticleImage,
   getAvailablePublicArticleImage,
-  getSafePayloadMediaPath,
 } from "@/content/articles/article-images";
+import { getSafePayloadMediaPath } from "@/content/media-paths";
 import {
-  getArticleAlternateUrls,
+  getArticlePath,
   getArticleUrl,
 } from "@/content/articles/article-routes";
 import type {
   PublicArticle,
+  PublicArticleSummary,
   PublicArticleTranslation,
 } from "@/content/articles/public-types";
 import {
-  personEntityId,
+  createPersonReference,
   personalBrandName,
+  serializeJsonLd,
 } from "@/content/entity-seo";
+import { getContentLastModifiedIso } from "@/lib/content-dates";
+import {
+  createOptimizedSocialImage,
+  createPageMetadata,
+  createSocialImage,
+  type SocialImage,
+} from "@/lib/metadata";
 
-export function getArticleCanonicalUrl(article: PublicArticle): string {
+type CanonicalArticle = Pick<PublicArticleSummary, "language" | "slug"> & {
+  seo: Pick<PublicArticleSummary["seo"], "canonical">;
+};
+
+export function getArticleCanonicalUrl(article: CanonicalArticle): string {
   if (article.seo.canonical !== undefined) {
     try {
       return getAbsoluteUrl(article.seo.canonical);
@@ -30,67 +43,98 @@ export function getArticleCanonicalUrl(article: PublicArticle): string {
   return getArticleUrl(article.slug, article.language);
 }
 
+/**
+ * Whether a version may take part in an hreflang cluster: it is indexable
+ * and its canonical URL is its own. The page metadata and the sitemap use
+ * the same rule, so both publish the same pairs.
+ */
+export function isArticleHreflangEligible(
+  article: Pick<PublicArticleSummary, "language" | "slug"> & {
+    seo: Pick<PublicArticleSummary["seo"], "index" | "canonical">;
+  },
+): boolean {
+  return (
+    article.seo.index &&
+    getArticleCanonicalUrl(article) ===
+      getArticleUrl(article.slug, article.language)
+  );
+}
+
+/**
+ * Static articles name their author in their details; CMS articles carry a
+ * guest author only when the editor named someone other than the owner.
+ */
+export function getArticleAuthorName(article: PublicArticle): string {
+  if (article.content.source === "static") {
+    return article.content.details.author?.name ?? personalBrandName;
+  }
+
+  return article.author ?? personalBrandName;
+}
+
+function getArticleSocialImage(article: PublicArticle): SocialImage | null {
+  const alt = article.featuredImage?.alt || article.title;
+
+  if (article.featuredImage?.source === "payload") {
+    // The CMS uses the featured image itself as the share image.
+    const src = getSafePayloadMediaPath(article.seo.openGraphImage);
+    const sameAsFeatured = src === article.featuredImage.src;
+
+    return src === null
+      ? null
+      : createOptimizedSocialImage({
+          src,
+          alt,
+          width: sameAsFeatured ? article.featuredImage.width : undefined,
+          height: sameAsFeatured ? article.featuredImage.height : undefined,
+        });
+  }
+
+  const src = getAvailableLocalArticleImage(article.seo.openGraphImage);
+  return src === null ? null : createSocialImage({ src, alt });
+}
+
 export function createArticleMetadata(
   article: PublicArticle,
   translation: PublicArticleTranslation | null,
 ): Metadata {
-  const canonical = getArticleCanonicalUrl(article);
-  const openGraphImage =
-    article.featuredImage?.source === "payload"
-      ? getSafePayloadMediaPath(article.seo.openGraphImage)
-      : getAvailableLocalArticleImage(article.seo.openGraphImage);
-  const author =
-    article.content.source === "static"
-      ? article.content.details.author
-      : null;
+  const image = getArticleSocialImage(article);
+  const hreflang = isArticleHreflangEligible(article);
 
-  return {
+  return createPageMetadata({
     title: article.seo.title,
     description: article.seo.description,
-    alternates: {
-      canonical,
-      languages: getArticleAlternateUrls(article, translation),
+    locale: article.language,
+    path: getArticlePath(article.slug, article.language),
+    hreflang,
+    translations:
+      !hreflang ||
+      translation === null ||
+      !isArticleHreflangEligible(translation)
+        ? undefined
+        : {
+            [translation.language]: getArticlePath(
+              translation.slug,
+              translation.language,
+            ),
+          },
+    canonical: getArticleCanonicalUrl(article),
+    images: image === null ? undefined : [image],
+    index: article.seo.index,
+    follow: article.seo.follow,
+    socialTitle: article.seo.openGraphTitle,
+    socialDescription: article.seo.openGraphDescription,
+    article: {
+      publishedTime: article.publishedAt,
+      modifiedTime: getContentLastModifiedIso(article),
+      authors: [getArticleAuthorName(article)],
     },
-    robots: {
-      index: article.seo.index,
-      follow: article.seo.follow,
-    },
-    openGraph: {
-      title: article.seo.openGraphTitle ?? article.seo.title,
-      description:
-        article.seo.openGraphDescription ?? article.seo.description,
-      url: canonical,
-      siteName: "Şaban Durali",
-      locale: article.language === "tr" ? "tr_TR" : "en_US",
-      alternateLocale:
-        translation === null
-          ? undefined
-          : translation.language === "tr"
-            ? "tr_TR"
-            : "en_US",
-      type: "article",
-      publishedTime: article.publishedAt ?? undefined,
-      modifiedTime: article.updatedAt,
-      authors: author === null ? undefined : [author.name],
-      images:
-        openGraphImage === null
-          ? undefined
-          : [
-              {
-                url: openGraphImage,
-                alt: article.featuredImage?.alt || article.title,
-              },
-            ],
-    },
-  };
+  });
 }
 
 export function createArticleJsonLd(article: PublicArticle) {
   const coverImage = getAvailablePublicArticleImage(article.featuredImage);
-  const author =
-    article.content.source === "static"
-      ? article.content.details.author
-      : null;
+  const authorName = getArticleAuthorName(article);
 
   return {
     "@context": "https://schema.org",
@@ -98,21 +142,14 @@ export function createArticleJsonLd(article: PublicArticle) {
     headline: article.title,
     description: article.summary,
     datePublished: article.publishedAt ?? undefined,
-    dateModified: article.updatedAt,
+    dateModified: getContentLastModifiedIso(article),
     author:
-      author === null
-        ? undefined
-        : author.name === personalBrandName
-          ? {
-              "@type": "Person",
-              "@id": personEntityId,
-              name: personalBrandName,
-              url: getAbsoluteUrl("/"),
-            }
-          : {
+      authorName === personalBrandName
+        ? createPersonReference()
+        : {
             "@type": "Person",
-            name: author.name,
-            },
+            name: authorName,
+          },
     inLanguage: article.language === "tr" ? "tr-TR" : "en",
     mainEntityOfPage: getArticleCanonicalUrl(article),
     image: coverImage === null ? undefined : getAbsoluteUrl(coverImage),
@@ -120,5 +157,5 @@ export function createArticleJsonLd(article: PublicArticle) {
 }
 
 export function serializeArticleJsonLd(article: PublicArticle): string {
-  return JSON.stringify(createArticleJsonLd(article)).replace(/</g, "\\u003c");
+  return serializeJsonLd(createArticleJsonLd(article));
 }

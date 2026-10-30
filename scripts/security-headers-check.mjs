@@ -1,0 +1,118 @@
+// Read-only header checks against a locally running production build:
+//
+//   npm run build && npm run start -- --hostname 127.0.0.1 --port 3101
+//   npm run e2e:headers -- http://127.0.0.1:3101
+//
+// The expected values come from src/lib/securityHeaders.ts (Node 24 strips the
+// types), so this script and the unit test cannot drift apart.
+import assert from "node:assert/strict";
+import { isReadyAdminLogin } from "./security-headers-expectations.mjs";
+import {
+  adminRouteSecurityHeaders,
+  publicRouteSecurityHeaders,
+  securityHeaders,
+} from "../src/lib/securityHeaders.ts";
+
+const base = new URL(process.argv[2] || "http://127.0.0.1:3101");
+assert.ok(
+  ["127.0.0.1", "localhost", "[::1]"].includes(base.hostname),
+  "Run this verification only against a local test server.",
+);
+
+const optimizedImage = "/_next/image?url=%2Fbrand%2Fsite-og.jpg&w=640&q=75";
+// `publicRoute`: the public report-only CSP is expected; `admin`: the admin
+// report-only CSP is expected instead. The API and the image optimizer get
+// neither.
+const checks = [
+  { path: "/", status: 200, publicRoute: true },
+  { path: "/en", status: 200, publicRoute: true },
+  { path: "/iletisim", status: 200, publicRoute: true },
+  { path: "/admin/login", status: 200, admin: true },
+  // The admin root streams its redirect, so it answers 200 as well.
+  { path: "/admin", status: 200, adminRoot: true },
+  { path: "/public-missing-security-test", status: 404, publicRoute: true },
+  { path: "/brand/site-og.jpg", status: 200, image: true, publicRoute: true },
+  { path: optimizedImage, status: 200, image: true, optimizer: true },
+];
+
+for (const {
+  path,
+  status,
+  image = false,
+  optimizer = false,
+  publicRoute = false,
+  admin = false,
+  adminRoot = false,
+} of checks) {
+  const response = await fetch(new URL(path, base), { redirect: "manual" });
+  assert.equal(response.status, status, path);
+  assert.equal(response.headers.get("x-powered-by"), null, path);
+
+  for (const { key, value } of securityHeaders) {
+    if (optimizer && key === "Content-Security-Policy") continue;
+    assert.equal(response.headers.get(key), value, `${key} on ${path}`);
+  }
+
+  // Both lists hold the same header name with different values.
+  const reportOnly = publicRoute
+    ? publicRouteSecurityHeaders
+    : admin || adminRoot
+      ? adminRouteSecurityHeaders
+      : [];
+  for (const { key } of [
+    ...publicRouteSecurityHeaders,
+    ...adminRouteSecurityHeaders,
+  ]) {
+    assert.equal(
+      response.headers.get(key),
+      reportOnly.find((header) => header.key === key)?.value ?? null,
+      `${key} on ${path}`,
+    );
+  }
+
+  if (optimizer) {
+    // The image optimizer deliberately replaces the page CSP with a sandbox.
+    const csp = response.headers.get("content-security-policy");
+    assert.ok(csp?.includes("script-src 'none'"), path);
+    assert.ok(csp?.includes("sandbox"), path);
+  }
+
+  if (admin) {
+    // Payload answers 200 with its error page too, for example when the
+    // database has no schema ("no such table: users"). A ready admin either
+    // sends the visitor to create the first user or shows the login form.
+    const html = await response.text();
+    assert.ok(isReadyAdminLogin(html), `${path} renders Payload's error page`);
+  } else if (image) {
+    assert.match(response.headers.get("content-type") ?? "", /^image\//, path);
+    assert.ok((await response.arrayBuffer()).byteLength > 0, path);
+  } else {
+    await response.body?.cancel();
+  }
+
+  console.log(`PASS ${path} (${response.status})`);
+}
+
+// localPatterns set `search: ""`, so a query string on a local image is refused.
+const cacheBuster = await fetch(
+  new URL("/_next/image?url=%2Fbrand%2Fsite-og.jpg%3Fx%3D1&w=640&q=75", base),
+);
+assert.equal(
+  cacheBuster.status,
+  400,
+  "query strings on local images are refused",
+);
+await cacheBuster.body?.cancel();
+console.log("PASS optimizer refuses query strings on local images");
+
+const users = await fetch(new URL("/api/users", base));
+assert.equal(users.status, 403, "Anonymous users must not list accounts.");
+assert.equal(users.headers.get("x-content-type-options"), "nosniff");
+for (const { key } of [
+  ...publicRouteSecurityHeaders,
+  ...adminRouteSecurityHeaders,
+]) {
+  assert.equal(users.headers.get(key), null, `${key} on /api/users`);
+}
+await users.body?.cancel();
+console.log("PASS anonymous users API denied");

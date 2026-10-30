@@ -1,33 +1,56 @@
 import type { Metadata } from "next";
-import BackToTop from "@/components/layout/BackToTop";
-import Footer from "@/components/layout/Footer";
-import Header from "@/components/layout/Header";
-import { getAbsoluteUrl } from "@/config/site";
-import { homeContent } from "@/content/homeContent";
+import EmptyState from "@/components/ui/EmptyState";
+import Section from "@/components/ui/Section";
+import TextLink from "@/components/ui/TextLink";
+import PageIntro from "@/components/ui/PageIntro";
+import PageShell from "@/components/workspaces/PageShell";
+import { createPageMetadata } from "@/lib/metadata";
+import { homeBreadcrumbItem } from "@/components/ui/Breadcrumb";
 
-export const metadata: Metadata = {
+const path = "/hakkimda/biyografi";
+
+/* FE-10: no verified biography text exists yet. The page stays reachable
+   for old links but is kept out of search results (noindex, follow) and
+   says plainly that the text has not been added. */
+export const metadata: Metadata = createPageMetadata({
   title: "Biyografi | Şaban Durali",
-  description: "Şaban Durali biyografi bilgileri için hazırlanan sayfa.",
-  alternates: { canonical: getAbsoluteUrl("/hakkimda/biyografi") },
-};
+  description:
+    "Şaban Durali'nin doğrulanmış biyografi metni henüz yayınlanmadı; profil özeti Hakkımda sayfasındadır.",
+  locale: "tr",
+  path,
+  index: false,
+  follow: true,
+});
 
 export default function BiographyPage() {
-  const home = homeContent.tr;
-
   return (
-    <div id="top" lang="tr">
-      <Header locale="tr" anchors={home.anchors} content={home.header} homeHref="/" anchorPrefix="/" languageHrefs={{ tr: "/hakkimda/biyografi", en: "/en" }} />
-      <main className="bg-[#F5EFE4] text-ink">
-        <section className="mx-auto max-w-4xl px-6 py-16 sm:py-24 lg:px-10 lg:py-32">
-          <p className="text-sm font-medium uppercase tracking-[0.24em] text-accent">Hakkımda</p>
-          <h1 className="mt-6 font-serif text-5xl font-semibold leading-none sm:text-6xl">Biyografi</h1>
-          <div className="mt-10 max-w-2xl border-l-2 border-accent/40 pl-5 text-lg leading-8 text-muted-dark">
-            <p>Şaban Durali&apos;nin doğrulanmış biyografi bilgileri bu alanda yayınlanmak üzere hazırlanmaktadır.</p>
-          </div>
-        </section>
+    <PageShell locale="tr" languageHrefs={{ tr: path, en: "/en" }}>
+      <main id="main" className="scheme-light bg-paper text-ink">
+        <Section>
+          <PageIntro
+            breadcrumb={[
+              homeBreadcrumbItem("tr"),
+              { label: "Hakkımda", href: "/hakkimda" },
+              { label: "Biyografi" },
+            ]}
+            eyebrow="Hakkımda"
+            title="Biyografi"
+          />
+          <EmptyState
+            size="lg"
+            className="mt-10"
+            note={
+              <>
+                Mesleki deneyim ve eğitim özeti{" "}
+                <TextLink href="/hakkimda#biyografi">Hakkımda</TextLink>{" "}
+                sayfasında yer alır.
+              </>
+            }
+          >
+            Doğrulanmış biyografi metni henüz eklenmedi.
+          </EmptyState>
+        </Section>
       </main>
-      <Footer id={home.anchors.contact} content={home.footer} />
-      <BackToTop label={home.backToTopLabel} />
-    </div>
+    </PageShell>
   );
 }

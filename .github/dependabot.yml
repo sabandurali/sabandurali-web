@@ -1,0 +1,45 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Europe/Istanbul
+    # Let fresh releases settle before a pull request is opened. Security
+    # updates are not delayed.
+    cooldown:
+      default-days: 3
+    open-pull-requests-limit: 10
+    ignore:
+      # The runtime is Node 24 (.nvmrc, engines); types of a newer Node major
+      # would describe APIs the site cannot use.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      # Payload packages pin each other exactly and must move together.
+      payload:
+        patterns:
+          - "payload"
+          - "@payloadcms/*"
+      nextjs:
+        patterns:
+          - "next"
+          - "eslint-config-next"
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+      timezone: Europe/Istanbul
+    commit-message:
+      prefix: "chore(ci)"

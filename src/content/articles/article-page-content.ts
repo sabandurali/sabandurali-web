@@ -1,7 +1,5 @@
-import type {
-  ArticleLanguage,
-  SourceType,
-} from "@/content/articles/types";
+import type { ArticleLanguage, SourceType } from "@/content/articles/types";
+import { formatDate } from "@/lib/format-date";
 
 export type ArticlePageContent = {
   locale: ArticleLanguage;
@@ -118,18 +116,5 @@ export function formatArticleDate(
   value: string | null | undefined,
   content: ArticlePageContent,
 ): string | null {
-  if (value === null || value === undefined) {
-    return null;
-  }
-
-  const date = new Date(value);
-
-  if (!Number.isFinite(date.getTime())) {
-    return null;
-  }
-
-  return new Intl.DateTimeFormat(content.dateLocale, {
-    dateStyle: "long",
-    timeZone: "Europe/Istanbul",
-  }).format(date);
+  return formatDate(value, content.dateLocale);
 }

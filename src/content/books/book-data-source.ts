@@ -1,188 +1,125 @@
 import "server-only";
 import { cache } from "react";
+import { PayloadPublicBookReviewRepository } from "@/content/books/payload-book-review-repository";
 import {
-  exampleEnglishBookReview,
-  exampleTurkishBookReview,
-} from "@/content/books/examples";
-import { PayloadBookReviewRepository } from "@/content/books/payload-book-review-repository";
-import { BookReviewQueryService } from "@/content/books/repository/book-review-query-service";
-import { InMemoryBookReviewRepository } from "@/content/books/repository/in-memory-book-review-repository";
-import { MAX_BOOK_REVIEW_PAGE_SIZE } from "@/content/books/repository/types";
-import type {
-  BookReview,
-  BookReviewLanguage,
-} from "@/content/books/types";
-import { assertProductionPayloadInfrastructure } from "@/lib/payloadInfrastructure";
+  createStaticBookReviewFixtures,
+  findStaticBookReviewTranslation,
+  findStaticPublishedBookReview,
+  listStaticPublishedBookReviews,
+} from "@/content/books/static-book-reviews";
+import {
+  toPublicBookReview,
+  toPublicBookReviewSummary,
+  type PublicBookReview,
+  type PublicBookReviewSummary,
+} from "@/content/books/public-types";
+import type { BookReviewLanguage } from "@/content/books/types";
+import { readPublicSource } from "@/content/public-source";
 
-const modelFixtures = [
-  exampleTurkishBookReview,
-  exampleEnglishBookReview,
-] satisfies ReadonlyArray<BookReview>;
-
-function createDevelopmentPublishedFixture(review: BookReview): BookReview {
-  return {
-    ...structuredClone(review),
-    reviewStatus: "published",
-    seo: {
-      ...review.seo,
-      index: true,
-    },
-  };
-}
-
-function createDevelopmentRouteGuards(): BookReview[] {
-  const base = structuredClone(exampleTurkishBookReview);
-
-  return [
-    {
-      ...base,
-      id: "development-book-review-draft",
-      slug: "development-draft-book-review",
-      translationGroupId: null,
-      reviewStatus: "draft",
-      publishedAt: null,
-      seo: { ...base.seo, index: false },
-    },
-    {
-      ...base,
-      id: "development-book-review-future",
-      slug: "development-future-book-review",
-      translationGroupId: null,
-      reviewStatus: "published",
-      publishedAt: "2099-01-01T00:00:00+03:00",
-      seo: { ...base.seo, index: true },
-    },
-    {
-      ...base,
-      id: "development-book-review-noindex",
-      slug: "development-noindex-book-review",
-      translationGroupId: null,
-      reviewStatus: "published",
-      seo: { ...base.seo, index: false },
-    },
-  ];
-}
-
-// The source records remain draft/noindex in production. Local development
-// receives isolated published clones so list/detail behavior can be exercised
-// without presenting the model-only review as a real production publication.
-const initialBookReviews: ReadonlyArray<BookReview> =
-  process.env.NODE_ENV === "development"
-    ? [
-        ...modelFixtures.map(createDevelopmentPublishedFixture),
-        ...createDevelopmentRouteGuards(),
-      ]
-    : modelFixtures;
-
-const bookReviewRepository = new InMemoryBookReviewRepository(
-  initialBookReviews,
-);
-const payloadBookReviewRepository = new PayloadBookReviewRepository();
-const payloadBookReviewQueryService = new BookReviewQueryService(
-  payloadBookReviewRepository,
-);
-
-export const bookReviewQueryService = new BookReviewQueryService(
-  bookReviewRepository,
-);
-
-type PublicBookReviewSource = "payload" | "static";
-
-function getPublicBookReviewSource(): PublicBookReviewSource {
-  const source = process.env.BOOK_PUBLIC_SOURCE;
-
-  if (source === undefined || source === "static") {
-    return "static";
-  }
-
-  if (source === "payload") {
-    assertProductionPayloadInfrastructure();
-    return "payload";
-  }
-
-  throw new Error(
-    `Invalid BOOK_PUBLIC_SOURCE value "${source}". Expected "static" or "payload".`,
-  );
-}
-
-export async function getAllBookReviews(): Promise<BookReview[]> {
-  const bookReviews: BookReview[] = [];
-  let page = 1;
-  let totalPages = 1;
-
-  while (page <= totalPages) {
-    const result = await bookReviewRepository.list({
-      sort: "updatedAt_desc",
-      pagination: {
-        page,
-        pageSize: MAX_BOOK_REVIEW_PAGE_SIZE,
-      },
-    });
-
-    bookReviews.push(...result.items);
-    totalPages = result.totalPages;
-    page += 1;
-  }
-
-  return bookReviews;
-}
+const staticBookReviews = createStaticBookReviewFixtures(process.env.NODE_ENV);
+const payloadBookReviewRepository = new PayloadPublicBookReviewRepository();
 
 export type PublishedBookReviewPageData = {
-  bookReview: BookReview | null;
-  translation: BookReview | null;
+  bookReview: PublicBookReview | null;
+  translation: PublicBookReview | null;
 };
+
+function isPayloadSource(): boolean {
+  return readPublicSource("BOOK_PUBLIC_SOURCE") === "payload";
+}
+
+/*
+ * Both sources return public types: the Payload repository projects at its
+ * boundary, the static fixtures are projected here. The editorial fields of
+ * the book model never leave this module.
+ */
 
 export const getPublishedBookReviewPageData = cache(
   async (
     slug: string,
     language: BookReviewLanguage,
   ): Promise<PublishedBookReviewPageData> => {
-    const queryService =
-      getPublicBookReviewSource() === "payload"
-        ? payloadBookReviewQueryService
-        : bookReviewQueryService;
-    const bookReview = await queryService.getPublishedBookReview(
-      slug,
-      language,
-    );
+    const now = new Date();
+    const targetLanguage = language === "tr" ? "en" : "tr";
 
-    if (bookReview === null) {
-      return { bookReview: null, translation: null };
+    if (isPayloadSource()) {
+      const bookReview = await payloadBookReviewRepository.findPublishedBySlug(
+        slug,
+        language,
+        now,
+      );
+
+      return {
+        bookReview,
+        translation:
+          bookReview === null
+            ? null
+            : await payloadBookReviewRepository.findPublishedTranslation(
+                bookReview,
+                targetLanguage,
+                now,
+              ),
+      };
     }
 
-    const translation = await queryService.getBookReviewTranslation(
-      bookReview.id,
-      language === "tr" ? "en" : "tr",
+    const bookReview = findStaticPublishedBookReview(
+      staticBookReviews,
+      slug,
+      language,
+      now,
     );
+    const translation =
+      bookReview === null
+        ? null
+        : findStaticBookReviewTranslation(
+            staticBookReviews,
+            bookReview,
+            targetLanguage,
+            now,
+          );
 
-    return { bookReview, translation };
+    return {
+      bookReview: bookReview === null ? null : toPublicBookReview(bookReview),
+      translation:
+        translation === null ? null : toPublicBookReview(translation),
+    };
   },
 );
 
-export async function getAllPublishedBookReviews(
+function listStatic(language: BookReviewLanguage): PublicBookReviewSummary[] {
+  return listStaticPublishedBookReviews(
+    staticBookReviews,
+    language,
+    new Date(),
+  ).map(toPublicBookReviewSummary);
+}
+
+/** Every public review of one language, newest first, as list summaries. */
+export const getAllPublishedBookReviews = cache(
+  async (language: BookReviewLanguage): Promise<PublicBookReviewSummary[]> =>
+    isPayloadSource()
+      ? payloadBookReviewRepository.listPublished(language)
+      : listStatic(language),
+);
+
+/**
+ * The newest `limit` public reviews, read with a database limit for
+ * surfaces that show only a few (the home page). Use this instead of
+ * slicing getAllPublishedBookReviews().
+ */
+export const getLatestPublishedBookReviews = cache(
+  async (
+    language: BookReviewLanguage,
+    limit: number,
+  ): Promise<PublicBookReviewSummary[]> =>
+    isPayloadSource()
+      ? payloadBookReviewRepository.listPublished(language, new Date(), limit)
+      : listStatic(language).slice(0, Math.max(0, limit)),
+);
+
+/** Whether a language has any public book review (one-row read). */
+export async function hasPublishedBookReviews(
   language: BookReviewLanguage,
-): Promise<BookReview[]> {
-  const queryService =
-    getPublicBookReviewSource() === "payload"
-      ? payloadBookReviewQueryService
-      : bookReviewQueryService;
-  const bookReviews: BookReview[] = [];
-  let page = 1;
-  let totalPages = 1;
-
-  while (page <= totalPages) {
-    const result = await queryService.getPublishedBookReviews({
-      language,
-      pagination: {
-        page,
-        pageSize: MAX_BOOK_REVIEW_PAGE_SIZE,
-      },
-    });
-
-    bookReviews.push(...result.items);
-    totalPages = result.totalPages;
-    page += 1;
-  }
-
-  return bookReviews;
+): Promise<boolean> {
+  return (await getLatestPublishedBookReviews(language, 1)).length > 0;
 }

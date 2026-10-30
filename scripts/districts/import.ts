@@ -5,16 +5,18 @@ import {
   assertBatch1PopulationImportPlan,
   attachEditorial,
   type Batch1PopulationImportPlan,
-  type EditorialBundle,
 } from "./editorial";
+import { isEditorialBundle } from "./content-acceptance";
+import { isRecord } from "../../src/content/guards";
 import { parseArgs } from "node:util";
 import {
-  validateBundle,
+  parseResearchBundle,
   makeDraft,
   decideImport,
   fingerprint,
   importVersion,
   researchFingerprint,
+  toFieldRecord,
   type ResearchBundle,
 } from "./import-core";
 const { values } = parseArgs({
@@ -30,15 +32,19 @@ const { values } = parseArgs({
 });
 if (values.apply && values["dry-run"])
   throw new Error("Choose --apply or --dry-run.");
-const bundle = JSON.parse(
-  await readFile(values.input!, "utf8"),
-) as ResearchBundle;
-validateBundle(bundle);
-if (values.editorial)
-  attachEditorial(
-    bundle,
-    JSON.parse(await readFile(values.editorial, "utf8")) as EditorialBundle,
+const bundle: ResearchBundle = parseResearchBundle(
+  JSON.parse(await readFile(values.input, "utf8")),
+);
+if (values.editorial) {
+  const editorial: unknown = JSON.parse(
+    await readFile(values.editorial, "utf8"),
   );
+  if (!isEditorialBundle(editorial))
+    throw new Error(
+      `${values.editorial} is not an editorial bundle (schemaVersion 1 with complete district reviews).`,
+    );
+  attachEditorial(bundle, editorial);
+}
 if (values["offline-empty"]) {
   if (values.apply || values.database)
     throw new Error("Offline plan cannot apply or inspect a database.");
@@ -75,7 +81,7 @@ if (values["offline-empty"]) {
     if ((await realpath(target)).startsWith(path.resolve(".data") + path.sep))
       throw new Error("Protected database symlink.");
   } catch (error) {
-    if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+    if (!isRecord(error) || error.code !== "ENOENT") throw error;
   }
   const apply = values.apply === true;
   Object.assign(process.env, { NODE_ENV: "development" });
@@ -87,6 +93,7 @@ if (values["offline-empty"]) {
   const { default: configPromise } = await import("../../src/payload.config");
   const config = await configPromise;
   config.typescript.autoGenerate = false;
+  config.telemetry = false;
   // A dry-run must never push schema or create a database.
   if (!apply) {
     await realpath(target);
@@ -122,7 +129,7 @@ if (values["offline-empty"]) {
         (item) => item.district === row.district,
       );
       const decision = decideImport(
-        existing as unknown as Record<string, unknown> | undefined,
+        existing === undefined ? undefined : toFieldRecord(existing),
         row,
       );
       const action =
@@ -135,16 +142,13 @@ if (values["offline-empty"]) {
     // Materialize and validate the complete plan before the first possible write.
     if (values.editorial) assertBatch1PopulationImportPlan(count);
     for (const planned of rows) {
-      if (
-        !apply ||
-        planned.action === "skip" ||
-        planned.action === "conflict"
-      )
+      if (!apply || planned.action === "skip" || planned.action === "conflict")
         continue;
-      const { row, existing, decision } = planned;
+      const { row, existing } = planned;
       const data = makeDraft(row);
+      // decideImport plans "create" exactly when no document exists.
       const saved =
-        decision.action === "create"
+        existing === undefined
           ? await payload.create({
               collection: "district-guides",
               locale: "tr",
@@ -154,7 +158,7 @@ if (values["offline-empty"]) {
             })
           : await payload.update({
               collection: "district-guides",
-              id: existing!.id,
+              id: existing.id,
               locale: "tr",
               draft: true,
               overrideAccess: true,
@@ -172,9 +176,7 @@ if (values["offline-empty"]) {
             version: importVersion,
             sourceFingerprint: researchFingerprint(row),
             ...row.document,
-            fingerprint: fingerprint(
-              saved as unknown as Record<string, unknown>,
-            ),
+            fingerprint: fingerprint(toFieldRecord(saved)),
           },
         },
       });

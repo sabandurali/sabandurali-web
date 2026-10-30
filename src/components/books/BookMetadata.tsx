@@ -1,29 +1,37 @@
+import MetaList, { type MetaItem } from "@/components/pages/MetaList";
 import {
   type BookPageContent,
   formatBookReviewDate,
 } from "@/content/books/book-page-content";
 import { BOOK_CATEGORY_LABELS } from "@/content/books/constants";
-import type { BookReview } from "@/content/books/types";
+import type { PublicBookReview } from "@/content/books/public-types";
+import { toDateTimeAttribute } from "@/lib/format-date";
 
 type BookMetadataProps = {
-  bookReview: BookReview;
+  bookReview: PublicBookReview;
   content: BookPageContent;
+  className?: string;
 };
 
-type MetadataEntry = {
+type Entry = {
   label: string;
   value: string | null;
+  /** Numbers, codes and dates are set in the data face. */
+  data?: boolean;
+  /** Source date for a <time> element. */
+  date?: string | null;
 };
 
-export default function BookMetadata({
-  bookReview,
-  content,
-}: BookMetadataProps) {
-  const category =
-    bookReview.category === null
-      ? null
-      : BOOK_CATEGORY_LABELS[bookReview.category][bookReview.language];
-  const entries: ReadonlyArray<MetadataEntry> = [
+/** Book facts that are present, in reading order; empty values are left out. */
+export function getBookMetadataItems(
+  bookReview: PublicBookReview,
+  content: BookPageContent,
+): MetaItem[] {
+  const year = (value: number | null) =>
+    value === null ? null : String(value);
+  const date = (value: string | null): Entry["value"] =>
+    formatBookReviewDate(value, content);
+  const entries: Entry[] = [
     {
       label: content.authorsLabel,
       value:
@@ -31,6 +39,7 @@ export default function BookMetadata({
           ? null
           : bookReview.authors.map((author) => author.name).join(", "),
     },
+    { label: content.originalTitleLabel, value: bookReview.originalTitle },
     { label: content.translatorLabel, value: bookReview.translator },
     { label: content.publisherLabel, value: bookReview.publisher },
     {
@@ -39,31 +48,33 @@ export default function BookMetadata({
     },
     {
       label: content.publicationYearLabel,
-      value:
-        bookReview.publicationYear === null
-          ? null
-          : String(bookReview.publicationYear),
+      value: year(bookReview.publicationYear),
+      data: true,
     },
     {
       label: content.originalPublicationYearLabel,
-      value:
-        bookReview.originalPublicationYear === null
-          ? null
-          : String(bookReview.originalPublicationYear),
+      value: year(bookReview.originalPublicationYear),
+      data: true,
     },
     { label: content.editionLabel, value: bookReview.edition },
     {
       label: content.pageCountLabel,
-      value:
-        bookReview.pageCount === null ? null : String(bookReview.pageCount),
+      value: year(bookReview.pageCount),
+      data: true,
     },
-    { label: content.isbn10Label, value: bookReview.isbn10 },
-    { label: content.isbn13Label, value: bookReview.isbn13 },
-    { label: content.categoryLabel, value: category },
+    { label: content.isbn10Label, value: bookReview.isbn10, data: true },
+    { label: content.isbn13Label, value: bookReview.isbn13, data: true },
+    {
+      label: content.categoryLabel,
+      value:
+        bookReview.category === null
+          ? null
+          : BOOK_CATEGORY_LABELS[bookReview.category][bookReview.language],
+    },
     {
       label: content.ratingLabel,
-      value:
-        bookReview.rating === null ? null : `${bookReview.rating} / 10`,
+      value: bookReview.rating === null ? null : `${bookReview.rating} / 10`,
+      data: true,
     },
     {
       label: content.readingStatusLabel,
@@ -71,34 +82,57 @@ export default function BookMetadata({
     },
     {
       label: content.startedLabel,
-      value: formatBookReviewDate(bookReview.startedAt, content),
+      value: date(bookReview.startedAt),
+      data: true,
+      date: bookReview.startedAt,
     },
     {
       label: content.completedLabel,
-      value: formatBookReviewDate(bookReview.completedAt, content),
+      value: date(bookReview.completedAt),
+      data: true,
+      date: bookReview.completedAt,
     },
     {
       label: content.publishedLabel,
-      value: formatBookReviewDate(bookReview.publishedAt, content),
+      value: date(bookReview.publishedAt),
+      data: true,
+      date: bookReview.publishedAt,
     },
   ];
-  const visibleEntries = entries.filter(
-    (entry): entry is { label: string; value: string } =>
-      entry.value !== null && entry.value.trim() !== "",
-  );
 
-  if (visibleEntries.length === 0) {
-    return null;
-  }
+  return entries.flatMap((entry) =>
+    entry.value === null || entry.value.trim() === ""
+      ? []
+      : [
+          {
+            label: entry.label,
+            value: entry.value,
+            data: entry.data,
+            dateTime:
+              entry.date === undefined
+                ? undefined
+                : toDateTimeAttribute(entry.date),
+          },
+        ],
+  );
+}
+
+/** The book's fact sheet: a list on a land panel, one column beside the review on wide screens. */
+export default function BookMetadata({
+  bookReview,
+  content,
+  className,
+}: BookMetadataProps) {
+  const items = getBookMetadataItems(bookReview, content);
+  if (items.length === 0) return null;
 
   return (
-    <dl className="mt-8 grid gap-4 rounded-sm border border-border bg-surface/70 p-5 text-sm sm:grid-cols-2 sm:p-6">
-      {visibleEntries.map((entry) => (
-        <div key={entry.label} className="min-w-0">
-          <dt className="font-semibold text-ivory">{entry.label}</dt>
-          <dd className="mt-1 break-words text-muted">{entry.value}</dd>
-        </div>
-      ))}
-    </dl>
+    <div className={className}>
+      <MetaList
+        items={items}
+        layout="sidebar"
+        className="rounded-card border border-ink bg-land p-5 sm:p-6"
+      />
+    </div>
   );
 }

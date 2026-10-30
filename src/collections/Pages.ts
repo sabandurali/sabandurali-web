@@ -1,19 +1,42 @@
 import {
+  APIError,
   ValidationError,
-  type CollectionBeforeChangeHook,
+  type CollectionBeforeOperationHook,
   type CollectionBeforeValidateHook,
   type CollectionConfig,
   type Where,
 } from "payload";
 import { pageBlocks } from "@/blocks/pageBlocks";
 import {
+  SEO_DESCRIPTION_MAX_LENGTH,
+  SEO_TITLE_MAX_LENGTH,
+  imageMediaFilter,
+} from "@/collections/validation";
+import { getText, isRecord } from "@/content/guards";
+import type { SiteLocale } from "@/content/locales";
+import { isRenderableHomeBlock } from "@/content/pages/payload-page-mapper";
+import {
+  adminOnly,
   adminOrEditor,
+  isAdminOrEditor,
   publishedPageOrAdminOrEditor,
 } from "@/lib/payloadAccess";
+import { SLUG_RULE_MESSAGE } from "@/content/shared/slug";
 import { normalizeSlug } from "@/lib/localizedSlug";
 import { preventDeletingHomePage } from "@/lib/payloadDeleteGuards";
+import { ensurePublishedAt } from "@/lib/publishedAt";
+import { createRevalidationHooks } from "@/lib/revalidation";
 
-const RESERVED_TURKISH_SLUGS = new Set([
+const revalidation = createRevalidationHooks("pages");
+
+/**
+ * Turkish standard pages are served at `/<slug>`, below every other top-level
+ * Turkish route. A slug in this list would be shadowed by that route (or by
+ * the admin, the API or the English tree). `collections.test.ts` compares the
+ * list with the route folders in `src/app`, so a new top-level route cannot
+ * be forgotten. `geri-bildirim` stays reserved for the retired feedback page.
+ */
+export const RESERVED_TURKISH_SLUGS: ReadonlySet<string> = new Set([
   "admin",
   "api",
   "arastirma-ve-analiz",
@@ -35,15 +58,19 @@ const RESERVED_TURKISH_SLUGS = new Set([
   "yonetim",
 ]);
 
-function getText(value: unknown): string | null {
-  return typeof value === "string" && value.trim().length > 0
-    ? value.trim()
-    : null;
-}
+/**
+ * Slug of the legacy Turkish home: a standard page that `/` falls back to
+ * when no "Ana sayfa" record exists. `/ana-sayfa` redirects to `/` (see
+ * `next.config.ts`), so no other page may take this slug.
+ */
+export const LEGACY_TURKISH_HOME_SLUG = "ana-sayfa";
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
-}
+/** The only blocks the home page renders. */
+export const HOME_BLOCK_TYPES: ReadonlySet<string> = new Set([
+  "hero",
+  "homeAbout",
+  "homeFocusAreas",
+]);
 
 function countVisibleHomeBlocks(
   layout: unknown,
@@ -59,7 +86,38 @@ function countVisibleHomeBlocks(
   ).length;
 }
 
-const validatePageIdentity: CollectionBeforeValidateHook = async ({
+/** Visible home blocks the public mapper would skip, as "hero#1" labels. */
+export function getUnrenderableHomeBlocks(
+  layout: unknown,
+  language: SiteLocale,
+): string[] {
+  if (!Array.isArray(layout)) return [];
+
+  return layout.flatMap((block, index) =>
+    isRecord(block) &&
+    block.visible !== false &&
+    typeof block.blockType === "string" &&
+    HOME_BLOCK_TYPES.has(block.blockType) &&
+    !isRenderableHomeBlock(block, language)
+      ? [`${block.blockType}#${index + 1}`]
+      : [],
+  );
+}
+
+function getVisibleUnsupportedHomeBlocks(layout: unknown): string[] {
+  if (!Array.isArray(layout)) return [];
+
+  return layout.flatMap((block) =>
+    isRecord(block) &&
+    block.visible !== false &&
+    typeof block.blockType === "string" &&
+    !HOME_BLOCK_TYPES.has(block.blockType)
+      ? [block.blockType]
+      : [],
+  );
+}
+
+export const validatePageIdentity: CollectionBeforeValidateHook = async ({
   data,
   operation,
   originalDoc,
@@ -81,6 +139,8 @@ const validatePageIdentity: CollectionBeforeValidateHook = async ({
   const pageType =
     getText(data.pageType) ?? getText(originalDoc?.pageType) ?? "standard";
   const currentID = getText(data.id) ?? getText(originalDoc?.id);
+  const status =
+    getText(data._status) ?? getText(originalDoc?._status) ?? "draft";
 
   data.slug = slug;
   data.language = language;
@@ -101,9 +161,31 @@ const validatePageIdentity: CollectionBeforeValidateHook = async ({
     RESERVED_TURKISH_SLUGS.has(slug)
   ) {
     errors.push({
-      message:
-        "Bu slug mevcut özel bir Türkçe rota için ayrılmıştır.",
+      message: "Bu slug mevcut özel bir Türkçe rota için ayrılmıştır.",
       path: "slug",
+    });
+  }
+
+  if (
+    pageType === "standard" &&
+    language === "tr" &&
+    slug === LEGACY_TURKISH_HOME_SLUG &&
+    previousSlug !== LEGACY_TURKISH_HOME_SLUG
+  ) {
+    errors.push({
+      message:
+        "ana-sayfa adresi eski Ana Sayfa kaydına ayrılmıştır ve / adresine yönlenir. Ana sayfa için Sayfa türünü 'Ana sayfa' seçin.",
+      path: "slug",
+    });
+  }
+
+  // There is no English standard-page route yet (/en/<slug> returns 404), so
+  // such a page can be drafted but not published.
+  if (pageType === "standard" && language === "en" && status === "published") {
+    errors.push({
+      message:
+        "İngilizce standart sayfaların henüz bir site adresi yok. Yalnız İngilizce Ana sayfa yayınlanabilir; bu sayfayı taslak olarak saklayın.",
+      path: "language",
     });
   }
 
@@ -127,8 +209,7 @@ const validatePageIdentity: CollectionBeforeValidateHook = async ({
 
     if (duplicateSlug.docs.length > 0) {
       errors.push({
-        message:
-          "Bu dilde aynı slug değerine sahip başka bir sayfa var.",
+        message: "Bu dilde aynı slug değerine sahip başka bir sayfa var.",
         path: "slug",
       });
     }
@@ -159,8 +240,6 @@ const validatePageIdentity: CollectionBeforeValidateHook = async ({
       });
     }
 
-    const status =
-      getText(data._status) ?? getText(originalDoc?._status) ?? "draft";
     const layout = Array.isArray(data.layout)
       ? data.layout
       : originalDoc?.layout;
@@ -174,6 +253,27 @@ const validatePageIdentity: CollectionBeforeValidateHook = async ({
       errors.push({
         message:
           "Yayındaki Ana Sayfa tam olarak bir görünür Hero, Hakkımda ve Çalışma Alanları bloğu içermelidir.",
+        path: "layout",
+      });
+    }
+
+    const unrenderableBlocks = getUnrenderableHomeBlocks(
+      layout,
+      language === "en" ? "en" : "tr",
+    );
+
+    if (status === "published" && unrenderableBlocks.length > 0) {
+      errors.push({
+        message: `Ana Sayfa bloklarında zorunlu alanlar eksik veya bağlantılar geçersiz; yayındaki sitede gösterilemezler: ${unrenderableBlocks.join(", ")}. Başlık satırlarını, metinleri ve bağlantıları (etiket ve / ile başlayan ya da https adres) tamamlayın.`,
+        path: "layout",
+      });
+    }
+
+    const unsupportedBlocks = getVisibleUnsupportedHomeBlocks(layout);
+
+    if (status === "published" && unsupportedBlocks.length > 0) {
+      errors.push({
+        message: `Ana Sayfa yalnız Hero, Hakkımda ve Çalışma Alanları bloklarını gösterir. Şu blokları silin veya gizleyin: ${[...new Set(unsupportedBlocks)].join(", ")}.`,
         path: "layout",
       });
     }
@@ -194,28 +294,142 @@ const validatePageIdentity: CollectionBeforeValidateHook = async ({
   return data;
 };
 
-const setPublishedAtOnFirstPublish: CollectionBeforeChangeHook = ({
-  data,
-  originalDoc,
-}) => {
-  const wasPublished = originalDoc?._status === "published";
-  const willBePublished = data._status === "published";
+type HomeChange = "unpublish" | "schedule" | "pageType" | "language";
 
-  if (!wasPublished && willBePublished && !data.publishedAt) {
-    return {
-      ...data,
-      publishedAt: new Date().toISOString(),
-    };
+/**
+ * The changes in an update that would take a published home record off the
+ * site. Saving a draft over the published home only writes a version, so it
+ * is allowed, but a draft that changes the page type or language would break
+ * the home as soon as it is published and is refused as well.
+ */
+export function getHomeBreakingChanges(
+  data: unknown,
+  home: { language: unknown },
+  options: { draft: boolean; unpublishAllLocales: boolean; now: Date },
+): HomeChange[] {
+  if (!isRecord(data)) return options.unpublishAllLocales ? ["unpublish"] : [];
+
+  const savingDraft = options.draft && data._status !== "published";
+  const changes: HomeChange[] = [];
+
+  if (
+    options.unpublishAllLocales ||
+    (!savingDraft && data._status === "draft")
+  ) {
+    changes.push("unpublish");
   }
 
-  return data;
+  if (!savingDraft && data.publishedAt !== undefined) {
+    const publishedAt =
+      typeof data.publishedAt === "string" ? Date.parse(data.publishedAt) : NaN;
+
+    if (!Number.isFinite(publishedAt) || publishedAt > options.now.getTime()) {
+      changes.push("schedule");
+    }
+  }
+
+  if (data.pageType !== undefined && data.pageType !== "home") {
+    changes.push("pageType");
+  }
+
+  if (data.language !== undefined && data.language !== home.language) {
+    changes.push("language");
+  }
+
+  return changes;
+}
+
+const homeChangeMessages: Record<HomeChange, string> = {
+  unpublish: "yayından kaldırılamaz",
+  schedule: "ileri bir tarihe planlanamaz ve yayın tarihi silinemez",
+  pageType: "standart sayfaya çevrilemez",
+  language: "başka bir dile taşınamaz",
+};
+
+/**
+ * Keeps the published home records on the site. `/` would otherwise fall
+ * back to the static content (COR-2). Runs before the operation because only
+ * the operation arguments tell a draft save from an unpublish.
+ */
+export const protectPublishedHomePage: CollectionBeforeOperationHook = async ({
+  args,
+  operation,
+  req,
+}) => {
+  if (operation !== "update") return args;
+  // This hook runs before access control. A REST or GraphQL request that
+  // may not update pages is refused by access control anyway, so its
+  // user-supplied `where` never reaches the overrideAccess query below
+  // (which would otherwise answer whether the home matches it).
+  if (req.payloadAPI !== "local" && !isAdminOrEditor(req.user)) return args;
+
+  // Operation argument types differ per operation; read them as unknowns.
+  const values = new Map<string, unknown>(Object.entries(args));
+  const data = values.get("data");
+  const id = values.get("id");
+  // A bulk update's `where`, already parsed and typed by Payload.
+  const where = "where" in args ? args.where : undefined;
+  const unpublishAllLocales = values.get("unpublishAllLocales");
+  const options = {
+    draft: values.get("draft") === true,
+    unpublishAllLocales:
+      unpublishAllLocales === true || unpublishAllLocales === "true",
+    now: new Date(),
+  };
+  // Without a stored language every language in the data counts as a
+  // change, so this cheap check never misses an update that needs a look.
+  if (
+    getHomeBreakingChanges(data, { language: undefined }, options).length === 0
+  ) {
+    return args;
+  }
+
+  const target: Where | null =
+    typeof id === "string" || typeof id === "number"
+      ? { id: { equals: id } }
+      : isRecord(where)
+        ? where
+        : null;
+
+  if (target === null) return args;
+
+  const homes = await req.payload.find({
+    collection: "pages",
+    depth: 0,
+    draft: false,
+    overrideAccess: true,
+    pagination: false,
+    req,
+    where: {
+      and: [
+        target,
+        { pageType: { equals: "home" } },
+        { _status: { equals: "published" } },
+      ],
+    },
+  });
+
+  for (const home of homes.docs) {
+    const changes = getHomeBreakingChanges(data, home, options);
+
+    if (changes.length > 0) {
+      throw new APIError(
+        `Yayındaki ${home.language === "en" ? "İngilizce" : "Türkçe"} Ana Sayfa ${changes.map((change) => homeChangeMessages[change]).join(", ")}. İçeriği düzenleyip yeniden yayınlayın; ana sayfayı değiştirmek için bu kaydı güncelleyin.`,
+        400,
+      );
+    }
+  }
+
+  return args;
 };
 
 export const Pages: CollectionConfig = {
   slug: "pages",
   access: {
     create: adminOrEditor,
-    delete: adminOrEditor,
+    // Deleting removes every version too; only an admin may do it. Editors
+    // unpublish instead.
+    delete: adminOnly,
     read: publishedPageOrAdminOrEditor,
     update: adminOrEditor,
   },
@@ -264,7 +478,7 @@ export const Pages: CollectionConfig = {
                 value === normalizeSlug(value) &&
                 value.length > 0
                   ? true
-                  : "Slug küçük harf, sayı ve tek tirelerden oluşmalıdır.",
+                  : SLUG_RULE_MESSAGE,
             },
             {
               name: "language",
@@ -323,7 +537,7 @@ export const Pages: CollectionConfig = {
               label: "Yayın tarihi",
               admin: {
                 description:
-                  "İlk yayında otomatik atanır. Gelecek tarih planlı yayın anlamına gelir.",
+                  "İlk yayında otomatik atanır; yayındaki bir kayıtta boşaltılırsa önceki tarih korunur. Gelecek tarih planlı yayın anlamına gelir.",
               },
             },
           ],
@@ -340,13 +554,13 @@ export const Pages: CollectionConfig = {
                   name: "title",
                   type: "text",
                   label: "SEO başlığı",
-                  maxLength: 60,
+                  maxLength: SEO_TITLE_MAX_LENGTH,
                 },
                 {
                   name: "description",
                   type: "textarea",
                   label: "SEO açıklaması",
-                  maxLength: 160,
+                  maxLength: SEO_DESCRIPTION_MAX_LENGTH,
                 },
                 {
                   name: "index",
@@ -365,6 +579,7 @@ export const Pages: CollectionConfig = {
                   type: "upload",
                   label: "Sosyal paylaşım görseli",
                   relationTo: "media",
+                  filterOptions: imageMediaFilter,
                 },
               ],
             },
@@ -374,8 +589,11 @@ export const Pages: CollectionConfig = {
     },
   ],
   hooks: {
-    beforeChange: [setPublishedAtOnFirstPublish],
+    afterChange: [revalidation.afterChange],
+    afterDelete: [revalidation.afterDelete],
+    beforeChange: [ensurePublishedAt],
     beforeDelete: [preventDeletingHomePage],
+    beforeOperation: [protectPublishedHomePage],
     beforeValidate: [validatePageIdentity],
   },
   indexes: [

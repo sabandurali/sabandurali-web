@@ -1,25 +1,26 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import DistrictEditorialGuidePage from "@/components/districts/DistrictEditorialGuidePage";
-import { getDistrictGuide } from "@/content/districts/district-guide-data-source";
+import { serializeJsonLd } from "@/content/entity-seo";
+import { getDistrictPageData } from "@/content/districts/district-page-data";
 import { districts, getDistrict } from "@/content/districts/district-registry";
 import {
   districtJsonLd,
   districtMetadata,
 } from "@/content/districts/district-seo";
-import {
-  getDistrictNews,
-  getDistrictResearch,
-} from "@/content/articles/article-data-source";
-import { getDistrictPhotos } from "@/content/photos/photo-data-source";
-import { serializeJsonLd } from "@/content/entity-seo";
 
 type Props = { params: Promise<{ district: string }> };
-// Re-evaluate publication and source freshness instead of caching CMS content indefinitely.
-export const dynamic = "force-dynamic";
+
+// Prerendered per district and refreshed at most hourly. CMS writes
+// revalidate the page on demand (src/lib/revalidation.ts); the hourly pass
+// also re-applies the content policy's source-freshness rules and picks up
+// scheduled publications, which no write announces.
+export const revalidate = 3600;
+
 export function generateStaticParams() {
   return districts.map((district) => ({ district: district.slug }));
 }
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { district: slug } = await params;
   const district = getDistrict(slug);
@@ -29,33 +30,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       robots: { index: false, follow: false },
     };
   }
-  return districtMetadata(district, await getDistrictGuide(slug));
+  const { guide } = await getDistrictPageData(slug);
+  return districtMetadata(district, guide);
 }
+
 export default async function DistrictPage({ params }: Props) {
   const { district: slug } = await params;
   const district = getDistrict(slug);
   if (district === null) notFound();
-  const [guide, photos, research, news] = await Promise.all([
-    getDistrictGuide(slug),
-    getDistrictPhotos(slug, "tr"),
-    getDistrictResearch(slug, "tr"),
-    getDistrictNews(slug, "tr"),
-  ]);
+  const data = await getDistrictPageData(slug);
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: serializeJsonLd(districtJsonLd(district, guide)),
+          __html: serializeJsonLd(districtJsonLd(district, data.guide)),
         }}
       />
-      <DistrictEditorialGuidePage
-        district={district}
-        guide={guide}
-        photos={photos}
-        research={research}
-        news={news}
-      />
+      <DistrictEditorialGuidePage district={district} data={data} />
     </>
   );
 }

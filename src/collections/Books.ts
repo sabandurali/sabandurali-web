@@ -1,7 +1,10 @@
 import {
   ValidationError,
+  type CollectionAfterReadHook,
   type CollectionBeforeValidateHook,
   type CollectionConfig,
+  type FilterOptions,
+  type PayloadRequest,
   type Where,
 } from "payload";
 import {
@@ -11,35 +14,71 @@ import {
   READING_STATUSES,
   REVIEW_STATUSES,
 } from "@/content/books/constants";
+import { createBookReviewSlug, normalizeIsbn } from "@/content/books/helpers";
+import { SLUG_RULE_MESSAGE } from "@/content/shared/slug";
+import { getBookPublicationIssues } from "@/collections/bookPublication";
 import {
-  createBookReviewSlug,
-  normalizeIsbn,
-} from "@/content/books/helpers";
+  imageMediaFilter,
+  validateOptionalSiteCanonical,
+  SEO_DESCRIPTION_MAX_LENGTH,
+  SEO_TITLE_MAX_LENGTH,
+} from "@/collections/validation";
+import { getRelationshipID, getText, isRecord } from "@/content/guards";
 import {
+  adminOnly,
   adminOrEditor,
+  editorialFieldRead,
+  isPublicApiReader,
   publishedBookReviewOrAdminOrEditor,
 } from "@/lib/payloadAccess";
+import { createRevalidationHooks } from "@/lib/revalidation";
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
+const revalidation = createRevalidationHooks("books");
+
+function throwBookValidationError(
+  req: PayloadRequest,
+  errors: Array<{ message: string; path: string }>,
+  id: string | null,
+): never {
+  throw new ValidationError(
+    {
+      collection: "books",
+      errors,
+      id: id ?? undefined,
+      req,
+    },
+    req.t,
+  );
 }
 
-function getText(value: unknown): string | null {
-  return typeof value === "string" && value.trim().length > 0
-    ? value.trim()
-    : null;
+/** Other reviews whose `translation` points at `targetID`. */
+async function findBooksTranslatedAs(
+  req: PayloadRequest,
+  targetID: string,
+  excludeID: string | null,
+): Promise<string[]> {
+  const result = await req.payload.find({
+    collection: "books",
+    depth: 0,
+    limit: 2,
+    overrideAccess: true,
+    pagination: false,
+    req,
+    where: {
+      and: [
+        { translation: { equals: targetID } },
+        ...(excludeID === null ? [] : [{ id: { not_equals: excludeID } }]),
+      ],
+    },
+  });
+
+  return result.docs.map((doc) => String(doc.id));
 }
 
-function getRelationshipID(value: unknown): string | null {
-  if (typeof value === "string") return value;
-  if (isRecord(value) && typeof value.id === "string") return value.id;
-  return null;
-}
+const excludeCurrentBook: FilterOptions = ({ id }) =>
+  id === undefined ? true : { id: { not_equals: id } };
 
-function normalizeNestedSlugs(
-  value: unknown,
-  sourceField: string,
-): unknown {
+function normalizeNestedSlugs(value: unknown, sourceField: string): unknown {
   if (!Array.isArray(value)) return value;
 
   return value.map((entry) => {
@@ -55,7 +94,149 @@ function normalizeNestedSlugs(
   });
 }
 
-const normalizeAndValidateBook: CollectionBeforeValidateHook = async ({
+/** One slug per language: the public route is `/<language>/kitaplar/<slug>`. */
+async function assertUniqueSlugPerLanguage(
+  req: PayloadRequest,
+  slug: string,
+  language: string | null,
+  currentID: string | null,
+): Promise<void> {
+  if (slug === "" || language === null) return;
+
+  const duplicate = await req.payload.find({
+    collection: "books",
+    depth: 0,
+    limit: 1,
+    overrideAccess: true,
+    pagination: false,
+    req,
+    where: {
+      and: [
+        { slug: { equals: slug } },
+        { language: { equals: language } },
+        ...(currentID === null ? [] : [{ id: { not_equals: currentID } }]),
+      ],
+    },
+  });
+
+  if (duplicate.docs.length > 0) {
+    throwBookValidationError(
+      req,
+      [
+        {
+          message:
+            "Bu dilde aynı slug değerine sahip başka bir kitap incelemesi var.",
+          path: "slug",
+        },
+      ],
+      currentID,
+    );
+  }
+}
+
+/** An ISBN (10 or 13) belongs to one review across both languages. */
+async function assertUniqueIsbn(
+  req: PayloadRequest,
+  data: Record<string, unknown>,
+  currentID: string | null,
+): Promise<void> {
+  const isbnValues = [getText(data.isbn10), getText(data.isbn13)].filter(
+    (value): value is string => value !== null,
+  );
+  if (isbnValues.length === 0) return;
+
+  const duplicate = await req.payload.find({
+    collection: "books",
+    depth: 0,
+    limit: 1,
+    overrideAccess: true,
+    pagination: false,
+    req,
+    where: {
+      and: [
+        {
+          or: isbnValues.flatMap((isbn): Where[] => [
+            { isbn10: { equals: isbn } },
+            { isbn13: { equals: isbn } },
+          ]),
+        },
+        ...(currentID === null ? [] : [{ id: { not_equals: currentID } }]),
+      ],
+    },
+  });
+
+  if (duplicate.docs.length > 0) {
+    throwBookValidationError(
+      req,
+      [
+        {
+          message: "Bu ISBN değerine sahip başka bir kitap incelemesi var.",
+          path: data.isbn13 ? "isbn13" : "isbn10",
+        },
+      ],
+      currentID,
+    );
+  }
+}
+
+/**
+ * A translation is another review in the other language, and translations
+ * are 1:1 pairs. Otherwise the reverse lookup that builds hreflang links
+ * finds several candidates and picks one at random.
+ */
+async function assertValidTranslation(
+  req: PayloadRequest,
+  translationID: string | null,
+  language: string | null,
+  currentID: string | null,
+): Promise<void> {
+  if (translationID === null) return;
+
+  const refuse = (message: string): never =>
+    throwBookValidationError(
+      req,
+      [{ message, path: "translation" }],
+      currentID,
+    );
+
+  if (translationID === currentID) {
+    refuse("Bir kayıt kendi çevirisi olarak seçilemez.");
+  }
+
+  const translation = await req.payload.findByID({
+    collection: "books",
+    depth: 0,
+    id: translationID,
+    overrideAccess: true,
+    req,
+  });
+
+  if (language !== null && getText(translation.language) === language) {
+    refuse("Çeviri kaydı mevcut kayıttan farklı bir dilde olmalıdır.");
+  }
+
+  const targetsOwnTranslation = getRelationshipID(translation.translation);
+  if (targetsOwnTranslation !== null && targetsOwnTranslation !== currentID) {
+    refuse(
+      "Seçilen kayıt başka bir incelemeye çeviri olarak bağlı. Önce o bağlantıyı kaldırın.",
+    );
+  }
+
+  if ((await findBooksTranslatedAs(req, translationID, currentID)).length > 0) {
+    refuse("Seçilen kayıt başka bir incelemenin çevirisi olarak zaten seçili.");
+  }
+
+  if (
+    currentID !== null &&
+    (await findBooksTranslatedAs(req, currentID, translationID)).length > 0
+  ) {
+    refuse(
+      "Bu inceleme başka bir kaydın çevirisi olarak bağlı. Çeviri olarak o kaydı seçin veya önce o bağlantıyı kaldırın.",
+    );
+  }
+}
+
+export const normalizeAndValidateBook: CollectionBeforeValidateHook = async ({
   data,
   operation,
   originalDoc,
@@ -86,138 +267,81 @@ const normalizeAndValidateBook: CollectionBeforeValidateHook = async ({
     data[field] = value === null ? null : normalizeIsbn(value);
   }
 
-  if (slug !== "" && language !== null) {
-    const where: Where = {
-      and: [
-        { slug: { equals: slug } },
-        { language: { equals: language } },
-        ...(currentID === null ? [] : [{ id: { not_equals: currentID } }]),
-      ],
-    };
-    const duplicate = await req.payload.find({
-      collection: "books",
-      depth: 0,
-      limit: 1,
-      overrideAccess: true,
-      pagination: false,
-      req,
-      where,
-    });
-
-    if (duplicate.docs.length > 0) {
-      throw new ValidationError(
-        {
-          collection: "books",
-          errors: [
-            {
-              message:
-                "Bu dilde aynı slug değerine sahip başka bir kitap incelemesi var.",
-              path: "slug",
-            },
-          ],
-          id: currentID ?? undefined,
-          req,
-        },
-        req.t,
-      );
-    }
-  }
-
-  const isbnValues = [getText(data.isbn10), getText(data.isbn13)].filter(
-    (value): value is string => value !== null,
+  await assertUniqueSlugPerLanguage(req, slug, language, currentID);
+  await assertUniqueIsbn(req, data, currentID);
+  await assertValidTranslation(
+    req,
+    getRelationshipID(data.translation),
+    language,
+    currentID,
   );
 
-  if (isbnValues.length > 0) {
-    const duplicate = await req.payload.find({
-      collection: "books",
-      depth: 0,
-      limit: 1,
-      overrideAccess: true,
-      pagination: false,
+  return data;
+};
+
+/**
+ * Publishing runs the same rules as the public site (see
+ * `bookPublication.ts`), so a review that looks published in the admin is
+ * also visible on the site, or the editor sees why not.
+ */
+export const validateBookPublication: CollectionBeforeValidateHook = async ({
+  data,
+  originalDoc,
+  req,
+}) => {
+  if (!data) return data;
+
+  const merged: Record<string, unknown> = {
+    ...(isRecord(originalDoc) ? originalDoc : {}),
+    ...data,
+  };
+
+  if (merged._status !== "published") return data;
+
+  const coverID = getRelationshipID(merged.coverImage);
+  const coverMedia =
+    coverID === null
+      ? null
+      : await req.payload.findByID({
+          collection: "media",
+          depth: 0,
+          disableErrors: true,
+          id: coverID,
+          overrideAccess: true,
+          req,
+        });
+  const issues = getBookPublicationIssues(merged, coverMedia);
+
+  if (issues.length > 0) {
+    throwBookValidationError(
       req,
-      where: {
-        and: [
-          {
-            or: isbnValues.flatMap((isbn): Where[] => [
-              { isbn10: { equals: isbn } },
-              { isbn13: { equals: isbn } },
-            ]),
-          },
-          ...(currentID === null ? [] : [{ id: { not_equals: currentID } }]),
-        ],
-      },
-    });
-
-    if (duplicate.docs.length > 0) {
-      throw new ValidationError(
-        {
-          collection: "books",
-          errors: [
-            {
-              message:
-                "Bu ISBN değerine sahip başka bir kitap incelemesi var.",
-              path: data.isbn13 ? "isbn13" : "isbn10",
-            },
-          ],
-          id: currentID ?? undefined,
-          req,
-        },
-        req.t,
-      );
-    }
-  }
-
-  const translationID = getRelationshipID(data.translation);
-
-  if (translationID !== null) {
-    if (translationID === currentID) {
-      throw new ValidationError(
-        {
-          collection: "books",
-          errors: [
-            {
-              message: "Bir kayıt kendi çevirisi olarak seçilemez.",
-              path: "translation",
-            },
-          ],
-          id: currentID ?? undefined,
-          req,
-        },
-        req.t,
-      );
-    }
-
-    const translation = await req.payload.findByID({
-      collection: "books",
-      depth: 0,
-      id: translationID,
-      overrideAccess: true,
-      req,
-    });
-
-    if (
-      language !== null &&
-      getText(translation.language) === language
-    ) {
-      throw new ValidationError(
-        {
-          collection: "books",
-          errors: [
-            {
-              message:
-                "Çeviri kaydı mevcut kayıttan farklı bir dilde olmalıdır.",
-              path: "translation",
-            },
-          ],
-          id: currentID ?? undefined,
-          req,
-        },
-        req.t,
-      );
-    }
+      issues.map((issue) => ({ ...issue })),
+      getText(merged.id),
+    );
   }
 
   return data;
+};
+
+/**
+ * `reviewStatus` is an editorial field (`PRIVATE_BOOK_REVIEW_FIELDS`), but the
+ * collection's own read access filters on it, and Payload validates that
+ * filter against field access. It is dropped from the public API response
+ * here instead; every row an anonymous client can read has the value
+ * `published`, so the column itself reveals nothing to a `where` query.
+ */
+export const hideReviewStatusFromPublicApi: CollectionAfterReadHook = ({
+  doc,
+  overrideAccess,
+  req,
+}) => {
+  if (overrideAccess === true || !isPublicApiReader(req) || !isRecord(doc)) {
+    return doc;
+  }
+
+  return Object.fromEntries(
+    Object.entries(doc).filter(([key]) => key !== "reviewStatus"),
+  );
 };
 
 const textListField = (
@@ -241,7 +365,9 @@ export const Books: CollectionConfig = {
   slug: "books",
   access: {
     create: adminOrEditor,
-    delete: adminOrEditor,
+    // Deleting removes every version too; like articles and photos, only an
+    // admin may do it. Editors unpublish instead.
+    delete: adminOnly,
     read: publishedBookReviewOrAdminOrEditor,
     update: adminOrEditor,
   },
@@ -288,7 +414,7 @@ export const Books: CollectionConfig = {
                 value === createBookReviewSlug(value) &&
                 value.length > 0
                   ? true
-                  : "Slug küçük harf, sayı ve tek tirelerden oluşmalıdır.",
+                  : SLUG_RULE_MESSAGE,
             },
             {
               name: "language",
@@ -399,6 +525,7 @@ export const Books: CollectionConfig = {
               type: "upload",
               label: "Kapak görseli",
               relationTo: "media",
+              filterOptions: imageMediaFilter,
             },
             {
               name: "coverImageAlt",
@@ -481,7 +608,7 @@ export const Books: CollectionConfig = {
                   label: "İnceleme durumu",
                   admin: {
                     description:
-                      "Public erişim için published seçilmeli; yayın tarihi gelmiş ve SEO index açık olmalıdır.",
+                      "Yayınlarken 'published' (sitede görünür) veya 'archived' (sitede gizli) seçin. Görünmesi için yayın tarihi gelmiş ve SEO indeksi açık olmalıdır; eksik alanlar yayın sırasında listelenir.",
                   },
                   defaultValue: "draft",
                   index: true,
@@ -640,16 +767,25 @@ export const Books: CollectionConfig = {
           fields: [
             {
               name: "translation",
+              // The anonymous REST API would otherwise name the ID of an
+              // unpublished translation. The public pages pair reviews
+              // through the Local API, which keeps the field.
+              access: { read: editorialFieldRead },
               type: "relationship",
               label: "Diğer dildeki kayıt",
               admin: {
                 description:
-                  "Bu incelemenin Türkçe veya İngilizce karşılığını seçin.",
+                  "Bu incelemenin Türkçe veya İngilizce karşılığını seçin. Her kayıt yalnız bir çeviriyle eşleşebilir.",
               },
+              filterOptions: excludeCurrentBook,
+              // Translations point at each other; populating only one level
+              // keeps `?depth=` from expanding the pair recursively.
+              maxDepth: 1,
               relationTo: "books",
             },
             {
               name: "translationStatus",
+              access: { read: editorialFieldRead },
               type: "select",
               label: "Çeviri durumu",
               defaultValue: "none",
@@ -661,9 +797,12 @@ export const Books: CollectionConfig = {
             },
             {
               name: "relatedBooks",
+              access: { read: editorialFieldRead },
               type: "relationship",
               hasMany: true,
               label: "İlgili kitap incelemeleri",
+              filterOptions: excludeCurrentBook,
+              maxDepth: 1,
               relationTo: "books",
             },
             {
@@ -671,12 +810,14 @@ export const Books: CollectionConfig = {
               fields: [
                 {
                   name: "authorId",
+                  access: { read: editorialFieldRead },
                   type: "relationship",
                   label: "İçerik yazarı",
                   relationTo: "users",
                 },
                 {
                   name: "editorId",
+                  access: { read: editorialFieldRead },
                   type: "relationship",
                   label: "Editör",
                   relationTo: "users",
@@ -699,6 +840,7 @@ export const Books: CollectionConfig = {
                 },
                 {
                   name: "showOnHomepage",
+                  access: { read: editorialFieldRead },
                   type: "checkbox",
                   label: "Ana sayfada göster",
                   defaultValue: false,
@@ -714,18 +856,25 @@ export const Books: CollectionConfig = {
                   name: "title",
                   type: "text",
                   label: "SEO başlığı",
+                  maxLength: SEO_TITLE_MAX_LENGTH,
                   required: true,
                 },
                 {
                   name: "description",
                   type: "textarea",
                   label: "SEO açıklaması",
+                  maxLength: SEO_DESCRIPTION_MAX_LENGTH,
                   required: true,
                 },
                 {
                   name: "canonical",
                   type: "text",
                   label: "Canonical adresi",
+                  admin: {
+                    description:
+                      "Boş bırakılırsa incelemenin kendi adresi kullanılır. Yalnız site içi yol (/kitaplar/...) veya https://www.sabandurali.com adresi girilebilir.",
+                  },
+                  validate: validateOptionalSiteCanonical,
                 },
                 {
                   name: "index",
@@ -757,6 +906,7 @@ export const Books: CollectionConfig = {
                   type: "upload",
                   label: "Sosyal paylaşım görseli",
                   relationTo: "media",
+                  filterOptions: imageMediaFilter,
                 },
               ],
             },
@@ -766,8 +916,19 @@ export const Books: CollectionConfig = {
     },
   ],
   hooks: {
-    beforeValidate: [normalizeAndValidateBook],
+    afterChange: [revalidation.afterChange],
+    afterDelete: [revalidation.afterDelete],
+    afterRead: [hideReviewStatusFromPublicApi],
+    beforeValidate: [normalizeAndValidateBook, validateBookPublication],
   },
+  indexes: [
+    {
+      // Enforces in the database what `normalizeAndValidateBook` checks, so
+      // two concurrent saves cannot create the same language and slug twice.
+      fields: ["language", "slug"],
+      unique: true,
+    },
+  ],
   versions: {
     drafts: true,
     maxPerDoc: 25,

@@ -1,6 +1,24 @@
-import type { SubmissionMessages } from "@/components/forms/FormStatus";
-import type { PrivacyAcknowledgementContent } from "@/components/forms/PrivacyAcknowledgement";
 import type { Locale } from "@/content/homeContent";
+
+/**
+ * Button and status texts of a form submission. The content layer owns the
+ * shape; the form components render it (src/components/forms/).
+ */
+export type SubmissionMessages = {
+  submit: string;
+  submitting: string;
+  success: string;
+  error: string;
+  configurationError: string;
+  submitAnother: string;
+};
+
+/** The privacy notice sentence under a form: text, link label, text. */
+export type PrivacyAcknowledgementContent = {
+  prefix: string;
+  linkLabel: string;
+  suffix: string;
+};
 
 export type ContactContent = {
   locale: Locale;
@@ -53,8 +71,7 @@ export const contactContent = {
       submitting: "Mesajınız gönderiliyor…",
       success:
         "Mesajınız alındı. Uygun olduğumda size e-posta yoluyla dönüş yapacağım.",
-      error:
-        "Mesaj şu anda gönderilemedi. Lütfen daha sonra yeniden deneyin.",
+      error: "Mesaj şu anda gönderilemedi. Lütfen daha sonra yeniden deneyin.",
       configurationError: "İletişim formu geçici olarak kullanılamıyor.",
       submitAnother: "Yeni mesaj gönder",
     },

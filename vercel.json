@@ -2,7 +2,9 @@
   "buildCommand": "npm run vercel:build",
   "git": {
     "deploymentEnabled": {
-      "codex/security-stage-1": false
+      "codex/security-stage-1": false,
+      "codex/backup-2026-10-21": false,
+      "codex/security-followup-2026-10-21": false
     }
   }
 }

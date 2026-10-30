@@ -1,26 +1,14 @@
-import type { Metadata } from "next";
-import PhotoListPage from "@/components/photos/PhotoListPage";
-import { getPublishedPhotos } from "@/content/photos/photo-data-source";
-import { photoListUrls } from "@/content/photos/photo-routes";
+import { createPhotoListRoute } from "@/components/pages/publication-list-routes";
+import type { PhotoListSearchParams } from "@/components/photos/photo-list-params";
 
-export const metadata: Metadata = {
-  title: "Photography | Şaban Durali",
-  description: "Photographs from city, human and animal stories.",
-  alternates: { canonical: photoListUrls.en, languages: photoListUrls },
-};
+// The list reads its filters and page from the query string, so it renders
+// per request (no revalidate).
+const route = createPhotoListRoute("en");
 
-function single(value: string | string[] | undefined) {
-  return typeof value === "string" && value.trim() !== "" ? value : undefined;
-}
+export const generateMetadata = route.generateMetadata;
 
-export default async function EnglishPhotographyPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
-  const query = await searchParams;
-  const pageValue = Number(single(query.page));
-  const filters = {
-    collection: single(query.collection),
-    tag: single(query.tag),
-    ...(Number.isInteger(pageValue) && pageValue > 0 ? { page: pageValue } : {}),
-  };
-  const result = await getPublishedPhotos("en", filters);
-  return <PhotoListPage locale="en" filters={filters} result={result} />;
+export default function EnglishPhotographyPage(props: {
+  searchParams: Promise<PhotoListSearchParams>;
+}) {
+  return <route.Page {...props} />;
 }

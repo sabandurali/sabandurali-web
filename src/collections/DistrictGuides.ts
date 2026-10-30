@@ -1,33 +1,41 @@
 import type { CollectionBeforeChangeHook, CollectionConfig } from "payload";
-import { mapDistrictGuide } from "@/content/districts/district-guide-projection";
+import {
+  projectPublicDistrictGuideDocument,
+  sanitizeDistrictSources,
+} from "@/content/districts/district-guide-projection";
 import { APIError } from "payload";
+import { ensurePublishedAt } from "@/lib/publishedAt";
 import {
   districtSectionOptions,
+  districtSourceTypeOptions,
   isPublicSourceUrl,
   sectionIsPublic,
-  type DistrictSource,
 } from "@/content/districts/district-content-policy";
 import { districtOptions } from "@/content/districts/district-registry";
+import { imageMediaFilter } from "@/collections/validation";
 import {
   adminOnly,
   adminOrEditor,
+  createAnonymousQueryAllowlist,
   isAdminOrEditor,
   publishedOrAdminOrEditor,
 } from "@/lib/payloadAccess";
+import { createRevalidationHooks } from "@/lib/revalidation";
 
-const setPublishedAtOnFirstPublish: CollectionBeforeChangeHook = ({
-  data,
-  originalDoc,
-}) => {
-  if (
-    originalDoc?._status !== "published" &&
-    data._status === "published" &&
-    !data.publishedAt
-  ) {
-    return { ...data, publishedAt: new Date().toISOString() };
-  }
-  return data;
-};
+const revalidation = createRevalidationHooks("district-guides");
+
+/**
+ * Fields anonymous readers may filter and sort by. Everything else can hold
+ * unreviewed or unsourced values that `afterRead` hides from them.
+ */
+export const PUBLIC_DISTRICT_GUIDE_QUERY_PATHS = [
+  "_status",
+  "createdAt",
+  "district",
+  "id",
+  "publishedAt",
+  "updatedAt",
+] as const;
 
 const protectDistrictPublication: CollectionBeforeChangeHook = ({
   data,
@@ -48,7 +56,9 @@ const protectDistrictPublication: CollectionBeforeChangeHook = ({
     throw new APIError("Merkezi registry içinden geçerli bir ilçe seçin.", 400);
   }
   if (merged._status === "published") {
-    const sources = (merged.sources ?? []) as DistrictSource[];
+    // The same normalization as the public projection: a malformed row is
+    // rejected by the policy instead of reaching it unchecked.
+    const sources = sanitizeDistrictSources(merged.sources);
     const reviewed = merged.reviewedSections ?? [];
     for (const section of ["summary", "history", "geography"] as const) {
       if (
@@ -162,6 +172,7 @@ export const DistrictGuides: CollectionConfig = {
                   name: "image",
                   type: "upload",
                   relationTo: "media",
+                  filterOptions: imageMediaFilter,
                   label: "Fotoğraf",
                 },
               ],
@@ -308,13 +319,7 @@ export const DistrictGuides: CollectionConfig = {
                   type: "select",
                   required: true,
                   defaultValue: "unclassified",
-                  options: [
-                    { label: "Resmî", value: "official" },
-                    { label: "Akademik / kurumsal", value: "academic" },
-                    { label: "İkincil", value: "secondary" },
-                    { label: "Piyasa platformu", value: "market" },
-                    { label: "Sınıflandırılmadı", value: "unclassified" },
-                  ],
+                  options: [...districtSourceTypeOptions],
                 },
                 {
                   name: "primary",
@@ -388,17 +393,24 @@ export const DistrictGuides: CollectionConfig = {
     },
   ],
   hooks: {
-    beforeChange: [protectDistrictPublication, setPublishedAtOnFirstPublish],
+    afterChange: [revalidation.afterChange],
+    afterDelete: [revalidation.afterDelete],
+    beforeChange: [protectDistrictPublication, ensurePublishedAt],
+    // `afterRead` hides raw values from anonymous readers, but `where` and
+    // `sort` run on the stored columns; without this allowlist a query such
+    // as `where[marketData.salePricePerM2][greater_than]=N` would reveal them.
+    beforeOperation: [
+      createAnonymousQueryAllowlist(PUBLIC_DISTRICT_GUIDE_QUERY_PATHS),
+    ],
     afterRead: [
       ({ doc, req, overrideAccess }) => {
         if (overrideAccess || isAdminOrEditor(req.user)) return doc;
-        // Apply the same gate to anonymous REST/GraphQL reads, not only page rendering.
-        return {
-          ...doc,
-          ...mapDistrictGuide(doc),
-          researchNotes: undefined,
-          importProvenance: undefined,
-        };
+        // Anonymous REST and Local API reads get the same allowlisted
+        // projection as the page: identity fields plus the public sections.
+        // Stored fields that are not on the allowlist (research notes,
+        // provenance, neighbourhood images, future internal fields) are
+        // never copied instead of being blanked one by one.
+        return projectPublicDistrictGuideDocument(doc);
       },
     ],
   },

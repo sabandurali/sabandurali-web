@@ -1,62 +1,61 @@
 import "server-only";
 import { getPayload, type Where } from "payload";
 import config from "@payload-config";
-import { normalizeIsbn } from "@/content/books/helpers";
-import { mapPayloadBookReview } from "@/content/books/payload-book-review-mapper";
-import type { BookReviewRepository } from "@/content/books/repository/book-review-repository";
-import { InMemoryBookReviewRepository } from "@/content/books/repository/in-memory-book-review-repository";
-import type {
-  BookReviewListQuery,
-  PaginatedBookReviewResult,
-} from "@/content/books/repository/types";
-import type {
-  BookReview,
-  BookReviewLanguage,
-} from "@/content/books/types";
+import {
+  collectMappedPages,
+  getReadBatchSize,
+} from "@/content/shared/pagination";
+import { createPublicBookReviewConditions } from "@/content/books/book-query-conditions";
+import {
+  mapPayloadBookReview,
+  mapPayloadBookReviewSummary,
+} from "@/content/books/payload-book-review-mapper";
+import {
+  toPublicBookReview,
+  type PublicBookReview,
+  type PublicBookReviewSummary,
+} from "@/content/books/public-types";
+import type { BookReviewLanguage } from "@/content/books/types";
 
 const PAYLOAD_BOOK_PAGE_SIZE = 100;
+const PUBLIC_BOOK_SORT = ["-publishedAt", "id"];
 
-function createPublicConditions(now: Date): Where[] {
-  return [
-    {
-      _status: {
-        equals: "published",
-      },
-    },
-    {
-      reviewStatus: {
-        equals: "published",
-      },
-    },
-    {
-      publishedAt: {
-        less_than_equal: now.toISOString(),
-      },
-    },
-    {
-      "seo.index": {
-        equals: true,
-      },
-    },
-  ];
-}
+/**
+ * `translation` and `relatedBooks` point to other books. The mapper only
+ * keeps their IDs, so a populated book carries nothing but its ID and
+ * `updatedAt` instead of the whole review with its arrays. Media (cover and
+ * Open Graph image) are still populated in full.
+ */
+export const BOOK_RELATION_POPULATE = {
+  books: { updatedAt: true },
+} as const;
 
-function createIDCondition(id: string): Where {
-  return {
-    id: {
-      equals: id,
-    },
-  };
-}
+/**
+ * List reads leave out the long-form fields only the review page shows
+ * (`BOOK_REVIEW_DETAIL_FIELDS`): on Postgres each of them is a separate
+ * array table, joined for every listed review.
+ */
+export const BOOK_LIST_SELECT = {
+  keyIdeas: false,
+  strengths: false,
+  weaknesses: false,
+  whoShouldRead: false,
+  whoShouldNotRead: false,
+  applicationNotes: false,
+  quotes: false,
+} as const;
 
-export class PayloadBookReviewRepository
-  implements BookReviewRepository
-{
+/**
+ * Public book review reads. Every result is projected to the public type
+ * here, at the repository boundary, so no caller ever receives the
+ * editorial fields (review workflow, curation, translation bookkeeping).
+ */
+export class PayloadPublicBookReviewRepository {
   private async findOne(
     conditions: Where[],
-    now: Date = new Date(),
+    now: Date,
     relatedTranslationID?: string | null,
-  ): Promise<BookReview | null> {
+  ): Promise<PublicBookReview | null> {
     const payload = await getPayload({ config });
     const result = await payload.find({
       collection: "books",
@@ -65,229 +64,93 @@ export class PayloadBookReviewRepository
       limit: 1,
       overrideAccess: false,
       pagination: false,
+      populate: BOOK_RELATION_POPULATE,
       where: {
-        and: [...createPublicConditions(now), ...conditions],
+        and: [...createPublicBookReviewConditions(now), ...conditions],
       },
     });
     const document = result.docs[0];
+    const bookReview =
+      document === undefined
+        ? null
+        : mapPayloadBookReview(document, now, relatedTranslationID);
 
-    return document === undefined
-      ? null
-      : mapPayloadBookReview(document, now, relatedTranslationID);
+    return bookReview === null ? null : toPublicBookReview(bookReview);
   }
 
-  private async listAllPublic(
+  /**
+   * Every public review of one language, or only the newest `limit`, as
+   * list summaries (no long-form detail fields).
+   */
+  async listPublished(
+    language: BookReviewLanguage,
     now: Date = new Date(),
-  ): Promise<BookReview[]> {
+    limit?: number,
+  ): Promise<PublicBookReviewSummary[]> {
     const payload = await getPayload({ config });
-    const bookReviews: BookReview[] = [];
-    let page = 1;
-    let totalPages = 1;
 
-    while (page <= totalPages) {
+    return collectMappedPages(async (page) => {
       const result = await payload.find({
         collection: "books",
         depth: 1,
         draft: false,
-        limit: PAYLOAD_BOOK_PAGE_SIZE,
+        limit: getReadBatchSize(limit, PAYLOAD_BOOK_PAGE_SIZE),
         overrideAccess: false,
         page,
-        sort: "-publishedAt",
+        populate: BOOK_RELATION_POPULATE,
+        select: BOOK_LIST_SELECT,
+        sort: PUBLIC_BOOK_SORT,
         where: {
-          and: createPublicConditions(now),
+          and: [
+            ...createPublicBookReviewConditions(now),
+            { language: { equals: language } },
+          ],
         },
       });
 
-      for (const document of result.docs) {
-        const bookReview = mapPayloadBookReview(document, now);
-        if (bookReview !== null) bookReviews.push(bookReview);
-      }
-
-      totalPages = result.totalPages;
-      page += 1;
-    }
-
-    return bookReviews;
+      return {
+        items: result.docs.flatMap((document): PublicBookReviewSummary[] => {
+          const bookReview = mapPayloadBookReviewSummary(document, now);
+          return bookReview === null ? [] : [bookReview];
+        }),
+        totalPages: result.totalPages,
+      };
+    }, limit);
   }
 
-  async findById(id: string): Promise<BookReview | null> {
-    return this.findOne([createIDCondition(id)]);
-  }
-
-  async findBySlugAndLanguage(
+  async findPublishedBySlug(
     slug: string,
     language: BookReviewLanguage,
-  ): Promise<BookReview | null> {
-    return this.findOne([
-      {
-        slug: {
-          equals: slug,
-        },
-      },
-      {
-        language: {
-          equals: language,
-        },
-      },
-    ]);
-  }
-
-  async findByIsbn(isbn: string): Promise<BookReview | null> {
-    const normalizedIsbn = normalizeIsbn(isbn);
-
-    if (normalizedIsbn === "") return null;
-
-    return this.findOne([
-      {
-        or: [
-          {
-            isbn10: {
-              equals: normalizedIsbn,
-            },
-          },
-          {
-            isbn13: {
-              equals: normalizedIsbn,
-            },
-          },
-        ],
-      },
-    ]);
-  }
-
-  async findTranslation(
-    bookReviewId: string,
-    targetLanguage: BookReviewLanguage,
-  ): Promise<BookReview | null> {
-    const payload = await getPayload({ config });
-    const now = new Date();
-    const sourceResult = await payload.find({
-      collection: "books",
-      depth: 0,
-      draft: false,
-      limit: 1,
-      overrideAccess: false,
-      pagination: false,
-      where: {
-        and: [
-          ...createPublicConditions(now),
-          createIDCondition(bookReviewId),
-        ],
-      },
-    });
-    const source = sourceResult.docs[0];
-
-    if (source === undefined) return null;
-
-    const directTranslationID =
-      typeof source.translation === "string"
-        ? source.translation
-        : source.translation?.id ?? null;
-
-    if (directTranslationID !== null) {
-      return this.findOne(
-        [
-          createIDCondition(directTranslationID),
-          {
-            language: {
-              equals: targetLanguage,
-            },
-          },
-        ],
-        now,
-        bookReviewId,
-      );
-    }
-
+    now: Date = new Date(),
+  ): Promise<PublicBookReview | null> {
     return this.findOne(
-      [
-        {
-          translation: {
-            equals: bookReviewId,
-          },
-        },
-        {
-          language: {
-            equals: targetLanguage,
-          },
-        },
-      ],
+      [{ slug: { equals: slug } }, { language: { equals: language } }],
       now,
-      bookReviewId,
     );
   }
 
-  async list(
-    query: BookReviewListQuery = {},
-  ): Promise<PaginatedBookReviewResult<BookReview>> {
-    const now = query.publishedAsOf ?? new Date();
-    const publicBookReviews = await this.listAllPublic(now);
-    const repository = new InMemoryBookReviewRepository(publicBookReviews);
+  /**
+   * Translations are linked from either side: the review may point to its
+   * translation, or the translation may point back to the review.
+   */
+  async findPublishedTranslation(
+    bookReview: Pick<PublicBookReview, "id" | "translationSourceBookReviewId">,
+    targetLanguage: BookReviewLanguage,
+    now: Date = new Date(),
+  ): Promise<PublicBookReview | null> {
+    const linkedID = bookReview.translationSourceBookReviewId;
+    const languageCondition: Where = { language: { equals: targetLanguage } };
 
-    return repository.list({
-      ...query,
-      publishedOnly: true,
-      publishedAsOf: now,
-    });
-  }
-
-  async existsBySlug(
-    slug: string,
-    language: BookReviewLanguage,
-    excludeId?: string,
-  ): Promise<boolean> {
-    const now = new Date();
-    const bookReview = await this.findOne([
-      {
-        slug: {
-          equals: slug,
-        },
-      },
-      {
-        language: {
-          equals: language,
-        },
-      },
-      ...(excludeId === undefined
-        ? []
-        : [
-            {
-              id: {
-                not_equals: excludeId,
-              },
-            },
-          ]),
-    ], now);
-
-    return bookReview !== null;
-  }
-
-  async existsByIsbn(
-    isbn: string,
-    excludeId?: string,
-  ): Promise<boolean> {
-    const normalizedIsbn = normalizeIsbn(isbn);
-
-    if (normalizedIsbn === "") return false;
-
-    const bookReview = await this.findOne([
-      {
-        or: [
-          { isbn10: { equals: normalizedIsbn } },
-          { isbn13: { equals: normalizedIsbn } },
-        ],
-      },
-      ...(excludeId === undefined
-        ? []
-        : [
-            {
-              id: {
-                not_equals: excludeId,
-              },
-            },
-          ]),
-    ]);
-
-    return bookReview !== null;
+    return linkedID === undefined
+      ? this.findOne(
+          [{ translation: { equals: bookReview.id } }, languageCondition],
+          now,
+          bookReview.id,
+        )
+      : this.findOne(
+          [{ id: { equals: linkedID } }, languageCondition],
+          now,
+          bookReview.id,
+        );
   }
 }

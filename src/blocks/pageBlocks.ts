@@ -1,35 +1,11 @@
 import type { Block, Field } from "payload";
-
-function isSafeLink(value: unknown): true | string {
-  if (typeof value !== "string" || value.trim().length === 0) {
-    return "Bağlantı boş olamaz.";
-  }
-
-  const link = value.trim();
-
-  if (/^#[a-z][a-z0-9-]*$/.test(link)) {
-    return true;
-  }
-
-  if (link.startsWith("/") && !link.startsWith("//")) {
-    return true;
-  }
-
-  try {
-    const url = new URL(link);
-    return url.protocol === "http:" || url.protocol === "https:"
-      ? true
-      : "Yalnız site içi, http veya https bağlantıları kullanılabilir.";
-  } catch {
-    return "Geçerli bir site içi, http veya https bağlantısı girin.";
-  }
-}
+import { imageMediaFilter, validatePageLink } from "@/collections/validation";
+import { hideNonPublicRichTextLinks } from "@/lib/payloadAccess";
 
 function isValidAnchor(value: unknown): true | string {
   if (value === null || value === undefined || value === "") return true;
 
-  return typeof value === "string" &&
-    /^[a-z][a-z0-9-]*$/.test(value)
+  return typeof value === "string" && /^[a-z][a-z0-9-]*$/.test(value)
     ? true
     : "Bölüm kimliği küçük harf veya sayı içermeli; harfle başlamalı ve yalnız tire kullanmalıdır.";
 }
@@ -41,8 +17,7 @@ const commonFields: Field[] = [
     label: "Bölümü göster",
     defaultValue: true,
     admin: {
-      description:
-        "Kapalıysa blok silinmeden public sayfada gizlenir.",
+      description: "Kapalıysa blok silinmeden public sayfada gizlenir.",
     },
   },
   {
@@ -50,8 +25,7 @@ const commonFields: Field[] = [
     type: "text",
     label: "Bölüm kimliği (anchor)",
     admin: {
-      description:
-        "İsteğe bağlıdır. Örnek: hakkimda veya calismalar.",
+      description: "İsteğe bağlıdır. Örnek: hakkimda veya calismalar.",
     },
     validate: isValidAnchor,
   },
@@ -69,7 +43,7 @@ const linkFields: Field[] = [
     type: "text",
     label: "Bağlantı adresi",
     required: true,
-    validate: isSafeLink,
+    validate: validatePageLink,
   },
 ];
 
@@ -169,6 +143,7 @@ export const RichTextBlock: Block = {
     {
       name: "content",
       type: "richText",
+      hooks: { afterRead: [hideNonPublicRichTextLinks] },
       label: "İçerik",
       required: true,
     },
@@ -218,6 +193,7 @@ export const CardGroupBlock: Block = {
           type: "upload",
           label: "Görsel",
           relationTo: "media",
+          filterOptions: imageMediaFilter,
         },
         {
           name: "imageAlt",
@@ -256,7 +232,7 @@ export const CardGroupBlock: Block = {
               validate: (value: unknown) =>
                 value === null || value === undefined || value === ""
                   ? true
-                  : isSafeLink(value),
+                  : validatePageLink(value),
             },
           ],
         },
@@ -287,6 +263,7 @@ export const ImageTextBlock: Block = {
     {
       name: "content",
       type: "richText",
+      hooks: { afterRead: [hideNonPublicRichTextLinks] },
       label: "Metin",
       required: true,
     },
@@ -295,6 +272,7 @@ export const ImageTextBlock: Block = {
       type: "upload",
       label: "Görsel",
       relationTo: "media",
+      filterOptions: imageMediaFilter,
       required: true,
     },
     {
@@ -378,7 +356,7 @@ export const HomeAboutBlock: Block = {
           validate: (value: unknown) =>
             value === null || value === undefined || value === ""
               ? true
-              : isSafeLink(value),
+              : validatePageLink(value),
         },
       ],
     },
@@ -387,6 +365,7 @@ export const HomeAboutBlock: Block = {
       type: "upload",
       label: "Portre görseli (isteğe bağlı)",
       relationTo: "media",
+      filterOptions: imageMediaFilter,
       admin: {
         description:
           "Boş bırakılırsa mevcut statik Şaban Durali portresi kullanılır.",
@@ -473,7 +452,7 @@ export const HomeFocusAreasBlock: Block = {
           validate: (value: unknown) =>
             value === null || value === undefined || value === ""
               ? true
-              : isSafeLink(value),
+              : validatePageLink(value),
         },
       ],
     },

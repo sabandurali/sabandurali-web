@@ -1,6 +1,20 @@
+// Playwright acceptance of the 39 district guides against a local server
+// (DISTRICT_TEST_URL, default http://localhost:3017) with the local Chrome
+// (BROWSER_CHANNEL, default chrome). Playwright is a devDependency;
+// BROWSER_PACKAGE may point at another playwright/package.json. The JSON
+// result goes to DISTRICT_TEST_OUTPUT (default /tmp/istanbul-39-acceptance).
 import { createRequire } from "node:module";
 import { readFile, mkdir, writeFile } from "node:fs/promises";
 import assert from "node:assert/strict";
+import { districts as registeredDistricts } from "../../src/content/districts/district-registry.ts";
+import {
+  expectedSectionIds,
+  expectsIndexedGuides,
+  redirectLocationProblem,
+  robotsProblem,
+  sitemapListsDistrict,
+  withoutSoftHyphens,
+} from "./acceptance-expectations.mjs";
 const { chromium } = createRequire(
   process.env.BROWSER_PACKAGE || import.meta.url,
 )("playwright");
@@ -10,18 +24,15 @@ if (!/^http:\/\/(localhost|127\.0\.0\.1):\d+$/.test(base))
 const output =
   process.env.DISTRICT_TEST_OUTPUT || "/tmp/istanbul-39-acceptance";
 await mkdir(output, { recursive: true });
-const registry = await readFile(
-  "src/content/districts/district-registry.ts",
-  "utf8",
-);
-const districts = [
-  ...registry.matchAll(/\["([^"]+)", "([a-z-]+)", [\d.]+, [\d.]+\]/g),
-].map((m) => ({ name: m[1], slug: m[2] }));
+const districts = registeredDistricts.map(({ name, slug }) => ({ name, slug }));
 assert.equal(districts.length, 39);
-const editorial =
-  process.env.DISTRICT_EXPECT_EDITORIAL === "1"
-    ? JSON.parse(await readFile("data/districts/editorial.json", "utf8"))
-    : null;
+// Static builds have no published guide: every district page is a
+// `noindex, follow` placeholder and stays out of the sitemap. Indexed
+// expectations apply only with DISTRICT_EXPECT_EDITORIAL=1.
+const indexed = expectsIndexedGuides();
+const editorial = indexed
+  ? JSON.parse(await readFile("data/districts/editorial.json", "utf8"))
+  : null;
 const browser = await chromium.launch({
   headless: true,
   channel: process.env.BROWSER_CHANNEL || "chrome",
@@ -64,7 +75,7 @@ try {
           true,
         );
         assert.equal(
-          await page.locator("#mahalleler ul li").count(),
+          await page.locator("#mahalleler ol li").count(),
           content.neighborhoods.length,
         );
         assert.equal(
@@ -86,9 +97,9 @@ try {
             !body.includes("Ortalama m² satış fiyatı"),
         );
       }
-      assert.match(
-        await page.locator("h1").innerText(),
-        new RegExp(district.name),
+      assert.equal(
+        withoutSoftHyphens(await page.locator("h1").innerText()),
+        district.name,
       );
       const canonical = await page
         .locator("link[rel=canonical]")
@@ -101,11 +112,11 @@ try {
         await page.locator('meta[property="og:title"]').getAttribute("content"),
       );
       assert.equal(await page.locator("link[hreflang=en]").count(), 0);
-      assert.ok(
-        !(
-          await page.locator("meta[name=robots]").getAttribute("content")
-        ).includes("noindex"),
-      );
+      const robots = await page
+        .locator("meta[name=robots]")
+        .getAttribute("content");
+      const robotsError = robotsProblem(robots, indexed);
+      assert.equal(robotsError, null, robotsError ?? "");
       const json = JSON.parse(
         await page
           .locator('script[type="application/ld+json"]')
@@ -117,7 +128,22 @@ try {
           .itemListElement.length,
         4,
       );
-      assert.equal(await page.locator("main section[id]").count(), 14);
+      // The fixed section contract in order (docs/PROJECT-STATE.md §H).
+      // Research and news appear with published content, or with a
+      // "temporarily unavailable" note when their query failed; the other
+      // twelve always render.
+      const sectionIds = await page
+        .locator("main section[id]")
+        .evaluateAll((nodes) => nodes.map((node) => node.id));
+      assert.deepEqual(sectionIds, expectedSectionIds(sectionIds));
+      assert.equal(await page.locator("main#main").count(), 1);
+      // Every source reference points at a row of the source list.
+      const danglingRefs = await page.evaluate(() =>
+        [...document.querySelectorAll('main a[href^="#kaynak-"]')]
+          .map((link) => link.getAttribute("href").slice(1))
+          .filter((id) => !document.getElementById(id)),
+      );
+      assert.deepEqual(danglingRefs, []);
       const widths = [];
       for (const width of [1440, 820, 390]) {
         await page.setViewportSize({ width, height: 1000 });
@@ -135,10 +161,14 @@ try {
         assert.deepEqual(geometry.broken, []);
         widths.push(width);
       }
-      assert.match(
-        await page.locator("#kareler").innerText(),
-        /henüz eklenmedi/,
-      );
+      // Without published photos the section says so; with photos it
+      // shows figures (an editorial build may have them).
+      const photoFigures = await page.locator("#kareler figure").count();
+      if (photoFigures === 0)
+        assert.match(
+          await page.locator("#kareler").innerText(),
+          /henüz eklenmedi|sayfanın başında/,
+        );
       assert.ok(
         !(await page.getByText("HAM ARAŞTIRMA", { exact: false }).count()),
       );
@@ -231,10 +261,10 @@ try {
   await check("sitemap and robots", async () => {
     const xml = await (await request.get(`${base}/sitemap.xml`)).text();
     for (const district of districts)
-      assert.ok(
-        xml.includes(
-          `<loc>https://www.sabandurali.com/istanbul/ilceler/${district.slug}</loc>`,
-        ),
+      assert.equal(
+        sitemapListsDistrict(xml, district.slug),
+        indexed,
+        `${district.slug} in sitemap: expected ${indexed}`,
       );
     const robots = await (await request.get(`${base}/robots.txt`)).text();
     assert.ok(!/^Disallow:\s*\/$/m.test(robots));
@@ -245,7 +275,14 @@ try {
       { maxRedirects: 0 },
     );
     assert.equal(response.status(), 308);
-    assert.equal(response.headers().location, "/istanbul/ilceler");
+    // headers() joins repeated lines; headersArray() keeps each one, so a
+    // duplicated Location header is caught.
+    const locations = response
+      .headersArray()
+      .filter(({ name }) => name.toLowerCase() === "location")
+      .map(({ value }) => value);
+    const problem = redirectLocationProblem(locations, "/istanbul/ilceler");
+    assert.equal(problem, null, problem ?? "");
   });
   const regressions = [];
   for (const path of [
@@ -268,6 +305,7 @@ try {
   const result = {
     origin: base,
     sourceMode: process.env.DISTRICT_SOURCE_MODE || "static-build",
+    indexedGuidesExpected: indexed,
     districtCount: districts.length,
     passedRoutes: rows.length,
     rows,

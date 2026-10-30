@@ -1,7 +1,5 @@
-import type {
-  BookReviewLanguage,
-  ReadingStatus,
-} from "@/content/books/types";
+import type { BookReviewLanguage, ReadingStatus } from "@/content/books/types";
+import { formatDate } from "@/lib/format-date";
 
 export type BookPageContent = {
   dateLocale: string;
@@ -148,18 +146,5 @@ export function formatBookReviewDate(
   value: string | null | undefined,
   content: BookPageContent,
 ): string | null {
-  if (value === null || value === undefined) {
-    return null;
-  }
-
-  const date = new Date(value);
-
-  if (!Number.isFinite(date.getTime())) {
-    return null;
-  }
-
-  return new Intl.DateTimeFormat(content.dateLocale, {
-    dateStyle: "long",
-    timeZone: "Europe/Istanbul",
-  }).format(date);
+  return formatDate(value, content.dateLocale);
 }

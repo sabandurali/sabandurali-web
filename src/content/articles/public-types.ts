@@ -1,5 +1,5 @@
 import type { Article } from "@/content/articles/types";
-import type { Article as PayloadArticle } from "@/payload-types";
+import type { PublicRichText } from "@/content/rich-text/public-rich-text";
 
 export type PublicArticleCategory = {
   id: string;
@@ -12,7 +12,12 @@ export type PublicArticleImage = {
   source: "static" | "payload";
   src: string;
   alt: string;
+  /** Set only when `alt` is not in the article's language (Turkish media alt
+   * on an English page); render the image with this `lang`. */
+  altLanguage?: Article["language"];
   caption?: string;
+  /** Source / copyright line that must be shown with the image. */
+  credit?: string;
   width?: number;
   height?: number;
 };
@@ -28,7 +33,8 @@ export type PublicArticleSeo = {
   openGraphImage?: string;
 };
 
-export type DistrictArticleType = "article" | "district-research" | "district-news";
+export type DistrictArticleType =
+  "article" | "district-research" | "district-news";
 
 export type PublicArticleExternalSource = {
   name: string;
@@ -54,26 +60,39 @@ export type PublicArticleSummary = {
   publishedAt: string;
   createdAt: string;
   updatedAt: string;
+  /** A CMS article's guest author; absent when Şaban Durali wrote it. */
+  author?: string;
   seo: PublicArticleSeo;
 };
 
+/** One page of a list paginated in the database. */
+export type PublicArticleSummaryPage = {
+  items: PublicArticleSummary[];
+  /** The page served: the requested one, clamped to 1…totalPages. */
+  currentPage: number;
+  /** At least 1, also for an empty list. */
+  totalPages: number;
+  totalItems: number;
+};
+
+/**
+ * The other-language version of an article. Its SEO controls decide whether
+ * it may appear as an hreflang alternate (`isArticleHreflangEligible`).
+ */
 export type PublicArticleTranslation = Pick<
   PublicArticleSummary,
   "id" | "language" | "slug" | "title"
->;
+> & { seo: Pick<PublicArticleSummary["seo"], "index" | "canonical"> };
 
 export type PublicArticleContent =
   | {
       source: "static";
       blocks: Article["content"];
-      details: Pick<
-        Article,
-        "author" | "faq" | "legalNotice" | "sources"
-      >;
+      details: Pick<Article, "author" | "faq" | "legalNotice" | "sources">;
     }
   | {
       source: "lexical";
-      data: PayloadArticle["content"] | null;
+      data: PublicRichText | null;
     };
 
 export type PublicArticle = PublicArticleSummary & {

@@ -1,6 +1,6 @@
 # Şaban Durali Web — Project State
 
-Last verified handoff: 2026-10-04
+Last verified handoff: 2026-10-29
 
 ## A. Project identity
 
@@ -10,7 +10,7 @@ Last verified handoff: 2026-10-04
 - Canonical production URL: `https://www.sabandurali.com`
 - Positioning: Gayrimenkul • Danışmanlık • Araştırma • Teknoloji
 - Monogram: SD
-- Design character: dark navy/near-black foundations, copper/bronze accents, and light paper tones. The implementation uses a navy/ink base (`#101D32`, `#07101C`, `#081220`) and a copper/gold accent family led by `#C9A24A`.
+- Design system: "İstanbul Atlası" (`docs/DESIGN-SYSTEM.md`): cool map-paper grounds, Boğaz-blue ink and sea, a single signal-orange accent, Archivo and Martian Mono. The tokens live only in `src/app/globals.css` (`@theme`); read them there instead of copying values into documents. The earlier navy/copper palette (`#101D32`, `#C9A24A` …) is retired and must not be reintroduced.
 
 Do not put account identifiers, credentials, tokens, or other secret values in repository documentation.
 
@@ -23,24 +23,21 @@ The final application baseline for the Istanbul district quality milestone is:
 
 This commit is the final application baseline after the 39-district quality tour. It is a historical code/content baseline, not a promise that it will remain the repository's latest commit.
 
-The current documentation HEAD is the later docs-only commit containing this handoff. Always distinguish **application baseline** from **current documentation HEAD**, and check `git log` before starting work.
+This document is updated together with the code after that dated application baseline, so later sections (for example §K.5) describe newer commits. No section names the current HEAD: `git log` shows the current state. Always distinguish the **application baseline** above from the current HEAD, and check `git log` before starting work.
 
 ## C. Tech stack
 
-Versions are pinned or declared in `package.json` at this handoff:
+Versions are recorded only in `package.json` (ranges, `engines`), `package-lock.json` (the exact installed versions) and `.nvmrc`. This section names the parts and major versions without copying exact versions:
 
-- Next.js `16.2.10`
-- React and React DOM `19.2.4`
-- Payload CMS `3.86.0`
-- Payload PostgreSQL and SQLite adapters `3.86.0`
-- Payload Vercel Blob storage adapter `3.86.0`
-- PostgreSQL in production, hosted on Neon
-- SQLite for local Payload development
+- Node.js 24 (`engines` and `.nvmrc`) with npm 11
+- Next.js 16 (App Router, Turbopack) with the matching `eslint-config-next`
+- React and React DOM 19
+- Payload CMS 3: `payload`, `@payloadcms/next`, `@payloadcms/ui`, `@payloadcms/richtext-lexical`, `@payloadcms/db-postgres`, `@payloadcms/db-sqlite` and `@payloadcms/storage-vercel-blob`, all pinned exactly and upgraded together
+- PostgreSQL in production, hosted on Neon (`pg`); SQLite for local Payload development
 - Vercel deployment and Vercel Blob media storage
-- TypeScript `^5`
-- Tailwind CSS `^4`
-- Sharp `0.34.5`
-- GitHub repository hosting
+- TypeScript 5 (strict), Tailwind CSS 4, Sharp for image processing
+- Tooling: ESLint, Prettier, `tsx` (node:test runner and scripts), `@electric-sql/pglite` (migration replay) and Playwright (local e2e checks with the installed Chrome)
+- CI: GitHub Actions (`.github/workflows/ci.yml`) and Dependabot; GitHub repository hosting
 
 ## D. Production architecture
 
@@ -49,7 +46,7 @@ Versions are pinned or declared in `package.json` at this handoff:
 - Local development defaults to SQLite and local media.
 - Production Payload uses PostgreSQL/Neon when `PAYLOAD_DATABASE=postgres` and Vercel Blob when `PAYLOAD_STORAGE=vercel-blob`.
 - PostgreSQL schema push is disabled. Production schema changes require reviewed migrations.
-- Blob storage applies only to the `media` collection and retains Payload validation, MIME restrictions, and the 10 MiB application limit.
+- Blob storage applies only to the `media` collection and retains Payload validation and MIME restrictions. Every upload (local or Blob) is limited to 4 MiB (`MAX_UPLOAD_BYTES` in `src/payload.config.ts`, below the 4.5 MB request body limit of Vercel Functions), and images are re-encoded to at most 3200 px on the long edge without EXIF metadata (`src/collections/Media.ts`).
 - Production builds fail closed if a Payload-backed public source is selected without the required persistent database, storage, and secret configuration.
 
 Public content source selection is controlled independently by:
@@ -89,7 +86,7 @@ The site also contains Turkish workspace, about, biography, feedback-linked navi
 - Payload API route: `/api/[...slug]`
 - Admin help route: `/admin/help`
 - The help navigation link and custom view are configured in `src/payload.config.ts`.
-- Help content is embedded in `src/components/admin/help/admin-help-guide.ts` and rendered as Markdown by `AdminHelpView.tsx`.
+- Help content is embedded in `src/components/admin/help/admin-help-guide.ts` and rendered as Markdown by `AdminHelpView.tsx`. That file is the single source: `YONETIM-PANELI-KULLANIM-KILAVUZU.md` is generated from it with `npm run generate:admin-guide`, and `scripts/admin-help/guide.test.ts` fails when the two differ or when the guide names a route that `src/app` does not have. The guide covers `DistrictGuides` in its section 8.
 - The help view requires an authenticated user with admin access and `user.role === "admin"`; editors are redirected to the unauthorized route.
 - `DistrictGuides` is a registered Payload collection alongside Users, Media, Categories, Articles, Books, Pages, PhotoCollections, Tags, and Photos. Navigation is a Payload global.
 
@@ -113,7 +110,7 @@ No district rewrite is required by default. The district layer is in maintenance
 
 ## H. District content contract
 
-The public district page has an exact 14-section presentation:
+The public district page has an exact 14-section presentation, rendered by `DistrictGuideArticle.tsx` with the order and numbering from `getVisibleDistrictSections` (`src/components/districts/district-guide-model.ts`). Sections 11 and 12 render when published research articles or news for the district exist, and also when their query failed: the section then shows a "temporarily unavailable" empty state instead of disappearing. With nothing published and no failure they are left out and the remaining sections are renumbered consecutively. The other twelve always render, in this order (`npm test` checks every published/empty/unavailable combination on the render path in `scripts/content-trust.test.ts`; `npm run e2e:districts:routes` checks the section ids of the built pages):
 
 1. Bir bakışta
 2. İlçenin hikâyesi
@@ -141,21 +138,17 @@ Content rules:
 - `marketData` remains private unless it has a recent, supported market source and passes the freshness rules.
 - Unverified/private research and import provenance must never leak through the public projection.
 
+Dated windows and CI: the content gate (`npm run test:districts:content`, part of `npm test`) evaluates the content policy at the latest `checkedAt` recorded in `data/districts/editorial.json`, never at the wall clock, so a commit gives the same result on every day. Whether reviewed content is still public today (a planning row's 90-day window, the transport check age, market data age) is reported by `npm run report:districts:freshness`, which `.github/workflows/content-freshness.yml` runs every Monday and on demand, never on a pull request. It warns about content that expires within 30 days and fails only when content is already withheld; the fix is a new dated review in the data, never a looser threshold.
+
 Editorial goal: **“İlçeyi geziyor hissi; rapor okuyor hissi değil.”**
 
-The district experience combines Sini Kadıköy readability, Apple-like whitespace and restraint, and the SD identity. Preserve hierarchy, breathing room, source clarity, and a grounded local sense of place.
+The district experience combines Sini Kadıköy readability, Apple-like whitespace and restraint, and the İstanbul Atlası identity (wayfinding section signs, data tables, schematic maps). Preserve hierarchy, breathing room, source clarity, and a grounded local sense of place.
 
-## I. Paper tones and design
+## I. Grounds and design
 
-`DistrictEditorialGuidePage.tsx` maintains a district-specific light paper-tone map. These backgrounds sit inside the broader navy/copper/ink brand system rather than replacing it.
+District pages use the shared İstanbul Atlası tokens; there is no district-specific colour map. `DistrictEditorialGuidePage.tsx` sets the page ground to the `paper` token (`bg-paper`), and `DistrictGuideArticle.tsx` varies section grounds only through the `Section` tones of `src/components/ui/Section.tsx` (`paper`, `land`, `band`, `sea`). Every district, Esenler included, gets the same grounds.
 
-Esenler's paper tone is fixed at:
-
-```text
-#F4F0E8
-```
-
-Preserve it unless a deliberate, approved design-system change covers all district tones.
+The earlier per-district paper-tone map (Esenler `#F4F0E8`) was retired with the İstanbul Atlası rebuild. A district-specific ground would be a design-system change: record it in `docs/DESIGN-SYSTEM.md`, add it as a token in `src/app/globals.css` and keep the contrast tests in `src/components/ui/design-tokens.test.ts` passing.
 
 ## J. Esenler special history
 
@@ -215,6 +208,112 @@ The safety model matters more than internal hashes: exact approved baseline, dep
 
 Production imports must preserve document identity, creation/publication metadata where required, publication state, non-target content, and private-field boundaries.
 
+The applied district importers were removed from the tree after the 39-district milestone; they are kept for audit in the Git history. Commit `4b94d32` is the last one that contains them, under `scripts/districts/archive/`; read one with `git show 4b94d32:scripts/districts/archive/<file>`. Do not restore or copy them for new work: every importer repeated the same gate around a hard-coded batch, so a fix in one copy never reached the others. A new Production import needs one parameterised engine with a small per-batch configuration (the pattern of `scripts/photos/`), a dry-run, exact counts, SHA-bound approval, verified PITR and read-only verification. Running a historical importer would be a Production operation under every rule above.
+
+| Importer (in `4b94d32`) | Targets | Provenance |
+| --- | --- | --- |
+| `import-production.ts` | 8 population updates, 31 skips | import version 3 |
+| `import-production-editorial-batch2.ts` | 38 districts except Esenler | version 4, baseline `data/districts/production-editorial-batch2-baseline.json` |
+| `import-production-arnavutkoy-editorial.ts` | Arnavutköy | version 5, `arnavutkoy-editorial-quality-2026` |
+| `import-production-avcilar-editorial.ts` | Avcılar | version 5, `avcilar-editorial-quality-2026` |
+| `import-production-bagcilar-editorial.ts` | Bağcılar | version 5, `bagcilar-editorial-quality-2026` |
+| `import-production-bahcelievler-editorial.ts` | Bahçelievler | version 5, `bahcelievler-editorial-quality-2026` |
+| `import-production-bakirkoy-editorial.ts` | Bakırköy | version 5, `bakirkoy-editorial-quality-2026` |
+| `import-production-district-batch1-six.ts` | 6 districts | version 5 |
+| `import-production-district-batch2-eight.ts` | 8 districts | version 6 |
+| `import-production-district-batch3-ten.ts` | 10 districts | version 7 |
+| `import-production-district-batch4-nine.ts` | 9 districts | version 8 |
+| `import-production-esenler-final.ts` | Esenler | version 6, `esenler-final-editorial-quality-2026` |
+
+The same commit holds `check-editorial-cms.ts`, the local check of the first editorial import, whose assertions describe that first batch only and fail against the current data by design.
+
+### K.1 Production build gate
+
+`npm run vercel:build` (`scripts/vercel-build.mjs`) is the Vercel build command. It fails closed:
+
+- A Production build (`VERCEL_ENV=production`) must run on Vercel (`VERCEL=1`), from `main` (`VERCEL_GIT_COMMIT_REF=main`) and for a full 40-character `VERCEL_GIT_COMMIT_SHA`. Any other ref (for example `vercel deploy --prod` from a feature branch, a promoted Preview or a changed Production Branch setting) stops before the database is read. Keep the Vercel Production Branch locked to `main` and limit who can deploy to Production from the CLI. The gate reads Vercel's system variables (`VERCEL`, `VERCEL_ENV`, `VERCEL_GIT_COMMIT_REF`, `VERCEL_GIT_COMMIT_SHA`), so keep "Automatically expose System Environment Variables" enabled in the project settings; without them every Production build stops.
+- Production requires PostgreSQL, Vercel Blob, `DATABASE_URL`, `PAYLOAD_SECRET` and `BLOB_READ_WRITE_TOKEN`, checks the database fingerprint, and reads the applied migrations in a read-only transaction. An applied migration that the registry does not know, or applied migrations that are not a prefix of the registry, stop the build.
+- The registry is what `payload migrate` applies: Payload runs every `.ts`/`.js` file in `src/migrations/` except `index.ts`, in file-name order, and does not read the index. `src/migrations/index.ts` (which the CI migration replay reads) must list exactly the same migrations in the same order; a migration file missing from the index, an index entry without a file, another order or a helper module in that folder stops the build with `migration_registry_invalid`, and `npm test` fails on it first. `npm run payload:migrate:create` keeps both in step.
+- Previews and local builds never migrate. No Preview branch is designated for migrations any more, and a non-Production build whose `DATABASE_URL` resolves to the Production database refuses to build. The check compares host, port and database name; it also recognises the Production host in another letter case, with a trailing dot, and the Neon pooled or direct twin of the endpoint (`ep-…-pooler.…` and `ep-….…`). Any other alias of the same database (a custom DNS name or an IP address) is not recognised, so keep the Production `DATABASE_URL` scoped to the Production environment in Vercel. The Production check itself stays exact.
+- The build-time district dry-run (`PRODUCTION_DISTRICT_DRY_RUN_APPROVED_SHA`) is retired: if that variable is set, the build stops before reading anything. Remove it from the Production environment.
+- The boolean `PRODUCTION_MIGRATION_APPROVED` and `PRODUCTION_PITR_CONFIRMED` no longer approve a migration; the build logs that it ignores them. Remove them from Vercel. (`PRODUCTION_PITR_CONFIRMED` is still read by the archived original importer, never by the build.) The historical photo importers retired their boolean approvals the same way (see L.1).
+
+### K.2 Approving a Production migration
+
+A migration is approved for one commit and one exact set of migrations:
+
+1. Merge the reviewed pull request (CI replays every migration in PGlite). The Production build of the merge commit stops with `Pending migrations detected; approval required.` and lists the pending migration names. Nothing is migrated.
+2. Verify point-in-time recovery for the Production Neon branch: the restore window covers the current time and a restore target can be chosen. Note the time you checked.
+3. Set three variables in the Vercel Production environment (Vercel scopes variables to an environment, not to one deployment; the values approve only this commit):
+   - `PRODUCTION_MIGRATION_APPROVED_SHA` — the full commit SHA of the deployment (`VERCEL_GIT_COMMIT_SHA`, 40 lowercase hex characters, no whitespace).
+   - `PRODUCTION_MIGRATION_APPROVED_NAMES` — the pending migration names exactly as the failed build listed them after `Pending:`, in order, separated by commas, without the sentence's final period.
+   - `PRODUCTION_MIGRATION_PITR_CONFIRMED_SHA` — the same commit SHA, set only after step 2. It is separate from every import PITR variable.
+4. Redeploy that same deployment (a redeploy keeps the commit SHA). The gate checks the three values against the commit and the pending list, runs `payload:migrate`, reads the state again and builds only when nothing is pending.
+5. Remove the three variables right after the deployment. They cannot approve another commit or another migration set, but they must not linger.
+6. Check the live site and record the deployment, commit and migration names in the release notes.
+
+A missing value, a SHA of another commit, a different or reordered name list, a migration that does not reach the registry head and an unreadable state all stop the build with an explicit reason.
+
+### K.3 Failure reasons
+
+Build failures name a category and, when there is one, a standard error code (PostgreSQL SQLSTATE or a Node.js/TLS code). Connection strings, hosts, users, passwords and driver messages are never printed. `Migration state could not be verified (<category>[, <code>]); stopping.`:
+
+| Category | Meaning |
+| --- | --- |
+| `database_url_invalid`, `database_identity_incomplete` | `DATABASE_URL` is not a complete PostgreSQL URL |
+| `database_identity_mismatch` | `DATABASE_URL` is not the Production database fingerprint (see K.4) |
+| `connection_failed`, `tls_failed` | Network, DNS, timeout or TLS failure |
+| `authentication_failed` | Wrong database credentials (`28P01`, `28000`) |
+| `database_not_found` | The database name does not exist (`3D000`) |
+| `connected_database_mismatch` | The server reports another database than the URL |
+| `migration_table_missing` | `payload_migrations` does not exist |
+| `migration_registry_invalid` | The migration files and `src/migrations/index.ts` disagree, or the list is empty or has duplicates |
+| `migration_state_inconsistent` | The applied migrations do not match the committed registry |
+| `query_failed`, `unknown_failed` | Any other database or unexpected error |
+
+### K.4 Rotating the database fingerprint after a restore
+
+The Production database identity (sha256 of `host:port/database`) is a reviewed constant, `productionDatabaseFingerprint` in `scripts/vercel-build.mjs`. A point-in-time restore onto a new endpoint, or a new database name, changes it, and every Production build then stops with `database_identity_mismatch`. To rotate it:
+
+1. Confirm the new endpoint is the intended Production database.
+2. Compute its fingerprint without printing the URL: `read -rs DATABASE_URL; export DATABASE_URL; node scripts/database-fingerprint.mjs; unset DATABASE_URL` (paste the value from Vercel; the script prints only the fingerprint).
+3. Change `productionDatabaseFingerprint` in a reviewed pull request, merge it, and let the Production build verify the migration state against the restored database.
+
+### K.5 Pending migration `20261028_205938_article_seo_book_slug_unique`
+
+This migration is additive: it sets the default user role to `editor`, adds `focal_x`/`focal_y` to `media`, adds the article author and SEO columns (`author_name`, `seo_index`, `seo_follow`, `seo_canonical`, and their version columns) and creates the unique index `language_slug_1_idx` on `books (language, slug)`. Its `down` refuses to run; when rolling application code back, keep the schema.
+
+The unique index fails, and with it the whole migration, if Production already holds two book reviews with the same language and slug. Before step 3 of K.2, run these read-only pre-flight queries against Production (a read-only role or `BEGIN READ ONLY; … ROLLBACK;`), with the owner's approval, and record the results with the approval:
+
+```sql
+-- 1. Duplicate book slugs: must return no rows.
+SELECT language, slug, count(*) FROM books GROUP BY 1,2 HAVING count(*) > 1;
+
+-- 2. Rich text the editor no longer offers: level-1 headings and relationship nodes.
+SELECT 'articles_locales' AS source, _parent_id::text AS parent_id, _locale AS locale,
+       jsonb_path_exists(content, 'lax $.** ? (@.type == "heading" && @.tag == "h1")') AS has_h1,
+       jsonb_path_exists(content, 'lax $.** ? (@.type == "relationship")') AS has_relationship
+  FROM articles_locales
+ WHERE jsonb_path_exists(content, 'lax $.** ? (@.type == "relationship" || (@.type == "heading" && @.tag == "h1"))')
+UNION ALL
+SELECT 'pages_blocks_rich_text', _parent_id::text, NULL,
+       jsonb_path_exists(content, 'lax $.** ? (@.type == "heading" && @.tag == "h1")'),
+       jsonb_path_exists(content, 'lax $.** ? (@.type == "relationship")')
+  FROM pages_blocks_rich_text
+ WHERE jsonb_path_exists(content, 'lax $.** ? (@.type == "relationship" || (@.type == "heading" && @.tag == "h1"))')
+UNION ALL
+SELECT 'pages_blocks_image_text', _parent_id::text, NULL,
+       jsonb_path_exists(content, 'lax $.** ? (@.type == "heading" && @.tag == "h1")'),
+       jsonb_path_exists(content, 'lax $.** ? (@.type == "relationship")')
+  FROM pages_blocks_image_text
+ WHERE jsonb_path_exists(content, 'lax $.** ? (@.type == "relationship" || (@.type == "heading" && @.tag == "h1"))');
+```
+
+- Query 1 returning rows stops the release: an editor renames one slug of each pair in the admin (never a manual database edit, rule 12), then the query is run again.
+- Query 2 does not block the migration. The rich-text editor now allows `h2`–`h4` and no relationship blocks, so each listed document must be opened in the admin and the `h1` changed to `h2` and the relationship replaced by a link before it is saved again. Until then the public site does not show the relationship nodes (`PayloadRichText` skips and logs them), and an `h1` in the body competes with the page title. Record the number of rows per source.
+
+Both queries were checked against PGlite with the committed schema; they only read.
+
 ## L. Historical photos
 
 Publication-safe rights are restricted to item-level evidence such as:
@@ -227,31 +326,35 @@ Publication-safe rights are restricted to item-level evidence such as:
 
 Do not use AI-generated, stock, random, non-commercial-only, no-derivatives, or ambiguously licensed images as historical evidence. Recheck the source page, rights statement, attribution, and current availability immediately before publication.
 
+Since Phase B every Media upload is re-encoded (long edge at most 3200 px, EXIF removed) and limited to 4 MiB. The historical photo importers (`scripts/photos/`) compare an existing Media record with its manifest item exactly, including `filesize`, `width` and `height`. Records imported before the change keep their original bytes and still match. On a fresh database (local or a restored copy) a new import stores a re-encoded file, so a later dry-run or `--verify` reports each item as `source media metadata differs` (two batch 1 items are also larger than 3200 px). This is expected and is not to be "fixed" by relaxing the comparison: the gate must not adopt a file it cannot prove to be the audited source (§K rule 11). `historical-district-batch1.test.ts` (J2) pins the behaviour. All manifest files are below 4 MiB.
+
 Historical imports set `featured: false`. Hero selection prefers an explicitly featured image and otherwise the first non-historical photo, so an imported historical image must remain gallery-only and must not automatically become the district hero.
+
+### L.1 Approving a historical photo import
+
+The importers (`scripts/photos/import-historical-district-batch1.ts` and `…-batch2.ts`: thin entry points that pass `historical-district-batch<N>-config.ts` to the shared engine `historical-district-photo-engine.ts` and runner `historical-district-photo-importer.ts`; prefix `PRODUCTION_HISTORICAL_PHOTO_BATCH1` or `…_BATCH2`) follow §K. Every approval is the full commit SHA of the Production deployment (`VERCEL_GIT_COMMIT_SHA`) and approves only that commit and that batch:
+
+1. `<prefix>_DRY_RUN_APPROVED_SHA` — allows the dry-run and `--verify`. Record the exact plan counts.
+2. Verify point-in-time recovery for the Production Neon branch (as in K.2 step 2), then set `<prefix>_PITR_CONFIRMED_SHA` to the same SHA.
+3. `<prefix>_IMPORT_APPROVED_SHA` — the same SHA, set only after the owner approved the dry-run counts. Apply refuses to run unless all three values equal the deployed SHA.
+4. Remove the three variables right after the read-only verification.
+
+The boolean `<prefix>_IMPORT_APPROVED` and `<prefix>_PITR_CONFIRMED` are retired: a forgotten `true` would have approved a later commit without a fresh PITR check. While either is set, the importer refuses every mode (dry-run, apply and verify) and names the variable to remove.
 
 ## M. Local machine safety and backups
 
-Local Payload database:
-
-- Path: `.data/payload.db`
-- Audit date: 2026-10-04
-- SQLite integrity: `ok`
-- Content tables: empty
-- Local users: 1
-- Local sessions: 1
-- Do not delete casually.
-
-Secure backup:
-
-- Path: `/Users/saban/Documents/Backups/sabandurali-web/payload-local-2026-10-04.db`
-- SHA-256: `9672c50b124627661d6802b516c08e41b7ff225ff61d57612232f457e534f84a`
-- Permissions: `0600`
-
-`.env.production.backup` is local-only, Git-ignored, permissioned `0600`, and contains production secrets. **NEVER COMMIT IT.** Relevant variable names had Vercel Production counterparts as of 2026-10-04. Never print its values into chat, logs, commands, or documentation.
-
-`.vercel` contains regenerable linkage metadata and can be recreated with `vercel link`.
+- The local Payload database is `.data/payload.db` (SQLite, Git-ignored). It is the owner's local working copy; do not delete it casually.
+- Backup locations, checksums and any local file that holds production values are recorded in the owner's private operational notes, never in this public repository. Do not commit such files and never print their values into chat, logs, commands or documentation.
+- `.env*` files other than `.env.example`, `.data/` and `.private-backups/` are Git-ignored and must stay so.
+- `.vercel` contains regenerable linkage metadata and can be recreated with `vercel link`.
 
 ## N. Old branches
+
+### `origin/codex/project-day-17-production-infra` and `origin/codex/project-day-19-photography`
+
+- Both are merged and stale (August 2026). Their own copy of `scripts/vercel-build.mjs` still runs `payload:migrate` for its Preview build without a database identity or approval check.
+- The gate on `main` no longer designates any Preview branch, but a push or a Redeploy of these branches builds their old script, and the `vercel.json` of `main` does not apply to their commits.
+- Delete both remote branches (owner action; it needs push rights). Until then, do not push to them or redeploy their Previews.
 
 ### `origin/codex/project-day-20-full-site-prototype`
 

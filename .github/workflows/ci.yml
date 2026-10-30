@@ -1,0 +1,245 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  # Superseded pull request runs are cancelled; every main commit is checked.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  check:
+    name: Typecheck, lint, format, test, build and e2e
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      # CI-only local environment: SQLite, local media and static public
+      # sources. No secret, no production service and no network database.
+      NEXT_TELEMETRY_DISABLED: "1"
+      PAYLOAD_DATABASE: sqlite
+      PAYLOAD_STORAGE: local
+      DATABASE_URL: file:./.data/ci.db
+      PAYLOAD_SECRET: ci-only-insecure-payload-secret
+      ARTICLE_PUBLIC_SOURCE: static
+      BOOK_PUBLIC_SOURCE: static
+      PAGE_PUBLIC_SOURCE: static
+      NAVIGATION_PUBLIC_SOURCE: static
+      PHOTO_PUBLIC_SOURCE: static
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # No test reads Git history (the archived Esenler test uses a
+          # fixture), so the default shallow checkout is enough.
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          # .nvmrc holds the exact minimum of `engines` (Payload's floor), so
+          # CI proves the lowest supported Node; a test keeps them equal.
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify registry signatures
+        run: npm audit signatures
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Test
+        run: npm test
+
+      # The production build never pushes a schema, so the CI SQLite database
+      # gets one here: the admin pages of the e2e server render the real
+      # login instead of Payload's error page. Local file only, no content.
+      - name: Prepare the CI SQLite schema
+        run: npm run ci:sqlite-schema
+
+      - name: Build
+        run: npm run build
+
+      # The e2e checks run against the production build served locally on
+      # 127.0.0.1 with the same CI-only environment: no secret, no network
+      # database and no deployed origin. The scripts refuse non-local URLs.
+      - name: Start the production server
+        run: |
+          npm run start -- --hostname 127.0.0.1 --port 3101 > "$RUNNER_TEMP/next-start.log" 2>&1 &
+          for _ in $(seq 1 60); do
+            if curl --silent --output /dev/null http://127.0.0.1:3101/; then exit 0; fi
+            sleep 1
+          done
+          cat "$RUNNER_TEMP/next-start.log"
+          exit 1
+
+      # First, so the legacy redirects (next.config.ts) are checked on the
+      # very first response of a fresh server.
+      - name: E2E content trust (39 districts, redirects, TR/EN routes)
+        run: npm run e2e:content-trust
+        env:
+          DISTRICT_TEST_URL: http://127.0.0.1:3101
+          DISTRICT_TEST_OUTPUT: ${{ runner.temp }}/content-trust-routes
+
+      - name: E2E security headers
+        run: npm run e2e:headers -- http://127.0.0.1:3101
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: E2E district routes (Playwright)
+        run: npm run e2e:districts:routes
+        env:
+          DISTRICT_TEST_URL: http://127.0.0.1:3101
+          DISTRICT_TEST_OUTPUT: ${{ runner.temp }}/istanbul-39-acceptance
+          BROWSER_CHANNEL: chromium
+
+      # Definition of Done on every public route type (TR/EN, lists, details
+      # when published, contact, 404): axe WCAG 2.2 AA, no horizontal scroll
+      # at 390/820/1440 px, skip link, focus indicator, header menu keyboard
+      # use and reduced motion.
+      - name: E2E accessibility and layout (Playwright + axe)
+        run: npm run e2e:a11y
+        env:
+          A11Y_TEST_URL: http://127.0.0.1:3101
+          A11Y_TEST_OUTPUT: ${{ runner.temp }}/public-a11y
+          BROWSER_CHANNEL: chromium
+
+      - name: Server log
+        if: failure()
+        run: cat "$RUNNER_TEMP/next-start.log" || true
+
+      # The e2e reports and screenshots, kept also when a check fails so the
+      # failing route, width or page error can be inspected without a rerun.
+      # They come from the CI-only static build: no secret or production data.
+      - name: Upload e2e evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: e2e-evidence
+          path: |
+            ${{ runner.temp }}/content-trust-routes
+            ${{ runner.temp }}/istanbul-39-acceptance
+            ${{ runner.temp }}/public-a11y
+            ${{ runner.temp }}/next-start.log
+          if-no-files-found: ignore
+          retention-days: 7
+
+  # The static build above publishes no article, book, photo, CMS page or
+  # district guide and uses the static navigation, so its a11y run can only
+  # reach empty states. This job renders the detail templates, the CMS block
+  # page, a filled district guide and news list, and the CMS header and
+  # footer from clearly fictional records (scripts/ci/fixture-content.ts)
+  # seeded into a CI-only SQLite file through the Payload Local API.
+  #
+  # It serves `next dev`: a production build or `next start` with a Payload
+  # public source fails closed without PostgreSQL and Vercel Blob
+  # (src/lib/payloadInfrastructure.ts), and this job must stay hermetic.
+  # The a11y script ignores only Next's development tools element.
+  fixtures:
+    name: Detail templates on CI fixtures (Playwright + axe)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      # CI-only local environment: no secret, no production service and no
+      # network database. The fixtures exist only in this SQLite file.
+      NEXT_TELEMETRY_DISABLED: "1"
+      PAYLOAD_DATABASE: sqlite
+      PAYLOAD_STORAGE: local
+      DATABASE_URL: file:./.data/ci-fixtures.db
+      PAYLOAD_SECRET: ci-only-insecure-payload-secret
+      ARTICLE_PUBLIC_SOURCE: payload
+      BOOK_PUBLIC_SOURCE: payload
+      PAGE_PUBLIC_SOURCE: payload
+      NAVIGATION_PUBLIC_SOURCE: payload
+      PHOTO_PUBLIC_SOURCE: payload
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Seed the CI fixtures
+        run: npm run ci:seed-fixtures
+
+      - name: Start the fixture server
+        run: |
+          npm run dev -- --hostname 127.0.0.1 --port 3102 > "$RUNNER_TEMP/next-dev.log" 2>&1 &
+          for _ in $(seq 1 120); do
+            if curl --silent --output /dev/null http://127.0.0.1:3102/robots.txt; then break; fi
+            sleep 1
+          done
+          # Compile the lists and fixture routes once, so the a11y check
+          # never waits for the development compiler.
+          for path in /makaleler /kitaplar /fotograflar /en/articles /en/books /en/photography \
+            /makaleler/ci-test-makalesi /en/articles/ci-test-article \
+            /kitaplar/ci-test-kitap-incelemesi /en/books/ci-test-book-review \
+            /fotograflar/ci-test-fotografi /en/photography/ci-test-photo \
+            /ci-test-sayfasi /istanbul/ilceler/esenler /istanbul/ilceler/esenler/haberler; do
+            curl --silent --show-error --fail --max-time 300 --output /dev/null "http://127.0.0.1:3102$path" || { cat "$RUNNER_TEMP/next-dev.log"; exit 1; }
+          done
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: E2E accessibility and layout of the detail templates
+        run: npm run e2e:a11y
+        env:
+          A11Y_FIXTURES: "1"
+          A11Y_TEST_URL: http://127.0.0.1:3102
+          A11Y_TEST_OUTPUT: ${{ runner.temp }}/fixture-a11y
+          BROWSER_CHANNEL: chromium
+
+      - name: Server log
+        if: failure()
+        run: cat "$RUNNER_TEMP/next-dev.log" || true
+
+      - name: Upload fixture e2e evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: fixture-e2e-evidence
+          path: |
+            ${{ runner.temp }}/fixture-a11y
+            ${{ runner.temp }}/next-dev.log
+          if-no-files-found: ignore
+          retention-days: 7
+
+  audit:
+    name: Audit production dependencies
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+
+      # Reads package-lock.json; no install needed. Fails on every high or
+      # critical advisory outside the reviewed GHSA allowlist of
+      # scripts/ci/audit-gate.mjs (each entry says why it cannot reach the
+      # site); moderate and low advisories are left to Dependabot.
+      - name: npm audit
+        run: npm run ci:audit

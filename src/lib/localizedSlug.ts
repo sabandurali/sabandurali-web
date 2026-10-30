@@ -6,40 +6,20 @@ import {
   type TypeWithID,
   type Where,
 } from "payload";
+import { createSlug } from "@/content/shared/slug";
 
 type SlugDocument = TypeWithID & Record<string, unknown>;
 type SlugSiblingData = Record<string, unknown>;
 
-const turkishCharacters: Record<string, string> = {
-  ç: "c",
-  Ç: "c",
-  ğ: "g",
-  Ğ: "g",
-  ı: "i",
-  İ: "i",
-  ö: "o",
-  Ö: "o",
-  ş: "s",
-  Ş: "s",
-  ü: "u",
-  Ü: "u",
-};
-
-export function normalizeSlug(input: string): string {
-  return input
-    .replace(/[çÇğĞıİöÖşŞüÜ]/g, (character) => turkishCharacters[character])
-    .normalize("NFKD")
-    .replace(/\p{M}+/gu, "")
-    .toLowerCase()
-    .replace(/[\u0027\u2019\u02BC]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/[^\p{L}\p{N}-]+/gu, "")
-    .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "");
-}
+/**
+ * Kept as the name the slug fields use; the rule itself lives in one place,
+ * `createSlug` (`src/content/shared/slug.ts`), shared with book reviews.
+ */
+export const normalizeSlug: (input: string) => string = createSlug;
 
 type LocalizedSlugFieldOptions = {
-  collection: "articles" | "categories" | "photo-collections" | "photos" | "tags";
+  collection:
+    "articles" | "categories" | "photo-collections" | "photos" | "tags";
   sourceField: string;
 };
 
@@ -75,9 +55,7 @@ export function createLocalizedSlugHook({
     const where: Where = {
       and: [
         { slug: { equals: normalizedValue } },
-        ...(currentID === undefined
-          ? []
-          : [{ id: { not_equals: currentID } }]),
+        ...(currentID === undefined ? [] : [{ id: { not_equals: currentID } }]),
       ],
     };
     const duplicate = await req.payload.find({
@@ -161,7 +139,7 @@ export function createLocalizedSlugField({
         typeof value === "string" ? normalizeSlug(value) : "";
 
       if (normalizedValue === "") {
-        return "Slug boş olamaz ve en az bir harf veya sayı içermelidir.";
+        return "Slug boş olamaz ve en az bir Latin harf (a-z) veya rakam içermelidir.";
       }
 
       return true;

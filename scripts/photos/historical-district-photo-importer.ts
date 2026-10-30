@@ -1,0 +1,339 @@
+/**
+ * Payload runner shared by the verified historical district photo importers.
+ * Each batch has a thin entry point (`import-historical-district-batch<N>.ts`)
+ * that passes its config; the runner defaults to a read-only dry-run.
+ */
+import { readFile, mkdir, writeFile } from "node:fs/promises";
+import path from "node:path";
+import { setTimeout as delay } from "node:timers/promises";
+import { parseArgs } from "node:util";
+import { getPayload, type Payload } from "payload";
+import sharp from "sharp";
+import {
+  describeProductionDatabase,
+  readProductionMigrationState,
+} from "../vercel-build.mjs";
+import {
+  applyHistoricalPlan,
+  assertHistoricalEnvironment,
+  buildHistoricalPlan,
+  configurationStatus,
+  historicalAlt,
+  historicalDescription,
+  historicalFilename,
+  HistoricalPhotoImportError,
+  type HistoricalBatchConfig,
+  type HistoricalPhotoItem,
+  type HistoricalDocument,
+  type HistoricalRepository,
+  type HistoricalSnapshot,
+  parseHistoricalManifest,
+  verifyDownloadedBytes,
+} from "./historical-district-photo-engine";
+
+type HistoricalImporterOptions = {
+  batchConfig: HistoricalBatchConfig;
+  defaultManifest: string;
+  downloadDirectory: string;
+};
+
+/**
+ * A Payload document as the engine reads it: every field by name. Spreading
+ * copies the fields into a plain record, so no cast hides a schema change.
+ */
+export function toHistoricalDocument(doc: { id: string }): HistoricalDocument {
+  const fields: Record<string, unknown> = { ...doc };
+  return { ...fields, id: doc.id };
+}
+
+function payloadRepository(payload: Payload): HistoricalRepository {
+  return {
+    async readSnapshot(): Promise<HistoricalSnapshot> {
+      const [collections, media, photos] = await Promise.all([
+        payload.find({
+          collection: "photo-collections",
+          depth: 0,
+          fallbackLocale: false,
+          limit: 1000,
+          locale: "tr",
+          overrideAccess: true,
+          pagination: false,
+        }),
+        payload.find({
+          collection: "media",
+          depth: 0,
+          limit: 1000,
+          overrideAccess: true,
+          pagination: false,
+        }),
+        payload.find({
+          collection: "photos",
+          depth: 0,
+          draft: true,
+          fallbackLocale: false,
+          limit: 1000,
+          locale: "tr",
+          overrideAccess: true,
+          pagination: false,
+        }),
+      ]);
+      return {
+        collections: collections.docs.map(toHistoricalDocument),
+        media: media.docs.map(toHistoricalDocument),
+        photos: photos.docs.map(toHistoricalDocument),
+      };
+    },
+    async createCollection(data) {
+      return toHistoricalDocument(
+        await payload.create({
+          collection: "photo-collections",
+          data,
+          draft: false,
+          locale: "tr",
+          overrideAccess: true,
+        }),
+      );
+    },
+    async updateCollectionEnglish(id, data) {
+      await payload.update({
+        collection: "photo-collections",
+        data,
+        id,
+        locale: "en",
+        overrideAccess: true,
+      });
+    },
+    async createMedia(item, filePath) {
+      return toHistoricalDocument(
+        await payload.create({
+          collection: "media",
+          data: {
+            alt: historicalAlt(item),
+            description: historicalDescription(item),
+            sourceCopyright: item.requiredAttribution,
+          },
+          filePath,
+          overrideAccess: true,
+        }),
+      );
+    },
+    async createPhoto(data) {
+      return toHistoricalDocument(
+        await payload.create({
+          collection: "photos",
+          data,
+          draft: false,
+          locale: "tr",
+          overrideAccess: true,
+        }),
+      );
+    },
+    async deletePhoto(id) {
+      await payload.delete({ collection: "photos", id, overrideAccess: true });
+    },
+    async deleteMedia(id) {
+      await payload.delete({ collection: "media", id, overrideAccess: true });
+    },
+    async deleteCollection(id) {
+      await payload.delete({
+        collection: "photo-collections",
+        id,
+        overrideAccess: true,
+      });
+    },
+  };
+}
+
+async function downloadAndVerify(
+  item: HistoricalPhotoItem,
+  downloadDirectory: string,
+): Promise<string> {
+  await mkdir(downloadDirectory, { recursive: true });
+  const filePath = path.join(downloadDirectory, historicalFilename(item));
+  const cachedPaths = [
+    filePath,
+    path.join(downloadDirectory, `${item.district}.jpg`),
+  ];
+  for (const cachedPath of cachedPaths) {
+    try {
+      const cached = await readFile(cachedPath);
+      verifyDownloadedBytes(item, cached);
+      const metadata = await sharp(cached).metadata();
+      if (
+        metadata.format !== "jpeg" ||
+        metadata.width !== item.width ||
+        metadata.height !== item.height
+      ) {
+        throw new HistoricalPhotoImportError(
+          "remote_changed",
+          "Cached historical source image metadata differs from the sealed manifest.",
+        );
+      }
+      return cachedPath;
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+    }
+  }
+  const response = await fetch(item.downloadUrl, {
+    headers: { "User-Agent": "sabandurali.com historical-photo verifier/1.0" },
+    redirect: "follow",
+  });
+  if (!response.ok) {
+    throw new HistoricalPhotoImportError(
+      "remote_changed",
+      "A historical source file is no longer available.",
+    );
+  }
+  const bytes = new Uint8Array(await response.arrayBuffer());
+  verifyDownloadedBytes(item, bytes);
+  const metadata = await sharp(bytes).metadata();
+  if (
+    metadata.format !== "jpeg" ||
+    metadata.width !== item.width ||
+    metadata.height !== item.height
+  ) {
+    throw new HistoricalPhotoImportError(
+      "remote_changed",
+      "Historical source image metadata changed after audit.",
+    );
+  }
+  await writeFile(filePath, bytes);
+  return filePath;
+}
+
+export async function runHistoricalImporter({
+  batchConfig,
+  defaultManifest,
+  downloadDirectory,
+}: HistoricalImporterOptions): Promise<void> {
+  const { values } = parseArgs({
+    options: {
+      apply: { type: "boolean" },
+      "dry-run": { type: "boolean" },
+      verify: { type: "boolean" },
+      manifest: {
+        type: "string",
+        default: defaultManifest,
+      },
+    },
+    strict: true,
+  });
+  const selectedModes = [values.apply, values["dry-run"], values.verify].filter(
+    Boolean,
+  ).length;
+  if (selectedModes > 1) {
+    throw new HistoricalPhotoImportError(
+      "configuration_failed",
+      `Choose only one ${batchConfig.label} mode.`,
+    );
+  }
+  const mode = values.apply ? "apply" : values.verify ? "verify" : "dry-run";
+  assertHistoricalEnvironment(process.env, mode, batchConfig);
+  const databaseUrl = process.env.DATABASE_URL;
+  if (!databaseUrl) {
+    throw new HistoricalPhotoImportError(
+      "configuration_failed",
+      "DATABASE_URL is required.",
+    );
+  }
+  describeProductionDatabase(databaseUrl);
+
+  const migrationState = await readProductionMigrationState(process.env);
+  if (
+    migrationState.pendingMigrationNames.length !== 0 ||
+    migrationState.appliedCount !== migrationState.registeredCount
+  ) {
+    throw new HistoricalPhotoImportError(
+      "configuration_failed",
+      "Production schema is not at the registered migration baseline.",
+    );
+  }
+
+  const manifest = parseHistoricalManifest(
+    JSON.parse(await readFile(values.manifest, "utf8")),
+    batchConfig,
+  );
+
+  const downloaded = new Map<string, string>();
+  for (const [index, item] of manifest.items.entries()) {
+    if (index > 0) await delay(500);
+    downloaded.set(
+      item.recordUrl,
+      await downloadAndVerify(item, downloadDirectory),
+    );
+  }
+
+  const { default: configPromise } = await import("../../src/payload.config");
+  const config = await configPromise;
+  config.typescript.autoGenerate = false;
+  const payload = await getPayload({ config });
+  try {
+    const repository = payloadRepository(payload);
+    const plan =
+      mode === "apply"
+        ? await applyHistoricalPlan(
+            manifest,
+            repository,
+            downloaded,
+            batchConfig,
+          )
+        : buildHistoricalPlan(
+            manifest,
+            await repository.readSnapshot(),
+            batchConfig,
+          );
+    if (plan.count.conflict > 0) {
+      throw new HistoricalPhotoImportError(
+        "conflict",
+        `${batchConfig.label} plan contains conflicts.`,
+      );
+    }
+    if (
+      mode === "verify" &&
+      (plan.count.collectionCreate !== 0 ||
+        plan.count.mediaCreate !== 0 ||
+        plan.count.photoCreate !== 0 ||
+        plan.count.skip !== manifest.items.length)
+    ) {
+      throw new HistoricalPhotoImportError(
+        "verify_failed",
+        `${batchConfig.label} is not fully applied.`,
+      );
+    }
+    console.log(
+      JSON.stringify({
+        mode,
+        ...plan.count,
+        writes:
+          mode === "apply"
+            ? plan.count.collectionCreate +
+              plan.count.mediaCreate +
+              plan.count.photoCreate
+            : 0,
+        districts: plan.entries.map(({ item }) => item.district),
+      }),
+    );
+  } finally {
+    await payload.destroy();
+  }
+}
+
+export function reportHistoricalImporterError(
+  error: unknown,
+  batchConfig: HistoricalBatchConfig,
+): void {
+  const category =
+    error instanceof HistoricalPhotoImportError
+      ? error.category
+      : "unknown_failed";
+  console.error(
+    JSON.stringify({
+      error: category,
+      ...((category === "configuration_failed" ||
+        category === "approval_failed") && {
+        configuration: configurationStatus(process.env, batchConfig),
+      }),
+    }),
+  );
+  process.exitCode = 1;
+}

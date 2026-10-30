@@ -1,165 +1,231 @@
 "use client";
 
-import FormStatus from "./FormStatus";
+import { Button } from "@/components/ui/Button";
+import { Field, Input, Select, Textarea } from "@/components/ui/Field";
+import FormStatus from "@/components/ui/FormStatus";
+import type { ContactContent } from "@/content/contactContent";
+import {
+  getFormspreeEndpoint,
+  getSubmissionMessage,
+  honeypotFieldName,
+  toFormStatusState,
+} from "./contact-submission";
+import {
+  getValidationSummary,
+  privacyAcknowledgementLabel,
+} from "./contact-validation";
 import PrivacyAcknowledgement from "./PrivacyAcknowledgement";
 import { useFormspreeSubmission } from "./useFormspreeSubmission";
-import type { ContactContent } from "@/content/contactContent";
 
 type ContactFormProps = {
   content: ContactContent;
+  /** Id of the visible heading that names the form. */
+  labelledBy?: string;
+  /** Formspree form id; defaults to the public build-time variable. */
+  formId?: string;
 };
 
-const fieldClassName =
-  "mt-3 min-h-11 w-full rounded-sm border border-border bg-[#14243A] px-4 py-3 text-base text-ivory outline-none transition-colors placeholder:text-placeholder hover:border-accent focus:border-accent motion-reduce:transition-none";
+const firstFieldId = "contact-name";
 
-export default function ContactForm({ content }: ContactFormProps) {
-  const { errorKind, handleSubmit, resetStatus, status } =
-    useFormspreeSubmission({
-      formId: process.env.NEXT_PUBLIC_FORMSPREE_CONTACT_FORM_ID,
-    });
-  const isLoading = status === "loading";
+/**
+ * Turns the browser's validation bubbles off once the script runs: from
+ * then on the form shows its own messages (FRONTEND-3). Without JavaScript
+ * the attribute is never set and the browser still checks the fields
+ * before posting to Formspree.
+ */
+function takeOverValidation(form: HTMLFormElement | null) {
+  if (form) form.noValidate = true;
+}
+
+/**
+ * Contact form (FE-21, SEC-14, FRONTEND-3). Visible labels with
+ * "(zorunlu)"; on an invalid submit every invalid field shows a lasting
+ * message in the page's language ("Hata:" prefix, aria-invalid,
+ * aria-describedby), focus moves to the first one and, with more than one,
+ * FormStatus lists them. One FormStatus outside the form for progress,
+ * results and that summary, and
+ * a submit button that stays focusable while sending (aria-disabled). The
+ * honeypot is off-screen, `inert` and hidden from assistive technology, and
+ * a filled one is rejected before anything is sent.
+ */
+export default function ContactForm({
+  content,
+  labelledBy,
+  formId = process.env.NEXT_PUBLIC_FORMSPREE_CONTACT_FORM_ID,
+}: ContactFormProps) {
+  const locale = content.locale;
+  const {
+    errorKind,
+    fieldErrors,
+    handleFieldChange,
+    handleSubmit,
+    resetStatus,
+    status,
+  } = useFormspreeSubmission({ formId, locale });
+  const isSending = status === "loading";
+  const validationSummary = getValidationSummary(
+    fieldErrors,
+    {
+      name: content.fields.name,
+      email: content.fields.email,
+      subject: content.fields.subject,
+      message: content.fields.message,
+      privacyAcknowledgement: privacyAcknowledgementLabel[locale],
+    },
+    locale,
+  );
+
+  function startAnotherMessage() {
+    resetStatus();
+    // The "new message" button disappears with the result: continue from
+    // the first field instead of losing focus to the page.
+    document.getElementById(firstFieldId)?.focus();
+  }
 
   return (
-    <form
-      method="post"
-      onSubmit={handleSubmit}
-      aria-busy={isLoading}
-      className="space-y-4 border-t border-border pt-6 sm:pt-8"
-    >
-      <fieldset disabled={isLoading} className="space-y-4 border-0 p-0">
-        <div className="grid gap-4 border border-border bg-[#223653] p-5 sm:grid-cols-2 sm:p-6">
-          <div>
-            <label htmlFor="contact-name">
-              <span className="font-medium leading-6 text-ivory">
-                {content.fields.name}
-              </span>
-              <span className="ml-2 text-xs text-accent-soft">
-                {content.requiredLabel}
-              </span>
-            </label>
-            <input
-              id="contact-name"
-              type="text"
-              name="name"
-              required
-              maxLength={100}
-              autoComplete="name"
-              className={fieldClassName}
-            />
-          </div>
-
-          <div>
-            <label htmlFor="contact-email">
-              <span className="font-medium leading-6 text-ivory">
-                {content.fields.email}
-              </span>
-              <span className="ml-2 text-xs text-accent-soft">
-                {content.requiredLabel}
-              </span>
-            </label>
-            <input
-              id="contact-email"
-              type="email"
-              name="email"
-              required
-              maxLength={200}
-              autoComplete="email"
-              className={fieldClassName}
-            />
-          </div>
-        </div>
-
-        <div className="border border-border bg-[#223653] p-5 sm:p-6">
-          <label htmlFor="contact-subject">
-            <span className="font-medium leading-6 text-ivory">
-              {content.fields.subject}
-            </span>
-            <span className="ml-2 text-xs text-accent-soft">
-              {content.requiredLabel}
-            </span>
-          </label>
-          <select
-            id="contact-subject"
-            name="subject"
+    <div className="flex flex-col gap-6">
+      {/* Before hydration (or without JavaScript) the browser posts straight
+          to Formspree, never to this page: the personal data only goes where
+          the privacy notice says it goes. */}
+      <form
+        ref={takeOverValidation}
+        method="post"
+        action={getFormspreeEndpoint(formId) ?? undefined}
+        onSubmit={handleSubmit}
+        onChange={handleFieldChange}
+        aria-labelledby={labelledBy}
+        className="relative flex flex-col gap-6"
+      >
+        <div className="grid gap-6 sm:grid-cols-2">
+          <Field
+            id={firstFieldId}
+            label={content.fields.name}
+            error={fieldErrors.name}
             required
-            defaultValue=""
-            className={fieldClassName}
+            locale={locale}
           >
-            <option value="" disabled>
-              {content.fields.subjectPlaceholder}
-            </option>
-            {content.fields.subjectOptions.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="border border-border bg-[#223653] p-5 sm:p-6">
-          <label htmlFor="contact-message">
-            <span className="font-medium leading-6 text-ivory">
-              {content.fields.message}
-            </span>
-            <span className="ml-2 text-xs text-accent-soft">
-              {content.requiredLabel}
-            </span>
-          </label>
-          <textarea
-            id="contact-message"
-            name="message"
+            {(control) => (
+              <Input
+                {...control}
+                type="text"
+                name="name"
+                maxLength={100}
+                autoComplete="name"
+              />
+            )}
+          </Field>
+          <Field
+            label={content.fields.email}
+            error={fieldErrors.email}
             required
-            minLength={10}
-            maxLength={3000}
-            rows={8}
-            className={`${fieldClassName} resize-y`}
-          />
+            locale={locale}
+          >
+            {(control) => (
+              <Input
+                {...control}
+                type="email"
+                name="email"
+                maxLength={200}
+                autoComplete="email"
+                spellCheck={false}
+              />
+            )}
+          </Field>
         </div>
 
+        <Field
+          label={content.fields.subject}
+          error={fieldErrors.subject}
+          required
+          locale={locale}
+        >
+          {(control) => (
+            <Select {...control} name="subject" defaultValue="">
+              <option value="" disabled>
+                {content.fields.subjectPlaceholder}
+              </option>
+              {content.fields.subjectOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </Select>
+          )}
+        </Field>
+
+        <Field
+          label={content.fields.message}
+          error={fieldErrors.message}
+          required
+          locale={locale}
+        >
+          {(control) => (
+            <Textarea
+              {...control}
+              name="message"
+              minLength={10}
+              maxLength={3000}
+              rows={8}
+            />
+          )}
+        </Field>
+
+        {/* SEC-14 honeypot: never visible, never focusable, never announced. */}
         <div
           aria-hidden="true"
-          className="absolute left-[-10000px] top-auto h-px w-px overflow-hidden"
+          inert
+          data-honeypot=""
+          className="pointer-events-none absolute top-0 -left-[10000px] h-px w-px overflow-hidden opacity-0"
         >
-          <label htmlFor="contact-website">Website</label>
+          <label htmlFor="contact-gotcha">Website</label>
           <input
-            id="contact-website"
+            id="contact-gotcha"
             type="text"
-            name="website"
+            name={honeypotFieldName}
             tabIndex={-1}
             autoComplete="off"
-            aria-hidden="true"
+            defaultValue=""
           />
         </div>
 
-        <input type="hidden" name="language" value={content.locale} />
+        <input type="hidden" name="language" value={locale} />
         <input type="hidden" name="formType" value="contact" />
 
         <PrivacyAcknowledgement
           id="contact-privacy-acknowledgement"
-          locale={content.locale}
+          locale={locale}
           content={content.privacyAcknowledgement}
-          requiredLabel={content.requiredLabel}
+          error={fieldErrors.privacyAcknowledgement}
         />
 
-        <div className="pt-3">
-          <button
+        <div>
+          <Button
             type="submit"
-            disabled={isLoading}
-            className="flex min-h-12 w-full items-center justify-center rounded-sm bg-accent px-6 py-3 text-sm font-semibold text-ink transition-colors hover:bg-accent-strong disabled:cursor-not-allowed disabled:opacity-45 motion-reduce:transition-none sm:w-auto sm:min-w-56"
+            aria-disabled={isSending || undefined}
+            className="w-full sm:w-auto sm:min-w-56"
           >
-            {isLoading
+            {isSending
               ? content.submission.submitting
               : content.submission.submit}
-          </button>
+          </Button>
         </div>
-      </fieldset>
+      </form>
 
+      {/* A validation summary is announced, but focus goes to the first
+          invalid field instead of the message. */}
       <FormStatus
-        status={status}
-        errorKind={errorKind}
-        messages={content.submission}
-        onReset={resetStatus}
+        state={validationSummary ? "error" : toFormStatusState(status)}
+        message={
+          validationSummary ??
+          getSubmissionMessage(status, errorKind, content.submission)
+        }
+        focusResult={validationSummary === undefined}
+        successActions={
+          <Button variant="secondary" size="sm" onClick={startAnotherMessage}>
+            {content.submission.submitAnother}
+          </Button>
+        }
       />
-    </form>
+    </div>
   );
 }

@@ -1,30 +1,80 @@
-import type { CollectionBeforeChangeHook, CollectionConfig } from "payload";
+import type {
+  CollectionConfig,
+  RichTextField,
+  TextFieldSingleValidation,
+} from "payload";
+import { richText as validateRichText } from "payload/shared";
 import {
   adminOnly,
   adminOrEditor,
   publishedOrAdminOrEditor,
+  hideNonPublicRichTextLinks,
 } from "@/lib/payloadAccess";
 import {
   createLocalizedSlugField,
   createLocalizedSlugHook,
 } from "@/lib/localizedSlug";
+import { ensurePublishedAt } from "@/lib/publishedAt";
+import { createRevalidationHooks } from "@/lib/revalidation";
 import { districtOptions } from "@/content/districts/district-registry";
+import {
+  hasMeaningfulRichText,
+  imageMediaFilter,
+  isHttpsUrl,
+  validateOptionalSiteCanonical,
+  SEO_DESCRIPTION_MAX_LENGTH,
+  SEO_TITLE_MAX_LENGTH,
+} from "@/collections/validation";
+import { getText, isRecord } from "@/content/guards";
 
-const setPublishedAtOnFirstPublish: CollectionBeforeChangeHook = ({
-  data,
-  originalDoc,
-}) => {
-  const wasPublished = originalDoc?._status === "published";
-  const willBePublished = data._status === "published";
+/** The author every article has unless an editor names someone else. */
+export const DEFAULT_ARTICLE_AUTHOR = "Şaban Durali";
 
-  if (!wasPublished && willBePublished && !data.publishedAt) {
-    return {
-      ...data,
-      publishedAt: new Date().toISOString(),
-    };
+const revalidation = createRevalidationHooks("articles");
+
+function isDistrictNews(data: unknown): boolean {
+  return isRecord(data) && data.articleType === "district-news";
+}
+
+/**
+ * The public site hides an article without visible body text, so publishing
+ * one is refused here instead. District news carry only a short summary and
+ * a source link by design. Runs after Payload's own rich text validation.
+ * Drafts are saved without field validation.
+ */
+export const validateArticleContent: NonNullable<
+  RichTextField["validate"]
+> = async (value, options) => {
+  const result = await validateRichText(value, options);
+
+  if (result !== true) return result;
+
+  return isDistrictNews(options.data) || hasMeaningfulRichText(value)
+    ? true
+    : "Yayımlanan makalenin bu dilde görünür bir içeriği olmalıdır.";
+};
+
+export const validateNewsSourceName: TextFieldSingleValidation = (
+  value,
+  { data },
+) =>
+  isDistrictNews(data) && getText(value) === null
+    ? "İlçe haberi için orijinal kaynağın adı zorunludur."
+    : true;
+
+export const validateNewsSourceUrl: TextFieldSingleValidation = (
+  value,
+  { data },
+) => {
+  if (value === null || value === undefined || value === "") {
+    return isDistrictNews(data)
+      ? "İlçe haberi için orijinal haberin https:// adresi zorunludur."
+      : true;
   }
 
-  return data;
+  return (
+    isHttpsUrl(value) || "Geçerli ve https:// ile başlayan bir adres girin."
+  );
 };
 
 export const Articles: CollectionConfig = {
@@ -75,10 +125,12 @@ export const Articles: CollectionConfig = {
       type: "richText",
       label: "Makale içeriği",
       localized: true,
+      hooks: { afterRead: [hideNonPublicRichTextLinks] },
       admin: {
         description:
-          "İlçe haberi türünde tam metin saklanmaz; kısa özgün özet ve kaynak bağlantısı kullanılır.",
+          "İlçe haberi türünde tam metin saklanmaz; kısa özgün özet ve kaynak bağlantısı kullanılır. Diğer türlerde yayın için içerik zorunludur.",
       },
+      validate: validateArticleContent,
     },
     {
       name: "categories",
@@ -98,6 +150,7 @@ export const Articles: CollectionConfig = {
       type: "upload",
       label: "Öne çıkan görsel",
       relationTo: "media",
+      filterOptions: imageMediaFilter,
     },
     {
       name: "featuredImageAlt",
@@ -115,6 +168,23 @@ export const Articles: CollectionConfig = {
         position: "sidebar",
       },
       defaultValue: false,
+    },
+    {
+      name: "author",
+      type: "group",
+      label: "Yazar",
+      fields: [
+        {
+          name: "name",
+          type: "text",
+          label: "Yazar adı",
+          defaultValue: DEFAULT_ARTICLE_AUTHOR,
+          admin: {
+            description:
+              "Yapılandırılmış veride (JSON-LD) ve paylaşım etiketlerinde yazar olarak görünür. Boş bırakılırsa Şaban Durali kullanılır.",
+          },
+        },
+      ],
     },
     {
       type: "collapsible",
@@ -148,17 +218,45 @@ export const Articles: CollectionConfig = {
           name: "newsCategory",
           type: "select",
           label: "Haber kategorisi",
-          options: ["ulasim", "sehircilik", "belediye", "kultur", "yasam", "gayrimenkul", "egitim", "cevre", "onemli-yerel-gelismeler"],
-          admin: { condition: (_, siblingData) => siblingData?.articleType === "district-news" },
+          options: [
+            "ulasim",
+            "sehircilik",
+            "belediye",
+            "kultur",
+            "yasam",
+            "gayrimenkul",
+            "egitim",
+            "cevre",
+            "onemli-yerel-gelismeler",
+          ],
+          admin: {
+            condition: (_, siblingData) =>
+              siblingData?.articleType === "district-news",
+          },
         },
         {
           name: "externalSource",
           type: "group",
           label: "Orijinal kaynak",
-          admin: { condition: (_, siblingData) => siblingData?.articleType === "district-news" },
+          admin: {
+            condition: (_, siblingData) =>
+              siblingData?.articleType === "district-news",
+            description:
+              "İlçe haberi yayınlanırken kaynak adı ve https:// ile başlayan orijinal haber adresi zorunludur.",
+          },
           fields: [
-            { name: "name", type: "text", label: "Kaynak adı" },
-            { name: "url", type: "text", label: "Orijinal haber URL'si" },
+            {
+              name: "name",
+              type: "text",
+              label: "Kaynak adı",
+              validate: validateNewsSourceName,
+            },
+            {
+              name: "url",
+              type: "text",
+              label: "Orijinal haber URL'si",
+              validate: validateNewsSourceUrl,
+            },
             { name: "checkedAt", type: "date", label: "Son kontrol tarihi" },
           ],
         },
@@ -170,7 +268,7 @@ export const Articles: CollectionConfig = {
       label: "Yayın tarihi",
       admin: {
         description:
-          "İlk yayında otomatik atanır; gerekirse elle düzenlenebilir.",
+          "İlk yayında otomatik atanır; yayındaki bir kayıtta boşaltılırsa önceki tarih korunur; gerekirse elle düzenlenebilir. Gelecek tarih planlı yayın anlamına gelir.",
         position: "sidebar",
       },
     },
@@ -183,19 +281,44 @@ export const Articles: CollectionConfig = {
           name: "metaTitle",
           type: "text",
           localized: true,
-          maxLength: 60,
+          maxLength: SEO_TITLE_MAX_LENGTH,
         },
         {
           name: "metaDescription",
           type: "textarea",
           localized: true,
-          maxLength: 160,
+          maxLength: SEO_DESCRIPTION_MAX_LENGTH,
+        },
+        {
+          name: "canonical",
+          type: "text",
+          label: "Canonical adresi",
+          localized: true,
+          admin: {
+            description:
+              "Boş bırakılırsa makalenin kendi adresi kullanılır. Yalnız site içi yol (/makaleler/...) veya https://www.sabandurali.com adresi girilebilir.",
+          },
+          validate: validateOptionalSiteCanonical,
+        },
+        {
+          name: "index",
+          type: "checkbox",
+          label: "Arama motorları indeksleyebilir",
+          defaultValue: true,
+        },
+        {
+          name: "follow",
+          type: "checkbox",
+          label: "Arama motorları bağlantıları takip edebilir",
+          defaultValue: true,
         },
       ],
     },
   ],
   hooks: {
-    beforeChange: [setPublishedAtOnFirstPublish],
+    afterChange: [revalidation.afterChange],
+    afterDelete: [revalidation.afterDelete],
+    beforeChange: [ensurePublishedAt],
     beforeValidate: [
       createLocalizedSlugHook({
         collection: "articles",

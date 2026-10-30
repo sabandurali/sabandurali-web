@@ -1,24 +1,13 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import { siteUrl } from "@/config/site";
+import { Analytics } from "@vercel/analytics/next";
+import { createRootLayoutMetadata } from "@/components/layout/root-metadata";
+import SkipLink from "@/components/ui/SkipLink";
+import { fontVariables } from "../fonts";
 import "../globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+export const metadata = createRootLayoutMetadata("en");
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
-  title: "Şaban Durali | Research and Knowledge Platform",
-  description:
-    "An independent platform producing reliable knowledge, actionable analysis and sustainable value across real estate, consulting, research and technology.",
-};
+/** Time-based safety net for every route below; see the (tr) layout. */
+export const revalidate = 3600;
 
 export default function EnglishRootLayout({
   children,
@@ -26,9 +15,13 @@ export default function EnglishRootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html lang="en" data-scroll-behavior="smooth" className={fontVariables}>
+      <body>
+        <SkipLink>Skip to content</SkipLink>
         {children}
+        {/* Vercel Web Analytics: cookieless page views, sent to this
+            origin (/_vercel/insights); see docs/SECURITY.md. */}
+        <Analytics />
       </body>
     </html>
   );

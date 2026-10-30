@@ -1,92 +1,50 @@
-import { getSafePayloadMediaPath } from "@/content/articles/article-images";
 import type {
+  DistrictArticleType,
   PublicArticle,
   PublicArticleCategory,
+  PublicArticleExternalSource,
   PublicArticleImage,
   PublicArticleSummary,
   PublicArticleTranslation,
 } from "@/content/articles/public-types";
 import type { ArticleLanguage } from "@/content/articles/types";
-import type {
-  Article as PayloadArticle,
-  Category as PayloadCategory,
-  Media as PayloadMedia,
-} from "@/payload-types";
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
-}
-
-function getRequiredText(value: unknown): string | null {
-  return typeof value === "string" && value.trim().length > 0
-    ? value.trim()
-    : null;
-}
-
-function hasMeaningfulLexicalNode(value: unknown): boolean {
-  if (!isRecord(value)) {
-    return false;
-  }
-
-  if (value.type === "text") {
-    return getRequiredText(value.text) !== null;
-  }
-
-  if (value.type === "upload") {
-    return true;
-  }
-
-  return (
-    Array.isArray(value.children) &&
-    value.children.some(hasMeaningfulLexicalNode)
-  );
-}
-
-function isLexicalContent(
-  value: unknown,
-): value is PayloadArticle["content"] {
-  return (
-    isRecord(value) &&
-    isRecord(value.root) &&
-    Array.isArray(value.root.children) &&
-    value.root.children.some(hasMeaningfulLexicalNode)
-  );
-}
-
-function isPublishedAtPublic(
-  value: unknown,
-  now: Date,
-): value is string {
-  if (typeof value !== "string") {
-    return false;
-  }
-
-  const timestamp = Date.parse(value);
-  return Number.isFinite(timestamp) && timestamp <= now.getTime();
-}
+import { isSiteCanonicalUrl } from "@/collections/validation";
+import { reportContentIssue } from "@/content/content-log";
+import {
+  getFiniteNumber,
+  getText,
+  isPublishedBy,
+  isRecord,
+} from "@/content/guards";
+import {
+  createFallbackMetaDescription,
+  createFallbackMetaTitle,
+} from "@/lib/metadata";
+import { personalBrandName } from "@/content/entity-seo";
+import { mapMediaImage } from "@/content/media";
+import {
+  prepareRichText,
+  type RichTextLinkContext,
+} from "@/content/rich-text/prepare-rich-text";
+import { isMeaningfulPublicRichText } from "@/content/rich-text/public-rich-text";
+import type { Article as PayloadArticle } from "@/payload-types";
 
 function reportInvalidArticle(
   articleID: string,
   locale: ArticleLanguage,
   reason: string,
 ): void {
-  if (process.env.NODE_ENV === "development") {
-    console.warn(
-      `[public-articles] Payload article ${articleID} was skipped for locale ${locale}: ${reason}`,
-    );
-  }
+  reportContentIssue({ scope: "articles", id: articleID, locale, reason });
 }
 
-function mapCategory(
-  value: string | PayloadCategory,
-): PublicArticleCategory | null {
+function mapCategory(value: unknown): PublicArticleCategory | null {
   if (!isRecord(value)) {
     return null;
   }
 
-  const id = getRequiredText(value.id);
-  const name = getRequiredText(value.name);
-  const slug = getRequiredText(value.slug);
+  const id = getText(value.id);
+  const name = getText(value.name);
+  const slug = getText(value.slug);
 
   if (id === null || name === null || slug === null) {
     return null;
@@ -96,10 +54,7 @@ function mapCategory(
     id,
     name,
     slug,
-    sortOrder:
-      typeof value.sortOrder === "number" && Number.isFinite(value.sortOrder)
-        ? value.sortOrder
-        : 0,
+    sortOrder: getFiniteNumber(value.sortOrder) ?? 0,
   };
 }
 
@@ -107,16 +62,13 @@ function mapCategories(
   values: PayloadArticle["categories"],
   locale: ArticleLanguage,
 ): PublicArticleCategory[] {
-  const collator = new Intl.Collator(
-    locale === "tr" ? "tr-TR" : "en",
-    { sensitivity: "base" },
-  );
+  const collator = new Intl.Collator(locale === "tr" ? "tr-TR" : "en", {
+    sensitivity: "base",
+  });
 
-  return values
+  return (Array.isArray(values) ? values : [])
     .map(mapCategory)
-    .filter(
-      (category): category is PublicArticleCategory => category !== null,
-    )
+    .filter((category): category is PublicArticleCategory => category !== null)
     .toSorted(
       (left, right) =>
         left.sortOrder - right.sortOrder ||
@@ -124,64 +76,61 @@ function mapCategories(
     );
 }
 
-function getPositiveDimension(value: unknown): number | undefined {
-  return typeof value === "number" &&
-    Number.isFinite(value) &&
-    value > 0
+function getArticleType(value: unknown): DistrictArticleType {
+  return value === "district-research" || value === "district-news"
     ? value
-    : undefined;
+    : "article";
 }
 
-function getArticleType(value: unknown): "article" | "district-research" | "district-news" {
-  return value === "district-research" || value === "district-news" ? value : "article";
-}
-
-function mapExternalSource(value: unknown) {
+function mapExternalSource(value: unknown): PublicArticleExternalSource | null {
   if (!isRecord(value)) return null;
-  const name = getRequiredText(value.name);
-  const url = getRequiredText(value.url);
+  const name = getText(value.name);
+  const url = getText(value.url);
   if (name === null || url === null) return null;
-  return { name, url, checkedAt: getRequiredText(value.checkedAt) };
+  return { name, url, checkedAt: getText(value.checkedAt) };
 }
 
 function mapFeaturedImage(
   value: PayloadArticle["featuredImage"],
   localizedAlt: unknown,
   title: string,
+  locale: ArticleLanguage,
 ): PublicArticleImage | null {
-  if (!isRecord(value)) {
-    return null;
-  }
+  const image = mapMediaImage(value, {
+    alt: localizedAlt,
+    fallbackAlt: title,
+    locale,
+  });
 
-  const media = value as PayloadMedia;
-  const mimeType = getRequiredText(media.mimeType);
-  const src = getSafePayloadMediaPath(media.url);
-
-  if (mimeType === null || !mimeType.startsWith("image/") || src === null) {
-    return null;
-  }
+  if (image === null) return null;
 
   return {
     source: "payload",
-    src,
-    alt:
-      getRequiredText(localizedAlt) ??
-      getRequiredText(media.alt) ??
-      title,
-    width: getPositiveDimension(media.width),
-    height: getPositiveDimension(media.height),
+    src: image.src,
+    alt: image.alt,
+    ...(image.altLanguage === locale ? {} : { altLanguage: image.altLanguage }),
+    ...(image.caption === null ? {} : { caption: image.caption }),
+    ...(image.credit === null ? {} : { credit: image.credit }),
+    ...(image.width === null ? {} : { width: image.width }),
+    ...(image.height === null ? {} : { height: image.height }),
   };
 }
 
-export function mapPayloadArticle(
+/**
+ * Summary fields shared by the full article and the list projection.
+ * `acceptContent` runs after the identity checks and before the source and
+ * date checks, so the order of the reported reasons stays the same for both.
+ */
+function mapArticleSummaryFields(
   value: PayloadArticle,
   locale: ArticleLanguage,
-  now: Date = new Date(),
-): PublicArticle | null {
-  const id = getRequiredText(value.id);
-  const title = getRequiredText(value.title);
-  const slug = getRequiredText(value.slug);
-  const excerpt = getRequiredText(value.excerpt);
+  now: Date,
+  acceptContent: (id: string, articleType: DistrictArticleType) => boolean,
+): PublicArticleSummary | null {
+  const id = getText(value.id);
+  const title = getText(value.title);
+  const slug = getText(value.slug);
+  const excerpt = getText(value.excerpt);
   const articleType = getArticleType(value.articleType);
 
   if (id === null) {
@@ -202,14 +151,7 @@ export function mapPayloadArticle(
     return null;
   }
 
-  if (articleType !== "district-news" && !isLexicalContent(value.content)) {
-    reportInvalidArticle(
-      id,
-      locale,
-      "Lexical content is missing for the requested locale",
-    );
-    return null;
-  }
+  if (!acceptContent(id, articleType)) return null;
 
   const externalSource = mapExternalSource(value.externalSource);
   if (articleType === "district-news" && externalSource === null) {
@@ -217,7 +159,7 @@ export function mapPayloadArticle(
     return null;
   }
 
-  if (!isPublishedAtPublic(value.publishedAt, now)) {
+  if (!isPublishedBy(value.publishedAt, now)) {
     reportInvalidArticle(
       id,
       locale,
@@ -230,6 +172,7 @@ export function mapPayloadArticle(
     value.featuredImage,
     value.featuredImageAlt,
     title,
+    locale,
   );
 
   return {
@@ -239,29 +182,96 @@ export function mapPayloadArticle(
     language: locale,
     translationKey: id,
     summary: excerpt,
-    content: articleType === "district-news"
-      ? { source: "lexical", data: null }
-      : { source: "lexical", data: value.content },
     categories: mapCategories(value.categories, locale),
     featuredImage,
     featured: value.featured === true,
     articleType,
-    district: getRequiredText(value.district),
-    districtNeighborhood: getRequiredText(value.districtNeighborhood),
-    newsCategory: getRequiredText(value.newsCategory),
+    district: getText(value.district),
+    districtNeighborhood: getText(value.districtNeighborhood),
+    newsCategory: getText(value.newsCategory),
     externalSource,
     publishedAt: value.publishedAt,
     createdAt: value.createdAt,
     updatedAt: value.updatedAt,
+    ...mapAuthor(value.author),
     seo: {
-      title: getRequiredText(value.seo?.metaTitle) ?? title,
+      title: getText(value.seo?.metaTitle) ?? createFallbackMetaTitle(title),
       description:
-        getRequiredText(value.seo?.metaDescription) ?? excerpt,
-      index: true,
-      follow: true,
+        getText(value.seo?.metaDescription) ??
+        createFallbackMetaDescription(excerpt) ??
+        excerpt,
+      ...mapCanonical(value.seo?.canonical),
+      index: value.seo?.index !== false,
+      follow: value.seo?.follow !== false,
       openGraphImage: featuredImage?.src,
     },
   };
+}
+
+export function mapPayloadArticle(
+  value: PayloadArticle,
+  locale: ArticleLanguage,
+  now: Date = new Date(),
+  links: RichTextLinkContext = {},
+): PublicArticle | null {
+  let content: unknown = null;
+  const summary = mapArticleSummaryFields(
+    value,
+    locale,
+    now,
+    (id, articleType) => {
+      if (articleType === "district-news") return true;
+
+      // Internal links are resolved here, where the locale is known.
+      content = prepareRichText(value.content, locale, now, links);
+      if (isMeaningfulPublicRichText(content)) return true;
+
+      reportInvalidArticle(
+        id,
+        locale,
+        "Lexical content is missing for the requested locale",
+      );
+      return false;
+    },
+  );
+
+  if (summary === null) return null;
+
+  return {
+    ...summary,
+    content: {
+      source: "lexical",
+      data: isMeaningfulPublicRichText(content) ? content : null,
+    },
+  };
+}
+
+/**
+ * List projection of an article read without its rich text (`select`
+ * excludes `content`). The repository's query requires the content to exist
+ * instead, and publishing requires it to be meaningful
+ * (`validateArticleContent`).
+ */
+export function mapPayloadArticleSummary(
+  value: PayloadArticle,
+  locale: ArticleLanguage,
+  now: Date = new Date(),
+): PublicArticleSummary | null {
+  return mapArticleSummaryFields(value, locale, now, () => true);
+}
+
+/** A canonical path or URL on this site; anything else is ignored. */
+function mapCanonical(value: unknown): { canonical?: string } {
+  const canonical = getText(value);
+  return canonical !== null && isSiteCanonicalUrl(canonical)
+    ? { canonical }
+    : {};
+}
+
+/** A guest author's name; empty or the owner's name means the owner. */
+function mapAuthor(value: unknown): { author?: string } {
+  const name = isRecord(value) ? getText(value.name) : null;
+  return name === null || name === personalBrandName ? {} : { author: name };
 }
 
 export function toPublicArticleSummary(
@@ -285,6 +295,7 @@ export function toPublicArticleSummary(
     publishedAt: article.publishedAt,
     createdAt: article.createdAt,
     updatedAt: article.updatedAt,
+    ...(article.author === undefined ? {} : { author: article.author }),
     seo: article.seo,
   };
 }
@@ -297,5 +308,11 @@ export function toPublicArticleTranslation(
     language: article.language,
     slug: article.slug,
     title: article.title,
+    seo: {
+      index: article.seo.index,
+      ...(article.seo.canonical === undefined
+        ? {}
+        : { canonical: article.seo.canonical }),
+    },
   };
 }

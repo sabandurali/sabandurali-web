@@ -1,3 +1,5 @@
+import { getSafeHref } from "@/content/links";
+
 /** Shared by CMS validation, import validation and public projection. */
 export const districtSectionOptions = [
   { value: "summary", label: "Genel bakış" },
@@ -16,11 +18,33 @@ export const districtSectionOptions = [
   { value: "researchTopics", label: "İleri araştırma konuları" },
 ] as const;
 export type DistrictSection = (typeof districtSectionOptions)[number]["value"];
+/**
+ * The source types, shared like {@link districtSectionOptions} by the CMS
+ * select, the importer and the public projection, so a type added here is
+ * known everywhere instead of being projected as "unclassified".
+ */
+export const districtSourceTypeOptions = [
+  { value: "official", label: "Resmî" },
+  { value: "academic", label: "Akademik / kurumsal" },
+  { value: "secondary", label: "İkincil" },
+  { value: "market", label: "Piyasa platformu" },
+  { value: "unclassified", label: "Sınıflandırılmadı" },
+] as const;
+export type DistrictSourceType =
+  (typeof districtSourceTypeOptions)[number]["value"];
+const districtSourceTypeValues: ReadonlySet<string> = new Set(
+  districtSourceTypeOptions.map(({ value }) => value),
+);
+export function isDistrictSourceType(
+  value: unknown,
+): value is DistrictSourceType {
+  return typeof value === "string" && districtSourceTypeValues.has(value);
+}
 export type DistrictSource = {
   title: string;
   publisher: string;
   url: string;
-  sourceType: "official" | "academic" | "secondary" | "market" | "unclassified";
+  sourceType: DistrictSourceType;
   primary?: boolean | null;
   dataDate?: string | null;
   checkedAt?: string | null;
@@ -28,26 +52,55 @@ export type DistrictSource = {
   sections?: DistrictSection[] | null;
 };
 export function isPublicSourceUrl(value: unknown): value is string {
-  if (typeof value !== "string") return false;
-  try {
-    const url = new URL(value);
-    return (
-      ["https:", "http:"].includes(url.protocol) &&
-      !url.username &&
-      !url.password
-    );
-  } catch {
-    return false;
-  }
+  return typeof value === "string" && getSafeHref(value) !== null;
 }
-function validPastDate(value: unknown, now: number): boolean {
+/** The timestamp of a valid date string that is not in the future. */
+function parsePastDate(value: unknown, now: number): number | null {
+  if (typeof value !== "string") return null;
+  const time = Date.parse(value);
+  return Number.isFinite(time) && time <= now ? time : null;
+}
+/**
+ * A population register release (TÜİK ADNKS or another TÜİK table) counts
+ * people. It can support a population figure, a neighbourhood list and the
+ * overview or comparison that quotes them, never a history, everyday life,
+ * transport, places or research text.
+ */
+const statisticalReleaseSections: readonly DistrictSection[] = [
+  "summary",
+  "facts",
+  "neighborhoods",
+  "regionalAssessment",
+];
+export function isStatisticalRelease(
+  source: Pick<DistrictSource, "url" | "title">,
+): boolean {
+  if (/Adrese Dayalı Nüfus Kayıt Sistemi|\bADNKS\b/iu.test(source.title ?? ""))
+    return true;
+  if (!isPublicSourceUrl(source.url)) return false;
+  const host = new URL(source.url).hostname.toLowerCase();
+  return host === "tuik.gov.tr" || host.endsWith(".tuik.gov.tr");
+}
+/** Whether the kind of source can support the section at all. */
+export function sourceKindFitsSection(
+  source: Pick<DistrictSource, "url" | "title">,
+  section: DistrictSection,
+): boolean {
   return (
-    typeof value === "string" &&
-    Number.isFinite(Date.parse(value)) &&
-    Date.parse(value) <= now
+    !isStatisticalRelease(source) ||
+    statisticalReleaseSections.includes(section)
   );
 }
-/** Periodic values need a dated source; dynamic values expire after 90 days. */
+const dayMs = 24 * 60 * 60 * 1000;
+/** Market figures are dynamic: data and check expire after 90 days. */
+export const MARKET_DATA_MAX_AGE_DAYS = 90;
+/**
+ * "Transportation claims require current support" (§H): lines, stops and
+ * timetables change, so a transport source must have been checked within
+ * this window. Provisional value; the owner sets the final one.
+ */
+export const TRANSPORTATION_CHECK_MAX_AGE_DAYS = 365;
+/** Periodic values need a dated source; dynamic values expire. */
 export function sourceSupportsSection(
   source: DistrictSource,
   section: DistrictSection,
@@ -71,13 +124,16 @@ export function sourceSupportsSection(
     ))
       return false;
   }
+  const checkedAt = parsePastDate(source.checkedAt, now);
+  const dataDate = parsePastDate(source.dataDate, now);
   if (
     source.needsVerification !== false ||
     !isPublicSourceUrl(source.url) ||
     !source.title?.trim() ||
     !source.publisher?.trim() ||
     !source.sections?.includes(section) ||
-    !validPastDate(source.checkedAt, now)
+    !sourceKindFitsSection(source, section) ||
+    checkedAt === null
   )
     return false;
   if (
@@ -88,7 +144,7 @@ export function sourceSupportsSection(
       "marketData",
       "planningDevelopments",
     ].includes(section) &&
-    !validPastDate(source.dataDate, now)
+    dataDate === null
   )
     return false;
   if (
@@ -97,13 +153,15 @@ export function sourceSupportsSection(
   )
     return false;
   if (section === "marketData") {
-    const threshold = now - 90 * 24 * 60 * 60 * 1000;
-    if (
-      Date.parse(source.checkedAt!) < threshold ||
-      Date.parse(source.dataDate!) < threshold
-    )
+    const threshold = now - MARKET_DATA_MAX_AGE_DAYS * dayMs;
+    if (dataDate === null || checkedAt < threshold || dataDate < threshold)
       return false;
   }
+  if (
+    section === "transportation" &&
+    checkedAt < now - TRANSPORTATION_CHECK_MAX_AGE_DAYS * dayMs
+  )
+    return false;
   return true;
 }
 export function sectionIsPublic(

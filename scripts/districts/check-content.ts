@@ -1,145 +1,66 @@
+// District content acceptance check (`npm run test:districts:content`). It
+// never writes by default; `--report <path>` writes the JSON result, as
+// `npm run report:districts:content` does.
 import assert from "node:assert/strict";
-import { readFileSync, writeFileSync } from "node:fs";
+import { writeFileSync } from "node:fs";
+import { parseArgs } from "node:util";
+import {
+  checkDistrictRecord,
+  contentReferenceTime,
+  isEditorialBundle,
+  isHistoricalPhotoBundle,
+  isNeighbourhoodEvidence,
+  isResearchBundle,
+  readCheckedJson,
+  requireDistrictRow,
+} from "./content-acceptance";
 import {
   assertBatch1PopulationImportPlan,
   attachEditorial,
-  batch1PopulationFacts,
   batch1PopulationPlan,
-  type EditorialBundle,
 } from "./editorial";
-import { makeDraft, validateBundle, type ResearchBundle } from "./import-core";
-import { mapDistrictGuide } from "../../src/content/districts/district-guide-projection";
+import { validateBundle } from "./import-core";
+import { sourceKindFitsSection } from "../../src/content/districts/district-content-policy";
 
-const research = JSON.parse(
-  readFileSync("data/districts/research.json", "utf8"),
-) as ResearchBundle;
-const editorial = JSON.parse(
-  readFileSync("data/districts/editorial.json", "utf8"),
-) as EditorialBundle;
-const historicalPhotos = JSON.parse(
-  readFileSync("data/districts/historical-photo-candidates.json", "utf8"),
-) as {
-  schemaVersion: number;
-  districts: Array<{
-    district: string;
-    candidates: Array<{
-      archive: string;
-      recordUrl: string;
-      rightsStatement: string;
-      publicationSafe: boolean;
-      license: string;
-      requiredAttribution: string;
-      currentDistrictMatch: "verified" | "probable" | "uncertain";
-      notes: string;
-    }>;
-    notes: string;
-  }>;
-};
-const evidence = JSON.parse(
-  readFileSync("reports/istanbul-39/editorial-review.json", "utf8"),
-) as Array<{
-  district: string;
-  officialNames: string[];
-  neighborhoodStatus: string;
-}>;
+const { values: options } = parseArgs({
+  options: { report: { type: "string" } },
+  strict: true,
+});
+// Reviewed official neighbourhood lists (moved from reports/istanbul-39/ by
+// ARC-12, see reports/README.md).
+const editorialReviewPath = "data/districts/editorial-review.json";
+
+const research = readCheckedJson(
+  "data/districts/research.json",
+  isResearchBundle,
+);
+const editorial = readCheckedJson(
+  "data/districts/editorial.json",
+  isEditorialBundle,
+);
+const historicalPhotos = readCheckedJson(
+  "data/districts/historical-photo-candidates.json",
+  isHistoricalPhotoBundle,
+);
+const evidence = readCheckedJson(editorialReviewPath, isNeighbourhoodEvidence);
 const expectedCounts = [
   38, 10, 22, 11, 15, 10, 11, 23, 10, 45, 24, 39, 19, 43, 29, 57, 16, 11, 19,
   21, 38, 35, 15, 25, 13, 5, 17, 45, 21, 21, 20, 18, 36, 19, 15, 62, 17, 35, 33,
 ];
+// Deterministic: the content policy is evaluated at the latest recorded
+// review, not at the wall clock, so the result of a commit never changes with
+// the date (TESTS-INFRA-1). A review dated in the future is still rejected;
+// that comparison can only turn from failing to passing as time goes by.
+const referenceTime = contentReferenceTime(editorial);
+assert.ok(
+  referenceTime <= Date.now(),
+  "editorial.json: a checkedAt lies in the future",
+);
 validateBundle(research);
-attachEditorial(research, editorial);
-const rows = research.districts.map((r, i) => {
-  const review = r.editorial!;
-  const draft = makeDraft(r);
-  const projected = mapDistrictGuide(draft)!;
-  const proof = evidence.find((e) => e.district === r.district)!;
-  assert.equal(proof.neighborhoodStatus, "verified-current-directory");
-  assert.deepEqual(
-    projected.neighborhoods.map((n) => n.name),
-    proof.officialNames,
-  );
-  assert.equal(projected.neighborhoods.length, expectedCounts[i], r.district);
-  for (const section of ["summary", "history", "geography"] as const) {
-    assert.ok(
-      projected[section] && projected[section] === review.sections[section],
-    );
-    assert.notEqual(projected[section], r.sections[section]);
-    assert.ok(
-      !/\b(?:TL|ADNKS)\b|%\s*\d|\d[.,]\d+\s*(?:m²|yıl|milyon)/.test(
-        projected[section]!,
-      ),
-      `${r.district}: volatile claim`,
-    );
-  }
-  const expectedFacts =
-    batch1PopulationFacts[
-      r.district as keyof typeof batch1PopulationFacts
-    ];
-  if (review.facts) {
-    assert.deepEqual(projected.facts, review.facts, `${r.district}/facts`);
-  } else {
-    assert.equal(projected.facts, null, `${r.district}/facts must be withheld`);
-  }
-  if (expectedFacts) {
-    assert.equal(review.facts?.population, expectedFacts.population);
-    assert.equal(review.facts?.populationYear, expectedFacts.populationYear);
-    assert.ok(
-      projected.sources.some(
-        (source) =>
-          source.publisher === "Türkiye İstatistik Kurumu" &&
-          source.primary === true &&
-          source.needsVerification === false &&
-          source.sections?.includes("facts"),
-      ),
-      `${r.district}/facts TÜİK source`,
-    );
-    assert.ok(!/Nüfus|nüfus yılı/.test(review.excluded.facts));
-  }
-  for (const field of [
-    "transportation",
-    "life",
-    "housingTexture",
-    "regionalAssessment",
-    "placesGuide",
-    "distinctiveFeatures",
-    "researchTopics",
-  ] as const) {
-    const editorialValue = review.sections[field];
-    if (editorialValue) {
-      assert.equal(projected[field], editorialValue, `${r.district}/${field}`);
-    } else {
-      assert.equal(
-        projected[field],
-        null,
-        `${r.district}/${field} must be withheld`,
-      );
-      assert.ok(review.excluded[field]);
-    }
-  }
-  assert.equal(projected.marketData, null, `${r.district}/marketData withheld`);
-  assert.ok(review.excluded.marketData);
-  assert.equal(
-    projected.planningDevelopments.length,
-    review.planningDevelopments?.length ?? 0,
-    `${r.district}/planningDevelopments`,
-  );
-  const publicJSON = JSON.stringify(projected);
-  assert.ok(!publicJSON.includes(r.sourceAppendix));
-  assert.ok(
-    !publicJSON.includes("importProvenance") &&
-      !publicJSON.includes("researchNotes"),
-  );
-  assert.ok(projected.sources.every((s) => s.needsVerification === false));
-  assert.ok(review.methodology && Date.parse(review.checkedAt) <= Date.now());
-  return {
-    district: r.district,
-    result: "PASS",
-    verified: draft.reviewedSections,
-    neighborhoods: projected.neighborhoods.length,
-    sourceCount: projected.sources.length,
-    excluded: review.excluded,
-  };
-});
+attachEditorial(research, editorial, referenceTime);
+const rows = research.districts.map((r, i) =>
+  checkDistrictRecord(r, evidence, expectedCounts[i], referenceTime),
+);
 
 const completedFields = [
   "life",
@@ -174,7 +95,9 @@ for (const district of nonEsenler) {
     `${district.district}: populationYear`,
   );
   assert.ok(
-    Number.isFinite(facts.areaKm2) && facts.areaKm2! > 0,
+    typeof facts.areaKm2 === "number" &&
+      Number.isFinite(facts.areaKm2) &&
+      facts.areaKm2 > 0,
     `${district.district}: areaKm2`,
   );
   assert.equal(
@@ -219,7 +142,8 @@ for (const district of nonEsenler) {
       `${district.district}/${field}: ellipsis or truncated copy`,
     );
   }
-  const topics = district.sections.researchTopics!
+  const researchTopics = district.sections.researchTopics ?? "";
+  const topics = researchTopics
     .split("\n")
     .map((topic) => topic.trim())
     .filter(Boolean);
@@ -233,13 +157,29 @@ for (const district of nonEsenler) {
   );
   assert.ok(
     !/Araştırma Teması|Temel Sorunsal|\[cite:|\b(?:Sütun|Kolon)\b/i.test(
-      district.sections.researchTopics!,
+      researchTopics,
     ),
     `${district.district}/researchTopics: research artifact`,
   );
 }
+// A source may only claim sections its kind can support: a population
+// register release never backs history, life or places copy. Adopted
+// records keep the fingerprint the owner approved; their extra claims are
+// withheld by the same policy at projection time until a re-adoption.
+for (const district of editorial.districts) {
+  if (district.adoption) continue;
+  for (const source of district.sources)
+    for (const section of source.sections ?? [])
+      assert.ok(
+        sourceKindFitsSection(source, section),
+        `${district.district}: ${source.title} cannot support ${section}`,
+      );
+}
 for (const field of completedFields) {
-  const values = nonEsenler.map((district) => district.sections[field]!.trim());
+  // Presence per district is asserted above with the district name.
+  const values = nonEsenler.map(
+    (district) => district.sections[field]?.trim() ?? "",
+  );
   assert.ok(values.every(Boolean), `${field}: all 38 districts completed`);
   assert.equal(
     new Set(values.map((value) => value.toLocaleLowerCase("tr-TR"))).size,
@@ -250,7 +190,7 @@ for (const field of completedFields) {
 const shingleDistricts = new Map<string, Set<string>>();
 for (const district of nonEsenler) {
   for (const field of completedFields) {
-    const words = district.sections[field]!
+    const words = (district.sections[field] ?? "")
       .toLocaleLowerCase("tr-TR")
       .replace(/[^\p{L}\p{N}]+/gu, " ")
       .trim()
@@ -276,7 +216,9 @@ assert.equal(
     : "no overused 12-word copy",
 );
 const completedCopy = nonEsenler
-  .flatMap((district) => completedFields.map((field) => district.sections[field]))
+  .flatMap((district) =>
+    completedFields.map((field) => district.sections[field]),
+  )
   .join("\n");
 assert.ok(
   !/İstanbul['’]un önemli ilçelerinden|yatırımcıların gözdesi|yüksek prim potansiyeli|eşsiz yaşam fırsatı/i.test(
@@ -321,34 +263,63 @@ const invalid = structuredClone(editorial);
 invalid.districts[0].sources.forEach((s) => {
   s.needsVerification = true;
 });
-assert.throws(() => attachEditorial(structuredClone(research), invalid));
+assert.throws(() =>
+  attachEditorial(structuredClone(research), invalid, referenceTime),
+);
 const mismatch = structuredClone(editorial);
 mismatch.districts[0].pdfSha256 = "0".repeat(64);
-assert.throws(() => attachEditorial(structuredClone(research), mismatch));
-const invalidPopulation = structuredClone(editorial);
-invalidPopulation.districts.find(
-  (row) => row.district === "bahcelievler",
-)!.facts!.population = "539036";
 assert.throws(() =>
-  attachEditorial(structuredClone(research), invalidPopulation),
+  attachEditorial(structuredClone(research), mismatch, referenceTime),
+);
+const invalidPopulation = structuredClone(editorial);
+const invalidPopulationFacts = requireDistrictRow(
+  invalidPopulation.districts,
+  "bahcelievler",
+  "editorial",
+).facts;
+assert.ok(invalidPopulationFacts, "bahcelievler: facts required");
+invalidPopulationFacts.population = "539036";
+assert.throws(() =>
+  attachEditorial(structuredClone(research), invalidPopulation, referenceTime),
 );
 const invalidPopulationSource = structuredClone(editorial);
-invalidPopulationSource.districts
-  .find((row) => row.district === "bahcelievler")!
-  .sources.find((source) => source.sections?.includes("facts"))!.needsVerification =
-  true;
+const populationSource = requireDistrictRow(
+  invalidPopulationSource.districts,
+  "bahcelievler",
+  "editorial",
+).sources.find((source) => source.sections?.includes("facts"));
+assert.ok(populationSource, "bahcelievler: facts source required");
+populationSource.needsVerification = true;
 assert.throws(() =>
-  attachEditorial(structuredClone(research), invalidPopulationSource),
+  attachEditorial(
+    structuredClone(research),
+    invalidPopulationSource,
+    referenceTime,
+  ),
 );
 const invalidAdoption = structuredClone(editorial);
-invalidAdoption.districts.find(
-  (row) => row.district === "esenler",
-)!.adoption!.contentFingerprint = "0".repeat(64);
-assert.throws(() => attachEditorial(structuredClone(research), invalidAdoption));
+const adoption = requireDistrictRow(
+  invalidAdoption.districts,
+  "esenler",
+  "editorial",
+).adoption;
+assert.ok(adoption, "esenler: adoption required");
+adoption.contentFingerprint = "0".repeat(64);
+assert.throws(() =>
+  attachEditorial(structuredClone(research), invalidAdoption, referenceTime),
+);
 assertBatch1PopulationImportPlan({ ...batch1PopulationPlan });
-for (const action of Object.keys(batch1PopulationPlan) as Array<
-  keyof typeof batch1PopulationPlan
->) {
+const populationPlanActions = [
+  "update",
+  "skip",
+  "create",
+  "conflict",
+] as const satisfies ReadonlyArray<keyof typeof batch1PopulationPlan>;
+assert.deepEqual(
+  [...populationPlanActions].sort(),
+  Object.keys(batch1PopulationPlan).sort(),
+);
+for (const action of populationPlanActions) {
   assert.throws(() =>
     assertBatch1PopulationImportPlan({
       ...batch1PopulationPlan,
@@ -358,16 +329,14 @@ for (const action of Object.keys(batch1PopulationPlan) as Array<
 }
 const result = {
   checkedAt: new Date().toISOString(),
+  referenceTime: new Date(referenceTime).toISOString(),
   result: "39/39 PASS",
   scope:
     "Kaynak incelemesine bağlı sınırlı yayın içeriği; tüm PDF iddialarının veya bütün bölümlerin doğrulandığı anlamına gelmez.",
   rows,
 };
-if (process.env.DISTRICT_CONTENT_WRITE_REPORT !== "0")
-  writeFileSync(
-    "reports/istanbul-39/content-acceptance.json",
-    JSON.stringify(result, null, 2) + "\n",
-  );
+if (options.report)
+  writeFileSync(options.report, JSON.stringify(result, null, 2) + "\n");
 console.log(
   result.result,
   "— reviewed editorial sections + 39 official neighborhood lists; unverified fields withheld",

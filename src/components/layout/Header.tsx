@@ -1,32 +1,43 @@
-import Image from "next/image";
-import type {
-  HeaderContent,
-  HomeAnchors,
-  Locale,
+import {
+  homeContent,
+  type HeaderContent,
+  type HomeAnchors,
+  type Locale,
 } from "@/content/homeContent";
 import { getHeaderNavigation } from "@/content/navigation/navigation-data-source";
-import HeaderNavigationLinks from "./HeaderNavigationLinks";
-import LanguageSwitcher from "./LanguageSwitcher";
-import MobileMenu from "./MobileMenu";
+import Container from "@/components/ui/Container";
+import {
+  DesktopLanguageSwitcher,
+  DesktopNavigation,
+  MobileNavigation,
+} from "./HeaderNavigation";
+import Wordmark from "./Wordmark";
 
 type HeaderProps = {
   locale: Locale;
-  anchors: HomeAnchors;
-  content: HeaderContent;
-  homeHref?: string;
+  /** Defaults to the locale's home anchors. */
+  anchors?: HomeAnchors;
+  /** Defaults to the locale's header texts. */
+  content?: HeaderContent;
+  /** Prefix of the English home-section links ("/en" off the home page). */
   anchorPrefix?: string;
-  languageHrefs?: Record<Locale, string>;
-  compact?: boolean;
+  /** This page in each language; the home pages otherwise. */
+  languageHrefs?: Partial<Record<Locale, string>>;
 };
 
+/**
+ * Atlas header: the ŞABAN DURALİ wordmark (home link) and the language
+ * switcher on the first row, the navigation bar below it from 1280 px, and
+ * a "Menü" disclosure with the same links on narrower screens. The page,
+ * not the header, owns `<main id="main">`; the root layout's SkipLink is
+ * the first focusable element above it.
+ */
 export default async function Header({
   locale,
-  anchors,
-  content,
-  homeHref = "#top",
+  anchors = homeContent[locale].anchors,
+  content = homeContent[locale].header,
   anchorPrefix = "",
   languageHrefs,
-  compact = false,
 }: HeaderProps) {
   const items = await getHeaderNavigation(
     locale,
@@ -36,56 +47,33 @@ export default async function Header({
   );
 
   return (
-    <header className="border-b border-[var(--accent-border-soft)] bg-background-deep">
-      <div className={`relative mx-auto flex max-w-[1440px] items-center justify-between gap-4 px-4 py-1.5 sm:px-6 min-[1360px]:px-8 2xl:px-10 ${compact ? "min-h-[50px] min-[1360px]:min-h-[52px]" : "min-h-[62px] py-2 min-[1360px]:min-h-[68px]"}`}>
-        <a
-          href={homeHref}
-          className="flex shrink-0 items-center gap-3 min-[1360px]:min-w-0 min-[1360px]:shrink min-[1360px]:gap-3.5"
-        >
-          <Image
-            src="/brand/sd-monogram-light.png"
-            alt="Şaban Durali"
-            width={606}
-            height={669}
-            className={`${compact ? "h-7 min-[1360px]:h-8" : "h-9 min-[1360px]:h-10"} w-auto shrink-0 object-contain`}
-            priority
-          />
-          <span aria-hidden="true" className="min-[1360px]:min-w-0">
-            <span className="block whitespace-nowrap font-serif text-sm font-semibold tracking-[0.1em] text-ivory min-[1360px]:text-[1.02rem] min-[1360px]:uppercase min-[1360px]:tracking-[0.16em]">
-              <span className="min-[1360px]:hidden">{content.mobileBrandName}</span>
-              <span className="hidden min-[1360px]:inline">{content.brandName}</span>
-            </span>
-            <span className="mt-1 hidden whitespace-nowrap text-[8px] font-medium uppercase tracking-[0.16em] text-accent-soft min-[1360px]:block">
-              {content.brandTagline}
-            </span>
-          </span>
-        </a>
-
-        <nav
-          aria-label={content.menu.desktopNavigationLabel}
-          className="hidden min-w-0 flex-1 items-center justify-center text-xs text-ivory min-[1360px]:flex"
-        >
-          <HeaderNavigationLinks
-            items={items}
+    <header className="relative border-b-2 border-ink bg-paper text-ink">
+      <Container className="flex min-h-18 items-center justify-between gap-4 py-2.5">
+        <Wordmark
+          locale={locale}
+          name={content.brandName}
+          tagline={content.brandTagline}
+        />
+        <div className="flex items-center gap-3">
+          <DesktopLanguageSwitcher
             locale={locale}
-            variant="desktop"
+            languageLabel={content.languageSwitcherLabel}
+            languageHrefs={languageHrefs}
           />
-        </nav>
-
-        <MobileMenu
-          locale={locale}
-          content={content}
-          items={items}
-          languageHrefs={languageHrefs}
-        />
-
-        <LanguageSwitcher
-          locale={locale}
-          label={content.languageSwitcherLabel}
-          variant="desktop"
-          hrefs={languageHrefs}
-        />
-      </div>
+          <MobileNavigation
+            locale={locale}
+            items={items}
+            mobileNavigationLabel={content.menu.navigationLabel}
+            languageLabel={content.languageSwitcherLabel}
+            languageHrefs={languageHrefs}
+          />
+        </div>
+      </Container>
+      <DesktopNavigation
+        locale={locale}
+        items={items}
+        navigationLabel={content.menu.desktopNavigationLabel}
+      />
     </header>
   );
 }

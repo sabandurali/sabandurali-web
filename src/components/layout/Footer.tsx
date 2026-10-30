@@ -1,85 +1,100 @@
-import Image from "next/image";
-import NavigationLink from "./NavigationLink";
-import { getFooterNavigation } from "@/content/navigation/navigation-data-source";
 import type { FooterContent } from "@/content/homeContent";
+import { getFooterNavigation } from "@/content/navigation/navigation-data-source";
+import Container from "@/components/ui/Container";
+import { ArrowUpRightIcon } from "@/components/ui/icons";
+import { getUiStrings } from "@/components/ui/strings";
+import UiLink from "@/components/ui/UiLink";
+import VisuallyHidden from "@/components/ui/VisuallyHidden";
+import { withCurrentYear } from "./copyright";
+import { getFooterLinkGroups } from "./footer-links";
+import Wordmark from "./Wordmark";
 
 type FooterProps = {
-  id: string;
+  /** Anchor of the footer (home pages link to it as the contact section). */
+  id?: string;
   content: FooterContent;
-  compact?: boolean;
 };
 
-export default async function Footer({ id, content, compact = false }: FooterProps) {
-  const groups = await getFooterNavigation(content);
+const footerLinkClassName =
+  "inline-flex min-h-tap items-center gap-1 text-on-sea underline decoration-signal decoration-2 underline-offset-[5px] hover:decoration-[3px]";
+
+/**
+ * Sea-ground footer: wordmark, the platform line, the footer navigation and
+ * the copyright. The privacy notice (KVKK) and contact links are always
+ * present: getFooterNavigation adds them when the CMS footer lacks them.
+ * On sea the focus indicator flips to a white ring on a sea halo.
+ */
+export default async function Footer({ id, content }: FooterProps) {
+  const groups = getFooterLinkGroups(await getFooterNavigation(content));
+  const strings = getUiStrings(content.locale);
 
   return (
     <footer
       id={id}
-      className="scroll-mt-24 border-t border-[var(--accent-border-soft)] bg-background-deep"
+      className="scroll-mt-24 bg-sea text-on-sea scheme-dark [--focus-halo:var(--color-sea)] [--focus-ring:var(--color-on-sea)]"
     >
-      <div className={`mx-auto grid max-w-[1440px] px-5 sm:px-8 md:grid-cols-[0.9fr_1.1fr] md:items-center lg:px-10 ${compact ? "gap-6 py-5 md:min-h-[7.5rem]" : "gap-5 py-8 sm:py-10"}`}>
-        <div className="flex items-center gap-3">
-          <Image
-            src="/brand/sd-monogram-light.png"
-            alt=""
-            width={606}
-            height={669}
-            className={`${compact ? "h-9" : "h-11"} w-auto shrink-0 object-contain`}
-          />
-          <div>
-            <h3 className={`font-serif font-semibold tracking-[0.14em] text-ivory ${compact ? "text-base" : "text-lg"}`}>
-              {content.brandName}
-            </h3>
-            <p className="mt-1 text-[9px] tracking-[0.16em] text-accent-soft">
-              {content.brandTagline}
-            </p>
-          </div>
-        </div>
-
+      <Container className="grid gap-10 py-12 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:gap-12 md:py-16">
         <div>
-          <p className={`max-w-xl text-muted ${compact ? "text-[10px] leading-5" : "text-sm leading-6"}`}>
+          <Wordmark
+            locale={content.locale}
+            name={content.brandName}
+            tagline={content.brandTagline}
+            tone="on-sea"
+            asLink={false}
+          />
+          <p className="mt-5 mb-0 max-w-[44ch] type-small text-on-sea-soft">
             {content.description}
           </p>
-          <p className={`text-muted ${compact ? "mt-2 text-[9px]" : "mt-4 text-xs"}`}>
-            {content.copyright}
-          </p>
-          <nav
-            aria-label={content.locale === "tr" ? "Alt bilgi" : "Footer"}
-            className={`${compact ? "mt-2" : "mt-3"} flex flex-wrap gap-x-5 gap-y-1`}
-          >
-            {groups.map((group) => (
-              <div
-                key={group.id}
-                className={
-                  group.title === null
-                    ? "contents"
-                    : "min-w-40 space-y-2"
-                }
-              >
-                {group.title !== null && (
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ivory">
-                    {group.title}
-                  </p>
-                )}
-                <div
-                  className={
-                    group.title === null
-                      ? "contents"
-                      : "flex flex-wrap gap-x-5 gap-y-1"
-                  }
-                >
-                  {group.links.map((link) => (
-                    <NavigationLink
-                      key={link.id}
-                      link={link}
-                      className={`inline-flex items-center text-accent-soft underline decoration-border underline-offset-4 transition-colors hover:text-accent-strong motion-reduce:transition-none ${compact ? "min-h-7 text-[9px]" : "min-h-11 text-xs"}`}
-                    />
-                  ))}
-                </div>
-              </div>
-            ))}
-          </nav>
         </div>
+
+        <nav
+          aria-label={content.locale === "tr" ? "Alt bilgi" : "Footer"}
+          className="grid content-start gap-8 [grid-template-columns:repeat(auto-fit,minmax(min(16rem,100%),1fr))]"
+        >
+          {groups.map((group) => (
+            <div key={group.id}>
+              {group.title !== null ? (
+                <p
+                  id={`footer-group-${group.id}`}
+                  className="m-0 mb-2 type-label text-on-sea-muted"
+                >
+                  {group.title}
+                </p>
+              ) : null}
+              <ul
+                aria-labelledby={
+                  group.title !== null ? `footer-group-${group.id}` : undefined
+                }
+                className="m-0 grid list-none gap-1 p-0"
+              >
+                {group.links.map((link) => (
+                  <li key={link.id}>
+                    <UiLink
+                      href={link.href}
+                      newTab={link.newTab}
+                      className={footerLinkClassName}
+                    >
+                      <span className="min-w-0 break-words">{link.label}</span>
+                      {link.newTab ? (
+                        <>
+                          <ArrowUpRightIcon size={14} className="shrink-0" />
+                          <VisuallyHidden> {strings.newTab}</VisuallyHidden>
+                        </>
+                      ) : null}
+                    </UiLink>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </nav>
+      </Container>
+      <div className="border-t border-sea-line">
+        <Container className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 py-5">
+          <p className="m-0 type-caption text-on-sea-muted">
+            {withCurrentYear(content.copyright, new Date())}
+          </p>
+        </Container>
       </div>
     </footer>
   );
