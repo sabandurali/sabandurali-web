@@ -12,8 +12,8 @@ export type PhotoCopy = {
   districtGuide: (district: string) => string;
   /** Heading of the other photographs of the same district. */
   sameDistrict: (district: string) => string;
-  /** Badge of a Turkish photograph listed on an English page. */
-  inTurkish: string;
+  /** Badge of a photograph listed on a page in another language. */
+  inLanguage: Record<SiteLocale, string>;
   /** Heading of the Turkish photographs on the English list. */
   turkishFallbackTitle: string;
   /** Note above the Turkish photographs on the English list. */
@@ -25,7 +25,7 @@ export const photoCopy = {
     sourceRecord: "Kaynak kaydı",
     districtGuide: (district) => `${district} ilçe rehberi`,
     sameDistrict: (district) => `${district} ilçesinden fotoğraflar`,
-    inTurkish: "Türkçe",
+    inLanguage: { tr: "Türkçe", en: "İngilizce" },
     turkishFallbackTitle: "Türkçe fotoğraflar",
     turkishFallbackNote: "Bu fotoğraflar yalnızca Türkçe yayımlandı.",
   },
@@ -33,7 +33,7 @@ export const photoCopy = {
     sourceRecord: "Source record",
     districtGuide: (district) => `${district} district guide (in Turkish)`,
     sameDistrict: (district) => `More photographs from ${district}`,
-    inTurkish: "In Turkish",
+    inLanguage: { tr: "In Turkish", en: "In English" },
     turkishFallbackTitle: "Photographs in Turkish",
     turkishFallbackNote:
       "No photograph has an English page yet. These photographs are published in Turkish; their pages open in Turkish.",

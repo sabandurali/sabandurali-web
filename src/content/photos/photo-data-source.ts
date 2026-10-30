@@ -221,3 +221,22 @@ export async function getSameDistrictPhotos(
   });
   return selectSameDistrictPhotos(photo, candidates, shown);
 }
+
+/**
+ * The Turkish photographs an empty English list shows instead of "no
+ * photographs" (`shouldShowTurkishPhotoFallback`): the cached first page of
+ * the Turkish list, so it adds no per-request query. A failing read leaves
+ * the plain empty state and is logged.
+ */
+export async function getTurkishFallbackPhotos(): Promise<PublicPhoto[]> {
+  if (!isPayloadSource()) return [];
+  const page = await settleSection({
+    scope: "photos",
+    id: "en",
+    name: "turkish-fallback",
+    load: () => getCachedFirstPhotoPage("tr"),
+    fallback: null,
+    unavailable: new Set<string>(),
+  });
+  return page === null ? [] : page.photos;
+}

@@ -3,12 +3,16 @@ import PageIntro from "@/components/ui/PageIntro";
 import PublicationShell from "@/components/pages/PublicationShell";
 import { publicationCopy } from "@/components/pages/publication-copy";
 import PhotoCard from "@/components/photos/PhotoCard";
+import PhotoLanguageFallback from "@/components/photos/PhotoLanguageFallback";
+import { photoCopy } from "@/components/photos/photo-copy";
 import { Button } from "@/components/ui/Button";
 import EmptyState from "@/components/ui/EmptyState";
 import { Field, Select } from "@/components/ui/Field";
 import Pagination from "@/components/ui/Pagination";
 import Section from "@/components/ui/Section";
 import TextLink from "@/components/ui/TextLink";
+import { getTurkishFallbackPhotos } from "@/content/photos/photo-data-source";
+import { shouldShowTurkishPhotoFallback } from "@/content/photos/photo-list-fallback";
 import {
   getPhotoListPath,
   photoListPaths,
@@ -22,9 +26,11 @@ import type {
 /**
  * Photograph list: intro, a filter form (collection and tag, sent as a
  * plain GET form so it works without JavaScript), the card grid and page
- * links that keep the filters.
+ * links that keep the filters. The empty, unfiltered English list shows
+ * the Turkish photographs, marked as Turkish, instead of claiming there are
+ * none (EN-PHOTO-FALLBACK); it stays noindex (photo-list-seo.ts).
  */
-export default function PhotoListPage({
+export default async function PhotoListPage({
   locale,
   filters,
   result,
@@ -37,6 +43,9 @@ export default function PhotoListPage({
   const text = copy.photos;
   const filtered = Boolean(filters.collection || filters.tag);
   const hasFilters = result.collections.length > 0 || result.tags.length > 0;
+  const fallback = shouldShowTurkishPhotoFallback(locale, filters, result)
+    ? await getTurkishFallbackPhotos()
+    : [];
 
   return (
     <PublicationShell locale={locale} languageHrefs={photoListPaths}>
@@ -68,7 +77,9 @@ export default function PhotoListPage({
         labelledBy="photo-list-heading"
       >
         <h2 id="photo-list-heading" className="m-0 mb-6 type-h2">
-          {copy.allPhotos}
+          {fallback.length > 0
+            ? photoCopy[locale].turkishFallbackTitle
+            : copy.allPhotos}
         </h2>
 
         {hasFilters ? (
@@ -128,7 +139,9 @@ export default function PhotoListPage({
           </form>
         ) : null}
 
-        {result.photos.length === 0 ? (
+        {result.photos.length === 0 && fallback.length > 0 ? (
+          <PhotoLanguageFallback locale={locale} photos={fallback} />
+        ) : result.photos.length === 0 ? (
           <EmptyState size="lg">
             {filtered ? text.emptyFiltered : text.empty}
           </EmptyState>
