@@ -20,7 +20,11 @@ Git: attach it to the pull request or release notes, or keep it in private
 storage. Tools write their output to `/tmp` or another ignored path:
 
 - `npm run test:districts:content` never writes; `npm run report:districts:content`
-  writes `reports/istanbul-39/content-acceptance.json`, which is ignored.
+  writes `reports/istanbul-39/content-acceptance.json`, which is ignored. The
+  gate is evaluated at the latest `checkedAt` in the data, so it does not
+  depend on the day it runs; freshness against today is reported separately
+  by `npm run report:districts:freshness` (the weekly workflow
+  `.github/workflows/content-freshness.yml`).
 - `npm run e2e:districts:routes` and `npm run e2e:content-trust` write to
   `DISTRICT_TEST_OUTPUT` (a folder under `/tmp` by default).
 
