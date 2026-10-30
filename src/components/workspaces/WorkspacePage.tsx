@@ -154,7 +154,7 @@ export function WorkspaceEntryPage({
             size="lg"
             note={
               <>
-                Diğer yayınlar için{" "}
+                Diğer yayımlar için{" "}
                 <TextLink href={articleListPaths.tr}>Makaleler</TextLink> ve{" "}
                 <TextLink href={photoListPaths.tr}>Fotoğraflar</TextLink>{" "}
                 sayfalarına bakabilir ya da{" "}
@@ -166,8 +166,8 @@ export function WorkspaceEntryPage({
             }
           >
             {items === null
-              ? "Bu bölüm için yayınlanmış içerik henüz eklenmedi."
-              : "Bu başlıkta yayınlanmış içerik henüz eklenmedi."}
+              ? "Bu bölüm için yayımlanmış içerik henüz eklenmedi."
+              : "Bu başlıkta yayımlanmış içerik henüz eklenmedi."}
           </EmptyState>
         </Section>
       ) : (

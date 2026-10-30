@@ -42,7 +42,7 @@ export const articlePageContent = {
     emptyList: "Henüz yayımlanmış bir makale bulunmuyor.",
     readArticle: "Makaleyi oku",
     backToArticles: "Tüm makalelere dön",
-    publishedLabel: "Yayınlandı",
+    publishedLabel: "Yayımlandı",
     updatedLabel: "Güncellendi",
     authorLabel: "Yazar",
     categoryFallback: "Kategorisiz",

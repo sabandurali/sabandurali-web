@@ -242,7 +242,7 @@ export const Articles: CollectionConfig = {
             condition: (_, siblingData) =>
               siblingData?.articleType === "district-news",
             description:
-              "İlçe haberi yayınlanırken kaynak adı ve https:// ile başlayan orijinal haber adresi zorunludur.",
+              "İlçe haberi yayımlanırken kaynak adı ve https:// ile başlayan orijinal haber adresi zorunludur.",
           },
           fields: [
             {

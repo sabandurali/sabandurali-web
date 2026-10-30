@@ -37,7 +37,7 @@ function describeState(state: PublicRecordState): {
     case "draft":
       return {
         badge: "Taslak",
-        detail: "Yayınlanmış bir sürüm yok; kayıt sitede görünmez.",
+        detail: "Yayımlanmış bir sürüm yok; kayıt sitede görünmez.",
         tone: "draft",
       };
   }
@@ -120,7 +120,7 @@ export const PublicLinksField: UIFieldServerComponent = async ({
         </ul>
       )}
       <p className={styles.hint}>
-        Durum, yayınlanmış sürüme göredir; kaydedilmemiş veya yalnız taslak
+        Durum, yayımlanmış sürüme göredir; kaydedilmemiş veya yalnız taslak
         olarak kaydedilmiş değişiklikler sitede görünmez.
       </p>
     </section>

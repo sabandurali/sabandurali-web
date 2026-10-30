@@ -80,7 +80,7 @@ test("Phase B: the guide states the CMS rules the code enforces", () => {
     // Legacy home slug redirect.
     "/ana-sayfa adresi (yalnız bir yönlendirme, sayfa değil) kalıcı olarak `/` adresine yönlenir",
     // English standard pages cannot be published.
-    "EN standart `Sayfa` kaydı yayınlanamaz",
+    "EN standart `Sayfa` kaydı yayımlanamaz",
     // District news need an https source.
     "`https://` ile başlayan `Orijinal haber URL'si`",
     // Supported internal link targets (INTERNAL_LINK_COLLECTIONS).
@@ -108,7 +108,7 @@ test("Phase B: superseded statements do not come back", () => {
 test("ADM: the guide names the Turkish buttons and the new admin aids", () => {
   for (const statement of [
     "`Taslağı kaydet`",
-    "`Değişiklikleri yayınla`",
+    "`Değişiklikleri yayımla`",
     "`Yayından Kaldır`",
     "`Editör özeti`",
     "`Süresi dolacak ilçe verileri`",

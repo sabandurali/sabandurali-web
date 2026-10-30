@@ -180,7 +180,7 @@ export const Navigation: GlobalConfig = {
   },
   admin: {
     description:
-      "Türkçe Header ve mobil menü ile Türkçe ve İngilizce Footer bağlantılarını yönetin. İngilizce Header menüsü site kodunda sabittir. Taslak, yayınlama ve sürüm geçmişi sağ üstteki belge kontrollerindedir.",
+      "Türkçe Header ve mobil menü ile Türkçe ve İngilizce Footer bağlantılarını yönetin. İngilizce Header menüsü site kodunda sabittir. Taslak, yayımlama ve sürüm geçmişi sağ üstteki belge kontrollerindedir.",
     group: "İçerik",
   },
   label: "Navigasyon",

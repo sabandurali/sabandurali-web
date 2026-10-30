@@ -112,7 +112,7 @@ function validatePublicationRequirements(
       issue(
         "published_at.required",
         "publishedAt",
-        "Yayınlanmış incelemenin yayın tarihi olmalıdır.",
+        "Yayımlanmış incelemenin yayın tarihi olmalıdır.",
       ),
     );
   }

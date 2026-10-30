@@ -101,11 +101,11 @@ export async function EditorDashboard({ payload, user }: ServerProps) {
           {list}
         </Card>
         <Card
-          description="Yayınlanmış, fakat yayın tarihi gelmediği için sitede henüz görünmeyen kayıtlar."
+          description="Yayımlanmış, fakat yayın tarihi gelmediği için sitede henüz görünmeyen kayıtlar."
           empty="Planlanmış yayın yok."
           id="scheduled"
           section={data.scheduled}
-          title="Planlanan yayınlar"
+          title="Planlanan yayımlar"
         >
           {list}
         </Card>

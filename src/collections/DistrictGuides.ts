@@ -55,7 +55,7 @@ const protectDistrictPublication: CollectionBeforeChangeHook = ({
   }
   const merged = { ...originalDoc, ...data };
   if (!districtOptions.some((option) => option.value === merged.district)) {
-    throw new APIError("Merkezi registry içinden geçerli bir ilçe seçin.", 400);
+    throw new APIError("Merkezî ilçe listesinden geçerli bir ilçe seçin.", 400);
   }
   if (merged._status === "published") {
     // The same normalization as the public projection: a malformed row is

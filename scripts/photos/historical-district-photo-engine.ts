@@ -22,7 +22,7 @@ function isPhotoDistrict(value: string): value is PhotoDistrict {
 
 export const historicalCollection = {
   tr: {
-    title: "Tarihi İstanbul",
+    title: "Tarihî İstanbul",
     slug: "tarihi-istanbul",
     description:
       "İstanbul'un ilçelerine ilişkin hak durumu doğrulanmış tarihî fotoğraf ve kartpostallar.",

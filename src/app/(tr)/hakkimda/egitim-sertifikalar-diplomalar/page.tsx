@@ -15,7 +15,7 @@ const path = "/hakkimda/egitim-sertifikalar-diplomalar";
 export const metadata: Metadata = createPageMetadata({
   title: "Eğitim, Sertifikalar & Diplomalar | Şaban Durali",
   description:
-    "Şaban Durali'nin sertifika ve diploma belgeleri henüz yayınlanmadı; eğitim özeti Hakkımda sayfasındadır.",
+    "Şaban Durali'nin sertifika ve diploma belgeleri henüz yayımlanmadı; eğitim özeti Hakkımda sayfasındadır.",
   locale: "tr",
   path,
   index: false,

@@ -36,7 +36,7 @@ export const experience = [
 export const education = [
   {
     title: "Atatürk Üniversitesi AÖF",
-    description: "Emlak Yönetimi önlisans — devam ediyor.",
+    description: "Emlak Yönetimi ön lisans — devam ediyor.",
   },
   { title: "İbrahim Turhan Lisesi", description: "Fen — 1992." },
 ];

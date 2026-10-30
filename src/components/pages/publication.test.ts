@@ -246,7 +246,7 @@ test("MetaList puts dates in <time> and skips an empty list", () => {
     createElement(MetaList, {
       items: [
         {
-          label: "Yayınlandı",
+          label: "Yayımlandı",
           value: "15 Ocak 2026",
           dateTime: "2026-01-14T22:30:00.000Z",
           data: true,
@@ -256,7 +256,7 @@ test("MetaList puts dates in <time> and skips an empty list", () => {
   );
   assert.match(
     html,
-    /<dt[^>]*>Yayınlandı<\/dt><dd[^>]*><time dateTime="2026-01-14T22:30:00.000Z">15 Ocak 2026<\/time><\/dd>/,
+    /<dt[^>]*>Yayımlandı<\/dt><dd[^>]*><time dateTime="2026-01-14T22:30:00.000Z">15 Ocak 2026<\/time><\/dd>/,
   );
   assert.equal(
     renderToStaticMarkup(createElement(MetaList, { items: [] })),

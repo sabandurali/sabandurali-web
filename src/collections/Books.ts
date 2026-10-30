@@ -611,7 +611,7 @@ export const Books: CollectionConfig = {
                   label: "İnceleme durumu",
                   admin: {
                     description:
-                      "Yayınlarken 'published' (sitede görünür) veya 'archived' (sitede gizli) seçin. Görünmesi için yayın tarihi gelmiş ve SEO indeksi açık olmalıdır; eksik alanlar yayın sırasında listelenir.",
+                      "Yayımlarken 'published' (sitede görünür) veya 'archived' (sitede gizli) seçin. Görünmesi için yayın tarihi gelmiş ve SEO indeksi açık olmalıdır; eksik alanlar yayın sırasında listelenir.",
                   },
                   defaultValue: "draft",
                   index: true,

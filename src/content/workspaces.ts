@@ -66,14 +66,14 @@ export const workspaces: readonly Workspace[] = [
       {
         slug: "gayrimenkul-rehberleri",
         title: "Gayrimenkul Rehberleri",
-        description: "Yayınlanan gayrimenkul içerikleri burada derlenir.",
+        description: "Yayımlanan gayrimenkul içerikleri burada derlenir.",
         href: "/gayrimenkul-ve-istanbul/gayrimenkul-rehberleri",
         articleCategory: "gayrimenkul",
       },
       {
         slug: "sehir-ve-imar",
         title: "Şehir & İmar",
-        description: "Şehir ve planlama üzerine yayınlanan içerikler.",
+        description: "Şehir ve planlama üzerine yayımlanan içerikler.",
         href: "/gayrimenkul-ve-istanbul/sehir-ve-imar",
         articleCategory: "sehir",
       },
@@ -104,7 +104,7 @@ export const workspaces: readonly Workspace[] = [
       {
         slug: "satis",
         title: "Satış",
-        description: "Satış pratiğine ilişkin yayınlar.",
+        description: "Satış pratiğine ilişkin yayımlar.",
         href: "/satis-ve-muzakere/satis",
         articleCategory: "satis",
       },
@@ -125,7 +125,7 @@ export const workspaces: readonly Workspace[] = [
       {
         slug: "ikna",
         title: "İkna",
-        description: "Etik ikna ve karar süreçlerine ilişkin yayınlar.",
+        description: "Etik ikna ve karar süreçlerine ilişkin yayımlar.",
         href: "/satis-ve-muzakere/ikna",
         articleCategory: "ikna",
       },
@@ -194,7 +194,7 @@ export const workspaces: readonly Workspace[] = [
       {
         slug: "yapay-zeka",
         title: "Yapay Zekâ",
-        description: "Yapay zekâ üzerine yayınlanan içerikler.",
+        description: "Yapay zekâ üzerine yayımlanan içerikler.",
         href: "/yapay-zeka-ve-teknoloji/yapay-zeka",
         articleCategory: "yapay-zeka",
       },
@@ -208,7 +208,7 @@ export const workspaces: readonly Workspace[] = [
       {
         slug: "teknoloji",
         title: "Teknoloji",
-        description: "Teknoloji alanındaki yayınlar.",
+        description: "Teknoloji alanındaki yayımlar.",
         href: "/yapay-zeka-ve-teknoloji/teknoloji",
         articleCategory: "teknoloji",
       },
@@ -259,7 +259,7 @@ export const workspaces: readonly Workspace[] = [
       {
         slug: "dusunme-ve-notlar",
         title: "Düşünme & Notlar",
-        description: "Düşünmeye ve not almaya dair yayınlar.",
+        description: "Düşünmeye ve not almaya dair yayımlar.",
         href: "/kitaplar-ve-ogrenme/dusunme-ve-notlar",
         articleCategory: "dusunme",
       },
@@ -311,7 +311,7 @@ export const workspaces: readonly Workspace[] = [
       {
         slug: "galeriler",
         title: "Galeriler",
-        description: "Yayınlanmış tüm fotoğraflar ve koleksiyonlar.",
+        description: "Yayımlanmış tüm fotoğraflar ve koleksiyonlar.",
         href: "/fotograflar",
       },
     ],

@@ -15,7 +15,7 @@ const path = "/hakkimda/biyografi";
 export const metadata: Metadata = createPageMetadata({
   title: "Biyografi | Şaban Durali",
   description:
-    "Şaban Durali'nin doğrulanmış biyografi metni henüz yayınlanmadı; profil özeti Hakkımda sayfasındadır.",
+    "Şaban Durali'nin doğrulanmış biyografi metni henüz yayımlanmadı; profil özeti Hakkımda sayfasındadır.",
   locale: "tr",
   path,
   index: false,

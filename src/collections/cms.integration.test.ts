@@ -1387,7 +1387,7 @@ test("pages: a published home renders all its blocks and stays on the site", asy
   });
   assert.ok(home.publishedAt);
 
-  const refused = hasStatus(400, /Yayındaki Türkçe Ana Sayfa/);
+  const refused = hasStatus(400, /Yayındaki Türkçe ana sayfa/);
   const update = (data: Record<string, unknown>, draft = false) =>
     payload.update({ collection: "pages", id: home.id, data, draft });
 

@@ -456,6 +456,6 @@ test("O: apply approvals are separate and SHA-bound", () => {
       ),
     /SHA-bound/,
   );
-  assert.equal(historicalCollection.tr.title, "Tarihi İstanbul");
+  assert.equal(historicalCollection.tr.title, "Tarihî İstanbul");
   assert.equal(historicalCollection.en.title, "Historic Istanbul");
 });

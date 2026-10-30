@@ -1083,7 +1083,7 @@ test("standard Turkish pages cannot take reserved or legacy home slugs", async (
     }),
     (error: unknown) =>
       validationErrors(error).some((entry) =>
-        /eski Ana Sayfa/.test(entry.message),
+        /eski ana sayfa/.test(entry.message),
       ),
   );
   // The existing legacy record keeps working until it is converted.
