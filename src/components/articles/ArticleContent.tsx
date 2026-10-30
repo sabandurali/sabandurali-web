@@ -1,3 +1,4 @@
+import { getArticleOutline } from "@/components/articles/article-outline";
 import DownloadLink from "@/components/articles/DownloadLink";
 import PayloadRichText, {
   richTextClassName,
@@ -150,10 +151,13 @@ function ArticleBlock({
   block,
   details,
   content,
+  headingId,
 }: {
   block: ArticleContentBlock;
   details: StaticArticleDetails;
   content: ArticlePageContent;
+  /** Anchor id of a heading block (getArticleOutline). */
+  headingId?: string;
 }) {
   const locale = content.locale;
 
@@ -162,7 +166,7 @@ function ArticleBlock({
       return <p>{block.text}</p>;
     case "heading": {
       const Heading = block.level;
-      return <Heading>{block.text}</Heading>;
+      return <Heading id={headingId}>{block.text}</Heading>;
     }
     case "bullet_list":
       return (
@@ -388,17 +392,24 @@ function ArticleBlock({
 /**
  * Body of an article in the reading column. CMS articles render their
  * Lexical rich text; repository fixtures render their typed blocks with the
- * same reading styles (richTextClassName), so both look alike.
+ * same reading styles (richTextClassName), so both look alike. Headings
+ * carry the anchor ids of getArticleOutline(), the ids ArticleToc links to.
  */
 export default function ArticleContent({
   article,
   content,
 }: ArticleContentProps) {
+  const { anchors } = getArticleOutline(article.content);
+
   if (article.content.source === "lexical") {
     if (article.content.data === null || article.content.data === undefined)
       return null;
     return (
-      <PayloadRichText data={article.content.data} locale={article.language} />
+      <PayloadRichText
+        data={article.content.data}
+        locale={article.language}
+        headingIds={anchors}
+      />
     );
   }
 
@@ -412,6 +423,7 @@ export default function ArticleContent({
           block={block}
           details={details}
           content={content}
+          headingId={anchors.get(block.id)}
         />
       ))}
     </div>

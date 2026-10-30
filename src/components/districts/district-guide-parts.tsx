@@ -6,6 +6,8 @@ import { Figure } from "@/components/ui/Figure";
 import Section, { type SectionTone } from "@/components/ui/Section";
 import SectionSign from "@/components/ui/SectionSign";
 import { SourceRefList } from "@/components/ui/SourceRef";
+import TextLink from "@/components/ui/TextLink";
+import { getPhotoPath } from "@/content/photos/photo-routes";
 import type { PublicPhoto } from "@/content/photos/types";
 import { formatDate, toDateTimeAttribute } from "@/lib/format-date";
 import {
@@ -105,16 +107,37 @@ export function Sources({
   return <SourceRefList numbers={numbers} label={label} className="-my-2" />;
 }
 
+/**
+ * Loading attributes of a district photo. The page's LCP candidate (the
+ * hero) is fetched eagerly at high priority: Next 16 recommends this over
+ * `preload`, whose head preload keeps the browser's default low image
+ * priority. Every other photo stays lazy.
+ */
+export function districtPhotoLoading(
+  priority: boolean,
+): { loading: "eager"; fetchPriority: "high" } | { loading: "lazy" } {
+  return priority
+    ? { loading: "eager", fetchPriority: "high" }
+    : { loading: "lazy" };
+}
+
+/**
+ * One district photo with its caption and credit. The caption's title
+ * links to the photo's own page (/fotograflar/<slug>), so every photo the
+ * guide shows joins the photo archive's internal links.
+ */
 export function DistrictPhoto({
   photo,
-  preload = false,
+  priority = false,
   sizes,
 }: {
   photo: PublicPhoto;
-  preload?: boolean;
+  /** The page's LCP candidate: the hero photo above the fold. */
+  priority?: boolean;
   sizes: string;
 }) {
   const historical = photo.districtPhotoCategory === "tarih";
+  const { title, details } = districtPhotoCaption(photo);
   return (
     <Figure
       credit={districtPhotoCredit(photo)}
@@ -125,7 +148,10 @@ export function DistrictPhoto({
               Tarihî arşiv
             </Badge>
           ) : null}
-          {districtPhotoCaption(photo)}
+          <TextLink href={getPhotoPath(photo.slug, photo.language)}>
+            {title ?? "Fotoğrafın sayfası"}
+          </TextLink>
+          {details ? ` · ${details}` : null}
         </>
       }
     >
@@ -142,7 +168,7 @@ export function DistrictPhoto({
           width={photo.image.width ?? 1600}
           height={photo.image.height ?? 900}
           sizes={sizes}
-          preload={preload}
+          {...districtPhotoLoading(priority)}
           className={
             historical
               ? "mx-auto h-auto max-h-[48rem] w-auto max-w-full object-contain"

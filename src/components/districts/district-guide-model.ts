@@ -345,6 +345,23 @@ export function buildSourceRows(
   }));
 }
 
+/** Sources shown before the fold of the source list. */
+export const unfoldedSourceCount = 3;
+
+/**
+ * The source rows shown in full and the rows folded below them. Folding a
+ * single row saves nothing, so the list folds from two hidden rows on.
+ */
+export function splitSourceRows<T>(rows: readonly T[]): {
+  shown: T[];
+  folded: T[];
+} {
+  const folded = rows.slice(unfoldedSourceCount);
+  return folded.length < 2
+    ? { shown: [...rows], folded: [] }
+    : { shown: rows.slice(0, unfoldedSourceCount), folded };
+}
+
 /**
  * Credit of a district photo. Historical archive photos store
  * "<credit> · Kaynak kaydı: <url>" in creditLicense; the record link
@@ -366,15 +383,23 @@ export function districtPhotoCredit(photo: PublicPhoto): CreditInfo | null {
   return Object.keys(credit).length > 0 ? credit : null;
 }
 
-/** Caption line of a district photo: place · date. */
-export function districtPhotoCaption(photo: PublicPhoto): string {
-  return [
-    photo.title,
-    photo.neighborhood ?? photo.locationName,
-    formatDate(photo.takenAt),
-  ]
-    .filter(Boolean)
-    .join(" · ");
+/**
+ * Caption of a district photo: its title (the link to its own page) and
+ * the place · date line after it. Empty values are left out.
+ */
+export function districtPhotoCaption(photo: PublicPhoto): {
+  title: string | null;
+  details: string;
+} {
+  return {
+    title: photo.title.trim() || null,
+    details: [
+      photo.neighborhood ?? photo.locationName,
+      formatDate(photo.takenAt),
+    ]
+      .filter(Boolean)
+      .join(" · "),
+  };
 }
 
 const planningStatuses: Record<string, string> = {

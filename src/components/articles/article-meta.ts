@@ -6,8 +6,22 @@ import {
 import type { PublicArticle } from "@/content/articles/public-types";
 import { getContentLastModifiedIso } from "@/lib/content-dates";
 import { toDateTimeAttribute } from "@/lib/format-date";
+import { getArticleOutline, readingMinutes } from "./article-outline";
 
-/** Published, updated (when later) and author lines under the lead. */
+/** Reading time line: the label and the value in each language. */
+export const readingTimeCopy = {
+  tr: { label: "Okuma süresi", value: (minutes: number) => `${minutes} dk` },
+  en: {
+    label: "Reading time",
+    value: (minutes: number) => `${minutes} min`,
+  },
+} as const;
+
+/**
+ * Published, updated (when later), author and reading time lines under the
+ * lead. The reading time is counted from the body text; an article without
+ * text has none.
+ */
 export function getArticleMetaItems(article: PublicArticle): MetaItem[] {
   const content = articlePageContent[article.language];
   const staticDetails =
@@ -39,6 +53,11 @@ export function getArticleMetaItems(article: PublicArticle): MetaItem[] {
   }
   if (author !== null && author.trim() !== "") {
     items.push({ label: content.authorLabel, value: author });
+  }
+  const minutes = readingMinutes(getArticleOutline(article.content).words);
+  if (minutes !== null) {
+    const copy = readingTimeCopy[article.language];
+    items.push({ label: copy.label, value: copy.value(minutes), data: true });
   }
 
   return items;

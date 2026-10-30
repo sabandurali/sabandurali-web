@@ -1,4 +1,11 @@
 import { getArticleMetaItems } from "@/components/articles/article-meta";
+import {
+  getArticleOutline,
+  getTocEntries,
+} from "@/components/articles/article-outline";
+import ArticleToc from "@/components/articles/ArticleToc";
+import { articleCitationInput } from "@/components/articles/citation";
+import CiteThis from "@/components/articles/CiteThis";
 import ArticleContent, {
   articleFaqAnchorId,
   articleSourceAnchorId,
@@ -244,7 +251,7 @@ export default function ArticleDetailPage({
                 width={article.featuredImage.width}
                 height={article.featuredImage.height}
                 sizes="(min-width: 1080px) 960px, 100vw"
-                preload
+                priority
                 className="rounded-card border border-ink"
               />
             </Figure>
@@ -258,6 +265,11 @@ export default function ArticleDetailPage({
           className="pt-10 pb-section sm:pt-14"
         >
           <div className="max-w-measure">
+            <ArticleToc
+              entries={getTocEntries(getArticleOutline(article.content))}
+              locale={locale}
+              className="mb-10"
+            />
             <ArticleContent article={article} content={content} />
 
             {staticDetails !== null ? (
@@ -282,6 +294,11 @@ export default function ArticleDetailPage({
                 ) : null}
               </>
             ) : null}
+
+            <CiteThis
+              citation={articleCitationInput(article)}
+              className="mt-14"
+            />
 
             <TextLink
               href={articleListPaths[locale]}
