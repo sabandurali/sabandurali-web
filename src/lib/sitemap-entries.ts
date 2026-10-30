@@ -49,6 +49,7 @@ import {
 import { isLegacyTurkishHome } from "@/content/pages/legacy-home";
 import type { PublicPage } from "@/content/pages/public-types";
 import { getPhotoPath, photoListPaths } from "@/content/photos/photo-routes";
+import { verifiedDistrictImages } from "@/content/photos/verified-district-images";
 import type { PublicPhoto } from "@/content/photos/types";
 import {
   workspacePath,
@@ -404,8 +405,30 @@ export function buildListEntries(
   ];
 }
 
+/**
+ * The images a district page shows or shares: its verified district image
+ * (the share image) and the published Turkish photos tagged with the
+ * district (hero and gallery), as absolute URLs, each once.
+ */
+export function getDistrictImageUrls(
+  slug: string,
+  photos: readonly PublicPhoto[],
+): string[] {
+  const verified = Object.hasOwn(verifiedDistrictImages, slug)
+    ? verifiedDistrictImages[slug]
+    : undefined;
+  const sources = [
+    ...(verified === undefined ? [] : [verified.src]),
+    ...photos
+      .filter((photo) => photo.language === "tr" && photo.district === slug)
+      .map((photo) => photo.image.src),
+  ];
+  return [...new Set(sources.map(toAbsoluteUrl))];
+}
+
 export function buildDistrictEntries(
   districtGuides: ReadonlyMap<string, DistrictGuide | null>,
+  photos: readonly PublicPhoto[] = [],
 ): SitemapEntry[] {
   const indexable = districts.flatMap((district) => {
     const guide = districtGuides.get(district.slug) ?? null;
@@ -425,6 +448,7 @@ export function buildDistrictEntries(
         changeFrequency: "monthly",
         priority: 0.6,
         lastModified: getContentLastModified(guide),
+        images: getDistrictImageUrls(district.slug, photos),
       }),
     ),
   ];
@@ -497,31 +521,56 @@ export function getWorkspaceEntryItems(
  * The workspace index, the six workspace pages and the section pages that
  * have published content. Sections that only link to another listing
  * (`/istanbul/ilceler`, `/kitaplar`, `/fotograflar`) are listed there.
+ *
+ * A hub (a workspace page, the workspace index) is dated by the newest item
+ * of the sections it links to; without one it carries no date.
  */
 export function buildWorkspaceEntries(
   articles: readonly PublicArticleSummary[],
   photos: readonly PublicPhoto[],
 ): SitemapEntry[] {
+  const hubs = workspaces.map((workspace) => {
+    const sections = workspace.entries.map((entry) => {
+      const items = getWorkspaceEntryItems(entry, articles, photos) ?? [];
+      return {
+        entry,
+        hasItems: items.length > 0,
+        lastModified: getLatestDate(items.map(getContentLastModified)),
+      };
+    });
+    return {
+      workspace,
+      sections,
+      lastModified: getLatestDate(
+        sections.map((section) => section.lastModified),
+      ),
+    };
+  });
+
   return [
-    createEntry(workspacePath, { changeFrequency: "monthly", priority: 0.8 }),
-    ...workspaces.flatMap((workspace) => [
+    createEntry(workspacePath, {
+      changeFrequency: "monthly",
+      priority: 0.8,
+      lastModified: getLatestDate(hubs.map((hub) => hub.lastModified)),
+    }),
+    ...hubs.flatMap(({ workspace, sections, lastModified }) => [
       createEntry(`/${workspace.key}`, {
         changeFrequency: "monthly",
         priority: 0.7,
+        lastModified,
       }),
-      ...workspace.entries.flatMap((entry) => {
-        if (!entry.href.startsWith(`/${workspace.key}/`)) return [];
-        const items = getWorkspaceEntryItems(entry, articles, photos);
-        return items === null || items.length === 0
-          ? []
-          : [
-              createEntry(entry.href, {
+      ...sections.flatMap((section) =>
+        section.entry.href.startsWith(`/${workspace.key}/`) &&
+        section.hasItems
+          ? [
+              createEntry(section.entry.href, {
                 changeFrequency: "monthly",
                 priority: 0.6,
-                lastModified: getLatestDate(items.map(getContentLastModified)),
+                lastModified: section.lastModified,
               }),
-            ];
-      }),
+            ]
+          : [],
+      ),
     ]),
   ];
 }
@@ -546,7 +595,7 @@ export function buildSitemap(content: SitemapContent): MetadataRoute.Sitemap {
     ...buildBookReviewEntries(content.bookReviews),
     ...buildPhotoEntries(content.photos),
     ...buildStandardPageEntries(content.standardPages),
-    ...buildDistrictEntries(content.districtGuides),
+    ...buildDistrictEntries(content.districtGuides, content.photos),
     ...buildDistrictNewsEntries(content.districtNews),
     ...buildWorkspaceEntries(content.articles, content.photos),
   ]);
