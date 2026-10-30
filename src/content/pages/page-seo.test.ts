@@ -59,15 +59,19 @@ test("a noindex home page is neither in a hreflang pair nor a target of one", ()
   assert.equal(isHomePageIndexable(null), true, "static home");
   assert.equal(isHomePageIndexable(home), true);
   assert.equal(isHomePageIndexable(noindexHome), false);
-  assert.deepEqual(createPublicPageMetadata(noindexHome).alternates, {
-    canonical: homeUrls.en,
-  });
-  assert.deepEqual(
-    createPublicPageMetadata(home, {
-      translationIndexable: isHomePageIndexable(noindexHome),
-    }).alternates,
-    { canonical: homeUrls["tr-TR"] },
+  assert.equal(
+    createPublicPageMetadata(noindexHome).alternates?.canonical,
+    homeUrls.en,
   );
+  assert.equal(
+    createPublicPageMetadata(noindexHome).alternates?.languages,
+    undefined,
+  );
+  const indexed = createPublicPageMetadata(home, {
+    translationIndexable: isHomePageIndexable(noindexHome),
+  }).alternates;
+  assert.equal(indexed?.canonical, homeUrls["tr-TR"]);
+  assert.equal(indexed?.languages, undefined);
 });
 
 test("standard pages are Turkish-only and get the default social image", () => {

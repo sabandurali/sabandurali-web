@@ -279,7 +279,33 @@ export type PageMetadataInput = {
   socialDescription?: string;
   /** Present for articles, reviews and photos: `og:type` becomes `article`. */
   article?: ArticleOpenGraph;
+  /**
+   * Announce the language's Atom feed (`<link rel="alternate"
+   * type="application/atom+xml">`). Defaults to true on the home pages;
+   * the publication lists pass true.
+   */
+  feed?: boolean;
 };
+
+/** The Atom feed of each language (the `feed.xml` route handlers). */
+export const feedLinks = {
+  tr: { path: "/feed.xml", title: "Şaban Durali — yeni yayınlar" },
+  en: { path: "/en/feed.xml", title: "Şaban Durali — new publications" },
+} as const satisfies Record<SiteLocale, { path: string; title: string }>;
+
+const homePaths = { tr: "/", en: "/en" } as const satisfies Record<
+  SiteLocale,
+  string
+>;
+
+function createFeedAlternates(locale: SiteLocale) {
+  const feed = feedLinks[locale];
+  return {
+    "application/atom+xml": [
+      { url: toAbsoluteUrl(feed.path), title: feed.title },
+    ],
+  };
+}
 
 /**
  * Metadata for one page: title, description, canonical, hreflang pairs,
@@ -319,11 +345,15 @@ export function createPageMetadata(input: PageMetadataInput): Metadata {
     images,
   };
   const article = input.article;
+  const feed = input.feed ?? input.path === homePaths[input.locale];
+  const types = feed ? { types: createFeedAlternates(input.locale) } : {};
 
   return {
     title: input.title,
     description: input.description,
-    alternates: hreflang ? { canonical, languages } : { canonical },
+    alternates: hreflang
+      ? { canonical, languages, ...types }
+      : { canonical, ...types },
     robots: {
       index: input.index ?? true,
       follow: input.follow ?? true,

@@ -42,6 +42,7 @@ export const RESERVED_TURKISH_SLUGS: ReadonlySet<string> = new Set([
   "arastirma-ve-analiz",
   "calisma-alanlari",
   "en",
+  "feed.xml",
   "fotograf",
   "fotograflar",
   "gayrimenkul-ve-istanbul",
