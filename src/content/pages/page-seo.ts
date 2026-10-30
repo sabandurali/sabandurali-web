@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { isLegacyTurkishHome } from "@/content/pages/legacy-home";
 import type { PublicPage } from "@/content/pages/public-types";
-import { createPageMetadata, createSocialImage } from "@/lib/metadata";
+import {
+  createPageMetadata,
+  createSocialImage,
+  siteName,
+} from "@/lib/metadata";
 
 export const homePagePaths = {
   tr: "/",
@@ -27,6 +31,24 @@ export function isHomePageIndexable(page: PublicPage | null): boolean {
   return page?.seo.index !== false;
 }
 
+/**
+ * The home titles the static home uses (`staticHomeSeo`, a test keeps them
+ * equal). A CMS home whose SEO title is only the site name would show a
+ * bare "Şaban Durali" in results, so it gets this title instead.
+ */
+export const homeFallbackTitles = {
+  tr: "Şaban Durali | Araştırma ve Bilgi Platformu",
+  en: "Şaban Durali | Research and Knowledge Platform",
+} as const;
+
+/** The title of a CMS page; a home titled only with the site name gets more. */
+export function getPublicPageTitle(page: PublicPage): string {
+  const title = page.seo.title.replace(/\s+/g, " ").trim();
+  return page.pageType === "home" && (title === "" || title === siteName)
+    ? homeFallbackTitles[page.language]
+    : page.seo.title;
+}
+
 export type PublicPageMetadataOptions = {
   /**
    * Home pages only: whether the other language's home page is indexable.
@@ -46,7 +68,7 @@ export function createPublicPageMetadata(
   const otherLanguage = page.language === "en" ? "tr" : "en";
 
   return createPageMetadata({
-    title: page.seo.title,
+    title: getPublicPageTitle(page),
     description: page.seo.description,
     locale: page.language,
     path: getPublicPagePath(page),
