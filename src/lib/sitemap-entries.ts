@@ -560,8 +560,7 @@ export function buildWorkspaceEntries(
         lastModified,
       }),
       ...sections.flatMap((section) =>
-        section.entry.href.startsWith(`/${workspace.key}/`) &&
-        section.hasItems
+        section.entry.href.startsWith(`/${workspace.key}/`) && section.hasItems
           ? [
               createEntry(section.entry.href, {
                 changeFrequency: "monthly",
