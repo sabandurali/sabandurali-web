@@ -343,3 +343,34 @@ export function getWorkspaceSectionParams(
     .filter((entry) => entry.href === `/${key}/${entry.slug}`)
     .map((entry) => ({ section: entry.slug }));
 }
+
+/**
+ * Category, collection and tag slugs that have published Turkish content,
+ * read through the public data sources (`overrideAccess: false`).
+ */
+export type PublishedWorkspaceFeeds = {
+  articleCategories: ReadonlySet<string>;
+  photoCategories: ReadonlySet<string>;
+};
+
+/**
+ * Whether a workspace entry leads somewhere with content (NAV-EMPTY-SECTIONS).
+ * An entry that links to another page (the district guide, the book or
+ * photo archive) always does. A section page served by the `[section]` route
+ * does only when its feed has published content: the same rule that makes
+ * the page indexable and lists it in the sitemap (`getWorkspaceEntryItems`).
+ * A section without a feed is a placeholder and never does.
+ */
+export function sectionHasContent(
+  key: WorkspaceKey,
+  entry: WorkspaceEntry,
+  feeds: PublishedWorkspaceFeeds,
+): boolean {
+  if (entry.href !== `/${key}/${entry.slug}`) return true;
+  return (
+    (entry.articleCategory !== undefined &&
+      feeds.articleCategories.has(entry.articleCategory)) ||
+    (entry.photoCategory !== undefined &&
+      feeds.photoCategories.has(entry.photoCategory))
+  );
+}

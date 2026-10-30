@@ -117,6 +117,17 @@ jobs:
           A11Y_TEST_OUTPUT: ${{ runner.temp }}/public-a11y
           BROWSER_CHANNEL: chromium
 
+      # Performance budget of the same page types (PERF-CI-BUDGET): one
+      # cold load each on a throttled phone profile; fonts ≤ 100 KiB, the
+      # script, LCP and CLS limits of scripts/perf/budget-expectations.mjs.
+      # Same Playwright Chromium, no extra dependency.
+      - name: E2E performance budget (fonts, scripts, LCP, CLS)
+        run: node scripts/perf/budget.mjs
+        env:
+          PERF_TEST_URL: http://127.0.0.1:3101
+          PERF_TEST_OUTPUT: ${{ runner.temp }}/perf-budget
+          BROWSER_CHANNEL: chromium
+
       - name: Server log
         if: failure()
         run: cat "$RUNNER_TEMP/next-start.log" || true
@@ -133,6 +144,7 @@ jobs:
             ${{ runner.temp }}/content-trust-routes
             ${{ runner.temp }}/istanbul-39-acceptance
             ${{ runner.temp }}/public-a11y
+            ${{ runner.temp }}/perf-budget
             ${{ runner.temp }}/next-start.log
           if-no-files-found: ignore
           retention-days: 7

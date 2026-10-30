@@ -1,3 +1,5 @@
+import type { SiteLocale } from "@/content/locales";
+
 export type PublicNavigationLink = {
   id: string;
   label: string;
@@ -6,6 +8,8 @@ export type PublicNavigationLink = {
   newTab: boolean;
   activePathPrefix?: string;
   mobileOnly?: boolean;
+  /** Language of the label and the target when it differs from the page's. */
+  lang?: SiteLocale;
   children: PublicNavigationLink[];
 };
 

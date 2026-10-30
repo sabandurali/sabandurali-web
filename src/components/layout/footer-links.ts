@@ -1,3 +1,4 @@
+import type { SiteLocale } from "@/content/locales";
 import type {
   PublicFooterGroup,
   PublicNavigationLink,
@@ -8,6 +9,8 @@ export type FooterLink = {
   label: string;
   href: string;
   newTab: boolean;
+  /** Set when the label is in the other language ("English", "Türkçe"). */
+  lang?: SiteLocale;
 };
 
 export type FooterLinkGroup = {
@@ -27,6 +30,7 @@ function flatten(links: readonly PublicNavigationLink[]): FooterLink[] {
             label: link.label,
             href: link.href,
             newTab: link.newTab,
+            ...(link.lang === undefined ? {} : { lang: link.lang }),
           },
         ]),
     ...flatten(link.children),

@@ -85,13 +85,11 @@ test("English research navigation never targets the conditional home section", (
   const items = getEnglishHeaderNavigationItems();
   const research = items.find((item) => item.id === "research-analysis");
   assert.equal(research?.href, "/en/articles");
-  assert.equal(
-    research?.children?.find((item) => item.id === "latest-research")?.href,
-    "/en/articles",
-  );
+  assert.deepEqual(research?.children, []);
   assert.equal(JSON.stringify(items).includes("#son-arastirmalar"), false);
+  // NAV-EN-ANCHORS: the district atlas section of the English home page.
   const realEstate = items.find((item) => item.id === "real-estate-istanbul");
-  assert.equal(realEstate?.children?.[0].href, "/en#gayrimenkul-intelligence");
+  assert.equal(realEstate?.href, "/en#istanbul");
 });
 
 test("shared OG asset is a valid 1200 × 630 JPEG", async () => {

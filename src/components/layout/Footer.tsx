@@ -33,7 +33,7 @@ export default async function Footer({ id, content }: FooterProps) {
       id={id}
       className="scroll-mt-24 bg-sea text-on-sea scheme-dark [--focus-halo:var(--color-sea)] [--focus-ring:var(--color-on-sea)]"
     >
-      <Container className="grid gap-10 py-12 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:gap-12 md:py-16">
+      <Container className="grid gap-10 py-12 md:py-16 xl:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] xl:gap-12">
         <div>
           <Wordmark
             locale={content.locale}
@@ -49,7 +49,7 @@ export default async function Footer({ id, content }: FooterProps) {
 
         <nav
           aria-label={content.locale === "tr" ? "Alt bilgi" : "Footer"}
-          className="grid content-start gap-8 [grid-template-columns:repeat(auto-fit,minmax(min(16rem,100%),1fr))]"
+          className="grid content-start gap-8 [grid-template-columns:repeat(auto-fit,minmax(min(12rem,100%),1fr))]"
         >
           {groups.map((group) => (
             <div key={group.id}>
@@ -72,6 +72,11 @@ export default async function Footer({ id, content }: FooterProps) {
                     <UiLink
                       href={link.href}
                       newTab={link.newTab}
+                      lang={link.lang}
+                      hrefLang={link.lang}
+                      // A site map of ~20 links: no prefetch of every page
+                      // (or of the RSS feed) when the footer scrolls in.
+                      prefetch={false}
                       className={footerLinkClassName}
                     >
                       <span className="min-w-0 break-words">{link.label}</span>

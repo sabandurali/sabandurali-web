@@ -13,7 +13,8 @@ Kaynaklar (tek doğru kaynak bunlardır, bu belge onları açıklar):
 | Dosya | İçerik |
 |---|---|
 | `src/app/globals.css` | Token'lar (`@theme`), taban stiller (`@layer base`), tipografi sınıfları (`@utility type-*`) |
-| `src/app/fonts.ts` | Archivo ve Martian Mono (`next/font/google`) |
+| `src/app/fonts.ts` | Archivo ve Martian Mono (`next/font/local`, `src/app/_fonts/*.woff2`) |
+| `scripts/fonts/subset-fonts.mjs` | Font dosyalarını üretir (eksen aralığı, Latin + Türkçe alt küme); testi bütçeyi ve glifleri denetler |
 | `src/components/ui/` | Erişilebilir temel bileşenler |
 | `src/components/ui/design-tokens.test.ts` | Kontrast tablosu, 12 px tabanı, katman kuralı, odak halkası, font ayarları |
 | `src/components/ui/typography-guard.test.ts` | Sitede 12 px altı yazı boyutu yasağı |
@@ -128,18 +129,24 @@ Diğer her ölçü Tailwind'in 4 px tabanlı ölçeğinden gelir.
 
 ### Yazı aileleri
 
-- **Archivo** (değişken; ağırlık ve genişlik `wdth` 62–125): tüm metin ve başlıklar. Genişlik ekseni bir
+- **Archivo** (değişken; ağırlık 400–800, genişlik `wdth` 76–125): tüm metin ve başlıklar. Genişlik ekseni bir
   sistemdir: `--stretch-wide` 125 % (ŞABAN DURALİ, levha başlığı, bölge etiketleri), `--stretch-title`
   112 % (kart başlıkları), `--stretch-heading` 92 % (h2), `--stretch-display` 88 % (ana sayfa h1, durak
   adları), `--stretch-compact` 82 % ve `--stretch-tile` 76 % (harita kareleri), gövde 100 %.
-- **Martian Mono** (değişken, `wdth` 75–112.5, `--stretch-mono` 87.5 %): yalnızca veri — değerler, birimler,
-  tarihler, kare adresleri, hat kodları, kaynak numaraları.
+- **Martian Mono** (değişken ağırlık 500–700; genişlik dosyada `--stretch-mono` 87.5 %'e sabitlenmiştir):
+  yalnızca veri — değerler, birimler, tarihler, kare adresleri, hat kodları, kaynak numaraları.
 
-`fonts.ts` ikisini de `latin` + `latin-ext` alt kümeleri ve `display: "swap"` ile yükler; ğ Ğ ı İ ş Ş
-`latin-ext` içindedir. Archivo önyüklenir (her sayfa onunla açılır). Martian Mono önyüklenmez: yalnızca
-küçük veri etiketlerinde kullanılır ve ilk kullanıldığı sayfada iner. İtalik ya da başka bir statik kesim
-istenmez. Kök layout'lar fontları yalnızca `fontVariables` sınıflarıyla `<html>` üzerine bağlar; başka
-`next/font` çağrısı yapılmaz (test eder).
+Fontlar kendi sunucumuzdan gelir (`next/font/local`): `scripts/fonts/subset-fonts.mjs` google/fonts'taki
+sabit bir commit'ten kaynakları SHA-256 doğrulamasıyla indirir, eksenleri yukarıdaki aralıklara indirir ve
+her aileyi tek bir Latin + Türkçe woff2 dosyasına (Latin-1, ğ Ğ ı İ ş Ş, Œ œ, tipografik noktalama, € ₺)
+böler. Archivo yaklaşık 77 KiB, Martian Mono 15 KiB'tır; `subset-fonts.test.mjs` bütçeyi (Archivo ≤ 80 KiB,
+toplam ≤ 100 KiB), Türkçe glifleri, eksen aralıklarını ve `globals.css`'teki her ağırlık ve genişliğin
+dosyada olduğunu denetler. Yeni bir ağırlık, genişlik ya da karakter gerekirse betikteki ayarı değiştirip
+betiği çalıştırın (`FONTTOOLS_PYTHON` fontTools + brotli kurulu bir Python gösterir), sonra `npm test`.
+Lisanslar (`*-OFL.txt`) dosyaların yanındadır. İkisi de `display: "swap"` ile yüklenir; Archivo önyüklenir
+(her sayfa onunla açılır), Martian Mono önyüklenmez: yalnızca küçük veri etiketlerinde kullanılır ve ilk
+kullanıldığı sayfada iner. İtalik ya da başka bir statik kesim istenmez. Kök layout'lar fontları yalnızca
+`fontVariables` sınıflarıyla `<html>` üzerine bağlar; başka `next/font` çağrısı yapılmaz (test eder).
 
 ### Tip ölçeği
 
@@ -314,15 +321,31 @@ kipinde kalır. Klavye modeli `menu-keys.ts` içindedir ve test edilir:
   layout="bar"` (ana sayfa öğesi yok: wordmark onun yerine geçer). Daha dar ekranda "Menü" `Disclosure`'ı:
   panel tam genişlik, içinde `NavMenu layout="stack"` ve dil seçici; bir bağlantı izlenince kapanır.
   `toNavMenuItems` (test edilir) mevcut sayfayı ve bölümü işaretler, bir paneldeki yinelenen bağlantıları
-  atar ve ilçe rehberinin 25 + 14 ilçesini iki etiketli grup olarak taşır.
-- **Dil seçici:** TR · EN; her bağlantının adı "TR Türkçe" / "EN English", `lang` ve `hrefLang` taşır;
-  geçerli dil `aria-current`, kalın yazı ve turuncu çizgiyle.
-- **Footer:** `sea` zemin (odak halkası beyaz), wordmark, platform cümlesi, footer bağlantıları (KVKK ve
-  iletişim her zaman vardır), telif satırı.
+  atar ve ilçe rehberinin 25 + 14 ilçesini iki etiketli grup olarak taşır. Yayımlanmış içeriği olmayan
+  çalışma alanı alt başlıkları (noindex boş durum sayfaları) menüde gösterilmez (`sectionHasContent`);
+  ilk içerik yayımlanınca geri gelir. İngilizce menüdeki her `/en#…` bağlantısı ana sayfada var olan bir
+  bölüme gider; tek bağlantılı panel yoktur.
+- **Dil seçici:** TR · EN; her bağlantının adı "TR Türkçe" / "EN English", `lang` ve `hrefLang` taşır
+  (`hrefLang` sayfaların `<html lang>` değeriyle aynıdır: `tr`, `en`); geçerli dil `aria-current`, kalın
+  yazı ve turuncu çizgiyle. Sayfanın diğer dilde karşılığı yoksa (`src/content/route-parity.ts`) bağlantı
+  o dilin ana ya da liste sayfasına gider ve yanında o dilde görünür bir not durur ("Only in Turkish" /
+  "Yalnızca İngilizce"), bağlantı bu nota `aria-describedby` ile bağlıdır. Yeni bir sayfa rotası
+  manifestoya ya karşılığıyla ya da gerekçeli `tr-only` olarak eklenir (test eder).
+- **Footer:** `sea` zemin (odak halkası beyaz), wordmark, platform cümlesi, mini site haritası, footer
+  bağlantıları (KVKK ve iletişim her zaman vardır), telif satırı. Site haritası kodda tanımlıdır
+  (`getFooterSitemapGroups`): Türkçede çalışma alanları, ilçe rehberi ve yayın listeleri; iki dilde de
+  hakkımda, arama (`/ara`, `/en/search`), RSS (`/feed.xml`, `/en/feed.xml`) ve diğer dil (kendi dilinde
+  adlandırılır, `lang` ve `hrefLang` taşır). CMS footer'ı aynı sayfaya bağlanıyorsa site haritasındaki
+  kopya düşer. Footer bağlantıları önyüklenmez (`prefetch={false}`).
+- **Arama bağlantısı:** header'ın ilk satırında her genişlikte "Ara" / "Search" (büyüteç dekoratiftir,
+  ad görünür sözcüktür), önyüklenmez.
 - **404 ve hata:** `StatusMessage` (turuncu kod etiketi, tek `h1`, açıklama, çıkış yolları). Grup 404'leri
   tam header ve footer'la gelir; `/en/*` altındaki eşleşmeyen adresler `[...missing]` ile İngilizce 404'e
   düşer. `global-not-found` CMS okumaz, fontları ve stilleri kendisi yükler, Türkçe + `lang="en"` blokla iki
   dillidir. Hata ekranı `retry` kullanır, yalnızca sunucu `digest` değerini gösterir ve odağı başlığa taşır.
+  Kök layout'un kendisi hata verirse `src/app/global-error.tsx` devreye girer: aynı `ErrorScreen`, kendi
+  `<html lang="tr">`'si, fontları, stilleri ve iki dilli skip link'iyle; `lang="en"` blokta İngilizce metin,
+  "Try again" ve İngilizce ana sayfa bağlantısı vardır. CMS okumaz, `noindex`'tir.
 - `BackToTop`: kaydırınca görünen, 2 px mürekkep kenarlı `land` kare; görünmezken sekme sırasında değildir.
 
 ## 6. Erişilebilirlik kuralları
