@@ -321,6 +321,11 @@ test("FOOTER-SITEMAP: footer and header link the search page without prefetch", 
     read("src/components/layout/Header.tsx"),
     /<SearchLink locale=\{locale\} \/>/,
   );
+  // next/link renders no trace of `prefetch`, so the sources are read.
+  assert.match(
+    read("src/components/layout/SearchLink.tsx"),
+    /<Link\s+href=\{href\}[\s\S]*?prefetch=\{false\}[\s\S]*?>/,
+  );
   const footer = read("src/components/layout/Footer.tsx");
   assert.match(footer, /prefetch=\{false\}/);
   assert.match(footer, /lang=\{link\.lang\}\s+hrefLang=\{link\.lang\}/);
