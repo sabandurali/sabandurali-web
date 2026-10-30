@@ -13,3 +13,11 @@ export function getDistrictNewsPath(slug: string): string {
 export function getDistrictUrl(slug: string): string {
   return getAbsoluteUrl(getDistrictPath(slug));
 }
+
+/**
+ * The generated share card of a district page (`og.png` route), used when
+ * the district has no photograph to share (`districtSocialImage`).
+ */
+export function getDistrictShareCardPath(slug: string): string {
+  return `${getDistrictPath(slug)}/og.png`;
+}

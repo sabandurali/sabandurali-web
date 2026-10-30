@@ -30,8 +30,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       robots: { index: false, follow: false },
     };
   }
-  const { guide } = await getDistrictPageData(slug);
-  return districtMetadata(district, guide);
+  const { guide, photos } = await getDistrictPageData(slug);
+  return districtMetadata(district, guide, photos);
 }
 
 export default async function DistrictPage({ params }: Props) {
@@ -45,7 +45,9 @@ export default async function DistrictPage({ params }: Props) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: serializeJsonLd(districtJsonLd(district, data.guide)),
+          __html: serializeJsonLd(
+            districtJsonLd(district, data.guide, data.photos),
+          ),
         }}
       />
       <DistrictEditorialGuidePage district={district} data={data} />

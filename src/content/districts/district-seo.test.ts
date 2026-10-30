@@ -9,9 +9,12 @@ import { verifiedDistrictImages } from "@/content/photos/verified-district-image
 import { metaDescriptionMaxLength, metaTitleMaxLength } from "@/lib/metadata";
 import type { DistrictGuide } from "./district-guide-projection";
 import { districts, type District } from "./district-registry";
+import { districtWorkspaceCrumb } from "@/components/districts/district-breadcrumb";
+import type { PublicPhoto } from "@/content/photos/types";
 import {
   districtJsonLd,
   districtMetadata,
+  getDistrictShareCard,
   getDistrictTitle,
   isDistrictGuideIndexable,
 } from "./district-seo";
@@ -74,12 +77,12 @@ test("published summaries become descriptions of at most 160 characters", () => 
     assert.ok(description.startsWith(current.name), description);
     assert.equal(metadata.openGraph?.description, description);
     assert.equal(metadata.twitter?.description, description);
-    assert.equal(
-      districtJsonLd(current, guide({ summary: record.sections.summary }))[
-        "@graph"
-      ][1]?.description,
-      description,
-    );
+    const webPage = districtJsonLd(
+      current,
+      guide({ summary: record.sections.summary }),
+    )["@graph"].find((node) => node["@type"] === "WebPage");
+    assert.ok(webPage && "description" in webPage);
+    assert.equal(webPage.description, description);
   }
 });
 
@@ -114,13 +117,21 @@ test("district pages without an indexable guide are noindex, follow", () => {
   assert.equal(isDistrictGuideIndexable(guide({ summary: "Özet." })), true);
 });
 
-test("district photos are shared through the optimizer, others use the site image", () => {
+test("district photos are shared through the optimizer, others use the generated card", () => {
   for (const current of districts) {
     const images = districtMetadata(current, null).openGraph?.images;
     const photo = verifiedDistrictImages[current.slug];
 
     if (photo === undefined) {
-      assert.deepEqual(images, [siteSocialImage]);
+      assert.deepEqual(images, [
+        {
+          url: `https://www.sabandurali.com/istanbul/ilceler/${current.slug}/og.png`,
+          alt: `${current.name} ilçe rehberi, Şaban Durali`,
+          width: 1200,
+          height: 630,
+        },
+      ]);
+      assert.notDeepEqual(images, [siteSocialImage]);
       continue;
     }
     const width = Math.min(1200, photo.width);
@@ -219,4 +230,211 @@ test("CORRECTNESS-4: JSON-LD dateModified of a scheduled guide is its publicatio
   );
   assert.ok(edited && "dateModified" in edited);
   assert.equal(edited.dateModified, "2026-09-20T09:00:00.000Z");
+});
+
+function districtPhoto(overrides: Partial<PublicPhoto> = {}): PublicPhoto {
+  return {
+    id: "photo-1",
+    language: "tr",
+    title: "Moda sahili",
+    slug: "moda-sahili",
+    description: null,
+    image: {
+      src: "/api/media/file/moda.jpg",
+      alt: "Moda sahilinde akşam",
+      width: 3000,
+      height: 2000,
+    },
+    collections: [],
+    tags: [],
+    takenAt: null,
+    locationName: null,
+    district: "fatih",
+    neighborhood: null,
+    districtPhotoCategory: null,
+    dayPeriod: null,
+    photographer: "Şaban Durali",
+    creditLicense: "Tüm hakları saklıdır",
+    exif: {
+      camera: null,
+      lens: null,
+      focalLength: null,
+      aperture: null,
+      shutterSpeed: null,
+      iso: null,
+    },
+    featured: true,
+    publishedAt: "2026-06-01T09:00:00.000Z",
+    createdAt: "2026-06-01T09:00:00.000Z",
+    updatedAt: "2026-06-01T09:00:00.000Z",
+    seo: { title: "T", description: "D", openGraphImage: null },
+    ...overrides,
+  };
+}
+
+function graphNode(
+  jsonLd: ReturnType<typeof districtJsonLd>,
+  type: string,
+): Record<string, unknown> | undefined {
+  const node: unknown = jsonLd["@graph"].find(
+    (candidate) => candidate["@type"] === type,
+  );
+  return typeof node === "object" && node !== null
+    ? Object.fromEntries(Object.entries(node))
+    : undefined;
+}
+
+test("DISTRICT-OG: without a verified image the page's CMS hero photo is shared", () => {
+  const fatih = district("fatih");
+  assert.equal(verifiedDistrictImages.fatih, undefined);
+  const images = districtMetadata(fatih, null, [
+    districtPhoto({ featured: false, id: "other", slug: "other" }),
+    districtPhoto(),
+  ]).openGraph?.images;
+
+  assert.deepEqual(images, [
+    {
+      url: `https://www.sabandurali.com/_next/image?url=${encodeURIComponent("/api/media/file/moda.jpg")}&w=1200&q=75`,
+      alt: "Moda sahilinde akşam",
+      width: 1200,
+      height: 800,
+    },
+  ]);
+  // The verified image stays first when there is one.
+  const esenler = districtMetadata(district("esenler"), null, [
+    districtPhoto({ district: "esenler" }),
+  ]).openGraph?.images;
+  assert.match(JSON.stringify(esenler), /esenler\.jpg/);
+});
+
+test("DISTRICT-OG: the generated card names only the registry's side and name", () => {
+  assert.deepEqual(getDistrictShareCard(district("kadikoy")), {
+    eyebrow: "İSTANBUL · ANADOLU YAKASI",
+    title: "Kadıköy",
+    subtitle: "İlçe Rehberi",
+  });
+  assert.equal(
+    getDistrictShareCard(district("sisli")).eyebrow,
+    "İSTANBUL · AVRUPA YAKASI",
+  );
+});
+
+test("BREADCRUMB-JSONLD: the district trail uses the visible breadcrumb's names", () => {
+  const breadcrumb = graphNode(
+    districtJsonLd(district("kadikoy"), null),
+    "BreadcrumbList",
+  );
+  assert.ok(breadcrumb);
+  assert.deepEqual(breadcrumb.itemListElement, [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: getUiStrings("tr").home,
+      item: "https://www.sabandurali.com/",
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: districtWorkspaceCrumb.label,
+      item: `https://www.sabandurali.com${districtWorkspaceCrumb.href}`,
+    },
+    {
+      "@type": "ListItem",
+      position: 3,
+      name: "İlçeler",
+      item: "https://www.sabandurali.com/istanbul/ilceler",
+    },
+    {
+      "@type": "ListItem",
+      position: 4,
+      name: "Kadıköy",
+      item: "https://www.sabandurali.com/istanbul/ilceler/kadikoy",
+    },
+  ]);
+  // The last item is the page's canonical URL.
+  assert.equal(
+    districtMetadata(district("kadikoy"), null).alternates?.canonical,
+    "https://www.sabandurali.com/istanbul/ilceler/kadikoy",
+  );
+});
+
+test("DISTRICT-JSONLD: an indexable guide is an Article of the owner about the district", () => {
+  const jsonLd = districtJsonLd(
+    district("esenler"),
+    guide({
+      summary: "Esenler özeti.",
+      publishedAt: "2026-09-15T06:00:00.000Z",
+      updatedAt: "2026-09-20T09:00:00.000Z",
+    }),
+  );
+  const article = graphNode(jsonLd, "Article");
+  const place = graphNode(jsonLd, "AdministrativeArea");
+  assert.ok(article && place);
+  assert.equal(article.headline, "Esenler İlçe Rehberi");
+  assert.equal(article.datePublished, "2026-09-15T06:00:00.000Z");
+  assert.equal(article.dateModified, "2026-09-20T09:00:00.000Z");
+  assert.deepEqual(article.author, {
+    "@type": "Person",
+    "@id": "https://www.sabandurali.com/#person",
+    name: "Şaban Durali",
+    url: "https://www.sabandurali.com/",
+  });
+  assert.deepEqual(article.about, { "@id": place["@id"] });
+  assert.equal(place.name, "Esenler");
+  assert.deepEqual(place.containedInPlace, {
+    "@type": "AdministrativeArea",
+    name: "İstanbul",
+    containedInPlace: { "@type": "Country", name: "Türkiye" },
+  });
+  assert.equal("sameAs" in place, false);
+
+  // The licensed verified image with its licence and record page.
+  const image = verifiedDistrictImages.esenler;
+  assert.ok(image);
+  assert.deepEqual(article.image, {
+    "@type": "ImageObject",
+    contentUrl: "https://www.sabandurali.com/workspaces/districts/esenler.jpg",
+    url: "https://www.sabandurali.com/workspaces/districts/esenler.jpg",
+    caption: image.alt,
+    width: image.width,
+    height: image.height,
+    creditText: image.credit,
+    license: image.licenseUrl,
+    acquireLicensePage: image.recordUrl,
+  });
+});
+
+test("DISTRICT-JSONLD: a placeholder page claims no Article and no image it lacks", () => {
+  const jsonLd = districtJsonLd(district("fatih"), null);
+  assert.equal(graphNode(jsonLd, "Article"), undefined);
+  assert.equal(graphNode(jsonLd, "WebPage")?.primaryImageOfPage, undefined);
+  assert.ok(graphNode(jsonLd, "AdministrativeArea"));
+});
+
+test("DISTRICT-JSONLD: fields outside the public projection never reach the JSON-LD", () => {
+  const leaked = {
+    ...guide({ summary: "Fatih özeti.", history: "Tarih." }),
+    researchNotes: "PRIVATE-RESEARCH-NOTE",
+    internalNotes: "PRIVATE-INTERNAL-NOTE",
+    marketData: {
+      source: "PRIVATE-MARKET-SOURCE",
+      description: "PRIVATE-MARKET-DATA",
+    },
+    sources: [
+      {
+        title: "PRIVATE-SOURCE-TITLE",
+        url: "https://example.com/private",
+      },
+    ],
+    facts: { population: "PRIVATE-FACT" },
+  };
+  const serialized = JSON.stringify(
+    districtJsonLd(
+      district("fatih"),
+      // A guide object carrying extra keys, as a careless caller could pass.
+      Object.assign(guide(), leaked),
+      [districtPhoto()],
+    ),
+  );
+  assert.doesNotMatch(serialized, /PRIVATE-/);
 });
