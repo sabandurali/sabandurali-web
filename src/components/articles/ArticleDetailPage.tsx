@@ -251,7 +251,7 @@ export default function ArticleDetailPage({
                 width={article.featuredImage.width}
                 height={article.featuredImage.height}
                 sizes="(min-width: 1080px) 960px, 100vw"
-                preload
+                priority
                 className="rounded-card border border-ink"
               />
             </Figure>

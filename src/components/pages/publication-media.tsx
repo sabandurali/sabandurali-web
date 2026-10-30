@@ -56,10 +56,25 @@ type PublicationImageProps = {
    */
   layout?: "intrinsic" | "fill";
   fit?: "cover" | "contain";
-  /** The page's LCP image: preloaded in the document head. */
+  /** Preloads the image with a link in the document head. */
   preload?: boolean;
+  /**
+   * The page's LCP image (a hero or cover above the fold): fetched eagerly
+   * at high priority, which Next 16 recommends over `preload`.
+   */
+  priority?: boolean;
   className?: string;
 };
+
+/**
+ * Loading attributes of a publication image: the LCP image loads eagerly
+ * at high priority, every other image keeps next/image's lazy default.
+ */
+export function publicationImageLoading(
+  priority: boolean,
+): { loading: "eager"; fetchPriority: "high" } | Record<string, never> {
+  return priority ? { loading: "eager", fetchPriority: "high" } : {};
+}
 
 /** next/image with the publication pages' sizing rules. */
 export function PublicationImage({
@@ -72,8 +87,10 @@ export function PublicationImage({
   layout = "intrinsic",
   fit = "cover",
   preload = false,
+  priority = false,
   className,
 }: PublicationImageProps) {
+  const loading = publicationImageLoading(priority);
   const fitClassName = fit === "contain" ? "object-contain" : "object-cover";
   const hasSize =
     typeof width === "number" &&
@@ -91,6 +108,7 @@ export function PublicationImage({
         height={height}
         sizes={sizes}
         preload={preload}
+        {...loading}
         className={cx("block h-auto w-full", fitClassName, className)}
       />
     );
@@ -104,6 +122,7 @@ export function PublicationImage({
       fill
       sizes={sizes}
       preload={preload}
+      {...loading}
       className={cx(fitClassName, layout === "fill" && className)}
     />
   );

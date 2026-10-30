@@ -271,7 +271,7 @@ export default function BookReviewDetailPage({
                   width={cover.width}
                   height={cover.height}
                   sizes="(min-width: 1024px) 384px, 320px"
-                  preload
+                  priority
                   className="rounded-card border border-ink"
                 />
               </Figure>
