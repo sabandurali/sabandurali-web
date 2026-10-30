@@ -16,6 +16,7 @@ export type ContentScope =
   | "pages"
   | "photos"
   | "rich-text"
+  | "search"
   | "sitemap";
 
 export type ContentIssue = {
