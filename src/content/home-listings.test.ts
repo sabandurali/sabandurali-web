@@ -1,8 +1,14 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import test from "node:test";
+import { fileURLToPath } from "node:url";
 import type { PublicArticleSummary } from "./articles/public-types";
 import type { PublicBookReviewSummary } from "./books/public-types";
-import { loadHomeListings, type HomeListingLoaders } from "./home-listings";
+import {
+  loadHomeListings,
+  planHomeSections,
+  type HomeListingLoaders,
+} from "./home-listings";
 import type { PublicPhoto } from "./photos/types";
 
 const article = { id: "a1" } as PublicArticleSummary;
@@ -65,4 +71,70 @@ test("ARCHITECTURE-1: a production server keeps the cached home page", async (t)
     NEXT_PHASE: "phase-production-build",
   });
   assert.deepEqual(built.unavailable, ["photos"]);
+});
+
+test("UX-04: empty home lists are hidden and the numbers close up", () => {
+  const plan = planHomeSections({ articles: 0, books: 3, photos: 0 }, []);
+  assert.deepEqual(plan.listings, ["books"]);
+  assert.deepEqual(plan.numbers, {
+    atlas: "01",
+    articles: null,
+    books: "02",
+    photos: null,
+    workspaces: "03",
+  });
+  // Right after the atlas band, so it moves to the paper ground.
+  assert.equal(plan.tones.books, "paper");
+});
+
+test("UX-04: every list with content is shown in page order", () => {
+  const plan = planHomeSections({ articles: 2, books: 1, photos: 4 }, []);
+  assert.deepEqual(plan.listings, ["articles", "books", "photos"]);
+  assert.deepEqual(plan.numbers, {
+    atlas: "01",
+    articles: "02",
+    books: "03",
+    photos: "04",
+    workspaces: "05",
+  });
+  assert.deepEqual(plan.tones, {
+    articles: "paper",
+    books: "band",
+    photos: "paper",
+  });
+});
+
+test("UX-04: a list whose query failed stays visible as unavailable", () => {
+  const plan = planHomeSections({ articles: 0, books: 0, photos: 0 }, [
+    "photos",
+    "districts",
+  ]);
+  assert.deepEqual(plan.listings, ["photos"]);
+  assert.equal(plan.numbers.photos, "02");
+  assert.equal(plan.numbers.workspaces, "03");
+});
+
+test("UX-04: with no list at all the workspaces follow the atlas", () => {
+  const plan = planHomeSections({ articles: 0, books: 0, photos: 0 }, []);
+  assert.deepEqual(plan.listings, []);
+  assert.equal(plan.numbers.workspaces, "02");
+});
+
+test("UX-04: the home page renders, numbers and tones its lists from the plan", () => {
+  // HomePage.tsx loads server-only data sources, so the wiring is checked
+  // on the source (as in home-selection.test.ts).
+  const source = readFileSync(
+    fileURLToPath(new URL("../components/HomePage.tsx", import.meta.url)),
+    "utf8",
+  );
+  for (const name of ["articles", "books", "photos"]) {
+    assert.match(source, new RegExp(`\\{shows\\("${name}"\\) \\? \\(`));
+    assert.match(
+      source,
+      new RegExp(`tone=\\{sectionPlan\\.tones\\.${name}\\}`),
+    );
+    assert.match(source, new RegExp(`number=\\{numbers\\.${name} \\?\\?`));
+  }
+  assert.match(source, /number=\{numbers\.workspaces\}/);
+  assert.doesNotMatch(source, /tone="band"\s+number=\{copy\./);
 });

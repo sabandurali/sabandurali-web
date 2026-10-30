@@ -1,4 +1,5 @@
 import type { CollectionConfig } from "payload";
+import { publicLinksField, seoPreviewField } from "@/collections/admin-fields";
 import {
   SEO_DESCRIPTION_MAX_LENGTH,
   SEO_TITLE_MAX_LENGTH,
@@ -16,6 +17,10 @@ import {
 import { ensurePublishedAt } from "@/lib/publishedAt";
 import { createRevalidationHooks } from "@/lib/revalidation";
 import { districtOptions } from "@/content/districts/district-registry";
+import {
+  photoDayPeriodOptions,
+  photoDistrictCategoryOptions,
+} from "@/collections/option-labels";
 
 const revalidation = createRevalidationHooks("photos");
 
@@ -36,6 +41,7 @@ export const Photos: CollectionConfig = {
       "updatedAt",
     ],
     group: "Fotoğrafçılık",
+    listSearchableFields: ["title", "slug", "altText", "locationName"],
     useAsTitle: "title",
   },
   labels: {
@@ -43,6 +49,7 @@ export const Photos: CollectionConfig = {
     singular: "Fotoğraf",
   },
   fields: [
+    publicLinksField,
     {
       type: "tabs",
       tabs: [
@@ -56,10 +63,13 @@ export const Photos: CollectionConfig = {
               localized: true,
               required: true,
             },
-            createLocalizedSlugField({
-              collection: "photos",
-              sourceField: "title",
-            }),
+            {
+              ...createLocalizedSlugField({
+                collection: "photos",
+                sourceField: "title",
+              }),
+              label: "Slug",
+            },
             {
               name: "description",
               type: "textarea",
@@ -124,21 +134,13 @@ export const Photos: CollectionConfig = {
                   name: "districtPhotoCategory",
                   type: "select",
                   label: "İlçe fotoğraf kategorisi",
-                  options: [
-                    "mimari",
-                    "sokak",
-                    "tarih",
-                    "yasam",
-                    "ulasim",
-                    "doga",
-                    "gece",
-                  ],
+                  options: photoDistrictCategoryOptions,
                 },
                 {
                   name: "dayPeriod",
                   type: "select",
                   label: "Gündüz / gece",
-                  options: ["gunduz", "gece"],
+                  options: photoDayPeriodOptions,
                 },
               ],
             },
@@ -167,6 +169,7 @@ export const Photos: CollectionConfig = {
                 {
                   name: "photographer",
                   type: "text",
+                  label: "Fotoğrafçı",
                   defaultValue: "Şaban Durali",
                   required: true,
                 },
@@ -191,9 +194,10 @@ export const Photos: CollectionConfig = {
             {
               name: "exif",
               type: "group",
+              label: "EXIF bilgileri",
               fields: [
-                { name: "camera", type: "text" },
-                { name: "lens", type: "text" },
+                { name: "camera", type: "text", label: "Fotoğraf makinesi" },
+                { name: "lens", type: "text", label: "Objektif" },
                 { name: "focalLength", type: "text", label: "Odak uzaklığı" },
                 { name: "aperture", type: "text", label: "Diyafram" },
                 { name: "shutterSpeed", type: "text", label: "Enstantane" },
@@ -217,22 +221,27 @@ export const Photos: CollectionConfig = {
             {
               name: "seo",
               type: "group",
+              label: "SEO",
               fields: [
+                seoPreviewField("photos"),
                 {
                   name: "metaTitle",
                   type: "text",
+                  label: "SEO başlığı",
                   localized: true,
                   maxLength: SEO_TITLE_MAX_LENGTH,
                 },
                 {
                   name: "metaDescription",
                   type: "textarea",
+                  label: "SEO açıklaması",
                   localized: true,
                   maxLength: SEO_DESCRIPTION_MAX_LENGTH,
                 },
                 {
                   name: "openGraphImage",
                   type: "relationship",
+                  label: "Sosyal paylaşım görseli",
                   filterOptions: imageMediaFilter,
                   relationTo: "media",
                 },

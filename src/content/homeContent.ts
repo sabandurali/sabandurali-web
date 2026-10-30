@@ -10,8 +10,6 @@ export type HomeAnchors = {
 
 export type HeaderContent = {
   mobileBrandName: string;
-  brandName: string;
-  brandTagline: string;
   navigation: {
     about: string;
     work: string;
@@ -75,8 +73,6 @@ export type FocusAreasContent = {
 
 export type FooterContent = {
   locale: Locale;
-  brandName: string;
-  brandTagline: string;
   description: string;
   copyright: string;
   links: {
@@ -124,8 +120,6 @@ export const homeContent = {
     },
     header: {
       mobileBrandName: "Şaban Durali",
-      brandName: "ŞABAN DURALİ",
-      brandTagline: "ARAŞTIRMA VE BİLGİ PLATFORMU",
       navigation: {
         about: "Hakkımda",
         work: "Çalışma Alanları",
@@ -247,8 +241,6 @@ export const homeContent = {
     },
     footer: {
       locale: "tr",
-      brandName: "ŞABAN DURALİ",
-      brandTagline: "ARAŞTIRMA VE BİLGİ PLATFORMU",
       description:
         "Gayrimenkul, satış, araştırma, teknoloji, öğrenme ve fotoğraf odaklı bağımsız bilgi ve yayın platformu.",
       // Sample year: the footer writes the current Istanbul year
@@ -271,8 +263,6 @@ export const homeContent = {
     },
     header: {
       mobileBrandName: "Şaban Durali",
-      brandName: "ŞABAN DURALİ",
-      brandTagline: "RESEARCH AND KNOWLEDGE PLATFORM",
       navigation: {
         about: "About",
         work: "Focus Areas",
@@ -390,8 +380,6 @@ export const homeContent = {
     },
     footer: {
       locale: "en",
-      brandName: "ŞABAN DURALİ",
-      brandTagline: "RESEARCH AND KNOWLEDGE PLATFORM",
       description:
         "An independent knowledge and publishing platform focused on real estate, sales, research, technology, learning and photography.",
       // Sample year, replaced at render time like the Turkish line.

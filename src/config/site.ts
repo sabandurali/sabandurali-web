@@ -9,7 +9,9 @@ export const siteSocialImage = {
   url: getAbsoluteUrl("/brand/site-og.jpg"),
   width: 1200,
   height: 630,
-  alt: "Şaban Durali — Araştırma ve Bilgi Platformu / Research and Knowledge Platform",
+  // From the identity package (web/opengraph-image.alt.txt); the image is
+  // shared by both languages, so the English platform name follows.
+  alt: "Şaban Durali, Araştırma ve Bilgi Platformu / Research and Knowledge Platform",
 };
 
 export const homeUrls = {

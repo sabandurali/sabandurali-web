@@ -53,3 +53,24 @@ export function resolveFooterGroups(
         { id: "required-footer-links", title: null, links: missing },
       ];
 }
+
+/**
+ * The footer site map first, then the CMS or static footer groups. A site
+ * map link whose page the following groups already link is dropped, so the
+ * footer names a page once, and a site map group left empty is dropped.
+ */
+export function withFooterSitemap(
+  sitemapGroups: ReadonlyArray<PublicFooterGroup>,
+  groups: ReadonlyArray<PublicFooterGroup>,
+): PublicFooterGroup[] {
+  const present = new Set(groups.flatMap((group) => collectHrefs(group.links)));
+  const sitemap = sitemapGroups
+    .map((group) => ({
+      ...group,
+      links: group.links.filter(
+        (link) => link.href === null || !present.has(getLinkedPath(link.href)),
+      ),
+    }))
+    .filter((group) => group.links.length > 0);
+  return [...sitemap, ...groups];
+}

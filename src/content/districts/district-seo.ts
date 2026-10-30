@@ -1,20 +1,37 @@
-import { verifiedDistrictImages } from "@/content/photos/verified-district-images";
 import type { Metadata } from "next";
 import { getAbsoluteUrl } from "@/config/site";
+import {
+  createBreadcrumbJsonLd,
+  createHomeTrail,
+} from "@/content/breadcrumb-seo";
+import { citationMetaTags, type CitationInput } from "@/content/citation";
+import {
+  createPersonReference,
+  createWebsiteReference,
+  personalBrandName,
+} from "@/content/entity-seo";
+import { selectDistrictHeroPhoto } from "@/content/photos/district-photo-selection";
+import { getPhotoPath } from "@/content/photos/photo-routes";
+import { getPhotoCreditText } from "@/content/photos/photo-seo";
+import type { PublicPhoto } from "@/content/photos/types";
+import { verifiedDistrictImages } from "@/content/photos/verified-district-images";
+import { getWorkspace } from "@/content/workspaces";
 import { getContentLastModifiedIso } from "@/lib/content-dates";
-import { homeCrumb } from "@/content/home-crumb";
 import {
   createOptimizedSocialImage,
   createPageMetadata,
+  createSocialImage,
   truncateMetaDescription,
   type SocialImage,
 } from "@/lib/metadata";
 import {
+  districtDirectoryShareCardPath,
   districtGuidePath,
   getDistrictPath,
+  getDistrictShareCardPath,
   getDistrictUrl,
 } from "./district-routes";
-import type { District } from "./district-registry";
+import { districts, type District } from "./district-registry";
 import type { DistrictGuide } from "./district-guide-projection";
 
 /** Narrative sections; a guide without any of them is only a placeholder. */
@@ -64,75 +81,284 @@ function metaDescription(district: District, guide: DistrictGuide | null) {
   return truncateMetaDescription(guide?.summary?.trim() || fallback);
 }
 
+/** The pixel size of the generated district share card. */
+export const districtShareCardSize = { width: 1200, height: 630 } as const;
+
+const sideLabel = {
+  avrupa: "İSTANBUL · AVRUPA YAKASI",
+  anadolu: "İSTANBUL · ANADOLU YAKASI",
+} as const satisfies Record<District["side"], string>;
+
 /**
- * The verified district photo, resized for sharing (the originals are up to
- * 4000 px and several megabytes), or the site-wide image.
+ * The text of a district's generated share card: the registry's side and
+ * name and the kind of page, nothing else. (Upper case is written out:
+ * `toUpperCase` would turn "i" into "I" instead of "İ".)
  */
-function districtSocialImage(district: District): SocialImage | null {
-  const photo = verifiedDistrictImages[district.slug];
-  return photo === undefined
-    ? null
-    : createOptimizedSocialImage({
-        src: photo.src,
-        alt: photo.alt,
-        width: photo.width,
-        height: photo.height,
-      });
+export function getDistrictShareCard(district: District) {
+  return {
+    eyebrow: sideLabel[district.side],
+    title: district.name,
+    subtitle: "İlçe Rehberi",
+  };
+}
+
+/**
+ * The text of the district directory's generated share card: what the
+ * directory itself states (the registry's district count), nothing else.
+ */
+export function getDistrictDirectoryShareCard() {
+  return {
+    eyebrow: "İSTANBUL",
+    title: "İlçe Rehberi",
+    subtitle: `${districts.length} ilçe için kaynak temelli rehberler`,
+  };
+}
+
+/** The district directory's share image: its generated card. */
+export function districtDirectorySocialImage(): SocialImage {
+  return createSocialImage({
+    src: districtDirectoryShareCardPath,
+    alt: "İstanbul ilçe rehberi, Şaban Durali",
+    ...districtShareCardSize,
+  });
+}
+
+/**
+ * The image a district page is shared with, best first:
+ *
+ * 1. the verified district image (a licensed, credited file in `public/`),
+ * 2. the hero photo the page itself shows (a published CMS photo of the
+ *    district, `selectDistrictHeroPhoto`),
+ * 3. the generated card with the district's name (`og.png` route).
+ *
+ * Photographs go through the image optimizer (the originals are up to
+ * 4000 px and several megabytes).
+ */
+export function districtSocialImage(
+  district: District,
+  photos: readonly PublicPhoto[] = [],
+): SocialImage {
+  const verified = Object.hasOwn(verifiedDistrictImages, district.slug)
+    ? verifiedDistrictImages[district.slug]
+    : undefined;
+  if (verified !== undefined) {
+    return createOptimizedSocialImage({
+      src: verified.src,
+      alt: verified.alt,
+      width: verified.width,
+      height: verified.height,
+    });
+  }
+
+  const hero = selectDistrictHeroPhoto([...photos]);
+  if (hero !== undefined) {
+    return createOptimizedSocialImage({
+      src: hero.image.src,
+      alt: hero.image.alt,
+      width: hero.image.width,
+      height: hero.image.height,
+    });
+  }
+
+  return createSocialImage({
+    src: getDistrictShareCardPath(district.slug),
+    alt: `${district.name} ilçe rehberi, Şaban Durali`,
+    ...districtShareCardSize,
+  });
+}
+
+/**
+ * Citation of a published district guide, named like its JSON-LD WebPage
+ * ("<İlçe> İlçe Rehberi"). The site owner is the author, as the page title
+ * says; the dates are the guide's publication and last change.
+ */
+export function districtCitationInput(
+  district: Pick<District, "name" | "slug">,
+  guide: Pick<DistrictGuide, "publishedAt" | "updatedAt">,
+): CitationInput {
+  return {
+    title: `${district.name} İlçe Rehberi`,
+    authors: [personalBrandName],
+    siteName: personalBrandName,
+    url: getDistrictUrl(district.slug),
+    language: "tr",
+    publishedAt: guide.publishedAt,
+    modifiedAt: getContentLastModifiedIso(guide) ?? null,
+  };
 }
 
 export function districtMetadata(
   district: District,
   guide: DistrictGuide | null,
+  photos: readonly PublicPhoto[] = [],
 ): Metadata {
-  const image = districtSocialImage(district);
-  const indexable = isDistrictGuideIndexable(guide);
-
-  return createPageMetadata({
+  const metadata = createPageMetadata({
     title: getDistrictTitle(district),
     description: metaDescription(district, guide),
     locale: "tr",
     path: getDistrictPath(district.slug),
-    images: image === null ? undefined : [image],
-    index: indexable,
+    images: [districtSocialImage(district, photos)],
+    index: isDistrictGuideIndexable(guide),
     follow: true,
   });
+
+  // Only a published guide can be cited (the page shows "How to cite" under
+  // the same condition); without one there are no citation tags at all.
+  return guide === null
+    ? metadata
+    : {
+        ...metadata,
+        other: citationMetaTags(districtCitationInput(district, guide)),
+      };
 }
 
+const parentWorkspaceKey = "gayrimenkul-ve-istanbul";
+
+/**
+ * The district pages' parent crumb: the workspace, under the title the
+ * header navigation, the workspace page and the visible breadcrumb
+ * (`districtWorkspaceCrumb`) give it.
+ */
+function districtWorkspaceTrailItem() {
+  const workspace = getWorkspace(parentWorkspaceKey);
+  if (workspace === null) {
+    throw new Error(`Unknown workspace "${parentWorkspaceKey}".`);
+  }
+  return { name: workspace.title, path: `/${workspace.key}` };
+}
+
+/** The trail of a district page, the visible breadcrumb's four items. */
+export function getDistrictTrail(district: District) {
+  return createHomeTrail(
+    "tr",
+    districtWorkspaceTrailItem(),
+    { name: "İlçeler", path: districtGuidePath },
+    { name: district.name, path: getDistrictPath(district.slug) },
+  );
+}
+
+/**
+ * The district as a place: an administrative area of Istanbul at the
+ * registry's verified focus point (not a boundary). No `sameAs` (Wikidata,
+ * Wikipedia) is published until the owner approves a source for it.
+ */
+function districtPlace(district: District, url: string) {
+  const [latitude, longitude] = district.center;
+  return {
+    "@type": "AdministrativeArea",
+    "@id": `${url}#place`,
+    name: district.name,
+    geo: { "@type": "GeoCoordinates", latitude, longitude },
+    containedInPlace: {
+      "@type": "AdministrativeArea",
+      name: "İstanbul",
+      containedInPlace: { "@type": "Country", name: "Türkiye" },
+    },
+  };
+}
+
+/**
+ * The district's share image as an ImageObject with what its record states:
+ * the verified image's licence, record page and credit line, or the CMS hero
+ * photo's credit. Nothing is published without an image.
+ */
+function districtImageObject(
+  district: District,
+  photos: readonly PublicPhoto[],
+) {
+  const verified = Object.hasOwn(verifiedDistrictImages, district.slug)
+    ? verifiedDistrictImages[district.slug]
+    : undefined;
+  if (verified !== undefined) {
+    return {
+      "@type": "ImageObject",
+      contentUrl: getAbsoluteUrl(verified.src),
+      url: getAbsoluteUrl(verified.src),
+      caption: verified.alt,
+      width: verified.width,
+      height: verified.height,
+      creditText: verified.credit,
+      license: verified.licenseUrl,
+      acquireLicensePage: verified.recordUrl,
+    };
+  }
+
+  const hero = selectDistrictHeroPhoto([...photos]);
+  if (hero === undefined) return undefined;
+  return {
+    "@type": "ImageObject",
+    "@id": `${getAbsoluteUrl(getPhotoPath(hero.slug, hero.language))}#image`,
+    contentUrl: getAbsoluteUrl(hero.image.src),
+    url: getAbsoluteUrl(getPhotoPath(hero.slug, hero.language)),
+    caption: hero.image.alt,
+    width: hero.image.width,
+    height: hero.image.height,
+    creditText: getPhotoCreditText(hero),
+    copyrightNotice: hero.creditLicense?.trim() || undefined,
+  };
+}
+
+/**
+ * The structured data of a district page, built only from the public
+ * projection, the district registry and the page's public photos:
+ *
+ * - the BreadcrumbList of the visible breadcrumb;
+ * - the WebPage about the district (an AdministrativeArea of Istanbul);
+ * - with an indexable guide, the guide as an Article of the site owner with
+ *   its publication and modification dates and its image.
+ *
+ * A placeholder page (no indexable guide) claims no Article.
+ */
 export function districtJsonLd(
   district: District,
   guide: DistrictGuide | null,
+  photos: readonly PublicPhoto[] = [],
 ) {
   const url = getDistrictUrl(district.slug);
+  const breadcrumb = createBreadcrumbJsonLd(getDistrictTrail(district));
+  const place = districtPlace(district, url);
+  const image = districtImageObject(district, photos);
+  const description = metaDescription(district, guide);
+  const dateModified = guide ? getContentLastModifiedIso(guide) : undefined;
+  const article = isDistrictGuideIndexable(guide)
+    ? [
+        {
+          "@type": "Article",
+          "@id": `${url}#article`,
+          headline: `${district.name} İlçe Rehberi`,
+          description,
+          inLanguage: "tr-TR",
+          author: createPersonReference(),
+          publisher: createPersonReference(),
+          isPartOf: createWebsiteReference(),
+          mainEntityOfPage: { "@id": url },
+          about: { "@id": place["@id"] },
+          datePublished: guide.publishedAt ?? undefined,
+          dateModified,
+          image,
+        },
+      ]
+    : [];
+
   return {
     "@context": "https://schema.org",
     "@graph": [
-      {
-        "@type": "BreadcrumbList",
-        "@id": `${url}#breadcrumb`,
-        // The visible breadcrumb's trail (DistrictGuideArticle, homeCrumb).
-        itemListElement: [
-          [homeCrumb.tr.name, homeCrumb.tr.path],
-          ["İstanbul", "/gayrimenkul-ve-istanbul"],
-          ["İlçeler", districtGuidePath],
-          [district.name, getDistrictPath(district.slug)],
-        ].map(([name, path], index) => ({
-          "@type": "ListItem",
-          position: index + 1,
-          name,
-          item: getAbsoluteUrl(path),
-        })),
-      },
+      breadcrumb,
       {
         "@type": "WebPage",
         "@id": url,
         url,
         name: `${district.name} İlçe Rehberi`,
         inLanguage: "tr-TR",
-        description: metaDescription(district, guide),
-        dateModified: guide ? getContentLastModifiedIso(guide) : undefined,
-        breadcrumb: { "@id": `${url}#breadcrumb` },
-        about: { "@type": "Place", name: `${district.name}, İstanbul` },
+        description,
+        dateModified,
+        isPartOf: createWebsiteReference(),
+        breadcrumb: { "@id": breadcrumb["@id"] },
+        about: { "@id": place["@id"] },
+        primaryImageOfPage: image,
       },
+      place,
+      ...article,
     ],
   };
 }

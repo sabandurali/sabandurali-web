@@ -27,7 +27,7 @@ const texts: Record<
     home: "Ana sayfaya dön",
     elsewhere: "Şunlara da bakabilirsiniz",
     destinations: [
-      { href: districtGuidePath, label: "İstanbul ilçe rehberi" },
+      { href: districtGuidePath, label: "İstanbul İlçe Rehberi" },
       { href: articleListPaths.tr, label: "Makaleler" },
       { href: contactPaths.tr, label: "İletişim" },
     ],

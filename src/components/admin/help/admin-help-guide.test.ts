@@ -80,11 +80,11 @@ test("Phase B: the guide states the CMS rules the code enforces", () => {
     // Legacy home slug redirect.
     "/ana-sayfa adresi (yalnız bir yönlendirme, sayfa değil) kalıcı olarak `/` adresine yönlenir",
     // English standard pages cannot be published.
-    "EN standart `Sayfa` kaydı yayınlanamaz",
+    "EN standart `Sayfa` kaydı yayımlanamaz",
     // District news need an https source.
     "`https://` ile başlayan `Orijinal haber URL'si`",
     // Supported internal link targets (INTERNAL_LINK_COLLECTIONS).
-    "`Articles`, `Sayfalar`, `Kitap İncelemeleri`, `Fotoğraflar` ve `İlçe Rehberleri` kayıtlarına",
+    "`Makaleler & Araştırmalar`, `Sayfalar`, `Kitap İncelemeleri`, `Fotoğraflar` ve `İlçe Rehberleri` kayıtlarına",
     // Social image recommendation.
     "1200 × 630",
     // Empty district guides stay out of search.
@@ -101,6 +101,24 @@ test("Phase B: superseded statements do not come back", () => {
     "`Admin` veya `Editor` tarafından silinebilir",
     "Canonical alanı yalnız kitap incelemesinde",
   ]) {
+    assert.ok(!ADMIN_HELP_GUIDE.includes(stale), stale);
+  }
+});
+
+test("ADM: the guide names the Turkish buttons and the new admin aids", () => {
+  for (const statement of [
+    "`Taslağı kaydet`",
+    "`Değişiklikleri yayımla`",
+    "`Yayından Kaldır`",
+    "`Editör özeti`",
+    "`Süresi dolacak ilçe verileri`",
+    "`Sitede aç`",
+    "`Arama ve paylaşım önizlemesi`",
+  ]) {
+    assert.ok(ADMIN_HELP_GUIDE.includes(statement), statement);
+  }
+  // Collections are named as the Turkish admin shows them.
+  for (const stale of ["`Categories`", "`Articles`", "`Media`"]) {
     assert.ok(!ADMIN_HELP_GUIDE.includes(stale), stale);
   }
 });

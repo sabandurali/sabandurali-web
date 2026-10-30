@@ -6,6 +6,7 @@ import {
 } from "@payloadcms/richtext-lexical/react";
 import type {
   SerializedAutoLinkNode,
+  SerializedHeadingNode,
   SerializedLinkNode,
   SerializedListItemNode,
   SerializedListNode,
@@ -39,6 +40,11 @@ type PayloadRichTextProps = {
   data: ComponentProps<typeof RichText>["data"];
   /** Language of the document: built-in texts and alt-text language. */
   locale?: UiLocale;
+  /**
+   * Anchor ids of the heading nodes (getArticleOutline): each listed h2–h4
+   * gets its id, so a table of contents or a shared #link can point at it.
+   */
+  headingIds?: ReadonlyMap<string | object, string>;
   className?: string;
 };
 
@@ -311,12 +317,43 @@ const listItemConverter: JSXConverter<SerializedListItemNode> = ({
   return <li value={value}>{children}</li>;
 };
 
-function createConverters(locale: UiLocale): JSXConvertersFunction {
+type HeadingTag = "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+
+function isHeadingTag(tag: unknown): tag is HeadingTag {
+  return (
+    tag === "h1" ||
+    tag === "h2" ||
+    tag === "h3" ||
+    tag === "h4" ||
+    tag === "h5" ||
+    tag === "h6"
+  );
+}
+
+/**
+ * Headings, with the anchor id the outline gave the node. An unknown tag
+ * falls back to h2 (Payload's default uses h1, a second page title).
+ */
+function createHeadingConverter(
+  headingIds: ReadonlyMap<string | object, string> | undefined,
+): JSXConverter<SerializedHeadingNode> {
+  return function HeadingConverter({ node, nodesToJSX }) {
+    const children = nodesToJSX({ nodes: node.children });
+    const Tag = isHeadingTag(node.tag) ? node.tag : "h2";
+    return <Tag id={headingIds?.get(node)}>{children}</Tag>;
+  };
+}
+
+function createConverters(
+  locale: UiLocale,
+  headingIds?: ReadonlyMap<string | object, string>,
+): JSXConvertersFunction {
   const uploadConverter: JSXConverter<SerializedUploadNode> = ({ node }) =>
     renderRichTextUpload(node, locale);
 
   return ({ defaultConverters }) => ({
     ...defaultConverters,
+    heading: createHeadingConverter(headingIds),
     text: textConverter,
     list: listConverter,
     listitem: listItemConverter,
@@ -349,12 +386,17 @@ const convertersByLocale: Record<UiLocale, JSXConvertersFunction> = {
 export default function PayloadRichText({
   data,
   locale = "tr",
+  headingIds,
   className,
 }: PayloadRichTextProps) {
   return (
     <RichText
       data={data}
-      converters={convertersByLocale[locale]}
+      converters={
+        headingIds === undefined
+          ? convertersByLocale[locale]
+          : createConverters(locale, headingIds)
+      }
       className={cx(richTextClassName, className)}
     />
   );

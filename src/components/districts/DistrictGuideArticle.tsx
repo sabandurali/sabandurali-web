@@ -27,6 +27,7 @@ import {
   type VisibleDistrictSection,
 } from "./district-guide-model";
 import { DistrictPhoto } from "./district-guide-parts";
+import DistrictGuideMobileNav from "./DistrictGuideMobileNav";
 import {
   DistrictGeographySection,
   DistrictHistorySection,
@@ -164,7 +165,7 @@ export default function DistrictGuideArticle({
             <DistrictKeyMap
               featuredSlug={district.slug}
               highlightSlugs={neighbours}
-              title={`${district.name}, İstanbul'un şematik ilçe haritasında${tile ? ` (${tile.ref})` : ""}`}
+              title={`${district.name}, İstanbul’un şematik ilçe haritasında${tile ? ` (${tile.ref})` : ""}`}
             />
             <figcaption className="mt-2 type-caption text-ink-muted">
               Şematik, ölçeksiz. Turuncu kare {district.name}
@@ -180,7 +181,7 @@ export default function DistrictGuideArticle({
         <Container className="pb-10 sm:pb-14">
           <DistrictPhoto
             photo={heroPhoto}
-            preload
+            priority
             sizes="(max-width: 1440px) 100vw, 1296px"
           />
         </Container>
@@ -207,9 +208,20 @@ export default function DistrictGuideArticle({
         </Container>
       </div>
 
-      {visible.map((item) => (
-        <Fragment key={item.id}>{renderSection(item)}</Fragment>
-      ))}
+      {/* The sticky bar's containing block: it stays on screen while any
+          section scrolls past and leaves with the last one. */}
+      <div>
+        <DistrictGuideMobileNav
+          items={visible.map(({ id, number, label }) => ({
+            id,
+            number,
+            label,
+          }))}
+        />
+        {visible.map((item) => (
+          <Fragment key={item.id}>{renderSection(item)}</Fragment>
+        ))}
+      </div>
     </>
   );
 }

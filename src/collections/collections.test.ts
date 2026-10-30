@@ -479,13 +479,13 @@ test("the role description matches the delete rights and the admin guide", async
   assert.equal(role.admin?.description, USER_ROLE_DESCRIPTION);
   // Editors may delete Media and nothing else that the role text calls content.
   assert.equal(runAccess(Media.access?.delete, editor), true);
-  assert.match(USER_ROLE_DESCRIPTION, /Editor[^.]*Media dosyalarını silebilir/);
+  assert.match(USER_ROLE_DESCRIPTION, /Editor[^.]*Medya dosyalarını silebilir/);
   assert.match(USER_ROLE_DESCRIPTION, /Admin ayrıca kullanıcıları yönetir/);
   const { ADMIN_HELP_GUIDE } =
     await import("../components/admin/help/admin-help-guide");
   assert.ok(
     ADMIN_HELP_GUIDE.includes(
-      "içerik silme yetkisi yalnız `Media` kayıtlarındadır",
+      "içerik silme yetkisi yalnız `Medya` kayıtlarındadır",
     ),
   );
 });
@@ -1083,7 +1083,7 @@ test("standard Turkish pages cannot take reserved or legacy home slugs", async (
     }),
     (error: unknown) =>
       validationErrors(error).some((entry) =>
-        /eski Ana Sayfa/.test(entry.message),
+        /eski ana sayfa/.test(entry.message),
       ),
   );
   // The existing legacy record keeps working until it is converted.
@@ -1380,5 +1380,147 @@ test("articles, pages, photos and district guides run the shared publishedAt hoo
       collection.hooks?.beforeChange?.includes(ensurePublishedAt),
       collection.slug,
     );
+  }
+});
+
+/** Named data fields with their dotted path, blocks included. */
+function namedFieldPaths(
+  fields: readonly Field[],
+  prefix = "",
+): Array<{ field: Field; path: string }> {
+  return fields.flatMap((field): Array<{ field: Field; path: string }> => {
+    if (field.type === "tabs") {
+      return field.tabs.flatMap((tab) =>
+        namedFieldPaths(
+          tab.fields,
+          "name" in tab ? `${prefix}${tab.name}.` : prefix,
+        ),
+      );
+    }
+    const path = "name" in field ? `${prefix}${field.name}` : prefix;
+    const own = "name" in field && field.type !== "ui" ? [{ field, path }] : [];
+    if (field.type === "blocks") {
+      return [
+        ...own,
+        ...field.blocks.flatMap((block) =>
+          namedFieldPaths(block.fields, `${path}.${block.slug}.`),
+        ),
+      ];
+    }
+    if ("fields" in field && Array.isArray(field.fields)) {
+      return [
+        ...own,
+        ...namedFieldPaths(field.fields, "name" in field ? `${path}.` : prefix),
+      ];
+    }
+    return own;
+  });
+}
+
+const adminEntities = [
+  Articles,
+  Books,
+  Categories,
+  DistrictGuides,
+  Media,
+  Pages,
+  PhotoCollections,
+  Photos,
+  Tags,
+  Users,
+  Navigation,
+] as const;
+
+test("ADM-QUICK-UX: every named field has a Turkish label in the admin", () => {
+  const unlabeled = adminEntities.flatMap((entity) =>
+    namedFieldPaths(entity.fields)
+      .filter(({ field }) => !("label" in field) || field.label === undefined)
+      .map(({ path }) => `${entity.slug}.${path}`),
+  );
+  assert.deepEqual(unlabeled, []);
+});
+
+test("ADM-QUICK-UX: no select shows a raw stored value as its option label", () => {
+  const raw = adminEntities.flatMap((entity) =>
+    namedFieldPaths(entity.fields).flatMap(({ field, path }) =>
+      field.type === "select" || field.type === "radio"
+        ? field.options
+            .filter(
+              (option) =>
+                typeof option === "string" || option.label === option.value,
+            )
+            .map(
+              (option) =>
+                `${entity.slug}.${path}=${typeof option === "string" ? option : option.value}`,
+            )
+        : [],
+    ),
+  );
+  assert.deepEqual(raw, []);
+});
+
+test("ADM-QUICK-UX: every collection names its plural and singular", () => {
+  for (const collection of adminEntities) {
+    if (!("labels" in collection)) continue;
+    assert.ok(collection.labels?.plural, collection.slug);
+    assert.ok(collection.labels?.singular, collection.slug);
+  }
+});
+
+test("ADM-QUICK-UX: list views search beyond the title", () => {
+  for (const collection of [
+    Articles,
+    Books,
+    Categories,
+    Media,
+    PhotoCollections,
+    Photos,
+    Tags,
+  ]) {
+    const searchable = collection.admin?.listSearchableFields ?? [];
+    assert.ok(searchable.length >= 2, collection.slug);
+    const fieldNames = new Set([
+      ...namedFieldPaths(collection.fields).map(({ path }) => path),
+      // Upload collections get `filename` from Payload.
+      ...(collection.upload ? ["filename"] : []),
+    ]);
+    for (const name of searchable) {
+      assert.ok(fieldNames.has(name), `${collection.slug}.${name}`);
+    }
+  }
+});
+
+test("ADM-PUBLIC-LINKS: every public content type shows its site links in the sidebar", async () => {
+  const { publicLinksField } = await import("./admin-fields");
+  const { PUBLIC_RECORD_COLLECTIONS } =
+    await import("../components/admin/public-links/public-record");
+  const collections = [Articles, Books, DistrictGuides, Pages, Photos];
+  assert.deepEqual(
+    collections.map((collection) => collection.slug).toSorted(),
+    [...PUBLIC_RECORD_COLLECTIONS],
+  );
+  for (const collection of collections) {
+    assert.equal(collection.fields[0], publicLinksField, collection.slug);
+  }
+  assert.equal(publicLinksField.admin?.position, "sidebar");
+});
+
+test("ADM-SEO-PREVIEW: the SEO groups of articles, pages and photos show the live preview", () => {
+  for (const [collection, kind] of [
+    [Articles, "articles"],
+    [Pages, "pages"],
+    [Photos, "photos"],
+  ] as const) {
+    const seo = findField(collection, "seo");
+    assert.ok(seo.type === "group" && "name" in seo, collection.slug);
+    const preview = seo.fields[0];
+    assert.ok(preview?.type === "ui", collection.slug);
+    const component = preview.admin?.components?.Field;
+    assert.ok(typeof component === "object" && component !== null);
+    assert.equal(
+      component.path,
+      "/components/admin/seo/SeoPreviewField#SeoPreviewField",
+    );
+    assert.deepEqual(component.clientProps, { kind });
   }
 });

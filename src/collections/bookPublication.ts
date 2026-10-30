@@ -226,7 +226,7 @@ export function getBookPublicationIssues(
     return [
       {
         message:
-          "Yayınlamak için İnceleme durumunu 'published' yapın. Sitede gizli kalacaksa 'archived' seçin; ileri tarihli yayın için Yayın tarihini kullanın.",
+          "Yayımlamak için İnceleme durumunu 'published' yapın. Sitede gizli kalacaksa 'archived' seçin; ileri tarihli yayın için Yayın tarihini kullanın.",
         path: "reviewStatus",
       },
     ];

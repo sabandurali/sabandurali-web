@@ -1,0 +1,1964 @@
+[
+ {
+  "file": "saban-durali-app-icon-maskable-paper.svg",
+  "bytes": 3418,
+  "viewBox": [
+   0.0,
+   0.0,
+   1024.0,
+   1024.0
+  ],
+  "aspect": 1.0,
+  "aspect_class": "square",
+  "colors": [
+   "#eef2f1",
+   "#0a3352",
+   "#f47a2e"
+  ],
+  "gradients": 0,
+  "anchors": 136,
+  "library_anchor_percentiles": {
+   "p10": 21.0,
+   "p25": 31.0,
+   "median": 53.0,
+   "p75": 95.5,
+   "p90": 194.0,
+   "p95": 274.0
+  },
+  "content_bbox": [
+   0.0,
+   0.0,
+   1024.0,
+   1024.0
+  ],
+  "margins": {
+   "left": 0.0,
+   "right": 0.0,
+   "top": 0.0,
+   "bottom": 0.0
+  },
+  "bbox_fill_ratio": 1.0,
+  "score": 99,
+  "findings": [
+   {
+    "level": "INFO",
+    "code": "complexity",
+    "message": "136 anchor points (library median 53.0, p75 95.5). Check every point earns its place."
+   }
+  ]
+ },
+ {
+  "file": "saban-durali-app-icon-maskable.svg",
+  "bytes": 3396,
+  "viewBox": [
+   0.0,
+   0.0,
+   1024.0,
+   1024.0
+  ],
+  "aspect": 1.0,
+  "aspect_class": "square",
+  "colors": [
+   "#0a3352",
+   "#ffffff",
+   "#f47a2e"
+  ],
+  "gradients": 0,
+  "anchors": 136,
+  "library_anchor_percentiles": {
+   "p10": 21.0,
+   "p25": 31.0,
+   "median": 53.0,
+   "p75": 95.5,
+   "p90": 194.0,
+   "p95": 274.0
+  },
+  "content_bbox": [
+   0.0,
+   0.0,
+   1024.0,
+   1024.0
+  ],
+  "margins": {
+   "left": 0.0,
+   "right": 0.0,
+   "top": 0.0,
+   "bottom": 0.0
+  },
+  "bbox_fill_ratio": 1.0,
+  "score": 98,
+  "findings": [
+   {
+    "level": "INFO",
+    "code": "on-tile",
+    "message": "White artwork on a full-canvas tile/container — fine for app icons and avatars; make sure a version without the tile exists for other uses."
+   },
+   {
+    "level": "INFO",
+    "code": "complexity",
+    "message": "136 anchor points (library median 53.0, p75 95.5). Check every point earns its place."
+   }
+  ]
+ },
+ {
+  "file": "saban-durali-app-icon-rounded-paper.svg",
+  "bytes": 3437,
+  "viewBox": [
+   0.0,
+   0.0,
+   1024.0,
+   1024.0
+  ],
+  "aspect": 1.0,
+  "aspect_class": "square",
+  "colors": [
+   "#eef2f1",
+   "#0a3352",
+   "#f47a2e"
+  ],
+  "gradients": 0,
+  "anchors": 140,
+  "library_anchor_percentiles": {
+   "p10": 21.0,
+   "p25": 31.0,
+   "median": 53.0,
+   "p75": 95.5,
+   "p90": 194.0,
+   "p95": 274.0
+  },
+  "content_bbox": [
+   0.0,
+   0.0,
+   1024.0,
+   1024.0
+  ],
+  "margins": {
+   "left": 0.0,
+   "right": 0.0,
+   "top": 0.0,
+   "bottom": 0.0
+  },
+  "bbox_fill_ratio": 1.0,
+  "score": 99,
+  "findings": [
+   {
+    "level": "INFO",
+    "code": "complexity",
+    "message": "140 anchor points (library median 53.0, p75 95.5). Check every point earns its place."
+   }
+  ]
+ },
+ {
+  "file": "saban-durali-app-icon-rounded.svg",
+  "bytes": 3415,
+  "viewBox": [
+   0.0,
+   0.0,
+   1024.0,
+   1024.0
+  ],
+  "aspect": 1.0,
+  "aspect_class": "square",
+  "colors": [
+   "#0a3352",
+   "#ffffff",
+   "#f47a2e"
+  ],
+  "gradients": 0,
+  "anchors": 140,
+  "library_anchor_percentiles": {
+   "p10": 21.0,
+   "p25": 31.0,
+   "median": 53.0,
+   "p75": 95.5,
+   "p90": 194.0,
+   "p95": 274.0
+  },
+  "content_bbox": [
+   0.0,
+   0.0,
+   1024.0,
+   1024.0
+  ],
+  "margins": {
+   "left": 0.0,
+   "right": 0.0,
+   "top": 0.0,
+   "bottom": 0.0
+  },
+  "bbox_fill_ratio": 1.0,
+  "score": 98,
+  "findings": [
+   {
+    "level": "INFO",
+    "code": "on-tile",
+    "message": "White artwork on a full-canvas tile/container — fine for app icons and avatars; make sure a version without the tile exists for other uses."
+   },
+   {
+    "level": "INFO",
+    "code": "complexity",
+    "message": "140 anchor points (library median 53.0, p75 95.5). Check every point earns its place."
+   }
+  ]
+ },
+ {
+  "file": "saban-durali-app-icon-square-paper.svg",
+  "bytes": 3425,
+  "viewBox": [
+   0.0,
+   0.0,
+   1024.0,
+   1024.0
+  ],
+  "aspect": 1.0,
+  "aspect_class": "square",
+  "colors": [
+   "#eef2f1",
+   "#0a3352",
+   "#f47a2e"
+  ],
+  "gradients": 0,
+  "anchors": 136,
+  "library_anchor_percentiles": {
+   "p10": 21.0,
+   "p25": 31.0,
+   "median": 53.0,
+   "p75": 95.5,
+   "p90": 194.0,
+   "p95": 274.0
+  },
+  "content_bbox": [
+   0.0,
+   0.0,
+   1024.0,
+   1024.0
+  ],
+  "margins": {
+   "left": 0.0,
+   "right": 0.0,
+   "top": 0.0,
+   "bottom": 0.0
+  },
+  "bbox_fill_ratio": 1.0,
+  "score": 99,
+  "findings": [
+   {
+    "level": "INFO",
+    "code": "complexity",
+    "message": "136 anchor points (library median 53.0, p75 95.5). Check every point earns its place."
+   }
+  ]
+ },
+ {
+  "file": "saban-durali-app-icon-square.svg",
+  "bytes": 3403,
+  "viewBox": [
+   0.0,
+   0.0,
+   1024.0,
+   1024.0
+  ],
+  "aspect": 1.0,
+  "aspect_class": "square",
+  "colors": [
+   "#0a3352",
+   "#ffffff",
+   "#f47a2e"
+  ],
+  "gradients": 0,
+  "anchors": 136,
+  "library_anchor_percentiles": {
+   "p10": 21.0,
+   "p25": 31.0,
+   "median": 53.0,
+   "p75": 95.5,
+   "p90": 194.0,
+   "p95": 274.0
+  },
+  "content_bbox": [
+   0.0,
+   0.0,
+   1024.0,
+   1024.0
+  ],
+  "margins": {
+   "left": 0.0,
+   "right": 0.0,
+   "top": 0.0,
+   "bottom": 0.0
+  },
+  "bbox_fill_ratio": 1.0,
+  "score": 98,
+  "findings": [
+   {
+    "level": "INFO",
+    "code": "on-tile",
+    "message": "White artwork on a full-canvas tile/container — fine for app icons and avatars; make sure a version without the tile exists for other uses."
+   },
+   {
+    "level": "INFO",
+    "code": "complexity",
+    "message": "136 anchor points (library median 53.0, p75 95.5). Check every point earns its place."
+   }
+  ]
+ },
+ {
+  "file": "saban-durali-atlas-dark.svg",
+  "bytes": 3042,
+  "viewBox": [
+   0.0,
+   0.0,
+   372.0,
+   140.0
+  ],
+  "aspect": 2.657,
+  "aspect_class": "horizontal",
+  "colors": [
+   "#2c5577",
+   "#b9d0df",
+   "#ffffff",
+   "#f47a2e"
+  ],
+  "gradients": 0,
+  "anchors": 406,
+  "library_anchor_percentiles": {
+   "p10": 23.0,
+   "p25": 37.0,
+   "median": 75.0,
+   "p75": 155.0,
+   "p90": 257.8,
+   "p95": 379.45
+  },
+  "content_bbox": [
+   0.0,
+   0.0,
+   372.0,
+   140.0
+  ],
+  "margins": {
+   "left": 0.0,
+   "right": 0.0,
+   "top": 0.0,
+   "bottom": -0.0
+  },
+  "bbox_fill_ratio": 1.0,
+  "score": 92,
+  "findings": [
+   {
+    "level": "WARN",
+    "code": "complex",
+    "message": "406 anchor points — more than 95% of comparable reference logos (median 75.0). Simplify: fewer points, merged shapes, less detail."
+   }
+  ]
+ },
+ {
+  "file": "saban-durali-atlas-light.svg",
+  "bytes": 3042,
+  "viewBox": [
+   0.0,
+   0.0,
+   372.0,
+   140.0
+  ],
+  "aspect": 2.657,
+  "aspect_class": "horizontal",
+  "colors": [
+   "#c3d1d8",
+   "#0a3352",
+   "#f47a2e"
+  ],
+  "gradients": 0,
+  "anchors": 406,
+  "library_anchor_percentiles": {
+   "p10": 23.0,
+   "p25": 37.0,
+   "median": 75.0,
+   "p75": 155.0,
+   "p90": 257.8,
+   "p95": 379.45
+  },
+  "content_bbox": [
+   0.0,
+   0.0,
+   372.0,
+   140.0
+  ],
+  "margins": {
+   "left": 0.0,
+   "right": 0.0,
+   "top": 0.0,
+   "bottom": -0.0
+  },
+  "bbox_fill_ratio": 1.0,
+  "score": 92,
+  "findings": [
+   {
+    "level": "WARN",
+    "code": "complex",
+    "message": "406 anchor points — more than 95% of comparable reference logos (median 75.0). Simplify: fewer points, merged shapes, less detail."
+   }
+  ]
+ },
+ {
+  "file": "saban-durali-logo-black.svg",
+  "bytes": 19459,
+  "viewBox": [
+   0.0,
+   0.0,
+   2027.0,
+   256.0
+  ],
+  "aspect": 7.918,
+  "aspect_class": "extra-wide",
+  "colors": [
+   "#000000"
+  ],
+  "gradients": 0,
+  "anchors": 930,
+  "library_anchor_percentiles": {
+   "p10": 23.0,
+   "p25": 37.0,
+   "median": 75.0,
+   "p75": 155.0,
+   "p90": 257.8,
+   "p95": 379.45
+  },
+  "content_bbox": [
+   0.02,
+   0.0,
+   2026.98,
+   256.0
+  ],
+  "margins": {
+   "left": 0.0,
+   "right": 0.0,
+   "top": 0.0,
+   "bottom": 0.0
+  },
+  "bbox_fill_ratio": 1.0,
+  "score": 91,
+  "findings": [
+   {
+    "level": "WARN",
+    "code": "complex",
+    "message": "930 anchor points — more than 95% of comparable reference logos (median 75.0). Simplify: fewer points, merged shapes, less detail."
+   },
+   {
+    "level": "INFO",
+    "code": "extra-wide",
+    "message": "Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol."
+   }
+  ]
+ },
+ {
+  "file": "saban-durali-logo-color-ondark.svg",
+  "bytes": 19619,
+  "viewBox": [
+   0.0,
+   0.0,
+   2027.0,
+   256.0
+  ],
+  "aspect": 7.918,
+  "aspect_class": "extra-wide",
+  "colors": [
+   "#ffffff",
+   "#f47a2e",
+   "#b9d0df"
+  ],
+  "gradients": 0,
+  "anchors": 939,
+  "library_anchor_percentiles": {
+   "p10": 23.0,
+   "p25": 37.0,
+   "median": 75.0,
+   "p75": 155.0,
+   "p90": 257.8,
+   "p95": 379.45
+  },
+  "content_bbox": [
+   0.02,
+   0.0,
+   2026.98,
+   256.0
+  ],
+  "margins": {
+   "left": 0.0,
+   "right": 0.0,
+   "top": 0.0,
+   "bottom": 0.0
+  },
+  "bbox_fill_ratio": 1.0,
+  "score": 91,
+  "findings": [
+   {
+    "level": "WARN",
+    "code": "complex",
+    "message": "939 anchor points — more than 95% of comparable reference logos (median 75.0). Simplify: fewer points, merged shapes, less detail."
+   },
+   {
+    "level": "INFO",
+    "code": "extra-wide",
+    "message": "Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol."
+   }
+  ]
+ },
+ {
+  "file": "saban-durali-logo-color.svg",
+  "bytes": 19619,
+  "viewBox": [
+   0.0,
+   0.0,
+   2027.0,
+   256.0
+  ],
+  "aspect": 7.918,
+  "aspect_class": "extra-wide",
+  "colors": [
+   "#0a3352",
+   "#f47a2e",
+   "#4a6377"
+  ],
+  "gradients": 0,
+  "anchors": 939,
+  "library_anchor_percentiles": {
+   "p10": 23.0,
+   "p25": 37.0,
+   "median": 75.0,
+   "p75": 155.0,
+   "p90": 257.8,
+   "p95": 379.45
+  },
+  "content_bbox": [
+   0.02,
+   0.0,
+   2026.98,
+   256.0
+  ],
+  "margins": {
+   "left": 0.0,
+   "right": 0.0,
+   "top": 0.0,
+   "bottom": 0.0
+  },
+  "bbox_fill_ratio": 1.0,
+  "score": 91,
+  "findings": [
+   {
+    "level": "WARN",
+    "code": "complex",
+    "message": "939 anchor points — more than 95% of comparable reference logos (median 75.0). Simplify: fewer points, merged shapes, less detail."
+   },
+   {
+    "level": "INFO",
+    "code": "extra-wide",
+    "message": "Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol."
+   }
+  ]
+ },
+ {
+  "file": "saban-durali-logo-navy.svg",
+  "bytes": 19459,
+  "viewBox": [
+   0.0,
+   0.0,
+   2027.0,
+   256.0
+  ],
+  "aspect": 7.918,
+  "aspect_class": "extra-wide",
+  "colors": [
+   "#0a3352"
+  ],
+  "gradients": 0,
+  "anchors": 930,
+  "library_anchor_percentiles": {
+   "p10": 23.0,
+   "p25": 37.0,
+   "median": 75.0,
+   "p75": 155.0,
+   "p90": 257.8,
+   "p95": 379.45
+  },
+  "content_bbox": [
+   0.02,
+   0.0,
+   2026.98,
+   256.0
+  ],
+  "margins": {
+   "left": 0.0,
+   "right": 0.0,
+   "top": 0.0,
+   "bottom": 0.0
+  },
+  "bbox_fill_ratio": 1.0,
+  "score": 91,
+  "findings": [
+   {
+    "level": "WARN",
+    "code": "complex",
+    "message": "930 anchor points — more than 95% of comparable reference logos (median 75.0). Simplify: fewer points, merged shapes, less detail."
+   },
+   {
+    "level": "INFO",
+    "code": "extra-wide",
+    "message": "Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol."
+   }
+  ]
+ },
+ {
+  "file": "saban-durali-logo-vertical-black.svg",
+  "bytes": 18708,
+  "viewBox": [
+   0.0,
+   0.0,
+   685.0,
+   256.0
+  ],
+  "aspect": 2.676,
+  "aspect_class": "horizontal",
+  "colors": [
+   "#000000"
+  ],
+  "gradients": 0,
+  "anchors": 930,
+  "library_anchor_percentiles": {
+   "p10": 23.0,
+   "p25": 37.0,
+   "median": 75.0,
+   "p75": 155.0,
+   "p90": 257.8,
+   "p95": 379.45
+  },
+  "content_bbox": [
+   0.27,
+   0.0,
+   684.73,
+   256.0
+  ],
+  "margins": {
+   "left": 0.3,
+   "right": 0.3,
+   "top": 0.0,
+   "bottom": 0.0
+  },
+  "bbox_fill_ratio": 0.999,
+  "score": 76,
+  "findings": [
+   {
+    "level": "WARN",
+    "code": "complex",
+    "message": "930 anchor points — more than 95% of comparable reference logos (median 75.0). Simplify: fewer points, merged shapes, less detail."
+   },
+   {
+    "level": "WARN",
+    "code": "near-miss-angle",
+    "message": "2 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 42.0° (→45°) len 31.3 at (271,162); 42.1° (→45°) len 30.7 at (301,207). (Expected — and fine — for type set on a curve or deliberately rotated elements.)"
+   },
+   {
+    "level": "WARN",
+    "code": "tiny-detail",
+    "message": "7 sub-shape(s) smaller than 1/32 of the lockup height (≈1 px at 32 px tall): 7.0×7.6 at (8,236); 7.0×7.6 at (65,236); 7.2×6.0 at (93,250); 7.0×7.6 at (222,236) …. They vanish when small — enlarge, merge or remove them, or provide a small-size version."
+   }
+  ]
+ },
+ {
+  "file": "saban-durali-logo-vertical-color-ondark.svg",
+  "bytes": 18836,
+  "viewBox": [
+   0.0,
+   0.0,
+   685.0,
+   256.0
+  ],
+  "aspect": 2.676,
+  "aspect_class": "horizontal",
+  "colors": [
+   "#ffffff",
+   "#f47a2e",
+   "#b9d0df"
+  ],
+  "gradients": 0,
+  "anchors": 939,
+  "library_anchor_percentiles": {
+   "p10": 23.0,
+   "p25": 37.0,
+   "median": 75.0,
+   "p75": 155.0,
+   "p90": 257.8,
+   "p95": 379.45
+  },
+  "content_bbox": [
+   0.27,
+   0.0,
+   684.73,
+   256.0
+  ],
+  "margins": {
+   "left": 0.3,
+   "right": 0.3,
+   "top": 0.0,
+   "bottom": 0.0
+  },
+  "bbox_fill_ratio": 0.999,
+  "score": 76,
+  "findings": [
+   {
+    "level": "WARN",
+    "code": "complex",
+    "message": "939 anchor points — more than 95% of comparable reference logos (median 75.0). Simplify: fewer points, merged shapes, less detail."
+   },
+   {
+    "level": "WARN",
+    "code": "near-miss-angle",
+    "message": "2 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 42.0° (→45°) len 31.3 at (271,162); 42.1° (→45°) len 30.7 at (301,207). (Expected — and fine — for type set on a curve or deliberately rotated elements.)"
+   },
+   {
+    "level": "WARN",
+    "code": "tiny-detail",
+    "message": "7 sub-shape(s) smaller than 1/32 of the lockup height (≈1 px at 32 px tall): 7.0×7.6 at (8,236); 7.0×7.6 at (65,236); 7.2×6.0 at (93,250); 7.0×7.6 at (222,236) …. They vanish when small — enlarge, merge or remove them, or provide a small-size version."
+   }
+  ]
+ },
+ {
+  "file": "saban-durali-logo-vertical-color.svg",
+  "bytes": 18836,
+  "viewBox": [
+   0.0,
+   0.0,
+   685.0,
+   256.0
+  ],
+  "aspect": 2.676,
+  "aspect_class": "horizontal",
+  "colors": [
+   "#0a3352",
+   "#f47a2e",
+   "#4a6377"
+  ],
+  "gradients": 0,
+  "anchors": 939,
+  "library_anchor_percentiles": {
+   "p10": 23.0,
+   "p25": 37.0,
+   "median": 75.0,
+   "p75": 155.0,
+   "p90": 257.8,
+   "p95": 379.45
+  },
+  "content_bbox": [
+   0.27,
+   0.0,
+   684.73,
+   256.0
+  ],
+  "margins": {
+   "left": 0.3,
+   "right": 0.3,
+   "top": 0.0,
+   "bottom": 0.0
+  },
+  "bbox_fill_ratio": 0.999,
+  "score": 76,
+  "findings": [
+   {
+    "level": "WARN",
+    "code": "complex",
+    "message": "939 anchor points — more than 95% of comparable reference logos (median 75.0). Simplify: fewer points, merged shapes, less detail."
+   },
+   {
+    "level": "WARN",
+    "code": "near-miss-angle",
+    "message": "2 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 42.0° (→45°) len 31.3 at (271,162); 42.1° (→45°) len 30.7 at (301,207). (Expected — and fine — for type set on a curve or deliberately rotated elements.)"
+   },
+   {
+    "level": "WARN",
+    "code": "tiny-detail",
+    "message": "7 sub-shape(s) smaller than 1/32 of the lockup height (≈1 px at 32 px tall): 7.0×7.6 at (8,236); 7.0×7.6 at (65,236); 7.2×6.0 at (93,250); 7.0×7.6 at (222,236) …. They vanish when small — enlarge, merge or remove them, or provide a small-size version."
+   }
+  ]
+ },
+ {
+  "file": "saban-durali-logo-vertical-navy.svg",
+  "bytes": 18708,
+  "viewBox": [
+   0.0,
+   0.0,
+   685.0,
+   256.0
+  ],
+  "aspect": 2.676,
+  "aspect_class": "horizontal",
+  "colors": [
+   "#0a3352"
+  ],
+  "gradients": 0,
+  "anchors": 930,
+  "library_anchor_percentiles": {
+   "p10": 23.0,
+   "p25": 37.0,
+   "median": 75.0,
+   "p75": 155.0,
+   "p90": 257.8,
+   "p95": 379.45
+  },
+  "content_bbox": [
+   0.27,
+   0.0,
+   684.73,
+   256.0
+  ],
+  "margins": {
+   "left": 0.3,
+   "right": 0.3,
+   "top": 0.0,
+   "bottom": 0.0
+  },
+  "bbox_fill_ratio": 0.999,
+  "score": 76,
+  "findings": [
+   {
+    "level": "WARN",
+    "code": "complex",
+    "message": "930 anchor points — more than 95% of comparable reference logos (median 75.0). Simplify: fewer points, merged shapes, less detail."
+   },
+   {
+    "level": "WARN",
+    "code": "near-miss-angle",
+    "message": "2 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 42.0° (→45°) len 31.3 at (271,162); 42.1° (→45°) len 30.7 at (301,207). (Expected — and fine — for type set on a curve or deliberately rotated elements.)"
+   },
+   {
+    "level": "WARN",
+    "code": "tiny-detail",
+    "message": "7 sub-shape(s) smaller than 1/32 of the lockup height (≈1 px at 32 px tall): 7.0×7.6 at (8,236); 7.0×7.6 at (65,236); 7.2×6.0 at (93,250); 7.0×7.6 at (222,236) …. They vanish when small — enlarge, merge or remove them, or provide a small-size version."
+   }
+  ]
+ },
+ {
+  "file": "saban-durali-logo-vertical-white.svg",
+  "bytes": 18708,
+  "viewBox": [
+   0.0,
+   0.0,
+   685.0,
+   256.0
+  ],
+  "aspect": 2.676,
+  "aspect_class": "horizontal",
+  "colors": [
+   "#ffffff"
+  ],
+  "gradients": 0,
+  "anchors": 930,
+  "library_anchor_percentiles": {
+   "p10": 23.0,
+   "p25": 37.0,
+   "median": 75.0,
+   "p75": 155.0,
+   "p90": 257.8,
+   "p95": 379.45
+  },
+  "content_bbox": [
+   0.27,
+   0.0,
+   684.73,
+   256.0
+  ],
+  "margins": {
+   "left": 0.3,
+   "right": 0.3,
+   "top": 0.0,
+   "bottom": 0.0
+  },
+  "bbox_fill_ratio": 0.999,
+  "score": 76,
+  "findings": [
+   {
+    "level": "WARN",
+    "code": "complex",
+    "message": "930 anchor points — more than 95% of comparable reference logos (median 75.0). Simplify: fewer points, merged shapes, less detail."
+   },
+   {
+    "level": "WARN",
+    "code": "near-miss-angle",
+    "message": "2 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 42.0° (→45°) len 31.3 at (271,162); 42.1° (→45°) len 30.7 at (301,207). (Expected — and fine — for type set on a curve or deliberately rotated elements.)"
+   },
+   {
+    "level": "WARN",
+    "code": "tiny-detail",
+    "message": "7 sub-shape(s) smaller than 1/32 of the lockup height (≈1 px at 32 px tall): 7.0×7.6 at (8,236); 7.0×7.6 at (65,236); 7.2×6.0 at (93,250); 7.0×7.6 at (222,236) …. They vanish when small — enlarge, merge or remove them, or provide a small-size version."
+   }
+  ]
+ },
+ {
+  "file": "saban-durali-logo-white.svg",
+  "bytes": 19459,
+  "viewBox": [
+   0.0,
+   0.0,
+   2027.0,
+   256.0
+  ],
+  "aspect": 7.918,
+  "aspect_class": "extra-wide",
+  "colors": [
+   "#ffffff"
+  ],
+  "gradients": 0,
+  "anchors": 930,
+  "library_anchor_percentiles": {
+   "p10": 23.0,
+   "p25": 37.0,
+   "median": 75.0,
+   "p75": 155.0,
+   "p90": 257.8,
+   "p95": 379.45
+  },
+  "content_bbox": [
+   0.02,
+   0.0,
+   2026.98,
+   256.0
+  ],
+  "margins": {
+   "left": 0.0,
+   "right": 0.0,
+   "top": 0.0,
+   "bottom": 0.0
+  },
+  "bbox_fill_ratio": 1.0,
+  "score": 91,
+  "findings": [
+   {
+    "level": "WARN",
+    "code": "complex",
+    "message": "930 anchor points — more than 95% of comparable reference logos (median 75.0). Simplify: fewer points, merged shapes, less detail."
+   },
+   {
+    "level": "INFO",
+    "code": "extra-wide",
+    "message": "Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol."
+   }
+  ]
+ },
+ {
+  "file": "saban-durali-symbol-black.svg",
+  "bytes": 2973,
+  "viewBox": [
+   0.0,
+   0.0,
+   367.0,
+   256.0
+  ],
+  "aspect": 1.434,
+  "aspect_class": "wide",
+  "colors": [
+   "#000000"
+  ],
+  "gradients": 0,
+  "anchors": 122,
+  "library_anchor_percentiles": {
+   "p10": 23.0,
+   "p25": 37.0,
+   "median": 75.0,
+   "p75": 155.0,
+   "p90": 257.8,
+   "p95": 379.45
+  },
+  "content_bbox": [
+   0.07,
+   0.0,
+   366.93,
+   256.0
+  ],
+  "margins": {
+   "left": 0.1,
+   "right": 0.1,
+   "top": 0.0,
+   "bottom": 0.0
+  },
+  "bbox_fill_ratio": 1.0,
+  "score": 100,
+  "findings": []
+ },
+ {
+  "file": "saban-durali-symbol-color-ondark.svg",
+  "bytes": 3109,
+  "viewBox": [
+   0.0,
+   0.0,
+   367.0,
+   256.0
+  ],
+  "aspect": 1.434,
+  "aspect_class": "wide",
+  "colors": [
+   "#ffffff",
+   "#f47a2e"
+  ],
+  "gradients": 0,
+  "anchors": 131,
+  "library_anchor_percentiles": {
+   "p10": 23.0,
+   "p25": 37.0,
+   "median": 75.0,
+   "p75": 155.0,
+   "p90": 257.8,
+   "p95": 379.45
+  },
+  "content_bbox": [
+   0.07,
+   0.0,
+   366.93,
+   256.0
+  ],
+  "margins": {
+   "left": 0.1,
+   "right": 0.1,
+   "top": 0.0,
+   "bottom": 0.0
+  },
+  "bbox_fill_ratio": 1.0,
+  "score": 100,
+  "findings": []
+ },
+ {
+  "file": "saban-durali-symbol-color.svg",
+  "bytes": 3109,
+  "viewBox": [
+   0.0,
+   0.0,
+   367.0,
+   256.0
+  ],
+  "aspect": 1.434,
+  "aspect_class": "wide",
+  "colors": [
+   "#0a3352",
+   "#f47a2e"
+  ],
+  "gradients": 0,
+  "anchors": 131,
+  "library_anchor_percentiles": {
+   "p10": 23.0,
+   "p25": 37.0,
+   "median": 75.0,
+   "p75": 155.0,
+   "p90": 257.8,
+   "p95": 379.45
+  },
+  "content_bbox": [
+   0.07,
+   0.0,
+   366.93,
+   256.0
+  ],
+  "margins": {
+   "left": 0.1,
+   "right": 0.1,
+   "top": 0.0,
+   "bottom": 0.0
+  },
+  "bbox_fill_ratio": 1.0,
+  "score": 100,
+  "findings": []
+ },
+ {
+  "file": "saban-durali-symbol-navy.svg",
+  "bytes": 2973,
+  "viewBox": [
+   0.0,
+   0.0,
+   367.0,
+   256.0
+  ],
+  "aspect": 1.434,
+  "aspect_class": "wide",
+  "colors": [
+   "#0a3352"
+  ],
+  "gradients": 0,
+  "anchors": 122,
+  "library_anchor_percentiles": {
+   "p10": 23.0,
+   "p25": 37.0,
+   "median": 75.0,
+   "p75": 155.0,
+   "p90": 257.8,
+   "p95": 379.45
+  },
+  "content_bbox": [
+   0.07,
+   0.0,
+   366.93,
+   256.0
+  ],
+  "margins": {
+   "left": 0.1,
+   "right": 0.1,
+   "top": 0.0,
+   "bottom": 0.0
+  },
+  "bbox_fill_ratio": 1.0,
+  "score": 100,
+  "findings": []
+ },
+ {
+  "file": "saban-durali-symbol-small-black.svg",
+  "bytes": 3001,
+  "viewBox": [
+   0.0,
+   0.0,
+   346.0,
+   256.0
+  ],
+  "aspect": 1.352,
+  "aspect_class": "wide",
+  "colors": [
+   "#000000"
+  ],
+  "gradients": 0,
+  "anchors": 122,
+  "library_anchor_percentiles": {
+   "p10": 23.0,
+   "p25": 37.0,
+   "median": 75.0,
+   "p75": 155.0,
+   "p90": 257.8,
+   "p95": 379.45
+  },
+  "content_bbox": [
+   0.11,
+   0.0,
+   345.89,
+   256.0
+  ],
+  "margins": {
+   "left": 0.1,
+   "right": 0.1,
+   "top": 0.0,
+   "bottom": 0.0
+  },
+  "bbox_fill_ratio": 0.999,
+  "score": 100,
+  "findings": []
+ },
+ {
+  "file": "saban-durali-symbol-small-color-ondark.svg",
+  "bytes": 3151,
+  "viewBox": [
+   0.0,
+   0.0,
+   346.0,
+   256.0
+  ],
+  "aspect": 1.352,
+  "aspect_class": "wide",
+  "colors": [
+   "#ffffff",
+   "#f47a2e"
+  ],
+  "gradients": 0,
+  "anchors": 131,
+  "library_anchor_percentiles": {
+   "p10": 23.0,
+   "p25": 37.0,
+   "median": 75.0,
+   "p75": 155.0,
+   "p90": 257.8,
+   "p95": 379.45
+  },
+  "content_bbox": [
+   0.11,
+   0.0,
+   345.89,
+   256.0
+  ],
+  "margins": {
+   "left": 0.1,
+   "right": 0.1,
+   "top": 0.0,
+   "bottom": 0.0
+  },
+  "bbox_fill_ratio": 0.999,
+  "score": 100,
+  "findings": []
+ },
+ {
+  "file": "saban-durali-symbol-small-color.svg",
+  "bytes": 3151,
+  "viewBox": [
+   0.0,
+   0.0,
+   346.0,
+   256.0
+  ],
+  "aspect": 1.352,
+  "aspect_class": "wide",
+  "colors": [
+   "#0a3352",
+   "#f47a2e"
+  ],
+  "gradients": 0,
+  "anchors": 131,
+  "library_anchor_percentiles": {
+   "p10": 23.0,
+   "p25": 37.0,
+   "median": 75.0,
+   "p75": 155.0,
+   "p90": 257.8,
+   "p95": 379.45
+  },
+  "content_bbox": [
+   0.11,
+   0.0,
+   345.89,
+   256.0
+  ],
+  "margins": {
+   "left": 0.1,
+   "right": 0.1,
+   "top": 0.0,
+   "bottom": 0.0
+  },
+  "bbox_fill_ratio": 0.999,
+  "score": 100,
+  "findings": []
+ },
+ {
+  "file": "saban-durali-symbol-small-navy.svg",
+  "bytes": 3001,
+  "viewBox": [
+   0.0,
+   0.0,
+   346.0,
+   256.0
+  ],
+  "aspect": 1.352,
+  "aspect_class": "wide",
+  "colors": [
+   "#0a3352"
+  ],
+  "gradients": 0,
+  "anchors": 122,
+  "library_anchor_percentiles": {
+   "p10": 23.0,
+   "p25": 37.0,
+   "median": 75.0,
+   "p75": 155.0,
+   "p90": 257.8,
+   "p95": 379.45
+  },
+  "content_bbox": [
+   0.11,
+   0.0,
+   345.89,
+   256.0
+  ],
+  "margins": {
+   "left": 0.1,
+   "right": 0.1,
+   "top": 0.0,
+   "bottom": 0.0
+  },
+  "bbox_fill_ratio": 0.999,
+  "score": 100,
+  "findings": []
+ },
+ {
+  "file": "saban-durali-symbol-small-white.svg",
+  "bytes": 3001,
+  "viewBox": [
+   0.0,
+   0.0,
+   346.0,
+   256.0
+  ],
+  "aspect": 1.352,
+  "aspect_class": "wide",
+  "colors": [
+   "#ffffff"
+  ],
+  "gradients": 0,
+  "anchors": 122,
+  "library_anchor_percentiles": {
+   "p10": 23.0,
+   "p25": 37.0,
+   "median": 75.0,
+   "p75": 155.0,
+   "p90": 257.8,
+   "p95": 379.45
+  },
+  "content_bbox": [
+   0.11,
+   0.0,
+   345.89,
+   256.0
+  ],
+  "margins": {
+   "left": 0.1,
+   "right": 0.1,
+   "top": 0.0,
+   "bottom": 0.0
+  },
+  "bbox_fill_ratio": 0.999,
+  "score": 100,
+  "findings": []
+ },
+ {
+  "file": "saban-durali-symbol-white.svg",
+  "bytes": 2973,
+  "viewBox": [
+   0.0,
+   0.0,
+   367.0,
+   256.0
+  ],
+  "aspect": 1.434,
+  "aspect_class": "wide",
+  "colors": [
+   "#ffffff"
+  ],
+  "gradients": 0,
+  "anchors": 122,
+  "library_anchor_percentiles": {
+   "p10": 23.0,
+   "p25": 37.0,
+   "median": 75.0,
+   "p75": 155.0,
+   "p90": 257.8,
+   "p95": 379.45
+  },
+  "content_bbox": [
+   0.07,
+   0.0,
+   366.93,
+   256.0
+  ],
+  "margins": {
+   "left": 0.1,
+   "right": 0.1,
+   "top": 0.0,
+   "bottom": 0.0
+  },
+  "bbox_fill_ratio": 1.0,
+  "score": 100,
+  "findings": []
+ },
+ {
+  "file": "icon.svg",
+  "bytes": 3352,
+  "viewBox": [
+   0.0,
+   0.0,
+   512.0,
+   512.0
+  ],
+  "aspect": 1.0,
+  "aspect_class": "square",
+  "colors": [
+   "#0a3352",
+   "#ffffff",
+   "#f47a2e"
+  ],
+  "gradients": 0,
+  "anchors": 140,
+  "library_anchor_percentiles": {
+   "p10": 21.0,
+   "p25": 31.0,
+   "median": 53.0,
+   "p75": 95.5,
+   "p90": 194.0,
+   "p95": 274.0
+  },
+  "content_bbox": [
+   0.0,
+   0.0,
+   512.0,
+   512.0
+  ],
+  "margins": {
+   "left": 0.0,
+   "right": 0.0,
+   "top": 0.0,
+   "bottom": 0.0
+  },
+  "bbox_fill_ratio": 1.0,
+  "score": 98,
+  "findings": [
+   {
+    "level": "INFO",
+    "code": "on-tile",
+    "message": "White artwork on a full-canvas tile/container — fine for app icons and avatars; make sure a version without the tile exists for other uses."
+   },
+   {
+    "level": "INFO",
+    "code": "complexity",
+    "message": "140 anchor points (library median 53.0, p75 95.5). Check every point earns its place."
+   }
+  ]
+ },
+ {
+  "file": "saban-durali-wordmark-black.svg",
+  "bytes": 16231,
+  "viewBox": [
+   0.0,
+   0.0,
+   1637.0,
+   256.0
+  ],
+  "aspect": 6.395,
+  "aspect_class": "extra-wide",
+  "colors": [
+   "#000000"
+  ],
+  "gradients": 0,
+  "anchors": 808,
+  "library_anchor_percentiles": {
+   "p10": 23.0,
+   "p25": 37.0,
+   "median": 75.0,
+   "p75": 155.0,
+   "p90": 257.8,
+   "p95": 379.45
+  },
+  "content_bbox": [
+   0.07,
+   0.0,
+   1636.93,
+   256.0
+  ],
+  "margins": {
+   "left": 0.1,
+   "right": 0.1,
+   "top": 0.0,
+   "bottom": 0.0
+  },
+  "bbox_fill_ratio": 1.0,
+  "score": 83,
+  "findings": [
+   {
+    "level": "WARN",
+    "code": "complex",
+    "message": "808 anchor points — more than 95% of comparable reference logos (median 75.0). Simplify: fewer points, merged shapes, less detail."
+   },
+   {
+    "level": "WARN",
+    "code": "near-miss-angle",
+    "message": "2 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 42.0° (→45°) len 75.0 at (648,30); 42.1° (→45°) len 73.3 at (720,138). (Expected — and fine — for type set on a curve or deliberately rotated elements.)"
+   },
+   {
+    "level": "INFO",
+    "code": "extra-wide",
+    "message": "Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol."
+   }
+  ]
+ },
+ {
+  "file": "saban-durali-wordmark-color-ondark.svg",
+  "bytes": 16231,
+  "viewBox": [
+   0.0,
+   0.0,
+   1637.0,
+   256.0
+  ],
+  "aspect": 6.395,
+  "aspect_class": "extra-wide",
+  "colors": [
+   "#ffffff",
+   "#b9d0df"
+  ],
+  "gradients": 0,
+  "anchors": 808,
+  "library_anchor_percentiles": {
+   "p10": 23.0,
+   "p25": 37.0,
+   "median": 75.0,
+   "p75": 155.0,
+   "p90": 257.8,
+   "p95": 379.45
+  },
+  "content_bbox": [
+   0.07,
+   0.0,
+   1636.93,
+   256.0
+  ],
+  "margins": {
+   "left": 0.1,
+   "right": 0.1,
+   "top": 0.0,
+   "bottom": 0.0
+  },
+  "bbox_fill_ratio": 1.0,
+  "score": 83,
+  "findings": [
+   {
+    "level": "WARN",
+    "code": "complex",
+    "message": "808 anchor points — more than 95% of comparable reference logos (median 75.0). Simplify: fewer points, merged shapes, less detail."
+   },
+   {
+    "level": "WARN",
+    "code": "near-miss-angle",
+    "message": "2 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 42.0° (→45°) len 75.0 at (648,30); 42.1° (→45°) len 73.3 at (720,138). (Expected — and fine — for type set on a curve or deliberately rotated elements.)"
+   },
+   {
+    "level": "INFO",
+    "code": "extra-wide",
+    "message": "Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol."
+   }
+  ]
+ },
+ {
+  "file": "saban-durali-wordmark-color.svg",
+  "bytes": 16231,
+  "viewBox": [
+   0.0,
+   0.0,
+   1637.0,
+   256.0
+  ],
+  "aspect": 6.395,
+  "aspect_class": "extra-wide",
+  "colors": [
+   "#0a3352",
+   "#4a6377"
+  ],
+  "gradients": 0,
+  "anchors": 808,
+  "library_anchor_percentiles": {
+   "p10": 23.0,
+   "p25": 37.0,
+   "median": 75.0,
+   "p75": 155.0,
+   "p90": 257.8,
+   "p95": 379.45
+  },
+  "content_bbox": [
+   0.07,
+   0.0,
+   1636.93,
+   256.0
+  ],
+  "margins": {
+   "left": 0.1,
+   "right": 0.1,
+   "top": 0.0,
+   "bottom": 0.0
+  },
+  "bbox_fill_ratio": 1.0,
+  "score": 83,
+  "findings": [
+   {
+    "level": "WARN",
+    "code": "complex",
+    "message": "808 anchor points — more than 95% of comparable reference logos (median 75.0). Simplify: fewer points, merged shapes, less detail."
+   },
+   {
+    "level": "WARN",
+    "code": "near-miss-angle",
+    "message": "2 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 42.0° (→45°) len 75.0 at (648,30); 42.1° (→45°) len 73.3 at (720,138). (Expected — and fine — for type set on a curve or deliberately rotated elements.)"
+   },
+   {
+    "level": "INFO",
+    "code": "extra-wide",
+    "message": "Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol."
+   }
+  ]
+ },
+ {
+  "file": "saban-durali-wordmark-name-black.svg",
+  "bytes": 5645,
+  "viewBox": [
+   0.0,
+   0.0,
+   2470.0,
+   256.0
+  ],
+  "aspect": 9.648,
+  "aspect_class": "extra-wide",
+  "colors": [
+   "#000000"
+  ],
+  "gradients": 0,
+  "anchors": 274,
+  "library_anchor_percentiles": {
+   "p10": 23.0,
+   "p25": 37.0,
+   "median": 75.0,
+   "p75": 155.0,
+   "p90": 257.8,
+   "p95": 379.45
+  },
+  "content_bbox": [
+   0.18,
+   0.0,
+   2469.82,
+   256.0
+  ],
+  "margins": {
+   "left": 0.2,
+   "right": 0.2,
+   "top": 0.0,
+   "bottom": 0.0
+  },
+  "bbox_fill_ratio": 1.0,
+  "score": 90,
+  "findings": [
+   {
+    "level": "INFO",
+    "code": "complexity",
+    "message": "274 anchor points (library median 75.0, p75 155.0). Check every point earns its place."
+   },
+   {
+    "level": "WARN",
+    "code": "near-miss-angle",
+    "message": "2 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 42.0° (→45°) len 113.1 at (978,46); 42.1° (→45°) len 110.6 at (1086,208). (Expected — and fine — for type set on a curve or deliberately rotated elements.)"
+   },
+   {
+    "level": "INFO",
+    "code": "extra-wide",
+    "message": "Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol."
+   }
+  ]
+ },
+ {
+  "file": "saban-durali-wordmark-name-color-ondark.svg",
+  "bytes": 5645,
+  "viewBox": [
+   0.0,
+   0.0,
+   2470.0,
+   256.0
+  ],
+  "aspect": 9.648,
+  "aspect_class": "extra-wide",
+  "colors": [
+   "#ffffff"
+  ],
+  "gradients": 0,
+  "anchors": 274,
+  "library_anchor_percentiles": {
+   "p10": 23.0,
+   "p25": 37.0,
+   "median": 75.0,
+   "p75": 155.0,
+   "p90": 257.8,
+   "p95": 379.45
+  },
+  "content_bbox": [
+   0.18,
+   0.0,
+   2469.82,
+   256.0
+  ],
+  "margins": {
+   "left": 0.2,
+   "right": 0.2,
+   "top": 0.0,
+   "bottom": 0.0
+  },
+  "bbox_fill_ratio": 1.0,
+  "score": 90,
+  "findings": [
+   {
+    "level": "INFO",
+    "code": "complexity",
+    "message": "274 anchor points (library median 75.0, p75 155.0). Check every point earns its place."
+   },
+   {
+    "level": "WARN",
+    "code": "near-miss-angle",
+    "message": "2 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 42.0° (→45°) len 113.1 at (978,46); 42.1° (→45°) len 110.6 at (1086,208). (Expected — and fine — for type set on a curve or deliberately rotated elements.)"
+   },
+   {
+    "level": "INFO",
+    "code": "extra-wide",
+    "message": "Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol."
+   }
+  ]
+ },
+ {
+  "file": "saban-durali-wordmark-name-color.svg",
+  "bytes": 5645,
+  "viewBox": [
+   0.0,
+   0.0,
+   2470.0,
+   256.0
+  ],
+  "aspect": 9.648,
+  "aspect_class": "extra-wide",
+  "colors": [
+   "#0a3352"
+  ],
+  "gradients": 0,
+  "anchors": 274,
+  "library_anchor_percentiles": {
+   "p10": 23.0,
+   "p25": 37.0,
+   "median": 75.0,
+   "p75": 155.0,
+   "p90": 257.8,
+   "p95": 379.45
+  },
+  "content_bbox": [
+   0.18,
+   0.0,
+   2469.82,
+   256.0
+  ],
+  "margins": {
+   "left": 0.2,
+   "right": 0.2,
+   "top": 0.0,
+   "bottom": 0.0
+  },
+  "bbox_fill_ratio": 1.0,
+  "score": 90,
+  "findings": [
+   {
+    "level": "INFO",
+    "code": "complexity",
+    "message": "274 anchor points (library median 75.0, p75 155.0). Check every point earns its place."
+   },
+   {
+    "level": "WARN",
+    "code": "near-miss-angle",
+    "message": "2 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 42.0° (→45°) len 113.1 at (978,46); 42.1° (→45°) len 110.6 at (1086,208). (Expected — and fine — for type set on a curve or deliberately rotated elements.)"
+   },
+   {
+    "level": "INFO",
+    "code": "extra-wide",
+    "message": "Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol."
+   }
+  ]
+ },
+ {
+  "file": "saban-durali-wordmark-name-navy.svg",
+  "bytes": 5645,
+  "viewBox": [
+   0.0,
+   0.0,
+   2470.0,
+   256.0
+  ],
+  "aspect": 9.648,
+  "aspect_class": "extra-wide",
+  "colors": [
+   "#0a3352"
+  ],
+  "gradients": 0,
+  "anchors": 274,
+  "library_anchor_percentiles": {
+   "p10": 23.0,
+   "p25": 37.0,
+   "median": 75.0,
+   "p75": 155.0,
+   "p90": 257.8,
+   "p95": 379.45
+  },
+  "content_bbox": [
+   0.18,
+   0.0,
+   2469.82,
+   256.0
+  ],
+  "margins": {
+   "left": 0.2,
+   "right": 0.2,
+   "top": 0.0,
+   "bottom": 0.0
+  },
+  "bbox_fill_ratio": 1.0,
+  "score": 90,
+  "findings": [
+   {
+    "level": "INFO",
+    "code": "complexity",
+    "message": "274 anchor points (library median 75.0, p75 155.0). Check every point earns its place."
+   },
+   {
+    "level": "WARN",
+    "code": "near-miss-angle",
+    "message": "2 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 42.0° (→45°) len 113.1 at (978,46); 42.1° (→45°) len 110.6 at (1086,208). (Expected — and fine — for type set on a curve or deliberately rotated elements.)"
+   },
+   {
+    "level": "INFO",
+    "code": "extra-wide",
+    "message": "Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol."
+   }
+  ]
+ },
+ {
+  "file": "saban-durali-wordmark-name-white.svg",
+  "bytes": 5645,
+  "viewBox": [
+   0.0,
+   0.0,
+   2470.0,
+   256.0
+  ],
+  "aspect": 9.648,
+  "aspect_class": "extra-wide",
+  "colors": [
+   "#ffffff"
+  ],
+  "gradients": 0,
+  "anchors": 274,
+  "library_anchor_percentiles": {
+   "p10": 23.0,
+   "p25": 37.0,
+   "median": 75.0,
+   "p75": 155.0,
+   "p90": 257.8,
+   "p95": 379.45
+  },
+  "content_bbox": [
+   0.18,
+   0.0,
+   2469.82,
+   256.0
+  ],
+  "margins": {
+   "left": 0.2,
+   "right": 0.2,
+   "top": 0.0,
+   "bottom": 0.0
+  },
+  "bbox_fill_ratio": 1.0,
+  "score": 90,
+  "findings": [
+   {
+    "level": "INFO",
+    "code": "complexity",
+    "message": "274 anchor points (library median 75.0, p75 155.0). Check every point earns its place."
+   },
+   {
+    "level": "WARN",
+    "code": "near-miss-angle",
+    "message": "2 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 42.0° (→45°) len 113.1 at (978,46); 42.1° (→45°) len 110.6 at (1086,208). (Expected — and fine — for type set on a curve or deliberately rotated elements.)"
+   },
+   {
+    "level": "INFO",
+    "code": "extra-wide",
+    "message": "Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol."
+   }
+  ]
+ },
+ {
+  "file": "saban-durali-wordmark-navy.svg",
+  "bytes": 16231,
+  "viewBox": [
+   0.0,
+   0.0,
+   1637.0,
+   256.0
+  ],
+  "aspect": 6.395,
+  "aspect_class": "extra-wide",
+  "colors": [
+   "#0a3352"
+  ],
+  "gradients": 0,
+  "anchors": 808,
+  "library_anchor_percentiles": {
+   "p10": 23.0,
+   "p25": 37.0,
+   "median": 75.0,
+   "p75": 155.0,
+   "p90": 257.8,
+   "p95": 379.45
+  },
+  "content_bbox": [
+   0.07,
+   0.0,
+   1636.93,
+   256.0
+  ],
+  "margins": {
+   "left": 0.1,
+   "right": 0.1,
+   "top": 0.0,
+   "bottom": 0.0
+  },
+  "bbox_fill_ratio": 1.0,
+  "score": 83,
+  "findings": [
+   {
+    "level": "WARN",
+    "code": "complex",
+    "message": "808 anchor points — more than 95% of comparable reference logos (median 75.0). Simplify: fewer points, merged shapes, less detail."
+   },
+   {
+    "level": "WARN",
+    "code": "near-miss-angle",
+    "message": "2 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 42.0° (→45°) len 75.0 at (648,30); 42.1° (→45°) len 73.3 at (720,138). (Expected — and fine — for type set on a curve or deliberately rotated elements.)"
+   },
+   {
+    "level": "INFO",
+    "code": "extra-wide",
+    "message": "Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol."
+   }
+  ]
+ },
+ {
+  "file": "saban-durali-wordmark-white.svg",
+  "bytes": 16231,
+  "viewBox": [
+   0.0,
+   0.0,
+   1637.0,
+   256.0
+  ],
+  "aspect": 6.395,
+  "aspect_class": "extra-wide",
+  "colors": [
+   "#ffffff"
+  ],
+  "gradients": 0,
+  "anchors": 808,
+  "library_anchor_percentiles": {
+   "p10": 23.0,
+   "p25": 37.0,
+   "median": 75.0,
+   "p75": 155.0,
+   "p90": 257.8,
+   "p95": 379.45
+  },
+  "content_bbox": [
+   0.07,
+   0.0,
+   1636.93,
+   256.0
+  ],
+  "margins": {
+   "left": 0.1,
+   "right": 0.1,
+   "top": 0.0,
+   "bottom": 0.0
+  },
+  "bbox_fill_ratio": 1.0,
+  "score": 83,
+  "findings": [
+   {
+    "level": "WARN",
+    "code": "complex",
+    "message": "808 anchor points — more than 95% of comparable reference logos (median 75.0). Simplify: fewer points, merged shapes, less detail."
+   },
+   {
+    "level": "WARN",
+    "code": "near-miss-angle",
+    "message": "2 straight edge(s) are 0.3–3° off a clean angle — they read as mistakes. Snap them: 42.0° (→45°) len 75.0 at (648,30); 42.1° (→45°) len 73.3 at (720,138). (Expected — and fine — for type set on a curve or deliberately rotated elements.)"
+   },
+   {
+    "level": "INFO",
+    "code": "extra-wide",
+    "message": "Extra-wide lockup (>4.5:1) shrinks badly; provide a stacked lockup and a standalone symbol."
+   }
+  ]
+ }
+]

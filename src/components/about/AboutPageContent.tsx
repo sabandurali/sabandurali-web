@@ -59,7 +59,10 @@ export default function AboutPageContent({ content, page }: AboutPageProps) {
                 width={900}
                 height={1100}
                 sizes="(min-width: 1024px) 304px, (min-width: 768px) 240px, 224px"
-                preload
+                // Above the fold on every width: fetched first, never lazy
+                // (Next 16 recommends this over `preload`).
+                loading="eager"
+                fetchPriority="high"
                 className="block aspect-[9/11] h-auto w-full object-cover object-top"
               />
             </div>

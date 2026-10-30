@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 import type { NavMenuItem } from "../ui/NavMenu";
 import { homeContent } from "../../content/homeContent";
@@ -184,4 +185,63 @@ test("a CMS group whose own link repeats the parent keeps its links only", () =>
     group?.children?.map((leaf) => leaf.href),
     ["/a/b"],
   );
+});
+
+/**
+ * Section ids the English home page renders: its configured anchors and
+ * the literal or per-locale ids of HomePage and the home sections.
+ */
+function englishHomeSectionIds(): Set<string> {
+  const read = (path: string) =>
+    readFileSync(new URL(`../../${path}`, import.meta.url), "utf8");
+  const ids = new Set<string>(Object.values(homeContent.en.anchors));
+  for (const file of [
+    "components/HomePage.tsx",
+    "components/sections/HomeAtlas.tsx",
+  ]) {
+    const source = read(file);
+    for (const [, id] of source.matchAll(/<Section\s+id="([\w-]+)"/g)) {
+      if (id !== undefined) ids.add(id);
+    }
+    for (const [, , en] of source.matchAll(
+      /id=\{locale === "tr" \? "([\w-]+)" : "([\w-]+)"\}/g,
+    )) {
+      if (en !== undefined) ids.add(en);
+    }
+  }
+  return ids;
+}
+
+test("NAV-EN-ANCHORS: every English home anchor is a section of the English home page", () => {
+  const ids = englishHomeSectionIds();
+  assert.ok(ids.has("istanbul") && ids.has("about") && ids.has("books"));
+  const all = (
+    items: readonly PublicNavigationLink[],
+  ): PublicNavigationLink[] =>
+    items.flatMap((item) => [item, ...all(item.children)]);
+  const anchors = all(getEnglishHeaderNavigationItems()).flatMap((item) => {
+    const match = /^\/en#(.+)$/.exec(item.href ?? "");
+    return match?.[1] === undefined ? [] : [[item.id, match[1]] as const];
+  });
+  assert.ok(anchors.length > 0);
+  for (const [id, hash] of anchors) {
+    assert.ok(ids.has(hash), `${id}: #${hash} is not on /en`);
+  }
+});
+
+test("NAV-EN-ANCHORS: no English entry opens a panel with a single link", () => {
+  for (const item of toNavMenuItems(
+    getEnglishHeaderNavigationItems(),
+    "/en",
+    "stack",
+  )) {
+    const links = [
+      item.href,
+      ...walk(item.children ?? []).map((c) => c.href),
+    ].filter((href) => href !== null && href !== undefined);
+    assert.ok(
+      item.children === undefined || links.length > 1,
+      `${item.id}: one-link panel`,
+    );
+  }
 });

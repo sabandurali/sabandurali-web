@@ -1,5 +1,7 @@
 import Image from "next/image";
 import { Fragment, type ReactNode } from "react";
+import { districtCitationInput } from "@/content/districts/district-seo";
+import CiteThis from "@/components/articles/CiteThis";
 import Badge from "@/components/ui/Badge";
 import Card from "@/components/ui/Card";
 import DistrictTileMap from "@/components/ui/DistrictTileMap";
@@ -24,8 +26,11 @@ import {
   categoryLabel,
   extractLineCodes,
   planningStatusLabel,
+  splitSourceRows,
+  type DistrictSourceRow,
   type VisibleDistrictSection,
 } from "./district-guide-model";
+import DistrictSourceFold from "./DistrictSourceFold";
 import {
   DistrictPhoto,
   GuideSection,
@@ -616,12 +621,68 @@ export function DistrictNewsSection({
   );
 }
 
+/** One numbered source row; its id is the target of the [n] references. */
+function SourceRowItem({ row }: { row: DistrictSourceRow }) {
+  return (
+    <li
+      id={sourceAnchorId(row.number)}
+      className="grid scroll-mt-4 gap-x-6 gap-y-2 border-b border-hairline py-5 md:grid-cols-[4rem_minmax(0,1fr)]"
+    >
+      <p className="m-0 type-data-lg" aria-hidden="true">
+        [{row.number}]
+      </p>
+      <div className="grid min-w-0 gap-2 break-words">
+        <h3 className="m-0 type-h4">
+          <span className="sr-only">Kaynak {row.number}: </span>
+          {row.title}
+        </h3>
+        <p className="m-0 type-small">
+          {row.publisher} · {row.kind} · {row.role}
+        </p>
+        <dl className="m-0 grid gap-x-6 gap-y-1 type-small sm:grid-cols-[auto_minmax(0,1fr)]">
+          <dt className="text-ink-muted">Veri/gözlem tarihi</dt>
+          <dd className="m-0">
+            {row.dataDateTime ? (
+              <time dateTime={row.dataDateTime}>{row.dataDate}</time>
+            ) : (
+              row.dataDate
+            )}
+          </dd>
+          <dt className="text-ink-muted">Son kontrol</dt>
+          <dd className="m-0">
+            {row.checkedAtDateTime ? (
+              <time dateTime={row.checkedAtDateTime}>{row.checkedAt}</time>
+            ) : (
+              row.checkedAt
+            )}
+          </dd>
+          <dt className="text-ink-muted">İlgili bölümler</dt>
+          <dd className="m-0">{row.sections}</dd>
+        </dl>
+        <p className="m-0">
+          <TextLink
+            href={row.url}
+            variant="standalone"
+            external
+            className="break-all"
+          >
+            Kaynak bağlantısı
+          </TextLink>
+        </p>
+      </div>
+    </li>
+  );
+}
+
 export function DistrictSourcesSection({
   item,
   total,
   guide,
 }: GuideSectionProps) {
   const sourceRows = buildSourceRows(guide?.sources ?? []);
+  // Narrow screens show the first sources and fold the rest
+  // (DistrictSourceFold opens it for a reference, wide screens and print).
+  const { shown, folded } = splitSourceRows(sourceRows);
   return (
     <GuideSection section={item} total={total} tone="land">
       <p className="m-0 max-w-measure type-body">
@@ -639,60 +700,22 @@ export function DistrictSourcesSection({
           listelenecek. Son kontrol bilgisi kaynak eklendiğinde gösterilecek.
         </EmptyState>
       ) : (
-        <ol className="m-0 grid list-none gap-0 border-t-2 border-ink p-0">
-          {sourceRows.map((row) => (
-            <li
-              key={`${row.number}-${row.url}`}
-              id={sourceAnchorId(row.number)}
-              className="grid scroll-mt-4 gap-x-6 gap-y-2 border-b border-hairline py-5 md:grid-cols-[4rem_minmax(0,1fr)]"
-            >
-              <p className="m-0 type-data-lg" aria-hidden="true">
-                [{row.number}]
-              </p>
-              <div className="grid min-w-0 gap-2 break-words">
-                <h3 className="m-0 type-h4">
-                  <span className="sr-only">Kaynak {row.number}: </span>
-                  {row.title}
-                </h3>
-                <p className="m-0 type-small">
-                  {row.publisher} · {row.kind} · {row.role}
-                </p>
-                <dl className="m-0 grid gap-x-6 gap-y-1 type-small sm:grid-cols-[auto_minmax(0,1fr)]">
-                  <dt className="text-ink-muted">Veri/gözlem tarihi</dt>
-                  <dd className="m-0">
-                    {row.dataDateTime ? (
-                      <time dateTime={row.dataDateTime}>{row.dataDate}</time>
-                    ) : (
-                      row.dataDate
-                    )}
-                  </dd>
-                  <dt className="text-ink-muted">Son kontrol</dt>
-                  <dd className="m-0">
-                    {row.checkedAtDateTime ? (
-                      <time dateTime={row.checkedAtDateTime}>
-                        {row.checkedAt}
-                      </time>
-                    ) : (
-                      row.checkedAt
-                    )}
-                  </dd>
-                  <dt className="text-ink-muted">İlgili bölümler</dt>
-                  <dd className="m-0">{row.sections}</dd>
-                </dl>
-                <p className="m-0">
-                  <TextLink
-                    href={row.url}
-                    variant="standalone"
-                    external
-                    className="break-all"
-                  >
-                    Kaynak bağlantısı
-                  </TextLink>
-                </p>
-              </div>
-            </li>
-          ))}
-        </ol>
+        <div className="grid gap-0">
+          <ol className="m-0 grid list-none gap-0 border-t-2 border-ink p-0">
+            {shown.map((row) => (
+              <SourceRowItem key={`${row.number}-${row.url}`} row={row} />
+            ))}
+          </ol>
+          {folded.length > 0 ? (
+            <DistrictSourceFold count={folded.length}>
+              <ol className="m-0 grid list-none gap-0 p-0">
+                {folded.map((row) => (
+                  <SourceRowItem key={`${row.number}-${row.url}`} row={row} />
+                ))}
+              </ol>
+            </DistrictSourceFold>
+          ) : null}
+        </div>
       )}
     </GuideSection>
   );
@@ -701,6 +724,7 @@ export function DistrictSourcesSection({
 export function DistrictUpdateSection({
   item,
   total,
+  district,
   guide,
 }: GuideSectionProps) {
   // The same date as the JSON-LD `dateModified` and the sitemap `lastmod`:
@@ -718,6 +742,13 @@ export function DistrictUpdateSection({
           "İçerik güncellemesi: Bu rehberin doğrulanmış içerik yayını henüz tamamlanmadı."
         )}
       </p>
+      {/* Only a published guide can be cited: its date and URL exist. */}
+      {guide ? (
+        <CiteThis
+          citation={districtCitationInput(district, guide)}
+          className="max-w-measure"
+        />
+      ) : null}
     </GuideSection>
   );
 }

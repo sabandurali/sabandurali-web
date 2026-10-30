@@ -415,41 +415,28 @@ test("motion: reduced motion stops animation and smooth scrolling is opt-in", ()
   assert.match(motionSafe, /scroll-behavior:\s*smooth/);
 });
 
-test("FE-17: fonts.ts loads only Archivo and Martian Mono with Turkish subsets", () => {
+test("FE-17: fonts.ts loads only the trimmed Archivo and Martian Mono files", () => {
   const fonts = read("src/app/fonts.ts");
-  assert.match(
-    fonts,
-    /import \{ Archivo, Martian_Mono \} from "next\/font\/google";/,
-  );
-  const calls = [
-    ...fonts.matchAll(/= (Archivo|Martian_Mono)\(\{([\s\S]*?)\}\);/g),
-  ];
+  assert.match(fonts, /import localFont from "next\/font\/local";/);
+  assert.doesNotMatch(fonts, /next\/font\/google/);
+  const calls = [...fonts.matchAll(/= localFont\(\{([\s\S]*?)\}\);/g)];
   assert.deepEqual(
-    calls.map(([, name]) => name),
-    ["Archivo", "Martian_Mono"],
+    calls.map(([, options]) => /src: "([^"]+)"/.exec(options ?? "")?.[1]),
+    ["./_fonts/archivo-latin-tr.woff2", "./_fonts/martian-mono-latin-tr.woff2"],
   );
-  for (const [, name, options] of calls) {
-    assert.ok(options, name);
-    assert.match(
-      options,
-      /subsets: \["latin", "latin-ext"\]/,
-      `${name} subsets`,
-    );
-    assert.match(options, /axes: \["wdth"\]/, `${name} width axis`);
-    assert.match(options, /display: "swap"/, `${name} display`);
-    assert.doesNotMatch(
-      options,
-      /weight:|style:/,
-      `${name} must stay variable`,
-    );
+  for (const [, options] of calls) {
+    assert.ok(options);
+    assert.match(options, /display: "swap"/);
+    assert.match(options, /weight: "\d{3} \d{3}"/, "a variable weight range");
+    assert.match(options, /prop: "font-stretch"/);
   }
   assert.match(
-    calls[1]?.[2] ?? "",
+    calls[1]?.[1] ?? "",
     /preload: false/,
     "Martian Mono is not preloaded",
   );
   assert.doesNotMatch(
-    calls[0]?.[2] ?? "",
+    calls[0]?.[1] ?? "",
     /preload: false/,
     "Archivo is preloaded",
   );
@@ -487,4 +474,44 @@ test("FRONTEND-4: form controls and the md button share the 16 px type-control r
     /md: "[^"]*\btype-control\b/,
   );
   assert.match(read("docs/DESIGN-SYSTEM.md"), /\| `type-control` \|/);
+});
+
+test("FEAT-10: print leaves out the site chrome and prints external URLs", async () => {
+  const print = blockAfter(baseBody, "@media print");
+  // Header, footer and navigation outside <main>: the page intro (a
+  // <header> inside <main>) and in-page navigation stay.
+  assert.match(
+    print,
+    /header:not\(main header\),\s*footer:not\(main footer\),\s*nav:not\(main nav\)\s*\{\s*display:\s*none !important;/,
+  );
+  // <main> clips overflow on screen; printed, it must flow over pages.
+  assert.match(print, /main\s*\{\s*overflow:\s*visible !important;/);
+  // External link targets are printed; the site's own links are not.
+  assert.match(
+    print,
+    /main a\[href\^="http"\]:not\(\[href\^="https:\/\/www\.sabandurali\.com"\]\)::after\s*\{\s*content:\s*" \(" attr\(href\) "\)";/,
+  );
+  const unbroken = /([^{}]+)\{\s*break-inside:\s*avoid;/.exec(print)?.[1] ?? "";
+  for (const element of ["figure", "li", "blockquote", "tr", "img"]) {
+    assert.ok(
+      unbroken.split(",").some((selector) => selector.trim() === element),
+      `${element} must not break across pages`,
+    );
+  }
+  assert.match(
+    print,
+    /details::details-content\s*\{\s*content-visibility:\s*visible;/,
+  );
+
+  // The compiled stylesheet keeps the print rules in the base layer, and
+  // the print:hidden variant exists for in-page opt-outs.
+  const output = await buildCss(["print:hidden"]);
+  assert.match(
+    output,
+    /@layer base\s*\{[\s\S]*@media print\s*\{[\s\S]*header:not\(main header\)/,
+  );
+  assert.match(
+    output,
+    /@media print\s*\{\s*\.print\\:hidden\s*\{\s*display:\s*none;/,
+  );
 });

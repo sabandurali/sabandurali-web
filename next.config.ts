@@ -82,6 +82,13 @@ const nextConfig: NextConfig = {
     globalNotFound: true,
   },
   images: {
+    // The widest image the site shows is the 1296 px content column, so no
+    // source wider than 1600 px is generated (Next's default list goes up to
+    // 3840 px, which a 2x phone or a 4K screen would download for nothing).
+    deviceSizes: [640, 750, 828, 1080, 1200, 1600],
+    // Allowed `quality` values (required since Next 16; others are coerced
+    // to the closest one). 75 is the default; 60 is for small card images.
+    qualities: [60, 75],
     // `search: ""` rejects query strings. Without it every `?x=<random>` is a
     // new cache entry for the optimizer (and a Payload function call for media).
     localPatterns: [

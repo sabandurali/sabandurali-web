@@ -67,5 +67,6 @@ export function createListPageMetadata(input: ListPageMetadataInput): Metadata {
     translations: getFilledListPaths(input.paths, input.content),
     index: input.content[input.locale],
     follow: true,
+    feed: true,
   });
 }

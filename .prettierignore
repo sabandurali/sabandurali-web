@@ -6,6 +6,9 @@ build/
 coverage/
 .vercel/
 .data/
+
+# The owner's brand identity package is versioned exactly as delivered
+brand/
 .private-backups/
 ml-env/
 public/

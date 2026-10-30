@@ -1,13 +1,21 @@
 import type { Metadata } from "next";
 import { getAbsoluteUrl } from "@/config/site";
 import { getAvailableLocalBookImage } from "@/content/books/book-images";
+import { bookPageContent } from "@/content/books/book-page-content";
 import {
+  bookListPaths,
   getBookReviewPath,
   getBookReviewUrl,
 } from "@/content/books/book-routes";
+import {
+  createBreadcrumbJsonLd,
+  createHomeTrail,
+} from "@/content/breadcrumb-seo";
 import type { PublicBookReview } from "@/content/books/public-types";
 import {
+  createImageObject,
   createPersonReference,
+  createWebsiteReference,
   personalBrandName,
   serializeJsonLd,
 } from "@/content/entity-seo";
@@ -124,8 +132,31 @@ export function createBookReviewMetadata(
   });
 }
 
+/**
+ * The review's trail, named like its visible breadcrumb: home, the list
+ * ("Kitaplar" / "Books") and the review at its own address.
+ */
+export function createBookReviewBreadcrumbJsonLd(
+  bookReview: Pick<PublicBookReview, "language" | "slug" | "title">,
+) {
+  return createBreadcrumbJsonLd(
+    createHomeTrail(
+      bookReview.language,
+      {
+        name: bookPageContent[bookReview.language].listTitle,
+        path: bookListPaths[bookReview.language],
+      },
+      {
+        name: bookReview.title,
+        path: getBookReviewPath(bookReview.slug, bookReview.language),
+      },
+    ),
+  );
+}
+
 export function createBookReviewJsonLd(bookReview: PublicBookReview) {
   const cover = getBookCover(bookReview);
+  const canonicalUrl = getBookReviewCanonicalUrl(bookReview);
   const book = {
     "@type": "Book",
     name: bookReview.originalTitle ?? bookReview.title,
@@ -141,20 +172,30 @@ export function createBookReviewJsonLd(bookReview: PublicBookReview) {
             name: bookReview.publisher,
           },
     isbn: bookReview.isbn13 ?? bookReview.isbn10 ?? undefined,
-    image: cover === null ? undefined : getAbsoluteUrl(cover.src),
+    image:
+      cover === null
+        ? undefined
+        : createImageObject({
+            src: cover.src,
+            width: cover.width,
+            height: cover.height,
+          }),
   };
 
   return {
     "@context": "https://schema.org",
     "@type": "Review",
+    "@id": `${canonicalUrl}#review`,
     name: bookReview.title,
-    // Every review on the site is written by its owner.
+    // Every review on the site is written and published by its owner.
     author: createPersonReference(),
+    publisher: createPersonReference(),
+    isPartOf: createWebsiteReference(),
     reviewBody: bookReview.personalEvaluation || bookReview.summary,
     datePublished: bookReview.publishedAt ?? undefined,
     dateModified: getContentLastModifiedIso(bookReview),
     inLanguage: bookReview.language === "tr" ? "tr-TR" : "en",
-    url: getBookReviewCanonicalUrl(bookReview),
+    url: canonicalUrl,
     itemReviewed: book,
     reviewRating:
       bookReview.rating === null
@@ -168,8 +209,17 @@ export function createBookReviewJsonLd(bookReview: PublicBookReview) {
   };
 }
 
+/** The review page's JSON-LD: its Review and its BreadcrumbList. */
+export function createBookReviewStructuredData(bookReview: PublicBookReview) {
+  const { "@context": context, ...review } = createBookReviewJsonLd(bookReview);
+  return {
+    "@context": context,
+    "@graph": [review, createBookReviewBreadcrumbJsonLd(bookReview)],
+  };
+}
+
 export function serializeBookReviewJsonLd(
   bookReview: PublicBookReview,
 ): string {
-  return serializeJsonLd(createBookReviewJsonLd(bookReview));
+  return serializeJsonLd(createBookReviewStructuredData(bookReview));
 }

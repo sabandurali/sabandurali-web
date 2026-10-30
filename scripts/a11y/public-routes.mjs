@@ -9,6 +9,8 @@
 //     closes it and returns focus, at 390, 1100 and 1440 px,
 //   - under prefers-reduced-motion: reduce nothing animates or transitions
 //     and the page does not scroll smoothly,
+//   - in fixture mode, the photo fixture pages carry a JSON-LD block that
+//     parses and declares "@type": "ImageObject" (`fixtureStructuredData`),
 //   - on the contact pages, an empty submit marks every field (aria-invalid,
 //     a visible message tied by aria-describedby), focuses the first one and
 //     passes axe in that state; fixing or changing a field updates its
@@ -35,6 +37,7 @@ import {
   contentProblems,
   detailRoutes,
   focusIndicatorProblem,
+  jsonLdProblems,
   localOriginProblem,
   menuCheckWidths,
   menuProblem,
@@ -452,7 +455,8 @@ async function checkRoute(route) {
     if (response.url().startsWith(base) && response.status() >= 500)
       serverErrors.push({ url: response.url(), status: response.status() });
   });
-  const name = path === "/" ? "home" : path.slice(1).replace(/\//g, "_");
+  // Screenshot names: no "/", "?" or "=" (artifact uploads refuse "?").
+  const name = path === "/" ? "home" : path.slice(1).replace(/[/?=&]/g, "_");
   const problems = [];
   const steps = [
     () => checkContent(page, route),
@@ -477,6 +481,26 @@ async function checkRoute(route) {
   for (const problem of problems) console.log(`     ${problem}`);
 }
 
+/** The page's JSON-LD parses and declares `jsonLdType`. */
+async function checkStructuredData(path, jsonLdType) {
+  const page = await context.newPage();
+  const type = `JSON-LD ${jsonLdType}`;
+  let problems;
+  try {
+    await open(page, path, 200);
+    const texts = await page
+      .locator('script[type="application/ld+json"]')
+      .evaluateAll((scripts) => scripts.map((s) => s.textContent ?? ""));
+    problems = jsonLdProblems(texts, jsonLdType);
+  } catch (error) {
+    problems = [`error: ${error instanceof Error ? error.message : error}`];
+  }
+  await page.close();
+  rows.push({ path, type, status: 200, problems });
+  console.log(`${problems.length ? "FAIL" : "ok  "} ${type} ${path}`);
+  for (const problem of problems) console.log(`     ${problem}`);
+}
+
 const skippedDetails = [];
 try {
   for (const route of plan.routes) await checkRoute(route);
@@ -494,6 +518,8 @@ try {
     else skippedDetails.push({ type, list, reason: "no published item" });
   }
   await finder.close();
+  for (const { path, jsonLdType } of plan.structuredData)
+    await checkStructuredData(path, jsonLdType);
 } finally {
   await browser.close();
 }

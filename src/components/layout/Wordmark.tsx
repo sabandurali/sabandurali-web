@@ -1,4 +1,10 @@
 import Link from "next/link";
+import {
+  brandLogo,
+  brandLogoAlt,
+  brandLogoOnDark,
+  brandNameMark,
+} from "@/config/brand";
 import { cx } from "@/components/ui/cx";
 import {
   getShellStrings,
@@ -8,8 +14,6 @@ import {
 
 type WordmarkProps = {
   locale: HeaderLocale;
-  name?: string;
-  tagline?: string;
   /** `on-sea` for the footer. */
   tone?: "ink" | "on-sea";
   /** A link to the home page (header) or plain text (footer). */
@@ -17,48 +21,69 @@ type WordmarkProps = {
   className?: string;
 };
 
-const defaultTagline: Record<HeaderLocale, string> = {
-  tr: "ARAŞTIRMA VE BİLGİ PLATFORMU",
-  en: "RESEARCH AND KNOWLEDGE PLATFORM",
-};
-
 /**
- * ŞABAN DURALİ in the wide wordmark cut, with the platform line under it.
- * Written in capitals in the source (never CSS uppercase), so the dotted
- * İ is right in every language. As a link its accessible name starts with
- * the visible text ("ŞABAN DURALİ, ana sayfa", WCAG 2.5.3).
+ * The identity v1 logo (brand/saban-durali-kimlik-v1/), shown from its SVG
+ * files and never redrawn with text. On paper the horizontal logo is 36 px
+ * high (285 px wide, above its 200 px minimum, with the x clear space inside
+ * the 72 px header row); below 640 px, where it would crowd the menu, the
+ * name-only wordmark takes its place at 18 px (174 px wide, minimum 110 px;
+ * it may shrink a little below 360 px rather than push the menu off screen).
+ * On sea (footer) the `-color-ondark` horizontal logo, 36 px high.
+ *
+ * The image's alt starts with the visible name ("Şaban Durali, Araştırma ve
+ * Bilgi Platformu"), and as a link the home-page suffix follows it (WCAG
+ * 2.5.3). The tagline inside the files is Turkish; the alt is in the page
+ * language.
  */
 export default function Wordmark({
   locale,
-  name = "ŞABAN DURALİ",
-  tagline = defaultTagline[locale],
   tone = "ink",
   asLink = true,
   className,
 }: WordmarkProps) {
-  const body = (
-    <>
-      <span lang="tr" className="block type-wordmark">
-        {name}
-      </span>
-      <span
-        className={cx(
-          "mt-0.5 block type-tagline",
-          tone === "ink" ? "text-ink-muted" : "text-on-sea-muted",
-        )}
-      >
-        {tagline}
-      </span>
-    </>
-  );
-  const classes = cx(
-    "inline-flex min-h-tap flex-col justify-center",
-    tone === "ink" ? "text-ink" : "text-on-sea",
-    className,
-  );
+  const alt = brandLogoAlt[locale];
+
+  const image =
+    tone === "on-sea" ? (
+      // An SVG, served as is (no optimizer, so no next/image); one file at
+      // every width. Lazy: the footer is far below the first screen.
+      <picture>
+        <img
+          src={brandLogoOnDark.src}
+          alt={alt}
+          width={brandLogoOnDark.width}
+          height={brandLogoOnDark.height}
+          loading="lazy"
+          decoding="async"
+          className="block h-9 w-auto"
+        />
+      </picture>
+    ) : (
+      // Art direction: the browser downloads only the file its width needs.
+      <picture>
+        <source
+          media="(min-width: 40rem)"
+          srcSet={brandLogo.src}
+          width={brandLogo.width}
+          height={brandLogo.height}
+        />
+        <img
+          src={brandNameMark.src}
+          alt={alt}
+          width={brandNameMark.width}
+          height={brandNameMark.height}
+          // In the first row of every page: fetched with the page, not after
+          // the layout pass that would otherwise raise its priority.
+          fetchPriority="high"
+          decoding="async"
+          className="block h-4.5 w-auto sm:h-9"
+        />
+      </picture>
+    );
+  const classes = cx("inline-flex min-h-tap items-center", className);
 
   if (!asLink) {
-    return <p className={cx("m-0", classes)}>{body}</p>;
+    return <p className={cx("m-0", classes)}>{image}</p>;
   }
 
   return (
@@ -66,7 +91,7 @@ export default function Wordmark({
       href={localeHomePaths[locale]}
       className={cx(classes, "no-underline")}
     >
-      {body}
+      {image}
       <span className="sr-only">, {getShellStrings(locale).homeLink}</span>
     </Link>
   );

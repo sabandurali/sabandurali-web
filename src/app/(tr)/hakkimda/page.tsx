@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import AboutPage from "@/components/about/AboutPage";
+import { createAboutPageJsonLd, serializeJsonLd } from "@/content/entity-seo";
 import { getHomeContent } from "@/content/pages/page-data-source";
 import { createPageMetadata } from "@/lib/metadata";
 
@@ -12,7 +13,7 @@ export const revalidate = 300;
 export const metadata: Metadata = createPageMetadata({
   title: "Hakkımda | Şaban Durali",
   description:
-    "Şaban Durali'nin çalışma alanları, platform yaklaşımı ve profesyonel profili.",
+    "Şaban Durali’nin çalışma alanları, platform yaklaşımı ve profesyonel profili.",
   locale: "tr",
   path: "/hakkimda",
 });
@@ -20,5 +21,15 @@ export const metadata: Metadata = createPageMetadata({
 export default async function AboutRoute() {
   const { content, page } = await getHomeContent("tr");
 
-  return <AboutPage content={content} page={page} />;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: serializeJsonLd(createAboutPageJsonLd()),
+        }}
+      />
+      <AboutPage content={content} page={page} />
+    </>
+  );
 }

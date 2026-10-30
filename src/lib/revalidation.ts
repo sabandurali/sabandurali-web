@@ -77,6 +77,7 @@ import {
 } from "@/content/photos/photo-cache-tags";
 import { getPhotoPath, photoListPaths } from "@/content/photos/photo-routes";
 import { workspaces } from "@/content/workspaces";
+import { feedPaths } from "@/lib/feed";
 
 export type RevalidationTarget = Readonly<{
   path: string;
@@ -112,6 +113,13 @@ const ROUTE_GROUPS: Readonly<Record<SiteLocale, string>> = {
 export const ALL_PAGES: RevalidationTarget = { path: "/", type: "layout" };
 
 export const SITEMAP_PATH = "/sitemap.xml";
+
+/** The Atom feeds list articles, book reviews and photos of each language. */
+export const FEED_PATHS: Readonly<Record<SiteLocale, string>> = feedPaths;
+
+function feedTargets(): RevalidationTarget[] {
+  return LANGUAGES.map((language) => pathTarget(FEED_PATHS[language]));
+}
 
 const HOME_PATHS: Readonly<Record<SiteLocale, string>> = {
   tr: new URL(homeUrls["tr-TR"]).pathname,
@@ -227,6 +235,7 @@ function articleTargets(
     ...districtPageTargets(getDistricts(docs), { news: true }),
     ...richTextLinkSourceTargets(),
     pathTarget(SITEMAP_PATH),
+    ...feedTargets(),
   ];
 }
 
@@ -250,6 +259,7 @@ function bookTargets(docs: readonly unknown[]): RevalidationTarget[] {
     ),
     ...richTextLinkSourceTargets(),
     pathTarget(SITEMAP_PATH),
+    ...feedTargets(),
   ];
 }
 
@@ -297,6 +307,7 @@ function photoTargets(
     ...districtPageTargets(getDistricts(docs), { news: false }),
     ...richTextLinkSourceTargets(),
     pathTarget(SITEMAP_PATH),
+    ...feedTargets(),
   ];
 }
 

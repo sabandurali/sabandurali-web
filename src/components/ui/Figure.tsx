@@ -67,6 +67,8 @@ export function Credit({
         className={linkClassName}
       >
         {credit.sourceLabel ?? strings.originalSource}
+        {/* External record: a visual cue only, the link text names it. */}
+        <span aria-hidden="true"> ↗</span>
       </a>,
     );
   }

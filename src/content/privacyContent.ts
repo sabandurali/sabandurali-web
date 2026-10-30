@@ -82,7 +82,7 @@ export const privacyContent = {
           "Eksik veya yanlış işlenen verilerin düzeltilmesini isteme.",
           "Kanundaki şartlar çerçevesinde verilerin silinmesini veya yok edilmesini isteme.",
           "Düzeltme, silme veya yok etme işlemlerinin verilerin aktarıldığı üçüncü kişilere bildirilmesini isteme.",
-          "Yalnızca otomatik sistemlerle analiz sonucunda aleyhinize bir sonuç ortaya çıkmasına itiraz etme.",
+          "Yalnızca otomatik sistemlerle yapılan analiz sonucunda aleyhinize bir sonuç ortaya çıkmasına itiraz etme.",
           "Kanuna aykırı işleme nedeniyle zarara uğramanız hâlinde zararın giderilmesini talep etme.",
         ],
       },

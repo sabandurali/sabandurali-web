@@ -6,6 +6,7 @@ import {
   type CollectionConfig,
   type Where,
 } from "payload";
+import { publicLinksField, seoPreviewField } from "@/collections/admin-fields";
 import { pageBlocks } from "@/blocks/pageBlocks";
 import {
   SEO_DESCRIPTION_MAX_LENGTH,
@@ -39,9 +40,11 @@ const revalidation = createRevalidationHooks("pages");
 export const RESERVED_TURKISH_SLUGS: ReadonlySet<string> = new Set([
   "admin",
   "api",
+  "ara",
   "arastirma-ve-analiz",
   "calisma-alanlari",
   "en",
+  "feed.xml",
   "fotograf",
   "fotograflar",
   "gayrimenkul-ve-istanbul",
@@ -174,7 +177,7 @@ export const validatePageIdentity: CollectionBeforeValidateHook = async ({
   ) {
     errors.push({
       message:
-        "ana-sayfa adresi eski Ana Sayfa kaydına ayrılmıştır ve / adresine yönlenir. Ana sayfa için Sayfa türünü 'Ana sayfa' seçin.",
+        "ana-sayfa adresi eski ana sayfa kaydına ayrılmıştır ve / adresine yönlenir. Ana sayfa için Sayfa türünü 'Ana sayfa' seçin.",
       path: "slug",
     });
   }
@@ -184,7 +187,7 @@ export const validatePageIdentity: CollectionBeforeValidateHook = async ({
   if (pageType === "standard" && language === "en" && status === "published") {
     errors.push({
       message:
-        "İngilizce standart sayfaların henüz bir site adresi yok. Yalnız İngilizce Ana sayfa yayınlanabilir; bu sayfayı taslak olarak saklayın.",
+        "İngilizce standart sayfaların henüz bir site adresi yok. Yalnız İngilizce Ana sayfa yayımlanabilir; bu sayfayı taslak olarak saklayın.",
       path: "language",
     });
   }
@@ -252,7 +255,7 @@ export const validatePageIdentity: CollectionBeforeValidateHook = async ({
     ) {
       errors.push({
         message:
-          "Yayındaki Ana Sayfa tam olarak bir görünür Hero, Hakkımda ve Çalışma Alanları bloğu içermelidir.",
+          "Yayındaki ana sayfa tam olarak bir görünür Hero, Hakkımda ve Çalışma Alanları bloğu içermelidir.",
         path: "layout",
       });
     }
@@ -264,7 +267,7 @@ export const validatePageIdentity: CollectionBeforeValidateHook = async ({
 
     if (status === "published" && unrenderableBlocks.length > 0) {
       errors.push({
-        message: `Ana Sayfa bloklarında zorunlu alanlar eksik veya bağlantılar geçersiz; yayındaki sitede gösterilemezler: ${unrenderableBlocks.join(", ")}. Başlık satırlarını, metinleri ve bağlantıları (etiket ve / ile başlayan ya da https adres) tamamlayın.`,
+        message: `Ana sayfa bloklarında zorunlu alanlar eksik veya bağlantılar geçersiz; yayındaki sitede gösterilemezler: ${unrenderableBlocks.join(", ")}. Başlık satırlarını, metinleri ve bağlantıları (etiket ve / ile başlayan ya da https adres) tamamlayın.`,
         path: "layout",
       });
     }
@@ -273,7 +276,7 @@ export const validatePageIdentity: CollectionBeforeValidateHook = async ({
 
     if (status === "published" && unsupportedBlocks.length > 0) {
       errors.push({
-        message: `Ana Sayfa yalnız Hero, Hakkımda ve Çalışma Alanları bloklarını gösterir. Şu blokları silin veya gizleyin: ${[...new Set(unsupportedBlocks)].join(", ")}.`,
+        message: `Ana sayfa yalnız Hero, Hakkımda ve Çalışma Alanları bloklarını gösterir. Şu blokları silin veya gizleyin: ${[...new Set(unsupportedBlocks)].join(", ")}.`,
         path: "layout",
       });
     }
@@ -414,7 +417,7 @@ export const protectPublishedHomePage: CollectionBeforeOperationHook = async ({
 
     if (changes.length > 0) {
       throw new APIError(
-        `Yayındaki ${home.language === "en" ? "İngilizce" : "Türkçe"} Ana Sayfa ${changes.map((change) => homeChangeMessages[change]).join(", ")}. İçeriği düzenleyip yeniden yayınlayın; ana sayfayı değiştirmek için bu kaydı güncelleyin.`,
+        `Yayındaki ${home.language === "en" ? "İngilizce" : "Türkçe"} ana sayfa ${changes.map((change) => homeChangeMessages[change]).join(", ")}. İçeriği düzenleyip yeniden yayımlayın; ana sayfayı değiştirmek için bu kaydı güncelleyin.`,
         400,
       );
     }
@@ -451,6 +454,7 @@ export const Pages: CollectionConfig = {
   },
   lockDocuments: false,
   fields: [
+    publicLinksField,
     {
       type: "tabs",
       tabs: [
@@ -550,6 +554,7 @@ export const Pages: CollectionConfig = {
               type: "group",
               label: "Arama ve paylaşım ayarları",
               fields: [
+                seoPreviewField("pages"),
                 {
                   name: "title",
                   type: "text",

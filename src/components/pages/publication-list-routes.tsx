@@ -16,6 +16,11 @@ import {
   hasPublishedBookReviews,
 } from "@/content/books/book-data-source";
 import { bookListPaths } from "@/content/books/book-routes";
+import {
+  createArticleListJsonLd,
+  createBookReviewListJsonLd,
+} from "@/content/collection-seo";
+import { serializeJsonLd } from "@/content/entity-seo";
 import { createListPageMetadata, loadListContent } from "@/content/list-seo";
 import {
   getPublishedPhotos,
@@ -47,7 +52,18 @@ export function createArticleListRoute(locale: SiteLocale) {
 
   async function ArticleListRoutePage() {
     const articles = await getAllPublishedArticles(locale);
-    return <ArticleListPage articles={articles} locale={locale} />;
+    const jsonLd = createArticleListJsonLd(locale, articles);
+    return (
+      <>
+        {jsonLd === null ? null : (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
+          />
+        )}
+        <ArticleListPage articles={articles} locale={locale} />
+      </>
+    );
   }
 
   return { generateMetadata, Page: ArticleListRoutePage };
@@ -65,7 +81,18 @@ export function createBookReviewListRoute(locale: SiteLocale) {
 
   async function BookReviewListRoutePage() {
     const bookReviews = await getAllPublishedBookReviews(locale);
-    return <BookReviewListPage bookReviews={bookReviews} locale={locale} />;
+    const jsonLd = createBookReviewListJsonLd(locale, bookReviews);
+    return (
+      <>
+        {jsonLd === null ? null : (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
+          />
+        )}
+        <BookReviewListPage bookReviews={bookReviews} locale={locale} />
+      </>
+    );
   }
 
   return { generateMetadata, Page: BookReviewListRoutePage };

@@ -33,6 +33,7 @@ import type { HomeContent } from "@/content/homeContent";
 import {
   homeListingUnavailableCopy,
   loadHomeListings,
+  planHomeSections,
 } from "@/content/home-listings";
 import { homeEditorialContent } from "@/content/homeEditorialContent";
 import type { PublicPage } from "@/content/pages/public-types";
@@ -75,6 +76,19 @@ export default async function HomePage({
     districts: guideSummaries,
   } = listings;
   const unavailableCopy = homeListingUnavailableCopy[locale];
+  // Lists with nothing published are left out and the section numbers
+  // close up (UX-04); a failed list stays with its "unavailable" message.
+  const sectionPlan = planHomeSections(
+    {
+      articles: latestArticles.length,
+      books: latestBooks.length,
+      photos: latestPhotos.length,
+    },
+    unavailable,
+  );
+  const { numbers } = sectionPlan;
+  const shows = (name: "articles" | "books" | "photos") =>
+    sectionPlan.listings.includes(name);
   const emptyMessage = (
     name: "articles" | "books" | "photos",
     empty: string,
@@ -125,48 +139,56 @@ export default async function HomePage({
           }
         />
 
-        <HomeListingSection
-          id={locale === "tr" ? "son-makaleler" : "latest-articles"}
-          locale={locale}
-          number={copy.articles.number}
-          eyebrow={copy.articles.eyebrow}
-          title={content.listingSections.articles.title}
-          linkLabel={content.listingSections.articles.linkLabel}
-          href={articleListPaths[locale]}
-          emptyMessage={emptyMessage("articles", copy.articles.empty)}
-          itemCount={latestArticles.length}
-        >
-          <ArticleCardList articles={latestArticles} locale={locale} />
-        </HomeListingSection>
+        {shows("articles") ? (
+          <HomeListingSection
+            id={locale === "tr" ? "son-makaleler" : "latest-articles"}
+            locale={locale}
+            tone={sectionPlan.tones.articles}
+            number={numbers.articles ?? copy.articles.number}
+            eyebrow={copy.articles.eyebrow}
+            title={content.listingSections.articles.title}
+            linkLabel={content.listingSections.articles.linkLabel}
+            href={articleListPaths[locale]}
+            emptyMessage={emptyMessage("articles", copy.articles.empty)}
+            itemCount={latestArticles.length}
+          >
+            <ArticleCardList articles={latestArticles} locale={locale} />
+          </HomeListingSection>
+        ) : null}
 
-        <HomeListingSection
-          id={locale === "tr" ? "kitaplar" : "books"}
-          locale={locale}
-          tone="band"
-          number={copy.books.number}
-          eyebrow={copy.books.eyebrow}
-          title={content.listingSections.books.title}
-          linkLabel={content.listingSections.books.linkLabel}
-          href={bookListPaths[locale]}
-          emptyMessage={emptyMessage("books", copy.books.empty)}
-          itemCount={latestBooks.length}
-        >
-          <BookReviewCardList books={latestBooks} locale={locale} />
-        </HomeListingSection>
+        {shows("books") ? (
+          <HomeListingSection
+            id={locale === "tr" ? "kitaplar" : "books"}
+            locale={locale}
+            tone={sectionPlan.tones.books}
+            number={numbers.books ?? copy.books.number}
+            eyebrow={copy.books.eyebrow}
+            title={content.listingSections.books.title}
+            linkLabel={content.listingSections.books.linkLabel}
+            href={bookListPaths[locale]}
+            emptyMessage={emptyMessage("books", copy.books.empty)}
+            itemCount={latestBooks.length}
+          >
+            <BookReviewCardList books={latestBooks} locale={locale} />
+          </HomeListingSection>
+        ) : null}
 
-        <HomeListingSection
-          id={locale === "tr" ? "fotograf" : "photography"}
-          locale={locale}
-          number={copy.photos.number}
-          eyebrow={copy.photos.eyebrow}
-          title={content.listingSections.photography.title}
-          linkLabel={content.listingSections.photography.linkLabel}
-          href={photoListPaths[locale]}
-          emptyMessage={emptyMessage("photos", copy.photos.empty)}
-          itemCount={latestPhotos.length}
-        >
-          <PhotoCardList photos={latestPhotos} columns={4} />
-        </HomeListingSection>
+        {shows("photos") ? (
+          <HomeListingSection
+            id={locale === "tr" ? "fotograf" : "photography"}
+            locale={locale}
+            tone={sectionPlan.tones.photos}
+            number={numbers.photos ?? copy.photos.number}
+            eyebrow={copy.photos.eyebrow}
+            title={content.listingSections.photography.title}
+            linkLabel={content.listingSections.photography.linkLabel}
+            href={photoListPaths[locale]}
+            emptyMessage={emptyMessage("photos", copy.photos.empty)}
+            itemCount={latestPhotos.length}
+          >
+            <PhotoCardList photos={latestPhotos} columns={4} />
+          </HomeListingSection>
+        ) : null}
 
         {focusAreas.cards.length > 0 ? (
           <Section
@@ -177,7 +199,7 @@ export default async function HomePage({
           >
             <HomeSectionHeading
               id={workspacesHeadingId}
-              number={copy.workspaces.number}
+              number={numbers.workspaces}
               eyebrow={focusAreas.label}
               title={focusAreas.title}
             >

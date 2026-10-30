@@ -144,7 +144,7 @@ export interface UserAuthOperations {
 export interface User {
   id: string;
   /**
-   * Editor içerik ekler ve düzenler, kullanılmayan Media dosyalarını silebilir. Admin ayrıca kullanıcıları yönetir ve diğer içerikleri siler. Sistemde her zaman en az bir Admin kalır.
+   * Editor içerik ekler ve düzenler, kullanılmayan Medya dosyalarını silebilir. Admin ayrıca kullanıcıları yönetir ve diğer içerikleri siler. Sistemde her zaman en az bir Admin kalır.
    */
   role: 'admin' | 'editor';
   updatedAt: string;
@@ -505,7 +505,7 @@ export interface Article {
       )
     | null;
   /**
-   * İlçe haberi yayınlanırken kaynak adı ve https:// ile başlayan orijinal haber adresi zorunludur.
+   * İlçe haberi yayımlanırken kaynak adı ve https:// ile başlayan orijinal haber adresi zorunludur.
    */
   externalSource?: {
     name?: string | null;
@@ -829,7 +829,7 @@ export interface Book {
     | null;
   readingStatus: 'planned' | 'reading' | 'completed' | 'paused' | 'abandoned';
   /**
-   * Yayınlarken 'published' (sitede görünür) veya 'archived' (sitede gizli) seçin. Görünmesi için yayın tarihi gelmiş ve SEO indeksi açık olmalıdır; eksik alanlar yayın sırasında listelenir.
+   * Yayımlarken 'published' (sitede görünür) veya 'archived' (sitede gizli) seçin. Görünmesi için yayın tarihi gelmiş ve SEO indeksi açık olmalıdır; eksik alanlar yayın sırasında listelenir.
    */
   reviewStatus: 'draft' | 'in_review' | 'scheduled' | 'published' | 'archived';
   startedAt?: string | null;
@@ -1741,7 +1741,7 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   createdAt?: T;
 }
 /**
- * Türkçe Header ve mobil menü ile Türkçe ve İngilizce Footer bağlantılarını yönetin. İngilizce Header menüsü site kodunda sabittir. Taslak, yayınlama ve sürüm geçmişi sağ üstteki belge kontrollerindedir.
+ * Türkçe Header ve mobil menü ile Türkçe ve İngilizce Footer bağlantılarını yönetin. İngilizce Header menüsü site kodunda sabittir. Taslak, yayımlama ve sürüm geçmişi sağ üstteki belge kontrollerindedir.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "navigation".

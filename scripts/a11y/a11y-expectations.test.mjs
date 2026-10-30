@@ -9,8 +9,10 @@ import {
   contentProblems,
   detailRoutes,
   fixtureRoutes,
+  fixtureStructuredData,
   focusIndicatorProblem,
   headerMenuBreakpoint,
+  jsonLdProblems,
   localOriginProblem,
   maxDurationMs,
   menuCheckWidths,
@@ -416,10 +418,12 @@ test("TESTS-INFRA-1: a fixture run must reach every detail template", () => {
   assert.deepEqual(routePlan(false), {
     routes: publicRoutes,
     requireDetails: false,
+    structuredData: [],
   });
   assert.deepEqual(routePlan(true), {
     routes: fixtureRoutes,
     requireDetails: true,
+    structuredData: fixtureStructuredData,
   });
   const types = fixtureRoutes.map(({ type }) => type);
   assert.ok(types.includes("CMS block page"));
@@ -487,6 +491,45 @@ test("contentProblems reports a missing fixture text and a private text", () => 
     ],
   );
   assert.deepEqual(contentProblems({}, {}, "anything"), []);
+});
+
+test("jsonLdProblems requires a parseable block of the expected type", () => {
+  const image = JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "ImageObject",
+  });
+  assert.deepEqual(jsonLdProblems([image], "ImageObject"), []);
+  // Found inside an @graph, an array or a multi-type node as well.
+  assert.deepEqual(
+    jsonLdProblems(
+      [
+        JSON.stringify({ "@graph": [{ "@type": "ImageObject" }] }),
+        JSON.stringify([{ "@type": ["Photograph", "ImageObject"] }]),
+      ],
+      "ImageObject",
+    ),
+    [],
+  );
+  assert.deepEqual(jsonLdProblems([], "ImageObject"), [
+    "no application/ld+json script",
+  ]);
+  assert.deepEqual(
+    jsonLdProblems([JSON.stringify({ "@type": "WebPage" })], "ImageObject"),
+    ['no JSON-LD "@type": "ImageObject" (found WebPage)'],
+  );
+  assert.deepEqual(jsonLdProblems(["{not json", image], "ImageObject"), [
+    "JSON-LD block 1 is not valid JSON",
+  ]);
+  // The fixture run checks both photo fixture pages for an ImageObject.
+  assert.deepEqual(
+    fixtureStructuredData.map(({ path }) => path),
+    ["/fotograflar/ci-test-fotografi", "/en/photography/ci-test-photo"],
+  );
+  assert.ok(
+    fixtureStructuredData.every(
+      ({ jsonLdType }) => jsonLdType === "ImageObject",
+    ),
+  );
 });
 
 test("the keyboard checks wait for the hydrated skip link", () => {

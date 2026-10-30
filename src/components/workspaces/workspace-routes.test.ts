@@ -162,7 +162,7 @@ test("a section is indexable only with published items", () => {
 test("FE-7: workspace metadata goes through the shared builder", () => {
   const metadata = createWorkspaceMetadata(
     "Satış",
-    "Satış pratiğine ilişkin yayınlar.",
+    "Satış pratiğine ilişkin yayımlar.",
     "/satis-ve-muzakere/satis",
     { index: false },
   );

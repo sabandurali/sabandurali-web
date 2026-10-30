@@ -20,27 +20,38 @@ export const Categories: CollectionConfig = {
   admin: {
     defaultColumns: ["name", "slug", "sortOrder", "updatedAt"],
     group: "İçerik",
+    listSearchableFields: ["name", "slug"],
     useAsTitle: "name",
+  },
+  labels: {
+    plural: "Kategoriler",
+    singular: "Kategori",
   },
   fields: [
     {
       name: "name",
       type: "text",
+      label: "Ad",
       localized: true,
       required: true,
     },
-    createLocalizedSlugField({
-      collection: "categories",
-      sourceField: "name",
-    }),
+    {
+      ...createLocalizedSlugField({
+        collection: "categories",
+        sourceField: "name",
+      }),
+      label: "Slug",
+    },
     {
       name: "description",
       type: "textarea",
+      label: "Açıklama",
       localized: true,
     },
     {
       name: "sortOrder",
       type: "number",
+      label: "Sıra",
       admin: {
         description:
           "Kategorilerin yönetim panelindeki sıralamasını belirlemek için kullanılır.",

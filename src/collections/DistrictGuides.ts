@@ -1,4 +1,5 @@
 import type { CollectionBeforeChangeHook, CollectionConfig } from "payload";
+import { publicLinksField } from "@/collections/admin-fields";
 import {
   projectPublicDistrictGuideDocument,
   sanitizeDistrictSources,
@@ -21,6 +22,7 @@ import {
   publishedOrAdminOrEditor,
 } from "@/lib/payloadAccess";
 import { createRevalidationHooks } from "@/lib/revalidation";
+import { planningStatusOptions } from "@/collections/option-labels";
 
 const revalidation = createRevalidationHooks("district-guides");
 
@@ -53,7 +55,7 @@ const protectDistrictPublication: CollectionBeforeChangeHook = ({
   }
   const merged = { ...originalDoc, ...data };
   if (!districtOptions.some((option) => option.value === merged.district)) {
-    throw new APIError("Merkezi registry içinden geçerli bir ilçe seçin.", 400);
+    throw new APIError("Merkezî ilçe listesinden geçerli bir ilçe seçin.", 400);
   }
   if (merged._status === "published") {
     // The same normalization as the public projection: a malformed row is
@@ -97,6 +99,7 @@ export const DistrictGuides: CollectionConfig = {
     defaultColumns: ["district", "_status", "publishedAt", "updatedAt"],
   },
   fields: [
+    publicLinksField,
     {
       name: "district",
       type: "select",
@@ -160,7 +163,12 @@ export const DistrictGuides: CollectionConfig = {
               type: "array",
               label: "Mahalleler",
               fields: [
-                { name: "name", type: "text", required: true },
+                {
+                  name: "name",
+                  type: "text",
+                  label: "Mahalle adı",
+                  required: true,
+                },
                 {
                   name: "featured",
                   type: "checkbox",
@@ -221,6 +229,7 @@ export const DistrictGuides: CollectionConfig = {
                 {
                   name: "title",
                   type: "text",
+                  label: "Başlık",
                   localized: true,
                   required: true,
                 },
@@ -230,18 +239,7 @@ export const DistrictGuides: CollectionConfig = {
                 {
                   name: "status",
                   type: "select",
-                  options: [
-                    "teklif",
-                    "planlama",
-                    "belediye-meclisi-karari",
-                    "onay",
-                    "aski",
-                    "ihale",
-                    "insaat",
-                    "uygulama",
-                    "tamamlandi",
-                    "belirsiz",
-                  ],
+                  options: planningStatusOptions,
                   label: "Durum",
                 },
                 {
@@ -317,6 +315,7 @@ export const DistrictGuides: CollectionConfig = {
                 {
                   name: "sourceType",
                   type: "select",
+                  label: "Kaynak türü",
                   required: true,
                   defaultValue: "unclassified",
                   options: [...districtSourceTypeOptions],

@@ -10,7 +10,7 @@ import { getGuideParts, slugifyHeading } from "./admin-help-guide-parts";
 import styles from "./AdminHelpView.module.css";
 
 const GUIDE_DESCRIPTION =
-  "İçerik ekleme, yayınlama ve güvenli yönetim için adım adım rehber.";
+  "İçerik ekleme, yayımlama ve güvenli yönetim için adım adım rehber.";
 
 const markdownComponents: Components = {
   h2: ({ children }) => {

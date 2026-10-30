@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { Button, ButtonLink } from "@/components/ui/Button";
 import type { HeaderLocale } from "./header-content";
 import { localeHomePaths } from "./header-content";
@@ -26,6 +26,11 @@ const texts = {
   },
 } as const satisfies Record<HeaderLocale, Record<string, string>>;
 
+/** The error screen's texts in one language (the global error is bilingual). */
+export function getErrorTexts(locale: HeaderLocale) {
+  return texts[locale];
+}
+
 /** The digest Next.js attaches to server errors, if any (never a message). */
 export function getErrorDigest(error: unknown): string | null {
   if (typeof error !== "object" || error === null || !("digest" in error)) {
@@ -41,6 +46,8 @@ type ErrorScreenProps = {
   locale: HeaderLocale;
   error: unknown;
   retry: () => void;
+  /** Further content under the actions (the English block of the global error). */
+  aside?: ReactNode;
 };
 
 /**
@@ -53,6 +60,7 @@ export default function ErrorScreen({
   locale,
   error,
   retry,
+  aside,
 }: ErrorScreenProps) {
   const t = texts[locale];
   const digest = getErrorDigest(error);
@@ -67,6 +75,7 @@ export default function ErrorScreen({
       <Masthead locale={locale} />
       <StatusMessage
         code={t.code}
+        aside={aside}
         title={
           <span
             ref={headingRef}

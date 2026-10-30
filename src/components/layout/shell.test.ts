@@ -5,16 +5,22 @@ import { fileURLToPath } from "node:url";
 import { createElement as h } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { istanbulYear, withCurrentYear } from "./copyright";
-import { getErrorDigest } from "./ErrorScreen";
+import ErrorScreen, { getErrorDigest, getErrorTexts } from "./ErrorScreen";
 import { getFooterLinkGroups } from "./footer-links";
 import { getLanguageOptions } from "./header-content";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { createRootLayoutMetadata } from "./root-metadata";
+import SearchLink, { getSearchLink } from "./SearchLink";
 import Wordmark from "./Wordmark";
 import { shouldCloseOnEscape, shouldDismissOnOutside } from "../ui/Disclosure";
 import Disclosure from "../ui/Disclosure";
 import NavMenu from "../ui/NavMenu";
-import { getStaticFooterGroups } from "../../content/navigation/static-navigation";
+import {
+  getFooterSitemapGroups,
+  getStaticFooterGroups,
+} from "../../content/navigation/static-navigation";
+import { withFooterSitemap } from "../../content/navigation/navigation-fallback";
+import { workspaces } from "../../content/workspaces";
 import { homeContent } from "../../content/homeContent";
 import { contactPaths, privacyPaths } from "../../config/site";
 
@@ -27,44 +33,124 @@ test("language options fall back to the home pages and mark the current one", ()
       o.code,
       o.href,
       o.current,
+      o.translated,
     ]),
     [
-      ["TR", "/iletisim", true],
-      ["EN", "/en", false],
+      ["TR", "/iletisim", true, true],
+      // The contact page has an English counterpart; "/en" is not it.
+      ["EN", "/en", false, false],
     ],
   );
+  assert.deepEqual(
+    getLanguageOptions("tr", contactPaths).map((o) => o.translated),
+    [true, true],
+  );
+  // The home pages are each other's translation.
+  assert.deepEqual(
+    getLanguageOptions("en").map((o) => o.translated),
+    [true, true],
+  );
+});
+
+test("LANG-SWITCH-FALLBACK: hreflang of the language links equals <html lang>", () => {
+  for (const option of getLanguageOptions("tr")) {
+    assert.equal(option.hrefLang, option.locale);
+  }
+  for (const layout of ["src/app/(tr)/layout.tsx", "src/app/(en)/layout.tsx"]) {
+    const lang = /<html lang="(\w+)"/.exec(read(layout))?.[1];
+    assert.ok(
+      getLanguageOptions("tr").some((option) => option.hrefLang === lang),
+      layout,
+    );
+  }
 });
 
 test("LanguageSwitcher: visible code in the name, lang and hreflang per link", () => {
   const html = renderToStaticMarkup(
     h(LanguageSwitcher, { locale: "en", label: "Language selection" }),
   );
-  assert.match(html, /^<ul aria-label="Language selection"/);
+  assert.match(html, /<ul aria-label="Language selection"/);
   assert.match(
     html,
-    /hrefLang="tr-TR" lang="tr"[^>]*>TR<span class="sr-only"> Türkçe/,
+    /hrefLang="tr" lang="tr"[^>]*>TR<span class="sr-only"> Türkçe/,
   );
   assert.match(
     html,
     /lang="en" aria-current="true"[^>]*>EN<span class="sr-only"> English/,
   );
   assert.equal([...html.matchAll(/aria-current/g)].length, 1);
+  // The English home has its Turkish translation: no note.
+  assert.doesNotMatch(html, /aria-describedby|Yalnızca/);
 });
 
-test("Wordmark: home link named by its visible text, Turkish name marked", () => {
-  const html = renderToStaticMarkup(h(Wordmark, { locale: "en" }));
-  assert.match(html, /^<a [^>]*href="\/en"/);
+test("LANG-SWITCH-FALLBACK: a page without translation says so next to the other language", () => {
+  const html = renderToStaticMarkup(
+    h(LanguageSwitcher, {
+      locale: "tr",
+      label: "Dil seçimi",
+      hrefs: { tr: "/hakkimda", en: "/en" },
+    }),
+  );
+  const describedBy =
+    /<a hrefLang="en"[^>]*aria-describedby="([^"]+)"[^>]*href="\/en"/.exec(
+      html,
+    )?.[1];
+  assert.ok(describedBy, html);
   assert.match(
     html,
-    /<span lang="tr" class="block type-wordmark">ŞABAN DURALİ<\/span>/,
+    new RegExp(`<p id="${describedBy}" lang="en"[^>]*>Only in Turkish</p>`),
   );
-  assert.match(html, /RESEARCH AND KNOWLEDGE PLATFORM/);
+  assert.equal([...html.matchAll(/aria-describedby/g)].length, 1);
+
+  const english = renderToStaticMarkup(
+    h(LanguageSwitcher, {
+      locale: "en",
+      label: "Language selection",
+      hrefs: { tr: "/kitaplar", en: "/en/books/a-review" },
+    }),
+  );
+  assert.match(english, /<p id="[^"]+" lang="tr"[^>]*>Yalnızca İngilizce<\/p>/);
+  // A translated detail page shows no note.
+  const translated = renderToStaticMarkup(
+    h(LanguageSwitcher, {
+      locale: "en",
+      label: "Language selection",
+      hrefs: { tr: "/kitaplar/bir-inceleme", en: "/en/books/a-review" },
+    }),
+  );
+  assert.doesNotMatch(translated, /Yalnızca|aria-describedby/);
+});
+
+test("Wordmark: the identity logo, a home link named by its visible text", () => {
+  const html = renderToStaticMarkup(h(Wordmark, { locale: "en" }));
+  assert.match(html, /^<a [^>]*href="\/en"/);
+  // Below 640 px the name-only wordmark, from 640 px the horizontal logo.
+  assert.match(
+    html,
+    /<source media="\(min-width: 40rem\)" srcSet="\/brand\/saban-durali-logo-color\.svg" width="2027" height="256"\/>/,
+  );
+  assert.match(
+    html,
+    /<img src="\/brand\/saban-durali-wordmark-name-color\.svg" alt="Şaban Durali, Research and Knowledge Platform" width="2470" height="256" fetchPriority="high" decoding="async" class="block h-4\.5 w-auto sm:h-9"\/>/,
+  );
+  // The accessible name: the alt (visible name first), then the suffix.
   assert.match(html, /<span class="sr-only">, home page<\/span>/);
+  assert.doesNotMatch(html, /type-wordmark|ŞABAN DURALİ/);
+
+  const turkish = renderToStaticMarkup(h(Wordmark, { locale: "tr" }));
+  assert.match(turkish, /^<a [^>]*href="\/"/);
+  assert.match(turkish, /alt="Şaban Durali, Araştırma ve Bilgi Platformu"/);
+  assert.match(turkish, /<span class="sr-only">, ana sayfa<\/span>/);
+
   const plain = renderToStaticMarkup(
     h(Wordmark, { locale: "tr", asLink: false, tone: "on-sea" }),
   );
   assert.match(plain, /^<p /);
-  assert.doesNotMatch(plain, /<a /);
+  assert.doesNotMatch(plain, /<a |<source/);
+  assert.match(
+    plain,
+    /<img src="\/brand\/saban-durali-logo-color-ondark\.svg" alt="Şaban Durali, Araştırma ve Bilgi Platformu" width="2027" height="256" loading="lazy" decoding="async" class="block h-9 w-auto"\/>/,
+  );
 });
 
 test("footer groups: flat real links, no empty group, DOM-safe ids", () => {
@@ -110,6 +196,161 @@ test("footer groups: flat real links, no empty group, DOM-safe ids", () => {
   }
 });
 
+test("FOOTER-SITEMAP: the footer maps the site in both languages", () => {
+  const hrefsOf = (locale: "tr" | "en") =>
+    getFooterLinkGroups(
+      withFooterSitemap(
+        getFooterSitemapGroups(locale),
+        getStaticFooterGroups(homeContent[locale].footer),
+      ),
+    ).flatMap((group) => group.links);
+  const tr = hrefsOf("tr");
+  const en = hrefsOf("en");
+  for (const workspace of workspaces) {
+    assert.ok(
+      tr.some((link) => link.href === `/${workspace.key}`),
+      workspace.key,
+    );
+  }
+  for (const href of [
+    "/calisma-alanlari",
+    "/istanbul/ilceler",
+    "/makaleler",
+    "/kitaplar",
+    "/fotograflar",
+    "/hakkimda",
+    "/ara",
+    "/feed.xml",
+    contactPaths.tr,
+    privacyPaths.tr,
+  ]) {
+    assert.ok(
+      tr.some((link) => link.href === href),
+      href,
+    );
+  }
+  for (const href of [
+    "/en/articles",
+    "/en/books",
+    "/en/photography",
+    "/en#about",
+    "/en#istanbul",
+    "/en/search",
+    "/en/feed.xml",
+    contactPaths.en,
+    privacyPaths.en,
+  ]) {
+    assert.ok(
+      en.some((link) => link.href === href),
+      href,
+    );
+  }
+  // The other language is named in its own language and marked as such.
+  assert.deepEqual(
+    tr.filter((link) => link.lang !== undefined),
+    [
+      {
+        id: "footer-language",
+        label: "English",
+        href: "/en",
+        newTab: false,
+        lang: "en",
+      },
+    ],
+  );
+  assert.deepEqual(
+    en.filter((link) => link.lang !== undefined),
+    [
+      {
+        id: "footer-language",
+        label: "Türkçe",
+        href: "/",
+        newTab: false,
+        lang: "tr",
+      },
+    ],
+  );
+  // Each page once per footer.
+  for (const links of [tr, en]) {
+    const hrefs = links.map((link) => link.href);
+    assert.equal(new Set(hrefs).size, hrefs.length);
+  }
+});
+
+test("FOOTER-SITEMAP: a CMS link replaces the site map's link to the same page", () => {
+  const cms = [
+    {
+      id: "cms",
+      title: "CI test bağlantıları",
+      links: [
+        {
+          id: "cms-about",
+          label: "Hakkımda (CMS)",
+          href: "/hakkimda/",
+          external: false,
+          newTab: false,
+          children: [],
+        },
+      ],
+    },
+  ];
+  const groups = withFooterSitemap(getFooterSitemapGroups("tr"), cms);
+  const links = groups.flatMap((group) => group.links);
+  assert.deepEqual(
+    links.filter((link) => link.href?.startsWith("/hakkimda")).map((l) => l.id),
+    ["cms-about"],
+  );
+  assert.equal(groups.at(-1)?.title, "CI test bağlantıları");
+  // A site map group whose every link the CMS already has is dropped.
+  const duplicate = {
+    id: "dup",
+    label: "Hakkımda",
+    href: "/hakkimda",
+    external: false,
+    newTab: false,
+    children: [],
+  };
+  assert.deepEqual(
+    withFooterSitemap([{ id: "x", title: "Boş", links: [duplicate] }], cms).map(
+      (group) => group.id,
+    ),
+    ["cms"],
+  );
+});
+
+test("FOOTER-SITEMAP: footer and header link the search page without prefetch", () => {
+  for (const locale of ["tr", "en"] as const) {
+    const html = renderToStaticMarkup(h(SearchLink, { locale }));
+    const { href, label } = getSearchLink(locale);
+    assert.match(html, new RegExp(`^<a [^>]*href="${href}"`));
+    assert.match(
+      html,
+      new RegExp(`</svg><span class="max-sm:sr-only">${label}</span></a>$`),
+    );
+    assert.match(html, /<svg aria-hidden="true"/);
+  }
+  assert.deepEqual(
+    [getSearchLink("tr").href, getSearchLink("en").href],
+    ["/ara", "/en/search"],
+  );
+  assert.match(
+    read("src/components/layout/Header.tsx"),
+    /<SearchLink locale=\{locale\} \/>/,
+  );
+  // next/link renders no trace of `prefetch`, so the sources are read.
+  assert.match(
+    read("src/components/layout/SearchLink.tsx"),
+    /<Link\s+href=\{href\}[\s\S]*?prefetch=\{false\}[\s\S]*?>/,
+  );
+  const footer = read("src/components/layout/Footer.tsx");
+  assert.match(footer, /prefetch=\{false\}/);
+  assert.match(footer, /lang=\{link\.lang\}\s+hrefLang=\{link\.lang\}/);
+  assert.match(
+    read("src/content/navigation/navigation-data-source.ts"),
+    /return withFooterSitemap\(sitemap, staticGroups\);[\s\S]*return withFooterSitemap\(\s*sitemap,\s*resolveFooterGroups\(/,
+  );
+});
+
 test("FE-7: root metadata has Open Graph and Twitter, never a canonical or og:url", () => {
   for (const locale of ["tr", "en"] as const) {
     const metadata = createRootLayoutMetadata(locale);
@@ -121,6 +362,7 @@ test("FE-7: root metadata has Open Graph and Twitter, never a canonical or og:ur
     assert.equal(og.locale, locale === "tr" ? "tr_TR" : "en_US");
     assert.equal("type" in og ? og.type : undefined, "website");
     assert.ok(Array.isArray(og.images) && og.images.length === 1);
+    assert.equal(metadata.manifest, "/site.webmanifest");
     const twitter = metadata.twitter;
     assert.ok(twitter);
     assert.equal(
@@ -245,6 +487,38 @@ test("shell sources: atlas layouts, retry, English 404 catch-all, global 404", (
       file,
     );
   }
+});
+
+test("GLOBAL-ERROR: a branded, bilingual root error screen without CMS reads", () => {
+  const source = read("src/app/global-error.tsx");
+  assert.match(source, /^"use client";/);
+  assert.match(source, /export default function GlobalError\(/);
+  assert.match(source, /<html lang="tr"[^>]*className=\{fontVariables\}/);
+  assert.match(source, /import "\.\/globals\.css";/);
+  assert.match(
+    source,
+    /<body>\s*<title>[^<]+<\/title>\s*<meta name="robots" content="noindex" \/>\s*<SkipLink>\s*İçeriğe geç · <span lang="en">Skip to content<\/span>\s*<\/SkipLink>/,
+  );
+  assert.match(
+    source,
+    /<ErrorScreen\s+locale="tr"\s+error=\{error\}\s+retry=\{retry\}/,
+  );
+  assert.match(source, /<section\s+lang="en"/);
+  // No data layer: the screen must render when the CMS or the root layout fails.
+  assert.doesNotMatch(source, /@\/content\/|payload|server-only|async /);
+
+  const html = renderToStaticMarkup(
+    h(ErrorScreen, {
+      locale: "tr",
+      error: { digest: "abc123" },
+      retry: () => undefined,
+      aside: h("section", { lang: "en" }, "English block"),
+    }),
+  );
+  assert.match(html, /Sayfa şu anda gösterilemiyor\./);
+  assert.match(html, /Hata kodu: abc123/);
+  assert.match(html, /<section lang="en">English block<\/section>/);
+  assert.equal(getErrorTexts("en").retry, "Try again");
 });
 
 test("FRONTEND-6: every long page shell, the home page included, has BackToTop", () => {

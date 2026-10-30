@@ -56,15 +56,18 @@ export function toAbsoluteUrl(pathOrUrl: string): string {
 /**
  * hreflang pairs for the published language versions of one page.
  *
- * Every version lists itself and its siblings (`tr-TR`, `en`). `x-default`
- * points to the Turkish version and is added only when more than one
- * language version exists.
+ * Every version lists itself and its siblings (`tr-TR`, `en`) and
+ * `x-default`, which points to the Turkish version. A page with a single
+ * language version is in no cluster: it gets no hreflang link at all, not
+ * a lone self-reference (A11Y-I18N-04). The page metadata and the sitemap
+ * both use this helper, so they always declare the same clusters.
  */
 export function createLanguageAlternates(
   paths: LocalizedPaths,
 ): Record<string, string> {
   const languages: Record<string, string> = {};
   const available = siteLocales.filter((locale) => paths[locale] !== undefined);
+  if (available.length < 2) return languages;
 
   for (const locale of available) {
     const path = paths[locale];
@@ -74,7 +77,7 @@ export function createLanguageAlternates(
   }
 
   const defaultLocale = available[0];
-  if (available.length > 1 && defaultLocale !== undefined) {
+  if (defaultLocale !== undefined) {
     languages["x-default"] = languages[getHreflang(defaultLocale)];
   }
 
@@ -276,7 +279,33 @@ export type PageMetadataInput = {
   socialDescription?: string;
   /** Present for articles, reviews and photos: `og:type` becomes `article`. */
   article?: ArticleOpenGraph;
+  /**
+   * Announce the language's Atom feed (`<link rel="alternate"
+   * type="application/atom+xml">`). Defaults to true on the home pages;
+   * the publication lists pass true.
+   */
+  feed?: boolean;
 };
+
+/** The Atom feed of each language (the `feed.xml` route handlers). */
+export const feedLinks = {
+  tr: { path: "/feed.xml", title: "Şaban Durali — yeni yayınlar" },
+  en: { path: "/en/feed.xml", title: "Şaban Durali — new publications" },
+} as const satisfies Record<SiteLocale, { path: string; title: string }>;
+
+const homePaths = { tr: "/", en: "/en" } as const satisfies Record<
+  SiteLocale,
+  string
+>;
+
+function createFeedAlternates(locale: SiteLocale) {
+  const feed = feedLinks[locale];
+  return {
+    "application/atom+xml": [
+      { url: toAbsoluteUrl(feed.path), title: feed.title },
+    ],
+  };
+}
 
 /**
  * Metadata for one page: title, description, canonical, hreflang pairs,
@@ -285,10 +314,12 @@ export type PageMetadataInput = {
 export function createPageMetadata(input: PageMetadataInput): Metadata {
   // A noindex URL cannot be a hreflang target, so it announces none either:
   // the page tags then agree with the sitemap, which leaves it out.
-  const hreflang = (input.hreflang ?? true) && (input.index ?? true);
-  const paths: LocalizedPaths = hreflang
-    ? { ...input.translations, [input.locale]: input.path }
-    : {};
+  const paths: LocalizedPaths =
+    (input.hreflang ?? true) && (input.index ?? true)
+      ? { ...input.translations, [input.locale]: input.path }
+      : {};
+  const languages = createLanguageAlternates(paths);
+  const hreflang = Object.keys(languages).length > 0;
   const canonical = toAbsoluteUrl(input.canonical ?? input.path);
   const images =
     input.images !== undefined && input.images.length > 0
@@ -297,7 +328,10 @@ export function createPageMetadata(input: PageMetadataInput): Metadata {
   const socialTitle = input.socialTitle ?? input.title;
   const socialDescription = input.socialDescription ?? input.description;
   const alternateLocales = siteLocales
-    .filter((locale) => locale !== input.locale && paths[locale] !== undefined)
+    .filter(
+      (locale) =>
+        hreflang && locale !== input.locale && paths[locale] !== undefined,
+    )
     .map(getOpenGraphLocale);
   const openGraphBase = {
     title: socialTitle,
@@ -311,13 +345,15 @@ export function createPageMetadata(input: PageMetadataInput): Metadata {
     images,
   };
   const article = input.article;
+  const feed = input.feed ?? input.path === homePaths[input.locale];
+  const types = feed ? { types: createFeedAlternates(input.locale) } : {};
 
   return {
     title: input.title,
     description: input.description,
     alternates: hreflang
-      ? { canonical, languages: createLanguageAlternates(paths) }
-      : { canonical },
+      ? { canonical, languages, ...types }
+      : { canonical, ...types },
     robots: {
       index: input.index ?? true,
       follow: input.follow ?? true,

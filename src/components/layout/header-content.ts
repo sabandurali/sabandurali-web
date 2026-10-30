@@ -1,4 +1,5 @@
 import type { SiteLocale } from "@/content/locales";
+import { isTranslationPath } from "@/content/route-parity";
 
 /**
  * Texts and links of the site shell (header, footer, 404 and error pages)
@@ -33,27 +34,54 @@ export type LanguageOption = {
   code: string;
   /** The language's name in that language. */
   name: string;
+  /** Same value as the `lang` of that language's pages (`<html lang>`). */
   hrefLang: string;
   href: string;
   current: boolean;
+  /**
+   * The link opens this page's translation. False when the page has no
+   * counterpart in that language and the link falls back to its home or
+   * list page; the switcher then shows `untranslatedNote`.
+   */
+  translated: boolean;
+  /** Visible note for an untranslated link, written in the link's language. */
+  untranslatedNote: string;
 };
 
 const languages = [
-  { locale: "tr", code: "TR", name: "Türkçe", hrefLang: "tr-TR" },
-  { locale: "en", code: "EN", name: "English", hrefLang: "en" },
+  {
+    locale: "tr",
+    code: "TR",
+    name: "Türkçe",
+    hrefLang: "tr",
+    untranslatedNote: "Yalnızca İngilizce",
+  },
+  {
+    locale: "en",
+    code: "EN",
+    name: "English",
+    hrefLang: "en",
+    untranslatedNote: "Only in Turkish",
+  },
 ] as const;
 
 /**
  * The language links of a page: the page's own path per language when it
- * has one, otherwise that language's home page.
+ * has one, otherwise that language's home page. `translated` comes from the
+ * route parity manifest (src/content/route-parity.ts).
  */
 export function getLanguageOptions(
   locale: HeaderLocale,
   hrefs?: Partial<Record<HeaderLocale, string>>,
 ): LanguageOption[] {
-  return languages.map((language) => ({
-    ...language,
-    href: hrefs?.[language.locale] ?? localeHomePaths[language.locale],
-    current: language.locale === locale,
-  }));
+  const ownPath = hrefs?.[locale] ?? localeHomePaths[locale];
+  return languages.map((language) => {
+    const href = hrefs?.[language.locale] ?? localeHomePaths[language.locale];
+    return {
+      ...language,
+      href,
+      current: language.locale === locale,
+      translated: isTranslationPath(ownPath, locale, href, language.locale),
+    };
+  });
 }

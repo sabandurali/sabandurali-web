@@ -27,7 +27,12 @@ export const Media: CollectionConfig = {
     description:
       "Yüklenen her dosya, adresini bilen herkes tarafından açılabilir; kişisel veya gizli belge yüklemeyin. Görseller uzun kenarı en fazla 3200 piksel olacak biçimde yeniden kaydedilir ve konum, cihaz ve çekim zamanı (EXIF) bilgileri silinir.",
     group: "İçerik",
+    listSearchableFields: ["filename", "alt", "sourceCopyright"],
     useAsTitle: "filename",
+  },
+  labels: {
+    plural: "Medya",
+    singular: "Medya dosyası",
   },
   fields: [
     {
