@@ -307,7 +307,10 @@ test("FOOTER-SITEMAP: footer and header link the search page without prefetch", 
     const html = renderToStaticMarkup(h(SearchLink, { locale }));
     const { href, label } = getSearchLink(locale);
     assert.match(html, new RegExp(`^<a [^>]*href="${href}"`));
-    assert.match(html, new RegExp(`</svg>${label}</a>$`));
+    assert.match(
+      html,
+      new RegExp(`</svg><span class="max-sm:sr-only">${label}</span></a>$`),
+    );
     assert.match(html, /<svg aria-hidden="true"/);
   }
   assert.deepEqual(

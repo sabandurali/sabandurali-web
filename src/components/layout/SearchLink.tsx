@@ -11,8 +11,10 @@ export function getSearchLink(locale: HeaderLocale) {
 
 /**
  * "Ara" / "Search" with a magnifier: a plain link to the search page (the
- * page owns the form). The visible word is the accessible name; the icon
- * is decorative. Same type, height and hover as the language links.
+ * page owns the form). The word is the accessible name and the icon is
+ * decorative. Below 640 px only the magnifier shows (the word stays for
+ * assistive technology), so the wordmark keeps its single line on a phone.
+ * Same type, height and hover as the language links.
  */
 export default function SearchLink({ locale }: { locale: HeaderLocale }) {
   const { href, label } = getSearchLink(locale);
@@ -38,7 +40,7 @@ export default function SearchLink({ locale }: { locale: HeaderLocale }) {
         <circle cx="6.5" cy="6.5" r="4.75" />
         <path d="m10 10 4.5 4.5" strokeLinecap="square" />
       </svg>
-      {label}
+      <span className="max-sm:sr-only">{label}</span>
     </Link>
   );
 }
