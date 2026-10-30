@@ -1,4 +1,5 @@
 import type { CollectionConfig } from "payload";
+import { publicLinksField, seoPreviewField } from "@/collections/admin-fields";
 import {
   SEO_DESCRIPTION_MAX_LENGTH,
   SEO_TITLE_MAX_LENGTH,
@@ -48,6 +49,7 @@ export const Photos: CollectionConfig = {
     singular: "Fotoğraf",
   },
   fields: [
+    publicLinksField,
     {
       type: "tabs",
       tabs: [
@@ -221,6 +223,7 @@ export const Photos: CollectionConfig = {
               type: "group",
               label: "SEO",
               fields: [
+                seoPreviewField("photos"),
                 {
                   name: "metaTitle",
                   type: "text",

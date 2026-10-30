@@ -3,6 +3,7 @@ import type {
   RichTextField,
   TextFieldSingleValidation,
 } from "payload";
+import { publicLinksField, seoPreviewField } from "@/collections/admin-fields";
 import { richText as validateRichText } from "payload/shared";
 import {
   adminOnly,
@@ -103,6 +104,7 @@ export const Articles: CollectionConfig = {
     singular: "Makale / Araştırma",
   },
   fields: [
+    publicLinksField,
     {
       name: "title",
       type: "text",
@@ -275,6 +277,7 @@ export const Articles: CollectionConfig = {
       type: "group",
       label: "SEO",
       fields: [
+        seoPreviewField("articles"),
         {
           name: "metaTitle",
           type: "text",

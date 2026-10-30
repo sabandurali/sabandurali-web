@@ -7,6 +7,7 @@ import {
   type PayloadRequest,
   type Where,
 } from "payload";
+import { publicLinksField } from "@/collections/admin-fields";
 import {
   BOOK_CATEGORIES,
   BOOK_CATEGORY_LABELS,
@@ -391,6 +392,7 @@ export const Books: CollectionConfig = {
   },
   lockDocuments: false,
   fields: [
+    publicLinksField,
     {
       type: "tabs",
       tabs: [

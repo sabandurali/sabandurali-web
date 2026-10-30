@@ -240,6 +240,9 @@ export default buildConfig({
     avatar: "default",
     components: {
       afterNavLinks: ["/components/admin/help/AdminHelpNavLink"],
+      beforeDashboard: [
+        "/components/admin/dashboard/EditorDashboard#EditorDashboard",
+      ],
       views: {
         help: {
           Component: "/components/admin/help/AdminHelpView#AdminHelpView",

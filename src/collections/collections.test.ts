@@ -1490,3 +1490,37 @@ test("ADM-QUICK-UX: list views search beyond the title", () => {
   }
 });
 
+test("ADM-PUBLIC-LINKS: every public content type shows its site links in the sidebar", async () => {
+  const { publicLinksField } = await import("./admin-fields");
+  const { PUBLIC_RECORD_COLLECTIONS } =
+    await import("../components/admin/public-links/public-record");
+  const collections = [Articles, Books, DistrictGuides, Pages, Photos];
+  assert.deepEqual(
+    collections.map((collection) => collection.slug).toSorted(),
+    [...PUBLIC_RECORD_COLLECTIONS],
+  );
+  for (const collection of collections) {
+    assert.equal(collection.fields[0], publicLinksField, collection.slug);
+  }
+  assert.equal(publicLinksField.admin?.position, "sidebar");
+});
+
+test("ADM-SEO-PREVIEW: the SEO groups of articles, pages and photos show the live preview", () => {
+  for (const [collection, kind] of [
+    [Articles, "articles"],
+    [Pages, "pages"],
+    [Photos, "photos"],
+  ] as const) {
+    const seo = findField(collection, "seo");
+    assert.ok(seo.type === "group" && "name" in seo, collection.slug);
+    const preview = seo.fields[0];
+    assert.ok(preview?.type === "ui", collection.slug);
+    const component = preview.admin?.components?.Field;
+    assert.ok(typeof component === "object" && component !== null);
+    assert.equal(
+      component.path,
+      "/components/admin/seo/SeoPreviewField#SeoPreviewField",
+    );
+    assert.deepEqual(component.clientProps, { kind });
+  }
+});

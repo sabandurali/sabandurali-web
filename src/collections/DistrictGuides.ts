@@ -1,4 +1,5 @@
 import type { CollectionBeforeChangeHook, CollectionConfig } from "payload";
+import { publicLinksField } from "@/collections/admin-fields";
 import {
   projectPublicDistrictGuideDocument,
   sanitizeDistrictSources,
@@ -98,6 +99,7 @@ export const DistrictGuides: CollectionConfig = {
     defaultColumns: ["district", "_status", "publishedAt", "updatedAt"],
   },
   fields: [
+    publicLinksField,
     {
       name: "district",
       type: "select",
