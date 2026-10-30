@@ -7,16 +7,19 @@ import {
   type PayloadRequest,
   type Where,
 } from "payload";
+import { publicLinksField } from "@/collections/admin-fields";
 import {
   BOOK_CATEGORIES,
   BOOK_CATEGORY_LABELS,
-  BOOK_REVIEW_TRANSLATION_STATUSES,
-  READING_STATUSES,
-  REVIEW_STATUSES,
 } from "@/content/books/constants";
 import { createBookReviewSlug, normalizeIsbn } from "@/content/books/helpers";
 import { SLUG_RULE_MESSAGE } from "@/content/shared/slug";
 import { getBookPublicationIssues } from "@/collections/bookPublication";
+import {
+  readingStatusOptions,
+  reviewStatusOptions,
+  translationStatusOptions,
+} from "@/collections/option-labels";
 import {
   imageMediaFilter,
   validateOptionalSiteCanonical,
@@ -380,6 +383,7 @@ export const Books: CollectionConfig = {
       "updatedAt",
     ],
     group: "İçerik",
+    listSearchableFields: ["title", "slug", "originalTitle", "isbn13"],
     useAsTitle: "title",
   },
   labels: {
@@ -388,6 +392,7 @@ export const Books: CollectionConfig = {
   },
   lockDocuments: false,
   fields: [
+    publicLinksField,
     {
       type: "tabs",
       tabs: [
@@ -403,6 +408,7 @@ export const Books: CollectionConfig = {
             {
               name: "slug",
               type: "text",
+              label: "Slug",
               admin: {
                 description:
                   "Başlıktan otomatik oluşur; gerekirse elle düzenlenebilir.",
@@ -596,10 +602,7 @@ export const Books: CollectionConfig = {
                   type: "select",
                   label: "Okuma durumu",
                   defaultValue: "planned",
-                  options: READING_STATUSES.map((value) => ({
-                    label: value,
-                    value,
-                  })),
+                  options: readingStatusOptions,
                   required: true,
                 },
                 {
@@ -612,10 +615,7 @@ export const Books: CollectionConfig = {
                   },
                   defaultValue: "draft",
                   index: true,
-                  options: REVIEW_STATUSES.map((value) => ({
-                    label: value,
-                    value,
-                  })),
+                  options: reviewStatusOptions,
                   required: true,
                 },
               ],
@@ -789,10 +789,7 @@ export const Books: CollectionConfig = {
               type: "select",
               label: "Çeviri durumu",
               defaultValue: "none",
-              options: BOOK_REVIEW_TRANSLATION_STATUSES.map((value) => ({
-                label: value,
-                value,
-              })),
+              options: translationStatusOptions,
               required: true,
             },
             {

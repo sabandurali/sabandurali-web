@@ -6,6 +6,7 @@ import {
   type CollectionConfig,
   type Where,
 } from "payload";
+import { publicLinksField, seoPreviewField } from "@/collections/admin-fields";
 import { pageBlocks } from "@/blocks/pageBlocks";
 import {
   SEO_DESCRIPTION_MAX_LENGTH,
@@ -451,6 +452,7 @@ export const Pages: CollectionConfig = {
   },
   lockDocuments: false,
   fields: [
+    publicLinksField,
     {
       type: "tabs",
       tabs: [
@@ -550,6 +552,7 @@ export const Pages: CollectionConfig = {
               type: "group",
               label: "Arama ve paylaşım ayarları",
               fields: [
+                seoPreviewField("pages"),
                 {
                   name: "title",
                   type: "text",

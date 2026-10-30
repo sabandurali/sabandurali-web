@@ -20,6 +20,7 @@ export const PhotoCollections: CollectionConfig = {
   admin: {
     defaultColumns: ["title", "parent", "sortOrder", "updatedAt"],
     group: "Fotoğrafçılık",
+    listSearchableFields: ["title", "slug"],
     useAsTitle: "title",
   },
   labels: {
@@ -30,21 +31,27 @@ export const PhotoCollections: CollectionConfig = {
     {
       name: "title",
       type: "text",
+      label: "Başlık",
       localized: true,
       required: true,
     },
-    createLocalizedSlugField({
-      collection: "photo-collections",
-      sourceField: "title",
-    }),
+    {
+      ...createLocalizedSlugField({
+        collection: "photo-collections",
+        sourceField: "title",
+      }),
+      label: "Slug",
+    },
     {
       name: "description",
       type: "textarea",
+      label: "Açıklama",
       localized: true,
     },
     {
       name: "parent",
       type: "relationship",
+      label: "Üst koleksiyon",
       relationTo: "photo-collections",
       admin: {
         description:
@@ -56,6 +63,7 @@ export const PhotoCollections: CollectionConfig = {
     {
       name: "sortOrder",
       type: "number",
+      label: "Sıra",
       defaultValue: 0,
       min: 0,
     },

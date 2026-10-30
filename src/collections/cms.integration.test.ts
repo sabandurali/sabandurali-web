@@ -1422,6 +1422,72 @@ test("pages: a published home renders all its blocks and stays on the site", asy
   assert.equal(republished.title, "Yeni");
 });
 
+test("ADM-I18N: the admin and Local API errors default to Turkish", () => {
+  assert.equal(config.i18n.fallbackLanguage, "tr");
+  assert.deepEqual(Object.keys(config.i18n.supportedLanguages).toSorted(), [
+    "en",
+    "tr",
+  ]);
+  assert.equal(config.admin.meta.titleSuffix, "– Şaban Durali Yönetim");
+});
+
+test("ADM-DASHBOARD: the editor overview reads with the user's own access", async () => {
+  const { loadDashboard } =
+    await import("../components/admin/dashboard/dashboard-queries");
+  assert.deepEqual(config.admin.components.beforeDashboard, [
+    "/components/admin/dashboard/EditorDashboard#EditorDashboard",
+  ]);
+  // The first account always becomes an admin; make sure ours is an editor.
+  if ((await payload.count({ collection: "users" })).totalDocs === 0) {
+    await payload.create({
+      collection: "users",
+      data: {
+        email: "dashboard-admin@example.test",
+        password: "dashboard-admin-password",
+        role: "admin",
+      },
+    });
+  }
+  const editorUser = await payload.create({
+    collection: "users",
+    data: {
+      email: "dashboard-editor@example.test",
+      password: "dashboard-editor-password",
+      role: "editor",
+    },
+  });
+  const draft = await payload.create({
+    collection: "articles",
+    data: { title: "Panoda görünen taslak" },
+    draft: true,
+  });
+
+  try {
+    const now = new Date();
+    const forEditor = await loadDashboard(
+      { payload, user: { ...editorUser, collection: "users" } },
+      now,
+    );
+    assert.ok(!("error" in forEditor.drafts));
+    assert.ok(
+      forEditor.drafts.rows.some(
+        (row) => row.id === String(draft.id) && row.kind === "Makale",
+      ),
+    );
+    for (const section of Object.values(forEditor)) {
+      assert.ok(!("error" in section));
+    }
+
+    // Without a user the same reads see only public records: no drafts.
+    const anonymous = await loadDashboard({ payload, user: undefined }, now);
+    assert.ok(!("error" in anonymous.drafts));
+    assert.equal(anonymous.drafts.total, 0);
+  } finally {
+    await payload.delete({ collection: "articles", id: draft.id });
+    await payload.delete({ collection: "users", id: editorUser.id });
+  }
+});
+
 test("district guides: anonymous readers cannot filter on hidden fields", async () => {
   await assert.rejects(
     payload.find({

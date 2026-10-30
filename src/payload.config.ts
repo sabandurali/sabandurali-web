@@ -21,6 +21,7 @@ import { PhotoCollections } from "@/collections/PhotoCollections";
 import { Photos } from "@/collections/Photos";
 import { Tags } from "@/collections/Tags";
 import { Users } from "@/collections/Users";
+import { ADMIN_I18N, ADMIN_META } from "@/components/admin/admin-settings";
 import { INTERNAL_LINK_COLLECTIONS } from "@/content/rich-text/internal-link-collections";
 import { siteUrl } from "@/config/site";
 import { Navigation } from "@/globals/Navigation";
@@ -239,6 +240,9 @@ export default buildConfig({
     avatar: "default",
     components: {
       afterNavLinks: ["/components/admin/help/AdminHelpNavLink"],
+      beforeDashboard: [
+        "/components/admin/dashboard/EditorDashboard#EditorDashboard",
+      ],
       views: {
         help: {
           Component: "/components/admin/help/AdminHelpView#AdminHelpView",
@@ -247,6 +251,7 @@ export default buildConfig({
         },
       },
     },
+    meta: ADMIN_META,
     user: Users.slug,
     importMap: {
       baseDir: path.resolve(dirname),
@@ -270,6 +275,7 @@ export default buildConfig({
   csrf: getCsrfAllowedOrigins(),
   globals: [Navigation],
   db: database,
+  i18n: ADMIN_I18N,
   editor: lexicalEditor({
     features: ({ defaultFeatures }) =>
       configureRichTextFeatures(defaultFeatures),
