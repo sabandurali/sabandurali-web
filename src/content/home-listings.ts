@@ -104,3 +104,73 @@ export const homeListingUnavailableCopy: Record<
       "The featured district guide could not be loaded right now. Please reopen the page shortly.",
   },
 };
+
+/** The "latest" lists shown as their own numbered home section. */
+export type HomeListingSectionName = Exclude<HomeListingName, "districts">;
+
+const LISTING_SECTION_ORDER: ReadonlyArray<HomeListingSectionName> = [
+  "articles",
+  "books",
+  "photos",
+];
+
+export type HomeSectionPlan = {
+  /** Listing sections to render, in page order. */
+  listings: HomeListingSectionName[];
+  /**
+   * Two-digit section numbers; the atlas is always "01". A hidden list has
+   * no number (null).
+   */
+  numbers: Record<HomeListingSectionName, string | null> & {
+    atlas: string;
+    workspaces: string;
+  };
+  /**
+   * Ground of each list: the shown lists alternate paper and band after
+   * the atlas band, so two neighbours never share a ground.
+   */
+  tones: Record<HomeListingSectionName, "paper" | "band">;
+};
+
+function sectionNumber(position: number): string {
+  return String(position).padStart(2, "0");
+}
+
+/**
+ * Which "latest" sections the home page renders and how they are numbered
+ * (UX-04). A list with nothing published is left out instead of filling a
+ * full-width band with "nothing yet"; it returns by itself once content is
+ * published. A list whose query failed stays visible with its "temporarily
+ * unavailable" message, because a failed read is not an empty one. The
+ * numbers follow the sections actually shown, so they never skip.
+ */
+export function planHomeSections(
+  counts: Readonly<Record<HomeListingSectionName, number>>,
+  unavailable: readonly HomeListingName[],
+): HomeSectionPlan {
+  const listings = LISTING_SECTION_ORDER.filter(
+    (name) => counts[name] > 0 || unavailable.includes(name),
+  );
+  const numberOf = (name: HomeListingSectionName): string | null => {
+    const index = listings.indexOf(name);
+    return index === -1 ? null : sectionNumber(index + 2);
+  };
+  const toneOf = (name: HomeListingSectionName): "paper" | "band" =>
+    listings.indexOf(name) % 2 === 1 ? "band" : "paper";
+
+  return {
+    listings,
+    numbers: {
+      atlas: sectionNumber(1),
+      articles: numberOf("articles"),
+      books: numberOf("books"),
+      photos: numberOf("photos"),
+      workspaces: sectionNumber(listings.length + 2),
+    },
+    tones: {
+      articles: toneOf("articles"),
+      books: toneOf("books"),
+      photos: toneOf("photos"),
+    },
+  };
+}
