@@ -122,7 +122,10 @@ test("CITE-THIS: the disclosure renders both formats in each language", () => {
   assert.match(tr, /<summary[^>]*><span>Nasıl atıf yapılır<\/span>/);
   assert.match(tr, /APA 7/);
   assert.match(tr, /BibTeX/);
+  // Long URLs wrap inside the box at 390 px instead of being clipped.
   assert.match(tr, /<pre[^>]*whitespace-pre-wrap/);
+  assert.match(tr, /<pre[^>]*\[overflow-wrap:anywhere\]/);
+  assert.match(tr, /<figure class="m-0 grid min-w-0/);
   assert.match(tr, /Durali, Ş\. \(2026, 27 Eylül\)/);
 
   const en = renderToStaticMarkup(h(CiteThis, { citation: guest }));

@@ -52,11 +52,13 @@ export default function CiteThis({
       </summary>
       <div className="grid gap-5 border-t border-hairline px-5 py-4">
         {formats.map((format) => (
-          <figure key={format.id} className="m-0 grid gap-2">
+          <figure key={format.id} className="m-0 grid min-w-0 gap-2">
             <figcaption className="type-label text-ink-muted">
               {format.label}
             </figcaption>
-            <pre className="m-0 rounded-tile border border-hairline bg-paper p-3 type-data-md break-words whitespace-pre-wrap">
+            {/* overflow-wrap:anywhere also lowers the min-content width, so
+                a long URL wraps instead of widening the grid column. */}
+            <pre className="m-0 min-w-0 rounded-tile border border-hairline bg-paper p-3 type-data-md whitespace-pre-wrap [overflow-wrap:anywhere]">
               {format.value}
             </pre>
           </figure>
