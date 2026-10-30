@@ -1,6 +1,6 @@
 # Şaban Durali Web — Project State
 
-Last verified handoff: 2026-10-29
+Last verified handoff: 2026-10-30
 
 ## A. Project identity
 
@@ -279,7 +279,11 @@ The Production database identity (sha256 of `host:port/database`) is a reviewed 
 2. Compute its fingerprint without printing the URL: `read -rs DATABASE_URL; export DATABASE_URL; node scripts/database-fingerprint.mjs; unset DATABASE_URL` (paste the value from Vercel; the script prints only the fingerprint).
 3. Change `productionDatabaseFingerprint` in a reviewed pull request, merge it, and let the Production build verify the migration state against the restored database.
 
-### K.5 Pending migration `20261028_205938_article_seo_book_slug_unique`
+### K.5 Migration `20261028_205938_article_seo_book_slug_unique`
+
+Applied to Production on 2026-10-30 with the procedure in K.2; the pre-flight results, the PITR check, the build
+log and the read-only verification are in `docs/releases/2026-10-30-quality-atlas.md`. The text below is kept as the
+record of what the migration does and of the pre-flight it required.
 
 This migration is additive: it sets the default user role to `editor`, adds `focal_x`/`focal_y` to `media`, adds the article author and SEO columns (`author_name`, `seo_index`, `seo_follow`, `seo_canonical`, and their version columns) and creates the unique index `language_slug_1_idx` on `books (language, slug)`. Its `down` refuses to run; when rolling application code back, keep the schema.
 
