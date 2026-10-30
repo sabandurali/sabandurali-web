@@ -3,8 +3,11 @@ import { articleListPaths } from "@/content/articles/article-routes";
 import { bookListPaths } from "@/content/books/book-routes";
 import { photoListPaths } from "@/content/photos/photo-routes";
 import { getDistrictsBySide } from "@/content/districts/district-registry";
-import { getDistrictPath } from "@/content/districts/district-routes";
-import { workspaces } from "@/content/workspaces";
+import {
+  districtGuidePath,
+  getDistrictPath,
+} from "@/content/districts/district-routes";
+import { workspacePath, workspaces } from "@/content/workspaces";
 import type {
   PublicFooterGroup,
   PublicNavigationLink,
@@ -302,5 +305,158 @@ export function getStaticFooterGroups(
         },
       ],
     },
+  ];
+}
+
+/**
+ * Site search pages (SITE-SEARCH). route-parity.ts pairs them, so they are
+ * served in both languages or in neither.
+ */
+export const searchPaths = {
+  tr: "/ara",
+  en: "/en/search",
+} as const satisfies Record<Locale, string>;
+
+/** RSS feeds of the publications (FEEDS), one per language. */
+export const feedPaths = {
+  tr: "/feed.xml",
+  en: "/en/feed.xml",
+} as const satisfies Record<Locale, string>;
+
+const footerSitemapLabels = {
+  tr: {
+    workspaces: "Çalışma alanları",
+    allWorkspaces: "Tüm çalışma alanları",
+    explore: "Keşfet",
+    districtGuide: "İstanbul İlçe Rehberi",
+    articles: "Makaleler",
+    books: "Kitaplar",
+    photos: "Fotoğraflar",
+    site: "Site",
+    about: "Hakkımda",
+    search: "Ara",
+    feed: "RSS beslemesi",
+    otherLanguage: "English",
+  },
+  en: {
+    explore: "Explore",
+    districtGuide: "Istanbul district atlas",
+    articles: "Articles",
+    books: "Books",
+    photos: "Photography",
+    site: "Site",
+    about: "About",
+    search: "Search",
+    feed: "RSS feed",
+    otherLanguage: "Türkçe",
+  },
+} as const;
+
+function footerLink(
+  id: string,
+  label: string,
+  href: string,
+  lang?: Locale,
+): PublicNavigationLink {
+  return {
+    id,
+    label,
+    href,
+    external: false,
+    newTab: false,
+    ...(lang === undefined ? {} : { lang }),
+    children: [],
+  };
+}
+
+/**
+ * The footer's site map (FOOTER-SITEMAP): the workspaces (Turkish only),
+ * the publication lists and the district guide, then about, search, the RSS
+ * feed and the other language. It is defined in code for both public
+ * sources; the CMS or static footer links follow it, and
+ * `withFooterSitemap` drops a site map link the CMS already offers.
+ */
+export function getFooterSitemapGroups(locale: Locale): PublicFooterGroup[] {
+  const site = (labels: {
+    about: string;
+    search: string;
+    feed: string;
+    otherLanguage: string;
+    site: string;
+  }): PublicFooterGroup => {
+    const other: Locale = locale === "tr" ? "en" : "tr";
+    return {
+      id: "footer-sitemap-site",
+      title: labels.site,
+      links: [
+        footerLink(
+          "footer-about",
+          labels.about,
+          locale === "tr" ? "/hakkimda" : "/en#about",
+        ),
+        footerLink("footer-search", labels.search, searchPaths[locale]),
+        footerLink("footer-feed", labels.feed, feedPaths[locale]),
+        footerLink(
+          "footer-language",
+          labels.otherLanguage,
+          other === "tr" ? "/" : "/en",
+          other,
+        ),
+      ],
+    };
+  };
+
+  if (locale === "en") {
+    const labels = footerSitemapLabels.en;
+    return [
+      {
+        id: "footer-sitemap-explore",
+        title: labels.explore,
+        links: [
+          footerLink("footer-articles", labels.articles, articleListPaths.en),
+          footerLink("footer-books", labels.books, bookListPaths.en),
+          footerLink("footer-photos", labels.photos, photoListPaths.en),
+          footerLink(
+            "footer-district-guide",
+            labels.districtGuide,
+            "/en#istanbul",
+          ),
+        ],
+      },
+      site(labels),
+    ];
+  }
+
+  const labels = footerSitemapLabels.tr;
+  return [
+    {
+      id: "footer-sitemap-workspaces",
+      title: labels.workspaces,
+      links: [
+        ...workspaces.map((workspace) =>
+          footerLink(
+            `footer-workspace-${workspace.key}`,
+            workspace.title,
+            `/${workspace.key}`,
+          ),
+        ),
+        footerLink("footer-workspaces", labels.allWorkspaces, workspacePath),
+      ],
+    },
+    {
+      id: "footer-sitemap-explore",
+      title: labels.explore,
+      links: [
+        footerLink(
+          "footer-district-guide",
+          labels.districtGuide,
+          districtGuidePath,
+        ),
+        footerLink("footer-articles", labels.articles, articleListPaths.tr),
+        footerLink("footer-books", labels.books, bookListPaths.tr),
+        footerLink("footer-photos", labels.photos, photoListPaths.tr),
+      ],
+    },
+    site(labels),
   ];
 }

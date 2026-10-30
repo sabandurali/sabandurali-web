@@ -324,8 +324,14 @@ kipinde kalır. Klavye modeli `menu-keys.ts` içindedir ve test edilir:
   o dilin ana ya da liste sayfasına gider ve yanında o dilde görünür bir not durur ("Only in Turkish" /
   "Yalnızca İngilizce"), bağlantı bu nota `aria-describedby` ile bağlıdır. Yeni bir sayfa rotası
   manifestoya ya karşılığıyla ya da gerekçeli `tr-only` olarak eklenir (test eder).
-- **Footer:** `sea` zemin (odak halkası beyaz), wordmark, platform cümlesi, footer bağlantıları (KVKK ve
-  iletişim her zaman vardır), telif satırı.
+- **Footer:** `sea` zemin (odak halkası beyaz), wordmark, platform cümlesi, mini site haritası, footer
+  bağlantıları (KVKK ve iletişim her zaman vardır), telif satırı. Site haritası kodda tanımlıdır
+  (`getFooterSitemapGroups`): Türkçede çalışma alanları, ilçe rehberi ve yayın listeleri; iki dilde de
+  hakkımda, arama (`/ara`, `/en/search`), RSS (`/feed.xml`, `/en/feed.xml`) ve diğer dil (kendi dilinde
+  adlandırılır, `lang` ve `hrefLang` taşır). CMS footer'ı aynı sayfaya bağlanıyorsa site haritasındaki
+  kopya düşer. Footer bağlantıları önyüklenmez (`prefetch={false}`).
+- **Arama bağlantısı:** header'ın ilk satırında her genişlikte "Ara" / "Search" (büyüteç dekoratiftir,
+  ad görünür sözcüktür), önyüklenmez.
 - **404 ve hata:** `StatusMessage` (turuncu kod etiketi, tek `h1`, açıklama, çıkış yolları). Grup 404'leri
   tam header ve footer'la gelir; `/en/*` altındaki eşleşmeyen adresler `[...missing]` ile İngilizce 404'e
   düşer. `global-not-found` CMS okumaz, fontları ve stilleri kendisi yükler, Türkçe + `lang="en"` blokla iki

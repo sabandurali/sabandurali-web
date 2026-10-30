@@ -10,11 +10,17 @@ import { getFooterLinkGroups } from "./footer-links";
 import { getLanguageOptions } from "./header-content";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { createRootLayoutMetadata } from "./root-metadata";
+import SearchLink, { getSearchLink } from "./SearchLink";
 import Wordmark from "./Wordmark";
 import { shouldCloseOnEscape, shouldDismissOnOutside } from "../ui/Disclosure";
 import Disclosure from "../ui/Disclosure";
 import NavMenu from "../ui/NavMenu";
-import { getStaticFooterGroups } from "../../content/navigation/static-navigation";
+import {
+  getFooterSitemapGroups,
+  getStaticFooterGroups,
+} from "../../content/navigation/static-navigation";
+import { withFooterSitemap } from "../../content/navigation/navigation-fallback";
+import { workspaces } from "../../content/workspaces";
 import { homeContent } from "../../content/homeContent";
 import { contactPaths, privacyPaths } from "../../config/site";
 
@@ -172,6 +178,153 @@ test("footer groups: flat real links, no empty group, DOM-safe ids", () => {
     assert.ok(hrefs.includes(privacyPaths[locale]), locale);
     assert.ok(hrefs.includes(contactPaths[locale]), locale);
   }
+});
+
+test("FOOTER-SITEMAP: the footer maps the site in both languages", () => {
+  const hrefsOf = (locale: "tr" | "en") =>
+    getFooterLinkGroups(
+      withFooterSitemap(
+        getFooterSitemapGroups(locale),
+        getStaticFooterGroups(homeContent[locale].footer),
+      ),
+    ).flatMap((group) => group.links);
+  const tr = hrefsOf("tr");
+  const en = hrefsOf("en");
+  for (const workspace of workspaces) {
+    assert.ok(
+      tr.some((link) => link.href === `/${workspace.key}`),
+      workspace.key,
+    );
+  }
+  for (const href of [
+    "/calisma-alanlari",
+    "/istanbul/ilceler",
+    "/makaleler",
+    "/kitaplar",
+    "/fotograflar",
+    "/hakkimda",
+    "/ara",
+    "/feed.xml",
+    contactPaths.tr,
+    privacyPaths.tr,
+  ]) {
+    assert.ok(
+      tr.some((link) => link.href === href),
+      href,
+    );
+  }
+  for (const href of [
+    "/en/articles",
+    "/en/books",
+    "/en/photography",
+    "/en#about",
+    "/en#istanbul",
+    "/en/search",
+    "/en/feed.xml",
+    contactPaths.en,
+    privacyPaths.en,
+  ]) {
+    assert.ok(
+      en.some((link) => link.href === href),
+      href,
+    );
+  }
+  // The other language is named in its own language and marked as such.
+  assert.deepEqual(
+    tr.filter((link) => link.lang !== undefined),
+    [
+      {
+        id: "footer-language",
+        label: "English",
+        href: "/en",
+        newTab: false,
+        lang: "en",
+      },
+    ],
+  );
+  assert.deepEqual(
+    en.filter((link) => link.lang !== undefined),
+    [
+      {
+        id: "footer-language",
+        label: "Türkçe",
+        href: "/",
+        newTab: false,
+        lang: "tr",
+      },
+    ],
+  );
+  // Each page once per footer.
+  for (const links of [tr, en]) {
+    const hrefs = links.map((link) => link.href);
+    assert.equal(new Set(hrefs).size, hrefs.length);
+  }
+});
+
+test("FOOTER-SITEMAP: a CMS link replaces the site map's link to the same page", () => {
+  const cms = [
+    {
+      id: "cms",
+      title: "CI test bağlantıları",
+      links: [
+        {
+          id: "cms-about",
+          label: "Hakkımda (CMS)",
+          href: "/hakkimda/",
+          external: false,
+          newTab: false,
+          children: [],
+        },
+      ],
+    },
+  ];
+  const groups = withFooterSitemap(getFooterSitemapGroups("tr"), cms);
+  const links = groups.flatMap((group) => group.links);
+  assert.deepEqual(
+    links.filter((link) => link.href?.startsWith("/hakkimda")).map((l) => l.id),
+    ["cms-about"],
+  );
+  assert.equal(groups.at(-1)?.title, "CI test bağlantıları");
+  // A site map group whose every link the CMS already has is dropped.
+  const duplicate = {
+    id: "dup",
+    label: "Hakkımda",
+    href: "/hakkimda",
+    external: false,
+    newTab: false,
+    children: [],
+  };
+  assert.deepEqual(
+    withFooterSitemap([{ id: "x", title: "Boş", links: [duplicate] }], cms).map(
+      (group) => group.id,
+    ),
+    ["cms"],
+  );
+});
+
+test("FOOTER-SITEMAP: footer and header link the search page without prefetch", () => {
+  for (const locale of ["tr", "en"] as const) {
+    const html = renderToStaticMarkup(h(SearchLink, { locale }));
+    const { href, label } = getSearchLink(locale);
+    assert.match(html, new RegExp(`^<a [^>]*href="${href}"`));
+    assert.match(html, new RegExp(`</svg>${label}</a>$`));
+    assert.match(html, /<svg aria-hidden="true"/);
+  }
+  assert.deepEqual(
+    [getSearchLink("tr").href, getSearchLink("en").href],
+    ["/ara", "/en/search"],
+  );
+  assert.match(
+    read("src/components/layout/Header.tsx"),
+    /<SearchLink locale=\{locale\} \/>/,
+  );
+  const footer = read("src/components/layout/Footer.tsx");
+  assert.match(footer, /prefetch=\{false\}/);
+  assert.match(footer, /lang=\{link\.lang\}\s+hrefLang=\{link\.lang\}/);
+  assert.match(
+    read("src/content/navigation/navigation-data-source.ts"),
+    /return withFooterSitemap\(sitemap, staticGroups\);[\s\S]*return withFooterSitemap\(\s*sitemap,\s*resolveFooterGroups\(/,
+  );
 });
 
 test("FE-7: root metadata has Open Graph and Twitter, never a canonical or og:url", () => {

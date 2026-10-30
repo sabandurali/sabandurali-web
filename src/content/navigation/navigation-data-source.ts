@@ -3,6 +3,7 @@ import { unstable_cache } from "next/cache";
 import { cache } from "react";
 import {
   getEnglishHeaderNavigationItems,
+  getFooterSitemapGroups,
   getStaticFooterGroups,
   getStaticHeaderNavigationItems,
   withTurkishHeaderShortcuts,
@@ -11,7 +12,10 @@ import { contactPaths, privacyPaths } from "@/config/site";
 import { getAllPublishedArticles } from "@/content/articles/article-data-source";
 import { describeError, reportContentIssue } from "@/content/content-log";
 import { NAVIGATION_CACHE_TAG } from "@/content/navigation/navigation-cache-tags";
-import { resolveFooterGroups } from "@/content/navigation/navigation-fallback";
+import {
+  resolveFooterGroups,
+  withFooterSitemap,
+} from "@/content/navigation/navigation-fallback";
 import { PayloadPublicNavigationRepository } from "@/content/navigation/payload-navigation-repository";
 import {
   collectPublishedWorkspaceFeeds,
@@ -142,15 +146,19 @@ export async function getFooterNavigation(
   content: FooterContent,
 ): Promise<PublicFooterGroup[]> {
   const staticGroups = getStaticFooterGroups(content);
+  const sitemap = getFooterSitemapGroups(content.locale);
 
   if (readPublicSource("NAVIGATION_PUBLIC_SOURCE") === "static") {
-    return staticGroups;
+    return withFooterSitemap(sitemap, staticGroups);
   }
 
   const navigation = await getPayloadNavigation(content.locale);
 
-  return resolveFooterGroups(navigation?.footerGroups ?? null, staticGroups, [
-    privacyPaths[content.locale],
-    contactPaths[content.locale],
-  ]);
+  return withFooterSitemap(
+    sitemap,
+    resolveFooterGroups(navigation?.footerGroups ?? null, staticGroups, [
+      privacyPaths[content.locale],
+      contactPaths[content.locale],
+    ]),
+  );
 }
